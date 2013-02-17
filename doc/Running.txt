@@ -31,5 +31,5 @@ Results are displayed in the command line.
   You will see the app being tested, and can see the results with GUI
 
 
-
+Test-configs are in client/config
 
