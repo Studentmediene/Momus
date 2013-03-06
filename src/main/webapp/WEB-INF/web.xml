@@ -6,32 +6,11 @@
     <servlet>
         <servlet-name>momusapi</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <!--<load-on-startup>1</load-on-startup>-->
-        <!-- TODO: Needed? -->
     </servlet>
-
-    <!--<servlet>-->
-        <!--<servlet-name>static</servlet-name>-->
-    <!--</servlet>-->
 
     <servlet-mapping>
         <servlet-name>momusapi</servlet-name>
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 
-    <!-- Should probably be uncommented when applicationContext.xml is being used? -->
-    <!--<listener>-->
-        <!--<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>-->
-    <!--</listener>-->
-
-    <!-- TODO: needed? -->
-    <!--<context-param>-->
-        <!--<param-name>contextConfigLocation</param-name>-->
-        <!--<param-value>/WEB-INF/momusapi-servlet.xml</param-value>-->
-    <!--</context-param>-->
-
-    <!--<servlet-mapping>-->
-        <!--<servlet-name>static</servlet-name>-->
-        <!--<url-pattern>/*</url-pattern>-->
-    <!--</servlet-mapping>-->
 </web-app>
