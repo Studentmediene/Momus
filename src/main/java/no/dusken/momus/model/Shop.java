@@ -1,8 +1,5 @@
 package no.dusken.momus.model;
 
-/**
- * @author Mats Svensson
- */
 public class Shop {
 
     String name;

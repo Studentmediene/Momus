@@ -11,7 +11,7 @@
 
     <!-- Some boilerplate info -->
     <name>Momus</name>
-    <description></description>
+    <description>A web client for journalists in Under Dusken</description>
     <url>https://momus.dusken.no</url>
     <inceptionYear>2013</inceptionYear>
     <organization>
