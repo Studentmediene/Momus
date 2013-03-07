@@ -15,14 +15,9 @@ public class TestController {
     @RequestMapping("/r")
     public @ResponseBody Shop getSomething2() {
         Shop shop = new Shop();
-        shop.setId(15);
+        shop.setId(13);
         shop.setName("ShopName");
 
         return shop;
-    }
-
-    @RequestMapping("redir")
-    public String goAway() {
-        return "r";
     }
 }
