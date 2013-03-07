@@ -33,3 +33,5 @@ Results are displayed in the command line.
 
 Test-configs are in client/config
 
+![alt](test.png)
+
