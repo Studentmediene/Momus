@@ -6,4 +6,6 @@ Momus
 > and unfair criticism. His name is related to μομφή, meaning 'blame' or 'censure'.
 > He is depicted in classical art as lifting a mask from his face.
 
+[Documentation/Wiki](doc/)
+
 [Basecamp project](https://basecamp.com/1856107/projects/1981137)
