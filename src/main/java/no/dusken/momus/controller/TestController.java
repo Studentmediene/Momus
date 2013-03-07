@@ -15,7 +15,7 @@ public class TestController {
     @RequestMapping("/r")
     public @ResponseBody Shop getSomething2() {
         Shop shop = new Shop();
-        shop.setId(5);
+        shop.setId(15);
         shop.setName("ShopName");
 
         return shop;

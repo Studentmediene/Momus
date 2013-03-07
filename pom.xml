@@ -60,6 +60,13 @@
             <artifactId>jackson-mapper-asl</artifactId>
             <version>1.7.1</version>
         </dependency>
+
+        <!-- Only for the redirect in index.jsp ... -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+        </dependency>
     </dependencies>
 
 
