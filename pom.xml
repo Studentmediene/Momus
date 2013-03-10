@@ -23,6 +23,7 @@
 
     <!-- Properties here -->
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>3.2.0.RELEASE</spring.version>
     </properties>
 
@@ -53,12 +54,41 @@
             <artifactId>spring-core</artifactId>
             <version>${spring.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>1.2.1.RELEASE</version>
+        </dependency>
 
         <!-- JSON mapper -->
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
             <version>1.7.1</version>
+        </dependency>
+
+        <!-- JDBC connector / JPA stuff -->
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>4.1.9.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.2.9</version>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- Only for the redirect in index.jsp ... -->
@@ -125,8 +155,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
                 <version>3.0</version>
             </plugin>

@@ -2,16 +2,55 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="
-        http://www.springframework.org/schema/beans
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.0.xsd
         http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
+
+    <!-- Enable @Controllers with @RequestMapping etc. -->
+    <mvc:annotation-driven />
     <context:component-scan base-package="no.dusken.momus.controller" />
 
-    <mvc:annotation-driven />
+    <!-- Enable @Autowired etc. -->
+    <context:annotation-config />
 
+    <!-- Load the db.properties file, can use the values like ${property.name} -->
+    <context:property-placeholder location="/WEB-INF/db.properties" />
+
+    <!-- Enable JPA -->
+    <jpa:repositories base-package="no.dusken.momus" />
+
+    <bean id="shop" class="no.dusken.momus.model.Shop">
+        <property name="id" value="444" />
+        <property name="name" value="classpath:path" />
+    </bean>
+
+
+    <!-- Connect to DB -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${dataSource.driver}" />
+        <property name="url" value="${dataSource.url}" />
+        <property name="username" value="${dataSource.username}" />
+        <property name="password" value="${dataSource.password}" />
+    </bean>
+
+    <!-- Use the DB inside JPA managers -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database" value="${dataSource.databaseType}" />
+                <property name="generateDdl" value="true" />
+                <property name="showSql" value="${dataSource.showSql}" />
+            </bean>
+        </property>
+        <property name="persistenceUnitName" value="jpaPersistenceUnit" />
+    </bean>
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
 </beans>

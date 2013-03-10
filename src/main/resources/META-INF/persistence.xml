@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence">
+    <!-- Spring checks here for a persistence-unit with the same name used in entityManagerFactory -->
+    <!-- We don't need to configure it -->
+    <persistence-unit name="jpaPersistenceUnit" />
+
+</persistence>
