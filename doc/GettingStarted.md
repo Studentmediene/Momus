@@ -13,6 +13,7 @@ All this must be installed
     * Maven handles all the Java dependencies (Spring Framework, JUnit etc.)
 * [Git](http://git-scm.com/)
     * Must be configured with GitHub
+    * The workflow will be like [this](http://nvie.com/posts/a-successful-git-branching-model/)
 
 ##Get the code
 By grabbing it from Git. Do
