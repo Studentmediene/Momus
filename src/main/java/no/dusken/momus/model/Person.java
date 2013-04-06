@@ -20,7 +20,6 @@ public class Person {
     private String phone;
 
     public Person() {
-
     }
 
     public Person(List<Role> roles, String firstName, String lastName, String email, String phone) {
@@ -33,10 +32,6 @@ public class Person {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getFirstName() {
