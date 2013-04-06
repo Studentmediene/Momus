@@ -1,9 +1,6 @@
 package no.dusken.momus.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -13,7 +10,7 @@ public class Person {
     @GeneratedValue
     private Long id;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Role> roles;
 
     private String firstName;

@@ -7,7 +7,7 @@ import javax.persistence.Id;
 public class Role {
 
     @Id
-    String name;
+    private String name;
 
     public Role() {
 

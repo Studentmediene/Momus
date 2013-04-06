@@ -57,5 +57,5 @@ add a scope to exclude them.
 
 Open Settings and select Scopes. Include/exclude stuff there. Here is mine:
 ![Scope Configuration](img/scope-conf.png)
-Pattern: `file:*/&&!file:src/main/webapp/app/lib//*&&!file:src/main/webapp/config//*&&!file:src/main/webapp/test//*`
+Pattern: `file:*/&&!file:src/main/webapp/app/lib//*&&!file:src/main/webapp/config//*&&!file:src/main/webapp/test//*&&!file:database//*`
 
