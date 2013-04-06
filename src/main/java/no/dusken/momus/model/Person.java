@@ -22,6 +22,10 @@ public class Person {
     public Person() {
     }
 
+    public Person(Long id) {
+        this.id = id;
+    }
+
     public Person(List<Role> roles, String firstName, String lastName, String email, String phone) {
         this.roles = roles;
         this.firstName = firstName;

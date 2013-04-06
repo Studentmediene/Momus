@@ -33,7 +33,7 @@ public class PersonController {
 
         roles = roleRepository.save(roles);
 
-        Person person = new Person(roles, "Gunild", "B", "fggggggg@m.com", "445345355");
+        Person person = new Person(roles, "Mats", "B", "fggggggg@m.com", "445345355");
 
 
         personRepository.saveAndFlush(person);
@@ -53,5 +53,10 @@ public class PersonController {
         if(false) //testing
         throw new RuntimeException("hehe");
         return person;
+    }
+
+    @RequestMapping("/getAll")
+    public @ResponseBody List<Person> getPersons() {
+        return personRepository.findAll();
     }
 }

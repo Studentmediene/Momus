@@ -9,4 +9,6 @@ import java.util.List;
 public interface ArticleRevisionRepository extends JpaRepository<ArticleRevision, Long> {
 
     public List<ArticleRevision> findByArticle(Article article);
+
+    public List<ArticleRevision> findByArticle_Id(Long id);
 }

@@ -14,6 +14,7 @@ public class Article {
 
     private String name;
     private String content;
+    private String note;
 
     @Transient
     private int contentLength;
@@ -112,5 +113,21 @@ public class Article {
 
     public void setLastUpdated(Date lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Person getCorrectResponsible() {
+        return correctResponsible;
+    }
+
+    public void setCorrectResponsible(Person correctResponsible) {
+        this.correctResponsible = correctResponsible;
     }
 }
