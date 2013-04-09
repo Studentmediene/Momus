@@ -1,0 +1,10 @@
+<h2>Roles</h2>
+
+        <p>Add new role:</p>
+        <input ng-model="newName">
+        <button ng-click="createNew(newName)">Lag ny</button>
+<ul>
+    <li ng-repeat="role in roles | orderBy:'name'">
+        (id:{{role.id}}, index:{{$index}}) <input ng-model="role.name"> <button ng-click="saveNewName(role)">Lagre</button> <button ng-click="delete(role)">delete</button> {{role.name}}
+    </li>
+</ul>

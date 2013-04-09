@@ -21,6 +21,7 @@ public class ExceptionHandler implements HandlerExceptionResolver {
             response.setStatus(((RestException) e).getStatus());
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            System.err.print(e);
         }
 
         ModelAndView mav = new ModelAndView(new MappingJackson2JsonView());

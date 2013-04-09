@@ -36,12 +36,16 @@ public class PersonController {
         List<Role> roles = new ArrayList<>();
         roles.add(new Role("Role222"));
 
-        roles = roleRepository.save(roles);
+        roleRepository.delete(new Role("Role222"));
 
-        Person person = new Person(roles, "Mats", "B", "fggggggg@m.com", "445345355");
+//        roles = roleRepository.save(roles);
 
 
-        personRepository.saveAndFlush(person);
+//        Person person = personRepository.findOne(5L);
+//        person.setRoles(roles);
+
+
+//        personRepository.saveAndFlush(person);
         return "success";
     }
 
@@ -55,6 +59,7 @@ public class PersonController {
         response.setHeader("Last-Modified", "Sat, 06 Apr 2013 12:45:26 GMT");
         response.setHeader("Cache-Control", "max-age=\"600\"");
         response.setHeader("Mats", "lol");
+
         Person person = personRepository.findOne(1L);
         person.getRoles().size();
 //        person = personRepository.save(person);
@@ -66,17 +71,11 @@ public class PersonController {
     @RequestMapping("/getAll")
     public @ResponseBody List<Person> getPersons(HttpServletResponse response, WebRequest webRequest) {
         Date date = new SimpleDateFormat("dd.MM.yyyy").parse("06.04.2013", new ParsePosition(0));
-        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss", Locale.ENGLISH);
 
         if(webRequest.checkNotModified(date.getTime())) {
-            System.out.println("not modified");
             return null;
         }
 
-        response.setHeader("Last-Modified", format.format(date) + " GMT");
-        response.setHeader("Expires", "Mon, 08 Apr 2013 12:45:26 GMT");
-        response.setHeader("Cache-Control", "max-age=\"600\"");
-        response.setHeader("Mats", "lol");
         return personRepository.findAll();
     }
 }

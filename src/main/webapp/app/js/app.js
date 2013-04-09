@@ -10,5 +10,6 @@ angular.module('momusApp', ['momusApp.filters', 'momusApp.services', 'momusApp.d
         // Admin interfaces
         $routeProvider.when('/admin', {templateUrl: 'partials/admin/admin.html', controller: MyCtrl2});
         $routeProvider.when('/admin/person', {templateUrl: 'partials/admin/person.html', controller: AdminPersonCtrl});
+        $routeProvider.when('/admin/role', {templateUrl: 'partials/admin/role.html', controller: AdminRoleCtrl});
         $routeProvider.otherwise({redirectTo: '/view1'});
     }]);
