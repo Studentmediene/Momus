@@ -22,8 +22,7 @@ public class RoleController {
 
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody Role createNewRole(@RequestBody Role newRole) {
-        Role createdRole = roleRepository.saveAndFlush(newRole);
-        return createdRole;
+        return roleRepository.saveAndFlush(newRole);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

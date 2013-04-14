@@ -9,4 +9,5 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
     public Note findByOwner(Person owner);
 
     public Note findByOwner_Id(Long owner);
+
 }

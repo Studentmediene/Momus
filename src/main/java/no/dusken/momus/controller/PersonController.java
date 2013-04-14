@@ -1,6 +1,5 @@
 package no.dusken.momus.controller;
 
-import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.model.Role;
 import no.dusken.momus.service.PersonRepository;
@@ -8,17 +7,9 @@ import no.dusken.momus.service.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
 
 @Controller
 @Transactional
@@ -31,51 +22,23 @@ public class PersonController {
     @Autowired
     RoleRepository roleRepository;
 
-    @RequestMapping("/add")
-    public @ResponseBody String addStuff() {
-        List<Role> roles = new ArrayList<>();
-        roles.add(new Role("Role222"));
-
-        roleRepository.delete(new Role("Role222"));
-
-//        roles = roleRepository.save(roles);
-
-
-//        Person person = personRepository.findOne(5L);
-//        person.setRoles(roles);
-
-
-//        personRepository.saveAndFlush(person);
-        return "success";
+    @RequestMapping(method = RequestMethod.POST)
+    public @ResponseBody Person addPerson(@RequestBody Person person) {
+        return personRepository.saveAndFlush(person);
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public @ResponseBody String addPerson(@RequestBody Person person) {
-        return person.getEmail();
+    @RequestMapping(value = "/addroles/{id}", method = RequestMethod.PUT)
+    public @ResponseBody Person setRolesToPerson(@PathVariable("id") Long id, @RequestBody List<Role> roles) {
+        Person person = personRepository.findOne(id);
+
+        person.setRoles(roles);
+
+        return personRepository.saveAndFlush(person);
     }
 
-    @RequestMapping("/get")
-    public @ResponseBody Person getPerson(HttpServletResponse response) {
-        response.setHeader("Last-Modified", "Sat, 06 Apr 2013 12:45:26 GMT");
-        response.setHeader("Cache-Control", "max-age=\"600\"");
-        response.setHeader("Mats", "lol");
-
-        Person person = personRepository.findOne(1L);
-        person.getRoles().size();
-//        person = personRepository.save(person);
-        if(false) //testing
-        throw new RuntimeException("hehe");
-        return person;
-    }
-
-    @RequestMapping("/getAll")
-    public @ResponseBody List<Person> getPersons(HttpServletResponse response, WebRequest webRequest) {
-        Date date = new SimpleDateFormat("dd.MM.yyyy").parse("06.04.2013", new ParsePosition(0));
-
-        if(webRequest.checkNotModified(date.getTime())) {
-            return null;
-        }
-
+    @RequestMapping(method = RequestMethod.GET)
+    public @ResponseBody List<Person> getAllPersons() {
         return personRepository.findAll();
     }
+
 }

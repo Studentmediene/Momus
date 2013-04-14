@@ -28,3 +28,6 @@
     content: "";
     padding: 0;
 }
+.navbar .navbar-inner {
+    padding: 0;
+}

@@ -6,10 +6,11 @@ import no.dusken.momus.service.NoteRepository;
 import no.dusken.momus.service.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
 
 @Controller
 @RequestMapping("/note")
@@ -21,26 +22,24 @@ public class NoteController {
     @Autowired
     PersonRepository personRepository;
 
-    @RequestMapping("/add")
-    public @ResponseBody void lol() {
-        Note note = new Note();
-        note.setContent("note5for2");
-
-//        Person person = personRepository.findOne(2L);
-        Person person = new Person(2L);
-
-        note.setOwner(person);
-
-        noteRepository.save(note);
-    }
-
-    @RequestMapping("/get")
-    public @ResponseBody List<Note> getAll() {
-        return noteRepository.findAll();
-    }
-
-    @RequestMapping("/getByPerson")
-    public @ResponseBody Note getByPerson() {
+    @RequestMapping(method = RequestMethod.GET)
+    public @ResponseBody Note getNoteForLoggedInUser() {
         return noteRepository.findByOwner_Id(1L);
     }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    public @ResponseBody Note saveNoteForLoggedInUser(@RequestBody Note note) {
+        Note updatedNote = noteRepository.findByOwner_Id(1L);
+
+        if (updatedNote == null) { // no existing note for user
+            updatedNote = new Note();
+            note.setOwner(new Person(1L));
+        }
+
+        updatedNote.setContent(note.getContent());
+        updatedNote = noteRepository.saveAndFlush(updatedNote);
+
+        return updatedNote;
+    }
+
 }
