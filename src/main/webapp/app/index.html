@@ -38,7 +38,7 @@
                     <span class="icon">
                     <i class="icon-user"></i>
                     </span>
-                    <h4>Din bruker</h4>
+                    <h4>Min profil</h4>
                     <div class="right-area">
                         <a class="btn btn-mini" href="#" title="Se full profil"><i class="icon-share-alt"></i></a>
                     </div>
@@ -55,8 +55,38 @@
         </div>
         <div class="span4">Notater</div>
         <div class="span4">Siste bilder</div>
+    </div>
+    <div class="row">
         <div class="span4">Min profil</div>
         <div class="span4">Mine artikler</div>
+    </div>
+
+    <div class="row">
+        <div class="span6">
+
+
+            <div class="widget-box" ng-controller="WysiTestCtrl">
+                <div class="widget-title">
+                    <span class="icon">
+                    <i class="icon-list-alt"></i>
+                    </span>
+                    <h4>Mine notater</h4>
+                    <div class="right-area">
+                        <button class="btn btn-mini disabled"><i class="icon-ok"></i> Lagre</button>
+                    </div>
+                </div>
+                <div class="widget-content">
+                    <textarea class="note"></textarea>
+                    <textarea id="lool" richeditor="yay"></textarea>
+                    <textarea id="tooo" richeditor="nay"></textarea>
+                    <input type="text" ng-model="yay">
+                    <input type="text" ng-model="nay">
+                    <br>
+                    {{yay}}
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 
@@ -117,6 +147,7 @@
 <!-- Include wysihtml5, the text editor -->
 <script src="lib/wysihtml5/wysihtml5-0.4.0pre.min.js"></script>
 <!-- And our parsing rules -->
+<script src="js/parsingrules.js"></script>
 
 </body>
 </html>

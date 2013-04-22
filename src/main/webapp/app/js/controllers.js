@@ -56,3 +56,8 @@ function ArticleCtrl($scope, $http) {
         toolbar:      "wysihtml5-toolbar" // id of toolbar element
     });
 }
+
+function WysiTestCtrl($scope) {
+    $scope.yay = "ttttttttt";
+    $scope.nay = "oooooooo";
+}

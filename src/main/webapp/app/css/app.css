@@ -37,9 +37,16 @@
 
 
 .widget-content {
-    padding: 12px 15px;
+    padding: 12px 15px 5px 15px;
 }
 
+textarea.note {
+    width: 100%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    height: 500px;
+    background-color: #fff95d;;
+}
 
 .menu {
     list-style: none;
