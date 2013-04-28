@@ -1,5 +1,6 @@
 package no.dusken.momus.controller;
 
+import no.dusken.momus.authentication.LoggedInUser;
 import no.dusken.momus.model.Note;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.NoteRepository;
@@ -24,17 +25,23 @@ public class NoteController {
 
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody Note getNoteForLoggedInUser() {
-        return noteRepository.findByOwner_Id(1L);
+        Note note = noteRepository.findByOwner_Id(LoggedInUser.getUserId());
+
+        if (note == null) { // no existing note for user, let's make one
+            note = new Note();
+            note.setOwner(new Person(LoggedInUser.getUserId()));
+        }
+
+        note = noteRepository.saveAndFlush(note);
+
+        return note;
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     public @ResponseBody Note saveNoteForLoggedInUser(@RequestBody Note note) {
-        Note updatedNote = noteRepository.findByOwner_Id(1L);
+        Long userId = LoggedInUser.getUserId();
 
-        if (updatedNote == null) { // no existing note for user
-            updatedNote = new Note();
-            note.setOwner(new Person(1L));
-        }
+        Note updatedNote = noteRepository.findByOwner_Id(userId);
 
         updatedNote.setContent(note.getContent());
         updatedNote = noteRepository.saveAndFlush(updatedNote);

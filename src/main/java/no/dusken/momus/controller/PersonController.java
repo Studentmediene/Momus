@@ -5,6 +5,8 @@ import no.dusken.momus.model.Role;
 import no.dusken.momus.service.PersonRepository;
 import no.dusken.momus.service.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,16 @@ public class PersonController {
     @Autowired
     RoleRepository roleRepository;
 
+    @RequestMapping(method = RequestMethod.GET)
+    public @ResponseBody List<Person> getAllPersons() {
+        return personRepository.findAll();
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public @ResponseBody Person getPersonById(@PathVariable("id") Long id) {
+        return personRepository.findOne(id);
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody Person addPerson(@RequestBody Person person) {
         return personRepository.saveAndFlush(person);
@@ -34,11 +46,6 @@ public class PersonController {
         person.setRoles(roles);
 
         return personRepository.saveAndFlush(person);
-    }
-
-    @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody List<Person> getAllPersons() {
-        return personRepository.findAll();
     }
 
 }

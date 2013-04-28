@@ -57,7 +57,20 @@ function ArticleCtrl($scope, $http) {
     });
 }
 
-function WysiTestCtrl($scope) {
-    $scope.yay = "ttttttttt";
-    $scope.nay = "oooooooo";
+function NoteCtrl($scope, $http) {
+    $http.get('/api/note').success(function(data) {
+        $scope.note = data;
+        $scope.original = angular.copy($scope.note);
+    });
+
+    $scope.$watch('note.content', function(newVal, oldVal) {
+        console.log('changes');
+        $scope.isDirty = !angular.equals($scope.note, $scope.original);
+    });
+
+    $scope.saveNote = function() {
+        $http.put('/api/note', $scope.note).success(function(data) {
+            $scope.note = data;
+        })
+    };
 }

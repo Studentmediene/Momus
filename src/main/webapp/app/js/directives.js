@@ -9,15 +9,15 @@ angular.module('momusApp.directives', []).
             elm.text(version);
         };
     }]).
-/**
- * Should be assigned to a <textarea>.
- * The textarea should specify a model to use and need to have an id set
- * like <textarea id="myid" richeditor="article.content"></textarea>
- *
- * Because it spawns an iframe the two-way-binding will not work, so to
- * keep the data in sync it will watch the passed in model for changes
- * and push changes back as long as it has focus
- */
+    /**
+     * Should be assigned to a <textarea>.
+     * The textarea should specify a model to use and need to have an id set
+     * like <textarea id="myid" richeditor="article.content"></textarea>
+     *
+     * Because it spawns an iframe the two-way-binding will not work, so to
+     * keep the data in sync it will watch the passed in model for changes
+     * and push changes back as long as it has focus
+     */
     directive('richeditor', function($timeout) {
         return {
             restrict: "A",
@@ -52,7 +52,7 @@ angular.module('momusApp.directives', []).
                     timerId = $timeout(function() {
                         updateModel();
                         startTimer();
-                    }, 1000)
+                    }, 500)
                 }
 
                 // cancel the timeout so we don't waste resources when not needed
@@ -66,6 +66,7 @@ angular.module('momusApp.directives', []).
 
                 scope.wysihtml5Editor.on('blur', function() {
                     // update one last time in case of changes since last update
+                    console.log('blur');
                     updateModel();
                     stopTimer()
                 });

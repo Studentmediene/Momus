@@ -65,24 +65,29 @@
         <div class="span6">
 
 
-            <div class="widget-box" ng-controller="WysiTestCtrl">
+            <div class="widget-box" ng-controller="NoteCtrl">
                 <div class="widget-title">
                     <span class="icon">
                     <i class="icon-list-alt"></i>
                     </span>
                     <h4>Mine notater</h4>
                     <div class="right-area">
-                        <button class="btn btn-mini disabled"><i class="icon-ok"></i> Lagre</button>
+                        <button class="btn btn-mini" ng-click="saveNote()" ng-disabled="!isDirty"><i class="icon-ok"></i> Lagre</button>
                     </div>
                 </div>
                 <div class="widget-content">
-                    <textarea class="note"></textarea>
-                    <textarea id="lool" richeditor="yay"></textarea>
-                    <!--<textarea id="tooo" richeditor="nay"></textarea>-->
-                    <input type="text" ng-model="yay">
-                    <!--<input type="text" ng-model="nay">-->
+
+                    <form name="noteForm">
+                    <textarea id="lool" richeditor="note.content" class="note"></textarea>
+                        <input type="text" ng-model="note.content">
                     <br>
-                    {{yay}}
+                    <p>dirty: {{noteForm.$dirty}}</p>
+                    </form>
+                    <p>note:{{note.content}}</p>
+                    <p>original:{{original.content}}</p>
+                    <p>d:{{isDirty}}</p>
+
+
                 </div>
             </div>
 
