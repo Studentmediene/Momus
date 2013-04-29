@@ -11,10 +11,11 @@ angular.module('momusApp.directives', []).
     }]).
     /**
      * Should be assigned to a <textarea>.
-     * The textarea should specify a model to use and need to have an id set
-     * like <textarea id="myid" richeditor="article.content"></textarea>
+     * The textarea should specify a model to use, the rules and need to have an id set.
+     * A toolbar id can also be specified.
+     * like <textarea id="myid" richeditor="article.content" richeditor-rules="rules" richeditor-toolbar="someid"></textarea>
      *
-     * Because it spawns an iframe the two-way-binding will not work, so to
+     * Because it spawns an iFrame the two-way-binding will not work, so to
      * keep the data in sync it will watch the passed in model for changes
      * and push changes back as long as it has focus
      */
@@ -28,10 +29,12 @@ angular.module('momusApp.directives', []).
             link: function(scope, element, attrs) {
                 // get the id to create editor for
                 scope.id = attrs.id;
+                scope.toolbarId = attrs.richeditorToolbar;
 
                 // make the id wysihtml5
                 scope.wysihtml5Editor = new wysihtml5.Editor(scope.id, {
-                    parserRules: scope.richeditorRules
+                    parserRules: scope.richeditorRules,
+                    toolbar: scope.toolbarId
                 });
 
                 // update the editor content if the model changes

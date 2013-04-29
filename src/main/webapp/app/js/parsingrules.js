@@ -1,7 +1,6 @@
 var wysihtml5ParserRules = {
     tags: {
         strong: {},
-        b: {},
         i: {},
         em: {},
         br: {},

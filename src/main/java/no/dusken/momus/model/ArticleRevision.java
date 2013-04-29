@@ -10,7 +10,7 @@ public class ArticleRevision {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Article article;
 
     private String content;

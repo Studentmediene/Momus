@@ -6,7 +6,6 @@ import java.util.List;
 
 @Entity
 public class Article {
-    // TypedQuery<UserAccount> q = em.createQuery("select u from UserAccount u where u.id in (:myList)", UserAccount.class);
 
     @Id
     @GeneratedValue
@@ -36,10 +35,6 @@ public class Article {
 
     @Temporal(TemporalType.DATE)
     private Date lastUpdated;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Publication publication;
-    // section?
 
     /**
      * This is done after load instead of in a getter, since
