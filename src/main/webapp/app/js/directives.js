@@ -22,7 +22,8 @@ angular.module('momusApp.directives', []).
         return {
             restrict: "A",
             scope: {
-                richeditor:"="
+                richeditor:"=",
+                richeditorRules:"="
             },
             link: function(scope, element, attrs) {
                 // get the id to create editor for
@@ -30,7 +31,7 @@ angular.module('momusApp.directives', []).
 
                 // make the id wysihtml5
                 scope.wysihtml5Editor = new wysihtml5.Editor(scope.id, {
-                    parserRules: wysihtml5ParserRules
+                    parserRules: scope.richeditorRules
                 });
 
                 // update the editor content if the model changes
