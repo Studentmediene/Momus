@@ -9,6 +9,8 @@ public class Note {
     @GeneratedValue
     private Long id;
 
+    @Lob
+    @Column(length = 40960)
     private String content;
 
     @OneToOne(fetch = FetchType.LAZY)

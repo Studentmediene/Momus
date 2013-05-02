@@ -34,7 +34,9 @@ angular.module('momusApp.directives', []).
                 // make the id wysihtml5
                 scope.wysihtml5Editor = new wysihtml5.Editor(scope.id, {
                     parserRules: scope.richeditorRules,
-                    toolbar: scope.toolbarId
+                    toolbar: scope.toolbarId,
+                    useLineBreaks: false
+
                 });
 
                 // update the editor content if the model changes
@@ -70,7 +72,6 @@ angular.module('momusApp.directives', []).
 
                 scope.wysihtml5Editor.on('blur', function() {
                     // update one last time in case of changes since last update
-                    console.log('blur');
                     updateModel();
                     stopTimer()
                 });

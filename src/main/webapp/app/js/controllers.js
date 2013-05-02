@@ -63,7 +63,7 @@ function NoteCtrl($scope, $http) {
         $scope.original = angular.copy($scope.note);
     });
 
-    $scope.rules = wysihtml5ParserRules;
+    $scope.rules = noteParserRules;
 
     $scope.$watch('note.content', function(newVal, oldVal) {
         $scope.isDirty = !angular.equals($scope.note, $scope.original);
@@ -72,6 +72,7 @@ function NoteCtrl($scope, $http) {
     $scope.saveNote = function() {
         $http.put('/api/note', $scope.note).success(function(data) {
             $scope.note = data;
+            $scope.original = angular.copy($scope.note);
         })
     };
 }
