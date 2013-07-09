@@ -27,15 +27,22 @@ var wysihtml5ParserRules = {
 
 var noteParserRules = {
     tags: {
+        br: {},
+        p: {},
+        span: {},
+
         strong: {
             rename_tag: "b"
         },
         b: {},
         i: {},
+        del: {
+            rename_tag: "strike"
+        },
+        strike: {},
+        u: {},
+
         ul: {},
-        br: {},
-        p: {},
-        span: {},
         ol: {},
         li: {},
         a: {

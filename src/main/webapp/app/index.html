@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" ng-app="momusApp">
+<html lang="en" ng-app="momusApp" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
     <title>Momus</title>
@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="lib/bootstrap/bootstrap.css" media="screen">
-    <link href="lib/bootstrap/bootstrap-responsive.css" rel="stylesheet">
+    <link rel="stylesheet" href="lib/bootstrap/bootstrap-responsive.css">
+    <link rel="stylesheet" href="lib/fontawesome/css/font-awesome.css">
     <link rel="stylesheet" href="css/app.css"/>
 
 </head>
@@ -72,21 +73,49 @@
                     </span>
                     <h4>Mine notater</h4>
                     <div class="right-area">
-                        <button class="btn btn-mini" ng-click="saveNote()" ng-disabled="!isDirty"><i class="icon-ok"></i> Lagre</button>
+                        <button class="btn btn-mini" ng-click="saveNote()" ng-show="isDirty"><i class="icon-save"></i> Lagre</button>
+                        <button class="btn btn-mini" ng-show="!isDirty" disabled><i class="icon-ok"></i> Lagret</button>
                     </div>
                 </div>
                 <div class="widget-content">
 
                     <form name="noteForm">
-                    <textarea id="lool" richeditor="note.content" richeditor-rules="rules" richeditor-toolbar="" class="note"></textarea>
-                        <input type="text" ng-model="note.content">
-                    <br>
-                    <p>dirty: {{noteForm.$dirty}}</p>
-                    </form>
-                    <p>note:{{note.content}}</p>
-                    <p>original:{{original.content}}</p>
-                    <p>d:{{isDirty}}</p>
+                        <div class="btn-toolbar" id="note-toolbar">
+                            <div class="btn-group">
+                                <button class="btn" data-wysihtml5-command="bold" title="Fet tekst (Ctrl+B)"><i class="icon-bold"></i></button>
+                                <button class="btn" data-wysihtml5-command="italic" title="Kursiv tekst (Ctrl+I)"><i class="icon-italic"></i></button>
+                                <button class="btn" data-wysihtml5-command="underline" title="Understreket tekst (Ctrl+U)"><i class="icon-underline"></i></button>
+                                <button class="btn" data-wysihtml5-command="strikethrough" title="Gjennomstreket tekst"><i class="icon-strikethrough"></i></button>
 
+                                <!--<button class="btn"><span style="color: #f00">&#x25A0;</span></button>-->
+                                <!--<button class="btn dropdown-toggle" data-toggle="dropdown">-->
+                                    <!--<span class="caret"></span>-->
+                                <!--</button>-->
+                                <!--<ul class="dropdown-menu">-->
+                                    <!--<li><a style="color: #ff0">&#x25A0;</a></li>-->
+                                    <!--<li><a style="color: #f0f">&#x25A0;</a></li>-->
+                                    <!--<li><a style="color: #0f0">&#x25A0;</a></li>-->
+                                <!--</ul>-->
+                            </div>
+
+                            <div class="btn-group">
+                                <button class="btn" data-wysihtml5-command="insertUnorderedList" title="Usortert liste"><i class="icon-list-ul"></i></button>
+                                <button class="btn" data-wysihtml5-command="insertOrderedList" title="Sortert liste"><i class="icon-list-ol"></i></button>
+                            </div>
+
+                            <div class="btn-group">
+                                <button class="btn" data-wysihtml5-action="change_view" title="Se rådata (avansert)"><i class="icon-exchange"></i></button>
+                            </div>
+                        </div>
+
+                        <textarea id="lool" richeditor="note.content" richeditor-rules="rules" richeditor-toolbar="note-toolbar" class="note"></textarea>
+                        <input type="text" ng-model="note.content">
+                        <br>
+                        <p>dirty: {{noteForm.$dirty}}</p>
+                        <p>note:{{note.content}}</p>
+                        <p>original:{{original.content}}</p>
+                        <p>d:{{isDirty}}</p>
+                    </form>
 
                 </div>
             </div>

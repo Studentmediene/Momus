@@ -73,6 +73,7 @@ function NoteCtrl($scope, $http) {
         $http.put('/api/note', $scope.note).success(function(data) {
             $scope.note = data;
             $scope.original = angular.copy($scope.note);
+            $scope.isDirty = false;
         })
     };
 }

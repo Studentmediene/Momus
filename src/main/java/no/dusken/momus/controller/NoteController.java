@@ -27,7 +27,7 @@ public class NoteController {
     public @ResponseBody Note getNoteForLoggedInUser() {
         Note note = noteRepository.findByOwner_Id(LoggedInUser.getUserId());
 
-        if (note == null) { // no existing note for user, let's make one
+        if (note == null) {
             note = new Note();
             note.setOwner(new Person(LoggedInUser.getUserId()));
         }
