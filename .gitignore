@@ -4,4 +4,4 @@
 *.iws
 .idea/
 
-*/target/*
+target/
