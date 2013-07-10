@@ -1,25 +1,17 @@
 package no.dusken.momus.model;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Role {
+public class ArticleType {
 
     @Id
-    @GeneratedValue
     private Long id;
 
     private String name;
+    private String description;
 
-    public Role() {
-
-    }
-
-    public Role(String name) {
-        this.name = name;
-    }
 
     public Long getId() {
         return id;
@@ -31,5 +23,13 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

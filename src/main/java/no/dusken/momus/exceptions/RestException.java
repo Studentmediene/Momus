@@ -1,5 +1,8 @@
 package no.dusken.momus.exceptions;
 
+/**
+ * Can be thrown when an error should be shown to the user with a specific http code
+ */
 public class RestException extends RuntimeException {
     private String message;
     private int status;
@@ -14,6 +17,7 @@ public class RestException extends RuntimeException {
         this.status = status;
     }
 
+    @Override
     public String getMessage() {
         return message;
     }

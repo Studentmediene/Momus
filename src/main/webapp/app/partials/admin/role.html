@@ -1,0 +1,12 @@
+<h2>Roles</h2>
+
+        <p>Add new role:</p>
+        <div class="input-append input-prepend">
+            <span class="add-on span1">lll</span>
+            <input ng-model="newName" type="text" class="">
+            <button ng-click="createNew(newName)" class="btn">Lag ny</button>
+        </div>
+
+        <div class="input-append" ng-repeat="role in roles">
+            <input class="span3" type="text" ng-model="role.name"> <button class="btn" ng-click="saveNewName(role)">Lagre</button><button class="btn" ng-click="delete(role)">Slett</button>
+        </div>

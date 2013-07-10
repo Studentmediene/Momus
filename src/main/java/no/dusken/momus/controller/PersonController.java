@@ -5,14 +5,12 @@ import no.dusken.momus.model.Role;
 import no.dusken.momus.service.PersonRepository;
 import no.dusken.momus.service.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -26,32 +24,28 @@ public class PersonController {
     @Autowired
     RoleRepository roleRepository;
 
-    @RequestMapping("/add")
-    public @ResponseBody String addStuff() {
-        List<Role> roles = new ArrayList<>();
-        roles.add(new Role("Role222"));
-
-        roles = roleRepository.save(roles);
-
-        Person person = new Person(roles, "Gunild", "B", "fggggggg@m.com", "445345355");
-
-
-        personRepository.saveAndFlush(person);
-        return "success";
+    @RequestMapping(method = RequestMethod.GET)
+    public @ResponseBody List<Person> getAllPersons() {
+        return personRepository.findAll();
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public @ResponseBody String addPerson(@RequestBody Person person) {
-        return person.getEmail();
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public @ResponseBody Person getPersonById(@PathVariable("id") Long id) {
+        return personRepository.findOne(id);
     }
 
-    @RequestMapping("/get")
-    public @ResponseBody Person getPerson() {
-        Person person = personRepository.findOne(1L);
-        person.getRoles().size();
-//        person = personRepository.save(person);
-        if(false) //testing
-        throw new RuntimeException("hehe");
-        return person;
+    @RequestMapping(method = RequestMethod.POST)
+    public @ResponseBody Person addPerson(@RequestBody Person person) {
+        return personRepository.saveAndFlush(person);
     }
+
+    @RequestMapping(value = "/addroles/{id}", method = RequestMethod.PUT)
+    public @ResponseBody Person setRolesToPerson(@PathVariable("id") Long id, @RequestBody List<Role> roles) {
+        Person person = personRepository.findOne(id);
+
+        person.setRoles(roles);
+
+        return personRepository.saveAndFlush(person);
+    }
+
 }
