@@ -18,8 +18,11 @@
         <name>Mediastud AS</name>
         <url>http://mediastud.no/</url>
     </organization>
+    <issueManagement>
+        <system>Github Issues</system>
+        <url>https://github.com/mediastud/Momus/issues</url>
+    </issueManagement>
 
-    <!-- Distribution management?? -->
 
     <!-- Properties here -->
     <properties>
