@@ -1,4 +1,4 @@
-package no.dusken.momus.service;
+package no.dusken.momus.service.repository;
 
 import no.dusken.momus.model.Note;
 import no.dusken.momus.model.Person;

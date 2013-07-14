@@ -33,7 +33,7 @@ public class Article {
     @ManyToOne
     private Person correctResponsible;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdated;
 
     /**

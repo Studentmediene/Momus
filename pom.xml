@@ -94,6 +94,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.23</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- Only for the redirect in index.jsp ... -->
         <dependency>
             <groupId>javax.servlet</groupId>

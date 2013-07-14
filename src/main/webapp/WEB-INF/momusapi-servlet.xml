@@ -25,7 +25,7 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
-    <context:component-scan base-package="no.dusken.momus.controller" />
+    <context:component-scan base-package="no.dusken.momus" />
 
 
     <!-- Enable @Autowired etc. -->
@@ -38,7 +38,7 @@
     <context:property-placeholder location="/WEB-INF/db.properties" />
 
     <!-- Enable JPA -->
-    <jpa:repositories base-package="no.dusken.momus.service" />
+    <jpa:repositories base-package="no.dusken.momus.service.repository" />
 
     <!-- Connect to DB -->
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">

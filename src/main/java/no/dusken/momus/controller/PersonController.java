@@ -2,11 +2,9 @@ package no.dusken.momus.controller;
 
 import no.dusken.momus.model.Person;
 import no.dusken.momus.model.Role;
-import no.dusken.momus.service.PersonRepository;
-import no.dusken.momus.service.RoleRepository;
+import no.dusken.momus.service.repository.PersonRepository;
+import no.dusken.momus.service.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
