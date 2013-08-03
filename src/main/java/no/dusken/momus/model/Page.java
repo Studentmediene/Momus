@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Page {
@@ -17,7 +18,7 @@ public class Page {
     private String note;
 
     @ManyToMany
-    private List<Article> articles;
+    private Set<Article> articles;
 
 
 
@@ -41,11 +42,11 @@ public class Page {
         this.note = note;
     }
 
-    public List<Article> getArticles() {
+    public Set<Article> getArticles() {
         return articles;
     }
 
-    public void setArticles(List<Article> articles) {
+    public void setArticles(Set<Article> articles) {
         this.articles = articles;
     }
 }

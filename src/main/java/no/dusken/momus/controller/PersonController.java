@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @Transactional
@@ -38,7 +39,7 @@ public class PersonController {
     }
 
     @RequestMapping(value = "/addroles/{id}", method = RequestMethod.PUT)
-    public @ResponseBody Person setRolesToPerson(@PathVariable("id") Long id, @RequestBody List<Role> roles) {
+    public @ResponseBody Person setRolesToPerson(@PathVariable("id") Long id, @RequestBody Set<Role> roles) {
         Person person = personRepository.findOne(id);
 
         person.setRoles(roles);

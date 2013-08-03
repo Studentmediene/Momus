@@ -7,6 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 import static no.dusken.momus.service.specification.ArticleSpecifications.*;
@@ -44,6 +49,8 @@ public class ArticleService {
         if (!name.equals("")) {
             criteria = criteria.and(nameIs(name));
         }
+
+        criteria = criteria.and(photoIdIs(1L));
 
         return articleRepository.findAll(criteria);
     }

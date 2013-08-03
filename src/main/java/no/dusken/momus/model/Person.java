@@ -2,6 +2,7 @@ package no.dusken.momus.model;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Person {
@@ -11,7 +12,7 @@ public class Person {
     private Long id;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private List<Role> roles;
+    private Set<Role> roles;
 
     private String firstName;
     private String lastName;
@@ -26,7 +27,7 @@ public class Person {
         this.id = id;
     }
 
-    public Person(List<Role> roles, String firstName, String lastName, String email, String phone) {
+    public Person(Set<Role> roles, String firstName, String lastName, String email, String phone) {
         this.roles = roles;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -70,11 +71,11 @@ public class Person {
         this.phone = phone;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 }

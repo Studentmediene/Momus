@@ -1,8 +1,11 @@
 package no.dusken.momus.model;
 
+import org.hibernate.annotations.IndexColumn;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Article {
@@ -25,10 +28,12 @@ public class Article {
 
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Person> journalists;
+    @JoinTable(name = "article_journalist")
+    private Set<Person> journalists;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Person> photographers;
+    @JoinTable(name = "article_photographer")
+    private Set<Person> photographers;
 
     @ManyToOne
     private Person correctResponsible;
@@ -86,19 +91,19 @@ public class Article {
         this.type = type;
     }
 
-    public List<Person> getJournalists() {
+    public Set<Person> getJournalists() {
         return journalists;
     }
 
-    public void setJournalists(List<Person> journalists) {
+    public void setJournalists(Set<Person> journalists) {
         this.journalists = journalists;
     }
 
-    public List<Person> getPhotographers() {
+    public Set<Person> getPhotographers() {
         return photographers;
     }
 
-    public void setPhotographers(List<Person> photographers) {
+    public void setPhotographers(Set<Person> photographers) {
         this.photographers = photographers;
     }
 

@@ -36,4 +36,13 @@ public class ArticleSpecifications {
             }
         };
     }
+
+    public static Specification<Article> photoIdIs(final Long id) {
+        return new Specification<Article>() {
+            @Override
+            public Predicate toPredicate(Root<Article> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return cb.equal(root.get("photographers.id"), id);
+            }
+        };
+    }
 }
