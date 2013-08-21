@@ -1,10 +1,7 @@
 package no.dusken.momus.model;
 
-import org.hibernate.annotations.IndexColumn;
-
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Entity
