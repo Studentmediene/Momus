@@ -7,9 +7,8 @@
     <!-- Enable responsive features -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="lib/bootstrap/bootstrap.css" media="screen">
-    <link rel="stylesheet" href="lib/bootstrap/bootstrap-responsive.css">
-    <link rel="stylesheet" href="lib/fontawesome/css/font-awesome.css">
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css" media="screen">
+    <!--<link rel="stylesheet" href="lib/fontawesome/css/font-awesome.css">-->
     <link rel="stylesheet" href="css/app.css"/>
 
 </head>
@@ -167,21 +166,30 @@
 
 <!-- Include jQuery and Twitter Bootstrap -->
 <script src="lib/jquery/jquery-1.9.0.min.js"></script>
-<script src="lib/bootstrap/bootstrap.js"></script>
+<script src="lib/bootstrap/js/bootstrap.js"></script>
 
 <!-- Include angular -->
 <script src="lib/angular/angular.js"></script>
+
+
 <!-- And the code for our app -->
 <script src="js/app.js"></script>
-<script src="js/services.js"></script>
-<script src="js/controllers.js"></script>
-<script src="js/filters.js"></script>
-<script src="js/directives.js"></script>
+
+<!-- Controllers -->
+<script src="js/controllers/adminRole.js"></script>
+<script src="js/controllers/article.js"></script>
+<script src="js/controllers/note.js"></script>
+<!-- Services -->
+<script src="js/services/version.js"></script>
+<script src="js/services/parsingRules.js"></script>
+<!-- Filters -->
+<!-- Directives -->
+<script src="js/directives/version.js"></script>
+<script src="js/directives/richEditor.js"></script>
+
 
 <!-- Include wysihtml5, the text editor -->
 <script src="lib/wysihtml5/wysihtml5-0.4.0pre.min.js"></script>
-<!-- And our parsing rules -->
-<script src="js/parsingrules.js"></script>
 
 </body>
 </html>

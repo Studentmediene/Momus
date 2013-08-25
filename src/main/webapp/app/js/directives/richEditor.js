@@ -1,24 +1,6 @@
 'use strict';
 
-/* Directives */
-
-
-angular.module('momusApp.directives', []).
-    directive('appVersion', ['version', function (version) {
-        return function (scope, elm, attrs) {
-            elm.text(version);
-        };
-    }]).
-    /**
-     * Should be assigned to a <textarea>.
-     * The textarea should specify a model to use, the rules and need to have an id set.
-     * A toolbar id can also be specified.
-     * like <textarea id="myid" richeditor="article.content" richeditor-rules="rules" richeditor-toolbar="someid"></textarea>
-     *
-     * Because it spawns an iFrame the two-way-binding will not work, so to
-     * keep the data in sync it will watch the passed in model for changes
-     * and push changes back as long as it has focus
-     */
+angular.module('momusApp.directives').
     directive('richeditor', function($timeout) {
         return {
             restrict: "A",
@@ -78,4 +60,5 @@ angular.module('momusApp.directives', []).
 
             }
         }
-    });
+    }
+);

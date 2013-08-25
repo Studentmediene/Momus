@@ -1,19 +1,20 @@
 'use strict';
 
+// Define the modules
+angular.module('momusApp.controllers', []);
+angular.module('momusApp.filters', []);
+angular.module('momusApp.services', []);
+angular.module('momusApp.directives', []);
+
 
 // Declare app level module which depends on filters, and services
-angular.module('momusApp', ['momusApp.filters', 'momusApp.services', 'momusApp.directives']).
+angular.module('momusApp', ['momusApp.controllers', 'momusApp.filters', 'momusApp.services', 'momusApp.directives']).
     config(['$routeProvider', function ($routeProvider) {
-        $routeProvider.when('/view1', {templateUrl: 'partials/partial1.html', controller: MyCtrl1});
-        $routeProvider.when('/view2', {templateUrl: 'partials/partial2.html', controller: MyCtrl2});
-
         // Admin interfaces
-        $routeProvider.when('/admin', {templateUrl: 'partials/admin/admin.html', controller: MyCtrl2});
-        $routeProvider.when('/admin/person', {templateUrl: 'partials/admin/person.html', controller: AdminPersonCtrl});
-        $routeProvider.when('/admin/role', {templateUrl: 'partials/admin/role.html', controller: AdminRoleCtrl});
+        $routeProvider.when('/admin/role', {templateUrl: 'partials/admin/role.html', controller: 'AdminRoleCtrl'});
 
         // Article interfaces
-        $routeProvider.when('/article/:id', {templateUrl: 'partials/article/articleView.html', controller: ArticleCtrl});
+        $routeProvider.when('/article/:id', {templateUrl: 'partials/article/articleView.html', controller: 'ArticleCtrl'});
 
 
         $routeProvider.otherwise({redirectTo: '/view1'});
