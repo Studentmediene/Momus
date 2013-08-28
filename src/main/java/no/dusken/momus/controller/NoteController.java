@@ -1,6 +1,7 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.authentication.LoggedInUser;
+import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Note;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.NoteRepository;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 @Controller
@@ -30,9 +33,8 @@ public class NoteController {
         if (note == null) {
             note = new Note();
             note.setOwner(new Person(LoggedInUser.getUserId()));
+            note = noteRepository.saveAndFlush(note);
         }
-
-        note = noteRepository.saveAndFlush(note);
 
         return note;
     }
