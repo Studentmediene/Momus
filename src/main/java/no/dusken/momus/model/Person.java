@@ -11,7 +11,9 @@ public class Person {
     private Long id;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Role> roles;
+    private Set<Group> groups;
+
+    private String userName;
 
     private String firstName;
     private String lastName;
@@ -26,8 +28,8 @@ public class Person {
         this.id = id;
     }
 
-    public Person(Set<Role> roles, String firstName, String lastName, String email, String phone) {
-        this.roles = roles;
+    public Person(Set<Group> groups, String firstName, String lastName, String email, String phone) {
+        this.groups = groups;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -36,6 +38,14 @@ public class Person {
 
     public Long getId() {
         return id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getFirstName() {
@@ -70,11 +80,11 @@ public class Person {
         this.phone = phone;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Set<Group> getGroups() {
+        return groups;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
     }
 }

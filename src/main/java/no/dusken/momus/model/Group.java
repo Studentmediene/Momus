@@ -3,9 +3,12 @@ package no.dusken.momus.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-public class Role {
+// because otherwise it will default to class name ("Group"), which is a reserved mysql word
+@Table(name = "group_table")
+public class Group {
 
     @Id
     @GeneratedValue
@@ -13,11 +16,11 @@ public class Role {
 
     private String name;
 
-    public Role() {
+    public Group() {
 
     }
 
-    public Role(String name) {
+    public Group(String name) {
         this.name = name;
     }
 

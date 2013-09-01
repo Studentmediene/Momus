@@ -16,9 +16,10 @@
 
 package no.dusken.momus.authentication;
 
-public class TokenValidator {
+public class SmmdbToken {
+    private String username;
 
-    public static boolean validateToken(SmmdbToken token) {
-        return true; // TODO connect to Sindre's API
+    public String getUsername() {
+        return username;
     }
 }
