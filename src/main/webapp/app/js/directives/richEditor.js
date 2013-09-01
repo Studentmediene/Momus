@@ -1,24 +1,22 @@
+/*
+ * Copyright 2013 Studentmediene i Trondheim AS
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 'use strict';
 
-/* Directives */
-
-
-angular.module('momusApp.directives', []).
-    directive('appVersion', ['version', function (version) {
-        return function (scope, elm, attrs) {
-            elm.text(version);
-        };
-    }]).
-    /**
-     * Should be assigned to a <textarea>.
-     * The textarea should specify a model to use, the rules and need to have an id set.
-     * A toolbar id can also be specified.
-     * like <textarea id="myid" richeditor="article.content" richeditor-rules="rules" richeditor-toolbar="someid"></textarea>
-     *
-     * Because it spawns an iFrame the two-way-binding will not work, so to
-     * keep the data in sync it will watch the passed in model for changes
-     * and push changes back as long as it has focus
-     */
+angular.module('momusApp.directives').
     directive('richeditor', function($timeout) {
         return {
             restrict: "A",
@@ -78,4 +76,5 @@ angular.module('momusApp.directives', []).
 
             }
         }
-    });
+    }
+);
