@@ -1,12 +1,15 @@
 package no.dusken.momus.authentication;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
 
 public class Token extends AbstractAuthenticationToken {
 
+
     public Token() {
-        super(null);
-        setAuthenticated(false);
+        super(null); // Todo fix
     }
 
     @Override public Object getCredentials() {
