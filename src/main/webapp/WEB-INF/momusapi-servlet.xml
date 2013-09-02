@@ -1,69 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-3.2.xsd
-        http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
-        http://www.springframework.org/schema/data/jpa
-        http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
+    <!--
 
-    <!-- Enable @Controllers with @RequestMapping etc. -->
-    <mvc:annotation-driven>
-        <mvc:message-converters>
-            <!-- Use the Hibernate JSON mapper instead of the default -->
-            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-                <property name="objectMapper">
-                    <bean class="no.dusken.momus.mapper.HibernateAwareObjectMapper" />
-                </property>
-            </bean>
-        </mvc:message-converters>
-    </mvc:annotation-driven>
+    The stuff normally here has been put in applicationContext.xml; since we only have one servlet
+    there's no need to have special rules for this one, the rules can instead be set for the whole app.
 
-    <context:component-scan base-package="no.dusken.momus" />
+    This will also make sure that we don't get twice loading of everything; one for the application and then one
+    for the servlet, since they both need the same stuff (database, services etc.)
 
+    -->
 
-    <!-- Enable @Autowired etc. -->
-    <context:annotation-config />
-
-    <!-- Enable @Transactional -->
-    <tx:annotation-driven />
-
-    <!-- Load the db.properties file, can use the values like ${property.name} -->
-    <context:property-placeholder location="/WEB-INF/db.properties" />
-
-    <!-- Enable JPA -->
-    <jpa:repositories base-package="no.dusken.momus.service.repository" />
-
-    <!-- Connect to DB -->
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="${dataSource.driver}" />
-        <property name="url" value="${dataSource.url}" />
-        <property name="username" value="${dataSource.username}" />
-        <property name="password" value="${dataSource.password}" />
-    </bean>
-
-    <!-- Use the DB inside JPA managers -->
-    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="dataSource" ref="dataSource" />
-        <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-                <property name="database" value="${dataSource.databaseType}" />
-                <property name="generateDdl" value="true" />
-                <property name="showSql" value="${dataSource.showSql}" />
-            </bean>
-        </property>
-        <property name="persistenceUnitName" value="jpaPersistenceUnit" />
-    </bean>
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory" />
-    </bean>
-
-    <!-- Define our exceptionHandler as the resolver for our program -->
-    <bean id="exceptionResolver" class="no.dusken.momus.exceptions.ExceptionHandler" />
 </beans>

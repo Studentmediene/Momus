@@ -26,17 +26,6 @@
         <servlet-name>momusapi</servlet-name>
     </filter-mapping>
 
-    <!-- Security should load config from applicationContext.xml, but *also* use the configs
-         defined in momusapi-servlet.xml since we need stuff from there (database etc.)
-     -->
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>
-            WEB-INF/applicationContext.xml
-            WEB-INF/momusapi-servlet.xml
-        </param-value>
-    </context-param>
-
     <!-- Needed for security, we should define how everything should be wired together in applicationContext.xml -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
