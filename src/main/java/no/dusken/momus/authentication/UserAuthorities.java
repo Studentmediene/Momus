@@ -44,7 +44,7 @@ public class UserAuthorities {
 
         HashSet<GrantedAuthority> grantedAuthorities = new HashSet<>();
         for (Group group : groups) {
-            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + group.getName()));
+            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + group.getName().toUpperCase()));
         }
 
         AuthUserDetails authUserDetails = new AuthUserDetails(user, grantedAuthorities);
