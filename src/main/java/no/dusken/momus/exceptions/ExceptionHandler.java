@@ -16,6 +16,8 @@
 
 package no.dusken.momus.exceptions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
@@ -29,16 +31,16 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class ExceptionHandler implements HandlerExceptionResolver {
 
+    Logger logger = LoggerFactory.getLogger(getClass());
+
     @Override
     public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse response, Object o, Exception e) {
-        logException(httpServletRequest, response, o, e);
 
-        if (e instanceof RestException) { // If it's our exception, we know how to handle it
+        if (e instanceof RestException) { // If it's our exception, we know how to handle it and has set a status
             response.setStatus(((RestException) e).getStatus());
-        } else { // Something else, let Spring handle it by throwing it again
+        } else { // Something else, log it and set status to internal server error
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            System.err.print(e);
-            throw new RuntimeException(e);
+            logException(httpServletRequest, response, o, e);
         }
 
         ModelAndView mav = new ModelAndView(new MappingJackson2JsonView());
@@ -48,6 +50,6 @@ public class ExceptionHandler implements HandlerExceptionResolver {
     }
 
     private void logException(HttpServletRequest httpServletRequest, HttpServletResponse response, Object o, Exception e) {
-        // TODO: Add logging
+        logger.warn("Exceptionhandler caught:", e);
     }
 }

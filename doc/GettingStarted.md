@@ -20,6 +20,9 @@ By grabbing it from Git. Do
 `git clone git@github.com:mediastud/Momus.git`
 where you want it to be.
 
+##Installing dependencies
+After cloning and after every change to the dependencies, you should run
+`mvn install` in the root folder.
 
 ##Running
 See the IntelliJ page on how to do this in the IDE with Hot Swap for easier/faster coding (recommended!).

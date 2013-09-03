@@ -1,0 +1,71 @@
+<!--
+  ~ Copyright 2013 Studentmediene i Trondheim AS
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!-- This file is the configuration for Logback, our logging system. -->
+<configuration>
+
+    <!--Load the values from our properties file -->
+    <property file="src/main/webapp/WEB-INF/momus.properties" />
+
+    <!-- Logger that logs to console -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--
+            %-7 means that what's inside the () will always be at least 7 characters, so if it's shorter it adds spaces to the right
+            %date is just normal java date
+            %thread is which thread this happened in
+            %logger{36} is the name of the logger. For instance no.dusken.momus.model.Person. If it's longer than 36 characters it will be shortened to for instance n.d.m.model.Person
+            %msg the message
+            -->
+            <pattern>%-7([%level]) %date{HH:mm:ss} %thread %logger{36}: %msg %n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Log to a rolling file, e.g. it creates a file for each day -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Use the location specified in properties, and name it by the date -->
+            <fileNamePattern>${log.location}momus.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- Only keep last 30 days -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%-7([%level]) %date{HH:mm:ss} %thread %logger{36}: %msg %n</pattern>
+        </encoder>
+    </appender>
+
+
+    <!-- Hide the info/debug from these frameworks even if the log level is lower as it's a lot of spam!-->
+    <logger name="org.springframework" level="WARN" />
+    <logger name="org.hibernate" level="WARN" />
+
+    <if condition="${devmode}">
+        <then>
+            <root level="DEBUG">
+                <appender-ref ref="STDOUT" />
+                <appender-ref ref="FILE" />
+            </root>
+        </then>
+        <else>
+            <root level="INFO">
+                <!-- File only when not in dev -->
+                <appender-ref ref="FILE" />
+            </root>
+        </else>
+    </if>
+
+</configuration>

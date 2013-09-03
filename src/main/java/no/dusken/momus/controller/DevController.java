@@ -20,10 +20,13 @@ import no.dusken.momus.authentication.AuthUserDetails;
 import no.dusken.momus.authentication.Token;
 import no.dusken.momus.authentication.UserAuthorities;
 import no.dusken.momus.authentication.UserLoginService;
+import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Group;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.GroupRepository;
 import no.dusken.momus.service.repository.PersonRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -46,6 +49,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/dev")
 public class DevController {
+
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Id for who to auto login as, set in properties file
@@ -105,5 +110,14 @@ public class DevController {
     @PreAuthorize("hasRole('ROLE_PHOTOGRAPHER')")
     public @ResponseBody String photoTest() {
         return "photo ok!!";
+    }
+
+    @RequestMapping("/logTest")
+    public @ResponseBody void logTest() {
+        logger.info("Yo, jeg logger info!");
+
+        logger.warn("advarsel, waaaarn!");
+
+        throw new RuntimeException("oooomgmmggm");
     }
 }
