@@ -40,7 +40,7 @@ public class AuthController {
     }
 
     @RequestMapping("/logout")
-    public void logout() {
+    public @ResponseBody void logout() {
         userLoginService.logout();
     }
 

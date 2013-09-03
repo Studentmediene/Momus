@@ -17,9 +17,9 @@ public class ExceptionHandler implements HandlerExceptionResolver {
     public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse response, Object o, Exception e) {
         logException(httpServletRequest, response, o, e);
 
-        if (e instanceof RestException) {
+        if (e instanceof RestException) { // If it's our exception, we know how to handle it
             response.setStatus(((RestException) e).getStatus());
-        } else {
+        } else { // Something else, let Spring handle it by throwing it again
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             System.err.print(e);
             throw new RuntimeException(e);

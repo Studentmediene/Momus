@@ -26,6 +26,7 @@ import no.dusken.momus.service.repository.GroupRepository;
 import no.dusken.momus.service.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -92,5 +93,17 @@ public class DevController {
 
         Person photographer = new Person(new HashSet<Group>(Arrays.asList(new Group[]{userGroup, photoGroup})), "Sven", "Fotosvensson", "sven@foto.com", "111111");
         personRepository.saveAndFlush(photographer);
+    }
+
+    @RequestMapping("/admin")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public @ResponseBody String adminTest() {
+        return "admin ok!!";
+    }
+
+    @RequestMapping("/photographer")
+    @PreAuthorize("hasRole('ROLE_PHOTOGRAPHER')")
+    public @ResponseBody String photoTest() {
+        return "photo ok!!";
     }
 }
