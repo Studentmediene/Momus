@@ -19,15 +19,31 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
 
+    <!-- Create an servlet, config in momusapi-servlet.xml -->
     <servlet>
         <servlet-name>momusapi</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <!-- Which urls to be handled by the servlet -->
     <servlet-mapping>
         <servlet-name>momusapi</servlet-name>
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 
+    <!-- Add security to the servlet -->
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <servlet-name>momusapi</servlet-name>
+    </filter-mapping>
+
+    <!-- Needed for security, we should define how everything should be wired together in applicationContext.xml -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
 </web-app>

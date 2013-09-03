@@ -16,8 +16,8 @@
 
 package no.dusken.momus.controller;
 
-import no.dusken.momus.model.Role;
-import no.dusken.momus.service.repository.RoleRepository;
+import no.dusken.momus.model.Group;
+import no.dusken.momus.service.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -29,30 +29,30 @@ import java.util.List;
 public class RoleController {
 
     @Autowired
-    private RoleRepository roleRepository;
+    private GroupRepository groupRepository;
 
     @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody List<Role> getAllRoles() {
-        return roleRepository.findAll();
+    public @ResponseBody List<Group> getAllRoles() {
+        return groupRepository.findAll();
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody Role createNewRole(@RequestBody Role newRole) {
-        return roleRepository.saveAndFlush(newRole);
+    public @ResponseBody Group createNewRole(@RequestBody Group newGroup) {
+        return groupRepository.saveAndFlush(newGroup);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public @ResponseBody void deleteRole(@PathVariable Long id) {
-        roleRepository.delete(id);
+        groupRepository.delete(id);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public @ResponseBody Role updateRole(@PathVariable Long id, @RequestBody Role updatedRole) {
-        Role savedRole = roleRepository.findOne(id);
-        savedRole.setName(updatedRole.getName());
-        savedRole = roleRepository.saveAndFlush(savedRole);
+    public @ResponseBody Group updateRole(@PathVariable Long id, @RequestBody Group updatedGroup) {
+        Group savedGroup = groupRepository.findOne(id);
+        savedGroup.setName(updatedGroup.getName());
+        savedGroup = groupRepository.saveAndFlush(savedGroup);
 
-        return savedRole;
+        return savedGroup;
     }
 
 }

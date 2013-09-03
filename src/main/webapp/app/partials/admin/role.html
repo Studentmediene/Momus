@@ -23,6 +23,6 @@
             <button ng-click="createNew(newName)" class="btn">Lag ny</button>
         </div>
 
-        <div class="input-append" ng-repeat="role in roles">
+        <div class="input-append" ng-repeat="role in groups">
             <input class="span3" type="text" ng-model="role.name"> <button class="btn" ng-click="saveNewName(role)">Lagre</button><button class="btn" ng-click="delete(role)">Slett</button>
         </div>

@@ -16,9 +16,10 @@
 
 package no.dusken.momus.authentication;
 
-public class LoggedInUser {
+public class SmmdbToken {
+    private String username;
 
-    public static Long getUserId() {
-        return 1L;
+    public String getUsername() {
+        return username;
     }
 }
