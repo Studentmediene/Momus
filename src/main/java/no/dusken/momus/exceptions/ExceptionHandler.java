@@ -18,6 +18,7 @@ package no.dusken.momus.exceptions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
@@ -38,6 +39,8 @@ public class ExceptionHandler implements HandlerExceptionResolver {
 
         if (e instanceof RestException) { // If it's our exception, we know how to handle it and has set a status
             response.setStatus(((RestException) e).getStatus());
+        } else if(e instanceof AccessDeniedException) { // let Spring handle it by throwing it again
+            throw (AccessDeniedException) e;
         } else { // Something else, log it and set status to internal server error
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logException(httpServletRequest, response, o, e);
