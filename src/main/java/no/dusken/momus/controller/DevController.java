@@ -34,6 +34,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -52,12 +53,6 @@ public class DevController {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
-    /**
-     * Id for who to auto login as, set in properties file
-     */
-    @Value(value = "${dev.logInAs}")
-    Long logInAs;
-
     @Autowired
     UserAuthorities userAuthorities;
 
@@ -70,9 +65,9 @@ public class DevController {
     /**
      * Logs in without token or anything
      */
-    @RequestMapping("/login")
-    public @ResponseBody void login() {
-        AuthUserDetails user = userAuthorities.getAuthoritiesForUser(logInAs);
+    @RequestMapping("/login/{id}")
+    public @ResponseBody void login(@PathVariable("id") Long id) {
+        AuthUserDetails user = userAuthorities.getAuthoritiesForUser(id);
         Token token = new Token(null, user);
         SecurityContextHolder.getContext().setAuthentication(token);
     }

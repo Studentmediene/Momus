@@ -148,55 +148,6 @@
     </dependencies>
 
 
-    <!-- Tell Maven to grab the dependencies from our Nexus mirror -->
-    <repositories>
-        <repository>
-            <id>public</id>
-            <name>public</name>
-            <url>http://nexus.underdusken.no/content/groups/public/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-        <repository>
-            <id>public-snapshots</id>
-            <name>public-snapshot</name>
-            <url>http://nexus.underdusken.no/content/groups/public-snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>public</id>
-            <url>http://nexus.underdusken.no/content/groups/public/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </pluginRepository>
-        <pluginRepository>
-            <id>public-snapshots</id>
-            <url>http://nexus.underdusken.no/content/groups/public-snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
-
 
     <build>
         <plugins>
