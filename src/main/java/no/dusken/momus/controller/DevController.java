@@ -19,25 +19,23 @@ package no.dusken.momus.controller;
 import no.dusken.momus.authentication.AuthUserDetails;
 import no.dusken.momus.authentication.Token;
 import no.dusken.momus.authentication.UserAuthorities;
-import no.dusken.momus.authentication.UserLoginService;
 import no.dusken.momus.model.Group;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.GroupRepository;
 import no.dusken.momus.service.repository.PersonRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 
 /**
  * Dev only, not accessible when live
@@ -47,11 +45,7 @@ import java.util.List;
 @RequestMapping("/dev")
 public class DevController {
 
-    /**
-     * Id for who to auto login as, set in properties file
-     */
-    @Value(value = "${dev.logInAs}")
-    Long logInAs;
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     UserAuthorities userAuthorities;
@@ -65,9 +59,9 @@ public class DevController {
     /**
      * Logs in without token or anything
      */
-    @RequestMapping("/login")
-    public @ResponseBody void login() {
-        AuthUserDetails user = userAuthorities.getAuthoritiesForUser(logInAs);
+    @RequestMapping("/login/{id}")
+    public @ResponseBody void login(@PathVariable("id") Long id) {
+        AuthUserDetails user = userAuthorities.getAuthoritiesForUser(id);
         Token token = new Token(null, user);
         SecurityContextHolder.getContext().setAuthentication(token);
     }
@@ -105,5 +99,25 @@ public class DevController {
     @PreAuthorize("hasRole('ROLE_PHOTOGRAPHER')")
     public @ResponseBody String photoTest() {
         return "photo ok!!";
+    }
+
+    @RequestMapping("/logTest")
+    public @ResponseBody void logTest() {
+        logger.info("Yo, jeg logger info!");
+
+        logger.warn("advarsel, waaaarn!");
+
+        throw new RuntimeException("oooomgmmggm");
+    }
+
+    @RequestMapping("/json")
+    public @ResponseBody void json() throws IOException {
+        String json = "{\n" +
+                "\"username\": \"sinjoh\",\n" +
+                "\"timestamp\": \"2013-09-01T17:26:11.246911\",\n" +
+                "\"userid\": 491,\n" +
+                "\"sign\": \"0b2d91b44975e9072210edaa2f8ce1235675daff\"\n" +
+                "}";
+
     }
 }

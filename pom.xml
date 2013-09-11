@@ -40,13 +40,6 @@
     <!-- Add the dependencies to be downloaded here -->
 
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.9</version>
-            <scope>test</scope>
-        </dependency>
-
         <!-- Spring Framework -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -91,6 +84,26 @@
             <version>${spring.security.version}</version>
         </dependency>
 
+        <!-- Testing (not used atm) -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.9</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Logging -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.9</version>
+        </dependency>
+
+        <dependency><!-- Needed for if-else in Logback's xml file -->
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>janino</artifactId>
+            <version>2.6.1</version>
+        </dependency>
 
         <!-- JSON mapper -->
         <dependency><!-- This is Jackson JSON mapper with some modifications to work with Hibernate -->
@@ -134,55 +147,6 @@
         </dependency>
     </dependencies>
 
-
-    <!-- Tell Maven to grab the dependencies from our Nexus mirror -->
-    <repositories>
-        <repository>
-            <id>public</id>
-            <name>public</name>
-            <url>http://nexus.underdusken.no/content/groups/public/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-        <repository>
-            <id>public-snapshots</id>
-            <name>public-snapshot</name>
-            <url>http://nexus.underdusken.no/content/groups/public-snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>public</id>
-            <url>http://nexus.underdusken.no/content/groups/public/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </pluginRepository>
-        <pluginRepository>
-            <id>public-snapshots</id>
-            <url>http://nexus.underdusken.no/content/groups/public-snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
 
 
     <build>

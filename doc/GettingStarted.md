@@ -2,24 +2,26 @@
 Tools used and how to get everything running and tested.
 
 ##Dependencies:
-All this must be installed
+This must be installed
 
-* [NodeJS](http://nodejs.org/), needs to be runnable from the command line
-    * Check this by running `node --version`
-* Install Testacular (through NodeJS)
-    * `npm install -g testacular`
 * [Maven 3](http://maven.apache.org/), should also be runnable from command line
     * Check by entering `mvn --version` in the command line
     * Maven handles all the Java dependencies (Spring Framework, JUnit etc.)
 * [Git](http://git-scm.com/)
     * Must be configured with GitHub
-    * The workflow will be like [this](http://nvie.com/posts/a-successful-git-branching-model/)
+* [NodeJS](http://nodejs.org/), needs to be runnable from the command line
+    * Check this by running `node --version`
+* Install Testacular (through NodeJS)
+    * `npm install -g testacular`
 
 ##Get the code
 By grabbing it from Git. Do
 `git clone git@github.com:mediastud/Momus.git`
 where you want it to be.
 
+##Installing dependencies
+After cloning and after every change to the dependencies, you should run
+`mvn install` in the root folder.
 
 ##Running
 See the IntelliJ page on how to do this in the IDE with Hot Swap for easier/faster coding (recommended!).
@@ -28,8 +30,14 @@ Otherwise, go to the root folder of the project (the one with pom.xml) and run
 `mvn jetty:run`
 
 For both:
-Go to http://localhost:8080/ to see it in action.
+Go to http://localhost:8080/ to see the web-page in action.
 
+##Developing
+See  [Architecture](Architecture.md), which contains some info.
+
+##Pushing code
+The git workflow will be like [this](http://nvie.com/posts/a-successful-git-branching-model/). In short:
+We always work in the branch `develop`. New features should branch of from develop. When a feature is done, create a pull request on GitHub to the develop branch, and the code will be reviewed.
 
 ##Running tests
 ###Unit Tests

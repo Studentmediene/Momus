@@ -30,12 +30,18 @@ public class Token extends AbstractAuthenticationToken {
     private SmmdbToken smmdbToken;
     private UserDetails principal;
 
+    /**
+     * Standard, non-authenticated token
+     */
     public Token(SmmdbToken smmdbToken) {
         super(null);
         this.smmdbToken = smmdbToken;
         setAuthenticated(false);
     }
 
+    /**
+     * When the user has been verified
+     */
     public Token(SmmdbToken smmdbToken, AuthUserDetails principal) {
         super(principal.getAuthorities());
         this.smmdbToken = smmdbToken;

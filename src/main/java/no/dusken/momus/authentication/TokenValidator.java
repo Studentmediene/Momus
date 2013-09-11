@@ -16,9 +16,72 @@
 
 package no.dusken.momus.authentication;
 
+import no.dusken.momus.exceptions.RestException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Scanner;
+
+@Service
 public class TokenValidator {
 
-    public static boolean validateToken(SmmdbToken token) {
-        return true; // TODO connect to Sindre's API
+    Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Value("${smmdb.url}")
+    String url;
+
+    public boolean validateToken(SmmdbToken token) {
+        logger.info("Trying to validate token for {}", token.getUsername());
+        String content;
+        try {
+            HttpURLConnection connection = createConnection();
+            content = getContentFromConnection(connection);
+        } catch (IOException e) {
+            logger.warn("Something went wrong connecting to Smmdb: {}", e);
+            throw new RestException("Couldn't connect to Smmdb", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+
+        if (isValid(content)) {
+            logger.info("User token was valid for user {}", token.getUsername());
+            return true;
+        } else {
+            logger.warn("Invalid token for user {}", token.getUsername());
+            return false;
+        }
     }
+
+    private HttpURLConnection createConnection() throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.setRequestProperty("User-Agent", "Momus/1.0 (Mats)");
+        connection.connect();
+
+        return connection;
+    }
+
+    private String getContentFromConnection(HttpURLConnection connection) throws IOException {
+        InputStream inputStream = connection.getInputStream();
+        Scanner s = new Scanner(inputStream);
+        // Hack to read whole stream at once
+        s.useDelimiter("\\A");
+        // May be empty
+        return s.hasNext() ? s.next() : "";
+    }
+
+    private boolean isValid(String content) {
+        if (content == null) {
+            return false;
+        }
+
+        //TODO: Something
+        return true;
+    }
+
+
 }

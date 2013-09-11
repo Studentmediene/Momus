@@ -5,7 +5,6 @@ Stuff to make it as easy as possible working with this project in IntelliJ.
 These should be installed in IntelliJ
 
 * AngularJS - Support for AngularJS, gives code completion etc.
-* Markdown - View these files better
 * NodeJS - To run the tests through IntelliJ
 
 Other than that, make sure Maven, Spring, Javascript etc. plugins are enabled.

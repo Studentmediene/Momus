@@ -33,10 +33,8 @@ public class AuthController {
     UserLoginService userLoginService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public @ResponseBody String login(@RequestBody String token) {
-        userLoginService.login(new SmmdbToken());
-
-        return "tried";
+    public @ResponseBody void login(@RequestBody String token) {
+        userLoginService.login(new SmmdbToken(token));
     }
 
     @RequestMapping("/logout")

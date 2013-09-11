@@ -37,9 +37,6 @@ public class UserLoginService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    private AuthUserDetails authUserDetails;
-    private Person user;
-
     /**
      * @return Id of the currently logged in user
      */
@@ -80,20 +77,15 @@ public class UserLoginService {
      * A proper Person object, should only be called when needed, as it retrieves it from the database.
      */
     public Person getLoggedInUser() {
-        if (user == null) {
-            user = personRepository.findOne(getId());
-        }
-        return user;
+        return personRepository.findOne(getId());
     }
 
     public AuthUserDetails getLoggedInUserDetails() {
-        if (authUserDetails == null) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (isAuthenticated(authentication)) {
-                authUserDetails = (AuthUserDetails) authentication.getPrincipal();
-            }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (isAuthenticated(authentication)) {
+            return (AuthUserDetails) authentication.getPrincipal();
         }
-        return authUserDetails;
+        return null;
     }
 
     private boolean isAuthenticated(Authentication authentication) {
