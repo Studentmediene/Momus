@@ -16,10 +16,52 @@
 
 package no.dusken.momus.authentication;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import no.dusken.momus.exceptions.RestException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
+
 public class SmmdbToken {
+
+    Logger logger = LoggerFactory.getLogger(getClass());
+
     private String username;
+    private Long id;
+    private String jsonText;
+
+    public SmmdbToken() {
+
+    }
+
+    public SmmdbToken(String jsonText) {
+        this.jsonText = jsonText;
+        readJson();
+    }
 
     public String getUsername() {
         return username;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    private void readJson() {
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> values = null;
+        try {
+            values = mapper.readValue(new JsonFactory().createParser(jsonText), Map.class);
+        } catch (IOException e) {
+            logger.warn("Invalid JSON data: {}", jsonText);
+            throw new RestException("Invalid JSON for token", HttpServletResponse.SC_BAD_REQUEST);
+        }
+
+        username = (String) values.get("username");
+        id = Long.valueOf((Integer) values.get("userid"));
     }
 }

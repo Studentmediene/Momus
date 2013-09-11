@@ -32,16 +32,16 @@ public class TokenAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private UserAuthorities userAuthorities;
 
+    @Autowired
+    private TokenValidator tokenValidator;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Token token = (Token) authentication;
-        if (TokenValidator.validateToken(token.getSmmdbToken())) {
-            AuthUserDetails authUserDetails = userAuthorities.getAuthoritiesForUser(1L);
-
+        if (tokenValidator.validateToken(token.getSmmdbToken())) {
+            AuthUserDetails authUserDetails = userAuthorities.getAuthoritiesForUser(token.getSmmdbToken().getId());
+            // Return an updated token with the right user details
             return new Token(token.getSmmdbToken(), authUserDetails);
-            // Get the authourities and the AuthUserDetails
-
-            // Return authorities from AuthUserDetails
         }
         return null;
     }

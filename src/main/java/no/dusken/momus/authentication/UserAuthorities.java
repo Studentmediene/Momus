@@ -16,15 +16,19 @@
 
 package no.dusken.momus.authentication;
 
+import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Group;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.PersonRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,9 +41,17 @@ public class UserAuthorities {
     @Autowired
     private PersonRepository personRepository;
 
+    Logger logger = LoggerFactory.getLogger(getClass());
+
     @Transactional
     public AuthUserDetails getAuthoritiesForUser(Long id) {
         Person user = personRepository.findOne(id);
+
+        if (user == null) {
+            logger.warn("Couldn't fetch authorities for user {}, got null", id);
+            throw new RestException("User not found", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+
         Set<Group> groups = user.getGroups();
 
         HashSet<GrantedAuthority> grantedAuthorities = new HashSet<>();
