@@ -20,6 +20,15 @@ The backend is completely rewritten, using a newer version of Spring and the pow
  * Wysihtml5
  * Bootstrap
 
+###IDE
+JetBRAINS are providing the developers working on this project with licenses to IntelliJ IDEA.
+[![IntelliJ IDEA](doc/img/idea.png)](http://www.jetbrains.com/idea/)
+
+ OBS!
+ ----
+Check the develop branch to see latest updates. Changes are only merged to master when a new version is ready.
+
+
 [Documentation](doc/)
 ---------------------
 
@@ -30,7 +39,6 @@ Issue tracker
 -------------
 
 Currently here on GitHub. When our new server arrives we will have a better issue tracker up and running.
-
 
 
 License
