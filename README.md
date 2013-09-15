@@ -22,10 +22,10 @@ The backend is completely rewritten, using a newer version of Spring and the pow
 
 ###IDE
 JetBRAINS are providing the developers working on this project with licenses to [IntelliJ IDEA](http://www.jetbrains.com/idea/).
-![IntelliJ IDEA](doc/img/idea.jpg)
+[![IntelliJ IDEA](doc/img/idea.jpg)](http://www.jetbrains.com/idea/)
 
- OBS!
- ----
+OBS!
+----
 Check the develop branch to see latest updates. Changes are only merged to master when a new version is ready.
 
 
