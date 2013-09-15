@@ -17,6 +17,7 @@
 package no.dusken.momus.authentication;
 
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.dusken.momus.exceptions.RestException;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class SmmdbToken {
@@ -33,10 +35,6 @@ public class SmmdbToken {
     private String username;
     private Long id;
     private String jsonText;
-
-    public SmmdbToken() {
-
-    }
 
     public SmmdbToken(String jsonText) {
         this.jsonText = jsonText;
@@ -51,11 +49,16 @@ public class SmmdbToken {
         return id;
     }
 
+    public String getJsonText() {
+        return jsonText;
+    }
+
     private void readJson() {
         ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> values = null;
+
+        Map<String, Object> values;
         try {
-            values = mapper.readValue(new JsonFactory().createParser(jsonText), Map.class);
+            values = mapper.readValue(new JsonFactory().createParser(jsonText), new TypeReference<HashMap<String, Object>>(){});
         } catch (IOException e) {
             logger.warn("Invalid JSON data: {}", jsonText);
             throw new RestException("Invalid JSON for token", HttpServletResponse.SC_BAD_REQUEST);

@@ -17,7 +17,6 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.model.Article;
-import no.dusken.momus.model.ArticleType;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/article")

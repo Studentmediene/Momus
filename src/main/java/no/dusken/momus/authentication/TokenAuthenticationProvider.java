@@ -18,6 +18,7 @@ package no.dusken.momus.authentication;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class TokenAuthenticationProvider implements AuthenticationProvider {
             // Return an updated token with the right user details
             return new Token(token.getSmmdbToken(), authUserDetails);
         }
-        return null;
+        throw new BadCredentialsException("Invalid token");
     }
 
     @Override

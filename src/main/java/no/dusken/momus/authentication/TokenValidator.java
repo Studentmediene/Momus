@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Scanner;
 
 @Service
@@ -37,16 +38,20 @@ public class TokenValidator {
     @Value("${smmdb.url}")
     String url;
 
+    @Value("${smmdb.key}")
+    String apiKey;
+
     public boolean validateToken(SmmdbToken token) {
         logger.info("Trying to validate token for {}", token.getUsername());
         String content;
         try {
-            HttpURLConnection connection = createConnection();
+            HttpURLConnection connection = createConnection(token);
             content = getContentFromConnection(connection);
         } catch (IOException e) {
             logger.warn("Something went wrong connecting to Smmdb: {}", e);
             throw new RestException("Couldn't connect to Smmdb", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+        logger.debug("Content is: {}", content);
 
         if (isValid(content)) {
             logger.info("User token was valid for user {}", token.getUsername());
@@ -57,8 +62,11 @@ public class TokenValidator {
         }
     }
 
-    private HttpURLConnection createConnection() throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+    private HttpURLConnection createConnection(SmmdbToken token) throws IOException {
+        String fullUrl = url + "?ticket=" + URLEncoder.encode(token.getJsonText(), "UTF-8") + "&key=" + apiKey;
+        logger.debug("Trying to access: {}", fullUrl);
+
+        HttpURLConnection connection = (HttpURLConnection) new URL(fullUrl).openConnection();
         connection.setRequestProperty("User-Agent", "Momus/1.0 (Mats)");
         connection.connect();
 
@@ -66,6 +74,9 @@ public class TokenValidator {
     }
 
     private String getContentFromConnection(HttpURLConnection connection) throws IOException {
+        if (connection.getResponseCode() != HttpServletResponse.SC_OK) {
+            return null;
+        }
         InputStream inputStream = connection.getInputStream();
         Scanner s = new Scanner(inputStream);
         // Hack to read whole stream at once
@@ -75,12 +86,7 @@ public class TokenValidator {
     }
 
     private boolean isValid(String content) {
-        if (content == null) {
-            return false;
-        }
-
-        //TODO: Something
-        return true;
+        return content != null && content.equals("{\"verified\": true}");
     }
 
 

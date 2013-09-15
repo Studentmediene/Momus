@@ -16,8 +16,8 @@
 
 package no.dusken.momus.controller;
 
-import no.dusken.momus.model.Person;
 import no.dusken.momus.model.Group;
+import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.GroupRepository;
 import no.dusken.momus.service.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
