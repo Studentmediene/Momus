@@ -26,16 +26,16 @@ public class Person {
     @GeneratedValue
     private Long id;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Group> groups;
 
-    private String userName;
+    private String username;
 
     private String firstName;
     private String lastName;
 
     private String email;
-    private String phone;
+    private String phoneNumber;
 
     public Person() {
     }
@@ -44,24 +44,24 @@ public class Person {
         this.id = id;
     }
 
-    public Person(Set<Group> groups, String firstName, String lastName, String email, String phone) {
+    public Person(Set<Group> groups, String firstName, String lastName, String email, String phoneNumber) {
         this.groups = groups;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.phone = phone;
+        this.phoneNumber = phoneNumber;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String userName) {
+        this.username = userName;
     }
 
     public String getFirstName() {
@@ -88,12 +88,12 @@ public class Person {
         this.email = email;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPhoneNumber(String phone) {
+        this.phoneNumber = phone;
     }
 
     public Set<Group> getGroups() {

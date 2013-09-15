@@ -59,7 +59,7 @@ public class PersonController {
         person.setEmail("mats@matsemann.com");
         person.setFirstName("Mats");
         person.setLastName("Svensson");
-        person.setPhone("47 38 53 24");
+        person.setPhoneNumber("47 38 53 24");
 
 //        person.setEmail("test@testesen");
 //        person.setFirstName("Test");

@@ -16,6 +16,11 @@
 
 package no.dusken.momus.controller;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import no.dusken.momus.authentication.AuthUserDetails;
 import no.dusken.momus.authentication.Token;
 import no.dusken.momus.authentication.UserAuthorities;
@@ -112,12 +117,18 @@ public class DevController {
 
     @RequestMapping("/json")
     public @ResponseBody void json() throws IOException {
-        String json = "{\n" +
-                "\"username\": \"sinjoh\",\n" +
-                "\"timestamp\": \"2013-09-01T17:26:11.246911\",\n" +
-                "\"userid\": 491,\n" +
-                "\"sign\": \"0b2d91b44975e9072210edaa2f8ce1235675daff\"\n" +
-                "}";
+        String json = "{\"username\": \"mats\", \"phone_number\": null, \"last_name\": \"Svensson\", \"last_updated\": \"2013-09-15T12:51:38.139717\", \"about\": null, \"groups\": [{\"id\": 2, \"name\": \"admin\"}], \"active\": true, \"id\": 594, \"private_email\": null, \"first_name\": \"Mats\", \"created\": \"2013-09-15T12:51:38.139661\", \"birthdate\": null, \"email\": null}";
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
+        Person person = mapper.readValue(new JsonFactory().createParser(json), Person.class);
+
+        ObjectReader reader = mapper.reader(Person.class);
+
+
+        logger.debug(person.getUsername());
+        logger.debug(person.getFirstName());
+        logger.debug(person.getEmail());
     }
 }
