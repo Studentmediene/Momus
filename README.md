@@ -22,7 +22,7 @@ The backend is completely rewritten, using a newer version of Spring and the pow
 
 ###IDE
 JetBRAINS are providing the developers working on this project with licenses to IntelliJ IDEA.
-[![IntelliJ IDEA](doc/img/idea.png)](http://www.jetbrains.com/idea/)
+![http://www.jetbrains.com/idea/](doc/img/idea.png)
 
  OBS!
  ----
