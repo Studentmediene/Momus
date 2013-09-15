@@ -13,12 +13,12 @@ The backend is completely rewritten, using a newer version of Spring and the pow
 
 ### Technologies:
  * Java
- * Spring
- * Hibernate
- * Jackson
- * AngularJS
- * Wysihtml5
- * Bootstrap
+ * [Spring](http://spring.io/)
+ * [Hibernate](http://www.hibernate.org/)
+ * [Jackson](http://wiki.fasterxml.com/JacksonHome)
+ * [AngularJS](http://angularjs.org/)
+ * [Wysihtml5](https://github.com/xing/wysihtml5)
+ * [Bootstrap 3](http://getbootstrap.com/)
 
 ###IDE
 JetBRAINS are providing the developers working on this project with licenses to [IntelliJ IDEA](http://www.jetbrains.com/idea/).
