@@ -21,8 +21,8 @@ The backend is completely rewritten, using a newer version of Spring and the pow
  * Bootstrap
 
 ###IDE
-JetBRAINS are providing the developers working on this project with licenses to IntelliJ IDEA.
-![http://www.jetbrains.com/idea/](doc/img/idea.jpg)
+JetBRAINS are providing the developers working on this project with licenses to [http://www.jetbrains.com/idea/](IntelliJ IDEA).
+![IntelliJ IDEA](doc/img/idea.jpg)
 
  OBS!
  ----
