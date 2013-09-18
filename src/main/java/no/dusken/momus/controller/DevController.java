@@ -28,6 +28,7 @@ import no.dusken.momus.model.Group;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.GroupRepository;
 import no.dusken.momus.service.repository.PersonRepository;
+import no.dusken.momus.smmdb.SmmdbConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,9 @@ public class DevController {
 
     @Autowired
     GroupRepository groupRepository;
+
+    @Autowired
+    SmmdbConnector smmdbConnector;
 
     /**
      * Logs in without token or anything
@@ -113,6 +117,11 @@ public class DevController {
         logger.warn("advarsel, waaaarn!");
 
         throw new RuntimeException("oooomgmmggm");
+    }
+
+    @RequestMapping("smmdbUser")
+    public @ResponseBody String smmdbUser() {
+        return smmdbConnector.getAllUsers();
     }
 
     @RequestMapping("/json")
