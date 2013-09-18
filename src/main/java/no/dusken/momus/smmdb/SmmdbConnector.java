@@ -56,6 +56,12 @@ public class SmmdbConnector {
         return getData(service, null);
     }
 
+    public String getAllGroups() {
+        String service = "group";
+
+        return getData(service, null);
+    }
+
     private String getData(String service, String params) {
         String fullUrl = smmdbUrl + "/" + service + "?key=" + apiKey;
         if (params != null) {
