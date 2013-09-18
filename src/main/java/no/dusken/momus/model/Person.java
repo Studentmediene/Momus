@@ -23,7 +23,6 @@ import java.util.Set;
 public class Person {
 
     @Id
-    @GeneratedValue
     private Long id;
 
     @ManyToMany(fetch = FetchType.EAGER)

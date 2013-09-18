@@ -27,7 +27,6 @@ import javax.persistence.Table;
 public class Group {
 
     @Id
-    @GeneratedValue
     private Long id;
 
     private String name;
