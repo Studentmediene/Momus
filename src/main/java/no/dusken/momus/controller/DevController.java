@@ -83,13 +83,13 @@ public class DevController {
     @RequestMapping("/create")
     public @ResponseBody void createData() {
         System.out.println("Create users");
-        Group userGroup = new Group("User");
+        Group userGroup = new Group(1L, "User");
         groupRepository.saveAndFlush(userGroup);
 
-        Group adminGroup = new Group("Admin");
+        Group adminGroup = new Group(2L, "Admin");
         groupRepository.saveAndFlush(adminGroup);
 
-        Group photoGroup = new Group("Photographer");
+        Group photoGroup = new Group(3L, "Photographer");
         groupRepository.saveAndFlush(photoGroup);
 
         Person admin = new Person(new HashSet<Group>(Arrays.asList(new Group[]{userGroup, adminGroup})), "Mats", "Svensson", "mats@matsemann.com", "47385324");
