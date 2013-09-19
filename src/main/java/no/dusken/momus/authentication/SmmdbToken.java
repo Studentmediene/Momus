@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,12 +58,12 @@ public class SmmdbToken {
         Map<String, Object> values;
         try {
             values = mapper.readValue(new JsonFactory().createParser(jsonText), new TypeReference<HashMap<String, Object>>(){});
-        } catch (IOException e) {
+            username = values.get("username").toString();
+            id = Long.valueOf((Integer) values.get("userid"));
+        } catch (Exception e) {
             logger.warn("Invalid JSON data: {}", jsonText);
             throw new RestException("Invalid JSON for token", HttpServletResponse.SC_BAD_REQUEST);
         }
 
-        username = (String) values.get("username");
-        id = Long.valueOf((Integer) values.get("userid"));
     }
 }

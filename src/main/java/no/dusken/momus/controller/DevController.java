@@ -16,6 +16,11 @@
 
 package no.dusken.momus.controller;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import no.dusken.momus.authentication.AuthUserDetails;
 import no.dusken.momus.authentication.Token;
 import no.dusken.momus.authentication.UserAuthorities;
@@ -23,6 +28,8 @@ import no.dusken.momus.model.Group;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.GroupRepository;
 import no.dusken.momus.service.repository.PersonRepository;
+import no.dusken.momus.smmdb.SmmdbConnector;
+import no.dusken.momus.smmdb.Syncer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +63,9 @@ public class DevController {
     @Autowired
     GroupRepository groupRepository;
 
+    @Autowired
+    Syncer syncer;
+
     /**
      * Logs in without token or anything
      */
@@ -73,13 +83,13 @@ public class DevController {
     @RequestMapping("/create")
     public @ResponseBody void createData() {
         System.out.println("Create users");
-        Group userGroup = new Group("User");
+        Group userGroup = new Group(1L, "User");
         groupRepository.saveAndFlush(userGroup);
 
-        Group adminGroup = new Group("Admin");
+        Group adminGroup = new Group(2L, "Admin");
         groupRepository.saveAndFlush(adminGroup);
 
-        Group photoGroup = new Group("Photographer");
+        Group photoGroup = new Group(3L, "Photographer");
         groupRepository.saveAndFlush(photoGroup);
 
         Person admin = new Person(new HashSet<Group>(Arrays.asList(new Group[]{userGroup, adminGroup})), "Mats", "Svensson", "mats@matsemann.com", "47385324");
@@ -101,6 +111,12 @@ public class DevController {
         return "photo ok!!";
     }
 
+    @RequestMapping("/test")
+    public @ResponseBody String test() {
+        syncer.sync();
+        return "wey";
+    }
+
     @RequestMapping("/logTest")
     public @ResponseBody void logTest() {
         logger.info("Yo, jeg logger info!");
@@ -110,14 +126,26 @@ public class DevController {
         throw new RuntimeException("oooomgmmggm");
     }
 
+    @RequestMapping("smmdbUser")
+    public @ResponseBody String smmdbUser() {
+//        return smmdbConnector.getAllUsers();
+        return "";
+    }
+
     @RequestMapping("/json")
     public @ResponseBody void json() throws IOException {
-        String json = "{\n" +
-                "\"username\": \"sinjoh\",\n" +
-                "\"timestamp\": \"2013-09-01T17:26:11.246911\",\n" +
-                "\"userid\": 491,\n" +
-                "\"sign\": \"0b2d91b44975e9072210edaa2f8ce1235675daff\"\n" +
-                "}";
+        String json = "{\"username\": \"mats\", \"phone_number\": null, \"last_name\": \"Svensson\", \"last_updated\": \"2013-09-15T12:51:38.139717\", \"about\": null, \"groups\": [{\"id\": 2, \"name\": \"admin\"}], \"active\": true, \"id\": 594, \"private_email\": null, \"first_name\": \"Mats\", \"created\": \"2013-09-15T12:51:38.139661\", \"birthdate\": null, \"email\": null}";
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
+        Person person = mapper.readValue(new JsonFactory().createParser(json), Person.class);
+
+        ObjectReader reader = mapper.reader(Person.class);
+
+
+        logger.debug(person.getUsername());
+        logger.debug(person.getFirstName());
+        logger.debug(person.getEmail());
     }
 }

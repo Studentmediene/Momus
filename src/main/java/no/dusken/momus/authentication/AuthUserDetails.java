@@ -33,7 +33,7 @@ public class AuthUserDetails implements UserDetails {
 
     public AuthUserDetails(Person person, Collection<? extends GrantedAuthority> grantedAuthorities) {
         id = person.getId();
-        username = person.getUserName();
+        username = person.getUsername();
 
         this.grantedAuthorities = grantedAuthorities;
     }
