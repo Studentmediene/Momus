@@ -20,7 +20,6 @@ import no.dusken.momus.authentication.UserLoginService;
 import no.dusken.momus.model.Note;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.NoteRepository;
-import no.dusken.momus.service.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,13 +33,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class NoteController {
 
     @Autowired
-    NoteRepository noteRepository;
+    private NoteRepository noteRepository;
 
     @Autowired
-    PersonRepository personRepository;
-
-    @Autowired
-    UserLoginService userLoginService;
+    private UserLoginService userLoginService;
 
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody Note getNoteForLoggedInUser() {

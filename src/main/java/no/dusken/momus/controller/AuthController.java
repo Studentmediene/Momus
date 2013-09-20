@@ -32,9 +32,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class AuthController {
 
     @Autowired
-    UserLoginService userLoginService;
+    private UserLoginService userLoginService;
 
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public @ResponseBody void login(@RequestBody String token) {

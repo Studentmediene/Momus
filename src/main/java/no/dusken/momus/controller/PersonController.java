@@ -16,17 +16,18 @@
 
 package no.dusken.momus.controller;
 
-import no.dusken.momus.model.Group;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.GroupRepository;
 import no.dusken.momus.service.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.Set;
 
 @Controller
 @Transactional
@@ -34,10 +35,10 @@ import java.util.Set;
 public class PersonController {
 
     @Autowired
-    PersonRepository personRepository;
+    private PersonRepository personRepository;
 
     @Autowired
-    GroupRepository groupRepository;
+    private GroupRepository groupRepository;
 
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody List<Person> getAllPersons() {
@@ -48,34 +49,4 @@ public class PersonController {
     public @ResponseBody Person getPersonById(@PathVariable("id") Long id) {
         return personRepository.findOne(id);
     }
-
-    @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody Person addPerson(@RequestBody Person person) {
-        return personRepository.saveAndFlush(person);
-    }
-    @RequestMapping("/debugAdd")
-    public @ResponseBody Person createNew() {
-        Person person = new Person();
-        person.setEmail("mats@matsemann.com");
-        person.setFirstName("Mats");
-        person.setLastName("Svensson");
-        person.setPhoneNumber("47 38 53 24");
-
-//        person.setEmail("test@testesen");
-//        person.setFirstName("Test");
-//        person.setLastName("Testson");
-//        person.setPhone("815 493 00");
-
-        return personRepository.saveAndFlush(person);
-    }
-
-    @RequestMapping(value = "/addroles/{id}", method = RequestMethod.PUT)
-    public @ResponseBody Person setRolesToPerson(@PathVariable("id") Long id, @RequestBody Set<Group> groups) {
-        Person person = personRepository.findOne(id);
-
-        person.setGroups(groups);
-
-        return personRepository.saveAndFlush(person);
-    }
-
 }
