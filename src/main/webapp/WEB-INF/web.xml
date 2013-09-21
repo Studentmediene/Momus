@@ -42,8 +42,14 @@
         <servlet-name>momusapi</servlet-name>
     </filter-mapping>
 
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:applicationContext.xml</param-value>
+    </context-param>
+
     <!-- Needed for security, we should define how everything should be wired together in applicationContext.xml -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+
 </web-app>

@@ -80,7 +80,7 @@
     <task:annotation-driven />
 
     <!-- Load the momus.properties file, can use the values like ${property.name} -->
-    <context:property-placeholder location="/WEB-INF/momus.properties" />
+    <context:property-placeholder location="classpath*:momus.properties" />
 
     <!-- Enable JPA -->
     <jpa:repositories base-package="no.dusken.momus.service.repository" />
