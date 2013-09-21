@@ -27,8 +27,8 @@ Is the rich text editor being used. Chosen because it has good support for speci
 By default it uses HSQLDB, which is an in-memory-db and needs no installation (maven fetches it as a dependency). HSQLDB will create a folder named `database` that it saves everything into. Deleting this folder will clear the DB.
 However, mysql can also be used by un-commenting the lines in momus.properties. Using mysql allows you to browse the data while the server is running.
 
-####Fill inn dummy data
-Go to `/api/dev/create` to create some dummy users to be able to log in.
+####Fill inn  data
+Go to `/api/dev/sync` to sync data from SmmDB (needs API key in momus.properties).
 
 ###Dev login
 Go to `/api/dev/login/{id}` to hack yourself in as the user of your choice.
@@ -40,29 +40,30 @@ Most of the files mentioned here should have useful comments in them.
 ###pom.xml
 Contains all the dependencies for the project, along with how it should be run.
 
-Files in `src/main/webapp/WEB-INF`:
-
+Files in `src/main/resources`:
 ####momus.properties
 Various values that can be used inside the different xml-files or be assigned to java variables.
-All values that can/should be different between production and development, between different developers etc. should be put here so they are easy to locate and change. To ignore local changes to this file, run `git update-index --assume-unchanged src/main/webapp/WEB-INF/momus.properties` To redo use the flag `--no-assume-unchanged`.
+All values that can/should be different between production and development, between different developers etc. should be put here so they are easy to locate and change. To ignore local changes to this file, run `git update-index --assume-unchanged src/main/resources/momus.properties` To redo use the flag `--no-assume-unchanged`.
 Or possibly use `--skip-worktree` instead.
-
-####web.xml
-Definition of our server, creates the "momusapi"-servlet that will listen for requests.
 
 ####applicationContext.xml
 Configuration of most of the back-end.
-
-####momusapi-servlet.xml
-Special rules for this servlet. Since we only have one servlet these rules may as well be stated in the app context.
-
-Files in `src/main/resources`:
 
 ####logback.xml
 Configuration for our Logger.
 
 ####META-INF/persistence.xml
 Configuration for persistence, e.g. how entities should be saved to the database.
+
+
+Files in `src/main/webapp/WEB-INF`:
+
+####web.xml
+Definition of our server, creates the "momusapi"-servlet that will listen for requests.
+
+####momusapi-servlet.xml
+Special rules for this servlet. Since we only have one servlet these rules may as well be stated in the app context.
+
 
 ###Code
 Our Java code is in the package `no.dusken.momus`
@@ -86,5 +87,5 @@ The second class is our custom exception. By throwing this anywhere we can speci
 Smmdb is a new project in Studentmediene that should provide single-logon for all our systems. So to login to our system, the user will login at Smmdb (or already be logged in there) and get a "token" that we can use to verify if the user is really logged in and who they claim to be.
 If the token is valid, we log in the user and assign  different roles to it (all the groups it belongs to).
 Then we can inject the `UserLoginService` to get various information about the logged in user.
-We can annotate methods with `@PreAuthorize` to restrict access for different users. See `DevController` for an example.
+We can annotate methods with `@PreAuthorize` to restrict access for different users. See `DevController` history for examples.
 
