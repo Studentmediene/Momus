@@ -24,13 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.junit.Assert.*;
 
 @Transactional
-public class SmmdbTokenTest extends AbstractTestRunner {
+public class SmmDbTokenTest extends AbstractTestRunner {
 
     @Test
-    public void testInitSmmdbToken1() {
+    public void testInitSmmDbToken1() {
         String json = "{\"username\": \"mats\", \"timestamp\": \"2013-09-21T23:21:50.232335\", \"userid\": 594, \"sign\": \"6b739b888a56c0122df93d73bb63e02ac70664d7\"}";
 
-        SmmdbToken token = new SmmdbToken(json);
+        SmmDbToken token = new SmmDbToken(json);
 
         assertEquals("mats", token.getUsername());
         assertEquals(594L, token.getId().longValue());
@@ -38,10 +38,10 @@ public class SmmdbTokenTest extends AbstractTestRunner {
     }
 
     @Test
-    public void testInitSmmdbToken2() {
+    public void testInitSmmDbToken2() {
         String json = "{\"username\": \"æææøøøøååå\", \"timestamp\": \"2013-09-21T23:21:50.232335\", \"userid\": 11, \"sign\": \"6b739b888a56c0122df93d73bb63e02ac70664d7\"}";
 
-        SmmdbToken token = new SmmdbToken(json);
+        SmmDbToken token = new SmmDbToken(json);
 
         assertEquals("æææøøøøååå", token.getUsername());
         assertEquals(11L, token.getId().longValue());
@@ -49,17 +49,17 @@ public class SmmdbTokenTest extends AbstractTestRunner {
     }
 
     @Test(expected = RestException.class)
-    public void testInvalidSmmdbToken1() {
+    public void testInvalidSmmDbToken1() {
         String json = "{}";
 
-        SmmdbToken token = new SmmdbToken(json);
+        SmmDbToken token = new SmmDbToken(json);
     }
 
     @Test(expected = RestException.class)
-    public void testInvalidSmmdbToken2() {
+    public void testInvalidSmmDbToken2() {
         String json = "{\"name\": \"æææøøøøååå\", \"timestamp\": \"2013-09-21T23:21:50.232335\", \"userid\": 11, \"sign\": \"6b739b888a56c0122df93d73bb63e02ac70664d7\"}";
 
-        SmmdbToken token = new SmmdbToken(json);
+        SmmDbToken token = new SmmDbToken(json);
     }
 
 

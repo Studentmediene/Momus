@@ -84,7 +84,7 @@ In `exceptions` there are two classes. First is our `ExceptionHandler` that take
 The second class is our custom exception. By throwing this anywhere we can specify the return code (401, 404, 500 etc.) and message to the user.
 
 ###Security/authentication
-Smmdb is a new project in Studentmediene that should provide single-logon for all our systems. So to login to our system, the user will login at Smmdb (or already be logged in there) and get a "token" that we can use to verify if the user is really logged in and who they claim to be.
+SmmDb is a new project in Studentmediene that should provide single-logon for all our systems. So to login to our system, the user will login at SmmDb (or already be logged in there) and get a "token" that we can use to verify if the user is really logged in and who they claim to be.
 If the token is valid, we log in the user and assign  different roles to it (all the groups it belongs to).
 Then we can inject the `UserLoginService` to get various information about the logged in user.
 We can annotate methods with `@PreAuthorize` to restrict access for different users. See `DevController` history for examples.

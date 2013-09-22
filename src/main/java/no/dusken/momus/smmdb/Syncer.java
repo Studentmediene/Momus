@@ -16,12 +16,8 @@
 
 package no.dusken.momus.smmdb;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import no.dusken.momus.mapper.GroupMapper;
+import no.dusken.momus.mapper.PersonMapper;
 import no.dusken.momus.model.Group;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.GroupRepository;
@@ -32,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -41,7 +36,7 @@ public class Syncer {
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    SmmdbConnector smmdbConnector;
+    SmmDbConnector smmDbConnector;
 
     @Autowired
     GroupRepository groupRepository;
@@ -49,95 +44,61 @@ public class Syncer {
     @Autowired
     PersonRepository personRepository;
 
-    private ObjectMapper mapper;
+    @Autowired
+    PersonMapper personMapper;
 
-    public Syncer() {
-        mapper = new ObjectMapper();
-        mapper.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
+    @Autowired
+    GroupMapper groupMapper;
 
     /**
-     * Will pull data from Smmdb and update our local copy
+     * Will pull data from SmmDb and update our local copy
+     * 02:00 each day (second minute hour day month weekdays)
      */
-    @Scheduled(cron = "0 0 2 * * *") // 02:00 each day (second minute hour day month weekdays)
+    @Scheduled(cron = "0 0 2 * * *")
     public void sync() {
-        logger.info("Starting smmdb sync");
+        logger.info("Starting SmmDb sync");
 
         boolean syncGroupSuccess = syncGroups();
         // Only sync people if the groups worked, or else we may run into issues
         if (syncGroupSuccess) {
             boolean syncPersonSuccess = syncPeople();
             if (syncPersonSuccess) {
-                logger.info("Done syncing from smmdb");
+                logger.info("Done syncing from SmmDb");
             }
         }
     }
 
     private boolean syncGroups() {
-        String groupsJsonString = smmdbConnector.getAllGroups();
-        List<Group> smmdbGroups = groupsFromJson(groupsJsonString);
+        String groupsJsonString = smmDbConnector.getAllGroups();
+        List<Group> smmDbGroups = groupMapper.groupsFromJson(groupsJsonString, "objects");
 
-        if (smmdbGroups == null || smmdbGroups.size() == 0) {
+        if (smmDbGroups == null || smmDbGroups.size() == 0) {
             // Something probably didn't work as it should
             return false;
         }
 
         // Delete stuff that is in our database but not in the latest data
         List<Group> oldGroups = groupRepository.findAll();
-        oldGroups.removeAll(smmdbGroups);
+        oldGroups.removeAll(smmDbGroups);
         groupRepository.delete(oldGroups);
 
-        groupRepository.save(smmdbGroups);
+        groupRepository.save(smmDbGroups);
         return true;
     }
 
     private boolean syncPeople() {
-        String personsJsonString = smmdbConnector.getAllUsers();
-        List<Person> smmdbPersons = personsFromJson(personsJsonString);
+        String personsJsonString = smmDbConnector.getAllUsers();
+        List<Person> smmDbPersons = personMapper.personsFromJson(personsJsonString, "objects");
 
-        if (smmdbPersons == null || smmdbPersons.size() == 0) {
+        if (smmDbPersons == null || smmDbPersons.size() == 0) {
             return false;
         }
 
         List<Person> oldPersons = personRepository.findAll();
-        oldPersons.removeAll(smmdbPersons);
+        oldPersons.removeAll(smmDbPersons);
         personRepository.delete(oldPersons);
 
-        personRepository.save(smmdbPersons);
+        personRepository.save(smmDbPersons);
         return true;
     }
-
-    private List<Group> groupsFromJson(String json) {
-        List<Group> groups = null;
-        try {
-
-            JsonParser parser = mapper.getFactory().createParser(json);
-            JsonNode root = mapper.readTree(parser);
-            JsonParser groupsObject = root.path("objects").traverse();
-
-            groups = mapper.readValue(groupsObject, new TypeReference<List<Group>>() {});
-        } catch (IOException e) {
-            logger.warn("Couldn't create groups from json: {}", e);
-        }
-
-        return groups;
-    }
-
-    private List<Person> personsFromJson(String json) {
-        List<Person> persons = null;
-        try {
-
-            JsonParser parser = mapper.getFactory().createParser(json);
-            JsonNode root = mapper.readTree(parser);
-            JsonParser personsObject = root.path("objects").traverse();
-
-            persons = mapper.readValue(personsObject, new TypeReference<List<Person>>() {});
-        } catch (IOException e) {
-            logger.warn("Couldn't create persons from json: {}", e);
-        }
-
-        return persons;
-    }
-
 }

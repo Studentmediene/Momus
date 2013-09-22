@@ -16,7 +16,7 @@
 
 package no.dusken.momus.smmdb;
 
-import no.dusken.momus.authentication.SmmdbToken;
+import no.dusken.momus.authentication.SmmDbToken;
 import no.dusken.momus.exceptions.RestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,17 +33,17 @@ import java.net.URLEncoder;
 import java.util.Scanner;
 
 @Service
-public class SmmdbConnector {
+public class SmmDbConnector {
 
-    @Value("${smmdb.url}")
-    String smmdbUrl;
+    @Value("${smmDb.url}")
+    String smmDbUrl;
 
-    @Value("${smmdb.key}")
+    @Value("${smmDb.key}")
     String apiKey;
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
-    public String getTokenStatus(SmmdbToken token) {
+    public String getTokenStatus(SmmDbToken token) {
         String service = "ticket/verify";
         String params = "ticket=" + encode(token.getJsonText());
 
@@ -63,7 +63,7 @@ public class SmmdbConnector {
     }
 
     private String getData(String service, String params) {
-        String fullUrl = smmdbUrl + "/" + service + "?key=" + apiKey;
+        String fullUrl = smmDbUrl + "/" + service + "?key=" + apiKey;
         if (params != null) {
             fullUrl += "&" + params;
         }
@@ -74,8 +74,8 @@ public class SmmdbConnector {
             content = getContentFromConnection(connection);
             logger.debug("Content is: {}", content);
         } catch (Exception e) {
-            logger.warn("Something went wrong connecting to Smmdb: {}", e);
-            throw new RestException("Couldn't connect to Smmdb", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.warn("Something went wrong connecting to SmmDb: {}", e);
+            throw new RestException("Couldn't connect to SmmDb", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 
         return content;
@@ -93,7 +93,7 @@ public class SmmdbConnector {
 
     private String getContentFromConnection(HttpURLConnection connection) throws IOException {
         if (connection.getResponseCode() != HttpServletResponse.SC_OK) {
-            logger.warn("Smmdb responsecode: {}, for URL: {}", connection.getResponseCode(), connection.getURL().toString());
+            logger.warn("SmmDb response code: {}, for URL: {}", connection.getResponseCode(), connection.getURL().toString());
             throw new IOException("Not a valid response");
         }
 

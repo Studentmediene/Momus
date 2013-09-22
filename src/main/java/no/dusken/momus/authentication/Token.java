@@ -24,30 +24,30 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public class Token extends AbstractAuthenticationToken {
 
-    private SmmdbToken smmdbToken;
+    private SmmDbToken smmDbToken;
     private UserDetails principal;
 
     /**
      * Standard, non-authenticated token
      */
-    public Token(SmmdbToken smmdbToken) {
+    public Token(SmmDbToken smmDbToken) {
         super(null);
-        this.smmdbToken = smmdbToken;
+        this.smmDbToken = smmDbToken;
         setAuthenticated(false);
     }
 
     /**
      * When the user has been verified
      */
-    public Token(SmmdbToken smmdbToken, AuthUserDetails principal) {
+    public Token(SmmDbToken smmDbToken, AuthUserDetails principal) {
         super(principal.getAuthorities());
-        this.smmdbToken = smmdbToken;
+        this.smmDbToken = smmDbToken;
         this.principal = principal;
         setAuthenticated(true);
     }
 
-    public SmmdbToken getSmmdbToken() {
-        return smmdbToken;
+    public SmmDbToken getSmmDbToken() {
+        return smmDbToken;
     }
 
     @Override

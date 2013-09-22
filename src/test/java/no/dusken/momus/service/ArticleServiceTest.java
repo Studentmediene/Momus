@@ -16,7 +16,6 @@
 
 package no.dusken.momus.service;
 
-import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.PersonRepository;
 import no.dusken.momus.test.AbstractTestRunner;
 import org.junit.Before;
@@ -25,19 +24,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.*;
-
 @Transactional
 public class ArticleServiceTest extends AbstractTestRunner {
 
     @Autowired
     PersonRepository personRepository;
 
-    @Value("${smmdb.key}")
+    @Value("${smmDb.key}")
     String key;
 
     @Before
     public void setUp() throws Exception {
+
+
     }
 
     @Test

@@ -16,7 +16,7 @@
 
 package no.dusken.momus.authentication;
 
-import no.dusken.momus.smmdb.SmmdbConnector;
+import no.dusken.momus.smmdb.SmmDbConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,17 +29,17 @@ public class TokenValidator {
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    SmmdbConnector smmdbConnector;
+    SmmDbConnector smmDbConnector;
 
-    @Value("${smmdb.url}")
+    @Value("${smmDb.url}")
     String url;
 
-    @Value("${smmdb.key}")
+    @Value("${smmDb.key}")
     String apiKey;
 
-    public boolean validateToken(SmmdbToken token) {
+    public boolean validateToken(SmmDbToken token) {
         logger.info("Trying to validate token for {}", token.getUsername());
-        String content = smmdbConnector.getTokenStatus(token);
+        String content = smmDbConnector.getTokenStatus(token);
 
         if (isValid(content)) {
             logger.info("User token was valid for user {}", token.getUsername());

@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SmmdbToken {
+public class SmmDbToken {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -35,7 +35,7 @@ public class SmmdbToken {
     private Long id;
     private String jsonText;
 
-    public SmmdbToken(String jsonText) {
+    public SmmDbToken(String jsonText) {
         this.jsonText = jsonText;
         readJson();
     }
