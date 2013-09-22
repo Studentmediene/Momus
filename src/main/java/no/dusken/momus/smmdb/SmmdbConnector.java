@@ -93,8 +93,8 @@ public class SmmdbConnector {
 
     private String getContentFromConnection(HttpURLConnection connection) throws IOException {
         if (connection.getResponseCode() != HttpServletResponse.SC_OK) {
-            logger.warn("Smmdb responsecode: {}", connection.getResponseCode());
-            return "";
+            logger.warn("Smmdb responsecode: {}, for URL: {}", connection.getResponseCode(), connection.getURL().toString());
+            throw new IOException("Not a valid response");
         }
 
         InputStream inputStream = connection.getInputStream();

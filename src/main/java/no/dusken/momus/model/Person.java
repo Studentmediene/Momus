@@ -50,8 +50,10 @@ public class Person {
         this.id = id;
     }
 
-    public Person(Set<Group> groups, String firstName, String lastName, String email, String phoneNumber) {
+    public Person(Long id, Set<Group> groups, String username, String firstName, String lastName, String email, String phoneNumber) {
+        this.id = id;
         this.groups = groups;
+        this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

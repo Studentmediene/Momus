@@ -16,20 +16,19 @@
 
 package no.dusken.momus.service;
 
+import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.PersonRepository;
+import no.dusken.momus.test.AbstractTestRunner;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:testContext.xml")
-public class ArticleServiceTest {
+@Transactional
+public class ArticleServiceTest extends AbstractTestRunner {
 
     @Autowired
     PersonRepository personRepository;
@@ -39,28 +38,22 @@ public class ArticleServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        System.out.println("Setup");
-        System.out.println(key);
     }
 
     @Test
     public void testGetArticleById() throws Exception {
-        assertEquals(false, true);
     }
 
     @Test
     public void testSaveArticle() throws Exception {
-        assertEquals(true, true);
     }
 
     @Test
     public void testGetAllArticles() throws Exception {
-        assertEquals("lol", "laal");
     }
 
     @Test
     public void testSearch() throws Exception {
-        assertEquals("lol", "lol");
     }
 
     @Test

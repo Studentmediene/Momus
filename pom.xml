@@ -177,12 +177,6 @@
                             <port>8080</port>
                         </connector>
                     </connectors>
-                    <systemProperties>
-                        <systemProperty>
-                            <name>developermode</name>
-                            <value>true</value>
-                        </systemProperty>
-                    </systemProperties>
                 </configuration>
             </plugin>
         </plugins>
