@@ -16,7 +16,7 @@
 
 package no.dusken.momus.smmdb;
 
-import no.dusken.momus.authentication.SmmAbToken;
+import no.dusken.momus.authentication.SmmDbToken;
 import no.dusken.momus.exceptions.RestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ import java.net.URLEncoder;
 import java.util.Scanner;
 
 @Service
-public class SmmAbConnector {
+public class SmmDbConnector {
 
     @Value("${smmDb.url}")
     String smmDbUrl;
@@ -43,7 +43,7 @@ public class SmmAbConnector {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
-    public String getTokenStatus(SmmAbToken token) {
+    public String getTokenStatus(SmmDbToken token) {
         String service = "ticket/verify";
         String params = "ticket=" + encode(token.getJsonText());
 
