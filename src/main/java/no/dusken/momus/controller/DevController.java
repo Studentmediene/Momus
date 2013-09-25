@@ -53,11 +53,10 @@ public class DevController {
      * Bypass login and logs you in as the user with the provided id
      */
     @RequestMapping("/login/{id}")
-    public @ResponseBody String login(@PathVariable("id") Long id) {
+    public @ResponseBody void login(@PathVariable("id") Long id) {
         AuthUserDetails user = userAuthorities.getAuthoritiesForUser(id);
         Token token = new Token(null, user);
         SecurityContextHolder.getContext().setAuthentication(token);
-        return "logged in as " + userLoginService.getUsername();
     }
 
     /**

@@ -58,7 +58,7 @@ public class UserLoginService {
      * @param token
      * @return whether the login succeeded or not.
      */
-    public boolean login(SmmDbToken token) {
+    public boolean login(SmmAbToken token) {
         Authentication authentication = authenticationManager.authenticate(new Token(token));
         boolean isAuthenticated = isAuthenticated(authentication);
         if (isAuthenticated) {

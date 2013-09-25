@@ -36,7 +36,7 @@ public class Syncer {
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    SmmDbConnector smmDbConnector;
+    SmmAbConnector smmDbConnector;
 
     @Autowired
     GroupRepository groupRepository;
