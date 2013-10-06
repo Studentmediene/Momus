@@ -42,57 +42,65 @@ public class UserAuthoritiesTest extends AbstractTestRunner {
     UserAuthorities userAuthorities;
 
     @Autowired
-    GroupRepository groupRepository;
-
-    @Autowired
     PersonRepository personRepository;
 
     @Before
     public void setUp() {
-        // Add some data
-        Group adminGroup = groupRepository.save(new Group(1L, "Admin"));
-        Group photographerGroup = groupRepository.save(new Group(2L, "Photographer"));
+        // Some sets of permissions
+        Set<String> permissions1 = new HashSet<>();
+        permissions1.add("momus:superuser");
+        permissions1.add("momus:photographer");
 
-        Set<Group> groups1 = new HashSet<>();
-        groups1.add(adminGroup);
+        Set<String> permissions2 = new HashSet<>();
+        permissions2.add("momus:journalist");
+        permissions2.add("momus:photographer");
+        permissions2.add("momus:editor");
 
-        Set<Group> groups2 = new HashSet<>();
-        groups2.add(adminGroup);
-        groups2.add(photographerGroup);
 
-        personRepository.save(new Person(1L, groups1, "username", "myFirstName", "myLastName", "mail@mail.com", "12345678"));
-        personRepository.save(new Person(2L, groups2, "testname", "testFirst", "testLast", "test@test.com", "87654321"));
+        personRepository.save(new Person(1L, null, permissions1, "username", "myFirstName", "myLastName", "mail@mail.com", "12345678", false));
+        personRepository.save(new Person(2L, null, permissions2, "testname", "testFirst", "testLast", "test@test.com", "87654321", false));
+        personRepository.save(new Person(3L, null, null, "noPermissions", "fail", "noaccess", "yo@giefaccess.com", "81549200", true));
     }
 
     @Test(expected = RestException.class)
     public void testNonExistingPerson() {
-        userAuthorities.getAuthoritiesForUser(3L);
+        userAuthorities.getAuthoritiesForUser(4L);
     }
 
     @Test
-    public void testAuthoritiesAdmin() {
+    public void testAuthoritiesTwo() {
         AuthUserDetails authoritiesForUser = userAuthorities.getAuthoritiesForUser(1L);
-
-        Collection<? extends GrantedAuthority> authorities = authoritiesForUser.getAuthorities();
-        assertEquals(1, authorities.size());
-
-        Collection<GrantedAuthority> expectedAuthorities = new HashSet<>();
-        expectedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-
-        assertEquals(expectedAuthorities, authorities);
-    }
-
-    @Test
-    public void testAuthoritiesAdminAndPhotographer() {
-        AuthUserDetails authoritiesForUser = userAuthorities.getAuthoritiesForUser(2L);
 
         Collection<? extends GrantedAuthority> authorities = authoritiesForUser.getAuthorities();
         assertEquals(2, authorities.size());
 
         Collection<GrantedAuthority> expectedAuthorities = new HashSet<>();
-        expectedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        expectedAuthorities.add(new SimpleGrantedAuthority("ROLE_PHOTOGRAPHER"));
+        expectedAuthorities.add(new SimpleGrantedAuthority("momus:superuser"));
+        expectedAuthorities.add(new SimpleGrantedAuthority("momus:photographer"));
 
         assertEquals(expectedAuthorities, authorities);
+    }
+
+    @Test
+    public void testAuthoritiesThree() {
+        AuthUserDetails authoritiesForUser = userAuthorities.getAuthoritiesForUser(2L);
+
+        Collection<? extends GrantedAuthority> authorities = authoritiesForUser.getAuthorities();
+        assertEquals(3, authorities.size());
+
+        Collection<GrantedAuthority> expectedAuthorities = new HashSet<>();
+        expectedAuthorities.add(new SimpleGrantedAuthority("momus:journalist"));
+        expectedAuthorities.add(new SimpleGrantedAuthority("momus:photographer"));
+        expectedAuthorities.add(new SimpleGrantedAuthority("momus:editor"));
+
+        assertEquals(expectedAuthorities, authorities);
+    }
+
+    @Test
+    public void testAuthoritiesNotFailWhenNone() {
+        AuthUserDetails authoritiesForUser = userAuthorities.getAuthoritiesForUser(3L);
+
+        Collection<? extends GrantedAuthority> authorities = authoritiesForUser.getAuthorities();
+        assertEquals(0, authorities.size());
     }
 }

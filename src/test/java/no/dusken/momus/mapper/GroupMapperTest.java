@@ -33,11 +33,12 @@ public class GroupMapperTest extends AbstractTestRunner {
 
     @Test
     public void testGroupFromJson() {
-        String json = "{\"id\": 1, \"name\": \"teknisk\"}";
+        String json = "{\"description\": \"De som driver med det tekniske for videoproduksjon.\", \"id\": 1, \"name\": \"videoteknisk\"}";
         Group group = groupMapper.groupFromJson(json);
 
         assertEquals(1L, group.getId().longValue());
-        assertEquals("teknisk", group.getName());
+        assertEquals("videoteknisk", group.getName());
+        assertEquals("De som driver med det tekniske for videoproduksjon.", group.getDescription());
     }
 
     @Test
@@ -50,22 +51,42 @@ public class GroupMapperTest extends AbstractTestRunner {
 
     @Test
     public void testGroupsFromJson() {
-        String json = "{\"total_pages\": 1, \"objects\": [{\"id\": 1, \"name\": \"teknisk\"}, {\"id\": 2, \"name\": \"admin\"}, {\"id\": 3, \"name\": \"marked\"}, {\"id\": 4, \"name\": \"Flerkamera\"}, {\"id\": 5, \"name\": \"Humor\"}, {\"id\": 6, \"name\": \"Aktuelt\"}, {\"id\": 7, \"name\": \"Produksjon\"}, {\"id\": 8, \"name\": \"Serie\"}, {\"id\": 9, \"name\": \"Feature\"}, {\"id\": 10, \"name\": \"Funker\"}, {\"id\": 11, \"name\": \"Panger\"}], \"num_results\": 11, \"page\": 1}";
+        String json = "{\"total_pages\": 1, \"objects\": [\n    {\n        \"description\": \"De som driver med det tekniske for videoproduksjon.\",\n        \"id\": 1,\n        \"name\": \"videoteknisk\"\n    },\n    {\n        \"description\": \"Administrasjonen i Student-TV er ansvarlig for den daglige driften og best\\u00e5r av  ansvarlig redakt\\u00f8r, daglig leder og \\u00f8konomiansvarlig. \\r\\n\\r\\nDaglig leder i Student-TV er gjengsjef ovenfor Studentersamfundet og  representerer Student-TV i gjengsjefkollegiet. Daglig leder er ogs\\u00e5  sammen med ansvarlig redakt\\u00f8r personalansvarlig i Student-TV.\\r\\n\\r\\n\\u00d8konomiansvarlig f\\u00f8rer Student-TVs regnskap, og setter opp budsjett i samr\\u00e5d med daglig leder.\\r\\n\\r\\nAnsvarlig  redakt\\u00f8r st\\u00e5r etisk og rettslig ansvarlig for innholdet som publiseres av Student-TV p\\u00e5 www.stv.no.\",\n        \"id\": 2,\n        \"name\": \"admin\"\n    },\n    {\n        \"description\": \"I Student-TVs markedsavdeling finner du tretten ildsjeler som brenner for \\u00e5 fronte Student-TV utad. Vi har seks eksternprodusenter som har kontakt med n\\u00e6ringslivet gjennom oppdragsfilm. Vi har fire kreative grafikere som ser til av v\\u00e5r grafiske profil p\\u00e5 trykk og video holder m\\u00e5l, og tre markedsf\\u00f8rere som s\\u00f8rger for at alle Trondheimsstudentene vet hvor de skal finne spennende nyheter, kultur og underholdning.\",\n        \"id\": 3,\n        \"name\": \"marked\"\n    },\n    {\n        \"description\": \"Humorredaksjonen i Student-TV s\\u00f8rger hver uke for \\u00e5 berike samfunnsdebatten med satiriske innslag om aktuelle tema. Spalten heter Apropos, og der finner du rompehumor, ordspill og sexvitser for en god sak! Vi lager ogs\\u00e5 innslag som er helt usaklig, for en d\\u00e5rlig sak eller som handler om saksing. Disse finner du i spalten Sketsjup. God ford\\u00f8yelse.\",\n        \"id\": 5,\n        \"name\": \"Humor\"\n    },\n    {\n        \"description\": \"STV Produksjon best\\u00e5r av eksternprodusenter og motiongrafikere. Sammen lager vi oppdragsfilm for eksterne akt\\u00f8rer. Vi har erfaring med produksjon av reklamefilm, film av arrangement og musikkvideo for \\u00e5 nevne noen.\",\n        \"id\": 7,\n        \"name\": \"Produksjon\"\n    },\n    {\n        \"description\": \"\",\n        \"id\": 9,\n        \"name\": \"Feature\"\n    },\n    {\n        \"description\": null,\n        \"id\": 11,\n        \"name\": \"Panger\"\n    },\n    {\n        \"description\": \"De som fikser alt\",\n        \"id\": 12,\n        \"name\": \"IT\"\n    },\n    {\n        \"description\": \"Avis-sjefer\",\n        \"id\": 14,\n        \"name\": \"Redakt\\u00f8r\"\n    }\n], \"num_results\": 9, \"page\": 1}";
         List<Group> groups = groupMapper.groupsFromJson(json, "objects");
 
-        assertEquals(11, groups.size());
-        assertEquals("teknisk", groups.get(0).getName());
-        assertEquals("admin", groups.get(1).getName());
-        assertEquals("Panger", groups.get(10).getName());
+        assertEquals(9, groups.size());
+
+        assertEquals("videoteknisk", groups.get(0).getName());
+        assertEquals(1L, groups.get(0).getId().longValue());
+        assertEquals("De som driver med det tekniske for videoproduksjon.", groups.get(0).getDescription());
+
+        assertEquals("Feature", groups.get(5).getName());
+        assertEquals(9L, groups.get(5).getId().longValue());
+        assertEquals("", groups.get(5).getDescription());
+
+        assertEquals("Panger", groups.get(6).getName());
+        assertEquals(11L, groups.get(6).getId().longValue());
+        assertEquals(null, groups.get(6).getDescription());
     }
 
     @Test
     public void testGroupsFromJsonRoot() {
-        String json = "[{\"id\": 5, \"name\": \"Humor\"}, {\"id\": 6, \"name\": \"Aktuelt\"}, {\"id\": 7, \"name\": \"Produksjon\"}, {\"id\": 8, \"name\": \"Serie\"}, {\"id\": 9, \"name\": \"Feature\"}, {\"id\": 10, \"name\": \"Funker\"}, {\"id\": 11, \"name\": \"Panger\"}]";
+        String json = "[\n    {\n        \"description\": \"De som driver med det tekniske for videoproduksjon.\",\n        \"id\": 1,\n        \"name\": \"videoteknisk\"\n    },\n    {\n        \"description\": \"Administrasjonen i Student-TV er ansvarlig for den daglige driften og best\\u00e5r av  ansvarlig redakt\\u00f8r, daglig leder og \\u00f8konomiansvarlig. \\r\\n\\r\\nDaglig leder i Student-TV er gjengsjef ovenfor Studentersamfundet og  representerer Student-TV i gjengsjefkollegiet. Daglig leder er ogs\\u00e5  sammen med ansvarlig redakt\\u00f8r personalansvarlig i Student-TV.\\r\\n\\r\\n\\u00d8konomiansvarlig f\\u00f8rer Student-TVs regnskap, og setter opp budsjett i samr\\u00e5d med daglig leder.\\r\\n\\r\\nAnsvarlig  redakt\\u00f8r st\\u00e5r etisk og rettslig ansvarlig for innholdet som publiseres av Student-TV p\\u00e5 www.stv.no.\",\n        \"id\": 2,\n        \"name\": \"admin\"\n    },\n    {\n        \"description\": \"I Student-TVs markedsavdeling finner du tretten ildsjeler som brenner for \\u00e5 fronte Student-TV utad. Vi har seks eksternprodusenter som har kontakt med n\\u00e6ringslivet gjennom oppdragsfilm. Vi har fire kreative grafikere som ser til av v\\u00e5r grafiske profil p\\u00e5 trykk og video holder m\\u00e5l, og tre markedsf\\u00f8rere som s\\u00f8rger for at alle Trondheimsstudentene vet hvor de skal finne spennende nyheter, kultur og underholdning.\",\n        \"id\": 3,\n        \"name\": \"marked\"\n    },\n    {\n        \"description\": \"Humorredaksjonen i Student-TV s\\u00f8rger hver uke for \\u00e5 berike samfunnsdebatten med satiriske innslag om aktuelle tema. Spalten heter Apropos, og der finner du rompehumor, ordspill og sexvitser for en god sak! Vi lager ogs\\u00e5 innslag som er helt usaklig, for en d\\u00e5rlig sak eller som handler om saksing. Disse finner du i spalten Sketsjup. God ford\\u00f8yelse.\",\n        \"id\": 5,\n        \"name\": \"Humor\"\n    },\n    {\n        \"description\": \"STV Produksjon best\\u00e5r av eksternprodusenter og motiongrafikere. Sammen lager vi oppdragsfilm for eksterne akt\\u00f8rer. Vi har erfaring med produksjon av reklamefilm, film av arrangement og musikkvideo for \\u00e5 nevne noen.\",\n        \"id\": 7,\n        \"name\": \"Produksjon\"\n    },\n    {\n        \"description\": \"\",\n        \"id\": 9,\n        \"name\": \"Feature\"\n    },\n    {\n        \"description\": null,\n        \"id\": 11,\n        \"name\": \"Panger\"\n    },\n    {\n        \"description\": \"De som fikser alt\",\n        \"id\": 12,\n        \"name\": \"IT\"\n    },\n    {\n        \"description\": \"Avis-sjefer\",\n        \"id\": 14,\n        \"name\": \"Redakt\\u00f8r\"\n    }\n]";
         List<Group> groups = groupMapper.groupsFromJson(json);
 
-        assertEquals(7, groups.size());
-        assertEquals("Humor", groups.get(0).getName());
+        assertEquals(9, groups.size());
+
+        assertEquals("videoteknisk", groups.get(0).getName());
+        assertEquals(1L, groups.get(0).getId().longValue());
+        assertEquals("De som driver med det tekniske for videoproduksjon.", groups.get(0).getDescription());
+
+        assertEquals("Feature", groups.get(5).getName());
+        assertEquals(9L, groups.get(5).getId().longValue());
+        assertEquals("", groups.get(5).getDescription());
+
+        assertEquals("Panger", groups.get(6).getName());
+        assertEquals(11L, groups.get(6).getId().longValue());
+        assertEquals(null, groups.get(6).getDescription());
     }
 
 }

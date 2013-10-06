@@ -35,18 +35,28 @@ public class PersonMapperTest extends AbstractTestRunner {
 
     @Test
     public void testPersonFromJson() {
-        String json = "{\"username\": \"mats\", \"phone_number\": \"12345678\", \"last_name\": \"Svensson\", \"last_updated\": \"2013-09-15T12:51:38.139717\", \"about\": null, \"groups\": [{\"id\": 2, \"name\": \"admin\"}], \"active\": true, \"id\": 594, \"private_email\": null, \"first_name\": \"Mats\", \"created\": \"2013-09-15T12:51:38.139661\", \"birthdate\": null, \"email\": null}";
+        String json = "{\"username\": \"mats\", \"phone_number\": \"47385324\", \"last_name\": \"Svensson\", \"last_updated\": \"2013-10-06T11:45:14.992792\", \"about\": \"Kul type!\", \"groups\": [{\"description\": \"Avis-sjefer\", \"id\": 14, \"name\": \"Redakt\\u00f8r\"}, {\"description\": \"De som fikser alt\", \"id\": 12, \"name\": \"IT\"}], \"active\": true, \"id\": 594, \"permissions\": [\"momus:editor\", \"smmdb:admin\", \"chimera:superuser\", \"momus:superuser\"], \"private_email\": \"mats@matsemann.com\", \"first_name\": \"Mats\", \"created\": \"2013-09-15T12:51:38.139661\", \"birthdate\": null, \"email\": \"mats.svensson@studentmediene.no\"}";
         Person person = personMapper.personFromJson(json);
 
         assertEquals("mats", person.getUsername());
-        assertEquals("12345678", person.getPhoneNumber());
+        assertEquals("47385324", person.getPhoneNumber());
         assertEquals("Mats", person.getFirstName());
         assertEquals("Svensson", person.getLastName());
+        assertEquals(true, person.isActive());
 
         Set<Group> groups = new HashSet<>();
-        groups.add(new Group(2L, "admin"));
-
+        groups.add(new Group(14L, "Redaktør", "notneeded"));
+        groups.add(new Group(12L, "IT", "notneeded"));
         assertEquals(groups, person.getGroups());
+
+        Set<String> expectedPermissions = new HashSet<>();
+        expectedPermissions.add("momus:editor");
+        expectedPermissions.add("smmdb:admin");
+        expectedPermissions.add("chimera:superuser");
+        expectedPermissions.add("momus:superuser");
+
+        assertEquals(expectedPermissions, person.getPermissions());
+
     }
 
     @Test
@@ -65,7 +75,7 @@ public class PersonMapperTest extends AbstractTestRunner {
 
     @Test
     public void testPersonsFromJson() throws Exception {
-        String json = "{\"total_pages\": 1, \"objects\": [{\"username\": \"alebru\", \"phone_number\": \"92233281\", \"last_name\": \"Kj\\u00f8niksen Brucki\", \"last_updated\": \"2013-09-04T18:35:18.664302\", \"about\": \"Addresse:\\n\\n \\n\", \"groups\": [{\"id\": 7, \"name\": \"Produksjon\"}], \"active\": true, \"id\": 6, \"private_email\": \"\", \"first_name\": \"Alexander\", \"created\": \"2013-09-04T18:35:18.664292\", \"birthdate\": null, \"email\": \"alexander.brucki@stv.no\"}, {\"username\": \"amahau\", \"phone_number\": \"95175034\", \"last_name\": \"Haug\", \"last_updated\": \"2013-09-04T18:35:18.664884\", \"about\": \"Addresse:\\n\\n \\n\", \"groups\": [{\"id\": 8, \"name\": \"Serie\"}], \"active\": true, \"id\": 9, \"private_email\": \"amanda_j_haug@hotmail.com\", \"first_name\": \"Amanda J\\u00f8rgine\", \"created\": \"2013-09-04T18:35:18.664875\", \"birthdate\": null, \"email\": \"amanda.haug@stv.no\"}, {\"username\": \"andhod\", \"phone_number\": \"46416928\", \"last_name\": \"Hodneland\", \"last_updated\": \"2013-09-04T18:35:18.666294\", \"about\": \"Addresse:\\n\\n \\n\", \"groups\": [{\"id\": 4, \"name\": \"Flerkamera\"}], \"active\": true, \"id\": 15, \"private_email\": \"andreashodneland@gmail.com\", \"first_name\": \"Andreas\", \"created\": \"2013-09-04T18:35:18.666272\", \"birthdate\": null, \"email\": \"andreas.hodneland@stv.no\"}], \"num_results\": 3, \"page\": 1}";
+        String json = "{\"total_pages\": 1, \"objects\": [\n    {\n        \"username\": \"alebru\",\n        \"phone_number\": \"92233281\",\n        \"last_name\": \"Kj\\u00f8niksen Brucki\",\n        \"last_updated\": \"2013-09-04T18:35:18.664302\",\n        \"about\": \"Addresse:\\n\\n \\n\",\n        \"groups\": [\n            {\n                \"description\": \"STV Produksjon best\\u00e5r av eksternprodusenter og motiongrafikere. Sammen lager vi oppdragsfilm for eksterne akt\\u00f8rer. Vi har erfaring med produksjon av reklamefilm, film av arrangement og musikkvideo for \\u00e5 nevne noen.\",\n                \"id\": 7,\n                \"name\": \"Produksjon\"\n            }\n        ],\n        \"active\": true,\n        \"id\": 6,\n        \"permissions\": [],\n        \"private_email\": \"\",\n        \"first_name\": \"Alexander\",\n        \"created\": \"2013-09-04T18:35:18.664292\",\n        \"birthdate\": null,\n        \"email\": \"alexander.kj\\u00f8niksen brucki@studentmediene.no\"\n    },\n    {\n        \"username\": \"amahau\",\n        \"phone_number\": \"95175034\",\n        \"last_name\": \"Haug\",\n        \"last_updated\": \"2013-09-04T18:35:18.664884\",\n        \"about\": \"Addresse:\\n\\n \\n\",\n        \"groups\": [\n            {\n                \"description\": \"\",\n                \"id\": 8,\n                \"name\": \"Serie\"\n            }\n        ],\n        \"active\": true,\n        \"id\": 9,\n        \"permissions\": [\"momus:editor\", \"smmdb:admin\"],\n        \"private_email\": \"amanda_j_haug@hotmail.com\",\n        \"first_name\": \"Amanda J\\u00f8rgine\",\n        \"created\": \"2013-09-04T18:35:18.664875\",\n        \"birthdate\": null,\n        \"email\": \"amanda j\\u00f8rgine.haug@studentmediene.no\"\n    },\n    {\n        \"username\": \"andhod\",\n        \"phone_number\": \"46416928\",\n        \"last_name\": \"Hodneland\",\n        \"last_updated\": \"2013-09-04T18:35:18.666294\",\n        \"about\": \"Addresse:\\n\\n \\n\",\n        \"groups\": [\n            {\n                \"description\": \"\",\n                \"id\": 4,\n                \"name\": \"Flerkamera\"\n            }\n        ],\n        \"active\": true,\n        \"id\": 15,\n        \"permissions\": [],\n        \"private_email\": \"andreashodneland@gmail.com\",\n        \"first_name\": \"Andreas\",\n        \"created\": \"2013-09-04T18:35:18.666272\",\n        \"birthdate\": null,\n        \"email\": \"andreas.hodneland@studentmediene.no\"\n    }\n], \"num_results\": 3, \"page\": 1}";
 
         List<Person> persons = personMapper.personsFromJson(json, "objects");
 
@@ -73,12 +83,14 @@ public class PersonMapperTest extends AbstractTestRunner {
         assertEquals("alebru", persons.get(0).getUsername());
         assertEquals("Kjøniksen Brucki", persons.get(0).getLastName());
         assertEquals(1, persons.get(0).getGroups().size());
-        assertTrue(persons.get(0).getGroups().contains(new Group(7L, "produksjon")));
+        assertTrue(persons.get(0).getGroups().contains(new Group(7L, "Produksjon", "")));
+
+        assertEquals(2, persons.get(1).getPermissions().size());
     }
 
     @Test
     public void testPersonsFromJsonAtRoot() throws Exception {
-        String json = "[{\"username\": \"alebru\", \"phone_number\": \"92233281\", \"last_name\": \"Kj\\u00f8niksen Brucki\", \"last_updated\": \"2013-09-04T18:35:18.664302\", \"about\": \"Addresse:\\n\\n \\n\", \"groups\": [{\"id\": 7, \"name\": \"Produksjon\"}], \"active\": true, \"id\": 6, \"private_email\": \"\", \"first_name\": \"Alexander\", \"created\": \"2013-09-04T18:35:18.664292\", \"birthdate\": null, \"email\": \"alexander.brucki@stv.no\"}, {\"username\": \"amahau\", \"phone_number\": \"95175034\", \"last_name\": \"Haug\", \"last_updated\": \"2013-09-04T18:35:18.664884\", \"about\": \"Addresse:\\n\\n \\n\", \"groups\": [{\"id\": 8, \"name\": \"Serie\"}], \"active\": true, \"id\": 9, \"private_email\": \"amanda_j_haug@hotmail.com\", \"first_name\": \"Amanda J\\u00f8rgine\", \"created\": \"2013-09-04T18:35:18.664875\", \"birthdate\": null, \"email\": \"amanda.haug@stv.no\"}, {\"username\": \"andhod\", \"phone_number\": \"46416928\", \"last_name\": \"Hodneland\", \"last_updated\": \"2013-09-04T18:35:18.666294\", \"about\": \"Addresse:\\n\\n \\n\", \"groups\": [{\"id\": 4, \"name\": \"Flerkamera\"}], \"active\": true, \"id\": 15, \"private_email\": \"andreashodneland@gmail.com\", \"first_name\": \"Andreas\", \"created\": \"2013-09-04T18:35:18.666272\", \"birthdate\": null, \"email\": \"andreas.hodneland@stv.no\"}]";
+        String json = "[\n    {\n        \"username\": \"alebru\",\n        \"phone_number\": \"92233281\",\n        \"last_name\": \"Kj\\u00f8niksen Brucki\",\n        \"last_updated\": \"2013-09-04T18:35:18.664302\",\n        \"about\": \"Addresse:\\n\\n \\n\",\n        \"groups\": [\n            {\n                \"description\": \"STV Produksjon best\\u00e5r av eksternprodusenter og motiongrafikere. Sammen lager vi oppdragsfilm for eksterne akt\\u00f8rer. Vi har erfaring med produksjon av reklamefilm, film av arrangement og musikkvideo for \\u00e5 nevne noen.\",\n                \"id\": 7,\n                \"name\": \"Produksjon\"\n            }\n        ],\n        \"active\": true,\n        \"id\": 6,\n        \"permissions\": [],\n        \"private_email\": \"\",\n        \"first_name\": \"Alexander\",\n        \"created\": \"2013-09-04T18:35:18.664292\",\n        \"birthdate\": null,\n        \"email\": \"alexander.kj\\u00f8niksen brucki@studentmediene.no\"\n    },\n    {\n        \"username\": \"amahau\",\n        \"phone_number\": \"95175034\",\n        \"last_name\": \"Haug\",\n        \"last_updated\": \"2013-09-04T18:35:18.664884\",\n        \"about\": \"Addresse:\\n\\n \\n\",\n        \"groups\": [\n            {\n                \"description\": \"\",\n                \"id\": 8,\n                \"name\": \"Serie\"\n            }\n        ],\n        \"active\": true,\n        \"id\": 9,\n        \"permissions\": [\"momus:editor\", \"smmdb:admin\"],\n        \"private_email\": \"amanda_j_haug@hotmail.com\",\n        \"first_name\": \"Amanda J\\u00f8rgine\",\n        \"created\": \"2013-09-04T18:35:18.664875\",\n        \"birthdate\": null,\n        \"email\": \"amanda j\\u00f8rgine.haug@studentmediene.no\"\n    },\n    {\n        \"username\": \"andhod\",\n        \"phone_number\": \"46416928\",\n        \"last_name\": \"Hodneland\",\n        \"last_updated\": \"2013-09-04T18:35:18.666294\",\n        \"about\": \"Addresse:\\n\\n \\n\",\n        \"groups\": [\n            {\n                \"description\": \"\",\n                \"id\": 4,\n                \"name\": \"Flerkamera\"\n            }\n        ],\n        \"active\": true,\n        \"id\": 15,\n        \"permissions\": [],\n        \"private_email\": \"andreashodneland@gmail.com\",\n        \"first_name\": \"Andreas\",\n        \"created\": \"2013-09-04T18:35:18.666272\",\n        \"birthdate\": null,\n        \"email\": \"andreas.hodneland@studentmediene.no\"\n    }\n]";
 
         List<Person> persons = personMapper.personsFromJson(json);
 

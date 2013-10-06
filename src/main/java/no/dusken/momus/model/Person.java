@@ -19,10 +19,7 @@ package no.dusken.momus.model;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
@@ -35,6 +32,9 @@ public class Person {
     @Fetch(FetchMode.SUBSELECT)
     private Set<Group> groups;
 
+    @ElementCollection
+    private Set<String> permissions;
+
     private String username;
 
     private String firstName;
@@ -43,6 +43,8 @@ public class Person {
     private String email;
     private String phoneNumber;
 
+    private boolean active;
+
     public Person() {
     }
 
@@ -50,14 +52,16 @@ public class Person {
         this.id = id;
     }
 
-    public Person(Long id, Set<Group> groups, String username, String firstName, String lastName, String email, String phoneNumber) {
+    public Person(Long id, Set<Group> groups, Set<String> permissions, String username, String firstName, String lastName, String email, String phoneNumber, boolean active) {
         this.id = id;
         this.groups = groups;
+        this.permissions = permissions;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.active = active;
     }
 
     public Long getId() {
@@ -110,6 +114,22 @@ public class Person {
 
     public void setGroups(Set<Group> groups) {
         this.groups = groups;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Set<String> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(Set<String> permissions) {
+        this.permissions = permissions;
     }
 
     @Override
