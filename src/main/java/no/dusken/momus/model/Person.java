@@ -32,7 +32,8 @@ public class Person {
     @Fetch(FetchMode.SUBSELECT)
     private Set<Group> groups;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
     private Set<String> permissions;
 
     private String username;

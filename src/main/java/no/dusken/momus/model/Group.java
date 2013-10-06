@@ -16,6 +16,7 @@
 
 package no.dusken.momus.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -29,6 +30,8 @@ public class Group {
     private Long id;
 
     private String name;
+
+    @Column(length = 4096)
     private String description;
 
     public Group() {
