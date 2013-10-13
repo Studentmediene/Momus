@@ -56,11 +56,17 @@
     /*padding: 12px 15px 5px 15px;*/
 /*}*/
 
-textarea.note {
+textarea {
     width: 100%;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
+}
+textarea.article {
     height: 500px;
+}
+
+textarea.note {
+    height: 200px;
     background-color: #fff95d;;
 }
 

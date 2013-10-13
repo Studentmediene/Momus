@@ -17,11 +17,27 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function ($scope, $http) {
-        $scope.articleText = "halloooo";
+    .controller('ArticleCtrl', function ($scope, $http, noteParserRules) {
 
-        $scope.editor = new wysihtml5.Editor("wysihtml5-textarea", { // id of textarea element
-            toolbar: "wysihtml5-toolbar" // id of toolbar element
+        // noteCtrl
+        $http.get('/api/note').success(function (data) {
+            $scope.note = data;
+            $scope.original = angular.copy($scope.note);
         });
+
+        $scope.rules = noteParserRules;
+
+        $scope.$watch('note.content', function (newVal, oldVal) {
+            $scope.noteIsDirty = !angular.equals($scope.note, $scope.original);
+        });
+
+        $scope.saveNote = function () {
+            $http.put('/api/note', $scope.note).success(function (data) {
+                $scope.note = data;
+                $scope.original = angular.copy($scope.note);
+                $scope.noteIsDirty = false;
+            })
+        };
+
     });
 

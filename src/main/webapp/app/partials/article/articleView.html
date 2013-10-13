@@ -1,4 +1,3 @@
-
 <!--
   ~ Copyright 2013 Studentmediene i Trondheim AS
   ~
@@ -15,8 +14,83 @@
   ~ limitations under the License.
   -->
 
-<form>
-    <textarea id="textTest" ng-model="articleText"></textarea>
+<div class="row">
+    <div class="col-md-8">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h1 class="panel-title">
+                    Artikkel
+                    <div class="pull-right">
+                        <button class="btn btn-default btn-xs" ng-click="saveArticle()" ng-show="articleIsDirty"><i class="icon-save"></i> Lagre</button>
+                        <button class="btn btn-default btn-xs" ng-show="!articleIsDirty" disabled><i class="icon-ok"></i> Lagret</button>
+                    </div>
+                </h1>
+            </div>
+            <div class="panel-body">
+                <form name="articleForm">
+                    <div class="btn-toolbar" id="article-toolbar">
+                        <div class="btn-group">
+                            <button class="btn btn-default" data-wysihtml5-command="bold" title="Fet tekst (Ctrl+B)"><i class="icon-bold"></i></button>
+                            <button class="btn btn-default" data-wysihtml5-command="italic" title="Kursiv tekst (Ctrl+I)"><i class="icon-italic"></i></button>
+                            <button class="btn btn-default" data-wysihtml5-command="underline" title="Understreket tekst (Ctrl+U)"><i class="icon-underline"></i></button>
+                            <button class="btn btn-default" data-wysihtml5-command="strikethrough" title="Gjennomstreket tekst"><i class="icon-strikethrough"></i></button>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-default" data-wysihtml5-command="insertUnorderedList" title="Usortert liste"><i class="icon-list-ul"></i></button>
+                            <button class="btn btn-default" data-wysihtml5-command="insertOrderedList" title="Sortert liste"><i class="icon-list-ol"></i></button>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-default" data-wysihtml5-action="change_view" title="Se rådata (avansert)"><i class="icon-exchange"></i></button>
+                        </div>
+                    </div>
+                    <textarea id="articleArea" richeditor="article.content" richeditor-rules="rules" richeditor-toolbar="article-toolbar" class="article"></textarea>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <h1 class="panel-title">
+                    <span class="icon-list-alt"></span> Mine notater
+                    <div class="pull-right">
+                        <button class="btn btn-default btn-xs" ng-show="noteIsDirty" ng-click="saveNote()"><i class="icon-save"></i> Lagre</button>
+                        <button class="btn btn-default btn-xs" ng-show="!noteIsDirty" disabled><i class="icon-ok"></i> Lagret</button>
+                    </div>
+                </h1>
+            </div>
+            <div class="panel-body">
+                <form name="noteForm">
+                    <div class="btn-toolbar" id="note-toolbar">
+                        <div class="btn-group">
+                            <button class="btn btn-default" data-wysihtml5-command="bold" title="Fet tekst (Ctrl+B)"><i class="icon-bold"></i></button>
+                            <button class="btn btn-default" data-wysihtml5-command="italic" title="Kursiv tekst (Ctrl+I)"><i class="icon-italic"></i></button>
+                            <button class="btn btn-default" data-wysihtml5-command="underline" title="Understreket tekst (Ctrl+U)"><i class="icon-underline"></i></button>
+                            <button class="btn btn-default" data-wysihtml5-command="strikethrough" title="Gjennomstreket tekst"><i class="icon-strikethrough"></i></button>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-default" data-wysihtml5-command="insertUnorderedList" title="Usortert liste"><i class="icon-list-ul"></i></button>
+                            <button class="btn btn-default" data-wysihtml5-command="insertOrderedList" title="Sortert liste"><i class="icon-list-ol"></i></button>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-default" data-wysihtml5-action="change_view" title="Se rådata (avansert)"><i class="icon-exchange"></i></button>
+                        </div>
+                    </div>
 
-</form>
-        <div>{{articleText}}</div>
+                    <textarea id="noteArea" richeditor="note.content" richeditor-rules="rules" richeditor-toolbar="note-toolbar" class="note"></textarea>
+                </form>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h1 class="panel-title">Meta</h1>
+            </div>
+            <div class="panel-body">
+                <p>dirty: {{noteForm.$dirty}}</p>
+                <p>note:{{note.content}}</p>
+                <p>original:{{original.content}}</p>
+                <p>d:{{isDirty}}</p>
+            </div>
+        </div>
+    </div>
+</div>
