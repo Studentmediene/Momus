@@ -38,7 +38,7 @@ Some tips on how to set up stuff in IntelliJ for awesome development.
 Issue tracker
 -------------
 
-Currently here on GitHub. When our new server arrives we will have a better issue tracker up and running.
+We're using JIRA.
 
 
 License
