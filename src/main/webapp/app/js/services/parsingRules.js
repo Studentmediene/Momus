@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.services').
-    value('articleParsingRules',
+    value('articleParserRules',
     {
         tags: {
             strong: {

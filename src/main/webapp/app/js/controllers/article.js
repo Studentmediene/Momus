@@ -17,24 +17,46 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function ($scope, $http, noteParserRules) {
+    .controller('ArticleCtrl', function ($scope, $http, articleParserRules, noteParserRules) {
+
+//        $http.get('/api/article').success(function (data) {
+//            $scope.article = data;
+//            $scope.originalArticle = angular.copy($scope.article);
+//        });
+
+        $scope.article = {content: "Hei"};
+        $scope.originalArticle = angular.copy($scope.article);
+
+        $scope.articleRules = articleParserRules;
+
+        $scope.$watch('article.content', function (newVal, oldVal) {
+            $scope.articleIsDirty = !angular.equals($scope.article, $scope.originalArticle);
+        });
+
+        $scope.saveArticle = function () {
+            $http.put('/api/article', $scope.article).success(function (data) {
+                $scope.article = data;
+                $scope.originalArticle = angular.copy($scope.article);
+                $scope.articleIsDirty = false;
+            })
+        };
 
         // noteCtrl
         $http.get('/api/note').success(function (data) {
             $scope.note = data;
-            $scope.original = angular.copy($scope.note);
+            $scope.originalNote = angular.copy($scope.note);
         });
 
-        $scope.rules = noteParserRules;
+        $scope.noteRules = noteParserRules;
 
         $scope.$watch('note.content', function (newVal, oldVal) {
-            $scope.noteIsDirty = !angular.equals($scope.note, $scope.original);
+            $scope.noteIsDirty = !angular.equals($scope.note, $scope.originalNote);
         });
 
         $scope.saveNote = function () {
             $http.put('/api/note', $scope.note).success(function (data) {
                 $scope.note = data;
-                $scope.original = angular.copy($scope.note);
+                $scope.originalNote = angular.copy($scope.note);
                 $scope.noteIsDirty = false;
             })
         };
