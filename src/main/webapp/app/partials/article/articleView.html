@@ -88,10 +88,22 @@
                 <h1 class="panel-title">Meta</h1>
             </div>
             <div class="panel-body">
-                <p>dirty: {{noteForm.$dirty}}</p>
-                <p>note:{{note.content}}</p>
-                <p>original:{{original.content}}</p>
-                <p>d:{{isDirty}}</p>
+                <div class="row">
+                    <span class="col-sm-4">Journalister</span>
+                    <span class="col-sm-8">
+                        <ul class="list-unstyled">
+                            <li ng-repeat="journalist in article.journalists">{{ journalist.name }}</li>
+                        </ul>
+                    </span>
+                <div class="row">
+                </div>
+                    <span class="col-sm-4">Fotografer</span>
+                    <span class="col-sm-8">
+                        <ul class="list-unstyled">
+                            <li ng-repeat="photographer in article.photographers">{{ photographer.name }}</li>
+                        </ul>
+                    </span>
+                </div>
             </div>
         </div>
     </div>
