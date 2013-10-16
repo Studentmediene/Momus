@@ -27,18 +27,23 @@ angular.module('momusApp.directives', []);
 angular.module('momusApp', ['momusApp.controllers', 'momusApp.filters', 'momusApp.services', 'momusApp.directives']).
     config(['$routeProvider', function ($routeProvider) {
         // Admin interfaces
-        $routeProvider.when('/admin/role', {templateUrl: 'partials/admin/role.html', controller: 'AdminRoleCtrl'});
-
+        $routeProvider
+        .when('/admin/role',
+            {
+                templateUrl: 'partials/admin/role.html',
+                controller: 'AdminRoleCtrl'
+            }
+        )
         // Article interface
-        // should eventually be /article/:id
-        $routeProvider.when(
-            '/article/',
+        .when('/article/:id',
             {
                 templateUrl: 'partials/article/articleView.html',
                 controller: 'ArticleCtrl'
             }
+        )
+        .otherwise(
+            {
+                redirectTo: '/view1'
+            }
         );
-
-
-        $routeProvider.otherwise({redirectTo: '/view1'});
     }]);

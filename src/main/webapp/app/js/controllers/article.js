@@ -17,15 +17,36 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function ($scope, $http, articleParserRules, noteParserRules) {
+    .controller('ArticleCtrl', function ($scope, $http, $routeParams, articleParserRules, noteParserRules) {
 
 //        $http.get('/api/article').success(function (data) {
 //            $scope.article = data;
 //            $scope.originalArticle = angular.copy($scope.article);
 //        });
 
-        $scope.article = {content: "Hei"};
+        // START DUMMY ARTICLES STUFF
+
+        var articles = [
+            {
+                content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin aliquam lorem ullamcorper placerat elementum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam non viverra nulla. Etiam ante nunc, elementum eget porta quis, blandit vel nisi. Donec ultricies tortor at urna viverra, ut rhoncus erat fringilla. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam a scelerisque justo. Quisque ut semper odio. Duis semper ut enim sed blandit. Mauris at vulputate arcu. Etiam tortor est, tincidunt condimentum ornare eget, tristique vel lectus. Vivamus dignissim tempor arcu id tempus. Maecenas sapien tortor, viverra in pretium ac, pulvinar sed lacus. Etiam consequat, libero ut porta malesuada, metus ante tristique quam, sed suscipit massa eros vitae justo. Vivamus ac tortor ac lacus venenatis feugiat. Suspendisse tempor dapibus urna, ac dictum ipsum fermentum in.",
+                journalists: [
+                    { name: "Mats" },
+                    { name: "Mathias" }
+                ]
+            },
+            {
+                content: "If something like that isn't possible you can change your templateUrl to point to a partial html file that just has ng-include and then set the url in your controller using $routeParams like this:",
+                journalists: [
+                    { name: "Mats" },
+                    { name: "Mathias" }
+                ]
+            }
+        ];
+
+        $scope.article = articles[$routeParams.id];
         $scope.originalArticle = angular.copy($scope.article);
+
+        // END DUMMY ARTICLES STUFF
 
         $scope.articleRules = articleParserRules;
 
