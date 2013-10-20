@@ -41,6 +41,11 @@ angular.module('momusApp', ['momusApp.controllers', 'momusApp.filters', 'momusAp
                 controller: 'ArticleCtrl'
             }
         )
+        .when('/article',
+            {
+                redirectTo: '/article/0' // TODO: make this go to article search view?
+            }
+        )
         .otherwise(
             {
                 redirectTo: '/view1'
