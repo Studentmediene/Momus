@@ -36,5 +36,5 @@ angular.module('momusApp', ['momusApp.controllers', 'momusApp.filters', 'momusAp
         $routeProvider.when('/search', {templateUrl: 'partials/search/searchView.html', controller: 'SearchCtrl'});
 
 
-        //$routeProvider.otherwise({redirectTo: '/view1'});
+        $routeProvider.otherwise({redirectTo: '/view1'});
     }]);

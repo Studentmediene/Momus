@@ -17,5 +17,15 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('SearchCtrl', function ($scope, $http) {
+    .controller('SearchCtrl', function ($scope) {
+        $scope.articles = [
+            {"id": "1", "name": "Nyhet1", "section": "Nyhet", "publication": "2013 1"},
+            {"id": "2", "name": "Nyhet2", "section": "Nyhet", "publication": "2013 1"},
+            {"id": "3", "name": "Nyhet3", "section": "Nyhet", "publication": "2013 2"},
+            {"id": "4", "name": "Debatt1", "section": "Debatt", "publication": "2013 2"},
+            {"id": "5", "name": "Kultur1", "section": "Kultur", "publication": "2013 3"},
+            {"id": "6", "name": "Forbruker1", "section": "Forbruker", "publication": "2013 3"},
+            {"id": "7", "name": "Reportasje1", "section": "Reportasje", "publication": "2013 4"},
+            {"id": "8", "name": "Sport1", "section": "Sport", "publication": "2013 4"}
+        ];
     });

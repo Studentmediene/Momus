@@ -15,4 +15,62 @@
   ~ limitations under the License.
   -->
 
-<p>Hei</p>
+
+<div class ="row">
+    <div class="col-md-6">
+        <label>Text input</label>
+        <input placeholder="Text input" ng-model="query">
+    </div>
+</div>
+
+
+<div class="row">
+
+    <div class="col-md-3">
+        <label >Status</label>
+            <select class="form-control" id="status">
+                <option>Velg status</option>
+                <option>Skriving</option>
+                <option>Desking</option>
+                <option>Korrektur</option>
+                <option>Publisert</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label >Person</label>
+        <select class="form-control" id="person">
+            <option>Velg person</option>
+            <option>Ola Nordmann</option>
+            <option>Albus Humlesnurr</option>
+            <option>Aragorn</option>
+            <option>Danny Ocean</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label >Redaksjon</label>
+        <select class="form-control" id="redaksjon">
+            <option>Velg redaksjon</option>
+            <option>Kultur</option>
+            <option>Forbruker</option>
+            <option>Debatt</option>
+            <option>Musikk</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label >Publikasjon</label>
+        <select class="form-control" id="redaksjon">
+            <option>Velg publikasjon</option>
+            <option>2013 1</option>
+            <option>2013 2</option>
+            <option>2013 3</option>
+            <option>2013 4</option>
+        </select>
+    </div>
+</div>
+            <div ng-repeat="article in articles | filter:query">
+                <div class="row">
+                    <div class=col-md-6>{{article.name}}</div>
+                    <div class=col-md-3>{{article.section}}</div>
+                    <div class=col-md-3>{{article.publication}}</div>
+                </div>
+                </div>
