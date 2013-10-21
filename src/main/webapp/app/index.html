@@ -63,6 +63,14 @@
         </div>
     </div>
 
+    <div class="row" ng-controller="CurrentUserCtrl">
+        1: {{test.first_name}}<br>
+        2: {{test2.first_name}}
+        <br>
+        <button ng-click="update()">Click me</button>
+    </div>
+
+
     <div class="row">
         <div ng-view></div>
     </div>
@@ -77,6 +85,7 @@
 
 <!-- Include angular -->
 <script src="lib/angular/angular.js"></script>
+<script src="lib/angular/angular-route.js"></script>
 
 
 <!-- And the code for our app -->
@@ -85,10 +94,13 @@
 <!-- Controllers -->
 <script src="js/controllers/adminRole.js"></script>
 <script src="js/controllers/article.js"></script>
+<script src="js/controllers/currentUser.js"></script>
 <script src="js/controllers/note.js"></script>
 <!-- Services -->
 <script src="js/services/version.js"></script>
 <script src="js/services/parsingRules.js"></script>
+<script src="js/services/smmDbTicket.js"></script>
+<script src="js/services/currentUser.js"></script>
 <!-- Filters -->
 <!-- Directives -->
 <script src="js/directives/version.js"></script>

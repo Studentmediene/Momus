@@ -24,7 +24,13 @@ angular.module('momusApp.directives', []);
 
 
 // Declare app level module which depends on filters, and services
-angular.module('momusApp', ['momusApp.controllers', 'momusApp.filters', 'momusApp.services', 'momusApp.directives']).
+angular.module('momusApp', [
+        'momusApp.controllers',
+        'momusApp.filters',
+        'momusApp.services',
+        'momusApp.directives',
+        'ngRoute'
+    ]).
     config(['$routeProvider', function ($routeProvider) {
         // Admin interfaces
         $routeProvider.when('/admin/role', {templateUrl: 'partials/admin/role.html', controller: 'AdminRoleCtrl'});
@@ -34,4 +40,9 @@ angular.module('momusApp', ['momusApp.controllers', 'momusApp.filters', 'momusAp
 
 
         $routeProvider.otherwise({redirectTo: '/view1'});
-    }]);
+    }]).
+    config(function($httpProvider) {
+        $httpProvider.interceptors.push('SmmDbTicket');
+    })
+
+;
