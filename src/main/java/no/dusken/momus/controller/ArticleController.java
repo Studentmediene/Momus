@@ -43,6 +43,11 @@ public class ArticleController {
         return articleService.getAllArticles();
     }
 
+    @RequestMapping(value = "/article/{id}", method = RequestMethod.GET)
+    public @ResponseBody Article getArticleByID(@PathVariable("id") Long id) {
+        return articleService.getArticleById(id);
+    }
+
     /**
      * TODO: Add full search
      */
