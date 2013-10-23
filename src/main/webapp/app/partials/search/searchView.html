@@ -32,37 +32,25 @@
     <div class="col-md-3">
         <select class="form-control" id="status">
             <option>Velg status</option>
-            <option>Skriving</option>
-            <option>Desking</option>
-            <option>Korrektur</option>
-            <option>Publisert</option>
+            <option ng-repeat="status in statuses">{{status.name}}</option>
     </select>
     </div>
     <div class="col-md-3">
         <select class="form-control" id="person">
             <option>Velg person</option>
-            <option>Ola Nordmann</option>
-            <option>Albus Humlesnurr</option>
-            <option>Aragorn</option>
-            <option>Danny Ocean</option>
+            <option ng-repeat="person in persons">{{person.name}}</option>
         </select>
     </div>
     <div class="col-md-3">
         <select class="form-control" id="redaksjon">
             <option>Velg redaksjon</option>
-            <option>Kultur</option>
-            <option>Forbruker</option>
-            <option>Debatt</option>
-            <option>Musikk</option>
+            <option ng-repeat="section in sections">{{section.name}}</option>
         </select>
     </div>
     <div class="col-md-3">
-        <select class="form-control" id="redaksjon">
+        <select class="form-control">
             <option>Velg publikasjon</option>
-            <option>2013 1</option>
-            <option>2013 2</option>
-            <option>2013 3</option>
-            <option>2013 4</option>
+            <option ng-repeat="publication in publications">{{publication.name}}</option>
         </select>
     </div>
 </div>
