@@ -18,7 +18,7 @@
 
 <div class ="row">
     <div class="col-md-6 col-md-offset-3">
-        <input type="text" class="form-control" placeholder="Text input">
+        <input type="text" class="form-control" placeholder="Text input" ng-model="search">
     </div>
 </div>
 
@@ -71,7 +71,7 @@
             <div class="col-md-3"><b>Seksjon</b></div>
             <div class="col-md-3"><b>Publikasjon</b></div>
         </div>
-<div ng-repeat="article in articles">
+<div ng-repeat="article in articles | filter:search">
     <div class="row">
         <div class=col-md-6>{{article.name}}</div>
         <div class=col-md-3>{{article.section}}</div>
