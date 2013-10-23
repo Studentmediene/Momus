@@ -32,6 +32,9 @@ angular.module('momusApp', ['momusApp.controllers', 'momusApp.filters', 'momusAp
         // Article interfaces
         $routeProvider.when('/article/:id', {templateUrl: 'partials/article/articleView.html', controller: 'ArticleCtrl'});
 
+        // Publications (utgaver) interfaces
+        $routeProvider.when('/publications', {templateUrl: 'partials/publication/publication.html', controller: 'PublicationCtrl'})
+
 
         $routeProvider.otherwise({redirectTo: '/view1'});
     }]);
