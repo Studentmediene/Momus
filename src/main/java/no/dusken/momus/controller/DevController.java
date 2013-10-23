@@ -20,6 +20,11 @@ import no.dusken.momus.authentication.AuthUserDetails;
 import no.dusken.momus.authentication.Token;
 import no.dusken.momus.authentication.UserAuthorities;
 import no.dusken.momus.authentication.UserLoginService;
+import no.dusken.momus.model.Article;
+import no.dusken.momus.model.ArticleStatus;
+import no.dusken.momus.model.Person;
+import no.dusken.momus.service.repository.ArticleRepository;
+import no.dusken.momus.service.repository.PersonRepository;
 import no.dusken.momus.smmdb.Syncer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +35,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Dev only, not accessible when live
@@ -46,6 +54,12 @@ public class DevController {
 
     @Autowired
     private UserLoginService userLoginService;
+
+    @Autowired
+    private ArticleRepository articleRepository;
+
+    @Autowired
+    private PersonRepository personRepository;
 
     @Autowired
     private Syncer syncer;
@@ -79,5 +93,21 @@ public class DevController {
     @PreAuthorize("hasRole('momus:editor')")
     public @ResponseBody String editor() {
         return "editor ok";
+    }
+
+    @RequestMapping("/createArticle")
+    public @ResponseBody String createTestArticle() {
+        Article article1 = new Article();
+
+        Set<Person> journalists = new HashSet<>();
+        journalists.add(personRepository.findOne(594L));
+
+        article1.setJournalists(journalists);
+
+        article1.setContent("hei");
+
+        articleRepository.save(article1);
+
+        return "ok";
     }
 }

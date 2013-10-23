@@ -89,18 +89,18 @@
             </div>
             <div class="panel-body">
                 <div class="row">
-                    <span class="col-sm-4">Journalister</span>
-                    <span class="col-sm-8">
+                    <span class="col-xs-4">Journalister</span>
+                    <span class="col-xs-8">
                         <ul class="list-unstyled">
-                            <li ng-repeat="journalist in article.journalists">{{ journalist.name }}</li>
+                            <li ng-repeat="journalist in article.journalists">{{ journalist.first_name }} {{ journalist.last_name }}</li>
                         </ul>
                     </span>
                 <div class="row">
                 </div>
-                    <span class="col-sm-4">Fotografer</span>
-                    <span class="col-sm-8">
+                    <span class="col-xs-4">Fotografer</span>
+                    <span class="col-xs-8">
                         <ul class="list-unstyled">
-                            <li ng-repeat="photographer in article.photographers">{{ photographer.name }}</li>
+                            <li ng-repeat="photographer in article.photographers">{{ photographer.first_name }} {{ photographer.last_name }}</li>
                         </ul>
                     </span>
                 </div>

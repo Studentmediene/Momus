@@ -34,6 +34,7 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
+    // Get list of all articles
     /**
      * TODO: Add pagination or something, getting all articles will possibly be MANY
      * @return
@@ -43,11 +44,13 @@ public class ArticleController {
         return articleService.getAllArticles();
     }
 
-    @RequestMapping(value = "/article/{id}", method = RequestMethod.GET)
+    // Get article by ID
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody Article getArticleByID(@PathVariable("id") Long id) {
         return articleService.getArticleById(id);
     }
 
+    // Find list of articles matching search criteria
     /**
      * TODO: Add full search
      */
