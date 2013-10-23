@@ -17,17 +17,21 @@
 
 
 <div class ="row">
-    <div class="col-md-6">
-        <label>Text input</label>
-        <input placeholder="Text input" ng-model="query">
+    <div class="col-md-6 col-md-offset-3">
+        <!--<label>Text input</label>-->
+        <input type="text" class="form-control" placeholder="Text input">
     </div>
+</div>
+
+<div class ="row">
+
 </div>
 
 
 <div class="row">
 
     <div class="col-md-3">
-        <label >Status</label>
+        <!--<label>Text input</label>-->
             <select class="form-control" id="status">
                 <option>Velg status</option>
                 <option>Skriving</option>
@@ -37,7 +41,7 @@
         </select>
     </div>
     <div class="col-md-3">
-        <label >Person</label>
+        <!--<label>Text input</label>-->
         <select class="form-control" id="person">
             <option>Velg person</option>
             <option>Ola Nordmann</option>
@@ -47,7 +51,7 @@
         </select>
     </div>
     <div class="col-md-3">
-        <label >Redaksjon</label>
+        <!--<label>Text input</label>-->
         <select class="form-control" id="redaksjon">
             <option>Velg redaksjon</option>
             <option>Kultur</option>
@@ -57,7 +61,7 @@
         </select>
     </div>
     <div class="col-md-3">
-        <label >Publikasjon</label>
+        <!--<label>Text input</label>-->
         <select class="form-control" id="redaksjon">
             <option>Velg publikasjon</option>
             <option>2013 1</option>
@@ -67,10 +71,15 @@
         </select>
     </div>
 </div>
-            <div ng-repeat="article in articles | filter:query">
-                <div class="row">
-                    <div class=col-md-6>{{article.name}}</div>
-                    <div class=col-md-3>{{article.section}}</div>
-                    <div class=col-md-3>{{article.publication}}</div>
-                </div>
-                </div>
+        <div class="row">
+            <div class="col-md-6"><b>Navn</b></div>
+            <div class="col-md-3"><b>Seksjon</b></div>
+            <div class="col-md-3"><b>Publikasjon</b></div>
+        </div>
+<div ng-repeat="article in articles">
+    <div class="row">
+        <div class=col-md-6>{{article.name}}</div>
+        <div class=col-md-3>{{article.section}}</div>
+        <div class=col-md-3>{{article.publication}}</div>
+    </div>
+    </div>
