@@ -20,10 +20,7 @@ import no.dusken.momus.model.Article;
 import no.dusken.momus.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -50,13 +47,12 @@ public class ArticleController {
         return articleService.getArticleById(id);
     }
 
-    // Find list of articles matching search criteria
-    /**
-     * TODO: Add full search
-     */
-    @RequestMapping("/search/{name}/{content}")
-    public @ResponseBody List<Article> getFromSearch(@PathVariable("name") String name, @PathVariable("content") String content) {
-        return articleService.search(content, name);
+    // Update (PUT) existing article
+    @RequestMapping(method = RequestMethod.PUT)
+    public @ResponseBody Article saveArticleContents(@RequestBody Article article){
+        return articleService.saveArticleContents(article);
     }
+
+
 
 }

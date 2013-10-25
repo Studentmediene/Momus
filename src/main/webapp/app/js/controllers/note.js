@@ -19,4 +19,25 @@
 angular.module('momusApp.controllers')
     .controller('NoteCtrl', function ($scope, $http, noteParserRules) {
 
+        // The scope of this controller is the note panel,
+        // which also falls under the control of the article controller
+
+        $scope.saveNote = function () {
+            $http.put('/api/note', $scope.note).success(function (data) {
+                $scope.note = data;
+                $scope.originalNote = angular.copy($scope.note);
+                $scope.noteIsDirty = false;
+            });
+        };
+        // the note that belongs to an article object is a string called note
+        // the note that belongs to a user is a note object with a string called content
+        $scope.$watch('note.content', function (newVal, oldVal) {
+            $scope.noteIsDirty = !angular.equals($scope.note, $scope.originalNote);
+        });
+        $scope.noteRules = noteParserRules;
+
+        $http.get('/api/note').success(function (data) {
+            $scope.note = data;
+            $scope.originalNote = angular.copy($scope.note);
+        });
     });

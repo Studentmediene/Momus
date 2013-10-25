@@ -66,8 +66,9 @@ public class ArticleService {
         return articleRepository.findAll(criteria);
     }
 
-    public void saveArticleContents(Article article) {
-        Article oldArticle = articleRepository.findOne(article.getId());
+    public Article saveArticleContents(Article article) {
+        articleRepository.saveAndFlush(article);
+        return articleRepository.findOne(article.getId());
     }
 
 }
