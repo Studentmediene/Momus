@@ -22,7 +22,12 @@ angular.module('momusApp.controllers')
         $http.get('/api/article/' + $routeParams.id).success(function (data) {
             $scope.article = data;
             $scope.originalContent = angular.copy($scope.article.content);
-            $scope.originalNote = angular.copy($scope.article.note);
+//            $scope.originalNote = angular.copy($scope.article.note);
+        });
+
+        $http.get('/api/note').success(function (data) {
+            $scope.note = data;
+            $scope.originalNote = angular.copy($scope.note);
         });
 
         $scope.articleRules = articleParserRules;
@@ -32,33 +37,27 @@ angular.module('momusApp.controllers')
             $scope.articleIsDirty = !angular.equals($scope.article.content, $scope.originalContent);
         });
 
-        $scope.$watch('article.note', function (newVal, oldVal) {
-            $scope.noteIsDirty = !angular.equals($scope.article.note, $scope.originalNote);
+        // the note that belongs to an article object is a string called note
+        // the note that belongs to a user is a note object with a string called content
+        $scope.$watch('note.content', function (newVal, oldVal) {
+            $scope.noteIsDirty = !angular.equals($scope.note, $scope.originalNote);
         });
 
         $scope.saveArticle = function () {
-            $scope.originalContent = angular.copy($scope.article.content);
-            $scope.articleIsDirty = false;
-//            $http.put('/api/article', $scope.article).success(function (data) {
-//                $scope.article = data;
-//            })
+            $http.put('/api/article', $scope.article).success(function (data) {
+                $scope.article = data;
+                $scope.originalContent = angular.copy($scope.article.content);
+                $scope.articleIsDirty = false;
+            });
         };
 
         $scope.saveNote = function () {
-            $scope.originalNote = angular.copy($scope.article.note);
-            $scope.noteIsDirty = false;
-//            $http.put('/api/note', $scope.note).success(function (data) {
-//                $scope.note = data;
-//                $scope.originalNote = angular.copy($scope.article.note);
-//                $scope.noteIsDirty = false;
-//            })
+            $http.put('/api/note', $scope.note).success(function (data) {
+                $scope.note = data;
+                $scope.originalNote = angular.copy($scope.note);
+                $scope.noteIsDirty = false;
+            });
         };
-
-        // noteCtrl
-//        $http.get('/api/note').success(function (data) {
-//            $scope.note = data;
-//            $scope.originalNote = angular.copy($scope.note);
-//        });
 
     });
 
