@@ -43,7 +43,7 @@ angular.module('momusApp', ['momusApp.controllers', 'momusApp.filters', 'momusAp
         )
         .when('/article',
             {
-                redirectTo: '/article/0' // TODO: make this go to article search view?
+                redirectTo: '/article/1' // TODO: make this go to article search view?
             }
         )
         .otherwise(

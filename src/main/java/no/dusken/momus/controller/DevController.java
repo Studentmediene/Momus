@@ -95,18 +95,37 @@ public class DevController {
         return "editor ok";
     }
 
-    @RequestMapping("/createArticle")
-    public @ResponseBody String createTestArticle() {
+    @RequestMapping("/createArticles")
+    public @ResponseBody String createTestArticle1() {
         Article article1 = new Article();
 
-        Set<Person> journalists = new HashSet<>();
-        journalists.add(personRepository.findOne(594L));
+        Set<Person> journalists1 = new HashSet<>();
+        Set<Person> photographers1 = new HashSet<>();
+        journalists1.add(personRepository.findOne(594L));
+        photographers1.add(personRepository.findOne(600L));
 
-        article1.setJournalists(journalists);
-
-        article1.setContent("hei");
+        article1.setJournalists(journalists1);
+        article1.setPhotographers(journalists1);
+        article1.setContent(" Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus consequat ultricies nibh nec gravida. Proin sed posuere quam. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aenean a augue nec lectus aliquet euismod et eget diam. Morbi mattis ante eget neque tincidunt porttitor. Morbi in pellentesque ante, vitae tempus leo. Phasellus ut augue elit. Ut porta vulputate odio, quis vestibulum mi pellentesque sit amet. Nullam bibendum elit et mauris pretium molestie quis in elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam ac nibh vitae dolor tincidunt convallis sit amet ut tellus. Aenean lacinia rutrum ligula, eu pellentesque dolor viverra vel. ");
+        article1.setNote("detta er et nottat");
+        article1.setName("Artikkelnavn");
 
         articleRepository.save(article1);
+
+        Article article2 = new Article();
+
+        Set<Person> journalists2 = new HashSet<>();
+        Set<Person> photographers2 = new HashSet<>();
+        journalists2.add(personRepository.findOne(601L));
+        photographers2.add(personRepository.findOne(594L));
+
+        article2.setJournalists(journalists2);
+        article2.setPhotographers(photographers2);
+        article2.setContent(" Integer id libero diam. Curabitur a pellentesque risus. Fusce ac justo id erat posuere dictum vel et arcu. Quisque et purus nibh. Fusce vel fringilla arcu. Pellentesque ac est mauris. Fusce quis tellus posuere, pharetra ante sit amet, elementum nibh. Donec pretium, lacus et porttitor placerat, diam quam posuere libero, sit amet dignissim tortor est nec justo. Donec in pulvinar risus. Donec at eleifend ligula, quis porta diam. Sed at rutrum est. Proin molestie euismod nunc, a blandit ligula egestas quis. Fusce et sollicitudin dui. Pellentesque vulputate eros id luctus porta. Proin quis urna sed sem lobortis sollicitudin. Donec non diam viverra, dictum arcu at, porta odio. ");
+        article2.setNote("detta er også et nottat");
+        article2.setName("Artikkelnavn 2: Electric Boogaloo");
+
+        articleRepository.save(article2);
 
         return "ok";
     }

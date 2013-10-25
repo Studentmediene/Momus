@@ -21,46 +21,44 @@ angular.module('momusApp.controllers')
 
         $http.get('/api/article/' + $routeParams.id).success(function (data) {
             $scope.article = data;
-            $scope.originalArticle = angular.copy($scope.article);
+            $scope.originalContent = angular.copy($scope.article.content);
+            $scope.originalNote = angular.copy($scope.article.note);
         });
 
         $scope.articleRules = articleParserRules;
+        $scope.noteRules = noteParserRules;
 
         $scope.$watch('article.content', function (newVal, oldVal) {
-            $scope.articleIsDirty = !angular.equals($scope.article, $scope.originalArticle);
+            $scope.articleIsDirty = !angular.equals($scope.article.content, $scope.originalContent);
+        });
+
+        $scope.$watch('article.note', function (newVal, oldVal) {
+            $scope.noteIsDirty = !angular.equals($scope.article.note, $scope.originalNote);
         });
 
         $scope.saveArticle = function () {
-            $scope.originalArticle = angular.copy($scope.article);
+            $scope.originalContent = angular.copy($scope.article.content);
             $scope.articleIsDirty = false;
 //            $http.put('/api/article', $scope.article).success(function (data) {
 //                $scope.article = data;
-//                $scope.originalArticle = angular.copy($scope.article);
-//                $scope.articleIsDirty = false;
+//            })
+        };
+
+        $scope.saveNote = function () {
+            $scope.originalNote = angular.copy($scope.article.note);
+            $scope.noteIsDirty = false;
+//            $http.put('/api/note', $scope.note).success(function (data) {
+//                $scope.note = data;
+//                $scope.originalNote = angular.copy($scope.article.note);
+//                $scope.noteIsDirty = false;
 //            })
         };
 
         // noteCtrl
-        $http.get('/api/note').success(function (data) {
-            $scope.note = data;
-            $scope.originalNote = angular.copy($scope.note);
-        });
-
-//        $scope.note = $scope.article.note;
-
-        $scope.noteRules = noteParserRules;
-
-        $scope.$watch('note.content', function (newVal, oldVal) {
-            $scope.noteIsDirty = !angular.equals($scope.note, $scope.originalNote);
-        });
-
-        $scope.saveNote = function () {
-            $http.put('/api/note', $scope.note).success(function (data) {
-                $scope.note = data;
-                $scope.originalNote = angular.copy($scope.note);
-                $scope.noteIsDirty = false;
-            })
-        };
+//        $http.get('/api/note').success(function (data) {
+//            $scope.note = data;
+//            $scope.originalNote = angular.copy($scope.note);
+//        });
 
     });
 
