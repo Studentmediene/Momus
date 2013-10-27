@@ -50,7 +50,7 @@ public class ExceptionHandler implements HandlerExceptionResolver {
         }
 
         ModelAndView mav = new ModelAndView(new MappingJackson2JsonView());
-        mav.addObject("error", "Something went wrong: \"" + e.getMessage() + "\"");
+        mav.addObject("error", e.getMessage());
 
         return mav;
     }

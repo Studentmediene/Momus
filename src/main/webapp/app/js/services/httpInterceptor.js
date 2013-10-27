@@ -17,7 +17,21 @@
 'use strict';
 
 angular.module('momusApp.services').
-    factory('SmmDbTicket', function($q, $location, $injector) {
+
+    factory('HttpInterceptor', function($q, $location, $injector) {
+        /*
+        This interceptor will intercept http requests that have failed.
+
+        If the reason for failing is 401 it means we are not logged in on our server, so then
+        we try to get a ticket from SmmDb and send it to our server to verify the user.
+        However, if SmmDb also returns a 401 the user is not logged in there either. So then we redirect
+        to SmmDb for login.
+        When a ticket has been sent to the server and we got a successful response, the interceptor will try
+        to resend all requests that failed and register a logout url in SmmDb.
+
+        If we get a 403 error, that means the user doesn't have authority to do the request.
+         */
+
 
         // Make sure we only send one request to SmmDb
         var hasSentRequestForTicket = false;
@@ -66,13 +80,12 @@ angular.module('momusApp.services').
                 })
                 .error(function(loginResponse) {
                     // Couldn't validate ticket on the server
-                    // TODO: Handle properly
-                    alert(loginResponse.message);
+                    alert('Noe gikk feil under innlogging.');
                 });
             })
             .error(function(smmDbData) {
                 // error from SmmDb, means we're not logged in there, so we redirect to the login-form
-                window.location = 'http://m.studentmediene.no/api/login?next=' + encodeURIComponent(window.location.href);;
+                window.location = 'http://m.studentmediene.no/api/login?next=' + encodeURIComponent(window.location.href);
             });
         }
 
@@ -92,10 +105,16 @@ angular.module('momusApp.services').
             $http.get('http://m.studentmediene.no/api/register_logout_url?logout_url=' + encodeURIComponent(ourUrl), {withCredentials: true});
         }
 
+        function isInIgnoreList(url) {
+            return (
+                   url.indexOf('m.studentmediene.no') > -1
+                || url.indexOf('/api/auth/login') > -1
+                );
+        }
 
         return {
             'responseError': function(response) {
-                if (response.status === 401 && (response.config.url.indexOf('m.studentmediene.no') == -1)) {
+                if (response.status === 401 && (!isInIgnoreList(response.config.url))) {
 
                     if (!hasSentRequestForTicket) {
                         tryLoginThroughSmmDb();
@@ -105,6 +124,13 @@ angular.module('momusApp.services').
                     var deferred = $q.defer();
                     addToBuffer(response.config, deferred);
                     return deferred.promise;
+
+                } else if (response.status === 403) {
+                    alert('Du har ikke tilgang.');
+                }
+
+                if (response.data.error) {
+                    alert(response.data.error);
                 }
 
                 return $q.reject(response);

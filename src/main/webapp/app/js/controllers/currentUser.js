@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('CurrentUserCtrl', function ($scope, $http, CurrentUser) {
+    .controller('CurrentUserCtrl', function ($scope, CurrentUser) {
         CurrentUser.getCurrentUser().then(function(user) {
             $scope.user = user;
         });

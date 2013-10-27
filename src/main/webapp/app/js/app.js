@@ -43,7 +43,7 @@ angular.module('momusApp', [
 
     }]).
     config(function($httpProvider) {
-        $httpProvider.interceptors.push('SmmDbTicket');
+        $httpProvider.interceptors.push('HttpInterceptor');
     })
 
 ;

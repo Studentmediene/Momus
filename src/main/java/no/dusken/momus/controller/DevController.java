@@ -20,6 +20,7 @@ import no.dusken.momus.authentication.AuthUserDetails;
 import no.dusken.momus.authentication.Token;
 import no.dusken.momus.authentication.UserAuthorities;
 import no.dusken.momus.authentication.UserLoginService;
+import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.smmdb.Syncer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +68,11 @@ public class DevController {
     public @ResponseBody String sync() {
         syncer.sync();
         return "sync ok";
+    }
+
+    @RequestMapping("/exception")
+    public @ResponseBody String exception() {
+        throw new RestException("Ops, Krasja", 500);
     }
 
     @RequestMapping("/test")

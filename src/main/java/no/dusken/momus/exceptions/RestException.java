@@ -18,6 +18,8 @@ package no.dusken.momus.exceptions;
 
 /**
  * Can be thrown when an error should be shown to the user with a specific http code
+ *
+ * OBS: RestExceptions are not logged. If logging is needed, it should be done before the exception is being thrown.
  */
 public class RestException extends RuntimeException {
     private String message;
