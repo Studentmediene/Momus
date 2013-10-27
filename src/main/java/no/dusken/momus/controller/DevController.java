@@ -70,8 +70,8 @@ public class DevController {
     }
 
     @RequestMapping("/test")
+    @PreAuthorize("hasRole('momus:teeest')")
     public @ResponseBody String test() {
-        syncer.sync();
         return "ok";
     }
 

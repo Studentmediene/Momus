@@ -39,7 +39,8 @@ angular.module('momusApp', [
         $routeProvider.when('/article/:id', {templateUrl: 'partials/article/articleView.html', controller: 'ArticleCtrl'});
 
 
-        $routeProvider.otherwise({redirectTo: '/view1'});
+        $routeProvider.otherwise({redirectTo: '/'});
+
     }]).
     config(function($httpProvider) {
         $httpProvider.interceptors.push('SmmDbTicket');

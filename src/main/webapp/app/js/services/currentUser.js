@@ -19,10 +19,20 @@
 angular.module('momusApp.services').
     factory('CurrentUser', function($http) {
 
+        function getUserFromServer() {
+            return $http.get('/api/person/me', {cache: true}).then(function(xhr) {
+                return xhr.data;
+            });
+        }
+
         return {
-            getTest: function() {
-                return $http.get('/api/person/594', {cache: true}).then(function(xhr) {
-                    return xhr.data;
+            getCurrentUser: function() {
+                return getUserFromServer()
+            },
+
+            id: function() {
+                return getUserFromServer().then(function(data) {
+                    return data.id;
                 });
             }
         };
