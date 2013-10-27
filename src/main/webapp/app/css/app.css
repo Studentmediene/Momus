@@ -16,45 +16,11 @@
 
 /* app css stylesheet */
 
-
-/*.widget-box {*/
-    /*margin: 15px 0px 15px 0px;*/
-    /*border: 1px solid #cdcdcd;*/
-/*}*/
-
-/*.widget-title {*/
-    /*border-bottom: 1px solid #CDCDCD;*/
-    /*height: 36px;*/
-    /*background-image: linear-gradient(to bottom, #ffffff, #f2f2f2);*/
-/*}*/
-
-/*.widget-title span.icon {*/
-    /*border-right: 1px solid #CDCDCD;*/
-    /*float: left;*/
-    /*opacity: 0.7;*/
-    /*padding: 9px 10px 7px 11px;*/
-/*}*/
+body {
+    padding-top: 70px;;
+}
 
 
-/*.widget-title h4 {*/
-    /*color: #666666;*/
-    /*float: left;*/
-    /*font-size: 13px;*/
-    /*font-weight: bold;*/
-    /*margin: 0;*/
-    /*padding: 9px 10px 0px 12px;*/
-    /*text-shadow: 0 1px 0 #FFFFFF;*/
-/*}*/
-
-/*.widget-title .right-area {*/
-    /*float: right;*/
-    /*margin: 8px 10px 0 0;*/
-/*}*/
-
-
-/*.widget-content {*/
-    /*padding: 12px 15px 5px 15px;*/
-/*}*/
 
 textarea.note {
     width: 100%;
@@ -63,39 +29,6 @@ textarea.note {
     height: 500px;
     background-color: #fff95d;;
 }
-
-/*.menu {*/
-    /*list-style: none;*/
-    /*border-bottom: 0.1em solid black;*/
-    /*margin-bottom: 2em;*/
-    /*padding: 0 0 0.5em;*/
-/*}*/
-
-/*.menu:before {*/
-    /*content: "[";*/
-/*}*/
-
-/*.menu:after {*/
-    /*content: "]";*/
-/*}*/
-
-/*.menu > li {*/
-    /*display: inline;*/
-/*}*/
-
-/*.menu > li:before {*/
-    /*content: "|";*/
-    /*padding-right: 0.3em;*/
-/*}*/
-
-/*.menu > li:nth-child(1):before {*/
-    /*content: "";*/
-    /*padding: 0;*/
-/*}*/
-/*.navbar .navbar-inner {*/
-    /*padding: 0;*/
-/*}*/
-
 
 .wysihtml5-command-active {
     background-color: #cccccc;

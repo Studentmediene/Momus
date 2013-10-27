@@ -16,6 +16,7 @@
 
 package no.dusken.momus.controller;
 
+import no.dusken.momus.authentication.UserLoginService;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.GroupRepository;
 import no.dusken.momus.service.repository.PersonRepository;
@@ -40,6 +41,9 @@ public class PersonController {
     @Autowired
     private GroupRepository groupRepository;
 
+    @Autowired
+    private UserLoginService userLoginService;
+
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody List<Person> getAllPersons() {
         return personRepository.findAll();
@@ -48,5 +52,11 @@ public class PersonController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody Person getPersonById(@PathVariable("id") Long id) {
         return personRepository.findOne(id);
+    }
+
+
+    @RequestMapping("/me")
+    public @ResponseBody Person getCurrentUser() {
+        return personRepository.findOne(userLoginService.getId());
     }
 }

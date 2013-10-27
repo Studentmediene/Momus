@@ -17,24 +17,9 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('CurrentUserCtrl', function ($scope, $http) {
-        $scope.update = function() {
-            $http.get('/api/person/594').then(function(xhr) {
-                $scope.test = xhr.data;
-            });
-        };
-
-        $http.get('/api/person/594', {cache: true}).then(function(xhr) {
-            $scope.test = xhr.data;
+    .controller('CurrentUserCtrl', function ($scope, CurrentUser) {
+        CurrentUser.getCurrentUser().then(function(user) {
+            $scope.user = user;
         });
-        $http.get('/api/person/594', {cache: true}).then(function(xhr) {
-            $scope.test2 = xhr.data;
-        });
-//        CurrentUser.getTest().then(function(data) {
-//            $scope.test = data;
-//        });
-//        CurrentUser.getTest().then(function(data) {
-//            $scope.test2 = data;
-//        })
     });
 
