@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.services').
-    factory('SmmDbTicket', function($q, $injector) {
+    factory('SmmDbTicket', function($q, $location, $injector) {
 
         // Make sure we only send one request to SmmDb
         var hasSentRequestForTicket = false;
@@ -58,7 +58,9 @@ angular.module('momusApp.services').
 
                 // We are logged in at SmmDb, should validate the ticket with our server
                 validateTicket($http, smmDbData.ticket).success(function(loginResponse) {
-                    // Success, should resend the requests that have failed
+                    registerSmmDbLogoutUrl($http);
+
+                    // We are now logged in, should resend the requests that have failed
                     resendAllInBuffer();
                     hasSentRequestForTicket = false;
                 })
@@ -84,10 +86,16 @@ angular.module('momusApp.services').
             return $http.post('/api/auth/login', ticketString);
         }
 
+        function registerSmmDbLogoutUrl($http) {
+            var ourUrl = 'http://' +  $location.host() + ($location.port() ? ':' + $location.port() : '') + '/api/auth/logout';
+
+            $http.get('http://m.studentmediene.no/api/register_logout_url?logout_url=' + encodeURIComponent(ourUrl), {withCredentials: true});
+        }
+
 
         return {
             'responseError': function(response) {
-                if (response.status === 401 && response.config.url !== 'http://m.studentmediene.no/api/ticket/get') {
+                if (response.status === 401 && (response.config.url.indexOf('m.studentmediene.no') == -1)) {
 
                     if (!hasSentRequestForTicket) {
                         tryLoginThroughSmmDb();
