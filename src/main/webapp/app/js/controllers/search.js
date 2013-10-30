@@ -58,4 +58,12 @@ angular.module('momusApp.controllers')
             {id: 3, name: "Korrektur"},
             {id: 4, name: "Publisert"}
         ];
+
+        $scope.searchParams = {
+            status: '',
+            section: '',
+            search: '',
+            publication: '',
+            persons: []
+        };
     });

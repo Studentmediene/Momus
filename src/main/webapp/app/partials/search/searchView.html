@@ -30,38 +30,38 @@
 <div class="row">
 
     <div class="col-md-3">
-        <select class="form-control" id="status">
-            <option>Velg status</option>
+        <select class="form-control" ng-model="searchParams.status">
+            <option value="">Velg status</option>
             <option ng-repeat="status in statuses">{{status.name}}</option>
     </select>
     </div>
     <div class="col-md-3">
-        <select class="form-control" id="person">
-            <option>Velg person</option>
+        <select class="form-control" ng-model="searchParams.persons">
+            <option value="">Velg person</option>
             <option ng-repeat="person in persons">{{person.name}}</option>
         </select>
     </div>
     <div class="col-md-3">
-        <select class="form-control" id="redaksjon">
-            <option>Velg redaksjon</option>
-            <option ng-repeat="section in sections">{{section.name}}</option>
+        <select class="form-control" ng-model="searchParams.section">
+            <option value="">Velg redaksjon</option>
+            <option ng-repeat="section in sections" value="{{section.id}}">{{section.name}}</option>
         </select>
     </div>
     <div class="col-md-3">
-        <select class="form-control">
-            <option>Velg publikasjon</option>
+        <select class="form-control" ng-model="searchParams.publication">
+            <option value="">Velg publikasjon</option>
             <option ng-repeat="publication in publications">{{publication.name}}</option>
         </select>
     </div>
 </div>
         <div class="row">
-            <div class="col-md-6"><b>Navn</b></div>
-            <div class="col-md-3"><b>Seksjon</b></div>
-            <div class="col-md-3"><b>Publikasjon</b></div>
+            <div class="col-md-6"><b><a href="orderByName">Navn</a></b></div>
+            <div class="col-md-3"><b><a href="orderBySection">Seksjon</a></b></div>
+            <div class="col-md-3"><b><a href="orderByPublication">Publikasjon</a></b></div>
         </div>
-<div ng-repeat="article in articles | filter:search">
+<div ng-repeat="article in articles | filter:{name:searchParams.search, section:searchParams.section, publication:searchParams.publication, status:searchParams.status}">
     <div class="row">
-        <div class=col-md-6>{{article.name}}</div>
+        <div class=col-md-6><a href="/article/{{article.id}}">{{article.name}}</a></div>
         <div class=col-md-3>{{article.section}}</div>
         <div class=col-md-3>{{article.publication}}</div>
     </div>
