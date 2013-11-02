@@ -51,12 +51,31 @@ angular.module('momusApp.controllers')
             });
         };
 
+        var removeFromArray = function(array, object) {
+            var index = array.indexOf(object);
+            if(index > -1){
+                array.splice(index, 1);
+            }
+        };
+
+        $scope.removeJournalist = function(journalist) {
+            removeFromArray($scope.article.journalists, journalist);
+            // Sends the whole article object, but the method will only change the server-version of the journalists field
+            $http.put('/api/article/journalists/', $scope.article);
+        };
+
         $scope.addPhotographer = function(newPhotographer){
             $http.get('/api/person/' + newPhotographer).success( function(data) {
                 $scope.article.photographers.push(data);
                 // Sends the whole article object, but the method will only change the server-version of the photgraphers field
                 $http.put('/api/article/photographers/', $scope.article);
             });
+        };
+
+        $scope.removePhotographer = function(photographer) {
+            removeFromArray($scope.article.photographers, photographer);
+            // Sends the whole article object, but the method will only change the server-version of the journalists field
+            $http.put('/api/article/photographers/', $scope.article);
         };
 
     });
