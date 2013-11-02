@@ -17,6 +17,7 @@
 package no.dusken.momus.service;
 
 import no.dusken.momus.model.Article;
+import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.ArticleRevisionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 import static no.dusken.momus.service.specification.ArticleSpecifications.*;
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -69,6 +71,13 @@ public class ArticleService {
     public Article saveArticleContents(Article article) {
         articleRepository.saveAndFlush(article);
         return articleRepository.findOne(article.getId());
+    }
+
+    public Set<Person> saveJournalists(Article article) {
+        Article repoArticle = articleRepository.findOne(article.getId());
+        repoArticle.setJournalists(article.getJournalists());
+        articleRepository.saveAndFlush(repoArticle);
+        return repoArticle.getJournalists();
     }
 
 }

@@ -17,12 +17,14 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.model.Article;
+import no.dusken.momus.model.Person;
 import no.dusken.momus.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/article")
@@ -53,6 +55,9 @@ public class ArticleController {
         return articleService.saveArticleContents(article);
     }
 
-
-
+    // Update only specific field
+    @RequestMapping(value = "/journalists", method = RequestMethod.PUT)
+    public @ResponseBody Set<Person> saveJournalists(@RequestBody Article article) {
+        return articleService.saveJournalists(article);
+    }
 }

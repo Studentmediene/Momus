@@ -41,5 +41,15 @@ angular.module('momusApp.controllers')
             });
         };
 
+        // Metadata editing functionality
+
+        $scope.addJournalist = function(newJournalist){
+            $http.get('/api/person/' + newJournalist).success( function(data) {
+                $scope.article.journalists.push(data);
+                // Sends the whole article object, but the method will only change the server-version of the journalists field
+                $http.put('/api/article/journalists/', $scope.article);
+            });
+        };
+
     });
 

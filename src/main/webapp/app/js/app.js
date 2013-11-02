@@ -48,7 +48,12 @@ angular.module('momusApp', ['momusApp.controllers', 'momusApp.filters', 'momusAp
         )
         .otherwise(
             {
-                redirectTo: '/view1'
+                redirectTo: '/'
+            }
+        )
+        .when('/',
+            {
+                templateUrl: 'partials/partial1.html'
             }
         );
     }]);
