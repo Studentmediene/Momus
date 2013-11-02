@@ -43,12 +43,15 @@ angular.module('momusApp.controllers')
 
         // Metadata editing functionality
 
-        $scope.addJournalist = function(newJournalist){
-            $http.get('/api/person/' + newJournalist).success( function(data) {
-                $scope.article.journalists.push(data);
-                // Sends the whole article object, but the method will only change the server-version of the journalists field
-                $http.put('/api/article/journalists/', $scope.article);
-            });
+        var listOfPersonsContainsID = function(list, id) {
+            var i;
+            for (i = 0; i < list.length; i++) {
+                // Note that this compares the object's integer ID to the string id
+                if (list[i].id == id) {
+                    return true;
+                }
+            }
+            return false;
         };
 
         var removeFromArray = function(array, object) {
@@ -58,14 +61,28 @@ angular.module('momusApp.controllers')
             }
         };
 
+        $scope.addJournalist = function(newJournalistID){
+            if (listOfPersonsContainsID($scope.article.journalists, newJournalistID)){
+                return;
+            }
+            $http.get('/api/person/' + newJournalistID).success( function(data) {
+                $scope.article.journalists.push(data);
+                // Sends the whole article object, but the method will only change the server-version of the journalists field
+                $http.put('/api/article/journalists/', $scope.article);
+            });
+        };
+
         $scope.removeJournalist = function(journalist) {
             removeFromArray($scope.article.journalists, journalist);
             // Sends the whole article object, but the method will only change the server-version of the journalists field
             $http.put('/api/article/journalists/', $scope.article);
         };
 
-        $scope.addPhotographer = function(newPhotographer){
-            $http.get('/api/person/' + newPhotographer).success( function(data) {
+        $scope.addPhotographer = function(newPhotographerID){
+            if (listOfPersonsContainsID($scope.article.photographers, newPhotographerID)){
+                return;
+            }
+            $http.get('/api/person/' + newPhotographerID).success( function(data) {
                 $scope.article.photographers.push(data);
                 // Sends the whole article object, but the method will only change the server-version of the photgraphers field
                 $http.put('/api/article/photographers/', $scope.article);
