@@ -51,5 +51,13 @@ angular.module('momusApp.controllers')
             });
         };
 
+        $scope.addPhotographer = function(newPhotographer){
+            $http.get('/api/person/' + newPhotographer).success( function(data) {
+                $scope.article.photographers.push(data);
+                // Sends the whole article object, but the method will only change the server-version of the photgraphers field
+                $http.put('/api/article/photographers/', $scope.article);
+            });
+        };
+
     });
 

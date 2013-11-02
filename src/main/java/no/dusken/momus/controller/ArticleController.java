@@ -55,9 +55,15 @@ public class ArticleController {
         return articleService.saveArticleContents(article);
     }
 
-    // Update only specific field
+    // Update only specific fields
+
     @RequestMapping(value = "/journalists", method = RequestMethod.PUT)
     public @ResponseBody Set<Person> saveJournalists(@RequestBody Article article) {
         return articleService.saveJournalists(article);
+    }
+
+    @RequestMapping(value = "/photographers", method = RequestMethod.PUT)
+    public @ResponseBody Set<Person> savePhotographers(@RequestBody Article article) {
+        return articleService.savePhotographers(article);
     }
 }

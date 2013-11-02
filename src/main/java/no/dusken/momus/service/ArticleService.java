@@ -80,4 +80,11 @@ public class ArticleService {
         return repoArticle.getJournalists();
     }
 
+    public Set<Person> savePhotographers(Article article) {
+        Article repoArticle = articleRepository.findOne(article.getId());
+        repoArticle.setPhotographers(article.getPhotographers());
+        articleRepository.saveAndFlush(repoArticle);
+        return repoArticle.getPhotographers();
+    }
+
 }
