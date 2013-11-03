@@ -36,9 +36,9 @@
     </select>
     </div>
     <div class="col-md-3">
-        <select class="form-control" ng-model="searchParams.persons">
-            <option value="">Velg person</option>
-            <option ng-repeat="person in persons">{{person.name}}</option>
+        <select ui-select2 ng-model="select2">
+            <option value=""></option>
+            <option ng-repeat="person in persons" value="{{person.id}}">{{person.name}}</option>
         </select>
     </div>
     <div class="col-md-3">

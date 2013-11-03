@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('momusApp.controllers')
+angular.module('momusApp.controllers', ['ui.select2'])
     .controller('SearchCtrl', function ($scope) {
         $scope.articles = [
             {id: 1, name: "Nyhet1", section: "Nyhet", publication: "2013 1"},
