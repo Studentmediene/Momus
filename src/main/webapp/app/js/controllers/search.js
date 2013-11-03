@@ -16,8 +16,13 @@
 
 'use strict';
 
-angular.module('momusApp.controllers', ['ui.select2'])
-    .controller('SearchCtrl', function ($scope) {
+angular.module('momusApp.controllers')
+    .controller('SearchCtrl', function ($scope, $http) {
+        $http.get('/api/person').success(function(data) {
+            $scope.persons = data;
+            console.log(data);
+        });
+
         $scope.articles = [
             {id: 1, name: "Nyhet1", section: "Nyhet", publication: "2013 1"},
             {id: 2, name: "Nyhet2", section: "Nyhet", publication: "2013 1"},
@@ -45,13 +50,6 @@ angular.module('momusApp.controllers', ['ui.select2'])
             {id: 6, name:"Sport"}
         ];
 
-        $scope.persons = [
-            {id: 1, name: "Ola Nordmann"},
-            {id: 2, name: "Albus Humlesnurr"},
-            {id: 3, name: "Aragorn"},
-            {id: 4, name: "Danny Ocean"}
-        ];
-
         $scope.statuses = [
             {id: 1, name: "Skrives"},
             {id: 2, name: "Desking"},
@@ -60,10 +58,10 @@ angular.module('momusApp.controllers', ['ui.select2'])
         ];
 
         $scope.searchParams = {
-            status: '',
-            section: '',
-            search: '',
-            publication: '',
+            status: "",
+            section: "",
+            search: "",
+            publication: "",
             persons: []
         };
 

@@ -36,9 +36,8 @@
     </select>
     </div>
     <div class="col-md-3">
-        <select ui-select2 ng-model="select2">
-            <option value=""></option>
-            <option ng-repeat="person in persons" value="{{person.id}}">{{person.name}}</option>
+        <select multiple class="form-control" ui-select2 ng-model="select2">
+            <option ng-repeat="person in persons" value="{{person.id}}">{{person.username}} {{person.first_name}} {{person.last_name}}</option>
         </select>
     </div>
     <div class="col-md-3">
@@ -59,6 +58,8 @@
             <div class="col-md-3"><b><a href="" ng-click="predicate='section'">Seksjon</a></b>(<a href="" ng-click="predicate='-section'">^</a>)</div>
             <div class="col-md-3"><b><a href="" ng-click="predicate='publication'">Publikasjon</a></b>(<a href="" ng-click="predicate='-publication'">^</a>)</div>
         </div>
+       <div class="row">{{searchParams}}</div>
+
 <div ng-repeat="article in articles | filter:{name:searchParams.search, section:searchParams.section, publication:searchParams.publication, status:searchParams.status} | orderBy:predicate">
     <div class="row">
         <div class=col-md-6><a href="/article/{{article.id}}">{{article.name}}</a></div>
