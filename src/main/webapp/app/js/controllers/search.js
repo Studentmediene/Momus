@@ -66,4 +66,6 @@ angular.module('momusApp.controllers')
             publication: '',
             persons: []
         };
+
+        $scope.predicate = "age"
     });
