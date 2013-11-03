@@ -67,13 +67,13 @@ angular.module('momusApp.controllers')
             }
             $http.get('/api/person/' + newJournalistID).success( function(data) {
                 $scope.article.journalists.push(data);
-                $http.put('/api/article/' + $scope.article.id + '/photographers/', $scope.article.journalists);
+                $scope.journalistsDirty = true;
             });
         };
 
         $scope.removeJournalist = function(journalist) {
             removeFromArray($scope.article.journalists, journalist);
-            $http.put('/api/article/' + $scope.article.id + '/photographers/', $scope.article.journalists);
+            $scope.journalistsDirty = true;
         };
 
         $scope.addPhotographer = function(newPhotographerID){
@@ -82,13 +82,24 @@ angular.module('momusApp.controllers')
             }
             $http.get('/api/person/' + newPhotographerID).success( function(data) {
                 $scope.article.photographers.push(data);
-                $http.put('/api/article/' + $scope.article.id + '/photographers/', $scope.article.photographers);
+                $scope.photographersDirty = true;
             });
         };
 
         $scope.removePhotographer = function(photographer) {
             removeFromArray($scope.article.photographers, photographer);
-            $http.put('/api/article/' + $scope.article.id + '/photographers/', $scope.article.photographers);
+            $scope.photographersDirty = true;
+        };
+
+        $scope.saveMeta = function() {
+            if ($scope.journalistsDirty){
+                $http.put('/api/article/' + $scope.article.id + '/journalists/', $scope.article.journalists)
+                $scope.journalistsDirty = false;
+            }
+            if ($scope.photographersDirty){
+                $http.put('/api/article/' + $scope.article.id + '/photographers/', $scope.article.photographers);
+                $scope.photographersDirty = false;
+            }
         };
 
     });
