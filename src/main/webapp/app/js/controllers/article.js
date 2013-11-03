@@ -24,19 +24,25 @@ angular.module('momusApp.controllers')
         $http.get('/api/article/' + $routeParams.id).success(function (data) {
             $scope.article = data;
             $scope.originalContent = angular.copy($scope.article.content);
+            $scope.originalName = angular.copy($scope.article.name);
 //            $scope.originalNote = angular.copy($scope.article.note);
         });
 
         $scope.articleRules = articleParserRules;
 
-        $scope.$watch('article.content', function (newVal, oldVal) {
+        $scope.$watch('article.content', function () {
             $scope.articleIsDirty = !angular.equals($scope.article.content, $scope.originalContent);
+        });
+
+        $scope.$watch('article.name', function () {
+            $scope.articleIsDirty = !angular.equals($scope.article.name, $scope.originalName);
         });
 
         $scope.saveArticle = function () {
             $http.put('/api/article', $scope.article).success(function (data) {
                 $scope.article = data;
                 $scope.originalContent = angular.copy($scope.article.content);
+                $scope.originalName = angular.copy($scope.article.name);
                 $scope.articleIsDirty = false;
             });
         };
