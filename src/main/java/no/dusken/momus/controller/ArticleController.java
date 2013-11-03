@@ -52,10 +52,25 @@ public class ArticleController {
     // Update (PUT) existing article
     @RequestMapping(method = RequestMethod.PUT)
     public @ResponseBody Article saveArticleContents(@RequestBody Article article){
-        return articleService.saveArticleContents(article);
+        return articleService.saveEntireArticle(article);
     }
 
     // Update only specific fields
+
+    @RequestMapping(value = "/{id}/content", method = RequestMethod.PUT)
+    public @ResponseBody String saveContent(@RequestBody String content, @PathVariable("id") Long id) {
+        return articleService.saveContent(content, id);
+    }
+
+    @RequestMapping(value = "/{id}/note", method = RequestMethod.PUT)
+    public @ResponseBody String saveNote(@RequestBody String note, @PathVariable("id") Long id) {
+        return articleService.saveNote(note, id);
+    }
+
+    @RequestMapping(value = "/{id}/name", method = RequestMethod.PUT)
+    public @ResponseBody String saveName(@RequestBody String name, @PathVariable("id") Long id) {
+        return articleService.saveName(name, id);
+    }
 
     @RequestMapping(value = "/{id}/journalists", method = RequestMethod.PUT)
     public @ResponseBody Set<Person> saveJournalists(@RequestBody Set<Person> persons, @PathVariable("id") Long id) {

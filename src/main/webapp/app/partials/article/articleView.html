@@ -20,7 +20,7 @@
             <div class="panel-heading">
                 <h1 class="panel-title">
                     <span class="glyphicon glyphicon-pencil"></span>
-                    <input type="text" class="input-large" ng-model="article.name"/>
+                    {{ article.name }}
                     <div class="pull-right">
                         <button class="btn btn-default btn-xs" ng-show="articleIsDirty" ng-click="saveArticle()"><i class="icon-save"></i> Lagre</button>
                         <button class="btn btn-default btn-xs" ng-show="!articleIsDirty" disabled><i class="icon-ok"></i> Lagret</button>
@@ -50,11 +50,11 @@
         </div>
     </div>
     <div class="col-md-4">
-        <div class="panel panel-warning" ng-controller="NoteCtrl">
+        <div class="panel panel-warning">
             <div class="panel-heading">
                 <h1 class="panel-title">
                     <span class="icon-list"></span>
-                    Mine notater
+                    Artikkel-notater
                     <div class="pull-right">
                         <button class="btn btn-default btn-xs" ng-show="noteIsDirty" ng-click="saveNote()"><i class="icon-save"></i> Lagre</button>
                         <button class="btn btn-default btn-xs" ng-show="!noteIsDirty" disabled><i class="icon-ok"></i> Lagret</button>
@@ -79,7 +79,7 @@
                         </div>
                     </div>
 
-                    <textarea id="noteArea" richeditor="note.content" richeditor-rules="noteRules" richeditor-toolbar="note-toolbar" class="note"></textarea>
+                    <textarea id="noteArea" richeditor="article.note" richeditor-rules="noteRules" richeditor-toolbar="note-toolbar" class="note"></textarea>
                 </form>
             </div>
         </div>
@@ -115,6 +115,15 @@
                 </div>
             </div>
             <div class="panel-body">
+                <div class="row">
+                    <span class="col-xs-4">Tittel</span>
+                    <span class="col-xs-8" ng-show="!metaEditMode">
+                        {{ article.name }}
+                    </span>
+                    <span class="col-xs-8" ng-show="metaEditMode">
+                        <input type="text" ng-model="article.name">
+                    </span>
+                </div>
                 <div class="row">
                     <span class="col-xs-4">Journalister</span>
                     <span class="col-xs-8">

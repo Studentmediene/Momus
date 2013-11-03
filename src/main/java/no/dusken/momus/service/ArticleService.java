@@ -68,9 +68,30 @@ public class ArticleService {
         return articleRepository.findAll(criteria);
     }
 
-    public Article saveArticleContents(Article article) {
+    public Article saveEntireArticle(Article article) {
         articleRepository.saveAndFlush(article);
         return articleRepository.findOne(article.getId());
+    }
+
+    public String saveContent(String content, Long id) {
+        Article article = articleRepository.findOne(id);
+        article.setContent(content);
+        articleRepository.saveAndFlush(article);
+        return article.getContent();
+    }
+
+    public String saveName(String name, Long id) {
+        Article article = articleRepository.findOne(id);
+        article.setName(name);
+        articleRepository.saveAndFlush(article);
+        return article.getName();
+    }
+
+    public String saveNote(String note, Long id) {
+        Article article = articleRepository.findOne(id);
+        article.setNote(note);
+        articleRepository.saveAndFlush(article);
+        return article.getNote();
     }
 
     public Set<Person> saveJournalists(Set<Person> persons, Long id) {
@@ -86,5 +107,4 @@ public class ArticleService {
         articleRepository.saveAndFlush(article);
         return article.getPhotographers();
     }
-
 }

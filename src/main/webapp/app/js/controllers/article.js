@@ -21,11 +21,16 @@ angular.module('momusApp.controllers')
 
         // The scope of this controller is the entire article view
 
+        // This initializes an object to be replaced by a GETed object.
+        // This is to stop functions that needs it from complaining that the object doesn't exist
+        // before the request is complete.
+        $scope.article = { content: "" };
+
         $http.get('/api/article/' + $routeParams.id).success(function (data) {
             $scope.article = data;
             $scope.originalContent = angular.copy($scope.article.content);
             $scope.originalName = angular.copy($scope.article.name);
-//            $scope.originalNote = angular.copy($scope.article.note);
+            $scope.originalNote = angular.copy($scope.article.note);
         });
 
         $scope.articleRules = articleParserRules;
@@ -34,18 +39,34 @@ angular.module('momusApp.controllers')
             $scope.articleIsDirty = !angular.equals($scope.article.content, $scope.originalContent);
         });
 
-        $scope.$watch('article.name', function () {
-            $scope.articleIsDirty = !angular.equals($scope.article.name, $scope.originalName);
-        });
+        // This is necessary for the transformation from JS string in the browser to Java String on the backend
+        var stringify = function (arg) {
+            return '"' + arg + '"';
+        };
 
         $scope.saveArticle = function () {
-            $http.put('/api/article', $scope.article).success(function (data) {
-                $scope.article = data;
+            $http.put('/api/article/' + $scope.article.id + '/content', stringify($scope.article.content)).success(function (data) {
+//                $scope.article.content = data;
                 $scope.originalContent = angular.copy($scope.article.content);
-                $scope.originalName = angular.copy($scope.article.name);
                 $scope.articleIsDirty = false;
             });
         };
+
+        // Note control
+
+        $scope.saveNote = function () {
+            $http.put('/api/article/' + $scope.article.id + '/note', stringify($scope.article.note)).success(function (data) {
+//                $scope.article.note = data;
+                $scope.originalNote = angular.copy($scope.article.note);
+                $scope.noteIsDirty = false;
+            });
+        };
+
+        $scope.$watch('article.note', function () {
+            $scope.noteIsDirty = !angular.equals($scope.article.note, $scope.originalNote);
+        });
+
+        $scope.noteRules = noteParserRules;
 
         // Metadata editing functionality
 
@@ -102,24 +123,31 @@ angular.module('momusApp.controllers')
         };
 
         $scope.saveMeta = function() {
-            if ($scope.journalistsDirty){
-                $http.put('/api/article/' + $scope.article.id + '/journalists/', $scope.article.journalists)
+            if ($scope.article.name != $scope.originalName) {
+                $http.put('/api/article/' + $scope.article.id + '/name', stringify($scope.article.name));
+                $scope.originalName = $scope.article.name;
+            }
+            if ($scope.journalistsDirty) {
+                $http.put('/api/article/' + $scope.article.id + '/journalists', $scope.article.journalists);
                 $scope.journalistsDirty = false;
             }
-            if ($scope.photographersDirty){
-                $http.put('/api/article/' + $scope.article.id + '/photographers/', $scope.article.photographers);
+            if ($scope.photographersDirty) {
+                $http.put('/api/article/' + $scope.article.id + '/photographers', $scope.article.photographers);
                 $scope.photographersDirty = false;
             }
             $scope.metaEditMode = false;
         };
 
         $scope.cancelMeta = function() {
-            $http.get('/api/article/' + $scope.article.id).success( function(data){
-                $scope.article.journalists = data.journalists;
-                $scope.journalistsDirty = false;
-
-                $scope.article.photographers = data.photographers;
-                $scope.photographersDirty = false;
+            $http.get('/api/article/' + $scope.article.id).success( function(data) {
+                if ($scope.journalistsDirty) {
+                    $scope.article.journalists = data.journalists;
+                    $scope.journalistsDirty = false;
+                }
+                if ($scope.photographersDirty) {
+                    $scope.article.photographers = data.photographers;
+                    $scope.photographersDirty = false;
+                }
             });
             $scope.metaEditMode = false;
         };
