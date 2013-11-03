@@ -86,89 +86,55 @@
         <div class="panel panel-info">
             <div class="panel-heading">
                 <div class="row">
-                    <h1 class="panel-title col-xs-10">
+                    <h1 class="panel-title col-xs-6">
                         Meta
                     </h1>
-                    <span class="col-xs-1" data-toggle="modal" data-target="#journalistsModal" style="cursor: pointer;">
-                        <span class="icon-edit"></span>
+                    <span class="col-xs-6">
+                        <button
+                                class="btn-sm btn-primary pull-right"
+                                style="cursor: pointer;"
+                                ng-show="!metaEditMode"
+                                ng-click="toggleEditMode()">
+                            Rediger
+                        </button>
+                        <button
+                                class="btn-sm btn-info pull-right"
+                                style="cursor: pointer;"
+                                ng-show="metaEditMode"
+                                ng-click="cancelMeta()">
+                            Avbryt
+                        </button>
+                        <button
+                                class="btn-sm btn-primary pull-right"
+                                style="cursor: pointer;"
+                                ng-show="metaEditMode"
+                                ng-click="saveMeta()">
+                            Lagre
+                        </button>
                     </span>
                 </div>
-                <div class="modal fade" id="journalistsModal" tabindex="-1" role="dialog" aria-labelledby="journalistsModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title" id="myModalLabel">Meta</h4>
-                            </div>
-                            <div class="modal-body">
-                                <h5>Journalister</h5>
-                                <ul class="list-unstyled">
-                                    <li ng-repeat="journalist in article.journalists" class="row">
-                                        <span class="col-xs-5">
-                                            {{ journalist.first_name }} {{ journalist.last_name }}
-                                        </span>
-                                        <span class="col-xs-5">
-                                            <ul class="list-inline">
-                                                <li ng-repeat="group in journalist.groups">
-                                                    {{ group.name }}
-                                                </li>
-                                            </ul>
-                                        </span>
-                                        <span class="col-xs-2">
-                                            <i class="icon-remove" ng-click="removeJournalist(journalist)"></i>
-                                        </span>
-                                    </li>
-                                    <li class="row">
-                                        <span class="col-xs-10">
-                                            <input type="text" ng-model="newJournalist"/>
-                                        </span>
-                                        <span class="col-xs-2">
-                                            <i class="icon-plus" ng-click="addJournalist(newJournalist)"></i>
-                                        </span>
-                                    </li>
-                                </ul>
-
-                                <h5>Fotografer</h5>
-                                <ul class="list-unstyled">
-                                    <li ng-repeat="photographer in article.photographers" class="row">
-                                        <span class="col-xs-5">
-                                            {{ photographer.first_name }} {{ photographer.last_name }}
-                                        </span>
-                                        <span class="col-xs-5">
-                                            <ul class="list-inline">
-                                                <li ng-repeat="group in photographer.groups">
-                                                    {{ group.name }}
-                                                </li>
-                                            </ul>
-                                        </span>
-                                        <span class="col-xs-2">
-                                            <i class="icon-remove" ng-click="removePhotographer(photographer)"></i>
-                                        </span>
-                                    </li>
-                                    <li class="row">
-                                        <span class="col-xs-10">
-                                            <input type="text" ng-model="newPhotographer"/>
-                                        </span>
-                                        <span class="col-xs-2">
-                                            <i class="icon-plus" ng-click="addPhotographer(newPhotographer)"></i>
-                                        </span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
-                                <button type="button" class="btn btn-primary" ng-click="saveMeta()">Lagre endringer</button>
-                            </div>
-                        </div><!-- /.modal-content -->
-                    </div><!-- /.modal-dialog -->
-                </div><!-- /.modal -->
             </div>
             <div class="panel-body">
                 <div class="row">
                     <span class="col-xs-4">Journalister</span>
                     <span class="col-xs-8">
                         <ul class="list-unstyled">
-                            <li ng-repeat="journalist in article.journalists">{{ journalist.first_name }} {{ journalist.last_name }}</li>
+                            <li ng-repeat="journalist in article.journalists" class="row">
+                                <span class="col-xs-10">
+                                    {{ journalist.first_name }} {{ journalist.last_name }}
+                                </span>
+                                <span class="col-xs-2" ng-show="metaEditMode">
+                                    <i class="icon-remove" ng-click="removeJournalist(journalist)"></i>
+                                </span>
+                            </li>
+                            <li class="row" ng-show="metaEditMode">
+                                <span class="col-xs-10">
+                                    <input class="input-sm" type="text" ng-model="newJournalist"/>
+                                </span>
+                                <span class="col-xs-2">
+                                    <i class="icon-plus" ng-click="addJournalist(newJournalist)"></i>
+                                </span>
+                            </li>
                         </ul>
                     </span>
                 </div>
@@ -176,7 +142,22 @@
                     <span class="col-xs-4">Fotografer</span>
                     <span class="col-xs-8">
                         <ul class="list-unstyled">
-                            <li ng-repeat="photographer in article.photographers">{{ photographer.first_name }} {{ photographer.last_name }}</li>
+                            <li ng-repeat="photographer in article.photographers" class="row">
+                                <span class="col-xs-10">
+                                    {{ photographer.first_name }} {{ photographer.last_name }}
+                                </span>
+                                <span class="col-xs-2" ng-show="metaEditMode">
+                                    <i class="icon-remove" ng-click="removePhotographer(photographer)"></i>
+                                </span>
+                            </li>
+                            <li class="row" ng-show="metaEditMode">
+                                <span class="col-xs-10">
+                                    <input class="input-sm" type="text" ng-model="newPhotographer"/>
+                                </span>
+                                <span class="col-xs-2">
+                                    <i class="icon-plus" ng-click="addPhotographer(newPhotographer)"></i>
+                                </span>
+                            </li>
                         </ul>
                     </span>
                 </div>

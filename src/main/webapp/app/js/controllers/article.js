@@ -49,6 +49,10 @@ angular.module('momusApp.controllers')
 
         // Metadata editing functionality
 
+        $scope.toggleEditMode = function() {
+            $scope.metaEditMode = !$scope.metaEditMode;
+        }
+
         var listOfPersonsContainsID = function(list, id) {
             var i;
             for (i = 0; i < list.length; i++) {
@@ -62,7 +66,7 @@ angular.module('momusApp.controllers')
 
         var removeFromArray = function(array, object) {
             var index = array.indexOf(object);
-            if(index > -1){
+            if (index > -1) {
                 array.splice(index, 1);
             }
         };
@@ -106,6 +110,18 @@ angular.module('momusApp.controllers')
                 $http.put('/api/article/' + $scope.article.id + '/photographers/', $scope.article.photographers);
                 $scope.photographersDirty = false;
             }
+            $scope.metaEditMode = false;
+        };
+
+        $scope.cancelMeta = function() {
+            $http.get('/api/article/' + $scope.article.id).success( function(data){
+                $scope.article.journalists = data.journalists;
+                $scope.journalistsDirty = false;
+
+                $scope.article.photographers = data.photographers;
+                $scope.photographersDirty = false;
+            });
+            $scope.metaEditMode = false;
         };
 
     });
