@@ -26,43 +26,38 @@
     <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css" media="screen">
     <link rel="stylesheet" href="lib/fontawesome/css/font-awesome.css">
     <link rel="stylesheet" href="css/app.css"/>
-    <style type="text/css">
-        /*.row > div {*/
-            /*background-color: rgba(86, 61, 124, 0.15);*/
-            /*border: 1px solid rgba(86, 61, 124, 0.2);*/
-        /*}*/
-    </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Momus</h1>
-
-    <div class="navbar navbar-default">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".main-nav-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand">Momus</a>
-        </div>
-
-        <div class="collapse navbar-collapse main-nav-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#"><i class="icon-th-large"></i> Front</a></li>
-                <li><a href="#"><i class="icon-pencil"></i> Articler</a></li>
-                <li><a href="#"><i class="icon-picture"></i> Bilder</a></li>
-                <li><a href="#"><i class="icon-list"></i> Disposisjon</a></li>
-                <li><a href="#"><i class="icon-user"></i> Medarbeidere</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Logg ut <i class="icon-off"></i></a></li>
-            </ul>
-        </div>
+<div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".main-nav-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand">Momus</a>
     </div>
 
+    <div class="collapse navbar-collapse main-nav-collapse">
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="#"><i class="icon-th-large"></i> Front</a></li>
+            <li><a href="#"><i class="icon-pencil"></i> Articler</a></li>
+            <li><a href="#"><i class="icon-picture"></i> Bilder</a></li>
+            <li><a href="#"><i class="icon-list"></i> Disposisjon</a></li>
+            <li><a href="#"><i class="icon-user"></i> Medarbeidere</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right" ng-controller="CurrentUserCtrl">
+            <!--<li><p class="navbar-text">Logget inn som <a href="#">Mats Svensson</a></p></li>-->
+            <li><a href="http://m.studentmediene.no/api/logout">Logg ut <b>{{user.first_name}} {{user.last_name}}</b> <i class="icon-off"></i></a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+
+<div class="container">
     <div class="row">
         <div ng-view></div>
     </div>
@@ -77,6 +72,7 @@
 
 <!-- Include angular -->
 <script src="lib/angular/angular.js"></script>
+<script src="lib/angular/angular-route.js"></script>
 
 
 <!-- And the code for our app -->
@@ -85,11 +81,14 @@
 <!-- Controllers -->
 <script src="js/controllers/adminRole.js"></script>
 <script src="js/controllers/article.js"></script>
+<script src="js/controllers/currentUser.js"></script>
 <script src="js/controllers/note.js"></script>
 <script src="js/controllers/search.js"></script>
 <!-- Services -->
 <script src="js/services/version.js"></script>
 <script src="js/services/parsingRules.js"></script>
+<script src="js/services/httpInterceptor.js"></script>
+<script src="js/services/currentUser.js"></script>
 <!-- Filters -->
 <!-- Directives -->
 <script src="js/directives/version.js"></script>
