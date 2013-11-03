@@ -73,18 +73,18 @@ public class ArticleService {
         return articleRepository.findOne(article.getId());
     }
 
-    public Set<Person> saveJournalists(Article article) {
-        Article repoArticle = articleRepository.findOne(article.getId());
-        repoArticle.setJournalists(article.getJournalists());
-        articleRepository.saveAndFlush(repoArticle);
-        return repoArticle.getJournalists();
+    public Set<Person> saveJournalists(Set<Person> persons, Long id) {
+        Article article = articleRepository.findOne(id);
+        article.setJournalists(persons);
+        articleRepository.saveAndFlush(article);
+        return article.getJournalists();
     }
 
-    public Set<Person> savePhotographers(Article article) {
-        Article repoArticle = articleRepository.findOne(article.getId());
-        repoArticle.setPhotographers(article.getPhotographers());
-        articleRepository.saveAndFlush(repoArticle);
-        return repoArticle.getPhotographers();
+    public Set<Person> savePhotographers(Set<Person> persons, Long id) {
+        Article article = articleRepository.findOne(id);
+        article.setPhotographers(persons);
+        articleRepository.saveAndFlush(article);
+        return article.getPhotographers();
     }
 
 }

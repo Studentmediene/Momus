@@ -57,13 +57,13 @@ public class ArticleController {
 
     // Update only specific fields
 
-    @RequestMapping(value = "/journalists", method = RequestMethod.PUT)
-    public @ResponseBody Set<Person> saveJournalists(@RequestBody Article article) {
-        return articleService.saveJournalists(article);
+    @RequestMapping(value = "/{id}/journalists", method = RequestMethod.PUT)
+    public @ResponseBody Set<Person> saveJournalists(@RequestBody Set<Person> persons, @PathVariable("id") Long id) {
+        return articleService.saveJournalists(persons, id);
     }
 
-    @RequestMapping(value = "/photographers", method = RequestMethod.PUT)
-    public @ResponseBody Set<Person> savePhotographers(@RequestBody Article article) {
-        return articleService.savePhotographers(article);
+    @RequestMapping(value = "/{id}/photographers", method = RequestMethod.PUT)
+    public @ResponseBody Set<Person> savePhotographers(@RequestBody Set<Person> persons, @PathVariable("id") Long id) {
+        return articleService.savePhotographers(persons, id);
     }
 }

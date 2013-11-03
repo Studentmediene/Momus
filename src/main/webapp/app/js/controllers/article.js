@@ -67,15 +67,13 @@ angular.module('momusApp.controllers')
             }
             $http.get('/api/person/' + newJournalistID).success( function(data) {
                 $scope.article.journalists.push(data);
-                // Sends the whole article object, but the method will only change the server-version of the journalists field
-                $http.put('/api/article/journalists/', $scope.article);
+                $http.put('/api/article/' + $scope.article.id + '/photographers/', $scope.article.journalists);
             });
         };
 
         $scope.removeJournalist = function(journalist) {
             removeFromArray($scope.article.journalists, journalist);
-            // Sends the whole article object, but the method will only change the server-version of the journalists field
-            $http.put('/api/article/journalists/', $scope.article);
+            $http.put('/api/article/' + $scope.article.id + '/photographers/', $scope.article.journalists);
         };
 
         $scope.addPhotographer = function(newPhotographerID){
@@ -84,15 +82,13 @@ angular.module('momusApp.controllers')
             }
             $http.get('/api/person/' + newPhotographerID).success( function(data) {
                 $scope.article.photographers.push(data);
-                // Sends the whole article object, but the method will only change the server-version of the photgraphers field
-                $http.put('/api/article/photographers/', $scope.article);
+                $http.put('/api/article/' + $scope.article.id + '/photographers/', $scope.article.photographers);
             });
         };
 
         $scope.removePhotographer = function(photographer) {
             removeFromArray($scope.article.photographers, photographer);
-            // Sends the whole article object, but the method will only change the server-version of the journalists field
-            $http.put('/api/article/photographers/', $scope.article);
+            $http.put('/api/article/' + $scope.article.id + '/photographers/', $scope.article.photographers);
         };
 
     });
