@@ -17,7 +17,7 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.model.Article;
-import no.dusken.momus.model.Person;
+import no.dusken.momus.model.ArticleUpdates;
 import no.dusken.momus.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -49,36 +49,30 @@ public class ArticleController {
         return articleService.getArticleById(id);
     }
 
-    // Update (PUT) existing article
+    // Update (PUT) entire existing article
     @RequestMapping(method = RequestMethod.PUT)
     public @ResponseBody Article saveArticleContents(@RequestBody Article article){
         return articleService.saveEntireArticle(article);
     }
 
-    // Update only specific fields
-
-    @RequestMapping(value = "/{id}/content", method = RequestMethod.PUT)
-    public @ResponseBody String saveContent(@RequestBody String content, @PathVariable("id") Long id) {
-        return articleService.saveContent(content, id);
-    }
-
-    @RequestMapping(value = "/{id}/note", method = RequestMethod.PUT)
-    public @ResponseBody String saveNote(@RequestBody String note, @PathVariable("id") Long id) {
-        return articleService.saveNote(note, id);
-    }
-
-    @RequestMapping(value = "/{id}/name", method = RequestMethod.PUT)
-    public @ResponseBody String saveName(@RequestBody String name, @PathVariable("id") Long id) {
-        return articleService.saveName(name, id);
-    }
-
-    @RequestMapping(value = "/{id}/journalists", method = RequestMethod.PUT)
-    public @ResponseBody Set<Person> saveJournalists(@RequestBody Set<Person> persons, @PathVariable("id") Long id) {
-        return articleService.saveJournalists(persons, id);
-    }
-
-    @RequestMapping(value = "/{id}/photographers", method = RequestMethod.PUT)
-    public @ResponseBody Set<Person> savePhotographers(@RequestBody Set<Person> persons, @PathVariable("id") Long id) {
-        return articleService.savePhotographers(persons, id);
+    // Receive an update object with a list of fields to be updated
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    public @ResponseBody Article updateArticle(@RequestBody ArticleUpdates updates){
+        if (updates.getUpdatedFields().contains("content")) {
+            articleService.saveContent(updates.getContent(), updates.getId());
+        }
+        if (updates.getUpdatedFields().contains("note")) {
+            articleService.saveNote(updates.getNote(), updates.getId());
+        }
+        if (updates.getUpdatedFields().contains("name")) {
+            articleService.saveName(updates.getName(), updates.getId());
+        }
+        if (updates.getUpdatedFields().contains("journalists")) {
+            articleService.saveJournalists(updates.getJournalists(), updates.getId());
+        }
+        if (updates.getUpdatedFields().contains("photographers")) {
+            articleService.savePhotographers(updates.getPhotographers(), updates.getId());
+        }
+        return articleService.getArticleById(updates.getId());
     }
 }

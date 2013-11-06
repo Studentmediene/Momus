@@ -19,6 +19,22 @@
 angular.module('momusApp.controllers')
     .controller('ArticleCtrl', function ($scope, $http, $routeParams, articleParserRules, noteParserRules) {
 
+        var newUpdatesCopy = function() {
+            var updates = angular.copy($scope.article);
+            updates.updated_fields = [];
+            return updates;
+        };
+
+        var putUpdates = function (updates) {
+            $http.put('/api/article/update', updates)
+                .success( function (data) {
+
+                })
+                .error( function () {
+                    alert("Oops, Momus fikk ikke til å lagre til serveren.");
+                });
+        };
+
         // The scope of this controller is the entire article view
 
         // This initializes an object to be replaced by a GETed object.
@@ -39,27 +55,20 @@ angular.module('momusApp.controllers')
             $scope.articleIsDirty = !angular.equals($scope.article.content, $scope.originalContent);
         });
 
-        // This is necessary for the transformation from JS string in the browser to Java String on the backend
-        var stringify = function (arg) {
-            return '"' + arg + '"';
-        };
-
         $scope.saveArticle = function () {
-            $http.put('/api/article/' + $scope.article.id + '/content', stringify($scope.article.content)).success(function (data) {
-//                $scope.article.content = data;
-                $scope.originalContent = angular.copy($scope.article.content);
-                $scope.articleIsDirty = false;
-            });
+            var updates = newUpdatesCopy();
+            updates.updated_fields.push("content");
+            putUpdates(updates);
+            $scope.articleIsDirty = false;
         };
 
         // Note control
 
         $scope.saveNote = function () {
-            $http.put('/api/article/' + $scope.article.id + '/note', stringify($scope.article.note)).success(function (data) {
-//                $scope.article.note = data;
-                $scope.originalNote = angular.copy($scope.article.note);
-                $scope.noteIsDirty = false;
-            });
+            var updates = newUpdatesCopy();
+            updates.updated_fields.push("note");
+            putUpdates(updates);
+            $scope.noteIsDirty = false;
         };
 
         $scope.$watch('article.note', function () {
@@ -93,7 +102,7 @@ angular.module('momusApp.controllers')
         };
 
         $scope.addJournalist = function(newJournalistID){
-            if (listOfPersonsContainsID($scope.article.journalists, newJournalistID)){
+            if (newJournalistID == "" || listOfPersonsContainsID($scope.article.journalists, newJournalistID)){
                 return;
             }
             $http.get('/api/person/' + newJournalistID).success( function(data) {
@@ -108,7 +117,7 @@ angular.module('momusApp.controllers')
         };
 
         $scope.addPhotographer = function(newPhotographerID){
-            if (listOfPersonsContainsID($scope.article.photographers, newPhotographerID)){
+            if (newPhotographerID == "" || listOfPersonsContainsID($scope.article.photographers, newPhotographerID)){
                 return;
             }
             $http.get('/api/person/' + newPhotographerID).success( function(data) {
@@ -123,18 +132,20 @@ angular.module('momusApp.controllers')
         };
 
         $scope.saveMeta = function() {
+            var updates = newUpdatesCopy();
             if ($scope.article.name != $scope.originalName) {
-                $http.put('/api/article/' + $scope.article.id + '/name', stringify($scope.article.name));
+                updates.updated_fields.push("name");
                 $scope.originalName = $scope.article.name;
             }
             if ($scope.journalistsDirty) {
-                $http.put('/api/article/' + $scope.article.id + '/journalists', $scope.article.journalists);
+                updates.updated_fields.push("journalists");
                 $scope.journalistsDirty = false;
             }
             if ($scope.photographersDirty) {
-                $http.put('/api/article/' + $scope.article.id + '/photographers', $scope.article.photographers);
+                updates.updated_fields.push("photographers");
                 $scope.photographersDirty = false;
             }
+            putUpdates(updates);
             $scope.metaEditMode = false;
         };
 
@@ -151,6 +162,5 @@ angular.module('momusApp.controllers')
             });
             $scope.metaEditMode = false;
         };
-
     });
 
