@@ -85,34 +85,29 @@
         </div>
         <div class="panel panel-info">
             <div class="panel-heading">
-                <div class="row">
-                    <h1 class="panel-title col-xs-6">
-                        Meta
-                    </h1>
-                    <span class="col-xs-6">
+                <h1 class="panel-title">
+                    Meta
+                    <span class="pull-right">
                         <button
-                                class="btn-sm btn-primary pull-right"
-                                style="cursor: pointer;"
+                                class="btn-xs btn-primary"
                                 ng-show="!metaEditMode"
                                 ng-click="toggleEditMode()">
                             Rediger
                         </button>
                         <button
-                                class="btn-sm btn-info pull-right"
-                                style="cursor: pointer;"
+                                class="btn-xs btn-info"
                                 ng-show="metaEditMode"
                                 ng-click="cancelMeta()">
                             Avbryt
                         </button>
                         <button
-                                class="btn-sm btn-primary pull-right"
-                                style="cursor: pointer;"
+                                class="btn-xs btn-primary"
                                 ng-show="metaEditMode"
                                 ng-click="saveMeta()">
                             Lagre
                         </button>
                     </span>
-                </div>
+                </h1>
             </div>
             <div class="panel-body">
                 <div class="row">
@@ -133,7 +128,7 @@
                                     {{ journalist.first_name }} {{ journalist.last_name }}
                                 </span>
                                 <span class="col-xs-2" ng-show="metaEditMode">
-                                    <i class="icon-remove" ng-click="removeJournalist(journalist)"></i>
+                                    <i class="icon-remove interact-icon" ng-click="removeJournalist(journalist)"></i>
                                 </span>
                             </li>
                             <li class="row" ng-show="metaEditMode">
@@ -141,7 +136,7 @@
                                     <input class="input-sm" type="text" ng-model="newJournalist"/>
                                 </span>
                                 <span class="col-xs-2">
-                                    <i class="icon-plus" ng-click="addJournalist(newJournalist)"></i>
+                                    <i class="icon-plus interact-icon" ng-click="addJournalist(newJournalist)"></i>
                                 </span>
                             </li>
                         </ul>
@@ -156,7 +151,7 @@
                                     {{ photographer.first_name }} {{ photographer.last_name }}
                                 </span>
                                 <span class="col-xs-2" ng-show="metaEditMode">
-                                    <i class="icon-remove" ng-click="removePhotographer(photographer)"></i>
+                                    <i class="icon-remove interact-icon" ng-click="removePhotographer(photographer)"></i>
                                 </span>
                             </li>
                             <li class="row" ng-show="metaEditMode">
@@ -164,7 +159,7 @@
                                     <input class="input-sm" type="text" ng-model="newPhotographer"/>
                                 </span>
                                 <span class="col-xs-2">
-                                    <i class="icon-plus" ng-click="addPhotographer(newPhotographer)"></i>
+                                    <i class="icon-plus interact-icon" ng-click="addPhotographer(newPhotographer)"></i>
                                 </span>
                             </li>
                         </ul>
