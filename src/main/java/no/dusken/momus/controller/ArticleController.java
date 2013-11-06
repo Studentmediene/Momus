@@ -58,21 +58,22 @@ public class ArticleController {
     // Receive an update object with a list of fields to be updated
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public @ResponseBody Article updateArticle(@RequestBody ArticleUpdates updates){
+        Long id = updates.getId();
         if (updates.getUpdatedFields().contains("content")) {
-            articleService.saveContent(updates.getContent(), updates.getId());
+            articleService.saveContent(updates.getContent(), id);
         }
         if (updates.getUpdatedFields().contains("note")) {
-            articleService.saveNote(updates.getNote(), updates.getId());
+            articleService.saveNote(updates.getNote(), id);
         }
         if (updates.getUpdatedFields().contains("name")) {
-            articleService.saveName(updates.getName(), updates.getId());
+            articleService.saveName(updates.getName(), id);
         }
         if (updates.getUpdatedFields().contains("journalists")) {
-            articleService.saveJournalists(updates.getJournalists(), updates.getId());
+            articleService.saveJournalists(updates.getJournalists(), id);
         }
         if (updates.getUpdatedFields().contains("photographers")) {
-            articleService.savePhotographers(updates.getPhotographers(), updates.getId());
+            articleService.savePhotographers(updates.getPhotographers(), id);
         }
-        return articleService.getArticleById(updates.getId());
+        return articleService.getArticleById(id);
     }
 }

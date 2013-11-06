@@ -17,8 +17,11 @@
 'use strict';
 
 angular.module('momusApp.controllers')
+    // The scope of this controller is the entire article view
     .controller('ArticleCtrl', function ($scope, $http, $routeParams, articleParserRules, noteParserRules) {
 
+        // Almost exactly like an article object, but when ArticleController.java receives this object,
+        // it will only save the fields that are listed in updated_fields
         var newUpdatesCopy = function() {
             var updates = angular.copy($scope.article);
             updates.updated_fields = [];
@@ -35,11 +38,7 @@ angular.module('momusApp.controllers')
                 });
         };
 
-        // The scope of this controller is the entire article view
-
-        // This initializes an object to be replaced by a GETed object.
-        // This is to stop functions that needs it from complaining that the object doesn't exist
-        // before the request is complete.
+        // Create the object ASAP so that the console won't complain.
         $scope.article = { content: "" };
 
         $http.get('/api/article/' + $routeParams.id).success(function (data) {
@@ -48,6 +47,9 @@ angular.module('momusApp.controllers')
             $scope.originalName = angular.copy($scope.article.name);
             $scope.originalNote = angular.copy($scope.article.note);
         });
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Article content control
 
         $scope.articleRules = articleParserRules;
 
@@ -62,6 +64,7 @@ angular.module('momusApp.controllers')
             $scope.articleIsDirty = false;
         };
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Note control
 
         $scope.saveNote = function () {
@@ -77,11 +80,12 @@ angular.module('momusApp.controllers')
 
         $scope.noteRules = noteParserRules;
 
-        // Metadata editing functionality
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Metadata editing
 
         $scope.toggleEditMode = function() {
             $scope.metaEditMode = !$scope.metaEditMode;
-        }
+        };
 
         var listOfPersonsContainsID = function(list, id) {
             var i;
