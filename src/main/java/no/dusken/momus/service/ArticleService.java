@@ -17,18 +17,14 @@
 package no.dusken.momus.service;
 
 import no.dusken.momus.model.Article;
-import no.dusken.momus.model.Person;
+import no.dusken.momus.model.ArticleUpdates;
 import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.ArticleRevisionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
-
-import static no.dusken.momus.service.specification.ArticleSpecifications.*;
-import static org.springframework.data.jpa.domain.Specifications.where;
 
 @Service
 public class ArticleService {
@@ -43,68 +39,41 @@ public class ArticleService {
         return articleRepository.findOne(id);
     }
 
-    public Article saveArticle(Article article) {
-        Long newID = articleRepository.saveAndFlush(article).getId();
-        return articleRepository.findOne(newID);
-    }
-
     public List<Article> getAllArticles() {
         return articleRepository.findAll();
     }
 
-    public List<Article> search(String content, String name) {
-        Specifications<Article> criteria = where(starter());
-
-        if (!content.equals("")) {
-            criteria = criteria.and(contentContains(content));
-        }
-
-        if (!name.equals("")) {
-            criteria = criteria.and(nameIs(name));
-        }
-
-        criteria = criteria.and(photoIdIs(1L));
-
-        return articleRepository.findAll(criteria);
+    public Article saveNewArticle(Article article) {
+        Long newID = articleRepository.saveAndFlush(article).getId();
+        return articleRepository.findOne(newID);
     }
 
-    public Article saveEntireArticle(Article article) {
+    public Article saveUpdatedArticle(Article article) {
         articleRepository.saveAndFlush(article);
         return articleRepository.findOne(article.getId());
     }
 
-    public String saveContent(String content, Long id) {
-        Article article = articleRepository.findOne(id);
-        article.setContent(content);
-        articleRepository.saveAndFlush(article);
-        return article.getContent();
-    }
+    public Article updateArticle(ArticleUpdates updates) {
+        Article articleFromClient = updates.getArticle();
+        Article articleFromServer = getArticleById(articleFromClient.getId());
 
-    public String saveName(String name, Long id) {
-        Article article = articleRepository.findOne(id);
-        article.setName(name);
-        articleRepository.saveAndFlush(article);
-        return article.getName();
-    }
+        Set<String> updatedFields = updates.getUpdatedFields();
+        if (updatedFields.contains("content")) {
+            articleFromServer.setContent(articleFromClient.getContent());
+        }
+        if (updatedFields.contains("note")) {
+            articleFromServer.setNote(articleFromClient.getNote());
+        }
+        if (updatedFields.contains("name")) {
+            articleFromServer.setName(articleFromClient.getName());
+        }
+        if (updatedFields.contains("journalists")) {
+            articleFromServer.setJournalists(articleFromClient.getJournalists());
+        }
+        if (updatedFields.contains("photographers")) {
+            articleFromServer.setPhotographers(articleFromClient.getPhotographers());
+        }
 
-    public String saveNote(String note, Long id) {
-        Article article = articleRepository.findOne(id);
-        article.setNote(note);
-        articleRepository.saveAndFlush(article);
-        return article.getNote();
-    }
-
-    public Set<Person> saveJournalists(Set<Person> persons, Long id) {
-        Article article = articleRepository.findOne(id);
-        article.setJournalists(persons);
-        articleRepository.saveAndFlush(article);
-        return article.getJournalists();
-    }
-
-    public Set<Person> savePhotographers(Set<Person> persons, Long id) {
-        Article article = articleRepository.findOne(id);
-        article.setPhotographers(persons);
-        articleRepository.saveAndFlush(article);
-        return article.getPhotographers();
+        return saveUpdatedArticle(articleFromServer);
     }
 }

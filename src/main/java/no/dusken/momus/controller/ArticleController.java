@@ -24,7 +24,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/article")
@@ -33,7 +32,6 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
-    // Get list of all articles
     /**
      * TODO: Add pagination or something, getting all articles will possibly be MANY
      * @return
@@ -43,37 +41,20 @@ public class ArticleController {
         return articleService.getAllArticles();
     }
 
-    // Get article by ID
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody Article getArticleByID(@PathVariable("id") Long id) {
         return articleService.getArticleById(id);
     }
 
-    // Update (PUT) entire existing article
+    /** Update (PUT) entire existing article */
     @RequestMapping(method = RequestMethod.PUT)
     public @ResponseBody Article saveArticleContents(@RequestBody Article article){
-        return articleService.saveEntireArticle(article);
+        return articleService.saveUpdatedArticle(article);
     }
 
-    // Receive an update object with a list of fields to be updated
+    /** Receive an update object with a list of fields to be updated */
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public @ResponseBody Article updateArticle(@RequestBody ArticleUpdates updates){
-        Long id = updates.getId();
-        if (updates.getUpdatedFields().contains("content")) {
-            articleService.saveContent(updates.getContent(), id);
-        }
-        if (updates.getUpdatedFields().contains("note")) {
-            articleService.saveNote(updates.getNote(), id);
-        }
-        if (updates.getUpdatedFields().contains("name")) {
-            articleService.saveName(updates.getName(), id);
-        }
-        if (updates.getUpdatedFields().contains("journalists")) {
-            articleService.saveJournalists(updates.getJournalists(), id);
-        }
-        if (updates.getUpdatedFields().contains("photographers")) {
-            articleService.savePhotographers(updates.getPhotographers(), id);
-        }
-        return articleService.getArticleById(id);
+        return articleService.updateArticle(updates);
     }
 }
