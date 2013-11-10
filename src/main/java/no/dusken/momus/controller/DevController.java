@@ -20,6 +20,10 @@ import no.dusken.momus.authentication.AuthUserDetails;
 import no.dusken.momus.authentication.Token;
 import no.dusken.momus.authentication.UserAuthorities;
 import no.dusken.momus.authentication.UserLoginService;
+import no.dusken.momus.model.Article;
+import no.dusken.momus.model.Page;
+import no.dusken.momus.model.Publication;
+import no.dusken.momus.service.repository.PublicationRepository;
 import no.dusken.momus.smmdb.Syncer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +34,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 
 /**
  * Dev only, not accessible when live
@@ -49,6 +57,9 @@ public class DevController {
 
     @Autowired
     private Syncer syncer;
+
+    @Autowired
+    private PublicationRepository publicationRepository;
 
     /**
      * Bypass login and logs you in as the user with the provided id
@@ -79,5 +90,11 @@ public class DevController {
     @PreAuthorize("hasRole('momus:editor')")
     public @ResponseBody String editor() {
         return "editor ok";
+    }
+
+    @RequestMapping("/createPublication")
+    public @ResponseBody String createPublication() {
+
+        return "publications ok";
     }
 }

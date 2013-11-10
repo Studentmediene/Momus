@@ -19,34 +19,84 @@
 angular.module('momusApp.controllers')
     .controller('PublicationCtrl', function ($scope, $http) {
 
-        $scope.publications = [
-            {month: '09', year: '2013'},
-            {month: '10', year: '2013'},
-            {month: '05', year: '2013'},
-            {month: '11', year: '2013'},
-            {month: '12', year: '2013'},
-            {month: '06', year: '2013'},
-            {month: '07', year: '2013'},
-            {month: '08', year: '2013'},
-            {month: '09', year: '2013'},
-            {month: '06', year: '2012'}
-        ];
+        $scope.option = 'Utgivelser';
+        $scope.editionView = 'false';
+        $scope.publicationData = null;
 
-        $scope.actives = [
-            {month: '05', year: '2013'},
-            {month: '09', year: '2013'},
-            {month: '09', year: '2013'},
-            {month: '06', year: '2012'}
-        ];
+        $http.get('/api/publication')
+            .success(function (data) {
+                $scope.publicationData = data;
+                console.log($scope.publicationData.length);
+            })
+            .error(function() {
+                console.log("Error");
+            });
 
-        $scope.option = 'År';
+        $scope.new = {
+            name: '',
+            release_date: ''
+        };
 
-        $scope.fileSaved = function() {
-            alert("Utgave lagret!");
+        $scope.getDisposal = function(id, $routeProvider) {
+            console.log("getting disposal!")
+            console.log("Id: " + id);
+            $routeProvider
+                .when('/disposal/:id',
+                    {
+                        templateUrl: 'partials/disposal/disposal.html'
+                    })
+                .otherwise(
+                    {
+                        template: "Couldn't find disposal"
+                    })
+        };
+
+        $scope.getPublication = function(id) {
+            if ($scope.option == 'Utgivelser') {
+                for (var i=1; i<=$scope.publicationData.length ;i++) {
+                    if (i==id) {
+                        $scope.edit = $scope.publicationData[id-1];
+                    }
+                }
+            }
+            else {
+                for (var i=1; i<=$scope.active.length ;i++) {
+                    if (i==id) {
+                        $scope.edit = $scope.active[id-1];
+                    }
+                }
+            }
         }
 
 
 
+        $scope.fileSaved = function(id) {
+            if ($scope.newWindow == 'true') {
+                console.log($scope.new);
+                $http.post('/api/publication', $scope.new)
+                    .success(function() {
+                        console.log("vellykket .POST");
+                    })
+                    .error(function() {
+                        console.log("Ikke vellykket");
+                    });;
+            }
+
+            else if ($scope.editionView=='true') {
+                console.log(($scope.edit));
+                $http.put('/api/publication/' + id, $scope.edit)
+                    .success(function() {
+                        console.log("Vellykket .PUT");
+                    })
+                    .error(function() {
+                        console.log("Ikke vellykket");
+                    });
+            }
+            else {
+                console.log("nothing happened..");
+            }
+
+        }
 
     });
 
