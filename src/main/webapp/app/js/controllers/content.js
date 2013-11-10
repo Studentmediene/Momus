@@ -17,22 +17,22 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('NoteCtrl', function ($scope, noteParserRules) {
+    .controller('ContentCtrl', function ($scope, articleParserRules) {
 
-        // The scope of this controller is the note panel,
+        // The scope of this controller is the content panel,
         // which also falls under the control of the article controller
         // so this controller has access to the ArticleCtrl $scope
 
-        $scope.noteRules = noteParserRules;
+        $scope.articleRules = articleParserRules;
 
-        $scope.$watch('article.note', function () {
-            $scope.noteIsDirty = !angular.equals($scope.article.note, $scope.originalNote);
+        $scope.$watch('article.content', function () {
+            $scope.articleIsDirty = !angular.equals($scope.article.content, $scope.originalContent);
         });
 
-        $scope.saveNote = function () {
+        $scope.saveArticle = function () {
             var updates = $scope.newUpdatesObject();
-            updates.updated_fields.push("note");
+            updates.updated_fields.push("content");
             $scope.putUpdates(updates);
-            $scope.noteIsDirty = false;
+            $scope.articleIsDirty = false;
         };
     });

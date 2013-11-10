@@ -17,19 +17,22 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    // The scope of this controller is the entire article view
-    .controller('ArticleCtrl', function ($scope, $http, $routeParams, articleParserRules, noteParserRules) {
+    .controller('ArticleCtrl', function ($scope, $http, $routeParams) {
 
-        // Almost exactly like an article object, but when ArticleController.java receives this object,
-        // it will only save the fields that are listed in updated_fields
-        var newUpdatesCopy = function() {
+        // The scope of this controller is the entire article view.
+        // There are sub-controllers for the different panels
+        // that access the $scope of this controller
+
+        // When ArticleController.java receives this object,
+        // it will overwrite the server data for the listed fields with the data from the sent object
+        $scope.newUpdatesObject = function() {
             return {
                 "object": $scope.article,
                 "updated_fields": []
             };
         };
 
-        var putUpdates = function (updates) {
+        $scope.putUpdates = function (updates) {
             $http.put('/api/article/update', updates)
                 .success( function (data) {
 
@@ -48,124 +51,5 @@ angular.module('momusApp.controllers')
             $scope.originalName = angular.copy($scope.article.name);
             $scope.originalNote = angular.copy($scope.article.note);
         });
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Article content control
-
-        $scope.articleRules = articleParserRules;
-
-        $scope.$watch('article.content', function () {
-            $scope.articleIsDirty = !angular.equals($scope.article.content, $scope.originalContent);
-        });
-
-        $scope.saveArticle = function () {
-            var updates = newUpdatesCopy();
-            updates.updated_fields.push("content");
-            putUpdates(updates);
-            $scope.articleIsDirty = false;
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Note control
-
-        $scope.saveNote = function () {
-            var updates = newUpdatesCopy();
-            updates.updated_fields.push("note");
-            putUpdates(updates);
-            $scope.noteIsDirty = false;
-        };
-
-        $scope.$watch('article.note', function () {
-            $scope.noteIsDirty = !angular.equals($scope.article.note, $scope.originalNote);
-        });
-
-        $scope.noteRules = noteParserRules;
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Metadata editing
-
-        $scope.toggleEditMode = function() {
-            $scope.metaEditMode = !$scope.metaEditMode;
-        };
-
-        var listOfPersonsContainsID = function(list, id) {
-            var i;
-            for (i = 0; i < list.length; i++) {
-                // Note that this compares the object's integer ID to the string id
-                if (list[i].id == id) {
-                    return true;
-                }
-            }
-            return false;
-        };
-
-        var removeFromArray = function(array, object) {
-            var index = array.indexOf(object);
-            if (index > -1) {
-                array.splice(index, 1);
-            }
-        };
-
-        $scope.addJournalist = function(newJournalistID){
-            if (listOfPersonsContainsID($scope.article.journalists, newJournalistID)){
-                return;
-            }
-            $http.get('/api/person/' + newJournalistID).success( function(data) {
-                $scope.article.journalists.push(data);
-                $scope.journalistsDirty = true;
-            });
-        };
-
-        $scope.removeJournalist = function(journalist) {
-            removeFromArray($scope.article.journalists, journalist);
-            $scope.journalistsDirty = true;
-        };
-
-        $scope.addPhotographer = function(newPhotographerID){
-            if (listOfPersonsContainsID($scope.article.photographers, newPhotographerID)){
-                return;
-            }
-            $http.get('/api/person/' + newPhotographerID).success( function(data) {
-                $scope.article.photographers.push(data);
-                $scope.photographersDirty = true;
-            });
-        };
-
-        $scope.removePhotographer = function(photographer) {
-            removeFromArray($scope.article.photographers, photographer);
-            $scope.photographersDirty = true;
-        };
-
-        $scope.saveMeta = function() {
-            var updates = newUpdatesCopy();
-            if ($scope.article.name != $scope.originalName) {
-                updates.updated_fields.push("name");
-                $scope.originalName = $scope.article.name;
-            }
-            if ($scope.journalistsDirty) {
-                updates.updated_fields.push("journalists");
-                $scope.journalistsDirty = false;
-            }
-            if ($scope.photographersDirty) {
-                updates.updated_fields.push("photographers");
-                $scope.photographersDirty = false;
-            }
-            putUpdates(updates);
-            $scope.metaEditMode = false;
-        };
-
-        $scope.cancelMeta = function() {
-            $http.get('/api/article/' + $scope.article.id).success( function(data) {
-                if ($scope.journalistsDirty) {
-                    $scope.article.journalists = data.journalists;
-                    $scope.journalistsDirty = false;
-                }
-                if ($scope.photographersDirty) {
-                    $scope.article.photographers = data.photographers;
-                    $scope.photographersDirty = false;
-                }
-            });
-            $scope.metaEditMode = false;
-        };
     });
 
