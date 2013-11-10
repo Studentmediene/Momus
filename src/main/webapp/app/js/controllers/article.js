@@ -24,7 +24,7 @@ angular.module('momusApp.controllers')
         // it will only save the fields that are listed in updated_fields
         var newUpdatesCopy = function() {
             return {
-                "article": $scope.article,
+                "object": $scope.article,
                 "updated_fields": []
             };
         };
@@ -107,7 +107,7 @@ angular.module('momusApp.controllers')
         };
 
         $scope.addJournalist = function(newJournalistID){
-            if (newJournalistID.isEmpty() || listOfPersonsContainsID($scope.article.journalists, newJournalistID)){
+            if (listOfPersonsContainsID($scope.article.journalists, newJournalistID)){
                 return;
             }
             $http.get('/api/person/' + newJournalistID).success( function(data) {
@@ -122,7 +122,7 @@ angular.module('momusApp.controllers')
         };
 
         $scope.addPhotographer = function(newPhotographerID){
-            if (newPhotographerID.isEmpty() || listOfPersonsContainsID($scope.article.photographers, newPhotographerID)){
+            if (listOfPersonsContainsID($scope.article.photographers, newPhotographerID)){
                 return;
             }
             $http.get('/api/person/' + newPhotographerID).success( function(data) {

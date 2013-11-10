@@ -17,7 +17,7 @@
 package no.dusken.momus.service;
 
 import no.dusken.momus.model.Article;
-import no.dusken.momus.model.ArticleUpdates;
+import no.dusken.momus.model.Updates;
 import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.ArticleRevisionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +53,8 @@ public class ArticleService {
         return articleRepository.findOne(article.getId());
     }
 
-    public Article updateArticle(ArticleUpdates updates) {
-        Article articleFromClient = updates.getArticle();
+    public Article updateArticle(Updates<Article> updates) {
+        Article articleFromClient = updates.getObject();
         Article articleFromServer = getArticleById(articleFromClient.getId());
 
         Set<String> updatedFields = updates.getUpdatedFields();

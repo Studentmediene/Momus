@@ -2,13 +2,13 @@ package no.dusken.momus.model;
 
 import java.util.Set;
 
-public class ArticleUpdates {
-    private Article article;
+public class Updates<T> {
+    private T object;
     private Set<String> updatedFields;
 
 
-    public Article getArticle() {
-        return article;
+    public T getObject() {
+        return object;
     }
 
     public Set<String> getUpdatedFields() {

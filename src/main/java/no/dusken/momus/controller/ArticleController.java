@@ -17,7 +17,7 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.model.Article;
-import no.dusken.momus.model.ArticleUpdates;
+import no.dusken.momus.model.Updates;
 import no.dusken.momus.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,7 +54,7 @@ public class ArticleController {
 
     /** Receive an update object with a list of fields to be updated */
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    public @ResponseBody Article updateArticle(@RequestBody ArticleUpdates updates){
+    public @ResponseBody Article updateArticle(@RequestBody Updates<Article> updates){
         return articleService.updateArticle(updates);
     }
 }
