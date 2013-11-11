@@ -23,8 +23,8 @@ angular.module('momusApp.controllers')
         // There are sub-controllers for the different panels
         // that access the $scope of this controller
 
-        // When ArticleController.java receives this object,
-        // it will overwrite the server data for the listed fields with the data from the sent object
+        // When the server receives this object,
+        // it will overwrite the server data for each listed field and leave the others unchanged
         $scope.newUpdatesObject = function() {
             return {
                 "object": $scope.article,
