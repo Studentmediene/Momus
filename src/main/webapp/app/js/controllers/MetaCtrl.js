@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('MetaCtrl', function ($scope, $http) {
+    .controller('MetaCtrl', function ($scope, ArticleService) {
 
         // The scope of this controller is the note panel,
         // which also falls under the control of the article controller
@@ -27,56 +27,38 @@ angular.module('momusApp.controllers')
             $scope.metaEditMode = !$scope.metaEditMode;
         };
 
-        var listOfPersonsContainsID = function(list, id) {
-            var i;
-            for (i = 0; i < list.length; i++) {
-                // Note that this compares the object's integer ID to the string id
-                if (list[i].id == id) {
-                    return true;
-                }
-            }
-            return false;
-        };
-
-        var removeFromArray = function(array, object) {
-            var index = array.indexOf(object);
-            if (index > -1) {
-                array.splice(index, 1);
-            }
-        };
-
         $scope.addJournalist = function(newJournalistID){
-            if (listOfPersonsContainsID($scope.article.journalists, newJournalistID)){
+            if (ArticleService.listOfPersonsContainsID($scope.article.journalists, newJournalistID)){
                 return;
             }
-            $http.get('/api/person/' + newJournalistID).success( function(data) {
+            ArticleService.getPerson(newJournalistID, function(data) {
                 $scope.article.journalists.push(data);
                 $scope.journalistsDirty = true;
             });
         };
 
         $scope.removeJournalist = function(journalist) {
-            removeFromArray($scope.article.journalists, journalist);
+            ArticleService.removeFromArray($scope.article.journalists, journalist);
             $scope.journalistsDirty = true;
         };
 
         $scope.addPhotographer = function(newPhotographerID){
-            if (listOfPersonsContainsID($scope.article.photographers, newPhotographerID)){
+            if (ArticleService.listOfPersonsContainsID($scope.article.photographers, newPhotographerID)){
                 return;
             }
-            $http.get('/api/person/' + newPhotographerID).success( function(data) {
+            ArticleService.getPerson(newPhotographerID, function(data) {
                 $scope.article.photographers.push(data);
                 $scope.photographersDirty = true;
             });
         };
 
         $scope.removePhotographer = function(photographer) {
-            removeFromArray($scope.article.photographers, photographer);
+            ArticleService.removeFromArray($scope.article.photographers, photographer);
             $scope.photographersDirty = true;
         };
 
         $scope.saveMeta = function() {
-            var updates = $scope.newUpdatesObject();
+            var updates = ArticleService.updateObject($scope.article);
             if ($scope.article.name != $scope.originalName) {
                 updates.updated_fields.push("name");
                 $scope.originalName = $scope.article.name;
@@ -89,12 +71,12 @@ angular.module('momusApp.controllers')
                 updates.updated_fields.push("photographers");
                 $scope.photographersDirty = false;
             }
-            $scope.putUpdates(updates);
+            ArticleService.updateArticle(updates);
             $scope.metaEditMode = false;
         };
 
         $scope.cancelMeta = function() {
-            $http.get('/api/article/' + $scope.article.id).success( function(data) {
+            ArticleService.getArticle($scope.article.id, function(data) {
                 if ($scope.journalistsDirty) {
                     $scope.article.journalists = data.journalists;
                     $scope.journalistsDirty = false;

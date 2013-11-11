@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ContentCtrl', function ($scope, articleParserRules) {
+    .controller('ContentCtrl', function ($scope, ArticleService, articleParserRules) {
 
         // The scope of this controller is the content panel,
         // which also falls under the control of the article controller
@@ -30,9 +30,9 @@ angular.module('momusApp.controllers')
         });
 
         $scope.saveArticle = function () {
-            var updates = $scope.newUpdatesObject();
+            var updates = ArticleService.updateObject($scope.article);
             updates.updated_fields.push("content");
-            $scope.putUpdates(updates);
+            ArticleService.updateArticle(updates);
             $scope.articleIsDirty = false;
         };
     });

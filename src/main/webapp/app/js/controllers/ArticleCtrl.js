@@ -17,35 +17,16 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function ($scope, $http, $routeParams) {
+    .controller('ArticleCtrl', function ($scope, $routeParams, ArticleService) {
 
         // The scope of this controller is the entire article view.
         // There are sub-controllers for the different panels
         // that access the $scope of this controller
 
-        // When the server receives this object,
-        // it will overwrite the server data for each listed field and leave the others unchanged
-        $scope.newUpdatesObject = function() {
-            return {
-                "object": $scope.article,
-                "updated_fields": []
-            };
-        };
-
-        $scope.putUpdates = function (updates) {
-            $http.put('/api/article/update', updates)
-                .success( function (data) {
-
-                })
-                .error( function () {
-                    alert("Oops, Momus fikk ikke til å lagre til serveren.");
-                });
-        };
-
         // Create the object ASAP so that the console won't complain.
         $scope.article = { content: "" };
 
-        $http.get('/api/article/' + $routeParams.id).success(function (data) {
+        ArticleService.getArticle( $routeParams.id, function (data) {
             $scope.article = data;
             $scope.originalContent = angular.copy($scope.article.content);
             $scope.originalName = angular.copy($scope.article.name);

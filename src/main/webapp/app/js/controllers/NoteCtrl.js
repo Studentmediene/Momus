@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('NoteCtrl', function ($scope, noteParserRules) {
+    .controller('NoteCtrl', function ($scope, ArticleService, noteParserRules) {
 
         // The scope of this controller is the note panel,
         // which also falls under the control of the article controller
@@ -30,9 +30,9 @@ angular.module('momusApp.controllers')
         });
 
         $scope.saveNote = function () {
-            var updates = $scope.newUpdatesObject();
+            var updates = ArticleService.updateObject($scope.article);
             updates.updated_fields.push("note");
-            $scope.putUpdates(updates);
+            ArticleService.updateArticle(updates);
             $scope.noteIsDirty = false;
         };
     });
