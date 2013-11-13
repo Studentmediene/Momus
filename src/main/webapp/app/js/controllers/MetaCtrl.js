@@ -27,65 +27,52 @@ angular.module('momusApp.controllers')
             $scope.metaEditMode = !$scope.metaEditMode;
         };
 
-        $scope.addJournalist = function(newJournalistID){
-            if (ArticleService.listOfPersonsContainsID($scope.article.journalists, newJournalistID)){
+        $scope.addJournalist = function(id){
+            if (id == null || id == "" || ArticleService.listOfPersonsContainsID($scope.article["journalists"], id)) {
                 return;
             }
-            ArticleService.getPerson(newJournalistID, function(data) {
-                $scope.article.journalists.push(data);
-                $scope.journalistsDirty = true;
+            ArticleService.getPerson(id, function(data) {
+                $scope.article["journalists"].push(data);
             });
         };
 
-        $scope.removeJournalist = function(journalist) {
-            ArticleService.removeFromArray($scope.article.journalists, journalist);
-            $scope.journalistsDirty = true;
-        };
-
-        $scope.addPhotographer = function(newPhotographerID){
-            if (ArticleService.listOfPersonsContainsID($scope.article.photographers, newPhotographerID)){
+        $scope.addPhotographer = function(id){
+            if (id == null || id == "" || ArticleService.listOfPersonsContainsID($scope.article["photographers"], id)) {
                 return;
             }
-            ArticleService.getPerson(newPhotographerID, function(data) {
-                $scope.article.photographers.push(data);
-                $scope.photographersDirty = true;
+            ArticleService.getPerson(id, function(data) {
+                $scope.article["photographers"].push(data);
             });
         };
 
-        $scope.removePhotographer = function(photographer) {
-            ArticleService.removeFromArray($scope.article.photographers, photographer);
-            $scope.photographersDirty = true;
+        $scope.removePhotographer = function(person) {
+            ArticleService.removeFromArray($scope.article["photographers"], person);
+        };
+
+        $scope.removeJournalist = function(person) {
+            ArticleService.removeFromArray($scope.article["journalists"], person);
         };
 
         $scope.saveMeta = function() {
             var updates = ArticleService.updateObject($scope.article);
-            if ($scope.article.name != $scope.originalName) {
+            if (ArticleService.changed("name", $scope)) {
                 updates.updated_fields.push("name");
-                $scope.originalName = $scope.article.name;
             }
-            if ($scope.journalistsDirty) {
+            if (ArticleService.changed("journalists", $scope)) {
                 updates.updated_fields.push("journalists");
-                $scope.journalistsDirty = false;
             }
-            if ($scope.photographersDirty) {
+            if (ArticleService.changed("photographers", $scope)) {
                 updates.updated_fields.push("photographers");
-                $scope.photographersDirty = false;
             }
-            ArticleService.updateArticle(updates);
-            $scope.metaEditMode = false;
+            ArticleService.updateArticle(updates, $scope, function() {
+                $scope.metaEditMode = false;
+            });
         };
 
         $scope.cancelMeta = function() {
-            ArticleService.getArticle($scope.article.id, function(data) {
-                if ($scope.journalistsDirty) {
-                    $scope.article.journalists = data.journalists;
-                    $scope.journalistsDirty = false;
-                }
-                if ($scope.photographersDirty) {
-                    $scope.article.photographers = data.photographers;
-                    $scope.photographersDirty = false;
-                }
-            });
+            ArticleService.revert("name", $scope);
+            ArticleService.revert("journalists", $scope);
+            ArticleService.revert("photographers", $scope);
             $scope.metaEditMode = false;
         };
     });

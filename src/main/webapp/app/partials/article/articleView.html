@@ -22,10 +22,10 @@
                     <span class="glyphicon glyphicon-pencil"></span>
                     {{ article.name }}
                     <div class="pull-right">
-                        <button class="btn btn-default btn-xs" ng-show="articleIsDirty" ng-click="saveArticle()">
+                        <button class="btn btn-default btn-xs" ng-show="article.content != original.content" ng-click="saveArticle()">
                             <i class="icon-save"></i> Lagre
                         </button>
-                        <button class="btn btn-default btn-xs" ng-show="!articleIsDirty" disabled>
+                        <button class="btn btn-default btn-xs" ng-show="article.content == original.content" disabled>
                             <i class="icon-ok"></i> Lagret
                         </button>
                     </div>
@@ -93,10 +93,10 @@
                     <span class="icon-list"></span>
                     Artikkel-notater
                     <div class="pull-right">
-                        <button class="btn btn-default btn-xs" ng-show="noteIsDirty" ng-click="saveNote()">
+                        <button class="btn btn-default btn-xs" ng-show="article.note != original.note" ng-click="saveNote()">
                             <i class="icon-save"></i> Lagre
                         </button>
-                        <button class="btn btn-default btn-xs" ng-show="!noteIsDirty" disabled>
+                        <button class="btn btn-default btn-xs" ng-show="article.note == original.note" disabled>
                             <i class="icon-ok"></i> Lagret
                         </button>
                     </div>

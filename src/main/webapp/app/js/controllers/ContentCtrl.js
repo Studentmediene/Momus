@@ -25,14 +25,9 @@ angular.module('momusApp.controllers')
 
         $scope.articleRules = articleParserRules;
 
-        $scope.$watch('article.content', function () {
-            $scope.articleIsDirty = !angular.equals($scope.article.content, $scope.originalContent);
-        });
-
         $scope.saveArticle = function () {
             var updates = ArticleService.updateObject($scope.article);
             updates.updated_fields.push("content");
-            ArticleService.updateArticle(updates);
-            $scope.articleIsDirty = false;
+            ArticleService.updateArticle(updates, $scope, function(){});
         };
     });

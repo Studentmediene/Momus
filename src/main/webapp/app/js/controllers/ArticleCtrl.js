@@ -23,14 +23,13 @@ angular.module('momusApp.controllers')
         // There are sub-controllers for the different panels
         // that access the $scope of this controller
 
-        // Create the object ASAP so that the console won't complain.
+        // Create these objects ASAP so that the console won't complain.
         $scope.article = { content: "" };
+        $scope.original = { content: "" };
 
         ArticleService.getArticle( $routeParams.id, function (data) {
-            $scope.article = data;
-            $scope.originalContent = angular.copy($scope.article.content);
-            $scope.originalName = angular.copy($scope.article.name);
-            $scope.originalNote = angular.copy($scope.article.note);
+            $scope.article = angular.copy(data);
+            $scope.original = angular.copy(data);
         });
     });
 

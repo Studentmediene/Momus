@@ -25,14 +25,9 @@ angular.module('momusApp.controllers')
 
         $scope.noteRules = noteParserRules;
 
-        $scope.$watch('article.note', function () {
-            $scope.noteIsDirty = !angular.equals($scope.article.note, $scope.originalNote);
-        });
-
         $scope.saveNote = function () {
             var updates = ArticleService.updateObject($scope.article);
             updates.updated_fields.push("note");
-            ArticleService.updateArticle(updates);
-            $scope.noteIsDirty = false;
+            ArticleService.updateArticle(updates, $scope, function(){});
         };
     });
