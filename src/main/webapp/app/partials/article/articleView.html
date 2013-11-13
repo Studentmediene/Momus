@@ -22,10 +22,14 @@
                     <span class="glyphicon glyphicon-pencil"></span>
                     {{ article.name }}
                     <div class="pull-right">
-                        <button class="btn btn-default btn-xs" ng-show="article.content != original.content" ng-click="saveArticle()">
+                        <button class="btn btn-default btn-xs"
+                                ng-show="article.content != original.content"
+                                ng-click="saveArticle()">
                             <i class="icon-save"></i> Lagre
                         </button>
-                        <button class="btn btn-default btn-xs" ng-show="article.content == original.content" disabled>
+                        <button disabled
+                                class="btn btn-default btn-xs"
+                                ng-show="article.content == original.content">
                             <i class="icon-ok"></i> Lagret
                         </button>
                     </div>
@@ -93,10 +97,14 @@
                     <span class="icon-list"></span>
                     Artikkel-notater
                     <div class="pull-right">
-                        <button class="btn btn-default btn-xs" ng-show="article.note != original.note" ng-click="saveNote()">
+                        <button class="btn btn-default btn-xs"
+                                ng-show="article.note != original.note"
+                                ng-click="saveNote()">
                             <i class="icon-save"></i> Lagre
                         </button>
-                        <button class="btn btn-default btn-xs" ng-show="article.note == original.note" disabled>
+                        <button disabled
+                                class="btn btn-default btn-xs"
+                                ng-show="article.note == original.note">
                             <i class="icon-ok"></i> Lagret
                         </button>
                     </div>
@@ -193,7 +201,9 @@
                                     {{ journalist.first_name }} {{ journalist.last_name }}
                                 </span>
                                 <span class="col-xs-2" ng-show="metaEditMode">
-                                    <i class="icon-remove interact" ng-click="removeJournalist(journalist)"></i>
+                                    <i class="icon-remove interact"
+                                       title="Fjern"
+                                       ng-click="removePerson(journalist, 'journalists')"></i>
                                 </span>
                             </li>
                             <li class="row" ng-show="metaEditMode">
@@ -201,7 +211,9 @@
                                     <input class="input-sm" type="text" ng-model="newJournalist"/>
                                 </span>
                                 <span class="col-xs-2">
-                                    <i class="icon-plus interact" ng-click="addJournalist(newJournalist)"></i>
+                                    <i class="icon-plus interact"
+                                       title="Legg til"
+                                       ng-click="addPerson(newJournalist, 'journalists')"></i>
                                 </span>
                             </li>
                         </ul>
@@ -216,7 +228,9 @@
                                     {{ photographer.first_name }} {{ photographer.last_name }}
                                 </span>
                                 <span class="col-xs-2" ng-show="metaEditMode">
-                                    <i class="icon-remove interact" ng-click="removePhotographer(photographer)"></i>
+                                    <i class="icon-remove interact"
+                                       title="Fjern"
+                                       ng-click="removePerson(photographer, 'photographers')"></i>
                                 </span>
                             </li>
                             <li class="row" ng-show="metaEditMode">
@@ -224,7 +238,9 @@
                                     <input class="input-sm" type="text" ng-model="newPhotographer"/>
                                 </span>
                                 <span class="col-xs-2">
-                                    <i class="icon-plus interact" ng-click="addPhotographer(newPhotographer)"></i>
+                                    <i class="icon-plus interact"
+                                       title="Legg til"
+                                       ng-click="addPerson(newPhotographer, 'photographers')"></i>
                                 </span>
                             </li>
                         </ul>

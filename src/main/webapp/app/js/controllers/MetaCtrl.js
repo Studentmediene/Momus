@@ -27,30 +27,17 @@ angular.module('momusApp.controllers')
             $scope.metaEditMode = !$scope.metaEditMode;
         };
 
-        $scope.addJournalist = function(id){
-            if (id == null || id == "" || ArticleService.listOfPersonsContainsID($scope.article["journalists"], id)) {
+        $scope.addPerson = function(id, list) {
+            if (id == null || id == "" || ArticleService.listOfPersonsContainsID($scope.article[list], id)) {
                 return;
             }
             ArticleService.getPerson(id, function(data) {
-                $scope.article["journalists"].push(data);
+                $scope.article[list].push(data);
             });
         };
 
-        $scope.addPhotographer = function(id){
-            if (id == null || id == "" || ArticleService.listOfPersonsContainsID($scope.article["photographers"], id)) {
-                return;
-            }
-            ArticleService.getPerson(id, function(data) {
-                $scope.article["photographers"].push(data);
-            });
-        };
-
-        $scope.removePhotographer = function(person) {
-            ArticleService.removeFromArray($scope.article["photographers"], person);
-        };
-
-        $scope.removeJournalist = function(person) {
-            ArticleService.removeFromArray($scope.article["journalists"], person);
+        $scope.removePerson = function (person, list) {
+            ArticleService.removeFromArray($scope.article[list], person);
         };
 
         $scope.saveMeta = function() {

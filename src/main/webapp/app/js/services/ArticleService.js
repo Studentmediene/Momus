@@ -37,21 +37,21 @@ angular.module('momusApp.services')
                     }
                 )
                     .error( function () {
-                        alert("Error");
+                        alert("Error!");
                     }
                 );
             },
             getArticle: function(id, success) {
                 $http.get('/api/article/' + id)
                     .success( function(data) {
-                        success(data)
+                        success(data);
                     }
                 );
             },
             getPerson: function(id, success) {
                 $http.get('/api/person/' + id)
                     .success( function (data) {
-                        success(data)
+                        success(data);
                     }
                 );
             },
@@ -73,8 +73,8 @@ angular.module('momusApp.services')
             changed: function(object, scope) {
                 return !angular.equals(scope.article[object], scope.original[object]);
             },
-            revert: function(field, scope) {
-                scope.article[field] = angular.copy(scope.original[field]);
+            revert: function(object, scope) {
+                scope.article[object] = angular.copy(scope.original[object]);
             }
         }
     });
