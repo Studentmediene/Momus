@@ -23,11 +23,18 @@
        xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
+
+    <!-- Load the momus.properties file, can use the values like ${property.name} -->
+    <context:property-placeholder location="classpath*:momus.properties" order="2" />
+    <!-- Override the values with our local properties -->
+    <context:property-placeholder location="classpath*:local.properties" order="1" ignore-unresolvable="true" />
+
+
     <!-- ############################
             SECURITY
          ############################ -->
 
-    <!-- Entry point is what it should do when not authorized, we use our simple
+    <!-- Entry point is what Spring should do when not authorized, we use our simple
      one instead of the default (the default implementation asks for username&password, while we use token) -->
     <security:http entry-point-ref="tokenEntryPoint" use-expressions="true">
 
@@ -79,8 +86,6 @@
     <!-- Enable @Scheduled -->
     <task:annotation-driven />
 
-    <!-- Load the momus.properties file, can use the values like ${property.name} -->
-    <context:property-placeholder location="classpath*:momus.properties" />
 
     <!-- Enable JPA -->
     <jpa:repositories base-package="no.dusken.momus.service.repository" />

@@ -3,12 +3,14 @@
 *.ipr
 *.iws
 .idea/
+atlassian-ide-plugin.xml
 
 log/
 database/
 node_modules/
 .tmp/
 src/main/webapp/app/libs/
+src/main/resources/local.properties
 
 # build folders
 target/
