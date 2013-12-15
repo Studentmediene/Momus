@@ -7,3 +7,4 @@
 target/
 log/
 database/
+node_modules/
