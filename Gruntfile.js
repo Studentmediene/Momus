@@ -1,12 +1,18 @@
 'use strict';
 
+// # Globbing
+// for performance reasons we're only matching one level down:
+// 'test/spec/{,*/}*.js'
+// use this if you want to recursively match all subfolders:
+// 'test/spec/**/*.js'
+
+
 module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
     require('time-grunt')(grunt);
 
-    var rootPath = 'src/main/webapp',
-        app      = 'src/main/webapp/app',
-        dist     = 'src/main/webapp/dist';
+    var dist = 'src/main/webapp/dist';
+    var app = 'src/main/webapp/app';
 
     grunt.initConfig({
         clean: {
@@ -14,32 +20,49 @@ module.exports = function (grunt) {
                 files: [{
                     dot: true,
                     src: [
+                        '.tmp',
                         dist + '/*'
+                    ]
+                }]
+            },
+            tmp : {
+                files: [{
+                    dot: true,
+                    src: [
+                        '.tmp'
                     ]
                 }]
             }
         },
-        jshint: {
-            options: {
-            },
-            all: [
-                'Gruntfile.js',
-                'src/main/webapp/scripts/{,*/}*.js'
-            ]
-        },
+//        jshint: {
+//            options: {
+//                jshintrc: '.jshintrc'
+//            },
+//            all: [
+//                'Gruntfile.js',
+//                'src/main/webapp/scripts/{,*/}*.js'
+//            ]
+//        },
+//        cssmin: {
+//            dist: {
+//                files: {
+//
+//                }
+//            }
+//        },
         rev: {
             dist: {
                 files: {
                     src: [
-                        dist + '/scripts/{,*/}*.js',
-                        dist + '/styles/{,*/}*.css',
-                        dist + '/fonts/*'
+                        dist + '/js/{,*/}*.js',
+                        dist + '/css/{,*/}*.css'
                     ]
                 }
             }
         },
         useminPrepare: {
             html: app + '/index.html',
+            css: app + 'css/**',
             options: {
                 dest: dist
             }
@@ -51,6 +74,7 @@ module.exports = function (grunt) {
                 dirs: [dist]
             }
         },
+
         // Put files not handled in other tasks here
         copy: {
             dist: {
@@ -64,8 +88,8 @@ module.exports = function (grunt) {
                         '.htaccess',
                         'bower_components/**/*',
                         'images/{,*/}*.{gif,webp}',
-                        'css/*',
-                        '*.*'
+                        'index.html',
+                        'lib/**'
                     ]
                 }, {
                     expand: true,
@@ -78,8 +102,8 @@ module.exports = function (grunt) {
             },
             styles: {
                 expand: true,
-                cwd: app + 'styles',
-                dest: '.tmp/styles/',
+                cwd: 'src/main/webapp/app/css',
+                dest: '.tmp/css/',
                 src: '{,*/}*.css'
             }
         },
@@ -87,37 +111,30 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: dist + '/scripts',
+                    cwd: dist + '/js',
                     src: '*.js',
                     dest: dist + '/scripts'
                 }]
             }
-        },
-        uglify: {
-            dist: {
-                files: {
-                    'src/main/webapp/dist/scripts/scripts.js': [
-                        dist + '/scripts/scripts.js'
-                    ]
-                }
-            }
         }
     });
 
-
-//    grunt.registerTask('test', [
-//        'clean:server',
-//        'concurrent:test',
-//        'autoprefixer',
-//        'connect:test'
-//    ]);
+    grunt.registerTask('test', [
+        'clean:server',
+        'concurrent:test',
+        'autoprefixer',
+        'connect:test'
+    ]);
 
     grunt.registerTask('build', [
         'clean:dist',
         'useminPrepare',
+        'copy:styles',
+        'concat',
         'copy:dist',
         'ngmin',
-        'uglify',
+        'cssmin',
+//        'uglify',
         'rev',
         'usemin'
     ]);

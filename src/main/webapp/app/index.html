@@ -23,10 +23,12 @@
     <!-- Enable responsive features -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- build:css css/lib.css -->
     <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css" media="screen">
     <link rel="stylesheet" href="lib/fontawesome/css/font-awesome.css">
+    <!-- endbuild -->
 
-    <!-- build:css(.tmp) css/app.css -->
+    <!-- build:css css/main.css -->
     <link rel="stylesheet" href="css/app.css"/>
     <!-- endbuild -->
 </head>
@@ -68,6 +70,8 @@
 
 
 
+<!-- Include libraries -->
+<!-- build:js js/libs.js -->
 
 <!-- Include jQuery and Twitter Bootstrap -->
 <script src="lib/jquery/jquery-1.9.0.min.js"></script>
@@ -77,8 +81,16 @@
 <script src="lib/angular/angular.js"></script>
 <script src="lib/angular/angular-route.js"></script>
 
+<!-- Include wysihtml5, the text editor -->
+<script src="lib/wysihtml5/wysihtml5-0.4.0pre.min.js"></script>
 
-<!-- And the code for our app -->
+<!-- endbuild -->
+
+
+
+
+<!-- And the code for our application -->
+<!-- build:js js/main.js -->
 <script src="js/app.js"></script>
 
 <!-- Controllers -->
@@ -96,9 +108,9 @@
 <script src="js/directives/version.js"></script>
 <script src="js/directives/richEditor.js"></script>
 
+<!-- endbuild -->
 
-<!-- Include wysihtml5, the text editor -->
-<script src="lib/wysihtml5/wysihtml5-0.4.0pre.min.js"></script>
+
 
 </body>
 </html>
