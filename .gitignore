@@ -4,7 +4,11 @@
 *.iws
 .idea/
 
-target/
 log/
 database/
 node_modules/
+.tmp/
+
+# build folders
+target/
+src/main/webapp/dist/

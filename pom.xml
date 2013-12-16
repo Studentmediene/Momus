@@ -186,14 +186,15 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
-                    <!-- exclude our client source code, tests etc. in src/main/webapp -->
-                    <warSourceExcludes>
-                        app/**, config/**, test/**, index.jsp
-                    </warSourceExcludes>
-                    <!-- include the dist built by grunt instead -->
+                    <!-- Only keep the WEB-INF folder in the war -->
+                    <warSourceIncludes>
+                        WEB-INF/**
+                    </warSourceIncludes>
+
+                    <!-- include the content of the dist folder built by grunt -->
                     <webResources>
                         <resource>
-                            <directory>src/main/webapp/app</directory>
+                            <directory>src/main/webapp/dist</directory>
                         </resource>
                     </webResources>
                 </configuration>

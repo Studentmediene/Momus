@@ -17,21 +17,25 @@ module.exports = function (grunt) {
     grunt.initConfig({
         clean: {
             dist: {
-                files: [{
-                    dot: true,
-                    src: [
-                        '.tmp',
-                        dist + '/*'
-                    ]
-                }]
+                files: [
+                    {
+                        dot: true,
+                        src: [
+                            '.tmp/*',
+                            dist + '/*'
+                        ]
+                    }
+                ]
             },
-            tmp : {
-                files: [{
-                    dot: true,
-                    src: [
-                        '.tmp'
-                    ]
-                }]
+            tmp: {
+                files: [
+                    {
+                        dot: true,
+                        src: [
+                            '.tmp'
+                        ]
+                    }
+                ]
             }
         },
 //        jshint: {
@@ -42,13 +46,6 @@ module.exports = function (grunt) {
 //                'Gruntfile.js',
 //                'src/main/webapp/scripts/{,*/}*.js'
 //            ]
-//        },
-//        cssmin: {
-//            dist: {
-//                files: {
-//
-//                }
-//            }
 //        },
         rev: {
             dist: {
@@ -62,7 +59,7 @@ module.exports = function (grunt) {
         },
         useminPrepare: {
             html: app + '/index.html',
-            css: app + 'css/**',
+//            css: app + 'css/**',
             options: {
                 dest: dist
             }
@@ -75,46 +72,53 @@ module.exports = function (grunt) {
             }
         },
 
-        // Put files not handled in other tasks here
+        // Put files not handled in other tasks here that should be copied to dist
         copy: {
             dist: {
-                files: [{
-                    expand: true,
-                    dot: true,
-                    cwd: app,
-                    dest: dist,
-                    src: [
-                        '*.{ico,png,txt}',
-                        '.htaccess',
-                        'bower_components/**/*',
-                        'images/{,*/}*.{gif,webp}',
-                        'index.html',
-                        'lib/**'
-                    ]
-                }, {
-                    expand: true,
-                    cwd: '.tmp/images',
-                    dest: dist + '/images',
-                    src: [
-                        'generated/*'
-                    ]
-                }]
+                files: [
+                    {
+                        expand: true,
+                        dot: true,
+                        cwd: app,
+                        dest: dist,
+                        src: [
+                            '*.{ico,png,txt}',
+                            'images/**',
+                            'partials/**',
+                            'index.html'
+                        ]
+                    }
+                ]
             },
-            styles: {
-                expand: true,
-                cwd: 'src/main/webapp/app/css',
-                dest: '.tmp/css/',
-                src: '{,*/}*.css'
+            fonts: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: app + '/lib/fontawesome/font/',
+                        src: ['*'],
+                        dest: dist + '/font/'
+
+                    },
+                    {
+                        expand: true,
+                        cwd: app + '/lib/bootstrap/fonts/',
+                        src: ['*'],
+                        dest: dist + '/fonts/'
+
+                    }
+                ]
             }
         },
         ngmin: {
             dist: {
-                files: [{
-                    expand: true,
-                    cwd: dist + '/js',
-                    src: '*.js',
-                    dest: dist + '/scripts'
-                }]
+                files: [
+                    {
+                        expand: true,
+                        cwd: '.tmp/concat/js',
+                        src: 'main.js',
+                        dest: '.tmp/concat/js'
+                    }
+                ]
             }
         }
     });
@@ -129,14 +133,15 @@ module.exports = function (grunt) {
     grunt.registerTask('build', [
         'clean:dist',
         'useminPrepare',
-        'copy:styles',
         'concat',
         'copy:dist',
+        'copy:fonts',
         'ngmin',
         'cssmin',
-//        'uglify',
+        'uglify',
         'rev',
-        'usemin'
+        'usemin',
+        'clean:tmp'
     ]);
 
     grunt.registerTask('default', [
