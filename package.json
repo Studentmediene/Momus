@@ -14,5 +14,9 @@
     "grunt-usemin": "~2.0.2",
     "load-grunt-tasks": "~0.2.0",
     "time-grunt": "0.2.3"
-  }
+  },
+
+    "scripts": {
+        "preinstall": "npm install -g bower && npm install -g grunt-cli"
+    }
 }

@@ -8,6 +8,7 @@ log/
 database/
 node_modules/
 .tmp/
+src/main/webapp/app/libs/
 
 # build folders
 target/

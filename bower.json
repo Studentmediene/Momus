@@ -1,0 +1,12 @@
+{
+  "name": "Momus",
+  "private": true,
+  "dependencies": {
+    "jquery": "1.9.1",
+    "angular": "~1.2.5",
+    "angular-route": "~1.2.5",
+    "bootstrap": "~3.0.3",
+    "components-font-awesome": "~4.0.3",
+    "wysihtml5": "https://raw.github.com/xing/wysihtml5/master/dist/wysihtml5-0.4.0pre.min.js"
+  }
+}

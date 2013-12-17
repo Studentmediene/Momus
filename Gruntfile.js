@@ -94,14 +94,14 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: app + '/lib/fontawesome/font/',
+                        cwd: app + '/libs/components-font-awesome/fonts/',
                         src: ['*'],
-                        dest: dist + '/font/'
+                        dest: dist + '/fonts/'
 
                     },
                     {
                         expand: true,
-                        cwd: app + '/lib/bootstrap/fonts/',
+                        cwd: app + '/libs/bootstrap/dist/fonts/',
                         src: ['*'],
                         dest: dist + '/fonts/'
 
