@@ -42,8 +42,8 @@ angular.module('momusApp', [
         $routeProvider.otherwise({redirectTo: '/'});
 
     }]).
-    config(function($httpProvider) {
+    config(['$httpProvider', function($httpProvider) {
         $httpProvider.interceptors.push('HttpInterceptor');
-    })
+    }])
 
 ;

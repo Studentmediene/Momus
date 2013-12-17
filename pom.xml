@@ -7,7 +7,7 @@
     <groupId>no.dusken.momus</groupId>
     <artifactId>momus</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <!-- Some boilerplate info -->
     <name>Momus</name>
@@ -157,6 +157,7 @@
 
     <build>
         <plugins>
+            <!-- Configuration of how the project should be compiled -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -165,6 +166,7 @@
                 </configuration>
                 <version>3.0</version>
             </plugin>
+            <!-- Lets us run and test the project easily in a server -->
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
@@ -177,6 +179,24 @@
                             <port>8080</port>
                         </connector>
                     </connectors>
+                </configuration>
+            </plugin>
+            <!-- Control how the application is built -->
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <!-- Only keep the WEB-INF folder in the war -->
+                    <warSourceIncludes>
+                        WEB-INF/**
+                    </warSourceIncludes>
+
+                    <!-- include the content of the dist folder built by grunt -->
+                    <webResources>
+                        <resource>
+                            <directory>src/main/webapp/dist</directory>
+                        </resource>
+                    </webResources>
                 </configuration>
             </plugin>
         </plugins>
