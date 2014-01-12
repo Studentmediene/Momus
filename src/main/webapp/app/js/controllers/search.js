@@ -57,13 +57,13 @@ angular.module('momusApp.controllers')
             {id: 4, name: "Publisert"}
         ];
 
-        $scope.searchParams = {
+/*        $scope.searchParams = {
             status: "",
             section: "",
             search: "",
             publication: "",
             persons: []
-        };
+        };*/
 
         $scope.predicate = "age"
     });
