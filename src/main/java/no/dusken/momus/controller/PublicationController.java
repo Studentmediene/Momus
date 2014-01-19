@@ -17,6 +17,13 @@ public class PublicationController {
     @Autowired
     private PublicationRepository publicationRepository;
 
+    /**
+     * Returns a repository with publications within the year given by the parameter.
+     *
+     * @method getAllPublications
+     * @param year  the year you want to see publications
+     * @return      the publications in the given year
+     */
     @RequestMapping(value = "/year/{year}", method = RequestMethod.GET)
     public @ResponseBody List<Publication> getAllPublications(@PathVariable("year") int year ){
         System.out.println("get all publications from year: " + year);
@@ -31,6 +38,13 @@ public class PublicationController {
 
         return publicationRepository.findByReleaseDateBetween(date, date2);
     }
+
+    /**
+     * Return a repository with all the active publications from now, and ten year ahead.
+     *
+     * @method getActivePublications
+     * @return the publications that are active.
+     */
     @RequestMapping(value ="/activePublications", method = RequestMethod.GET)
     public @ResponseBody List<Publication> getActivePublications() {
         Calendar calendar = Calendar.getInstance();
@@ -43,6 +57,14 @@ public class PublicationController {
         return publicationRepository.findByReleaseDateBetween(date, date2);
     }
 
+    /**
+     * This saves the publication given the parameter to the database
+     *
+     * @method              savePublication
+     * @param id            the id of the publication that will be saved.
+     * @param publication   the publication that will be saved.
+     * @return              the saved publication.
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public @ResponseBody Publication savePublication(@PathVariable("id") Long id, @RequestBody Publication publication) {
         Publication savedPublication = publicationRepository.save(publication);
@@ -51,6 +73,13 @@ public class PublicationController {
 
     }
 
+    /**
+     * This adds the publication to the database.
+     *
+     * @method addPublication
+     * @param publication       the publication that will be added.
+     * @return                  the new publication.
+     */
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody Publication addPublication(@RequestBody Publication publication) {
         Publication newPublication = publicationRepository.save(publication);

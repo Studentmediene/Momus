@@ -27,8 +27,13 @@ angular.module('momusApp.controllers')
         $scope.yearSelected = $scope.date.getFullYear();
 
 
-
-
+        /**
+         * Saving all the publications to an array within the year given as parameter.
+         *
+         * @method getPublicationByYear
+         * @param year. From what year you want to see publications.
+         *
+         */
         $scope.getPublicationByYear = function(year) {
             $http.get('/api/publication/year/' + year)
                 .success(function (data) {
@@ -42,6 +47,11 @@ angular.module('momusApp.controllers')
 
         $scope.getPublicationByYear($scope.yearSelected);
 
+        /**
+         * Saving all the active publications from right now, and ten years ahead.
+         *
+         * @method getActivePublications
+         */
         $scope.getActivePublications = function() {
             $http.get('/api/publication/activePublications')
                 .success(function (data) {
@@ -53,6 +63,14 @@ angular.module('momusApp.controllers')
                 })
 
         };
+
+        /**
+         * Saving a publication to the publication-variable. The index parameter gives the publication in the
+         * publicationData array.
+         *
+         * @method getPublication
+         * @param index. The index of a given publication in the publicationData array
+         */
         $scope.getPublication = function(index) {
             $scope.publication = $scope.publicationData[index];
         };
@@ -72,6 +90,14 @@ angular.module('momusApp.controllers')
         ];
 
 
+        /**
+         * This method saves either a new publication or an already existing publication. If it is a new publication,
+         * the new publication is pushed to the publicationData array and to the database. If it is an already existing
+         * publication, it will replace the old data with the new data, and update the database.
+         *
+         * @method fileSaved
+         * @param index. The index of a given publication in the publicationData array. Only used when updating a publication.
+         */
         $scope.fileSaved = function(index) {
             if ($scope.newWindow == 'true') {
                 $http.post('/api/publication', $scope.new)
@@ -82,7 +108,7 @@ angular.module('momusApp.controllers')
                     })
                     .error(function() {
                         console.log("Ikke vellykket");
-                    });;
+                    });
             }
 
             else if ($scope.publicationView=='true') {
