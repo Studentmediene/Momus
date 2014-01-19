@@ -10,30 +10,41 @@
         </div>
         <div class="panel body">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     </br>
-                    <div class="row">
-                        <div class="col-md-5 col-md-offset-2">
-                            <label>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                        {{option}}
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li ng-click="option = 'Utgivelser'" ><a>Utgivelser</a></li>
-                                        <!--<li ng-click="option = 'Aktive utgaver'"><a>Aktive utgaver</a></li>-->
-                                    </ul>
-                                </div>
-                            </label>
+                    <div class="row" >
+                        <div class="col-md-5 col-md-offset-1">
+                            <button class="btn btn-default" ng-disabled="true">{{yearSelected}}</button>
+                        </div>
+                        <div class="col-md-4 col-md-offset-2">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    {{yearSelected}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a ng-click="yearSelected = 'Aktive utgaver';
+                                    getActivePublications(); newWindow = 'false'; publicationView = 'false'">Aktive utgaver</a></li>
+
+                                    <li ng-repeat="this in hardCodedYears | orderBy: '-year'">
+                                        <a ng-click="$parent.yearSelected = this.year;
+                                        getPublicationByYear(yearSelected); $parent.newWindow = 'false';
+                                        $parent.publicationView = 'false'">{{this.year}}</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row">
+                </br>
                 <div class="col-md-5 col-md-offset-1">
-                    </br>
                     <input class="form-control" type="text" placeholder="Søk etter ID, navn eller dato" ng-model="searchFilter">
+                </div>
+                <div class="col-md-4 col-md-offset-2">
+                    <div class="btn-group">
+                        <button type="button" ng-click="newWindow = 'true'; publicationView='false'" class="btn btn-default">Ny utgave</button>
+                    </div>
                 </div>
             </div>
 
@@ -41,39 +52,19 @@
             <div class="row">
                 <div class="col-md-10 col-md-offset-1" >
                     <div class="table-responsive" >
-                        <table class="table table-hover" ng-show="option == 'Utgivelser'" ng-click="editionView ='true'; newWindow='false'">
+                        <table class="table table-hover" ng-click="publicationView ='true'; newWindow='false'">
                             <tr class="active" >
                                 <th>ID</th>
                                 <th>Navn</th>
                                 <th>Utgivelsesdato</th>
                             </tr>
-                            <tr class="success" ng-repeat="publication in publicationData | filter:searchFilter | orderBy: '-id' | limitTo:4"
-                                ng-click="getPublication(publication.id)">
+                            <tr class="success" ng-repeat="publication in publicationData | filter:searchFilter | orderBy: '-id'"
+                                ng-click="getPublication(publicationData.indexOf(publication))">
                                 <td>{{publication.id}}</td>
                                 <td>{{publication.name}}</td>
                                 <td>{{publication.release_date}}</td>
                             </tr>
                         </table>
-                        <!--<table class="table table-hover" ng-show="option == 'Aktive utgaver'" ng-click="editionView ='true'">-->
-                            <!--<tr class="active">-->
-                                <!--<th>ID</th>-->
-                                <!--<th>Navn</th>-->
-                                <!--<th>Dato</th>-->
-                            <!--</tr>-->
-                            <!--<tr class="success" ng-repeat="publication in active | filter:searchFilter | orderBy:['-year', '-id'] | limitTo:4"-->
-                                <!--ng-click="getPublication(publication.id)">-->
-                                <!--<td>{{publication.id}}</td>-->
-                                <!--<td>{{publication.name}}</td>-->
-                                <!--<td>{{publication.release_date}}</td>-->
-                            <!--</tr>-->
-                        <!--</table>-->
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-11 col-md-offset-1">
-                    <div class="btn-group">
-                        <button type="button" ng-click="newWindow = 'true'; editionView='false'" class="btn btn-default">Ny utgave</button>
                     </div>
                 </div>
             </div>
@@ -140,22 +131,20 @@
 
 <!-- Valgt utgave view -->
 
-<div class="col-md-6" ng-show="editionView=='true'">
+<div class="col-md-6" ng-show="publicationView=='true'">
 
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-12 ">
-                    <h2 class="text-center">{{edit.name}}</h2>
+                    <h2 class="text-center">{{publication.name}}</h2>
                 </div>
             </div>
         </div>
         <div class="panel-body">
             <div class="row">
-                <div class="col-md-11 col-md-offset-1" ng-model="edit.id">
-                    <label>
-                        <button type="button" class="btn btn-default btn-lg" ng-disabled="true">ID: {{edit.id}}</button>
-                    </label>
+                <div class="col-md-11 col-md-offset-1" ng-model="publication.id">
+                    <button type="button" class="btn btn-default btn-lg" ng-disabled="true">ID: {{publication.id}}</button>
                 </div>
             </div>
             </br>
@@ -169,7 +158,7 @@
             <div class="row">
                 <form name="chosenForm">
                     <div class="col-md-7 col-md-offset-1">
-                        <input class="form-control" type="text" placeholder="Navn.." name="nameTag" ng-model="edit.name" maxlength="30" required>
+                        <input class="form-control" type="text" placeholder="Navn.." name="nameTag" ng-model="publication.name" maxlength="30" required>
                     </div>
                     <span class="error" ng-show="chosenForm.nameTag.$error.required">
                         Required!
@@ -185,7 +174,7 @@
                     </label>
                 </div>
                 <div class="col-md-8">
-                    <input type="date" ng-model="edit.release_date">
+                    <input type="date" ng-model="publication.release_date">
                 </div>
             </div>
             </br>
@@ -193,9 +182,9 @@
             <div class="row">
                 <div class="col-md-11 col-md-offset-1">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default"ng-click="getDisposal(edit.id)">Disposisjon</button>
-                        <button type="button" ng-click="fileSaved(edit.id)" class="btn btn-default">Lagre</button>
-                        <button type="button" ng-click="editionView='false'" class="btn btn-default">Lukk</button>
+                        <a href="/disposition/{{publication.id}}" class="btn btn-default" role="button"> Disposisjon</a>
+                        <button type="button" ng-click="fileSaved(publicationData.indexOf(publication))" class="btn btn-default">Lagre</button>
+                        <button type="button" ng-click="publicationView='false'" class="btn btn-default">Lukk</button>
                     </div>
                 </div>
             </div>

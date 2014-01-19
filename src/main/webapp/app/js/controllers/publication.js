@@ -19,74 +19,81 @@
 angular.module('momusApp.controllers')
     .controller('PublicationCtrl', function ($scope, $http) {
 
-        $scope.option = 'Utgivelser';
-        $scope.editionView = 'false';
+        $scope.newWindow = 'false';
+        $scope.publicationView = 'false';
         $scope.publicationData = null;
+        $scope.publication = null;
+        $scope.date = new Date();
+        $scope.yearSelected = $scope.date.getFullYear();
 
-        $http.get('/api/publication')
-            .success(function (data) {
-                $scope.publicationData = data;
-                console.log($scope.publicationData.length);
-            })
-            .error(function() {
-                console.log("Error");
-            });
+
+
+
+        $scope.getPublicationByYear = function(year) {
+            $http.get('/api/publication/year/' + year)
+                .success(function (data) {
+                    $scope.publicationData = data;
+                    console.log($scope.publicationData.length);
+                })
+                .error(function() {
+                    console.log("Error retrieving publications by year");
+                })
+        };
+
+        $scope.getPublicationByYear($scope.yearSelected);
+
+        $scope.getActivePublications = function() {
+            $http.get('/api/publication/activePublications')
+                .success(function (data) {
+                    $scope.publicationData = data;
+//                    console.log($scope.publicationData.length);
+                })
+                .error(function() {
+                    console.log("Error retrieving active publications");
+                })
+
+        };
+        $scope.getPublication = function(index) {
+            $scope.publication = $scope.publicationData[index];
+        };
 
         $scope.new = {
             name: '',
             release_date: ''
         };
 
-        $scope.getDisposal = function(id, $routeProvider) {
-            console.log("getting disposal!")
-            console.log("Id: " + id);
-            $routeProvider
-                .when('/disposal/:id',
-                    {
-                        templateUrl: 'partials/disposal/disposal.html'
-                    })
-                .otherwise(
-                    {
-                        template: "Couldn't find disposal"
-                    })
-        };
+        //Using this to show the years in the dropdown menu, but this definitely needs a change to make it independent!
+        $scope.hardCodedYears = [
 
-        $scope.getPublication = function(id) {
-            if ($scope.option == 'Utgivelser') {
-                for (var i=1; i<=$scope.publicationData.length ;i++) {
-                    if (i==id) {
-                        $scope.edit = $scope.publicationData[id-1];
-                    }
-                }
-            }
-            else {
-                for (var i=1; i<=$scope.active.length ;i++) {
-                    if (i==id) {
-                        $scope.edit = $scope.active[id-1];
-                    }
-                }
-            }
-        }
+            {year: '2011'},
+            {year: '2012'},
+            {year: '2013'},
+            {year: '2014'}
+        ];
 
 
-
-        $scope.fileSaved = function(id) {
+        $scope.fileSaved = function(index) {
             if ($scope.newWindow == 'true') {
-                console.log($scope.new);
                 $http.post('/api/publication', $scope.new)
-                    .success(function() {
+                    .success(function(newPublication) {
+                        $scope.publicationData.push(newPublication);
                         console.log("vellykket .POST");
+                        alert("Publikasjon lagret!");
                     })
                     .error(function() {
                         console.log("Ikke vellykket");
                     });;
             }
 
-            else if ($scope.editionView=='true') {
-                console.log(($scope.edit));
-                $http.put('/api/publication/' + id, $scope.edit)
-                    .success(function() {
+            else if ($scope.publicationView=='true') {
+                console.log("publication: " + $scope.publication);
+                $http.put('/api/publication/' + index, $scope.publication)
+                    .success(function(savedPublication) {
+                        //Does a "replaceObject" method exist?
+                        //var index = $scope.publicationData.indexOf(id);
+                        $scope.publicationData[index] = savedPublication;
                         console.log("Vellykket .PUT");
+                        alert("Publikasjon lagret!");
                     })
                     .error(function() {
                         console.log("Ikke vellykket");
@@ -96,7 +103,7 @@ angular.module('momusApp.controllers')
                 console.log("nothing happened..");
             }
 
-        }
+        };
 
     });
 
