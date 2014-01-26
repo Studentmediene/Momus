@@ -60,7 +60,7 @@
         </div>
        <div class="row">{{searchParams}}</div>
 
-<div ng-repeat="article in articles | filter:{name:searchParams.search, section:searchParams.section, publication:searchParams.publication, status:searchParams.status} | orderBy:predicate">
+<div ng-repeat="article in articles | filter:searchParams.name | orderBy:predicate">
     <div class="row">
         <div class=col-md-6><a href="/article/{{article.id}}">{{article.name}}</a></div>
         <div class=col-md-3>{{article.section}}</div>
