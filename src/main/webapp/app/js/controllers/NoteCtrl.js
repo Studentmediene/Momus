@@ -17,25 +17,17 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('NoteCtrl', function ($scope, $http, noteParserRules) {
+    .controller('NoteCtrl', function ($scope, ArticleService, noteParserRules) {
 
-        $http.get('/api/note').success(function (data) {
-            $scope.note = data;
-            $scope.original = angular.copy($scope.note);
-        });
+        // The scope of this controller is the note panel,
+        // which also falls under the control of the article controller
+        // so this controller has access to the ArticleCtrl $scope
 
-        $scope.rules = noteParserRules;
-
-        $scope.$watch('note.content', function (newVal, oldVal) {
-            $scope.isDirty = !angular.equals($scope.note, $scope.original);
-        });
+        $scope.noteRules = noteParserRules;
 
         $scope.saveNote = function () {
-            $http.put('/api/note', $scope.note).success(function (data) {
-                $scope.note = data;
-                $scope.original = angular.copy($scope.note);
-                $scope.isDirty = false;
-            })
+            var updates = ArticleService.updateObject($scope.article);
+            updates.updated_fields.push("note");
+            ArticleService.updateArticle(updates, $scope, function(){});
         };
-
     });

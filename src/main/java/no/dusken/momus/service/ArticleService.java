@@ -17,16 +17,14 @@
 package no.dusken.momus.service;
 
 import no.dusken.momus.model.Article;
+import no.dusken.momus.model.Updates;
 import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.ArticleRevisionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static no.dusken.momus.service.specification.ArticleSpecifications.*;
-import static org.springframework.data.jpa.domain.Specifications.where;
+import java.util.Set;
 
 @Service
 public class ArticleService {
@@ -41,33 +39,41 @@ public class ArticleService {
         return articleRepository.findOne(id);
     }
 
-    public Article saveArticle(Article article) {
-        Long newID = articleRepository.saveAndFlush(article).getId();
-        return articleRepository.findOne(newID);
-    }
-
     public List<Article> getAllArticles() {
         return articleRepository.findAll();
     }
 
-    public List<Article> search(String content, String name) {
-        Specifications<Article> criteria = where(starter());
-
-        if (!content.equals("")) {
-            criteria = criteria.and(contentContains(content));
-        }
-
-        if (!name.equals("")) {
-            criteria = criteria.and(nameIs(name));
-        }
-
-        criteria = criteria.and(photoIdIs(1L));
-
-        return articleRepository.findAll(criteria);
+    public Article saveNewArticle(Article article) {
+        Long newID = articleRepository.saveAndFlush(article).getId();
+        return articleRepository.findOne(newID);
     }
 
-    public void saveArticleContents(Article article) {
-        Article oldArticle = articleRepository.findOne(article.getId());
+    public Article saveUpdatedArticle(Article article) {
+        articleRepository.saveAndFlush(article);
+        return articleRepository.findOne(article.getId());
     }
 
+    public Article updateArticle(Updates<Article> updates) {
+        Article articleFromClient = updates.getObject();
+        Article articleFromServer = getArticleById(articleFromClient.getId());
+
+        Set<String> updatedFields = updates.getUpdatedFields();
+        if (updatedFields.contains("content")) {
+            articleFromServer.setContent(articleFromClient.getContent());
+        }
+        if (updatedFields.contains("note")) {
+            articleFromServer.setNote(articleFromClient.getNote());
+        }
+        if (updatedFields.contains("name")) {
+            articleFromServer.setName(articleFromClient.getName());
+        }
+        if (updatedFields.contains("journalists")) {
+            articleFromServer.setJournalists(articleFromClient.getJournalists());
+        }
+        if (updatedFields.contains("photographers")) {
+            articleFromServer.setPhotographers(articleFromClient.getPhotographers());
+        }
+
+        return saveUpdatedArticle(articleFromServer);
+    }
 }

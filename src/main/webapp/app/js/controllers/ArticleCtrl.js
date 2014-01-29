@@ -17,11 +17,19 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function ($scope, $http) {
-        $scope.articleText = "halloooo";
+    .controller('ArticleCtrl', function ($scope, $routeParams, ArticleService) {
 
-        $scope.editor = new wysihtml5.Editor("wysihtml5-textarea", { // id of textarea element
-            toolbar: "wysihtml5-toolbar" // id of toolbar element
+        // The scope of this controller is the entire article view.
+        // There are sub-controllers for the different panels
+        // that access the $scope of this controller
+
+        // Create these objects ASAP so that the console won't complain.
+        $scope.article = { content: "" };
+        $scope.original = { content: "" };
+
+        ArticleService.getArticle( $routeParams.id, function (data) {
+            $scope.article = angular.copy(data);
+            $scope.original = angular.copy(data);
         });
     });
 

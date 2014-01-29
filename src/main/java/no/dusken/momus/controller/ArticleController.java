@@ -17,13 +17,11 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.model.Article;
+import no.dusken.momus.model.Updates;
 import no.dusken.momus.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -43,12 +41,20 @@ public class ArticleController {
         return articleService.getAllArticles();
     }
 
-    /**
-     * TODO: Add full search
-     */
-    @RequestMapping("/search/{name}/{content}")
-    public @ResponseBody List<Article> getFromSearch(@PathVariable("name") String name, @PathVariable("content") String content) {
-        return articleService.search(content, name);
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public @ResponseBody Article getArticleByID(@PathVariable("id") Long id) {
+        return articleService.getArticleById(id);
     }
 
+    /** Update (PUT) entire existing article */
+    @RequestMapping(method = RequestMethod.PUT)
+    public @ResponseBody Article saveArticleContents(@RequestBody Article article){
+        return articleService.saveUpdatedArticle(article);
+    }
+
+    /** Receive an update object with a list of fields to be updated */
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    public @ResponseBody Article updateArticle(@RequestBody Updates<Article> updates){
+        return articleService.updateArticle(updates);
+    }
 }

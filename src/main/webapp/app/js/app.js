@@ -34,22 +34,51 @@ angular.module('momusApp', [
     ]).
     config(['$routeProvider', function ($routeProvider) {
         // Admin interfaces
-        $routeProvider.when('/admin/role', {templateUrl: 'partials/admin/role.html', controller: 'AdminRoleCtrl'});
-
+        $routeProvider.
+            when('/admin/role',
+            {
+                templateUrl: 'partials/admin/role.html',
+                controller: 'AdminRoleCtrl'
+            }
+        )
         // Article interfaces
-        $routeProvider.when('/article/:id', {templateUrl: 'partials/article/articleView.html', controller: 'ArticleCtrl'});
-
+        .when('/article',
+            {
+                redirectTo: '/article/1' // TODO: make this go to article search view?
+            }
+        )
+        .when('/article/:id',
+            {
+                templateUrl: 'partials/article/articleView.html',
+                controller: 'ArticleCtrl'
+            }
+        )
+            
         // Search interfaces
-        $routeProvider.when('/search', {templateUrl: 'partials/search/searchView.html', controller: 'SearchCtrl'});
+        .when('/search',
+            {
+                templateUrl: 'partials/search/searchView.html',
+                controller: 'SearchCtrl'
+            }
+        )
+                
         // Publications (utgaver) interfaces
-        $routeProvider.when('/publications', {templateUrl: 'partials/publication/publicationView.html', controller: 'PublicationCtrl'});
+        .when('/publications',
+            {
+                templateUrl: 'partials/publication/publicationView.html',
+                controller: 'PublicationCtrl'
+            }
+        )
 
         //Disposition
-        $routeProvider.when('/disposition/:id', {templateUrl: 'partials/disposition/dispositionView.html', controller: 'DispositionCtrl'})
+        .when('/disposition/:id',
+            {
+                templateUrl: 'partials/disposition/dispositionView.html',
+                controller: 'DispositionCtrl'
+            }
+        )
 
-
-
-        $routeProvider.otherwise({redirectTo: '/'});
+        .otherwise({redirectTo: '/'});
 
     }]).
     config(['$httpProvider', function($httpProvider) {
