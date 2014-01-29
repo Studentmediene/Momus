@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
-@RequestMapping("/role")
+@RequestMapping("/group")
 public class GroupController {
 
     @Autowired

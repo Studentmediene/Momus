@@ -29,7 +29,8 @@ angular.module('momusApp', [
         'momusApp.filters',
         'momusApp.services',
         'momusApp.directives',
-        'ngRoute'
+        'ngRoute',
+        'ui.select2'
     ]).
     config(['$routeProvider', function ($routeProvider) {
         // Admin interfaces
@@ -37,6 +38,9 @@ angular.module('momusApp', [
 
         // Article interfaces
         $routeProvider.when('/article/:id', {templateUrl: 'partials/article/articleView.html', controller: 'ArticleCtrl'});
+
+        // Search interfaces
+        $routeProvider.when('/search', {templateUrl: 'partials/search/searchView.html', controller: 'SearchCtrl'});
 
 
         $routeProvider.otherwise({redirectTo: '/'});
