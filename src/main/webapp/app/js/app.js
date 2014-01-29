@@ -41,6 +41,12 @@ angular.module('momusApp', [
 
         // Search interfaces
         $routeProvider.when('/search', {templateUrl: 'partials/search/searchView.html', controller: 'SearchCtrl'});
+        // Publications (utgaver) interfaces
+        $routeProvider.when('/publications', {templateUrl: 'partials/publication/publicationView.html', controller: 'PublicationCtrl'});
+
+        //Disposition
+        $routeProvider.when('/disposition/:id', {templateUrl: 'partials/disposition/dispositionView.html', controller: 'DispositionCtrl'})
+
 
 
         $routeProvider.otherwise({redirectTo: '/'});
