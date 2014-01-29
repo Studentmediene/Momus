@@ -107,6 +107,16 @@ module.exports = function (grunt) {
 
                     }
                 ]
+            },
+            select2images: { // needed because select2's css has hardcoded path to some images
+                files: [
+                    {
+                        expand: true,
+                        cwd: app + '/libs/select2',
+                        src: ['*.png', '*.gif'],
+                        dest: dist + '/css'
+                    }
+                ]
             }
         },
         ngmin: {
@@ -136,6 +146,7 @@ module.exports = function (grunt) {
         'concat',
         'copy:dist',
         'copy:fonts',
+        'copy:select2images',
         'ngmin',
         'cssmin',
         'uglify',
