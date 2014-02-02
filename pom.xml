@@ -6,7 +6,7 @@
 
     <groupId>no.dusken.momus</groupId>
     <artifactId>momus</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.0-BETA</version>
     <packaging>war</packaging>
 
     <!-- Some boilerplate info -->
@@ -19,8 +19,8 @@
         <url>http://studentmediene.no/</url>
     </organization>
     <issueManagement>
-        <system>Github Issues (soon JIRA)</system>
-        <url>https://github.com/Studentmediene/Momus</url>
+        <system>JIRA</system>
+        <url>https://http://jira.studentmediene.no</url>
     </issueManagement>
     <licenses>
         <license>
