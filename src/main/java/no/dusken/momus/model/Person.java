@@ -16,6 +16,9 @@
 
 package no.dusken.momus.model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -23,19 +26,25 @@ import java.util.Set;
 public class Person {
 
     @Id
-    @GeneratedValue
     private Long id;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
     private Set<Group> groups;
 
-    private String userName;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
+    private Set<String> permissions;
+
+    private String username;
 
     private String firstName;
     private String lastName;
 
     private String email;
-    private String phone;
+    private String phoneNumber;
+
+    private boolean active;
 
     public Person() {
     }
@@ -44,24 +53,28 @@ public class Person {
         this.id = id;
     }
 
-    public Person(Set<Group> groups, String firstName, String lastName, String email, String phone) {
+    public Person(Long id, Set<Group> groups, Set<String> permissions, String username, String firstName, String lastName, String email, String phoneNumber, boolean active) {
+        this.id = id;
         this.groups = groups;
+        this.permissions = permissions;
+        this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.phone = phone;
+        this.phoneNumber = phoneNumber;
+        this.active = active;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String userName) {
+        this.username = userName;
     }
 
     public String getFirstName() {
@@ -88,12 +101,12 @@ public class Person {
         this.email = email;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPhoneNumber(String phone) {
+        this.phoneNumber = phone;
     }
 
     public Set<Group> getGroups() {
@@ -102,5 +115,38 @@ public class Person {
 
     public void setGroups(Set<Group> groups) {
         this.groups = groups;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Set<String> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(Set<String> permissions) {
+        this.permissions = permissions;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Person person = (Person) o;
+
+        if (id != null ? !id.equals(person.id) : person.id != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }

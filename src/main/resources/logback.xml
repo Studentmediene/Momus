@@ -18,7 +18,7 @@
 <configuration>
 
     <!--Load the values from our properties file -->
-    <property file="src/main/webapp/WEB-INF/momus.properties" />
+    <property file="src/main/resources/momus.properties" />
 
     <!-- Logger that logs to console -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">

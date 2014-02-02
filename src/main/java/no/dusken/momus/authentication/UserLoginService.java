@@ -38,6 +38,7 @@ public class UserLoginService {
     private AuthenticationManager authenticationManager;
 
     /**
+     * Will not touch the database
      * @return Id of the currently logged in user
      */
     public Long getId() {
@@ -45,6 +46,7 @@ public class UserLoginService {
     }
 
     /**
+     * Will not use the database
      * @return Username of the currently logged in user
      */
     public String getUsername() {
@@ -56,7 +58,7 @@ public class UserLoginService {
      * @param token
      * @return whether the login succeeded or not.
      */
-    public boolean login(SmmdbToken token) {
+    public boolean login(SmmDbToken token) {
         Authentication authentication = authenticationManager.authenticate(new Token(token));
         boolean isAuthenticated = isAuthenticated(authentication);
         if (isAuthenticated) {
@@ -74,7 +76,9 @@ public class UserLoginService {
     }
 
     /**
-     * A proper Person object, should only be called when needed, as it retrieves it from the database.
+     * A proper Person object of the logged in user.
+     * Should only be called when needed, as it touches the database.
+     * Calling this method multiple times will touch the database multiple times, so put the returned Person in a local variable instead!
      */
     public Person getLoggedInUser() {
         return personRepository.findOne(getId());

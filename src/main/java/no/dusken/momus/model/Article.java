@@ -28,7 +28,13 @@ public class Article {
     private Long id;
 
     private String name;
+
+    @Lob
+    @Column(length = 40960)
     private String content;
+
+    @Lob
+    @Column(length = 40960)
     private String note;
 
     @Transient

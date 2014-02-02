@@ -1,0 +1,69 @@
+
+<!--
+  ~ Copyright 2013 Studentmediene i Trondheim AS
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+
+<div class ="row">
+    <div class="col-md-6 col-md-offset-3">
+        <input type="text" class="form-control" placeholder="Text input" ng-model="search">
+    </div>
+</div>
+
+<div class ="row">
+    <p></p>
+</div>
+
+
+<div class="row">
+
+    <div class="col-md-3">
+        <select class="form-control" ng-model="searchParams.status">
+            <option value="">Velg status</option>
+            <option ng-repeat="status in statuses">{{status.name}}</option>
+    </select>
+    </div>
+    <div class="col-md-3">
+        <select multiple class="form-control" ui-select2 ng-model="select2">
+            <option ng-repeat="person in persons" value="{{person.id}}">{{person.username}} {{person.first_name}} {{person.last_name}}</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select class="form-control" ng-model="searchParams.section">
+            <option value="">Velg redaksjon</option>
+            <option ng-repeat="section in sections" value="{{section.id}}">{{section.name}}</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select class="form-control" ng-model="searchParams.publication">
+            <option value="">Velg publikasjon</option>
+            <option ng-repeat="publication in publications">{{publication.name}}</option>
+        </select>
+    </div>
+</div>
+        <div class="row">
+            <div class="col-md-6"><b><a href="" ng-click="predicate='name'">Navn</a></b>(<a href="" ng-click="predicate='-name'">^</a>)</div>
+            <div class="col-md-3"><b><a href="" ng-click="predicate='section'">Seksjon</a></b>(<a href="" ng-click="predicate='-section'">^</a>)</div>
+            <div class="col-md-3"><b><a href="" ng-click="predicate='publication'">Publikasjon</a></b>(<a href="" ng-click="predicate='-publication'">^</a>)</div>
+        </div>
+       <div class="row">{{searchParams}}</div>
+
+<div ng-repeat="article in articles | filter:searchParams.name | orderBy:predicate">
+    <div class="row">
+        <div class=col-md-6><a href="/article/{{article.id}}">{{article.name}}</a></div>
+        <div class=col-md-3>{{article.section}}</div>
+        <div class=col-md-3>{{article.publication}}</div>
+    </div>
+    </div>

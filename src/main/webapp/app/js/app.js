@@ -24,14 +24,65 @@ angular.module('momusApp.directives', []);
 
 
 // Declare app level module which depends on filters, and services
-angular.module('momusApp', ['momusApp.controllers', 'momusApp.filters', 'momusApp.services', 'momusApp.directives']).
+angular.module('momusApp', [
+        'momusApp.controllers',
+        'momusApp.filters',
+        'momusApp.services',
+        'momusApp.directives',
+        'ngRoute',
+        'ui.select2'
+    ]).
     config(['$routeProvider', function ($routeProvider) {
         // Admin interfaces
-        $routeProvider.when('/admin/role', {templateUrl: 'partials/admin/role.html', controller: 'AdminRoleCtrl'});
-
+        $routeProvider.
+            when('/admin/role',
+            {
+                templateUrl: 'partials/admin/role.html',
+                controller: 'AdminRoleCtrl'
+            }
+        )
         // Article interfaces
-        $routeProvider.when('/article/:id', {templateUrl: 'partials/article/articleView.html', controller: 'ArticleCtrl'});
+        .when('/article',
+            {
+                redirectTo: '/article/1' // TODO: make this go to article search view?
+            }
+        )
+        .when('/article/:id',
+            {
+                templateUrl: 'partials/article/articleView.html',
+                controller: 'ArticleCtrl'
+            }
+        )
+            
+        // Search interfaces
+        .when('/search',
+            {
+                templateUrl: 'partials/search/searchView.html',
+                controller: 'SearchCtrl'
+            }
+        )
+                
+        // Publications (utgaver) interfaces
+        .when('/publications',
+            {
+                templateUrl: 'partials/publication/publicationView.html',
+                controller: 'PublicationCtrl'
+            }
+        )
 
+        //Disposition
+        .when('/disposition/:id',
+            {
+                templateUrl: 'partials/disposition/dispositionView.html',
+                controller: 'DispositionCtrl'
+            }
+        )
 
-        $routeProvider.otherwise({redirectTo: '/view1'});
-    }]);
+        .otherwise({redirectTo: '/'});
+
+    }]).
+    config(['$httpProvider', function($httpProvider) {
+        $httpProvider.interceptors.push('HttpInterceptor');
+    }])
+
+;

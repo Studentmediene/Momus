@@ -52,11 +52,13 @@ public class UserAuthorities {
             throw new RestException("User not found", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 
-        Set<Group> groups = user.getGroups();
+        Set<String> permissions = user.getPermissions();
 
         HashSet<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        for (Group group : groups) {
-            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + group.getName().toUpperCase()));
+        if (permissions != null) {
+            for (String permission : permissions) {
+                grantedAuthorities.add(new SimpleGrantedAuthority(permission));
+            }
         }
 
         AuthUserDetails authUserDetails = new AuthUserDetails(user, grantedAuthorities);

@@ -13,12 +13,21 @@ The backend is completely rewritten, using a newer version of Spring and the pow
 
 ### Technologies:
  * Java
- * Spring
- * Hibernate
- * Jackson
- * AngularJS
- * Wysihtml5
- * Bootstrap
+ * [Spring](http://spring.io/)
+ * [Hibernate](http://www.hibernate.org/)
+ * [Jackson](http://wiki.fasterxml.com/JacksonHome)
+ * [AngularJS](http://angularjs.org/)
+ * [Wysihtml5](https://github.com/xing/wysihtml5)
+ * [Bootstrap 3](http://getbootstrap.com/)
+
+###IDE
+JetBRAINS are providing the developers working on this project with licenses to [IntelliJ IDEA](http://www.jetbrains.com/idea/).
+[![IntelliJ IDEA](doc/img/idea.jpg)](http://www.jetbrains.com/idea/)
+
+OBS!
+----
+Check the develop branch to see latest updates. Changes are only merged to master when a new version is ready.
+
 
 [Documentation](doc/)
 ---------------------
@@ -29,8 +38,7 @@ Some tips on how to set up stuff in IntelliJ for awesome development.
 Issue tracker
 -------------
 
-Currently here on GitHub. When our new server arrives we will have a better issue tracker up and running.
-
+We're using JIRA.
 
 
 License
@@ -39,3 +47,5 @@ License
 Copyright 2013 Studentmediene i Trondheim AS
 
 Licensed under the Apache License, Version 2.0: [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+

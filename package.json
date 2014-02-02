@@ -1,0 +1,22 @@
+{
+  "name": "Momus",
+  "version": "0.1.0",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-cssmin": "~0.7.0",
+    "grunt-contrib-jshint": "~0.7.2",
+    "grunt-contrib-uglify": "~0.2.7",
+    "grunt-ngmin": "~0.0.3",
+    "grunt-rev": "~0.1.0",
+    "grunt-usemin": "~2.0.2",
+    "load-grunt-tasks": "~0.2.0",
+    "time-grunt": "0.2.3"
+  },
+
+    "scripts": {
+        "preinstall": "npm install -g bower && npm install -g grunt-cli"
+    }
+}

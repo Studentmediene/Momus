@@ -16,37 +16,30 @@
 
 package no.dusken.momus.authentication;
 
-import no.dusken.momus.exceptions.RestException;
+import no.dusken.momus.smmdb.SmmDbConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Scanner;
 
 @Service
 public class TokenValidator {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Value("${smmdb.url}")
+    @Autowired
+    SmmDbConnector smmDbConnector;
+
+    @Value("${smmDb.url}")
     String url;
 
-    public boolean validateToken(SmmdbToken token) {
+    @Value("${smmDb.key}")
+    String apiKey;
+
+    public boolean validateToken(SmmDbToken token) {
         logger.info("Trying to validate token for {}", token.getUsername());
-        String content;
-        try {
-            HttpURLConnection connection = createConnection();
-            content = getContentFromConnection(connection);
-        } catch (IOException e) {
-            logger.warn("Something went wrong connecting to Smmdb: {}", e);
-            throw new RestException("Couldn't connect to Smmdb", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
+        String content = smmDbConnector.getTokenStatus(token);
 
         if (isValid(content)) {
             logger.info("User token was valid for user {}", token.getUsername());
@@ -57,30 +50,8 @@ public class TokenValidator {
         }
     }
 
-    private HttpURLConnection createConnection() throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-        connection.setRequestProperty("User-Agent", "Momus/1.0 (Mats)");
-        connection.connect();
-
-        return connection;
-    }
-
-    private String getContentFromConnection(HttpURLConnection connection) throws IOException {
-        InputStream inputStream = connection.getInputStream();
-        Scanner s = new Scanner(inputStream);
-        // Hack to read whole stream at once
-        s.useDelimiter("\\A");
-        // May be empty
-        return s.hasNext() ? s.next() : "";
-    }
-
     private boolean isValid(String content) {
-        if (content == null) {
-            return false;
-        }
-
-        //TODO: Something
-        return true;
+        return content != null && content.equals("{\"verified\": true}");
     }
 
 

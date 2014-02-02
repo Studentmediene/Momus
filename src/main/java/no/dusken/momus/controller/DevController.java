@@ -19,10 +19,13 @@ package no.dusken.momus.controller;
 import no.dusken.momus.authentication.AuthUserDetails;
 import no.dusken.momus.authentication.Token;
 import no.dusken.momus.authentication.UserAuthorities;
-import no.dusken.momus.model.Group;
+import no.dusken.momus.authentication.UserLoginService;
+import no.dusken.momus.model.Article;
+import no.dusken.momus.model.ArticleStatus;
 import no.dusken.momus.model.Person;
-import no.dusken.momus.service.repository.GroupRepository;
+import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.PersonRepository;
+import no.dusken.momus.smmdb.Syncer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +36,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Dev only, not accessible when live
@@ -45,19 +47,25 @@ import java.util.HashSet;
 @RequestMapping("/dev")
 public class DevController {
 
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    UserAuthorities userAuthorities;
+    private UserAuthorities userAuthorities;
 
     @Autowired
-    PersonRepository personRepository;
+    private UserLoginService userLoginService;
 
     @Autowired
-    GroupRepository groupRepository;
+    private ArticleRepository articleRepository;
+
+    @Autowired
+    private PersonRepository personRepository;
+
+    @Autowired
+    private Syncer syncer;
 
     /**
-     * Logs in without token or anything
+     * Bypass login and logs you in as the user with the provided id
      */
     @RequestMapping("/login/{id}")
     public @ResponseBody void login(@PathVariable("id") Long id) {
@@ -67,57 +75,58 @@ public class DevController {
     }
 
     /**
-     * Todo: Either have a copy of live data, or just some other dump to import to db
-     * Creates some entities used for testing
+     * Syncs stuff from SmmDB
      */
-    @RequestMapping("/create")
-    public @ResponseBody void createData() {
-        System.out.println("Create users");
-        Group userGroup = new Group("User");
-        groupRepository.saveAndFlush(userGroup);
-
-        Group adminGroup = new Group("Admin");
-        groupRepository.saveAndFlush(adminGroup);
-
-        Group photoGroup = new Group("Photographer");
-        groupRepository.saveAndFlush(photoGroup);
-
-        Person admin = new Person(new HashSet<Group>(Arrays.asList(new Group[]{userGroup, adminGroup})), "Mats", "Svensson", "mats@matsemann.com", "47385324");
-        personRepository.saveAndFlush(admin);
-
-        Person photographer = new Person(new HashSet<Group>(Arrays.asList(new Group[]{userGroup, photoGroup})), "Sven", "Fotosvensson", "sven@foto.com", "111111");
-        personRepository.saveAndFlush(photographer);
+    @RequestMapping("/sync")
+    public @ResponseBody String sync() {
+        syncer.sync();
+        return "sync ok";
     }
 
-    @RequestMapping("/admin")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public @ResponseBody String adminTest() {
-        return "admin ok!!";
+    @RequestMapping("/test")
+    public @ResponseBody String test() {
+        syncer.sync();
+        return "ok";
     }
 
-    @RequestMapping("/photographer")
-    @PreAuthorize("hasRole('ROLE_PHOTOGRAPHER')")
-    public @ResponseBody String photoTest() {
-        return "photo ok!!";
+    @RequestMapping("/editor")
+    @PreAuthorize("hasRole('momus:editor')")
+    public @ResponseBody String editor() {
+        return "editor ok";
     }
 
-    @RequestMapping("/logTest")
-    public @ResponseBody void logTest() {
-        logger.info("Yo, jeg logger info!");
+    @RequestMapping("/createArticles")
+    public @ResponseBody String createTestArticle1() {
+        Article article1 = new Article();
 
-        logger.warn("advarsel, waaaarn!");
+        Set<Person> journalists1 = new HashSet<>();
+        Set<Person> photographers1 = new HashSet<>();
+        journalists1.add(personRepository.findOne(594L));
+        photographers1.add(personRepository.findOne(600L));
 
-        throw new RuntimeException("oooomgmmggm");
-    }
+        article1.setJournalists(journalists1);
+        article1.setPhotographers(photographers1);
+        article1.setContent(" Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus consequat ultricies nibh nec gravida. Proin sed posuere quam. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aenean a augue nec lectus aliquet euismod et eget diam. Morbi mattis ante eget neque tincidunt porttitor. Morbi in pellentesque ante, vitae tempus leo. Phasellus ut augue elit. Ut porta vulputate odio, quis vestibulum mi pellentesque sit amet. Nullam bibendum elit et mauris pretium molestie quis in elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam ac nibh vitae dolor tincidunt convallis sit amet ut tellus. Aenean lacinia rutrum ligula, eu pellentesque dolor viverra vel. ");
+        article1.setNote("detta er et nottat");
+        article1.setName("Artikkelnavn");
 
-    @RequestMapping("/json")
-    public @ResponseBody void json() throws IOException {
-        String json = "{\n" +
-                "\"username\": \"sinjoh\",\n" +
-                "\"timestamp\": \"2013-09-01T17:26:11.246911\",\n" +
-                "\"userid\": 491,\n" +
-                "\"sign\": \"0b2d91b44975e9072210edaa2f8ce1235675daff\"\n" +
-                "}";
+        articleRepository.save(article1);
 
+        Article article2 = new Article();
+
+        Set<Person> journalists2 = new HashSet<>();
+        Set<Person> photographers2 = new HashSet<>();
+        journalists2.add(personRepository.findOne(601L));
+        photographers2.add(personRepository.findOne(594L));
+
+        article2.setJournalists(journalists2);
+        article2.setPhotographers(photographers2);
+        article2.setContent(" Integer id libero diam. Curabitur a pellentesque risus. Fusce ac justo id erat posuere dictum vel et arcu. Quisque et purus nibh. Fusce vel fringilla arcu. Pellentesque ac est mauris. Fusce quis tellus posuere, pharetra ante sit amet, elementum nibh. Donec pretium, lacus et porttitor placerat, diam quam posuere libero, sit amet dignissim tortor est nec justo. Donec in pulvinar risus. Donec at eleifend ligula, quis porta diam. Sed at rutrum est. Proin molestie euismod nunc, a blandit ligula egestas quis. Fusce et sollicitudin dui. Pellentesque vulputate eros id luctus porta. Proin quis urna sed sem lobortis sollicitudin. Donec non diam viverra, dictum arcu at, porta odio. ");
+        article2.setNote("detta er også et nottat");
+        article2.setName("Artikkelnavn 2: Electric Boogaloo");
+
+        articleRepository.save(article2);
+
+        return "ok";
     }
 }

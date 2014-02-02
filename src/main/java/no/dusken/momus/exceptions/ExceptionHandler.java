@@ -19,6 +19,7 @@ package no.dusken.momus.exceptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
@@ -41,18 +42,20 @@ public class ExceptionHandler implements HandlerExceptionResolver {
             response.setStatus(((RestException) e).getStatus());
         } else if(e instanceof AccessDeniedException) { // let Spring handle it by throwing it again
             throw (AccessDeniedException) e;
+        } else if (e instanceof AuthenticationException) { // let Spring handle it, is a failed login
+            throw (AuthenticationException) e;
         } else { // Something else, log it and set status to internal server error
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logException(httpServletRequest, response, o, e);
+            logException(e);
         }
 
         ModelAndView mav = new ModelAndView(new MappingJackson2JsonView());
-        mav.addObject("error", "Something went wrong: \"" + e.getMessage() + "\"");
+        mav.addObject("error", e.getMessage());
 
         return mav;
     }
 
-    private void logException(HttpServletRequest httpServletRequest, HttpServletResponse response, Object o, Exception e) {
+    private void logException(Exception e) {
         logger.warn("Exceptionhandler caught:", e);
     }
 }
