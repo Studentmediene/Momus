@@ -1,0 +1,13 @@
+<input style="width: 200px;" ng-model="search.name" placeholder="Søk på navn">
+<input style="width: 200px;" ng-model="search.freetext" placeholder="Fritekst søk">
+
+<input style="width: 250px;"
+       type="hidden"
+       ui-select2="select2Options"
+       ng-model="search.tags"
+       placeholder="tags"
+        >
+
+<div ng-repeat="source in sources | filter: search.freetext | filter:{name: search.name} | filter: tagFilter">
+    {{source.name}}
+</div>
