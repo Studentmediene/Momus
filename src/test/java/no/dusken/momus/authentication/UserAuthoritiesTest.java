@@ -31,11 +31,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static junit.framework.Assert.*;
 
-@Transactional
+@Transactional // <-- rollback the database after each test
 public class UserAuthoritiesTest extends AbstractTestRunner {
 
     @Autowired
