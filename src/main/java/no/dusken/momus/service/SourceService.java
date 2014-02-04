@@ -55,10 +55,10 @@ public class SourceService {
     /**
      * Basically adds the new tag to every source and removes the old one
      */
-    public void updateTag(SourceTag oldTag, SourceTag newTag) {
+    public SourceTag updateTag(SourceTag oldTag, SourceTag newTag) {
         List<Source> sources = sourceRepository.findByTag(oldTag.getTag());
 
-        tagRepository.save(newTag);
+        SourceTag saved = tagRepository.save(newTag);
 
         for (Source source : sources) {
             source.getTags().remove(oldTag);
@@ -67,5 +67,6 @@ public class SourceService {
         sourceRepository.save(sources);
 
         tagRepository.delete(oldTag);
+        return saved;
     }
 }
