@@ -1,13 +1,56 @@
-<input style="width: 200px;" ng-model="search.name" placeholder="Søk på navn">
-<input style="width: 200px;" ng-model="search.freetext" placeholder="Fritekst søk">
+<a href="#/sources/new"><i class="fa fa-plus-circle"></i> Opprett ny kilde</a>
+<a class="pull-right" href="#/sources/tags"><i class="fa fa-pencil"></i> Rediger tags</a>
 
-<input style="width: 250px;"
-       type="hidden"
-       ui-select2="select2Options"
-       ng-model="search.tags"
-       placeholder="tags"
-        >
+<div class="well">
+    <div class="row">
 
-<div ng-repeat="source in sources | filter: search.freetext | filter:{name: search.name} | filter: tagFilter">
-    {{source.name}}
+        <div class="col-xs-12 col-sm-4">
+            <label for="searchName">Navn</label>
+            <input class="form-control" id="searchName" ng-model="search.name"
+                   placeholder="Skriv inn navn">
+        </div>
+
+        <div class="col-xs-12 col-sm-4">
+            <label for="searchText">Fritekst</label>
+            <input id="searchText" class="form-control" ng-model="search.freetext"
+                   placeholder="Fritekst søk">
+        </div>
+
+        <div class="col-xs-12 col-sm-4">
+            <label>Tags</label>
+            <input type="hidden" placeholder="tags" class="form-control"
+                   ui-select2="select2Options"
+                   ng-model="search.tags">
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <thead>
+        <tr>
+            <th>Navn</th>
+            <th>Beskrivelse</th>
+            <th>Telefon</th>
+            <th>E-post</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ng-repeat="source in filteredSources = (sources | filter: search.freetext | filter:{name: search.name} | filter: tagFilter | orderBy:'-id')">
+            <td>{{source.name}}</td>
+            <td>{{source.description}}</td>
+            <td>{{source.telephone}}</td>
+            <td>{{source.email}}</td>
+            <td><a href="#/source/{{source.id}}">Åpne</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div ng-show="filteredSources.length == 0 && hasLoadedSources">
+    Ingen kilder funnet, juster filteret.
+</div>
+<div ng-show="!hasLoadedSources">
+    <i class="fa fa-spinner fa-spin"></i> Laster inn.
 </div>

@@ -17,31 +17,16 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('SourceSearchCtrl', function ($scope, $location) {
+    .controller('SourceSearchCtrl', function ($scope, $location, $http) {
         $scope.tags = [];
+        $scope.sources = [];
+        $scope.hasLoadedSources = false;
 
         $scope.search = {
             name: "",
             tags: [],
             freetext: ""
         };
-
-        updateSearchParametersFromUrl();
-        keepUrlAndSearchParametersInSync();
-
-        $scope.sources = [
-            {
-                name: "Mats Svensson",
-                tags: ["kul", "smart", "flink"],
-                description: "prosjektleder momus"
-            },
-            {
-                name: "Test Testesen",
-                tags: ["flink", "rar", "hårete og feit"],
-                description: "student i oslo"
-            }
-        ];
-
 
         $scope.select2Options = {
             'multiple': true,
@@ -50,24 +35,40 @@ angular.module('momusApp.controllers')
                 return $scope.tags;
             },
             createSearchChoice: function () {
-                return null;
-            }, // only use pre-defined tags
-            tokenSeparators: [","]
+                return null; // only use pre-defined tags
+            }
         };
 
-
-
-
-        $scope.tags = ["kul", "smart", "flink", "rar", "hårete og feit"];
-
-        $scope.tagFilter = function (source) {
+        $scope.tagFilter = function (source) { // Removes the sources that don't have all the selected tags
+            var tags = source.tags.map(function(e) {return e.tag;});
             for (var i = 0; i < $scope.search.tags.length; i++) {
-                if (source.tags.indexOf($scope.search.tags[i]) === -1) {
+                if (tags.indexOf($scope.search.tags[i]) === -1) {
                     return false;
                 }
             }
             return true;
         };
+
+        getTagsFromServer();
+        getSourcesFromServer();
+
+        updateSearchParametersFromUrl();
+        keepUrlAndSearchParametersInSync();
+
+        function getSourcesFromServer() {
+            $http.get('/api/source').success(function (data) {
+                $scope.sources = data;
+                $scope.hasLoadedSources = true;
+            });
+        }
+
+        function getTagsFromServer() {
+            $http.get('/api/source/tag').success(function(data) {
+                $scope.tags = data.map(function(e) { // map the tag-objects to an array of strings
+                    return e.tag;
+                });
+            });
+        }
 
         function updateSearchParametersFromUrl() {
             if ($location.search().name) {
@@ -85,12 +86,10 @@ angular.module('momusApp.controllers')
 
         function keepUrlAndSearchParametersInSync() {
             $scope.$on('$routeUpdate', function(){
-                console.log("route");
                 updateSearchParametersFromUrl();
             });
 
             $scope.$watch('search', function (newValue) {
-                console.log("params");
                 $location.search(newValue).replace();
             }, true);
         }
