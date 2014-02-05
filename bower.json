@@ -8,6 +8,7 @@
     "bootstrap": "~3.0.3",
     "components-font-awesome": "~4.0.3",
     "wysihtml5": "https://raw.github.com/xing/wysihtml5/master/dist/wysihtml5-0.4.0pre.min.js",
-    "angular-ui-select2": "~0.0.5"
+    "angular-ui-select2": "~0.0.5",
+    "select2-bootstrap3-css": "https://raw.github.com/fk/select2-bootstrap-css/master/select2-bootstrap.css"
   }
 }

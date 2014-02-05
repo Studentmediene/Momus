@@ -53,7 +53,7 @@ angular.module('momusApp', [
                 controller: 'ArticleCtrl'
             }
         )
-            
+
         // Search interfaces
         .when('/search',
             {
@@ -61,7 +61,7 @@ angular.module('momusApp', [
                 controller: 'SearchCtrl'
             }
         )
-                
+
         // Publications (utgaver) interfaces
         .when('/publications',
             {
@@ -75,6 +75,15 @@ angular.module('momusApp', [
             {
                 templateUrl: 'partials/disposition/dispositionView.html',
                 controller: 'DispositionCtrl'
+            }
+        )
+
+        // Sources
+        .when('/source',
+            {
+                templateUrl: 'partials/source/search.html',
+                controller: 'SourceSearchCtrl',
+                reloadOnSearch: false
             }
         )
 
