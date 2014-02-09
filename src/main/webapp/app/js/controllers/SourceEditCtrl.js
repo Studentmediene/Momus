@@ -35,26 +35,26 @@ angular.module('momusApp.controllers')
 
 
         $scope.save = function () {
-
             $scope.isLoading = true;
             $http.put('/api/source', $scope.source).success(function (data) {
                 setSource(data);
-
                 $scope.isLoading = false;
             })
         };
 
-        $scope.back = function() {
+        $scope.back = function () {
             window.history.back();
         };
 
         getTagsFromServer();
-        getSourceFromServer($routeParams.id);
+        if ($routeParams.id) {
+            getSourceFromServer($routeParams.id);
+        }
 
 
         function getTagsFromServer() {
-            $http.get('/api/source/tag').success(function(data) {
-                $scope.tags = data.map(function(e) { // map the tag-objects to an array of strings
+            $http.get('/api/source/tag').success(function (data) {
+                $scope.tags = data.map(function (e) { // map the tag-objects to an array of strings
                     return e.tag;
                 });
             });
