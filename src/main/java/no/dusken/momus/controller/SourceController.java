@@ -26,6 +26,12 @@ public class SourceController {
     public @ResponseBody Source createSource(@RequestBody Source newSource) {
         return sourceService.save(newSource);
     }
+    
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public @ResponseBody Source getSourceById(@PathVariable("id") Long id) {
+        return sourceService.getSourceRepository().findOne(id);
+    }
+    
 
     @RequestMapping(value = "/tag", method = RequestMethod.GET)
     public @ResponseBody List<SourceTag> getAllTags() {

@@ -1,0 +1,87 @@
+<form class="form-horizontal">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-5">
+            <div class="form-group">
+                <label for="name" class="col-md-3 control-label">Navn</label>
+
+                <div class="col-md-8">
+                    <input type="text" id="name" class="form-control" ng-model="source.name"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="description" class="col-md-3 control-label">Beskrivelse</label>
+
+                <div class="col-md-8">
+                    <input type="text" id="description" class="form-control" ng-model="source.description"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="tlf" class="col-md-3 control-label">Telefon</label>
+
+                <div class="col-md-8">
+                    <input type="text" id="tlf" class="form-control" ng-model="source.telephone"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email" class="col-md-3 control-label">E-post</label>
+
+                <div class="col-md-8">
+                    <input type="text" id="email" class="form-control" ng-model="source.email"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="webpage" class="col-md-3 control-label">Nettside</label>
+
+                <div class="col-md-8">
+                    <input type="text" id="webpage" class="form-control" ng-model="source.web_page"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="address" class="col-md-3 control-label">Adresse</label>
+
+                <div class="col-md-8">
+                    <textarea rows="3" id="address" class="form-control" ng-model="source.address"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="address" class="col-md-3 control-label">Tags</label>
+
+                <div class="col-md-8">
+                    <input type="hidden" placeholder="tags" class="form-control"
+                           ui-select2="select2Options"
+                           ng-model="source.tags">
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="col-xs-12 col-md-7">
+            <textarea class="form-control" placeholder="Notat" ng-model="source.note" style="height: 370px"></textarea>
+        </div>
+
+
+    </div>
+
+    <div class="row">
+
+        <div class="visible-md visible-lg col-md-5">
+            <div class="form-group">
+                <div class="col-md-8 col-md-offset-3">
+                    <button class="btn btn-primary col-xs-5" ng-click="save()" ng-disabled="isLoading">
+                        <i class="fa fa-spin fa-spinner" ng-show="isLoading"></i> Lagre
+                    </button>
+                    <button class="btn btn-default col-xs-5 col-xs-offset-2" ng-click="back()">Tilbake</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="visible-xs visible-sm col-xs-12" style="padding-top: 20px">
+            <button class="btn btn-primary col-xs-5" ng-click="save()">Lagre</button>
+            <button class="btn btn-default col-xs-5 col-xs-offset-2" ng-click="back()">Tilbake</button>
+
+        </div>
+
+    </div>
+</form>
