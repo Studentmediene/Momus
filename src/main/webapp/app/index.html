@@ -51,24 +51,23 @@
 
     <div class="collapse navbar-collapse main-nav-collapse">
         <ul class="nav navbar-nav">
-            <li class="active"><a href="#"><i class="fa fa-th-large"></i> Front</a></li>
+            <li class="active"><a href="#"><i class="fa fa-th-large"></i> Fronti</a></li>
             <li><a href="#"><i class="fa fa-pencil"></i> Articler</a></li>
             <li><a href="#"><i class="fa fa-picture-o"></i> Bilder</a></li>
             <li><a href="#"><i class="fa fa-list"></i> Disposisjon</a></li>
-            <li><a href="#"><i class="fa fa-user"></i> Medarbeidere</a></li>
+            <li><a href="#/sources"><i class="fa fa-comment"></i> Kilder</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right" ng-controller="CurrentUserCtrl">
             <!--<li><p class="navbar-text">Logget inn som <a href="#">Mats Svensson</a></p></li>-->
-            <li><a href="http://m.studentmediene.no/api/logout">Logg ut <b>{{user.first_name}} {{user.last_name}}</b> <i class="fa fa-power-off"></i></a></li>
+            <li><a class="visible-sm" href="http://m.studentmediene.no/api/logout">Logg ut <i class="fa fa-power-off"></i></a></li>
+            <li><a class="hidden-sm" href="http://m.studentmediene.no/api/logout">Logg ut <b>{{user.first_name}} {{user.last_name}}</b> <i class="fa fa-power-off"></i></a></li>
         </ul>
     </div>
     </div>
 </div>
 
 <div class="container">
-    <div class="row">
-        <div ng-view></div>
-    </div>
+    <div ng-view></div>
 </div>
 
 
@@ -110,6 +109,8 @@
 <script src="js/controllers/search.js"></script>
 <script src="js/controllers/publication.js"></script>
 <script src="js/controllers/SourceSearchCtrl.js"></script>
+<script src="js/controllers/SourceEditCtrl.js"></script>
+<script src="js/controllers/SourceTagsCtrl.js"></script>
 <!-- Services -->
 <script src="js/services/version.js"></script>
 <script src="js/services/parsingRules.js"></script>

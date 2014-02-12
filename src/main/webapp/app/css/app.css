@@ -17,16 +17,17 @@
 /* app css stylesheet */
 
 body {
-    padding-top: 70px;;
+    padding-top: 70px;
+    padding-bottom: 50px;
 }
 
 
 
-textarea {
-    width: 100%;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-}
+/*textarea {*/
+    /*width: 100%;*/
+    /*box-sizing: border-box;*/
+    /*-moz-box-sizing: border-box;*/
+/*}*/
 textarea.article {
     height: 500px;
 }

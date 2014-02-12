@@ -79,11 +79,29 @@ angular.module('momusApp', [
         )
 
         // Sources
-        .when('/source',
+        .when('/sources',
             {
                 templateUrl: 'partials/source/search.html',
                 controller: 'SourceSearchCtrl',
                 reloadOnSearch: false
+            }
+        )
+        .when('/sources/new',
+            {
+                templateUrl: 'partials/source/edit.html',
+                controller: 'SourceEditCtrl'
+            }
+        )
+        .when('/sources/tags',
+            {
+                templateUrl: 'partials/source/tags.html',
+                controller: 'SourceTagsCtrl'
+            }
+        )
+        .when('/sources/:id',
+            {
+                templateUrl: 'partials/source/edit.html',
+                controller: 'SourceEditCtrl'
             }
         )
 
