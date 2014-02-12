@@ -1,0 +1,20 @@
+<div class="checkbox">
+    <label>
+        <input id="unused" type="checkbox" ng-model="showUnused"/> Vis bare ubrukte
+    </label></div>
+
+
+<div class="row">
+
+    <div ng-repeat="tag in (showUnused ? unused : tags)" class="col-sm-4">
+        <div class="input-group input-group-sm form-group">
+            <input type="text" class="form-control" ng-model="tag.tag"/>
+            <span class="input-group-btn">
+                <button class="btn btn-primary" ng-disabled="tag.tag == 'sexy'"><i class="fa fa-check"></i></button>
+                <button class="btn btn-danger"><i class="fa fa-times"></i></button>
+            </span>
+
+        </div>
+
+    </div>
+</div>

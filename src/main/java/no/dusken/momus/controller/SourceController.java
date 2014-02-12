@@ -33,6 +33,9 @@ public class SourceController {
     }
     
 
+
+
+
     @RequestMapping(value = "/tag", method = RequestMethod.GET)
     public @ResponseBody List<SourceTag> getAllTags() {
         return sourceService.getTagRepository().findAll();
@@ -46,6 +49,16 @@ public class SourceController {
     @RequestMapping(value = "/tag/{tagId}", method = RequestMethod.PUT)
     public @ResponseBody SourceTag updateTag(@RequestBody SourceTag newTag, @PathVariable("tagId") String tagId) {
         return sourceService.updateTag(new SourceTag(tagId), newTag);
+    }
+
+    @RequestMapping(value = "/tag/{tagId}", method = RequestMethod.DELETE)
+    public @ResponseBody SourceTag deleteTag(@RequestBody SourceTag newTag, @PathVariable("tagId") String tagId) {
+        return sourceService.updateTag(new SourceTag(tagId), newTag);
+    }
+
+    @RequestMapping(value = "/tag/unused", method = RequestMethod.GET)
+    public @ResponseBody List<SourceTag> getUnusedTags() {
+        return sourceService.getTagRepository().getUnusedTags();
     }
 
 

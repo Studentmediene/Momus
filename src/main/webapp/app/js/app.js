@@ -92,6 +92,12 @@ angular.module('momusApp', [
                 controller: 'SourceEditCtrl'
             }
         )
+        .when('/sources/tags',
+            {
+                templateUrl: 'partials/source/tags.html',
+                controller: 'SourceTagsCtrl'
+            }
+        )
         .when('/sources/:id',
             {
                 templateUrl: 'partials/source/edit.html',
