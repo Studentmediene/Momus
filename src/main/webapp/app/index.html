@@ -37,7 +37,7 @@
 </head>
 <body>
 
-<div class="navbar navbar-default navbar-fixed-top">
+<div class="navbar navbar-default navbar-fixed-top" ng-controller="NavbarCtrl">
     <div class="container">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".main-nav-collapse">
@@ -51,13 +51,13 @@
 
     <div class="collapse navbar-collapse main-nav-collapse">
         <ul class="nav navbar-nav">
-            <li class="active"><a href="#"><i class="fa fa-th-large"></i> Fronti</a></li>
-            <li><a href="#"><i class="fa fa-pencil"></i> Articler</a></li>
-            <li><a href="#"><i class="fa fa-picture-o"></i> Bilder</a></li>
-            <li><a href="#"><i class="fa fa-list"></i> Disposisjon</a></li>
-            <li><a href="#/sources"><i class="fa fa-comment"></i> Kilder</a></li>
+            <li ng-class="{active: isActive('/')}"><a href="#"><i class="fa fa-th-large"></i> Front</a></li>
+            <li ng-class="{active: isActive('/article%')}"><a href="#"><i class="fa fa-pencil"></i> Articler</a></li>
+            <li ng-class="{active: isActive('/pictures')}"><a href="#"><i class="fa fa-picture-o"></i> Bilder</a></li>
+            <li ng-class="{active: isActive('/disposition')}"><a href="#"><i class="fa fa-list"></i> Disposisjon</a></li>
+            <li ng-class="{active: isActive('/sources%')}"><a href="#/sources"><i class="fa fa-comment"></i> Kilder</a></li>
         </ul>
-        <ul class="nav navbar-nav navbar-right" ng-controller="CurrentUserCtrl">
+        <ul class="nav navbar-nav navbar-right">
             <!--<li><p class="navbar-text">Logget inn som <a href="#">Mats Svensson</a></p></li>-->
             <li><a class="visible-sm" href="http://m.studentmediene.no/api/logout">Logg ut <i class="fa fa-power-off"></i></a></li>
             <li><a class="hidden-sm" href="http://m.studentmediene.no/api/logout">Logg ut <b>{{user.first_name}} {{user.last_name}}</b> <i class="fa fa-power-off"></i></a></li>
@@ -102,7 +102,7 @@
 <!-- Controllers -->
 <script src="js/controllers/AdminRoleCtrl.js"></script>
 <script src="js/controllers/ArticleCtrl.js"></script>
-<script src="js/controllers/currentUser.js"></script>
+<script src="js/controllers/Navbar.js"></script>
 <script src="js/controllers/NoteCtrl.js"></script>
 <script src="js/controllers/ContentCtrl.js"></script>
 <script src="js/controllers/MetaCtrl.js"></script>
