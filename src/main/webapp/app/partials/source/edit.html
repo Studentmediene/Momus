@@ -77,7 +77,9 @@
         </div>
 
         <div class="visible-xs visible-sm col-xs-12" style="padding-top: 20px">
-            <button class="btn btn-primary col-xs-5" ng-click="save()">Lagre</button>
+            <button class="btn btn-primary col-xs-5" ng-click="save()" ng-disabled="isLoading || sourceForm.$invalid">
+                <i class="fa fa-spin fa-spinner" ng-show="isLoading"></i> Lagre
+            </button>
             <button class="btn btn-default col-xs-5 col-xs-offset-2" ng-click="back()">Tilbake</button>
 
         </div>
