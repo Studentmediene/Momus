@@ -22,16 +22,60 @@ angular.module('momusApp.controllers')
         $scope.unused = [];
         $scope.showUnused = false;
 
+        $scope.originalTags = [];
+        $scope.originalUnused= [];
+
+
+        $scope.isChanged = function(tag, index) {
+            if ($scope.showUnused) {
+                return tag.tag != $scope.originalUnused[index].tag;
+            } else {
+                return tag.tag != $scope.originalTags[index].tag;
+            }
+        };
+
+        $scope.updateTag = function(newTag, index) {
+            var oldTag;
+
+            if ($scope.showUnused) {
+                oldTag = $scope.originalUnused[index];
+            } else {
+                oldTag = $scope.originalTags[index];
+            }
+
+            $http.put('/api/source/tag/' + oldTag.tag, newTag).success(function(data) {
+                getTagsFromServer();
+            });
+        };
+
+        $scope.deleteTag = function(index) {
+            if (!confirm("Vil du slette denne tagen og fjerne den fra alle kilder?")) {
+                return;
+            }
+
+            var oldTag;
+
+            if ($scope.showUnused) {
+                oldTag = $scope.originalUnused[index];
+            } else {
+                oldTag = $scope.originalTags[index];
+            }
+
+            $http.put('/api/source/tag/delete', oldTag).success(function(data) {
+                getTagsFromServer();
+            });
+        };
+
         getTagsFromServer();
-
-
 
         function getTagsFromServer() {
             $http.get('/api/source/tag').success(function(data) {
                 $scope.tags = data;
+                $scope.originalTags = angular.copy(data);
             });
             $http.get('/api/source/tag/unused').success(function(data) {
                 $scope.unused = data;
+                $scope.originalUnused = angular.copy(data);
             });
         }
 
