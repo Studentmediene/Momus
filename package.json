@@ -1,6 +1,6 @@
 {
   "name": "Momus",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-contrib-copy": "~0.4.1",
@@ -14,9 +14,6 @@
     "grunt-usemin": "~2.0.2",
     "load-grunt-tasks": "~0.2.0",
     "time-grunt": "0.2.3"
-  },
+  }
 
-    "scripts": {
-        "preinstall": "npm install -g bower && npm install -g grunt-cli"
-    }
 }

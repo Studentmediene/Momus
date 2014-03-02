@@ -6,7 +6,7 @@
 
     <groupId>no.dusken.momus</groupId>
     <artifactId>momus</artifactId>
-    <version>0.1.0-BETA</version>
+    <version>0.1.2-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <!-- Some boilerplate info -->

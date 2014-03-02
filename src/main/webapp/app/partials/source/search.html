@@ -38,12 +38,12 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="source in filteredSources = (sources | filter: search.freetext | filter:{name: search.name} | filter: tagFilter | orderBy:'-id')">
+        <tr  ng-repeat="source in filteredSources = (sources | filter: search.freetext | filter:{name: search.name} | filter: tagFilter | orderBy:'-id')" class="my-repeat-animation">
             <td>{{source.name}}</td>
             <td>{{source.description}}</td>
             <td>{{source.telephone}}</td>
-            <td>{{source.email}}</td>
-            <td><a href="#/source/{{source.id}}">Åpne</a></td>
+            <td><a href="mailto:{{source.email}}" ng-show="source.email" target="_blank" title="Åpne epost-klient"><i class="fa fa-envelope"></i></a> {{source.email}}</td>
+            <td style="text-align: right;"><a href="#/sources/{{source.id}}">Åpne</a></td>
         </tr>
         </tbody>
     </table>
