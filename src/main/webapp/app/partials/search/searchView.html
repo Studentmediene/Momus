@@ -16,12 +16,161 @@
   -->
 
 
-<div class ="row">
-    <div class="col-md-6 col-md-offset-3">
-        <input type="text" class="form-control" placeholder="Text input" ng-model="search">
+<!-- new Look baby -->
+
+<div class="col-md-12" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+     xmlns="http://www.w3.org/1999/html">
+    <div class="well">
+        <div class="row">
+            <div class="col-md-1 col-md-offset-1">
+                <label><h2>Søk:</h2></label>
+            </div>
+            <div class="col-md-4 col-md-offset-2">
+                <label for="searchFree">Frisøk</label>
+                <input class="form-control" id="searchFree" ng-model="search.free" placeholder="Fritt søk">
+            </div>
+        </div>
+
+        </br>
+
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="col-md-3 col-md-offset-0">
+                    <label for="searchStatus">Status</label>
+                    <select class="form-control" id="searchStatus" ng-model="search.status" placeholder="Status">
+                        <option class="" value="">Velg status</option>
+                        <option ng-repeat="status in statuses" value="{{status.id}}">{{status.name}}</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3 col-md-offset-0">
+                    <label for="searchPersons">Personsøk</label>
+                    <select multiple class="form-control" id="searchPersons" ui-select2 ng-model="search.persons">
+                        <option ng-repeat="person in persons" value="{{person.id}}">{{person.username}} {{person.first_name}} {{person.last_name}}</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3 col-md-offset-0">
+                    <label for="searchSection">Redaksjon</label>
+                    <select class="form-control" id="searchSection" ng-model="search.section">
+                        <option value="">Velg redaksjon</option>
+                        <option ng-repeat="section in sections" value="{{section.id}}">{{section.name}}</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3 col-md-offset-0">
+                    <label for="searchPublication">Publikasjoner</label>
+                    <select class="form-control" id="searchPublication" ng-model="search.publication">
+                        <option value="">Velg publikasjon</option>
+                        <option ng-repeat="publication in publications">{{publication.name}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2 col-md-offset-5">
+                    <p style="line-height: 70px; text-align: center;"><button type="button" class="btn btn-info btn-lg " ng-click="search()">Søk</button></p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
+<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-heading"><h2 style="text-align: center;"> Artikler</h2></div>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th>Navn</th>
+                    <th>ID</th>
+                    <th>Redaksjon</th>
+                    <th>Publikasjon</th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr ng-repeat="article in articles = (articles | filter: article.name| filter:{id: article.id} | filter: article.section | orderBy:'-id')">
+                    <td>{{article.name}}</td>
+                    <td>{{article.id}}</td>
+                    <td>{{article.section}}</td>
+                    <td>{{article.publication}}</td>
+                    <td><a href="#/source/{{source.id}}">Åpne</a></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="panel-heading"><h2 style="text-align: center;">Seksjon</h2></div>
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th>Navn</th>
+                    <th>ID</th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr ng-repeat="section in sections= (sections| filter: section.id| filter:{name: section.name}| orderBy:'id')">
+                    <td>{{section.name}}</td>
+                    <td>{{section.id}}</td>
+                    <td><a href="#/source/{{source.id}}">Åpne</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="panel-heading"><h2 style="text-align: center;">Publikasjoner</h2></div>
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th>Navn</th>
+                    <th>ID</th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr ng-repeat="publication in publications= (publications| filter: publications.id| filter:{name: publications.name}| orderBy:'id')">
+                    <td>{{publication.name}}</td>
+                    <td>{{publication.id}}</td>
+                    <td><a href="#/source/{{source.id}}">Åpne</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+                <!-- old style -->
+                <!-- old style -->
+                <!-- old style -->
+                <!-- old style -->
+                <!-- old style -->
+                <!-- old style -->
+                <!-- old style -->
+                <!-- old style -->
+                <!-- old style -->
+
+                <p>.</p>
+                <p>.</p>
+                <p>.</p>
+                <p>.</p>
+                <p>.</p>
+        <div class ="row">
+            <div class="col-md-6 col-md-offset-3">
+                <input type="text" class="form-control" placeholder="Text input" ng-model="search">
+            </div>
+        </div>
+    </div>
+</div>
 <div class ="row">
     <p></p>
 </div>
@@ -60,10 +209,12 @@
         </div>
        <div class="row">{{searchParams}}</div>
 
+
 <div ng-repeat="article in articles | filter:searchParams.name | orderBy:predicate">
     <div class="row">
         <div class=col-md-6><a href="/article/{{article.id}}">{{article.name}}</a></div>
         <div class=col-md-3>{{article.section}}</div>
         <div class=col-md-3>{{article.publication}}</div>
     </div>
-    </div>
+
+</div>

@@ -66,4 +66,32 @@ angular.module('momusApp.controllers')
         };
 
         $scope.predicate = "age"
+
+
+        $scope.publicationData = [];
+        $scope.articleData = [];
+        $scope.articleStatusesData = [];
+        $scope.personData = [];
+
+        $scope.search = function(year, persons, articles, articleStatues) {
+
+
+            $http.get('/api/publication/year/' + year)
+                .success(function (data) {
+                    $scope.publicationData = data;
+                    console.log($scope.publicationData.length);
+                })
+                .error(function() {
+                    console.log("Error retrieving publications by year");
+                })
+
+            $http.get('api/person/' + persons)
+                .success(function(data) {
+                    $scope.personData = data;
+                    console.log($scope.personData.length);
+                })
+                .error(function() {
+                    console.log("Errer retreieveing persons")
+                })
+        }
     });
