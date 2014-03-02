@@ -22,7 +22,6 @@ angular.module('momusApp.directives').
                 buttonLoader: '='
             },
             link: function (scope, elm, attrs) {
-                console.log(attrs);
                 var btnContents = $compile(elm.contents())(scope);
                 var spinner = '';
                 if (!attrs.buttonLoaderNospinner) {
@@ -30,7 +29,7 @@ angular.module('momusApp.directives').
                 }
                 scope.$watch('buttonLoader', function (value) {
                     if (value) {
-                        elm.html(spinner + scope.$eval(attrs.buttonLoaderText));
+                        elm.html(spinner + attrs.buttonLoaderText);
                         elm.attr('disabled', true);
                     } else {
                         elm.html('').append(btnContents);
