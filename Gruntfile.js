@@ -38,15 +38,22 @@ module.exports = function (grunt) {
                 ]
             }
         },
-//        jshint: {
-//            options: {
-//                jshintrc: '.jshintrc'
-//            },
-//            all: [
-//                'Gruntfile.js',
-//                'src/main/webapp/scripts/{,*/}*.js'
-//            ]
-//        },
+        jshint: {
+            options: {
+                globals: {
+                    alert: true,
+                    confirm: true,
+                    window: true,
+                    angular: true,
+                    module: true,
+                    console: true
+                },
+                globalstrict: true
+            },
+            all: [
+                app + '/js/**/*.js'
+            ]
+        },
         rev: {
             dist: {
                 files: {
