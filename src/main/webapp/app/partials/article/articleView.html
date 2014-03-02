@@ -19,18 +19,18 @@
         <div id="content-panel" ng-controller="ContentCtrl" class="panel panel-primary">
             <div class="panel-heading">
                 <h1 class="panel-title">
-                    <span class="glyphicon glyphicon-pencil"></span>
+                    <span class="fa fa-pencil"></span>
                     {{ article.name }}
                     <div class="pull-right">
                         <button class="btn btn-default btn-xs"
                                 ng-show="article.content != original.content"
                                 ng-click="saveArticle()">
-                            <i class="icon-save"></i> Lagre
+                            <i class="fa fa-save"></i> Lagre
                         </button>
                         <button disabled
                                 class="btn btn-default btn-xs"
                                 ng-show="article.content == original.content">
-                            <i class="icon-ok"></i> Lagret
+                            <i class="fa fa-ok"></i> Lagret
                         </button>
                     </div>
                 </h1>
@@ -42,41 +42,41 @@
                             <button class="btn btn-default"
                                     data-wysihtml5-command="bold"
                                     title="Fet tekst (Ctrl+B)">
-                                <i class="icon-bold"></i>
+                                <i class="fa fa-bold"></i>
                             </button>
                             <button class="btn btn-default"
                                     data-wysihtml5-command="italic"
                                     title="Kursiv tekst (Ctrl+I)">
-                                <i class="icon-italic"></i>
+                                <i class="fa fa-italic"></i>
                             </button>
                             <button class="btn btn-default"
                                     data-wysihtml5-command="underline"
                                     title="Understreket tekst (Ctrl+U)">
-                                <i class="icon-underline"></i>
+                                <i class="fa fa-underline"></i>
                             </button>
                             <button class="btn btn-default"
                                     data-wysihtml5-command="strikethrough"
                                     title="Gjennomstreket tekst">
-                                <i class="icon-strikethrough"></i>
+                                <i class="fa fa-strikethrough"></i>
                             </button>
                         </div>
                         <div class="btn-group">
                             <button class="btn btn-default"
                                     data-wysihtml5-command="insertUnorderedList"
                                     title="Usortert liste">
-                                <i class="icon-list-ul"></i>
+                                <i class="fa fa-list-ul"></i>
                             </button>
                             <button class="btn btn-default"
                                     data-wysihtml5-command="insertOrderedList"
                                     title="Sortert liste">
-                                <i class="icon-list-ol"></i>
+                                <i class="fa fa-list-ol"></i>
                             </button>
                         </div>
                         <div class="btn-group">
                             <button class="btn btn-default"
                                     data-wysihtml5-action="change_view"
                                     title="Se rådata (avansert)">
-                                <i class="icon-exchange"></i>
+                                <i class="fa fa-exchange"></i>
                             </button>
                         </div>
                     </div>
@@ -94,18 +94,18 @@
         <div if="note-panel" ng-controller="NoteCtrl" class="panel panel-warning">
             <div class="panel-heading">
                 <h1 class="panel-title">
-                    <span class="icon-list"></span>
+                    <span class="fa fa-list"></span>
                     Artikkel-notater
                     <div class="pull-right">
                         <button class="btn btn-default btn-xs"
                                 ng-show="article.note != original.note"
                                 ng-click="saveNote()">
-                            <i class="icon-save"></i> Lagre
+                            <i class="fa fa-save"></i> Lagre
                         </button>
                         <button disabled
                                 class="btn btn-default btn-xs"
                                 ng-show="article.note == original.note">
-                            <i class="icon-ok"></i> Lagret
+                            <i class="fa fa-ok"></i> Lagret
                         </button>
                     </div>
                 </h1>
@@ -117,41 +117,41 @@
                             <button class="btn btn-default"
                                     data-wysihtml5-command="bold"
                                     title="Fet tekst (Ctrl+B)">
-                                <i class="icon-bold"></i>
+                                <i class="fa fa-bold"></i>
                             </button>
                             <button class="btn btn-default"
                                     data-wysihtml5-command="italic"
                                     title="Kursiv tekst (Ctrl+I)">
-                                <i class="icon-italic"></i>
+                                <i class="fa fa-italic"></i>
                             </button>
                             <button class="btn btn-default"
                                     data-wysihtml5-command="underline"
                                     title="Understreket tekst (Ctrl+U)">
-                                <i class="icon-underline"></i>
+                                <i class="fa fa-underline"></i>
                             </button>
                             <button class="btn btn-default"
                                     data-wysihtml5-command="strikethrough"
                                     title="Gjennomstreket tekst">
-                                <i class="icon-strikethrough"></i>
+                                <i class="fa fa-strikethrough"></i>
                             </button>
                         </div>
                         <div class="btn-group">
                             <button class="btn btn-default"
                                     data-wysihtml5-command="insertUnorderedList"
                                     title="Usortert liste">
-                                <i class="icon-list-ul"></i>
+                                <i class="fa fa-list-ul"></i>
                             </button>
                             <button class="btn btn-default"
                                     data-wysihtml5-command="insertOrderedList"
                                     title="Sortert liste">
-                                <i class="icon-list-ol"></i>
+                                <i class="fa fa-list-ol"></i>
                             </button>
                         </div>
                         <div class="btn-group">
                             <button class="btn btn-default"
                                     data-wysihtml5-action="change_view"
                                     title="Se rådata (avansert)">
-                                <i class="icon-exchange"></i>
+                                <i class="fa fa-exchange"></i>
                             </button>
                         </div>
                     </div>
@@ -168,6 +168,7 @@
         <div id="meta-panel" ng-controller="MetaCtrl" class="panel panel-info">
             <div class="panel-heading">
                 <h1 class="panel-title">
+                    <span class="fa fa-tag"></span>
                     Meta
                     <span class="pull-right">
                         <button class="btn-xs btn-primary" ng-show="!metaEditMode" ng-click="toggleEditMode()">
@@ -201,7 +202,7 @@
                                     {{ journalist.first_name }} {{ journalist.last_name }}
                                 </span>
                                 <span class="col-xs-2" ng-show="metaEditMode">
-                                    <i class="icon-remove interact"
+                                    <i class="fa fa-remove interact"
                                        title="Fjern"
                                        ng-click="removePerson(journalist, 'journalists')"></i>
                                 </span>
@@ -211,7 +212,7 @@
                                     <input class="input-sm" type="text" ng-model="newJournalist"/>
                                 </span>
                                 <span class="col-xs-2">
-                                    <i class="icon-plus interact"
+                                    <i class="fa fa-plus interact"
                                        title="Legg til"
                                        ng-click="addPerson(newJournalist, 'journalists')"></i>
                                 </span>
@@ -228,7 +229,7 @@
                                     {{ photographer.first_name }} {{ photographer.last_name }}
                                 </span>
                                 <span class="col-xs-2" ng-show="metaEditMode">
-                                    <i class="icon-remove interact"
+                                    <i class="fa fa-remove interact"
                                        title="Fjern"
                                        ng-click="removePerson(photographer, 'photographers')"></i>
                                 </span>
@@ -238,7 +239,7 @@
                                     <input class="input-sm" type="text" ng-model="newPhotographer"/>
                                 </span>
                                 <span class="col-xs-2">
-                                    <i class="icon-plus interact"
+                                    <i class="fa fa-plus interact"
                                        title="Legg til"
                                        ng-click="addPerson(newPhotographer, 'photographers')"></i>
                                 </span>
