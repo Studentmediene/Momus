@@ -30,7 +30,7 @@
                         <button disabled
                                 class="btn btn-default btn-xs"
                                 ng-show="article.content == original.content">
-                            <i class="fa fa-ok"></i> Lagret
+                            <i class="fa fa-check"></i> Lagret
                         </button>
                     </div>
                 </h1>
@@ -81,7 +81,7 @@
                         </div>
                     </div>
                     <textarea id="articleArea"
-                              class="article"
+                              class="form-control article"
                               richeditor="article.content"
                               richeditor-rules="articleRules"
                               richeditor-toolbar="article-toolbar">
@@ -105,7 +105,7 @@
                         <button disabled
                                 class="btn btn-default btn-xs"
                                 ng-show="article.note == original.note">
-                            <i class="fa fa-ok"></i> Lagret
+                            <i class="fa fa-check"></i> Lagret
                         </button>
                     </div>
                 </h1>
@@ -157,7 +157,7 @@
                     </div>
 
                     <textarea id="noteArea"
-                              class="note"
+                              class="form-control note"
                               richeditor="article.note"
                               richeditor-rules="noteRules"
                               richeditor-toolbar="note-toolbar">
@@ -171,13 +171,13 @@
                     <span class="fa fa-tag"></span>
                     Meta
                     <span class="pull-right">
-                        <button class="btn-xs btn-primary" ng-show="!metaEditMode" ng-click="toggleEditMode()">
+                        <button class="btn btn-xs btn-primary" ng-show="!metaEditMode" ng-click="toggleEditMode()">
                             Rediger
                         </button>
-                        <button class="btn-xs btn-info" ng-show="metaEditMode" ng-click="cancelMeta()">
+                        <button class="btn btn-xs btn-info" ng-show="metaEditMode" ng-click="cancelMeta()">
                             Avbryt
                         </button>
-                        <button class="btn-xs btn-primary" ng-show="metaEditMode" ng-click="saveMeta()">
+                        <button class="btn btn-xs btn-primary" ng-show="metaEditMode" ng-click="saveMeta()">
                             Lagre
                         </button>
                     </span>
@@ -190,7 +190,7 @@
                         {{ article.name }}
                     </span>
                     <span class="col-xs-8" ng-show="metaEditMode">
-                        <input type="text" ng-model="article.name">
+                        <input class="form-control input-sm" type="text" ng-model="article.name">
                     </span>
                 </div>
                 <div class="row">
@@ -202,14 +202,14 @@
                                     {{ journalist.first_name }} {{ journalist.last_name }}
                                 </span>
                                 <span class="col-xs-2" ng-show="metaEditMode">
-                                    <i class="fa fa-remove interact"
+                                    <i class="fa fa-minus interact"
                                        title="Fjern"
                                        ng-click="removePerson(journalist, 'journalists')"></i>
                                 </span>
                             </li>
                             <li class="row" ng-show="metaEditMode">
                                 <span class="col-xs-10">
-                                    <input class="input-sm" type="text" ng-model="newJournalist"/>
+                                    <input class="form-control input-sm" type="text" ng-model="newJournalist"/>
                                 </span>
                                 <span class="col-xs-2">
                                     <i class="fa fa-plus interact"
@@ -225,18 +225,18 @@
                     <span class="col-xs-8">
                         <ul class="list-unstyled">
                             <li ng-repeat="photographer in article.photographers" class="row">
-                                <span class="col-xs-10">
+                                <span class="col-xs-10" style="line-height: 1.5">
                                     {{ photographer.first_name }} {{ photographer.last_name }}
                                 </span>
                                 <span class="col-xs-2" ng-show="metaEditMode">
-                                    <i class="fa fa-remove interact"
+                                    <i class="fa fa-minus interact"
                                        title="Fjern"
                                        ng-click="removePerson(photographer, 'photographers')"></i>
                                 </span>
                             </li>
                             <li class="row" ng-show="metaEditMode">
                                 <span class="col-xs-10">
-                                    <input class="input-sm" type="text" ng-model="newPhotographer"/>
+                                    <input class="form-control input-sm" type="text" ng-model="newPhotographer"/>
                                 </span>
                                 <span class="col-xs-2">
                                     <i class="fa fa-plus interact"
