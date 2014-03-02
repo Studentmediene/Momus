@@ -84,18 +84,14 @@
         <div class="visible-md visible-lg col-md-5">
             <div class="form-group">
                 <div class="col-md-8 col-md-offset-3">
-                    <button class="btn btn-primary col-xs-5" ng-click="save()" ng-disabled="isLoading || sourceForm.$invalid">
-                        <i class="fa fa-spin fa-spinner" ng-show="isLoading"></i> Lagre
-                    </button>
+                    <button class="btn btn-primary col-xs-5" ng-disabled="sourceForm.$invalid" ng-click="save()" button-loader="isLoading" button-loader-text="'Lagrer' + '{{source.note}}'">Lagre</button>
                     <button class="btn btn-default col-xs-5 col-xs-offset-2" ng-click="back()">Tilbake</button>
                 </div>
             </div>
         </div>
 
         <div class="visible-xs visible-sm col-xs-12" style="padding-top: 20px">
-            <button class="btn btn-primary col-xs-5" ng-click="save()" ng-disabled="isLoading || sourceForm.$invalid">
-                <i class="fa fa-spin fa-spinner" ng-show="isLoading"></i> Lagre
-            </button>
+            <button class="btn btn-primary col-xs-5" ng-disabled="sourceForm.$invalid" ng-click="save()" button-loader="isLoading" button-loader-text="'Lagrer' + '{{source.note}}'">Lagre</button>
             <button class="btn btn-default col-xs-5 col-xs-offset-2" ng-click="back()">Tilbake</button>
 
         </div>
