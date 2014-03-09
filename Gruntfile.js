@@ -153,6 +153,12 @@ module.exports = function (grunt) {
                     }
                 ]
             }
+        },
+        karma: {
+            unit: {
+                configFile: 'src/main/webapp/test/config/karma.conf.js',
+                singleRun: true
+            }
         }
     });
 
