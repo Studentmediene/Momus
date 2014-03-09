@@ -19,7 +19,8 @@ angular.module('momusApp.directives').
         return {
             restrict: 'A',
             scope: {
-                buttonLoader: '='
+                buttonLoader: '=',
+                ngDisabled: '='
             },
             link: function (scope, elm, attrs) {
                 var btnContents = $compile(elm.contents())(scope);
@@ -28,12 +29,16 @@ angular.module('momusApp.directives').
                     spinner = '<i class="fa fa-spinner fa-spin"></i> ';
                 }
                 scope.$watch('buttonLoader', function (value) {
-                    if (value) {
+                    if (value) { // loading state
                         elm.html(spinner + attrs.buttonLoaderText);
                         elm.attr('disabled', true);
-                    } else {
+                    } else { // not loading
                         elm.html('').append(btnContents);
-                        elm.attr('disabled', false);
+                        if (scope.ngDisabled) { // if it has a ngDisabled attribute, set disabled to that value
+                            elm.attr('disabled', scope.ngDisabled);
+                        } else { // if not, it's not longer disabled
+                            elm.attr('disabled', false);
+                        }
                     }
                 });
             }
