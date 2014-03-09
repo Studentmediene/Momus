@@ -41,75 +41,90 @@ angular.module('momusApp', [
                 controller: 'AdminRoleCtrl'
             }
         )
-        // Article interfaces
-        .when('/article',
+            // Article interfaces
+            .when('/article',
             {
                 redirectTo: '/article/1' // TODO: make this go to article search view?
             }
         )
-        .when('/article/:id',
+            .when('/article/:id',
             {
                 templateUrl: 'partials/article/articleView.html',
                 controller: 'ArticleCtrl'
             }
         )
 
-        // Search interfaces
-        .when('/search',
+            // Search interfaces
+            .when('/search',
             {
                 templateUrl: 'partials/search/searchView.html',
                 controller: 'SearchCtrl'
             }
         )
 
-        // Publications (utgaver) interfaces
-        .when('/publications',
+            // Publications (utgaver) interfaces
+            .when('/publications',
             {
                 templateUrl: 'partials/publication/publicationView.html',
-                controller: 'PublicationCtrl'
+                controller: 'PublicationCtrl',
+                title: "Utgaver"
             }
         )
 
-        //Disposition
-        .when('/disposition/:id',
+            //Disposition
+            .when('/disposition/:id',
             {
                 templateUrl: 'partials/disposition/dispositionView.html',
                 controller: 'DispositionCtrl'
             }
         )
 
-        // Sources
-        .when('/sources',
+            // Sources
+            .when('/sources',
             {
                 templateUrl: 'partials/source/search.html',
                 controller: 'SourceSearchCtrl',
-                reloadOnSearch: false
+                reloadOnSearch: false,
+                title: "Kilder"
             }
         )
-        .when('/sources/new',
+            .when('/sources/new',
             {
                 templateUrl: 'partials/source/edit.html',
-                controller: 'SourceEditCtrl'
+                controller: 'SourceEditCtrl',
+                title: "Ny kilde"
             }
         )
-        .when('/sources/tags',
+            .when('/sources/tags',
             {
                 templateUrl: 'partials/source/tags.html',
-                controller: 'SourceTagsCtrl'
+                controller: 'SourceTagsCtrl',
+                title: "Rediger kildetags"
             }
         )
-        .when('/sources/:id',
+            .when('/sources/:id',
             {
                 templateUrl: 'partials/source/edit.html',
                 controller: 'SourceEditCtrl'
             }
         )
 
-        .otherwise({redirectTo: '/'});
+            .otherwise({redirectTo: '/'});
 
     }]).
-    config(['$httpProvider', function($httpProvider) {
+    config(['$httpProvider', function ($httpProvider) {
         $httpProvider.interceptors.push('HttpInterceptor');
-    }])
+    }]).
 
-;
+    run(['$location', '$rootScope', 'TitleChanger', function ($location, $rootScope, TitleChanger) {
+        // Whenever there is a route change, we try to update the url with the title set in the rootprovider above
+        // if there is no title, we clear it
+        $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
+            if (current.$$route && current.$$route.title) {
+                TitleChanger.setTitle(current.$$route.title);
+            } else {
+                TitleChanger.setTitle("");
+            }
+        });
+    }]);
+

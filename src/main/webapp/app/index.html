@@ -18,7 +18,7 @@
 <html lang="en" ng-app="momusApp" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
-    <title>Momus</title>
+    <title ng-bind="pageTitle ? pageTitle : 'Momus'">Momus</title>
 
     <!-- Enable responsive features -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,7 +28,6 @@
     <link rel="stylesheet" href="libs/components-font-awesome/css/font-awesome.css">
     <link rel="stylesheet" href="libs/select2/select2.css">
     <link rel="stylesheet" href="libs/select2-bootstrap3-css/index.css">
-
     <!-- endbuild -->
 
     <!-- build:css css/main.css -->
@@ -54,11 +53,11 @@
             <li ng-class="{active: isActive('/')}"><a href="#"><i class="fa fa-th-large"></i> Front</a></li>
             <li ng-class="{active: isActive('/article%')}"><a href="#"><i class="fa fa-pencil"></i> Articler</a></li>
             <li ng-class="{active: isActive('/pictures')}"><a href="#"><i class="fa fa-picture-o"></i> Bilder</a></li>
+            <li ng-class="{active: isActive('/publications')}"><a href="#/publications"><i class="fa fa-list"></i> Publikasjoner</a></li>
             <li ng-class="{active: isActive('/disposition')}"><a href="#"><i class="fa fa-list"></i> Disposisjon</a></li>
             <li ng-class="{active: isActive('/sources%')}"><a href="#/sources"><i class="fa fa-comment"></i> Kilder</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <!--<li><p class="navbar-text">Logget inn som <a href="#">Mats Svensson</a></p></li>-->
             <li><a class="visible-sm" href="http://m.studentmediene.no/api/logout">Logg ut <i class="fa fa-power-off"></i></a></li>
             <li><a class="hidden-sm" href="http://m.studentmediene.no/api/logout">Logg ut <b>{{user.first_name}} {{user.last_name}}</b> <i class="fa fa-power-off"></i></a></li>
         </ul>
@@ -117,6 +116,7 @@
 <script src="js/services/httpInterceptor.js"></script>
 <script src="js/services/currentUser.js"></script>
 <script src="js/services/ArticleService.js"></script>
+<script src="js/services/TitleChanger.js"></script>
 <!-- Filters -->
 <!-- Directives -->
 <script src="js/directives/version.js"></script>

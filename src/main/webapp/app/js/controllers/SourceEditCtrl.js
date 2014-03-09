@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('SourceEditCtrl', function ($scope, $http, $routeParams) {
+    .controller('SourceEditCtrl', function ($scope, $http, $routeParams, TitleChanger) {
         $scope.tags = [];
         $scope.source = {
             tags: []
@@ -68,6 +68,7 @@ angular.module('momusApp.controllers')
 
         function setSource(source) {
             $scope.source = source;
+            TitleChanger.setTitle(source.name + ' - Kilder');
             $scope.source.tags = source.tags.map(function (e) {
                 return e.tag
             });
