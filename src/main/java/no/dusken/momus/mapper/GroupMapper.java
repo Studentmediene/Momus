@@ -49,7 +49,7 @@ public class GroupMapper {
         try {
             group = mapper.readValue(json, Group.class);
         } catch (IOException e) {
-            logger.warn("Couldn't create single group from json: {}", e);
+            logger.warn("Couldn't create single group from json:", e);
         }
         return group;
     }
@@ -76,7 +76,7 @@ public class GroupMapper {
 
             groups = mapper.readValue(parser, new TypeReference<List<Group>>() {});
         } catch (IOException e) {
-            logger.warn("Couldn't create groups from json: {}", e);
+            logger.warn("Couldn't create groups from json:", e);
         }
 
         return groups;

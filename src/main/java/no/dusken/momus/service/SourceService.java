@@ -64,7 +64,7 @@ public class SourceService {
      * Logs everything so it can be undone
      */
     public void deleteTag(SourceTag tag) {
-        logger.info("Deleting tag {}" + tag.getTag());
+        logger.info("Deleting tag {}", tag.getTag());
 
         List<Source> sources = sourceRepository.findByTag(tag.getTag());
 

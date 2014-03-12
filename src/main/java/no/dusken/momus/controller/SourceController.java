@@ -25,9 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.List;
 
 @Controller
@@ -45,8 +42,8 @@ public class SourceController {
     }
 
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
-    public @ResponseBody Source createSource(@RequestBody Source newSource) {
-        return sourceService.save(newSource);
+    public @ResponseBody Source saveSource(@RequestBody Source source) {
+        return sourceService.save(source);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
