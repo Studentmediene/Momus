@@ -3,55 +3,37 @@ package no.dusken.momus.model;
 
 import org.springframework.data.annotation.Id;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
-@Entity
+
 public class Search {
 
-    @javax.persistence.Id
-    @Id
-    @GeneratedValue
-    private long id;
-
-    private String name;
+    private String free;
     private String status;
+    private Set<Person> persons;
+//    private Set<Person> journalists;
+    private String section;
+    private String publication;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Publication> publications;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Person> persons;
-
-    public long getId() {return id;}
-
-    public void setId(long id) {this.id = id;}
-
-    public String getStatus() {return status;}
-
-    public void setStatus(String status) {this.status = status;}
-
-    public String getName() {return name;}
-
-    public void setName(String name) {this.name = name;}
-
-    public List<Person> getPersons() {
-        return persons;
+    public String getPublication() {
+        return publication;
     }
 
-    public void setPersons(List<Person> persons) {
-        this.persons = persons;
+    public Set<Person> getPersons() {return persons; }
+
+    public String getFree() {
+        return free;
     }
 
-    public List<Publication> getPublications() {
-        return publications;
+    public String getStatus() {
+        return status;
     }
 
-    public void setPublications(List<Publication> publications) {
-        this.publications = publications;
+
+    public String getSection() {
+        return section;
     }
 
 }

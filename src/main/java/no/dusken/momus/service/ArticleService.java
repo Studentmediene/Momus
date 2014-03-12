@@ -73,6 +73,9 @@ public class ArticleService {
         if (updatedFields.contains("photographers")) {
             articleFromServer.setPhotographers(articleFromClient.getPhotographers());
         }
+        if (updatedFields.contains("publication")) {
+            articleFromServer.setPublication(articleFromClient.getPublication());
+        }
 
         return saveUpdatedArticle(articleFromServer);
     }

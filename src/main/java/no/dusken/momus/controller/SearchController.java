@@ -1,47 +1,91 @@
 package no.dusken.momus.controller;
 
 
-import no.dusken.momus.model.Article;
-import no.dusken.momus.model.ArticleStatus;
-import no.dusken.momus.model.Person;
-import no.dusken.momus.model.Publication;
+import no.dusken.momus.model.*;
+import no.dusken.momus.service.repository.ArticleRepository;
+import no.dusken.momus.service.repository.ArticleStatusRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller
+@RequestMapping("/search")
 public class SearchController {
 
-    private ArticleController articleController;
-    private PersonController personController;
-    private PublicationController publicationController;
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
+    @Autowired
+    private ArticleRepository articleRepository;
 
-    public List<Publication> getPublicationsList(int year) {
-        return publicationController.getAllPublications(year);
-    }
+    @Autowired
+    private ArticleStatusRepository articleStatusRepository;
 
-    public List<Person> getPersonsList(List<Person> personsList) {
-        List<Person> persons = new ArrayList<>();
-        for (int i = 0; i < personsList.size(); i++ ) {
-           persons.add(personController.getPersonById(personsList.get(i).getId()));
+    private Search data;
+
+    @RequestMapping(method = RequestMethod.POST)
+    public @ResponseBody List<Article> getSearchData(@RequestBody Search search) {
+        logger.debug("getArticle_status_data");
+
+        //Check if only free search is set
+        if (isOnlyFreeSearch(search)) {
+            return articleRepository.findByNameOrStatus_NameOrJournalistsOrPhotographersOrPublication_Name(search.getFree(), search.getFree(), search.getPersons(), search.getPersons(), search.getFree());
         }
-        return persons;
-    }
-
-    public List<Article> getArticlesList(List<Article> articleList) {
-        List<Article> articles = new ArrayList<>();
-        for (int i = 0; i < articleList.size(); i++) {
-            articles.add(articleController.getArticleByID(articleList.get(i).getId()));
+        //Check if only status is set
+        else if (isOnlyStatus(search)) {
+            return articleRepository.findByStatus_Name(search.getStatus());
         }
-        return articles;
+        // Check if only people are set
+        else if (isOnlyPersons(search)) {
+            return articleRepository.findByJournalistsOrPhotographers(search.getPersons(), search.getPersons());
+        }
+        // Check if only section is set
+//        else if ((search.getFree().length() <= 0) && (search.getStatus().length()) <= 0 && (search.getPersons().size() == 0 ) &&
+//            (search.getSection().length() >= 0) && (search.getPublication().length() <= 0)) {
+//            return articleRepository.findBySection(String section);
+//        }
+        // Check if only publication is set
+        else if(isOnlyPublication(search)) {
+            return articleRepository.findByPublication_Name(search.getPublication());
+        }
+
+        return articleRepository.findByNameOrStatus_NameOrJournalistsOrPhotographersOrPublication_Name(search.getFree(), search.getStatus(), search.getPersons(), search.getPersons(), search.getPublication());
     }
 
-    public List<ArticleStatus> getArticleStatusList(List<ArticleStatus> articleStatusList) {
-        return articleStatusList;
+    public boolean isOnlyFreeSearch(Search search) {
+        if ((search.getFree().length() >= 0) && (search.getStatus().length()) <= 0 && (search.getPersons().size() == 0 ) &&
+                (search.getSection().length() <= 0) && (search.getPublication().length() <= 0)) {
+            return true;
+        }
+        return false;
     }
-
-
-
+    public boolean isOnlyStatus(Search search) {
+        if ((search.getFree().length() <= 0) && (search.getStatus().length()) > 0 && (search.getPersons().size() == 0 ) &&
+                (search.getSection().length() <= 0) && (search.getPublication().length() <= 0)) {
+            return true;
+        }
+        return false;
+    }
+    public boolean isOnlyPersons(Search search) {
+        if ((search.getFree().length() <= 0) && (search.getStatus().length()) <= 0 && (search.getPersons().size() > 0 ) &&
+                (search.getSection().length() <= 0) && (search.getPublication().length() <= 0)) {
+            return true;
+        }
+        return false;
+    }
+    public boolean isOnlyPublication(Search search) {
+        if ((search.getFree().length() <= 0) && (search.getStatus().length()) <= 0 && (search.getPersons().size() == 0 ) &&
+                (search.getSection().length() <= 0) && (search.getPublication().length() >= 0)) {
+            return true;
+        }
+        return false;
+    }
 }
+
+
