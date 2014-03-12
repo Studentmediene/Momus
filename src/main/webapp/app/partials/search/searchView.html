@@ -109,49 +109,6 @@
                 </tr>
                 </tbody>
             </table>
-
-        </div>
-
-        <div class="panel-heading"><h2 style="text-align: center;">Seksjon</h2></div>
-        <div class="table-responsive">
-            <table class="table table-hover table-striped">
-                <thead>
-                <tr>
-                    <th>Navn</th>
-                    <th>ID</th>
-                    <th></th>
-                </tr>
-                </thead>
-
-                <tbody>
-                <tr ng-repeat="section in sections= (sections| filter: section.id| filter:{name: section.name}| orderBy:'id')">
-                    <td>{{section.name}}</td>
-                    <td>{{section.id}}</td>
-                    <td><a href="#/source/{{source.id}}">Åpne</a></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="panel-heading"><h2 style="text-align: center;">Publikasjoner</h2></div>
-        <div class="table-responsive">
-            <table class="table table-hover table-striped">
-                <thead>
-                <tr>
-                    <th>Navn</th>
-                    <th>ID</th>
-                    <th></th>
-                </tr>
-                </thead>
-
-                <tbody>
-                <tr ng-repeat="publication in publications= (publications| filter: publications.id| filter:{name: publications.name}| orderBy:'id')">
-                    <td>{{publication.name}}</td>
-                    <td>{{publication.id}}</td>
-                    <td><a href="#/source/{{source.id}}">Åpne</a></td>
-                </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 </div>

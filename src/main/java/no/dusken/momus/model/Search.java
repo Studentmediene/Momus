@@ -12,7 +12,7 @@ public class Search {
 
     private String free;
     private String status;
-    private Set<Person> persons;
+    private Set<String> persons;
 //    private Set<Person> journalists;
     private String section;
     private String publication;
@@ -21,7 +21,7 @@ public class Search {
         return publication;
     }
 
-    public Set<Person> getPersons() {return persons; }
+    public Set<String> getPersons() {return persons; }
 
     public String getFree() {
         return free;
