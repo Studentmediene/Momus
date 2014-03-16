@@ -42,10 +42,10 @@
                                     <li><a ng-click="yearSelected = 'Aktive utgaver';
                                     getActivePublications(); newWindow = 'false'; publicationView = 'false'">Aktive utgaver</a></li>
 
-                                    <li ng-repeat="this in hardCodedYears | orderBy: '-year'">
-                                        <a ng-click="$parent.yearSelected = this.year;
+                                    <li ng-repeat="year in yearsInDropdown | orderBy: '-year'">
+                                        <a ng-click="$parent.yearSelected = year;
                                         getPublicationByYear(yearSelected); $parent.newWindow = 'false';
-                                        $parent.publicationView = 'false'">{{this.year}}</a></li>
+                                        $parent.publicationView = 'false'">{{year}}</a></li>
                                 </ul>
                             </div>
                         </div>

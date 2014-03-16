@@ -25,6 +25,7 @@ angular.module('momusApp.controllers')
         $scope.publication = null;
         $scope.date = new Date();
         $scope.yearSelected = $scope.date.getFullYear();
+        $scope.yearsInDropdown = [];
 
 
         /**
@@ -38,7 +39,7 @@ angular.module('momusApp.controllers')
             $http.get('/api/publication/year/' + year)
                 .success(function (data) {
                     $scope.publicationData = data;
-                    console.log($scope.publicationData.length);
+                    console.log("Data length: " + $scope.publicationData.length);
                 })
                 .error(function() {
                     console.log("Error retrieving publications by year");
@@ -80,14 +81,18 @@ angular.module('momusApp.controllers')
             release_date: ''
         };
 
-        //Using this to show the years in the dropdown menu, but this definitely needs a change to make it independent!
-        $scope.hardCodedYears = [
+        /**
+         * Showing years in the dropdown menu since year x.
+         */
+        $scope.yearsInDropdownMenu = function() {
+            var sinceYearX = 2009;
 
-            {year: '2011'},
-            {year: '2012'},
-            {year: '2013'},
-            {year: '2014'}
-        ];
+            //                  2014                2014 > 2009         2014--
+            for (var i = $scope.date.getFullYear(); i > sinceYearX; i--) {
+                $scope.yearsInDropdown.push(i);
+            }
+        };
+        $scope.yearsInDropdownMenu();
 
 
         /**
