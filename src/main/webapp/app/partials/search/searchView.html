@@ -45,7 +45,7 @@
                     <label for="searchStatus">Status</label>
                     <select class="form-control" id="searchStatus" ng-model="search.status" placeholder="Status">
                         <option class="" value="">Velg status</option>
-                        <option ng-repeat="status in statuses" value="{{status.name}}">{{status.name}}</option>
+                        <option ng-repeat="status in statuses" value="{{status.id}}">{{status.name}}</option>
                     </select>
                 </div>
 
@@ -68,7 +68,7 @@
                     <label for="searchPublication">Publikasjoner</label>
                     <select class="form-control" id="searchPublication" ng-model="search.publication">
                         <option value="">Velg publikasjon</option>
-                        <option ng-repeat="publication in publications">{{publication.name}}</option>
+                        <option ng-repeat="publication in publications" value="{{publication.id}}">{{publication.name}}</option>
                     </select>
                 </div>
             </div>
@@ -82,6 +82,7 @@
         </div>
     </div>
 </div>
+{{"testdata:"}}
 {{data}}
 <div class="col-md-12">
     <div class="panel panel-default">
@@ -93,6 +94,7 @@
                 <tr>
                     <th>Navn</th>
                     <th>ID</th>
+                    <th>Status</th>
                     <th>Redaksjon</th>
                     <th>Publikasjon</th>
                     <th></th>
@@ -103,6 +105,7 @@
                 <tr ng-repeat="article in data | filter: article.name | orderBy: -id">
                     <td>{{article.name}}</td>
                     <td>{{article.id}}</td>
+                    <td>{{article.status}}</td>
                     <td>{{article.section}}</td>
                     <td>{{article.publication.name}}</td>
                     <td><a href="#/source/{{source.id}}">Åpne</a></td>

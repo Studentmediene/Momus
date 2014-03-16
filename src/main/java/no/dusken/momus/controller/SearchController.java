@@ -37,61 +37,23 @@ public class SearchController {
     public @ResponseBody void getSearchData(@RequestBody Search search) {
         logger.debug("getArticle_status_data");
 
-        String query = new String("SELECT * FROM ");
-        String statusQuery = null;
-        String publicationQuery = null;
-        String personQuery = null;
+        //Status and publication search query:
+        String statusAndPublicationQuery = getStatusAndPublicationQuery(search.getStatus(), search.getPublication());
+        //Person search query:
+        String personQuery = getPersonQuery(search.getPersons());
+        //Free search query:
+        //TODO: Make this query really good for the free search!
+        String freeQuery = getFreeQuery(search.getFree());
 
-        if (search.getStatus().length() > 0) {
-            query += " ARTICLESTATUS,";
-            statusQuery = " NAME = '" + search.getStatus() + "'";
-        }
-        if (search.getPublication().length() > 0) {
-            query += " PUBLICATION,";
-            publicationQuery = " NAME = '" + search.getPublication() + "'";
-        }
-        if (search.getPersons().size() > 0) {
-            query += " PERSON,";
-            personQuery = " ID = ";
-            for (String s : search.getPersons()) {
-                personQuery += s;
-            }
-//            personQuery = " ID IN (";
-//            for (String s : search.getPersons()) {
-//                personQuery +=  s + ", ";
-//            }
-//            personQuery = personQuery.substring(0, personQuery.length()-2);
-//            personQuery += ")";
-        }
-
-        query = query.substring(0, query.length()-1);
-        query += " WHERE ";
-
-
-        boolean isAdded = false;
-        if (statusQuery != null) {
-            query += statusQuery + " AND ";
-            isAdded = true;
-        }
-        if (publicationQuery != null) {
-            query += publicationQuery + " AND ";
-            isAdded = true;
+        if (statusAndPublicationQuery != null) {
+            logger.debug("Status and pub: " + statusAndPublicationQuery);
         }
         if (personQuery != null) {
-            query += personQuery + " AND ";
-            isAdded = true;
+            logger.debug("Person query: " + personQuery);
         }
-        if (isAdded) {
-            query = query.substring(0, query.length()-4);
+        if (freeQuery != null) {
+            logger.debug("Free query: " + freeQuery);
         }
-
-        query = query.toUpperCase();
-
-        logger.debug(query);
-
-        String freeQuery = "SELECT * " +
-                            "FROM ARTICLESTATUS, PUBLICATION, PERSON" +
-                            "WHERE = " + search.getFree();
 
         Connection connection = null;
         Statement statement = null;
@@ -99,14 +61,24 @@ public class SearchController {
         try {
             connection = dataSource.getConnection();
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            ResultSet resultSet = statement.executeQuery(query);
+            ResultSet statusAndPubSet = statement.executeQuery(statusAndPublicationQuery);
+            ResultSet personSet = statement.executeQuery(personQuery);
+//            ResultSet freeSet = statement.executeQuery(freeQuery);
 
-            while (resultSet.next()) {
-                String test = Integer.toString(resultSet.getInt("ID"));
-                logger.debug("ID: " + test);
-                String test2 = resultSet.getString("FIRSTNAME");
-                logger.debug("FIRSTNAME: " + test2);
+            while (statusAndPubSet.next()) {
+                String test = Integer.toString(statusAndPubSet.getInt("ID"));
+                logger.debug("Article of status and pub ID: " + test);
+//                String test2 = statusAndPubSet.getString("NAME");
+//                logger.debug("NAME OF THE ARTICLE: " + test2);
             }
+            while (personSet.next()) {
+                String test = Integer.toString(personSet.getInt("ARTICLE_ID"));
+                logger.debug("Article by persons ID: " + test);
+            }
+//            while (freeSet.next()) {
+//                String test = Integer.toString(freeSet.getInt("ID"));
+//                logger.debug("Article from free search ID: " + test);
+//            }
 
         } catch (SQLException e) {
             logger.debug("SQL EXCEPTION");
@@ -115,61 +87,63 @@ public class SearchController {
             logger.debug("nullpointer: " , e);
         }
 
-
-
-
-//        //Check if only free search is set
-//        if (isOnlyFreeSearch(search)) {
-//            return articleRepository.findByNameOrStatus_NameOrJournalistsOrPhotographersOrPublication_Name(search.getFree(), search.getFree(), search.getPersons(), search.getPersons(), search.getFree());
-//        }
-        //Check if only status is set
-//        if (isOnlyStatus(search)) {
-//            return articleRepository.findByStatus_Name(search.getStatus());
-//        }
-//        // Check if only people are set
-//        else if (isOnlyPersons(search)) {
-//            return articleRepository.findByJournalistsOrPhotographers(search.getPersons(), search.getPersons());
-//        }
-//        // Check if only section is set
-//        else if ((search.getFree().length() <= 0) && (search.getStatus().length()) <= 0 && (search.getPersons().size() == 0 ) &&
-//            (search.getSection().length() >= 0) && (search.getPublication().length() <= 0)) {
-//            return articleRepository.findBySection(String section);
-//        }
-//        // Check if only publication is set
-//        else if(isOnlyPublication(search)) {
-//            return articleRepository.findByPublication_Name(search.getPublication());
-//        }
-
-//        return articleRepository.findByNameOrStatus_NameOrJournalistsOrPhotographersOrPublication_Name(search.getFree(), search.getStatus(), search.getPersons(), search.getPersons(), search.getPublication());
     }
 
-    public boolean isOnlyFreeSearch(Search search) {
-        if ((search.getFree().length() >= 0) && (search.getStatus().length()) <= 0 && (search.getPersons().size() == 0 ) &&
-                (search.getSection().length() <= 0) && (search.getPublication().length() <= 0)) {
-            return true;
+    private String getFreeQuery(String free) {
+        if (free.length() > 0) {
+
+            String freeQuery = "SELECT A.ID FROM ARTICLE AS A " +
+                                "WHERE ((A.NAME = '" + free + "') OR (A.ID = " + free +
+                                ") OR  (A.STATUS_ID = " + free + ") OR (A.PUBLICATION_ID = " + free + "));";
+            return freeQuery;
         }
-        return false;
+        return null;
     }
-    public boolean isOnlyStatus(Search search) {
-        if ((search.getFree().length() <= 0) && (search.getStatus().length()) > 0 && (search.getPersons().size() == 0 ) &&
-                (search.getSection().length() <= 0) && (search.getPublication().length() <= 0)) {
-            return true;
+
+    private String getPersonQuery(Set<String> persons) {
+        String personQuery = "SELECT DISTINCT AJ.ARTICLE_ID, AP.ARTICLE_ID " +
+                "FROM ARTICLE_JOURNALIST AS AJ, ARTICLE_PHOTOGRAPHER AS AP WHERE ";
+        if (persons.size() > 0) {
+            for (String id : persons) {
+                personQuery += "((AJ.JOURNALISTS_ID = " + id + ") OR (AP.PHOTOGRAPHERS_ID = " + id + "))";
+                personQuery += " AND ";
+            }
+            personQuery = personQuery.substring(0, personQuery.length()-4);
+            personQuery += ";";
+            return personQuery;
         }
-        return false;
+        return null;
     }
-    public boolean isOnlyPersons(Search search) {
-        if ((search.getFree().length() <= 0) && (search.getStatus().length()) <= 0 && (search.getPersons().size() > 0 ) &&
-                (search.getSection().length() <= 0) && (search.getPublication().length() <= 0)) {
-            return true;
+
+    private String getStatusAndPublicationQuery(String status, String publication) {
+
+        String statusAndPublicationQuery = new String("SELECT A.ID FROM ARTICLE AS A WHERE ");
+        String statusQuery = null;
+        String publicationQuery = null;
+
+        if (status.length() > 0) {
+            statusQuery = " A.STATUS_ID  = " + status ;
         }
-        return false;
-    }
-    public boolean isOnlyPublication(Search search) {
-        if ((search.getFree().length() <= 0) && (search.getStatus().length()) <= 0 && (search.getPersons().size() == 0 ) &&
-                (search.getSection().length() <= 0) && (search.getPublication().length() >= 0)) {
-            return true;
+        if (publication.length() > 0) {
+            publicationQuery = " A.PUBLICATION_ID = " + publication;
         }
-        return false;
+
+        boolean isAdded = false;
+        if (statusQuery != null) {
+            statusAndPublicationQuery += statusQuery + " AND ";
+            isAdded = true;
+        }
+        if (publicationQuery != null) {
+            statusAndPublicationQuery += publicationQuery + " AND ";
+            isAdded = true;
+        }
+        if (isAdded) {
+            statusAndPublicationQuery = statusAndPublicationQuery.substring(0, statusAndPublicationQuery.length()-4);
+            statusAndPublicationQuery += ";";
+        } else
+            return null;
+
+        return statusAndPublicationQuery;
     }
 }
 
