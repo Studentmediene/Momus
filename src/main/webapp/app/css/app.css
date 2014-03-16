@@ -65,3 +65,11 @@ textarea.note {
 .interact {
     cursor: pointer;
 }
+
+/* So that browsers doesn't display an outline around clicked links */
+a:focus {
+    outline: 0;
+}
+
+/* used for ui-bootstrap */
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }

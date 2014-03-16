@@ -114,6 +114,12 @@ angular.module('momusApp.services').
 
         return {
             'responseError': function(response) {
+                // Allow $http requests to handle errors themselves
+                if (response.config.bypassInterceptor) {
+                    return $q.reject(response);
+                }
+
+                // is the problem we're not logged in?
                 if (response.status === 401 && (!isInIgnoreList(response.config.url))) {
 
                     if (!hasSentRequestForTicket) {
@@ -125,13 +131,18 @@ angular.module('momusApp.services').
                     addToBuffer(response.config, deferred);
                     return deferred.promise;
 
-                } else if (response.status === 403) {
-                    alert('Du har ikke tilgang.');
                 }
 
+                // show an error message
+                var errorMessage = '';
+
                 if (response.data.error) {
-                    alert(response.data.error);
+                    errorMessage = response.data.error;
+                } else {
+                    errorMessage = response.data;
                 }
+                var MessageModal = $injector.get('MessageModal');
+                MessageModal.error(errorMessage, true);
 
                 return $q.reject(response);
             }

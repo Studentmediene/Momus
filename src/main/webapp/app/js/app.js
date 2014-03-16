@@ -30,7 +30,8 @@ angular.module('momusApp', [
         'momusApp.services',
         'momusApp.directives',
         'ngRoute',
-        'ui.select2'
+        'ui.select2',
+        'ui.bootstrap'
     ]).
     config(['$routeProvider', function ($routeProvider) {
         // Admin interfaces

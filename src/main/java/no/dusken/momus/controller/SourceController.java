@@ -16,6 +16,7 @@
 
 package no.dusken.momus.controller;
 
+import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Source;
 import no.dusken.momus.model.SourceTag;
 import no.dusken.momus.service.SourceService;
@@ -48,7 +49,11 @@ public class SourceController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody Source getSourceById(@PathVariable("id") Long id) {
-        return sourceService.getSourceRepository().findOne(id);
+        Source source = sourceService.getSourceRepository().findOne(id);
+        if (source == null) {
+            throw new RestException("Ingen kilde med den id'en", 404);
+        }
+        return source;
     }
 
 
