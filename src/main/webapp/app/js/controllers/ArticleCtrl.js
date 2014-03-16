@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function ($scope, $routeParams, ArticleService) {
+    .controller('ArticleCtrl', function ($scope, $routeParams, $location, ArticleService) {
 
         // The scope of this controller is the entire article view.
         // There are sub-controllers for the different panels
@@ -27,9 +27,15 @@ angular.module('momusApp.controllers')
         $scope.article = { content: "" };
         $scope.original = { content: "" };
 
-        ArticleService.getArticle( $routeParams.id, function (data) {
-            $scope.article = angular.copy(data);
-            $scope.original = angular.copy(data);
-        });
+        var success = function (response) {
+            $scope.article = angular.copy(response.data);
+            $scope.original = angular.copy(response.data);
+        };
+
+        var error = function(){
+            $location.path('/article');
+        };
+
+        ArticleService.getArticle($routeParams.id, success, error);
     });
 

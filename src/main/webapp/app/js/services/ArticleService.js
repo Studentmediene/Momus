@@ -41,12 +41,8 @@ angular.module('momusApp.services')
                     }
                 );
             },
-            getArticle: function(id, success) {
-                $http.get('/api/article/' + id)
-                    .success( function(data) {
-                        success(data);
-                    }
-                );
+            getArticle: function(id, success, error) {
+                $http.get('/api/article/' + id).then(success, error);
             },
             getPerson: function(id, success) {
                 $http.get('/api/person/' + id)
