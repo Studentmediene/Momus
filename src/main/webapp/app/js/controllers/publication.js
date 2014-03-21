@@ -27,6 +27,11 @@ angular.module('momusApp.controllers')
         $scope.yearSelected = $scope.date.getFullYear();
         $scope.yearsInDropdown = [];
 
+        $scope.dateOptions = {
+            'starting-day': 1
+        };
+
+        $scope.editing = {};
 
         /**
          * Saving all the publications to an array within the year given as parameter.
