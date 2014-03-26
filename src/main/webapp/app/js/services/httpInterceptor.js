@@ -18,18 +18,18 @@
 
 angular.module('momusApp.services').
 
-    factory('HttpInterceptor', function($q, $location, $injector) {
+    factory('HttpInterceptor', function ($q, $location, $injector) {
         /*
-        This interceptor will intercept http requests that have failed.
+         This interceptor will intercept http requests that have failed.
 
-        If the reason for failing is 401 it means we are not logged in on our server, so then
-        we try to get a ticket from SmmDb and send it to our server to verify the user.
-        However, if SmmDb also returns a 401 the user is not logged in there either. So then we redirect
-        to SmmDb for login.
-        When a ticket has been sent to the server and we got a successful response, the interceptor will try
-        to resend all requests that failed and register a logout url in SmmDb.
+         If the reason for failing is 401 it means we are not logged in on our server, so then
+         we try to get a ticket from SmmDb and send it to our server to verify the user.
+         However, if SmmDb also returns a 401 the user is not logged in there either. So then we redirect
+         to SmmDb for login.
+         When a ticket has been sent to the server and we got a successful response, the interceptor will try
+         to resend all requests that failed and register a logout url in SmmDb.
 
-        If we get a 403 error, that means the user doesn't have authority to do the request.
+         If we get a 403 error, that means the user doesn't have authority to do the request.
          */
 
 
@@ -56,10 +56,10 @@ angular.module('momusApp.services').
         function resendRequest(request, deferred) {
             var $http = $injector.get('$http');
             $http(request).then(
-                function(response) {
+                function (response) {
                     deferred.resolve(response);
                 },
-                function(response) {
+                function (response) {
                     deferred.reject(response);
                 }
             );
@@ -68,25 +68,25 @@ angular.module('momusApp.services').
         function tryLoginThroughSmmDb() {
             hasSentRequestForTicket = true;
             var $http = $injector.get('$http');
-            getTicketFromSmmDb($http).success(function(smmDbData) {
+            getTicketFromSmmDb($http).success(function (smmDbData) {
 
                 // We are logged in at SmmDb, should validate the ticket with our server
-                validateTicket($http, smmDbData.ticket).success(function(loginResponse) {
+                validateTicket($http, smmDbData.ticket).success(function (loginResponse) {
                     registerSmmDbLogoutUrl($http);
 
                     // We are now logged in, should resend the requests that have failed
                     resendAllInBuffer();
                     hasSentRequestForTicket = false;
                 })
-                .error(function(loginResponse) {
-                    // Couldn't validate ticket on the server
-                    alert('Noe gikk feil under innlogging.');
-                });
+                    .error(function (loginResponse) {
+                        // Couldn't validate ticket on the server
+                        alert('Noe gikk feil under innlogging.');
+                    });
             })
-            .error(function(smmDbData) {
-                // error from SmmDb, means we're not logged in there, so we redirect to the login-form
-                window.location = 'http://m.studentmediene.no/api/login?next=' + encodeURIComponent(window.location.href);
-            });
+                .error(function (smmDbData) {
+                    // error from SmmDb, means we're not logged in there, so we redirect to the login-form
+                    window.location = 'http://m.studentmediene.no/api/login?next=' + encodeURIComponent(window.location.href);
+                });
         }
 
         function getTicketFromSmmDb($http) {
@@ -100,20 +100,20 @@ angular.module('momusApp.services').
         }
 
         function registerSmmDbLogoutUrl($http) {
-            var ourUrl = 'http://' +  $location.host() + ($location.port() ? ':' + $location.port() : '') + '/api/auth/logout';
+            var ourUrl = 'http://' + $location.host() + ($location.port() ? ':' + $location.port() : '') + '/api/auth/logout';
 
             $http.get('http://m.studentmediene.no/api/register_logout_url?logout_url=' + encodeURIComponent(ourUrl), {withCredentials: true});
         }
 
         function isInIgnoreList(url) {
             return (
-                   url.indexOf('m.studentmediene.no') > -1
+                url.indexOf('m.studentmediene.no') > -1
                 || url.indexOf('/api/auth/login') > -1
                 );
         }
 
         return {
-            'responseError': function(response) {
+            'responseError': function (response) {
                 // Allow $http requests to handle errors themselves
                 if (response.config.bypassInterceptor) {
                     return $q.reject(response);
@@ -131,19 +131,19 @@ angular.module('momusApp.services').
                     addToBuffer(response.config, deferred);
                     return deferred.promise;
 
+                } else if (!isInIgnoreList(response.config.url)) {
+                    // show an error message
+                    var errorMessage = '';
+
+                    if (response.data.error) {
+                        errorMessage = response.data.error;
+                    } //else {
+                    //errorMessage = response.data;
+
+                    var MessageModal = $injector.get('MessageModal');
+                    MessageModal.error(errorMessage, true);
+
                 }
-
-                // show an error message
-                var errorMessage = '';
-
-                if (response.data.error) {
-                    errorMessage = response.data.error;
-                } else {
-                    errorMessage = response.data;
-                }
-                var MessageModal = $injector.get('MessageModal');
-                MessageModal.error(errorMessage, true);
-
                 return $q.reject(response);
             }
         }

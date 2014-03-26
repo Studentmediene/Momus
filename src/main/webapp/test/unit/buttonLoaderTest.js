@@ -28,7 +28,7 @@ describe('Button Loader tests', function() {
 
         scope.isLoading = false;
         scope.$digest();
-        expect(element.html()).toBe('<span class="ng-scope">Lagre</span>');
+        expect(element.html()).toBe('Lagre');
 
         scope.isLoading = true;
         scope.$digest();
@@ -36,7 +36,7 @@ describe('Button Loader tests', function() {
 
         scope.isLoading = false;
         scope.$digest();
-        expect(element.html()).toBe('<span class="ng-scope">Lagre</span>');
+        expect(element.html()).toBe('Lagre');
     }));
 
 
