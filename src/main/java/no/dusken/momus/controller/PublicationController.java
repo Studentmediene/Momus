@@ -42,15 +42,12 @@ public class PublicationController {
      */
     @RequestMapping(value = "/year/{year}", method = RequestMethod.GET)
     public @ResponseBody List<Publication> getAllPublications(@PathVariable("year") int year ){
-        System.out.println("get all publications from year: " + year);
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, Calendar.JANUARY, 1);
         Date date = calendar.getTime();
-        System.out.println("date = " + date);
 
         calendar.set(year + 1, Calendar.JANUARY, 1);
         Date date2 = calendar.getTime();
-        System.out.println("date2 = " + date2);
 
         return publicationRepository.findByReleaseDateBetween(date, date2);
     }

@@ -19,117 +19,90 @@
 angular.module('momusApp.controllers')
     .controller('PublicationCtrl', function ($scope, $http) {
 
-        $scope.newWindow = 'false';
-        $scope.publicationView = 'false';
-        $scope.publicationData = null;
-        $scope.publication = null;
-        $scope.date = new Date();
-        $scope.yearSelected = $scope.date.getFullYear();
+        $scope.publications = [];
+        var today = new Date();
+        $scope.yearSelected = "Aktive utgaver";
+        $scope.yearsInDropdown = [];
+
+        $scope.editing = {};
+
+        $scope.dateOptions = {// Needed for the date picker, always start weeks on a monday
+            'starting-day': 1
+        };
 
 
-        /**
-         * Saving all the publications to an array within the year given as parameter.
-         *
-         * @method getPublicationByYear
-         * @param year. From what year you want to see publications.
-         *
-         */
-        $scope.getPublicationByYear = function(year) {
+        $scope.getPublications = function (year) {
+            $scope.yearSelected = year;
+
+            if (year === "Aktive utgaver") {
+                getActivePublications();
+            } else {
+                getPublicationsByYear(year);
+            }
+        };
+
+
+        $scope.getPublications($scope.yearSelected);
+        calculateYearsInDropdownMenu();
+
+
+        $scope.editPublication = function (publication) {
+            $scope.editing = angular.copy(publication); // always work on a copy
+
+            // clear form errors
+            if (!$scope.editing.release_date) {
+                $scope.editing.release_date = '';
+            }
+            $scope.publicationForm.$setPristine();
+        };
+
+        function getPublicationsByYear(year) {
             $http.get('/api/publication/year/' + year)
                 .success(function (data) {
-                    $scope.publicationData = data;
-                    console.log($scope.publicationData.length);
-                })
-                .error(function() {
-                    console.log("Error retrieving publications by year");
-                })
-        };
+                    $scope.publications = data;
+                });
+        }
 
-        $scope.getPublicationByYear($scope.yearSelected);
-
-        /**
-         * Saving all the active publications from right now, and ten years ahead.
-         *
-         * @method getActivePublications
-         */
-        $scope.getActivePublications = function() {
+        function getActivePublications() {
             $http.get('/api/publication/activePublications')
                 .success(function (data) {
-                    $scope.publicationData = data;
-//                    console.log($scope.publicationData.length);
-                })
-                .error(function() {
-                    console.log("Error retrieving active publications");
-                })
+                    $scope.publications = data;
+                });
+        }
 
-        };
 
-        /**
-         * Saving a publication to the publication-variable. The index parameter gives the publication in the
-         * publicationData array.
-         *
-         * @method getPublication
-         * @param index. The index of a given publication in the publicationData array
-         */
-        $scope.getPublication = function(index) {
-            $scope.publication = $scope.publicationData[index];
-        };
+        function calculateYearsInDropdownMenu() {
+            var sinceYearX = 2009;
 
-        $scope.new = {
-            name: '',
-            release_date: ''
-        };
-
-        //Using this to show the years in the dropdown menu, but this definitely needs a change to make it independent!
-        $scope.hardCodedYears = [
-
-            {year: '2011'},
-            {year: '2012'},
-            {year: '2013'},
-            {year: '2014'}
-        ];
+            for (var i = today.getFullYear(); i > sinceYearX; i--) {
+                $scope.yearsInDropdown.push(i);
+            }
+        }
 
 
         /**
-         * This method saves either a new publication or an already existing publication. If it is a new publication,
-         * the new publication is pushed to the publicationData array and to the database. If it is an already existing
-         * publication, it will replace the old data with the new data, and update the database.
-         *
-         * @method fileSaved
-         * @param index. The index of a given publication in the publicationData array. Only used when updating a publication.
+         * This method saves either a new publication or an already existing publication.
+         * All publications are then reloaded
          */
-        $scope.fileSaved = function(index) {
-            if ($scope.newWindow == 'true') {
-                $http.post('/api/publication', $scope.new)
-                    .success(function(newPublication) {
-                        $scope.publicationData.push(newPublication);
-                        console.log("vellykket .POST");
-                        alert("Publikasjon lagret!");
-                    })
-                    .error(function() {
-                        console.log("Ikke vellykket");
+        $scope.saveEditedPublication = function () {
+            $scope.isSaving = true;
+            if (!$scope.editing.id) { // no id means it's a new one
+                $http.post('/api/publication', $scope.editing)
+                    .success(function (savedPublication) {
+                        $scope.editing = savedPublication;
+                        $scope.getPublications($scope.yearSelected); // reload all
+                        $scope.isSaving = false;
+                    });
+            } else { // it's an old one
+                $http.put('/api/publication/' + $scope.editing.id, $scope.editing)
+                    .success(function (savedPublication) {
+                        $scope.editing = savedPublication;
+                        $scope.getPublications($scope.yearSelected); // reload all
+                        $scope.isSaving = false;
                     });
             }
-
-            else if ($scope.publicationView=='true') {
-                console.log("publication: " + $scope.publication);
-                $http.put('/api/publication/' + index, $scope.publication)
-                    .success(function(savedPublication) {
-                        //Does a "replaceObject" method exist?
-                        //var index = $scope.publicationData.indexOf(id);
-                        $scope.publicationData[index] = savedPublication;
-                        console.log("Vellykket .PUT");
-                        alert("Publikasjon lagret!");
-                    })
-                    .error(function() {
-                        console.log("Ikke vellykket");
-                    });
-            }
-            else {
-                console.log("nothing happened..");
-            }
-
         };
+
 
     });
 
