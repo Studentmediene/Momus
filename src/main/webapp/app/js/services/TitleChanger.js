@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-'use strict';
-
-/* jasmine specs for filters go here */
-
-describe('filter', function() {
-  beforeEach(module('myApp.filters'));
-
-
-  describe('interpolate', function() {
-    beforeEach(module(function($provide) {
-      $provide.value('version', 'TEST_VER');
-    }));
-
-
-    it('should replace VERSION', inject(function(interpolateFilter) {
-      expect(interpolateFilter('before %VERSION% after')).toEqual('before TEST_VER after');
-    }));
-  });
+angular.module('momusApp.services')
+    .service('TitleChanger', function($rootScope){
+        return {
+            /**
+             * Postfixes the title with " - Momus" unless the second parameter
+             * is set to true
+             */
+            setTitle: function(newTitle, noPostFix) {
+                if (noPostFix) {
+                    $rootScope.pageTitle = newTitle;
+                } else {
+                    $rootScope.pageTitle = newTitle ? newTitle + ' - Momus' : 'Momus'; // only add - if the title is not empty
+                }
+            }
+        };
 });

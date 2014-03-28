@@ -1,193 +1,136 @@
-<div class="col-md-6" xmlns="http://www.w3.org/1999/html">
+<!--
+  ~ Copyright 2014 Studentmediene i Trondheim AS
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
 
+<!-- left panel -->
+<div class="col-sm-6">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2 class="text-center">Utgaver</h2>
-                </div>
-            </div>
+            <h3 class="panel-title text-center">Utgaver</h3>
         </div>
-        <div class="panel body">
+        <div class="panel-body">
             <div class="row">
-                <div class="col-md-12">
-                    </br>
-                    <div class="row" >
-                        <div class="col-md-5 col-md-offset-1">
-                            <button class="btn btn-default" ng-disabled="true">{{yearSelected}}</button>
-                        </div>
-                        <div class="col-md-4 col-md-offset-2">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    {{yearSelected}}
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a ng-click="yearSelected = 'Aktive utgaver';
-                                    getActivePublications(); newWindow = 'false'; publicationView = 'false'">Aktive utgaver</a></li>
 
-                                    <li ng-repeat="this in hardCodedYears | orderBy: '-year'">
-                                        <a ng-click="$parent.yearSelected = this.year;
-                                        getPublicationByYear(yearSelected); $parent.newWindow = 'false';
-                                        $parent.publicationView = 'false'">{{this.year}}</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                </br>
-                <div class="col-md-5 col-md-offset-1">
-                    <input class="form-control" type="text" placeholder="Søk etter ID, navn eller dato" ng-model="searchFilter">
-                </div>
-                <div class="col-md-4 col-md-offset-2">
+                <!-- dropdown year button -->
+                <div class="col-xs-6">
                     <div class="btn-group">
-                        <button type="button" ng-click="newWindow = 'true'; publicationView='false'" class="btn btn-default">Ny utgave</button>
+                        <button type="button" class="btn btn-default dropdown-toggle">
+                            {{yearSelected}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="interact" ng-click="getPublications('Aktive utgaver')">Aktive
+                                utgaver</a>
+                            </li>
+
+                            <li class="interact" ng-repeat="year in yearsInDropdown | orderBy: '-year'">
+                                <a ng-click="getPublications(year)">{{year}}</a>
+                            </li>
+                        </ul>
                     </div>
+
                 </div>
+
+                <!-- new publication button -->
+                <div class="col-xs-6">
+                    <button type="button" ng-click="editPublication({})"
+                            class="btn btn-default pull-right">Ny utgave
+                    </button>
+                </div>
+
             </div>
 
-            </br>
-            <div class="row">
-                <div class="col-md-10 col-md-offset-1" >
-                    <div class="table-responsive" >
-                        <table class="table table-hover" ng-click="publicationView ='true'; newWindow='false'">
-                            <tr class="active" >
-                                <th>ID</th>
+            <!-- list of publications -->
+            <div class="row top-spacing">
+                <div class="col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                            <tr>
                                 <th>Navn</th>
-                                <th>Utgivelsesdato</th>
+                                <th>Dato</th>
+                                <th></th>
+                                <th></th>
                             </tr>
-                            <tr class="success" ng-repeat="publication in publicationData | filter:searchFilter | orderBy: '-id'"
-                                ng-click="getPublication(publicationData.indexOf(publication))">
-                                <td>{{publication.id}}</td>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="publication in publications | orderBy: '-name'">
                                 <td>{{publication.name}}</td>
                                 <td>{{publication.release_date}}</td>
+                                <td><a href="#/disposition/{{publication.id}}">Disposisjon</a></td>
+                                <td><a class="interact" ng-click="editPublication(publication)">Endre</a></td>
                             </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
 
 
-<!-- Ny utgave view -->
-
-<div class="col-md-6" ng-show="newWindow =='true'">
-
+<!-- right panel, for editing/new -->
+<div class="col-sm-6">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <div class="row">
-                <div class="col-md-12 col-md-offset-4">
-                    <h2>Ny utgave</h2>
-                </div>
-            </div>
+            <h4 class="panel-title text-center">{{editing.id ? 'Rediger ' + editing.name : 'Ny publikasjon'}}</h4>
         </div>
+
         <div class="panel-body">
-            <div class="row">
-                <div class="col-md-11 col-md-offset-1">
-                    <label>
-                        Navn:
-                    </label>
-                </div>
-            </div>
-            <div class="row">
-                <form name="newForm">
-                    <div class="col-md-7 col-md-offset-1">
-                        <input  class="form-control" type="text" placeholder="Navn.." name="nameTag" ng-model="new.name" required>
-                    </div>
-                    <span class="error" ng-show="newForm.nameTag.$error.required">
-                        Required!
-                    </span>
-                </form>
-            </div>
-            </br>
-            </br>
-            <div class="row">
-                <div class="col-md-3 col-md-offset-1">
-                    <label>
-                        Utgivelsesdato:
-                    </label>
-                </div>
-                <div class="col-md-8">
-                    <input type="date" ng-model="new.release_date" required>
-                </div>
-            </div>
-            </br>
-            </br>
-            <div class="row">
-                <div class="col-md-11 col-md-offset-1">
-                    <div class="btn-group">
-                        <button type="button" ng-disabled="newForm.nameTag.$error.required" ng-click="fileSaved()" class="btn btn-default">Lagre</button>
-                        <button type="button" ng-click="newWindow = 'false'" class="btn btn-default">Lukk</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+            <form name="publicationForm" novalidate>
+                <!-- name input -->
+                <div class="form-group"
+                     ng-class="{'has-error': publicationForm.name.$invalid && publicationForm.name.$dirty}">
+                    <label for="name">Navn</label>
 
-<!-- Valgt utgave view -->
+                    <input type="text" class="form-control" id="name" name="name" ng-model="editing.name" required>
+                </div>
+                <!-- date input with selector -->
+                <div class="form-group"
+                     ng-class="{'has-error': publicationForm.date.$invalid && publicationForm.date.$dirty}">
+                    <label for="date">Utgivelsesdato</label>
 
-<div class="col-md-6" ng-show="publicationView=='true'">
+                    <div class="input-group">
+                        <input type="text" id="date" name="date" ng-model="editing.release_date"
+                               class="form-control" placeholder="ÅÅÅÅ-MM-DD"
+                               datepicker-popup="yyyy-MM-dd" datepicker-options="dateOptions"
+                               show-button-bar="false" is-open="opened"
+                               required>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="row">
-                <div class="col-md-12 ">
-                    <h2 class="text-center">{{publication.name}}</h2>
-                </div>
-            </div>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-11 col-md-offset-1" ng-model="publication.id">
-                    <button type="button" class="btn btn-default btn-lg" ng-disabled="true">ID: {{publication.id}}</button>
-                </div>
-            </div>
-            </br>
-            <div class="row">
-                <div class="col-md-11 col-md-offset-1">
-                    <label>
-                        Navn:
-                    </label>
-                </div>
-            </div>
-            <div class="row">
-                <form name="chosenForm">
-                    <div class="col-md-7 col-md-offset-1">
-                        <input class="form-control" type="text" placeholder="Navn.." name="nameTag" ng-model="publication.name" maxlength="30" required>
-                    </div>
-                    <span class="error" ng-show="chosenForm.nameTag.$error.required">
-                        Required!
-                    </span>
-                </form>
-            </div>
-            </br>
-            </br>
-            <div class="row">
-                <div class="col-md-3 col-md-offset-1">
-                    <label>
-                        Utgivelsesdato:
-                    </label>
-                </div>
-                <div class="col-md-8">
-                    <input type="date" ng-model="publication.release_date">
-                </div>
-            </div>
-            </br>
-            </br>
-            <div class="row">
-                <div class="col-md-11 col-md-offset-1">
-                    <div class="btn-group">
-                        <a href="/disposition/{{publication.id}}" class="btn btn-default" role="button"> Disposisjon</a>
-                        <button type="button" ng-click="fileSaved(publicationData.indexOf(publication))" class="btn btn-default">Lagre</button>
-                        <button type="button" ng-click="publicationView='false'" class="btn btn-default">Lukk</button>
+                        <!---->
+                        <!--/>-->
+                              <span class="input-group-btn">
+                              <button class="btn btn-default" ng-click="$event.stopPropagation(); opened = !opened">
+                                  <i class="fa fa-calendar"></i></button>
+                              </span>
+
                     </div>
                 </div>
+            </form>
+
+            <!-- buttons -->
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" ng-disabled="publicationForm.$invalid"
+                        ng-click="saveEditedPublication()" button-loader="isSaving" button-loader-text="Lagrer">Lagre</button>
+
+                <button class="btn btn-default" ng-show="editing.id" ng-click="editPublication({})">Avbryt</button>
             </div>
+
         </div>
+
     </div>
 </div>

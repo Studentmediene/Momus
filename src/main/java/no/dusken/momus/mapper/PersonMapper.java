@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Studentmediene i Trondheim AS
+ * Copyright 2014 Studentmediene i Trondheim AS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public class PersonMapper {
         try {
             person = mapper.readValue(json, Person.class);
         } catch (IOException e) {
-            logger.warn("Couldn't create single person from json: {}", e);
+            logger.warn("Couldn't create single person from json:", e);
         }
         return person;
     }
@@ -75,7 +75,7 @@ public class PersonMapper {
 
             persons = mapper.readValue(parser, new TypeReference<List<Person>>() {});
         } catch (IOException e) {
-            logger.warn("Couldn't create persons from json: {}", e);
+            logger.warn("Couldn't create persons from json:", e);
         }
 
         return persons;

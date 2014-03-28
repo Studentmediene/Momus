@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Studentmediene i Trondheim AS
+ * Copyright 2014 Studentmediene i Trondheim AS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('SourceEditCtrl', function ($scope, $http, $routeParams) {
+    .controller('SourceEditCtrl', function ($scope, $http, $routeParams, TitleChanger) {
         $scope.tags = [];
         $scope.source = {
             tags: []
@@ -68,6 +68,7 @@ angular.module('momusApp.controllers')
 
         function setSource(source) {
             $scope.source = source;
+            TitleChanger.setTitle(source.name + ' - Kilder');
             $scope.source.tags = source.tags.map(function (e) {
                 return e.tag
             });
