@@ -92,7 +92,6 @@ angular.module('momusApp.controllers')
                     $scope.data = data;
                     console.log("Data som ble hentet ut: " );
                     console.log($scope.data);
-                    console.log($scope.data[0]);
 
                 })
                 .error(function() {

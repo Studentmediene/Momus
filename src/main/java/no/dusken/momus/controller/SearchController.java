@@ -34,8 +34,10 @@ public class SearchController {
     public @ResponseBody List<Article> getSearchData(@RequestBody Search search) {
         String finalQuery = "SELECT DISTINCT A.ID " +
                             "FROM ARTICLE AS A " +
-                            "FULL JOIN 	ARTICLE_JOURNALIST AS AJ ON A.ID = AJ.ARTICLE_ID "+
-                            "FULL JOIN	ARTICLE_PHOTOGRAPHER AS AP ON A.ID = AP.ARTICLE_ID "+
+                            "LEFT JOIN 	ARTICLE_JOURNALIST AS AJ " +
+                            "ON A.ID = AJ.ARTICLE_ID " +
+                            "LEFT JOIN	ARTICLE_PHOTOGRAPHER AS AP " +
+                            "ON A.ID = AP.ARTICLE_ID " +
                             "WHERE";
 
         if (search.getStatus().length() > 0) {
@@ -47,16 +49,18 @@ public class SearchController {
         if (search.getFree().length() > 0) {
             finalQuery += " A.CONTENT LIKE '%" + search.getFree() + "%' AND ";
         }
+        if (search.getSection().length() > 0) {
+            finalQuery += " A.TYPE_ID = " + search.getSection() + " AND ";
+        }
         if (search.getPersons().size() > 0) {
             for (String id : search.getPersons()) {
                 finalQuery += " (AJ.JOURNALISTS_ID = " + id + " OR AP.PHOTOGRAPHERS_ID = " + id + ")";
                 finalQuery += " AND ";
             }
-
         }
         if (finalQuery.endsWith("WHERE")) {
             logger.debug("Nothing was asked for");
-            return new ArrayList<Article>();
+            return new ArrayList<>();
         }
         else {
             finalQuery = finalQuery.substring(0, finalQuery.length()-4);
@@ -71,7 +75,6 @@ public class SearchController {
             connection = dataSource.getConnection();
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ResultSet resultSet = statement.executeQuery(finalQuery);
-            logger.debug("HEIHEIHE");
 
             //Need to have this if statement if the query returns zero results. Don't ask me why..
             if (resultSet.next()) {
