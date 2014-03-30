@@ -71,6 +71,13 @@ angular.module('momusApp.services')
             },
             revert: function(object, scope) {
                 scope.article[object] = angular.copy(scope.original[object]);
+            },
+            deserializeJSON: function(jsonList) {
+                var r = [];
+                angular.forEach(jsonList, function(data) {
+                    r.push(angular.fromJson(data));
+                });
+                return r;
             }
         }
     });

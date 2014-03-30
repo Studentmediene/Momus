@@ -194,59 +194,57 @@
                     </span>
                 </div>
                 <div class="row">
-                    <span class="col-xs-4">Journalister</span>
-                    <span class="col-xs-8">
-                        <ul class="list-unstyled">
-                            <li ng-repeat="journalist in article.journalists" class="row">
-                                <span class="col-xs-10">
-                                    {{ journalist.first_name }} {{ journalist.last_name }}
-                                </span>
-                                <span class="col-xs-2" ng-show="metaEditMode">
-                                    <i class="fa fa-minus interact"
-                                       title="Fjern"
-                                       ng-click="removePerson(journalist, 'journalists')"></i>
-                                </span>
-                            </li>
-                            <li class="row" ng-show="metaEditMode">
-                                <span class="col-xs-10">
-                                    <input class="form-control input-sm" type="text" ng-model="newJournalist"/>
-                                </span>
-                                <span class="col-xs-2">
-                                    <i class="fa fa-plus interact"
-                                       title="Legg til"
-                                       ng-click="addPerson(newJournalist, 'journalists')"></i>
-                                </span>
+                    <div class="col-xs-4">Journalister</div>
+                    <div class="col-xs-8">
+                        <ul ng-hide="metaEditMode" class="list-unstyled">
+                            <li ng-repeat="journalist in article.journalists">
+                            {{ journalist.first_name }} {{ journalist.last_name }}
                             </li>
                         </ul>
-                    </span>
+                        <span ng-show="metaEditMode">
+                            <input class="form-control"
+                                   ui-select2="select2Options"
+                                   ng-model="journalistIDs"
+                                    >
+                                <!--<option ng-repeat="person in persons" value="{{ person }}" selected>-->
+                                    <!--{{ person.first_name }} {{ person.last_name }}-->
+                                <!--</option>-->
+                            </input>
+                        </span>
+                        <div>
+                            {{ article.journalistIDs }}
+                        </div>
+                    </div>
                 </div>
-                <div class="row">
-                    <span class="col-xs-4">Fotografer</span>
-                    <span class="col-xs-8">
-                        <ul class="list-unstyled">
-                            <li ng-repeat="photographer in article.photographers" class="row">
-                                <span class="col-xs-10" style="line-height: 1.5">
-                                    {{ photographer.first_name }} {{ photographer.last_name }}
-                                </span>
-                                <span class="col-xs-2" ng-show="metaEditMode">
-                                    <i class="fa fa-minus interact"
-                                       title="Fjern"
-                                       ng-click="removePerson(photographer, 'photographers')"></i>
-                                </span>
-                            </li>
-                            <li class="row" ng-show="metaEditMode">
-                                <span class="col-xs-10">
-                                    <input class="form-control input-sm" type="text" ng-model="newPhotographer"/>
-                                </span>
-                                <span class="col-xs-2">
-                                    <i class="fa fa-plus interact"
-                                       title="Legg til"
-                                       ng-click="addPerson(newPhotographer, 'photographers')"></i>
-                                </span>
-                            </li>
-                        </ul>
-                    </span>
-                </div>
+                <!--<div class="row">-->
+                    <!--<span class="col-xs-4">-->
+                        <!--Fotografer-->
+                    <!--</span>-->
+                    <!--<span class="col-xs-8">-->
+                        <!--<ul class="list-unstyled">-->
+                            <!--<li ng-repeat="photographer in article.photographers" class="row">-->
+                                <!--<span class="col-xs-10" style="line-height: 1.5">-->
+                                    <!--{{ photographer.first_name }} {{ photographer.last_name }}-->
+                                <!--</span>-->
+                                <!--<span class="col-xs-2" ng-show="metaEditMode">-->
+                                    <!--<i class="fa fa-minus interact"-->
+                                       <!--title="Fjern"-->
+                                       <!--ng-click="removePerson(photographer, 'photographers')"></i>-->
+                                <!--</span>-->
+                            <!--</li>-->
+                            <!--<li class="row" ng-show="metaEditMode">-->
+                                <!--<span class="col-xs-10">-->
+                                    <!--<input class="form-control input-sm" type="text" ng-model="newPhotographer"/>-->
+                                <!--</span>-->
+                                <!--<span class="col-xs-2">-->
+                                    <!--<i class="fa fa-plus interact"-->
+                                       <!--title="Legg til"-->
+                                       <!--ng-click="addPerson(newPhotographer, 'photographers')"></i>-->
+                                <!--</span>-->
+                            <!--</li>-->
+                        <!--</ul>-->
+                    <!--</span>-->
+                <!--</div>-->
             </div>
         </div>
     </div>

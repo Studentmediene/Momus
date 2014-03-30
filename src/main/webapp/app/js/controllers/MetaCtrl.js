@@ -17,14 +17,57 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('MetaCtrl', function ($scope, ArticleService) {
+    .controller('MetaCtrl', function ($scope, $http, ArticleService) {
 
         // The scope of this controller is the note panel,
         // which also falls under the control of the article controller
         // so this controller has access to the ArticleCtrl $scope
 
+        $scope.persons = [];
+        $scope.personLookup = {};
+
+        var format = function(id) {
+//            console.log(id);
+            var person = $scope.personLookup[id];
+//            console.log($scope.personLookup);
+            return person.first_name + " " + person.last_name;
+        };
+
+        $scope.select2Options = {
+            'multiple': true,
+            'simple_tags': false,
+            tags: function () { // wrapped in a function so it sees changes to $scope.tags
+                return $scope.persons;
+            },
+//            createSearchChoice: function () {
+//                return null; // only use pre-defined tags
+//            },
+            data: function() {
+                return {
+                    text: format,
+                    results: $scope.persons
+                }
+            },
+            formatSelection: format,
+            formatResult: format
+        };
+
         $scope.toggleEditMode = function() {
             $scope.metaEditMode = !$scope.metaEditMode;
+
+            if ( $scope.metaEditMode ) {
+                $http.get('/api/person').success(function(data) {
+                    $scope.persons = data;
+
+                    angular.forEach(data, function(object) {
+                        $scope.personLookup[object.id] = object;
+                    });
+                });
+
+                $scope.journalistIDs = $scope.article.journalists.map( function(person) {
+                    return person.id;
+                });
+            }
         };
 
         $scope.addPerson = function(id, list) {
@@ -46,6 +89,7 @@ angular.module('momusApp.controllers')
                 updates.updated_fields.push("name");
             }
             if (ArticleService.changed("journalists", $scope)) {
+                $scope.article.journalists = ArticleService.deserializeJSON($scope.article.journalists);
                 updates.updated_fields.push("journalists");
             }
             if (ArticleService.changed("photographers", $scope)) {
