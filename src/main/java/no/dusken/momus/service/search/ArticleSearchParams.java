@@ -1,14 +1,10 @@
-package no.dusken.momus.model;
+package no.dusken.momus.service.search;
 
 
-import org.springframework.data.annotation.Id;
-
-import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 
-public class Search {
+public class ArticleSearchParams {
 
     private String free;
     private String status;
@@ -16,6 +12,18 @@ public class Search {
 //    private Set<Person> journalists;
     private String section;
     private String publication;
+
+    public ArticleSearchParams() {
+        // empty
+    }
+
+    public ArticleSearchParams(String free, String status, Set<String> persons, String section, String publication) {
+        this.free = free;
+        this.status = status;
+        this.persons = persons;
+        this.section = section;
+        this.publication = publication;
+    }
 
     public String getPublication() {
         return publication;

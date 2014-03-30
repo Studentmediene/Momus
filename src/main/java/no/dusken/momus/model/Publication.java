@@ -40,6 +40,14 @@ public class Publication {
     @OneToMany
     private Set<Article> articles;
 
+    public Publication() {
+
+    }
+
+    public Publication(Long id) {
+        this.id = id;
+    }
+
 
     public Long getId() {
         return id;

@@ -19,7 +19,6 @@ package no.dusken.momus.service;
 import no.dusken.momus.model.Source;
 import no.dusken.momus.model.SourceTag;
 import no.dusken.momus.test.AbstractTestRunner;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @Transactional
 public class SourceServiceTest extends AbstractTestRunner {

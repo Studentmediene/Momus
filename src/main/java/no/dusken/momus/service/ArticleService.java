@@ -20,20 +20,35 @@ import no.dusken.momus.model.Article;
 import no.dusken.momus.model.Updates;
 import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.ArticleRevisionRepository;
+import no.dusken.momus.service.search.ArticleQueryBuilder;
+import no.dusken.momus.service.search.ArticleSearchParams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
 public class ArticleService {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     ArticleRepository articleRepository;
 
     @Autowired
     ArticleRevisionRepository articleRevisionRepository;
+
+    @PersistenceContext
+    EntityManager entityManager;
+
+
 
     public Article getArticleById(Long id) {
         return articleRepository.findOne(id);
@@ -78,5 +93,22 @@ public class ArticleService {
         }
 
         return saveUpdatedArticle(articleFromServer);
+    }
+
+    public List<Article> searchForArticles(ArticleSearchParams params) {
+        ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
+        String queryText = builder.getFullQuery();
+        Map<String, Object> queryParams = builder.getQueryParams();
+
+        TypedQuery<Article> query = entityManager.createQuery(queryText, Article.class);
+
+        for (Map.Entry<String, Object> e : queryParams.entrySet()) {
+            query.setParameter(e.getKey(), e.getValue());
+        }
+
+        query.setMaxResults(100);
+        // TODO add paging of results?
+
+        return query.getResultList();
     }
 }
