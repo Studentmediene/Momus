@@ -1,0 +1,29 @@
+<div>
+    <div class="modal-header" >
+        <h3 style="text-align: center"> Fjern / Legg til artikler</h3>
+        <p style="text-align: center"> Side: {{page.pageNr}}</p>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xs-8">
+                <select ng-model="addArticleModel" class="form-control" ng-options="a.type +': '+ a.name for a in articles">
+                </select>
+            </div>
+            <div class="col-xs-4">
+                <button type="button" class="btn btn-default" ng-click="addArticle(addArticleModel)">Legg til</button>
+            </div>
+        </div>
+        <div class="row" style="padding-top: 10px;">
+            <div class="col-xs-8">
+                <select ng-model="delArticleModel" class="form-control" ng-options="a.type +': '+ a.name for a in page.articles">
+                </select>
+            </div>
+            <div class="col-xs-4">
+                <button type="button" class="btn btn-default" ng-click="removeArticle(delArticleModel)" style="padding-left: 18px;padding-right: 19px;">Fjern</button>
+            </div>
+        </div>
+        <div class="row">
+
+        </div>
+    </div>
+</div>
