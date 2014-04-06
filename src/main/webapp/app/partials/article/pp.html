@@ -14,32 +14,36 @@
 
         app.controller('ppctrl', function($scope, $http) {
 
-            $scope.persons = [];
-            $scope.personLookup = {};
-            $scope.journalistIDs = [];
+            $scope.items = [];
+            $scope.lookup = {};
+            $scope.selectedIDs = [];
             $scope.article = {};
 
             $http.get("/api/article/1").then(function(response) {
                 $scope.article = response.data;
-                $scope.journalistIDs = $scope.article.journalists.map(function(person){
+                $scope.selectedIDs = $scope.article.journalists.map(function(person){
                     return person.id;
                 });
             });
 
             $http.get("/api/person/").then(function(response) {
-                $scope.persons = response.data;
+                $scope.objects = response.data;
                 response.data.forEach(function(person){
-                    $scope.personLookup[person.id] = person;
+                    $scope.lookup[person.id] = person;
                 });
             });
 
-            $scope.$watch('journalistIDs', function() {
-                $scope.journalistIDs.forEach(function(something) {
-                    $scope.article.journalists = $scope.journalistIDs.map(function(id) {
-                        return $scope.personLookup[id];
+            $scope.$watch('selectedIDs', function() {
+                $scope.selectedIDs.forEach(function(something) {
+                    $scope.article.journalists = $scope.selectedIDs.map(function(id) {
+                        return $scope.lookup[id];
                     });
                 });
             });
+
+            $scope.render = function(item) {
+                return item.first_name +" " + item.last_name
+            };
         });
     </script>
 
@@ -52,9 +56,9 @@
 </head>
 <body ng-app="pp" ng-controller="ppctrl">
 
-<select multiple ui-select2 ng-model="journalistIDs" style="width: 10em;">
-    <option ng-repeat="person in persons" value="{{ person.id }}">
-        {{ person.first_name }} {{ person.last_name }}
+<select multiple ui-select2 ng-model="selectedIDs" style="width: 10em;">
+    <option ng-repeat="item in items" value="{{ item.id }}">
+        {{ render(item) }}
     </option>
 </select>
 
