@@ -13,57 +13,63 @@
         var app = angular.module('pp', ['ui.select2']);
 
         app.controller('ppctrl', function($scope, $http) {
-
-            $scope.items = [];
-            $scope.lookup = {};
-            $scope.selectedIDs = [];
             $scope.article = {};
-
             $http.get("/api/article/1").then(function(response) {
                 $scope.article = response.data;
-                $scope.selectedIDs = $scope.article.journalists.map(function(person){
-                    return person.id;
-                });
             });
 
+            $scope.persons = [];
             $http.get("/api/person/").then(function(response) {
-                $scope.objects = response.data;
-                response.data.forEach(function(person){
-                    $scope.lookup[person.id] = person;
-                });
+                $scope.persons = response.data;
             });
 
-            $scope.$watch('selectedIDs', function() {
-                $scope.selectedIDs.forEach(function(something) {
-                    $scope.article.journalists = $scope.selectedIDs.map(function(id) {
-                        return $scope.lookup[id];
+            $scope.renderPerson = function(person) {
+                return person.first_name + ' ' + person.last_name
+            };
+        });
+
+        app.directive('multiPicker', function() {
+            return {
+                restrict: 'E',
+                templateUrl: '/app/partials/article/multiPicker.html',
+                scope: {
+                    items: '=',
+                    target: '=',
+                    renderer: '='
+                },
+                link: function(scope, element, attrs) {
+                    scope.selectedIDs = [];
+                    scope.selectedIDs = scope.target.map(function(o){
+                        return o.id;
                     });
-                });
-            });
 
-            $scope.render = function(item) {
-                return item.first_name +" " + item.last_name
+                    scope.lookup = {};
+                    scope.items.forEach(function(person){
+                        scope.lookup[person.id] = person;
+                    });
+
+                    scope.$watch('selectedIDs', function() {
+                        scope.target = scope.selectedIDs.map(function(id) {
+                            return scope.lookup[id];
+                        });
+                    });
+                }
             };
         });
     </script>
 
     <link rel="stylesheet" href="/app/libs/select2/select2.css">
     <style>
+        multi-picker .select2-container {
+            width: 10em;
+        }
         li.select2-search-choice {
             clear: both;
         }
     </style>
 </head>
 <body ng-app="pp" ng-controller="ppctrl">
-
-<select multiple ui-select2 ng-model="selectedIDs" style="width: 10em;">
-    <option ng-repeat="item in items" value="{{ item.id }}">
-        {{ render(item) }}
-    </option>
-</select>
-
-<div style="clear: both;"></div>
-{{ journalistIDs }}
+<multi-picker items="persons" target="article.journalists" renderer="renderPerson"></multi-picker>
 
 <div style="clear: both;"></div>
 {{ article.journalists }}

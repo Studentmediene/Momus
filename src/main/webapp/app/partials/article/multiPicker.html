@@ -1,0 +1,5 @@
+<select multiple ui-select2 ng-model="selectedIDs">
+    <option ng-repeat="item in items" value="{{ item.id }}">
+        {{ renderer(item) }}
+    </option>
+</select>
