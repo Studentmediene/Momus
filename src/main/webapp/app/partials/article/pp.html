@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="/app/libs/jquery/jquery.js"></script>
+    <script src="/app/libs/angular/angular.js"></script>
+    <script src="/app/libs/select2/select2.js"></script>
+    <script src="/app/libs/angular-ui-select2/src/select2.js"></script>
+    <script>
+        'use strict';
+
+        var app = angular.module('pp', ['ui.select2']);
+
+        app.controller('ppctrl', function($scope, $http) {
+
+            $scope.persons = [];
+            $scope.personLookup = {};
+            $scope.journalistIDs = [];
+            $scope.article = {};
+
+            $http.get("/api/article/1").then(function(response) {
+                $scope.article = response.data;
+                $scope.journalistIDs = $scope.article.journalists.map(function(person){
+                    return person.id;
+                });
+            });
+
+            $http.get("/api/person/").then(function(response) {
+                $scope.persons = response.data;
+                response.data.forEach(function(person){
+                    $scope.personLookup[person.id] = person;
+                });
+            });
+
+            $scope.$watch('journalistIDs', function() {
+                $scope.journalistIDs.forEach(function(something) {
+                    $scope.article.journalists = $scope.journalistIDs.map(function(id) {
+                        return $scope.personLookup[id];
+                    });
+                });
+            });
+        });
+    </script>
+
+    <link rel="stylesheet" href="/app/libs/select2/select2.css">
+    <style>
+        li.select2-search-choice {
+            clear: both;
+        }
+    </style>
+</head>
+<body ng-app="pp" ng-controller="ppctrl">
+
+<select multiple ui-select2 ng-model="journalistIDs" style="width: 10em;">
+    <option ng-repeat="person in persons" value="{{ person.id }}">
+        {{ person.first_name }} {{ person.last_name }}
+    </option>
+</select>
+
+<div style="clear: both;"></div>
+{{ journalistIDs }}
+
+<div style="clear: both;"></div>
+{{ article.journalists }}
+
+</body>
+</html>
