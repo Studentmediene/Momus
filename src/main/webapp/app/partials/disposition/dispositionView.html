@@ -16,7 +16,7 @@
 
 <div>
 
-<h1 style="text-align: center"> Disposition for {{disposition.publicationNr}}-{{disposition.release_date}} </h1>
+<h1 ng-click="addPage()" style="text-align: center"> Disposition for {{disposition.publicationNr}}-{{disposition.release_date}} </h1>
 <div class="row">
     <div class="col-md-12">
         <table class="table-bordered" style="width: 100%" >
@@ -32,7 +32,7 @@
                     <!--Seksjon-->
                     <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">{{page.section}}</td>
                     <!--Artikkel-->
-                    <td ng-click="articleModal(page)" style="text-align: center">{{article.type}} : {{article.name}}</td>
+                    <td class="articleHover" ng-click="articleModal(page)" style="text-align: center">{{article.type}} : {{article.name}}</td>
                     <!--Notater-->
                     <td><textarea rows="2" style="border: none; height: 4em;"></textarea></td>
                     <!--Journalister-->
@@ -66,7 +66,7 @@
                     <!--Seksjon-->
                     <td style="text-align: center">{{page.section}}</td>
                     <!--Artikkel-->
-                    <td ng-click="articleModal(page)" style="text-align: center"></td>
+                    <td class="articleHover" ng-click="articleModal(page)" style="text-align: center"></td>
                     <!--Notater-->
                     <td></td>
                     <!--Journalister-->
@@ -79,51 +79,21 @@
                     <td style="text-align: center"></td>
                     <!--Reklame-->
                     <td style="text-align: center"></td>
-
                 </tr>
             </tbody>
-            <!--&lt;!&ndash;Page nr&ndash;&gt;-->
-            <!--<td >{{page.pageNr}}</td>-->
-            <!--&lt;!&ndash;Seksjon&ndash;&gt;-->
-            <!--<td></td>-->
-            <!--&lt;!&ndash;Artikler&ndash;&gt;-->
-            <!--<td ng-click="addArticle(page)">-->
-            <!--<table>-->
-            <!--<tr ng-repeat="article in page.articles">-->
-            <!--<td>{{article.type}}: {{article.name}}</td>-->
-            <!--</tr>-->
-            <!--</table>-->
-            <!--</td>-->
-            <!--&lt;!&ndash;Notater&ndash;&gt;-->
-            <!--<td></td>-->
-            <!--&lt;!&ndash;Journalister&ndash;&gt;-->
-            <!--<td>-->
-            <!--<table>-->
-            <!--&lt;!&ndash;journalist in every page.articles.journalist&ndash;&gt;-->
-            <!--<tr ng-repeat="journalist in getJournalists(page)">-->
-            <!--<td>{{journalist.name}}</td>-->
-            <!--</tr>-->
-            <!--</table>-->
-            <!--</td>-->
-            <!--&lt;!&ndash;Fotografer&ndash;&gt;-->
-            <!--<td></td>-->
-            <!--&lt;!&ndash;Status&ndash;&gt;-->
-            <!--<td></td>-->
-            <!--&lt;!&ndash;Fotostatus&ndash;&gt;-->
-            <!--<td></td>-->
-            <!--&lt;!&ndash;Reklame&ndash;&gt;-->
-            <!--<td></td>-->
-            <!--</tbody>-->
-
-            <!--<tr ng-repeat="article in page.articles">-->
-            <!--<td rowspan="{{page.articles.size}}">{{page.pageNr}}</td>-->
-            <!--</tr>-->
-
-            <!--</div>-->
-            <!--<tr ng-repeat="page in disposition.pages" rowspan="{{page.articles.size}}" >-->
-            <!--<td >{{page.pageNr}}</td>-->
-            <!--<td ng-repeat="article in page.articles">{{article.name}}</td>-->
-            <!--</tr>-->
+            <!--Add new Page Row-->
+            <tr style="background-color: #F8F8F8;">
+                <!--Side-->
+                <td ng-click="addPage()" style="text-align: center"><span class="glyphicon glyphicon-plus"></span></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td ></td>
+                <td></td>
+                <td ></td>
+                <td ></td>
+                <td ng-click="removePage()" style="text-align: center"><span class="glyphicon glyphicon-minus"></span></td>
+            </tr>
         </table>
     </div>
 </div>
