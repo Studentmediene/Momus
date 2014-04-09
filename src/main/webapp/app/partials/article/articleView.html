@@ -209,24 +209,24 @@
                         </multi-picker>
                     </div>
                 </div>
-                <!--<div class="row">-->
-                    <!--<div class="col-xs-4">-->
-                        <!--Fotografer-->
-                    <!--</div>-->
-                    <!--<div class="col-xs-8">-->
-                        <!--<ul ng-hide="metaEditMode" class="list-unstyled">-->
-                            <!--<li ng-repeat="photographer in article.photographers">-->
-                                <!--{{ renderPerson(photographers) }}-->
-                            <!--</li>-->
-                        <!--</ul>-->
-                        <!--<multi-picker-->
-                                <!--ng-show="metaEditMode"-->
-                                <!--items="persons"-->
-                                <!--target="article.photographers"-->
-                                <!--renderer="renderPerson">-->
-                        <!--</multi-picker>-->
-                    <!--</div>-->
-                <!--</div>-->
+                <div class="row">
+                    <div class="col-xs-4">
+                        Fotografer
+                    </div>
+                    <div class="col-xs-8">
+                        <ul ng-hide="metaEditMode" class="list-unstyled">
+                            <li ng-repeat="photographer in article.photographers">
+                                {{ renderPerson(photographer) }}
+                            </li>
+                        </ul>
+                        <multi-picker
+                                ng-show="metaEditMode"
+                                items="persons"
+                                target="article.photographers"
+                                renderer="renderPerson">
+                        </multi-picker>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
