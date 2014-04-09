@@ -52,7 +52,8 @@ textarea.note {
     width: 100%;
 }
 
-#meta-panel multi-picker .select2-search-choice {
+#meta-panel multi-picker .select2-search-choice,
+#meta-panel multi-picker .select2-search-field {
     clear: both;
 }
 

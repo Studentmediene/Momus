@@ -43,6 +43,10 @@ angular.module('momusApp.controllers')
 
         /* meta panel */
         $scope.renderPerson = function(person) {
+            if (person.first_name === null && person.last_name === null) {
+                return person.username;
+            }
+
             return person.first_name + ' ' + person.last_name
         };
 
