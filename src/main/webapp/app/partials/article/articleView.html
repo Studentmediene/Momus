@@ -25,12 +25,14 @@
                     <button class="btn btn-default btn-xs"
                             ng-show="article.content != original.content"
                             ng-click="saveArticle()">
-                        <i class="fa fa-save"></i> Lagre
+                        <i class="fa fa-save"></i>
+                        Lagre
                     </button>
                     <button disabled
                             class="btn btn-default btn-xs"
                             ng-show="article.content == original.content">
-                        <i class="fa fa-check"></i> Lagret
+                        <i class="fa fa-check"></i>
+                        Lagret
                     </button>
                 </div>
             </h1>
@@ -100,12 +102,14 @@
                     <button class="btn btn-default btn-xs"
                             ng-show="article.note != original.note"
                             ng-click="saveNote()">
-                        <i class="fa fa-save"></i> Lagre
+                        <i class="fa fa-save"></i>
+                        Lagre
                     </button>
                     <button disabled
                             class="btn btn-default btn-xs"
                             ng-show="article.note == original.note">
-                        <i class="fa fa-check"></i> Lagret
+                        <i class="fa fa-check"></i>
+                        Lagret
                     </button>
                 </div>
             </h1>
@@ -155,7 +159,6 @@
                         </button>
                     </div>
                 </div>
-
                 <textarea id="noteArea"
                           class="form-control note"
                           richeditor="article.note"
@@ -170,17 +173,17 @@
             <h1 class="panel-title">
                 <span class="fa fa-tag"></span>
                 Meta
-                    <span class="pull-right">
-                        <button class="btn btn-xs btn-primary" ng-show="!metaEditMode" ng-click="toggleEditMode()">
-                            Rediger
-                        </button>
-                        <button class="btn btn-xs btn-info" ng-show="metaEditMode" ng-click="cancelMeta()">
-                            Avbryt
-                        </button>
-                        <button class="btn btn-xs btn-primary" ng-show="metaEditMode" ng-click="saveMeta()">
-                            Lagre
-                        </button>
-                    </span>
+                <span class="pull-right">
+                    <button class="btn btn-xs btn-primary" ng-show="!metaEditMode" ng-click="toggleEditMode()">
+                        Rediger
+                    </button>
+                    <button class="btn btn-xs btn-info" ng-show="metaEditMode" ng-click="cancelMeta()">
+                        Avbryt
+                    </button>
+                    <button class="btn btn-xs btn-primary" ng-show="metaEditMode" ng-click="saveMeta()">
+                        Lagre
+                    </button>
+                </span>
             </h1>
         </div>
         <div class="panel-body">
@@ -189,7 +192,6 @@
                     <label class="col-sm-4 control-label">
                         Tittel
                     </label>
-
                     <div class="col-sm-8" ng-hide="metaEditMode">
                         <p class="form-control-static">
                             {{ article.name }}
@@ -203,7 +205,6 @@
                     <label class="col-sm-4 control-label">
                         Journalister
                     </label>
-
                     <div class="col-sm-8">
                         <ul class="list-unstyled form-control-static" ng-hide="metaEditMode">
                             <li ng-repeat="journalist in article.journalists">
@@ -222,7 +223,6 @@
                     <label class="col-sm-4 control-label">
                         Fotografer
                     </label>
-
                     <div class="col-sm-8">
                         <ul class="list-unstyled form-control-static" ng-hide="metaEditMode">
                             <li ng-repeat="photographer in article.photographers">

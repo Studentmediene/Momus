@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+/* app css stylesheet */
 
 body {
     padding-top: 70px;
@@ -63,4 +64,6 @@ a:focus {
 }
 
 /* used for ui-bootstrap */
-.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+.nav, .pagination, .carousel, .panel-title a {
+    cursor: pointer;
+}

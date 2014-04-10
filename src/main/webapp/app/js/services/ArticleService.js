@@ -25,13 +25,6 @@ angular.module('momusApp.services')
             getPersons: function () {
                 return $http.get('/api/person/');
             },
-            getPerson: function (id, success) {
-                $http.get('/api/person/' + id)
-                    .success(function (data) {
-                        success(data);
-                    }
-                );
-            },
             updateObject: function (obj) {
                 // When the server receives this object,
                 // it will overwrite the server data for each listed field and leave the others unchanged
@@ -59,21 +52,6 @@ angular.module('momusApp.services')
             },
             revert: function (object, scope) {
                 scope.article[object] = angular.copy(scope.original[object]);
-            },
-            listOfPersonsContainsID: function (list, id) {
-                for (var i = 0; i < list.length; i++) {
-                    // Note that this compares the list object's "integer" ID to the _string_ parameter id
-                    if (list[i].id == id) {
-                        return true;
-                    }
-                }
-                return false;
-            },
-            removeFromArray: function (array, object) {
-                var index = array.indexOf(object);
-                if (index > -1) {
-                    array.splice(index, 1);
-                }
             }
         }
     });
