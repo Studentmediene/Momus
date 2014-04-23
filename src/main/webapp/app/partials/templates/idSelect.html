@@ -14,7 +14,18 @@
   ~ limitations under the License.
   -->
 
-<select multiple ui-select2 ng-model="selectedIDs">
+<select multiple
+        ng-if="multiple"
+        ui-select2
+        ng-model="$parent.selectedIDs">
+    <option ng-repeat="item in items" value="{{ item.id }}">
+        {{ renderer(item) }}
+    </option>
+</select>
+<select
+        ng-if="!multiple"
+        ui-select2
+        ng-model="$parent.selectedIDs">
     <option ng-repeat="item in items" value="{{ item.id }}">
         {{ renderer(item) }}
     </option>

@@ -1,14 +1,17 @@
 angular.module('momusApp.directives')
-    .directive('multiPicker', function() {
+    .directive('idSelect', function() {
         return {
             restrict: 'E',
-            templateUrl: '/app/partials/templates/multiPicker.html',
+            templateUrl: '/app/partials/templates/idSelect.html',
             scope: {
                 items: '=',
                 target: '=',
                 renderer: '='
             },
             link: function(scope, element, attrs) {
+                if (attrs.$attr.multiple === "multiple") {
+                    scope.multiple = true;
+                }
                 scope.selectedIDs = [];
                 scope.selectedIDs = scope.target.map(function(o){
                     return o.id;
@@ -20,9 +23,13 @@ angular.module('momusApp.directives')
                 });
 
                 scope.$watch('selectedIDs', function() {
-                    scope.target = scope.selectedIDs.map(function(id) {
-                        return scope.lookup[id];
-                    });
+                    if (scope.multiple){
+                        scope.target = scope.selectedIDs.map(function(id) {
+                            return scope.lookup[id];
+                        });
+                    } else {
+                        scope.target = [scope.lookup[scope.selectedIDs]];
+                    }
                 });
             }
         };

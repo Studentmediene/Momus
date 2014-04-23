@@ -211,12 +211,12 @@
                                 {{ renderPerson(journalist) }}
                             </li>
                         </ul>
-                        <multi-picker
+                        <id-select multiple
                                 ng-show="metaEditMode"
                                 items="persons"
                                 target="article.journalists"
                                 renderer="renderPerson">
-                        </multi-picker>
+                        </id-select>
                     </div>
                 </div>
                 <div class="form-group">
@@ -229,12 +229,12 @@
                                 {{ renderPerson(photographer) }}
                             </li>
                         </ul>
-                        <multi-picker
+                        <id-select multiple
                                 ng-show="metaEditMode"
                                 items="persons"
                                 target="article.photographers"
                                 renderer="renderPerson">
-                        </multi-picker>
+                        </id-select>
                     </div>
                 </div>
             </form>

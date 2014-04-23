@@ -49,12 +49,12 @@ textarea.note {
     cursor: pointer;
 }
 
-#meta-panel multi-picker .select2-container {
+#meta-panel id-select .select2-container {
     width: 100%;
 }
 
-#meta-panel multi-picker .select2-search-choice,
-#meta-panel multi-picker .select2-search-field {
+#meta-panel id-select .select2-search-choice,
+#meta-panel id-select .select2-search-field {
     clear: both;
 }
 
