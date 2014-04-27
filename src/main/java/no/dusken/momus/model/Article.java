@@ -45,6 +45,8 @@ public class Article {
     @OneToOne(fetch = FetchType.EAGER)
     private ArticleType type;
 
+    @ManyToOne
+    private Publication publication;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "article_journalist")
@@ -148,5 +150,13 @@ public class Article {
 
     public void setCorrectResponsible(Person correctResponsible) {
         this.correctResponsible = correctResponsible;
+    }
+
+    public Publication getPublication() {
+        return publication;
+    }
+
+    public void setPublication(Publication publication) {
+        this.publication = publication;
     }
 }

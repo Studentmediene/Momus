@@ -16,7 +16,9 @@
 
 package no.dusken.momus.controller;
 
+import no.dusken.momus.model.Disposition;
 import no.dusken.momus.model.Publication;
+import no.dusken.momus.service.repository.DispositionRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,9 @@ public class PublicationController {
 
     @Autowired
     private PublicationRepository publicationRepository;
+
+    @Autowired
+    private DispositionRepository dispositionRepository;
 
     /**
      * Returns a repository with publications within the year given by the parameter.
@@ -97,6 +102,11 @@ public class PublicationController {
     public @ResponseBody Publication addPublication(@RequestBody Publication publication) {
         Publication newPublication = publicationRepository.save(publication);
         newPublication = publicationRepository.findOne(newPublication.getId());
+
+        Disposition disposition = new Disposition(newPublication.getId());
+        disposition.setPublication(newPublication);
+        dispositionRepository.save(disposition);
+
         return newPublication;
     }
 }

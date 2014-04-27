@@ -24,24 +24,40 @@ angular.module('momusApp.controllers')
         };
 
         $scope.addPage = function () {
+
+            if (!$scope.disposition.pages) {
+                $scope.disposition.pages = [];
+            }
+
             var newPage = {
                 pageNr: $scope.disposition.pages.length + 1,
-                section: "",
+                section: $scope.sections[0],
                 articles: []
             };
             $scope.disposition.pages.push(newPage);
         };
 
         $scope.removePage = function () {
+
+            if (!$scope.disposition.pages) {
+                $scope.disposition.pages = [];
+            }
+
             var pages = $scope.disposition.pages;
             // If the page is empty (no article), remove it.
-            if (pages[pages.length - 1].articles.length === 0) {
-                pages.pop();
+            if (pages.length > 0) {
+                if (pages[pages.length - 1].articles.length === 0) {
+                    pages.pop();
+                } else {
+                    if (confirm("Slette denne siden?")) {
+                        pages.pop();
+                    }
+                }
             }
         };
 
 
-//        $http.get('/api/publication/'+$routeParams.id).success(function(data) {
+//        $http.get('/api/article/publication/' + $routeParams.id).success(function (data) {
 //            $scope.articles = data;
 //            console.log(data);
 //        });
@@ -119,110 +135,138 @@ angular.module('momusApp.controllers')
 
         ];
 
+
+//        $scope.sections = [
+//            {id: 1, name: "FORSIDE"},
+//            {id: 2, name: "INNHOLD"},
+//            {id: 3, name: "ANNONSE"},
+//            {id: 4, name: "NYHET"},
+//            {id: 5, name: "TRANSIT"},
+//            {id: 6, name: "FORSKNINGSFUNN"},
+//            {id: 7, name: "DAGSORDEN"},
+//            {id: 8, name: "MENINGER"},
+//            {id: 9, name: "AKTUALITET"},
+//            {id: 10, name: "SMÅREP"},
+//            {id: 11, name: "KULTUR"},
+//            {id: 12, name: "SPIT"},
+//            {id: 13, name: "BAKSIDE"},
+//            {id: 14, name: "TEST"}
+//        ];
+        // Get sections from database
+        $http.get('/api/disp/section').success(function (data) {
+            $scope.sections = data;
+        });
+
+        //Get Disposition
+        $http.get('/api/disp/' + $routeParams.id).success(function (data) {
+            $scope.disposition = data;
+        });
+
+
         // Test disposition
-        $scope.disposition = {
-            id: $routeParams.id,
-            publicationNr: 3,
-            release_date: 2014,
-            pages: [
-                {
-                    pageNr: 1,
-                    section: "Kultur",
-                    articles: [
-                        {
-                            id: 1,
-                            type: "KulturRaport",
-                            name: "Fuglefrø",
-                            status: "Skrives",
-                            photoStatus: "tatt",
-                            advertisement: false,
-                            photographers: [
-                                {
-                                    name: "jon",
-                                    age: 24
-                                },
-                                {
-                                    name: "birger",
-                                    age: 22
-                                },
-                                {
-                                    name: "olav",
-                                    age: 45
-                                },
-                                {
-                                    name: "kåre",
-                                    age: 45
-                                }
-                            ],
-                            journalists: [
-                                {
-                                    name: "håkon",
-                                    age: 24
-                                },
-                                {
-                                    name: "bård",
-                                    age: 22
-                                },
-                                {
-                                    name: "stian",
-                                    age: 45
-                                }
-                            ]
-                        },
-                        {
-                            id: 2,
-                            type: "Portrett",
-                            name: "Nato Jens",
-                            status: "Desk",
-                            photoStatus: "lagt inn",
-                            advertisement: true,
-                            photographers: [],
-                            journalists: [
-                                {
-                                    name: "ole",
-                                    age: 20
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    pageNr: 2,
-                    section: "",
-                    articles: [
-                        {
-                            id: 3,
-                            type: "Miljø",
-                            name: "Oljesøl",
-                            status: "Skrives",
-                            photoStatus: "redigeres",
-                            advertisement: false,
-                            photographers: [],
-                            journalists: [
-                                {
-                                    name: "frode",
-                                    age: 28
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    pageNr: 3,
-                    section: "",
-                    articles: [
-
-                    ]
-                },
-                {
-                    pageNr: 4,
-                    section: "",
-                    articles: [
-
-                    ]
-                }
-            ]
-        };
+//        $scope.disposition = {
+//            id: $routeParams.id,
+//            publicationNr: 3,
+//            release_date: 2014,
+//            pages: [
+//                {
+//                    pageNr: 1,
+//                    section: {id: 0, name: ""},
+//                    articles: [
+//                        {
+//                            id: 1,
+//                            type: "KulturRaport",
+//                            name: "Fuglefrø",
+//                            status: "Skrives",
+//                            photoStatus: "tatt",
+//                            advertisement: false,
+//                            photographers: [
+//                                {
+//                                    name: "jon",
+//                                    age: 24
+//                                },
+//                                {
+//                                    name: "birger",
+//                                    age: 22
+//                                },
+//                                {
+//                                    name: "olav",
+//                                    age: 45
+//                                },
+//                                {
+//                                    name: "kåre",
+//                                    age: 45
+//                                }
+//                            ],
+//                            journalists: [
+//                                {
+//                                    name: "håkon",
+//                                    age: 24
+//                                },
+//                                {
+//                                    name: "bård",
+//                                    age: 22
+//                                },
+//                                {
+//                                    name: "stian",
+//                                    age: 45
+//                                }
+//                            ]
+//                        },
+//                        {
+//                            id: 2,
+//                            type: "Portrett",
+//                            name: "Nato Jens",
+//                            status: "Desk",
+//                            photoStatus: "lagt inn",
+//                            advertisement: true,
+//                            photographers: [],
+//                            journalists: [
+//                                {
+//                                    name: "ole",
+//                                    age: 20
+//                                }
+//                            ]
+//                        }
+//                    ]
+//                },
+//                {
+//                    pageNr: 2,
+//                    section: {id: 0, name: ""},
+//                    articles: [
+//                        {
+//                            id: 3,
+//                            type: "Miljø",
+//                            name: "Oljesøl",
+//                            status: "Skrives",
+//                            photoStatus: "redigeres",
+//                            advertisement: false,
+//                            photographers: [],
+//                            journalists: [
+//                                {
+//                                    name: "frode",
+//                                    age: 28
+//                                }
+//                            ]
+//                        }
+//                    ]
+//                },
+//                {
+//                    pageNr: 3,
+//                    section: {id: 0, name: ""},
+//                    articles: [
+//
+//                    ]
+//                },
+//                {
+//                    pageNr: 4,
+//                    section: {id: 0, name: ""},
+//                    articles: [
+//
+//                    ]
+//                }
+//            ]
+//        };
 
 
         var ModalInstanceCtrl = function ($scope, $modalInstance, articles, page) {

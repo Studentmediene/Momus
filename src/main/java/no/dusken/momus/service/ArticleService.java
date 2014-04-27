@@ -76,4 +76,8 @@ public class ArticleService {
 
         return saveUpdatedArticle(articleFromServer);
     }
+
+    public ArticleRepository getArticleRepository() {
+        return articleRepository;
+    }
 }

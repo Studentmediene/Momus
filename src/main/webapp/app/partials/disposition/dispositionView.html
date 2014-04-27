@@ -16,7 +16,7 @@
 
 <div>
 
-<h1 ng-click="addPage()" style="text-align: center"> Disposition for {{disposition.publicationNr}}-{{disposition.release_date}} </h1>
+<h1 style="text-align: center"> Disposition for {{disposition.publication.name}} </h1>
 <div class="row">
     <div class="col-md-12">
         <table class="table-bordered" style="width: 100%" >
@@ -30,7 +30,9 @@
                     <!--Side-->
                     <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">{{page.pageNr}}</td>
                     <!--Seksjon-->
-                    <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">{{page.section}}</td>
+                    <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">
+                        <select ng-model="selection" ng-options="s.name for s in sections" style="border: none"></select>
+                    </td>
                     <!--Artikkel-->
                     <td class="articleHover" ng-click="articleModal(page)" style="text-align: center">{{article.type}} : {{article.name}}</td>
                     <!--Notater-->
@@ -64,7 +66,9 @@
                     <!--Side-->
                     <td style="text-align: center">{{page.pageNr}}</td>
                     <!--Seksjon-->
-                    <td style="text-align: center">{{page.section}}</td>
+                    <td style="text-align: center">
+                        <select ng-model="selection" ng-options="s.name for s in sections"></select>
+                    </td>
                     <!--Artikkel-->
                     <td class="articleHover" ng-click="articleModal(page)" style="text-align: center"></td>
                     <!--Notater-->

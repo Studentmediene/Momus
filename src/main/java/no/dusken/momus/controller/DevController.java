@@ -23,8 +23,10 @@ import no.dusken.momus.authentication.UserLoginService;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleStatus;
 import no.dusken.momus.model.Person;
+import no.dusken.momus.model.Section;
 import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.PersonRepository;
+import no.dusken.momus.service.repository.SectionRepository;
 import no.dusken.momus.smmdb.Syncer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +56,9 @@ public class DevController {
 
     @Autowired
     private UserLoginService userLoginService;
+
+    @Autowired
+    private SectionRepository sectionRepository;
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -126,6 +131,26 @@ public class DevController {
         article2.setName("Artikkelnavn 2: Electric Boogaloo");
 
         articleRepository.save(article2);
+
+        return "ok";
+    }
+
+    @RequestMapping("/createSections")
+    public @ResponseBody String createTestSections() {
+        sectionRepository.save(new Section("FORSIDE"));
+        sectionRepository.save(new Section("INNHOLD"));
+        sectionRepository.save(new Section("ANNONSE"));
+        sectionRepository.save(new Section("NYHET"));
+        sectionRepository.save(new Section("TRANSIT"));
+        sectionRepository.save(new Section("FORSKNINGSFUNN"));
+        sectionRepository.save(new Section("DAGSORDEN"));
+        sectionRepository.save(new Section("MENINGER"));
+        sectionRepository.save(new Section("AKTUALITET"));
+        sectionRepository.save(new Section("SMÅREP"));
+        sectionRepository.save(new Section("KULTUR"));
+        sectionRepository.save(new Section("SPIT"));
+        sectionRepository.save(new Section("BAKSIDE"));
+        sectionRepository.save(new Section("TEST"));
 
         return "ok";
     }
