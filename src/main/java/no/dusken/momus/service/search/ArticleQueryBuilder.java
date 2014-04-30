@@ -46,8 +46,25 @@ public class ArticleQueryBuilder {
             conditions.add("a.content like :free");
             queryParams.put("free", "%" + search.getFree() + "%");
         }
-
-        // todo: do it for all cases, old stuff is commented out below
+        if (search.getStatus().length() > 0) {
+            conditions.add("a.status.id = :statusid");
+            queryParams.put("statusid", Long.parseLong(search.getStatus()));
+        }
+        if (search.getPersons().size() > 0) {
+            for (String person : search.getPersons()) {
+                conditions.add(":personid" + person + " member of a.journalists or " +
+                                ":personid" + person + " member of a.photographers");
+                queryParams.put("personid" + person, person);
+            }
+        }
+        if (search.getSection().length() > 0 ){
+            conditions.add("a.type.id = :secid");
+            queryParams.put("secid", Long.parseLong(search.getSection()));
+        }
+        if (search.getPublication().length() > 0) {
+            conditions.add("a.publication.id = :pubid");
+            queryParams.put("pubid", Long.parseLong(search.getPublication()));
+        }
 
         String allConditions = StringUtils.collectionToDelimitedString(conditions, " AND ");
 
@@ -58,33 +75,6 @@ public class ArticleQueryBuilder {
         }
 
         logger.debug("Search: {}", fullQuery);
-
-        //        String finalQuery = "SELECT DISTINCT A.ID " +
-//                            "FROM ARTICLE AS A " +
-//                            "LEFT JOIN 	ARTICLE_JOURNALIST AS AJ " +
-//                            "ON A.ID = AJ.ARTICLE_ID " +
-//                            "LEFT JOIN	ARTICLE_PHOTOGRAPHER AS AP " +
-//                            "ON A.ID = AP.ARTICLE_ID " +
-//                            "WHERE";
-//
-//        if (search.getStatus().length() > 0) {
-//            finalQuery += " A.STATUS_ID = " + search.getStatus() + " AND ";
-//        }
-//        if (search.getPublication().length() > 0) {
-//            finalQuery += " A.PUBLICATION_ID = " + search.getPublication() + " AND ";
-//        }
-//        if (search.getFree().length() > 0) {
-//            finalQuery += " A.CONTENT LIKE '%" + search.getFree() + "%' AND ";
-//        }
-//        if (search.getSection().length() > 0) {
-//            finalQuery += " A.TYPE_ID = " + search.getSection() + " AND ";
-//        }
-//        if (search.getPersons().size() > 0) {
-//            for (String id : search.getPersons()) {
-//                finalQuery += " (AJ.JOURNALISTS_ID = " + id + " OR AP.PHOTOGRAPHERS_ID = " + id + ")";
-//                finalQuery += " AND ";
-//            }
-//        }
 
     }
 
