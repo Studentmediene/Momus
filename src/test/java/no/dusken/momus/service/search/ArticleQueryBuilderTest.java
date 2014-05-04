@@ -75,11 +75,11 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = "select a from article a where " +
+        String expectedQuery = "select a from article a where ( " +
                                 ":personid594 member of a.journalists or " +
-                                ":personid594 member of a.photographers and " +
+                                ":personid594 member of a.photographers ) and ( " +
                                 ":personid1337 member of a.journalists or " +
-                                ":personid1337 member of a.photographers";
+                                ":personid1337 member of a.photographers )";
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("personid594", "594");
         expectedMap.put("personid1337", "1337");
@@ -124,11 +124,11 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         String expectedQuery = "select a from article a where " +
                                 "a.content like :free and " +
-                                "a.status.id = :statusid and " +
+                                "a.status.id = :statusid and ( " +
                                 ":personid594 member of a.journalists or " +
-                                ":personid594 member of a.photographers and " +
+                                ":personid594 member of a.photographers ) and ( " +
                                 ":personid1337 member of a.journalists or " +
-                                ":personid1337 member of a.photographers and " +
+                                ":personid1337 member of a.photographers ) and " +
                                 "a.type.id = :secid and " +
                                 "a.publication.id = :pubid";
 

@@ -17,9 +17,11 @@
 package no.dusken.momus.service;
 
 import no.dusken.momus.model.Article;
+import no.dusken.momus.model.ArticleStatus;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.model.Publication;
 import no.dusken.momus.service.repository.ArticleRepository;
+import no.dusken.momus.service.repository.ArticleStatusRepository;
 import no.dusken.momus.service.repository.PersonRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
 import no.dusken.momus.service.search.ArticleSearchParams;
@@ -47,11 +49,15 @@ public class ArticleServiceTest extends AbstractTestRunner {
     PublicationRepository publicationRepository;
 
     @Autowired
+    ArticleStatusRepository articleStatusRepository;
+
+    @Autowired
     ArticleService articleService;
 
     private Article article1;
     private Article article2;
     private Article article3;
+    private Article article4;
 
     @Before
     public void setUp() throws Exception {
@@ -71,7 +77,12 @@ public class ArticleServiceTest extends AbstractTestRunner {
         publication1 = publicationRepository.save(publication1);
         publication2 = publicationRepository.save(publication2);
 
-        // TODO: add status and sections as well
+        ArticleStatus articleStatus1 = new ArticleStatus();
+        articleStatus1.setName("Skrives");
+        articleStatusRepository.save(articleStatus1);
+
+        // TODO: add section as well
+
         article1 = new Article();
         article1.setName("Artikkel 1");
         article1.setContent("Testinnhold for artikkel 1 yay");
@@ -109,12 +120,27 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article3.setPhotographers(article3photographers);
         article3.setPublication(publication1);
         article3 = articleRepository.save(article3);
+
+
+        article4 = new Article();
+        article4.setName("Artikkel 4");
+        article4.setContent("Its not about how hard you can hit, its about hard you can GET hit - and keep on moving");
+        Set<Person> article4journalists = new HashSet<>();
+        Set<Person> article4photographers = new HashSet<>();
+        article4photographers.add(person1);
+        article4photographers.add(person2);
+        article4.setJournalists(article4journalists);
+        article4.setPhotographers(article4photographers);
+        article4.setPublication(publication2);
+        article4.setStatus(articleStatus1);
+        article4 = articleRepository.save(article4);
     }
 
 
 
     @Test
     public void testSaveArticle() throws Exception {
+
     }
 
     @Test
@@ -130,6 +156,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         expected.add(article1);
         expected.add(article2);
         expected.add(article3);
+        expected.add(article4);
 
 
         List<Article> articles = articleService.searchForArticles(params);
@@ -153,16 +180,84 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForPublication() {
+        ArticleSearchParams params = new ArticleSearchParams("", "", Collections.<String>emptySet(), "", String.valueOf(article4.getPublication().getId()));
 
+        List<Article> expected = new ArrayList<>();
+        expected.add(article4);
+
+        List<Article> articles = articleService.searchForArticles(params);
+
+        assertEquals(expected, articles);
     }
 
     @Test
     public void testSearchingForPerson() {
+        ArticleSearchParams params1 = new ArticleSearchParams("", "", new HashSet<>(Arrays.asList("2")), "", "");
+        ArticleSearchParams params2 = new ArticleSearchParams("", "", new HashSet<>(Arrays.asList("1","2")), "", "");
+        ArticleSearchParams params3 = new ArticleSearchParams("", "", new HashSet<>(Arrays.asList("1","2","3")), "", "");
 
+        List<Article> expected1 = new ArrayList<>();
+        List<Article> expected2 = new ArrayList<>();
+        List<Article> expected3 = new ArrayList<>();
+
+        expected1.add(article1);
+        expected1.add(article2);
+        expected1.add(article3);
+        expected1.add(article4);
+
+        expected2.add(article1);
+        expected2.add(article3);
+        expected2.add(article4);
+
+        List<Article> articles1 = articleService.searchForArticles(params1);
+        List<Article> articles2 = articleService.searchForArticles(params2);
+
+        assertEquals(expected1, articles1);
+        assertEquals(expected2, articles2);
+        assertEquals(expected3, articleService.searchForArticles(params3));
     }
 
     @Test
     public void testSearchingForBothPersonAndContent() {
+        ArticleSearchParams params = new ArticleSearchParams("its about hard you can GET hit", "", new HashSet<>(Arrays.asList("1", "2")), "","");
+        ArticleSearchParams params2 = new ArticleSearchParams("du", "", new HashSet<>(Arrays.asList("2")), "","");
 
+        List<Article> expected = new ArrayList<>();
+        List<Article> expected2 = new ArrayList<>();
+        expected.add(article4);
+
+        expected2.add(article2);
+        expected2.add(article3);
+
+        List<Article> articles = articleService.searchForArticles(params);
+        List<Article> articles2 = articleService.searchForArticles(params2);
+
+        assertEquals(expected, articles);
+        assertEquals(expected2, articles2);
     }
+
+    @Test
+    public void testSearchingForStatus() {
+        ArticleSearchParams params = new ArticleSearchParams("",String.valueOf(article4.getStatus().getId()),Collections.<String>emptySet(),"","");
+
+        List<Article> expected = new ArrayList<>();
+        expected.add(article4);
+
+        List<Article> articles = articleService.searchForArticles(params);
+
+        assertEquals(expected, articles);
+    }
+
+    @Test
+    public void testSearchingForContentAndPersonAndStatusAndPublication() {
+        ArticleSearchParams params = new ArticleSearchParams("moving",String.valueOf(article4.getStatus().getId()),new HashSet<>(Arrays.asList("1", "2")),"",String.valueOf(article4.getPublication().getId()));
+
+        List<Article> expected = new ArrayList<>();
+        expected.add(article4);
+
+        List<Article> articles = articleService.searchForArticles(params);
+
+        assertEquals(expected, articles);
+    }
+    //Trololololol, hilsen Petter Asla :-) Lykke til videre!
 }

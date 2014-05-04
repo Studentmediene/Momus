@@ -52,8 +52,8 @@ public class ArticleQueryBuilder {
         }
         if (search.getPersons().size() > 0) {
             for (String person : search.getPersons()) {
-                conditions.add(":personid" + person + " member of a.journalists or " +
-                                ":personid" + person + " member of a.photographers");
+                conditions.add("( :personid" + person + " member of a.journalists or " +
+                                ":personid" + person + " member of a.photographers )");
                 queryParams.put("personid" + person, person);
             }
         }

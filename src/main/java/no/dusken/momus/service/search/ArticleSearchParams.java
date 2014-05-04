@@ -9,7 +9,6 @@ public class ArticleSearchParams {
     private String free;
     private String status;
     private Set<String> persons;
-//    private Set<Person> journalists;
     private String section;
     private String publication;
 
