@@ -33,9 +33,9 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = "select a from article a";
+        String expectedQuery = builder.getBaseQuery();
 
-        assertEquals(expectedQuery, builder.getFullQuery().toLowerCase());
+        assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
         assertEquals(0, builder.getQueryParams().size());
 
     }
@@ -46,11 +46,11 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = "select a from article a where a.content like :free";
+        String expectedQuery = builder.getBaseQuery() + " where a.content like :free";
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("free", "%finn meg%");
 
-        assertEquals(expectedQuery, builder.getFullQuery().toLowerCase());
+        assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
         assertEquals(expectedMap, builder.getQueryParams());
     }
 
@@ -60,11 +60,11 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = "select a from article a where a.status.id = :statusid";
+        String expectedQuery = builder.getBaseQuery() + " where a.status.id = :statusid";
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("statusid", 1L);
 
-        assertEquals(expectedQuery, builder.getFullQuery().toLowerCase());
+        assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
         assertEquals(expectedMap, builder.getQueryParams());
     }
 
@@ -75,16 +75,16 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = "select a from article a where ( " +
-                                ":personid594 member of a.journalists or " +
-                                ":personid594 member of a.photographers ) and ( " +
-                                ":personid1337 member of a.journalists or " +
-                                ":personid1337 member of a.photographers )";
+        String expectedQuery = builder.getBaseQuery() + " where ( " +
+                                ":personid0 member of a.journalists or " +
+                                ":personid0 member of a.photographers ) and ( " +
+                                ":personid1 member of a.journalists or " +
+                                ":personid1 member of a.photographers )";
         Map<String, Object> expectedMap = new HashMap<>();
-        expectedMap.put("personid594", "594");
-        expectedMap.put("personid1337", "1337");
+        expectedMap.put("personid0", "594");
+        expectedMap.put("personid1", "1337");
 
-        assertEquals(expectedQuery, builder.getFullQuery().toLowerCase());
+        assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
         assertEquals(expectedMap, builder.getQueryParams());
     }
 
@@ -94,11 +94,11 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = "select a from article a where a.type.id = :secid";
+        String expectedQuery = builder.getBaseQuery() + " where a.type.id = :secid";
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("secid", 31337L);
 
-        assertEquals(expectedQuery, builder.getFullQuery().toLowerCase());
+        assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
         assertEquals(expectedMap, builder.getQueryParams());
     }
 
@@ -108,11 +108,11 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = "select a from article a where a.publication.id = :pubid";
+        String expectedQuery = builder.getBaseQuery() + " where a.publication.id = :pubid";
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("pubid", 2L);
 
-        assertEquals(expectedQuery, builder.getFullQuery().toLowerCase());
+        assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
         assertEquals(expectedMap, builder.getQueryParams());
     }
 
@@ -122,25 +122,25 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = "select a from article a where " +
+        String expectedQuery = builder.getBaseQuery() + " where " +
                                 "a.content like :free and " +
                                 "a.status.id = :statusid and ( " +
-                                ":personid594 member of a.journalists or " +
-                                ":personid594 member of a.photographers ) and ( " +
-                                ":personid1337 member of a.journalists or " +
-                                ":personid1337 member of a.photographers ) and " +
+                                ":personid0 member of a.journalists or " +
+                                ":personid0 member of a.photographers ) and ( " +
+                                ":personid1 member of a.journalists or " +
+                                ":personid1 member of a.photographers ) and " +
                                 "a.type.id = :secid and " +
                                 "a.publication.id = :pubid";
 
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("free", "%kombinert test%");
         expectedMap.put("statusid", 1L);
-        expectedMap.put("personid594", "594");
-        expectedMap.put("personid1337", "1337");
+        expectedMap.put("personid0", "594");
+        expectedMap.put("personid1", "1337");
         expectedMap.put("secid", 31337L);
         expectedMap.put("pubid", 2L);
 
-        assertEquals(expectedQuery, builder.getFullQuery().toLowerCase());
+        assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
         assertEquals(expectedMap, builder.getQueryParams());
     }
 

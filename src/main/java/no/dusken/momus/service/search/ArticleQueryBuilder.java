@@ -32,6 +32,8 @@ public class ArticleQueryBuilder {
     private String fullQuery;
     private Map<String, Object> queryParams = new HashMap<>();
 
+    private final String baseQuery = "select a from Article a left join fetch a.status left join fetch a.publication";
+
     public ArticleQueryBuilder(ArticleSearchParams search) {
         this.search = search;
         buildQuery();
@@ -39,8 +41,6 @@ public class ArticleQueryBuilder {
 
     private void buildQuery() {
         List<String> conditions = new ArrayList<>();
-
-        String baseQuery = "select a from Article a";
 
         if (search.getFree().length() > 0) {
             conditions.add("a.content like :free");
@@ -51,13 +51,15 @@ public class ArticleQueryBuilder {
             queryParams.put("statusid", Long.parseLong(search.getStatus()));
         }
         if (search.getPersons().size() > 0) {
+            int personCount = 0;
+
             for (String person : search.getPersons()) {
-                conditions.add("( :personid" + person + " member of a.journalists or " +
-                                ":personid" + person + " member of a.photographers )");
-                queryParams.put("personid" + person, person);
+                conditions.add("( :personid" + personCount + " member of a.journalists or " +
+                        ":personid" + personCount + " member of a.photographers )");
+                queryParams.put("personid" + personCount++, person);
             }
         }
-        if (search.getSection().length() > 0 ){
+        if (search.getSection().length() > 0) {
             conditions.add("a.type.id = :secid");
             queryParams.put("secid", Long.parseLong(search.getSection()));
         }
@@ -74,8 +76,12 @@ public class ArticleQueryBuilder {
             fullQuery = baseQuery + " WHERE " + allConditions;
         }
 
-        logger.debug("Search: {}", fullQuery);
+        logger.debug("Search query: {}", fullQuery);
 
+    }
+
+    public String getBaseQuery() {
+        return baseQuery;
     }
 
     public String getFullQuery() {

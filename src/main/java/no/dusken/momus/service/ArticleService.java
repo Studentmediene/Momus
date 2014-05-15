@@ -96,6 +96,9 @@ public class ArticleService {
     }
 
     public List<Article> searchForArticles(ArticleSearchParams params) {
+        long start = System.currentTimeMillis();
+
+
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
         String queryText = builder.getFullQuery();
         Map<String, Object> queryParams = builder.getQueryParams();
@@ -106,9 +109,18 @@ public class ArticleService {
             query.setParameter(e.getKey(), e.getValue());
         }
 
-        query.setMaxResults(100);
+        query.setMaxResults(200);
         // TODO add paging of results?
 
-        return query.getResultList();
+        List<Article> resultList = query.getResultList();
+
+        long end = System.currentTimeMillis();
+        long timeUsed = end - start;
+        logger.debug("Time spent on search: {}ms", timeUsed);
+        if (timeUsed > 80) {
+            logger.warn("Time spent on search high ({}ms), params were: {}", timeUsed, params);
+        }
+
+        return resultList;
     }
 }

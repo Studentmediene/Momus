@@ -43,4 +43,14 @@ public class ArticleSearchParams {
         return section;
     }
 
+    @Override
+    public String toString() {
+        return "ArticleSearchParams{" +
+                "free='" + free + '\'' +
+                ", status='" + status + '\'' +
+                ", persons=" + persons +
+                ", section='" + section + '\'' +
+                ", publication='" + publication + '\'' +
+                '}';
+    }
 }
