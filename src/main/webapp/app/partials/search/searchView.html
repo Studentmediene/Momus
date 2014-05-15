@@ -84,31 +84,49 @@
     <div class="panel panel-default">
 
         <!-- Results of the search -->
-        <div class="panel-heading"><h2 style="text-align: center;"> Artikler</h2></div>
+        <div class="panel-heading"><h3 class="panel-title text-center">Artikler</h3> </div>
 
         <div class="table-responsive">
-            <table class="table table-hover table-striped">
+            <table class="table table-hover table-striped table-condensed" style="font-size: 85%;">
                 <thead>
                 <tr>
                     <th>Navn</th>
-                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Journalister</th>
+                    <th>Fotografer</th>
+                    <th>Beskrivelse</th>
+                    <th>Tegn</th>
                     <th>Status</th>
                     <th>Redaksjon</th>
-                    <th>Publikasjon</th>
+                    <th>Utgave</th>
                     <th></th>
                 </tr>
                 </thead>
 
                 <tbody>
-                <tr ng-repeat="article in data | filter: article.name | orderBy: article.id">
+                <tr ng-repeat="article in data">
                     <td>{{article.name}}</td>
-                    <td>{{article.id}}</td>
-                    <td>{{article.status.name}}</td>
-                    <td>{{article.section}}</td>
+                    <td>{{article.type.name}}Kulturtegn</td>
+
+                    <!-- If there are multiple people, we display them with smaller text -->
+                    <td ng-style="{fontSize: article.journalists.length > 1 ? '90%' : '100%',lineHeight: article.journalists.length > 1 ? '90%' : '100%'}">
+                        <span ng-repeat="j in article.journalists">{{j.first_name + ' ' + j.last_name}}<br></span>
+                    </td>
+                    <td ng-style="{fontSize: article.photographers.length > 1 ? '95%' : '100%', lineHeight: article.photographers.length > 1 ? '95%' : '100%'}">
+                        <span ng-repeat="j in article.photographers">{{j.first_name + ' ' + j.last_name}}<br></span>
+                    </td>
+
+                    <!-- Show only a small part of a long message, with tooltip for the long text -->
+                    <td><textwrapper text="article.description" length="23"></textwrapper></td>
+
+                    <td>{{article.content_length}}</td>
+                    <td ng-style="{backgroundColor: article.status.color}">{{article.status.name}}</td>
+                    <td>{{article.section.name}}Kultur</td>
                     <td>{{article.publication.name}}</td>
-                    <td><a href="#/source/{{source.id}}">Åpne</a></td>
+                    <td class="hidden-print"><a href="#/article/{{article.id}}">Åpne</a></td>
                 </tr>
                 </tbody>
+
             </table>
         </div>
     </div>
