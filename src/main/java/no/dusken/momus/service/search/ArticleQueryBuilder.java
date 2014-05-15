@@ -42,30 +42,30 @@ public class ArticleQueryBuilder {
     private void buildQuery() {
         List<String> conditions = new ArrayList<>();
 
-        if (search.getFree().length() > 0) {
+        if (search.getFree() != null && search.getFree().length() > 0) {
             conditions.add("a.content like :free");
             queryParams.put("free", "%" + search.getFree() + "%");
         }
-        if (search.getStatus().length() > 0) {
+        if (search.getStatus() != null) {
             conditions.add("a.status.id = :statusid");
-            queryParams.put("statusid", Long.parseLong(search.getStatus()));
+            queryParams.put("statusid", search.getStatus());
         }
-        if (search.getPersons().size() > 0) {
+        if (search.getPersons() != null && search.getPersons().size() > 0) {
             int personCount = 0;
 
-            for (String person : search.getPersons()) {
+            for (Long person : search.getPersons()) {
                 conditions.add("( :personid" + personCount + " member of a.journalists or " +
                         ":personid" + personCount + " member of a.photographers )");
                 queryParams.put("personid" + personCount++, person);
             }
         }
-        if (search.getSection().length() > 0) {
+        if (search.getSection() != null) {
             conditions.add("a.type.id = :secid");
-            queryParams.put("secid", Long.parseLong(search.getSection()));
+            queryParams.put("secid", search.getSection());
         }
-        if (search.getPublication().length() > 0) {
+        if (search.getPublication() != null) {
             conditions.add("a.publication.id = :pubid");
-            queryParams.put("pubid", Long.parseLong(search.getPublication()));
+            queryParams.put("pubid", search.getPublication());
         }
 
         String allConditions = StringUtils.collectionToDelimitedString(conditions, " AND ");

@@ -150,7 +150,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testEmptyArticleSearchReturnsAll() {
-        ArticleSearchParams params = new ArticleSearchParams("", "", Collections.<String>emptySet(), "", "");
+        ArticleSearchParams params = new ArticleSearchParams("", null, Collections.<Long>emptyList(), null, null);
 
         List<Article> expected = new ArrayList<>();
         expected.add(article1);
@@ -170,7 +170,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForContent() {
-        ArticleSearchParams params = new ArticleSearchParams("søke i dette", "", Collections.<String>emptySet(), "", "");
+        ArticleSearchParams params = new ArticleSearchParams("søke i dette", null, Collections.<Long>emptyList(), null, null);
 
         List<Article> expected = new ArrayList<>();
         expected.add(article2);
@@ -180,7 +180,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForPublication() {
-        ArticleSearchParams params = new ArticleSearchParams("", "", Collections.<String>emptySet(), "", String.valueOf(article4.getPublication().getId()));
+        ArticleSearchParams params = new ArticleSearchParams("", null, Collections.<Long>emptyList(), null, article4.getPublication().getId());
 
         List<Article> expected = new ArrayList<>();
         expected.add(article4);
@@ -192,9 +192,9 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForPerson() {
-        ArticleSearchParams params1 = new ArticleSearchParams("", "", new HashSet<>(Arrays.asList("2")), "", "");
-        ArticleSearchParams params2 = new ArticleSearchParams("", "", new HashSet<>(Arrays.asList("1","2")), "", "");
-        ArticleSearchParams params3 = new ArticleSearchParams("", "", new HashSet<>(Arrays.asList("1","2","3")), "", "");
+        ArticleSearchParams params1 = new ArticleSearchParams("", null, Arrays.asList(2L), null, null);
+        ArticleSearchParams params2 = new ArticleSearchParams(null, null, Arrays.asList(1L,2L), null, null);
+        ArticleSearchParams params3 = new ArticleSearchParams("", null, Arrays.asList(1L,2L,3L), null, null);
 
         List<Article> expected1 = new ArrayList<>();
         List<Article> expected2 = new ArrayList<>();
@@ -219,8 +219,8 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForBothPersonAndContent() {
-        ArticleSearchParams params = new ArticleSearchParams("its about hard you can GET hit", "", new HashSet<>(Arrays.asList("1", "2")), "","");
-        ArticleSearchParams params2 = new ArticleSearchParams("du", "", new HashSet<>(Arrays.asList("2")), "","");
+        ArticleSearchParams params = new ArticleSearchParams("its about hard you can GET hit", null, Arrays.asList(1L, 2L), null,null);
+        ArticleSearchParams params2 = new ArticleSearchParams("du", null, Arrays.asList(2L), null, null);
 
         List<Article> expected = new ArrayList<>();
         List<Article> expected2 = new ArrayList<>();
@@ -238,7 +238,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForStatus() {
-        ArticleSearchParams params = new ArticleSearchParams("",String.valueOf(article4.getStatus().getId()),Collections.<String>emptySet(),"","");
+        ArticleSearchParams params = new ArticleSearchParams("",article4.getStatus().getId(),Collections.<Long>emptyList(),null,null);
 
         List<Article> expected = new ArrayList<>();
         expected.add(article4);
@@ -250,7 +250,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForContentAndPersonAndStatusAndPublication() {
-        ArticleSearchParams params = new ArticleSearchParams("moving",String.valueOf(article4.getStatus().getId()),new HashSet<>(Arrays.asList("1", "2")),"",String.valueOf(article4.getPublication().getId()));
+        ArticleSearchParams params = new ArticleSearchParams("moving",article4.getStatus().getId(),Arrays.asList(1L, 2L),null,article4.getPublication().getId());
 
         List<Article> expected = new ArrayList<>();
         expected.add(article4);

@@ -1,22 +1,22 @@
 package no.dusken.momus.service.search;
 
 
-import java.util.Set;
+import java.util.List;
 
 
 public class ArticleSearchParams {
 
     private String free;
-    private String status;
-    private Set<String> persons;
-    private String section;
-    private String publication;
+    private Long status;
+    private List<Long> persons;
+    private Long section;
+    private Long publication;
 
     public ArticleSearchParams() {
         // empty
     }
 
-    public ArticleSearchParams(String free, String status, Set<String> persons, String section, String publication) {
+    public ArticleSearchParams(String free, Long status, List<Long> persons, Long section, Long publication) {
         this.free = free;
         this.status = status;
         this.persons = persons;
@@ -24,22 +24,22 @@ public class ArticleSearchParams {
         this.publication = publication;
     }
 
-    public String getPublication() {
+    public Long getPublication() {
         return publication;
     }
 
-    public Set<String> getPersons() {return persons; }
+    public List<Long> getPersons() {return persons; }
 
     public String getFree() {
         return free;
     }
 
-    public String getStatus() {
+    public Long getStatus() {
         return status;
     }
 
 
-    public String getSection() {
+    public Long getSection() {
         return section;
     }
 

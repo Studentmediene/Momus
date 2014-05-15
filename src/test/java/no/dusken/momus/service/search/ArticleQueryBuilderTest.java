@@ -25,11 +25,24 @@ import static org.junit.Assert.assertEquals;
 
 public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
-    Set<String> emptySet = Collections.emptySet();
+    List<Long> emptyList = Collections.emptyList();
 
     @Test
     public void testEmptyQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("", "", emptySet, "", "");
+        ArticleSearchParams params = new ArticleSearchParams("", null, emptyList, null, null);
+
+        ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
+
+        String expectedQuery = builder.getBaseQuery();
+
+        assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
+        assertEquals(0, builder.getQueryParams().size());
+
+    }
+
+    @Test
+    public void testNullQuery() {
+        ArticleSearchParams params = new ArticleSearchParams(null, null, null, null, null);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
@@ -42,7 +55,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
     @Test
     public void testTextQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("finn meg", "", emptySet, "", "");
+        ArticleSearchParams params = new ArticleSearchParams("finn meg", null, emptyList, null, null);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
@@ -56,7 +69,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
     @Test
     public void testStatusQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("", "1", emptySet, "", "");
+        ArticleSearchParams params = new ArticleSearchParams("", 1L, emptyList, null, null);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
@@ -71,7 +84,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
     @Test
     public void testPersonQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("", "", new HashSet<>(Arrays.asList("594", "1337")), "", "");
+        ArticleSearchParams params = new ArticleSearchParams("", null, Arrays.asList(594L, 1337L), null, null);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
@@ -81,8 +94,8 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
                                 ":personid1 member of a.journalists or " +
                                 ":personid1 member of a.photographers )";
         Map<String, Object> expectedMap = new HashMap<>();
-        expectedMap.put("personid0", "594");
-        expectedMap.put("personid1", "1337");
+        expectedMap.put("personid0", 594L);
+        expectedMap.put("personid1", 1337L);
 
         assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
         assertEquals(expectedMap, builder.getQueryParams());
@@ -90,7 +103,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
     @Test
     public void testSectionQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("", "", emptySet, "31337", "");
+        ArticleSearchParams params = new ArticleSearchParams("", null, emptyList, 31337L, null);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
@@ -104,7 +117,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
     @Test
     public void testPublicationQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("", "", emptySet, "", "2");
+        ArticleSearchParams params = new ArticleSearchParams("", null, emptyList, null, 2L);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
@@ -118,7 +131,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
     @Test
     public void testCombinedQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("kombinert test", "1", new HashSet<>(Arrays.asList("594", "1337")), "31337", "2");
+        ArticleSearchParams params = new ArticleSearchParams("kombinert test", 1L, Arrays.asList(594L, 1337L), 31337L, 2L);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
@@ -135,8 +148,8 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("free", "%kombinert test%");
         expectedMap.put("statusid", 1L);
-        expectedMap.put("personid0", "594");
-        expectedMap.put("personid1", "1337");
+        expectedMap.put("personid0", 594L);
+        expectedMap.put("personid1", 1337L);
         expectedMap.put("secid", 31337L);
         expectedMap.put("pubid", 2L);
 

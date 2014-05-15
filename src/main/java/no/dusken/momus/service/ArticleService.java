@@ -117,7 +117,7 @@ public class ArticleService {
         long end = System.currentTimeMillis();
         long timeUsed = end - start;
         logger.debug("Time spent on search: {}ms", timeUsed);
-        if (timeUsed > 80) {
+        if (timeUsed > 800) {
             logger.warn("Time spent on search high ({}ms), params were: {}", timeUsed, params);
         }
 
