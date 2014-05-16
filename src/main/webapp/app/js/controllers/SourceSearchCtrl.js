@@ -74,6 +74,7 @@ angular.module('momusApp.controllers')
             if ($location.search().name) {
                 $scope.search.name = $location.search().name;
             }
+
             if ($location.search().freetext) {
                 $scope.search.freetext = $location.search().freetext;
             }
@@ -90,7 +91,10 @@ angular.module('momusApp.controllers')
             });
 
             $scope.$watch('search', function (newValue) {
-                $location.search(newValue).replace();
+                // only update URL if there actually is a search
+                if (newValue.freetext != "" || newValue.name != "" || newValue.tags.length > 0) {
+                    $location.search(newValue).replace();
+                }
             }, true);
         }
 
