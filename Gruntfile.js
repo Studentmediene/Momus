@@ -131,6 +131,16 @@ module.exports = function (grunt) {
                     }
                 ]
             },
+            favicon: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'src/main/webapp/',
+                        src: ['favicon.ico'],
+                        dest: dist + '/'
+                    }
+                ]
+            },
             select2images: { // needed because select2's css has hardcoded path to some images
                 files: [
                     {
@@ -175,6 +185,7 @@ module.exports = function (grunt) {
         'concat',
         'copy:dist',
         'copy:fonts',
+        'copy:favicon',
         'copy:select2images',
         'ngmin',
         'cssmin',
