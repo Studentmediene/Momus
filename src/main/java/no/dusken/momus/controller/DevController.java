@@ -21,23 +21,28 @@ import no.dusken.momus.authentication.Token;
 import no.dusken.momus.authentication.UserAuthorities;
 import no.dusken.momus.authentication.UserLoginService;
 import no.dusken.momus.model.Article;
-import no.dusken.momus.model.ArticleStatus;
 import no.dusken.momus.model.Person;
+import no.dusken.momus.model.Publication;
+import no.dusken.momus.model.Source;
 import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.PersonRepository;
 import no.dusken.momus.smmdb.Syncer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import java.util.*;
 
 /**
  * Dev only, not accessible when live
@@ -128,5 +133,68 @@ public class DevController {
         articleRepository.save(article2);
 
         return "ok";
+    }
+
+    @PersistenceContext
+    EntityManager entityManager;
+
+
+    @RequestMapping("/test3")
+    public @ResponseBody String test3() {
+
+        Article article = new Article();
+        article.setContent("test innhold lol");
+        article.setPublication(new Publication(2L));
+        article.setName("Test name");
+
+        articleRepository.save(article);
+        return "ok";
+    }
+
+    @RequestMapping("/test2")
+    public @ResponseBody List<Source> test22() {
+        String baseQuery = "select distinct s from Source s";
+
+        List<String> conditions = new ArrayList<>();
+        Map<String, String> params = new HashMap<>();
+
+        if(true) {
+            conditions.add("s.name like :name");
+            params.put("name", "%Mats%");
+        }
+
+        if (true) {
+            conditions.add("s.email like :email");
+            params.put("email", "mats.svensson@gmail.rart.com");
+        }
+
+        String conditionsString = StringUtils.collectionToDelimitedString(conditions, " AND ");
+        String fullQuery;
+
+        if (conditionsString.equals("")) {
+            fullQuery = baseQuery;
+        } else {
+            fullQuery = baseQuery + " WHERE " + conditionsString;
+        }
+
+        Page<Source> page;
+
+        logger.debug(fullQuery);
+
+        TypedQuery<Source> query = entityManager.createQuery(fullQuery, Source.class);
+
+        for (Map.Entry<String, String> e : params.entrySet()) {
+            query.setParameter(e.getKey(), e.getValue());
+        }
+
+
+
+//        query.setFirstResult(1);
+//        query.setMaxResults(2);
+
+
+
+        return query.getResultList();
+
     }
 }

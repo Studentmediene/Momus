@@ -16,54 +16,118 @@
   -->
 
 
-<div class ="row">
-    <div class="col-md-6 col-md-offset-3">
-        <input type="text" class="form-control" placeholder="Text input" ng-model="search">
-    </div>
-</div>
-
-<div class ="row">
-    <p></p>
-</div>
-
-
-<div class="row">
-
-    <div class="col-md-3">
-        <select class="form-control" ng-model="searchParams.status">
-            <option value="">Velg status</option>
-            <option ng-repeat="status in statuses">{{status.name}}</option>
-    </select>
-    </div>
-    <div class="col-md-3">
-        <select multiple class="form-control" ui-select2 ng-model="select2">
-            <option ng-repeat="person in persons" value="{{person.id}}">{{person.username}} {{person.first_name}} {{person.last_name}}</option>
-        </select>
-    </div>
-    <div class="col-md-3">
-        <select class="form-control" ng-model="searchParams.section">
-            <option value="">Velg redaksjon</option>
-            <option ng-repeat="section in sections" value="{{section.id}}">{{section.name}}</option>
-        </select>
-    </div>
-    <div class="col-md-3">
-        <select class="form-control" ng-model="searchParams.publication">
-            <option value="">Velg publikasjon</option>
-            <option ng-repeat="publication in publications">{{publication.name}}</option>
-        </select>
-    </div>
-</div>
+<div class="col-md-12" xmlns="http://www.w3.org/1999/html">
+    <div class="well">
         <div class="row">
-            <div class="col-md-6"><b><a href="" ng-click="predicate='name'">Navn</a></b>(<a href="" ng-click="predicate='-name'">^</a>)</div>
-            <div class="col-md-3"><b><a href="" ng-click="predicate='section'">Seksjon</a></b>(<a href="" ng-click="predicate='-section'">^</a>)</div>
-            <div class="col-md-3"><b><a href="" ng-click="predicate='publication'">Publikasjon</a></b>(<a href="" ng-click="predicate='-publication'">^</a>)</div>
+            <!-- Free search -->
+            <div class="col-md-11">
+            <div class="col-md-3 col-md-offset-5">
+                <label for="searchFree">Frisøk</label>
+                <input class="form-control" id="searchFree" ng-model="search.free" placeholder="Innhold i artikkelen">
+            </div>
+            </div>
         </div>
-       <div class="row">{{searchParams}}</div>
 
-<div ng-repeat="article in articles | filter:searchParams.name | orderBy:predicate">
-    <div class="row">
-        <div class=col-md-6><a href="/article/{{article.id}}">{{article.name}}</a></div>
-        <div class=col-md-3>{{article.section}}</div>
-        <div class=col-md-3>{{article.publication}}</div>
+        </br>
+
+        <div class="row">
+            <div class="col-md-12">
+
+                <!-- Status search -->
+                <div class="col-md-3 col-md-offset-0">
+                    <label for="searchStatus">Status</label>
+                    <select class="form-control" id="searchStatus" ng-model="search.status" placeholder="Status">
+                        <option class="" value="">Velg status</option>
+                        <option ng-repeat="status in statuses" value="{{status.id}}">{{status.name}}</option>
+                    </select>
+                </div>
+
+                <!-- Person search -->
+                <div class="col-md-3 col-md-offset-0">
+                    <label for="searchPersons">Personsøk</label>
+                    <select multiple class="form-control" id="searchPersons" ui-select2 ng-model="search.persons">
+                        <option ng-repeat="person in persons" value="{{person.id}}">{{person.username}} {{person.first_name}} {{person.last_name}}</option>
+                    </select>
+                </div>
+
+                <!-- Section search -->
+                <div class="col-md-3 col-md-offset-0">
+                    <label for="searchSection">Redaksjon</label>
+                    <select class="form-control" id="searchSection" ng-model="search.section">
+                        <option value="">Velg redaksjon</option>
+                        <option ng-repeat="section in sections" value="{{section.id}}">{{section.name}}</option>
+                    </select>
+                </div>
+
+                <!-- Publication search -->
+                <div class="col-md-3 col-md-offset-0">
+                    <label for="searchPublication">Publikasjoner</label>
+                    <select class="form-control" id="searchPublication" ng-model="search.publication">
+                        <option value="">Velg publikasjon</option>
+                        <option ng-repeat="publication in publications" value="{{publication.id}}">{{publication.name}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Search button -->
+            <div class="row">
+                <div class="col-md-2 col-md-offset-5">
+                    <p style="line-height: 70px; text-align: center;"><button type="button" class="btn btn-info btn-lg "
+                             ng-click="searchFunc()">Søk</button></p>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+
+<div class="col-md-12">
+    <div class="panel panel-default">
+
+        <!-- Results of the search -->
+        <div class="panel-heading"><h3 class="panel-title text-center">Artikler</h3> </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-striped table-condensed" style="font-size: 85%;">
+                <thead>
+                <tr>
+                    <th>Navn</th>
+                    <th>Type</th>
+                    <th>Journalister</th>
+                    <th>Fotografer</th>
+                    <th>Beskrivelse</th>
+                    <th>Tegn</th>
+                    <th>Status</th>
+                    <th>Redaksjon</th>
+                    <th>Utgave</th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr ng-repeat="article in data">
+                    <td>{{article.name}}</td>
+                    <td>{{article.type.name}}Kulturtegn</td>
+
+                    <!-- If there are multiple people, we display them with smaller text -->
+                    <td ng-style="{fontSize: article.journalists.length > 1 ? '90%' : '100%',lineHeight: article.journalists.length > 1 ? '90%' : '100%'}">
+                        <span ng-repeat="j in article.journalists">{{j.first_name + ' ' + j.last_name}}<br></span>
+                    </td>
+                    <td ng-style="{fontSize: article.photographers.length > 1 ? '95%' : '100%', lineHeight: article.photographers.length > 1 ? '95%' : '100%'}">
+                        <span ng-repeat="j in article.photographers">{{j.first_name + ' ' + j.last_name}}<br></span>
+                    </td>
+
+                    <!-- Show only a small part of a long message, with tooltip for the long text -->
+                    <td><textwrapper text="article.description" length="23"></textwrapper></td>
+
+                    <td>{{article.content_length}}</td>
+                    <td ng-style="{backgroundColor: article.status.color}">{{article.status.name}}</td>
+                    <td>{{article.section.name}}Kultur</td>
+                    <td>{{article.publication.name}}</td>
+                    <td class="hidden-print"><a href="#/article/{{article.id}}">Åpne</a></td>
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
     </div>
+</div>

@@ -18,10 +18,42 @@
 
 angular.module('momusApp.controllers')
     .controller('SearchCtrl', function ($scope, $http) {
-        $http.get('/api/person').success(function(data) {
-            $scope.persons = data;
-            console.log(data);
-        });
+
+        $scope.data = null;
+        $scope.search = {
+            free: '',
+            status: '',
+            persons: [],
+            section: '',
+            publication: ''
+        };
+
+        /**
+         * Fetching persons from server
+         */
+        $http.get('/api/person')
+            .success(function(data) {
+                $scope.persons = data;
+                console.log("Persons loaded successfully");
+            })
+            .error(function() {
+                console.log("Error retrieving persons");
+            });
+
+
+        /**
+         * Fetching publications from server
+         */
+        $http.get('/api/publication/year/2014')
+            .success(function (data) {
+                $scope.publications = data;
+                console.log("Publications loaded successfully");
+            })
+            .error(function() {
+                console.log("Error retrieving publications by year");
+            });
+
+
 
         $scope.articles = [
             {id: 1, name: "Nyhet1", section: "Nyhet", publication: "2013 1"},
@@ -34,12 +66,7 @@ angular.module('momusApp.controllers')
             {id: 8, name: "Sport1", section: "Sport", publication: "2013 4"}
         ];
 
-        $scope.publications = [
-            {id: 1, name: "2013 1"},
-            {id: 2, name: "2013 2"},
-            {id: 3, name: "2013 3"},
-            {id: 4, name: "2013 4"}
-        ];
+
 
         $scope.sections = [
             {id: 1, name:"Nyhet"},
@@ -57,13 +84,18 @@ angular.module('momusApp.controllers')
             {id: 4, name: "Publisert"}
         ];
 
-        $scope.searchParams = {
-            status: "",
-            section: "",
-            search: "",
-            publication: "",
-            persons: []
-        };
+        $scope.searchFunc = function() {
+            console.log($scope.search);
 
-        $scope.predicate = "age"
+            $http.post('/api/search', $scope.search)
+                .success(function(data) {
+                    $scope.data = data;
+                    console.log("Data som ble hentet ut: " );
+                    console.log($scope.data);
+
+                })
+                .error(function() {
+                    console.log("Search function failed");
+                })
+        }
     });

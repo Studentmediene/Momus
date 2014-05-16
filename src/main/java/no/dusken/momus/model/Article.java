@@ -16,6 +16,9 @@
 
 package no.dusken.momus.model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
@@ -40,22 +43,24 @@ public class Article {
     @Transient
     private int contentLength;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private ArticleStatus status;
-    @OneToOne(fetch = FetchType.EAGER)
+
+    @ManyToOne(fetch = FetchType.EAGER)
     private ArticleType type;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Publication publication;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "article_journalist")
+    @Fetch(FetchMode.SUBSELECT)
     private Set<Person> journalists;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "article_photographer")
+    @Fetch(FetchMode.SUBSELECT)
     private Set<Person> photographers;
-
-    @ManyToOne
-    private Person correctResponsible;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdated;
@@ -142,11 +147,7 @@ public class Article {
         this.note = note;
     }
 
-    public Person getCorrectResponsible() {
-        return correctResponsible;
-    }
+    public Publication getPublication() {return publication; }
 
-    public void setCorrectResponsible(Person correctResponsible) {
-        this.correctResponsible = correctResponsible;
-    }
+    public void setPublication(Publication publication) {this.publication = publication; }
 }
