@@ -35,36 +35,22 @@ angular.module('momusApp', [
     ]).
     config(['$routeProvider', function ($routeProvider) {
         // Admin interfaces
-        $routeProvider.
-            when('/admin/role',
-            {
-                templateUrl: 'partials/admin/role.html',
-                controller: 'AdminRoleCtrl'
-            }
-        )
-            // Article interfaces
-            .when('/article',
-            {
-                redirectTo: '/article/1' // TODO: make this go to article search view?
-            }
-        )
-            .when('/article/:id',
+        $routeProvider
+            .when('/artikler/:id',
             {
                 templateUrl: 'partials/article/articleView.html',
                 controller: 'ArticleCtrl'
             }
         )
 
-            // Search interfaces
-            .when('/search',
+            .when('/artikler',
             {
                 templateUrl: 'partials/search/searchView.html',
                 controller: 'SearchCtrl'
             }
         )
 
-            // Publications (utgaver) interfaces
-            .when('/publications',
+            .when('/utgaver',
             {
                 templateUrl: 'partials/publication/publicationView.html',
                 controller: 'PublicationCtrl',
@@ -81,7 +67,7 @@ angular.module('momusApp', [
         )
 
             // Sources
-            .when('/sources',
+            .when('/kilder',
             {
                 templateUrl: 'partials/source/search.html',
                 controller: 'SourceSearchCtrl',
@@ -89,21 +75,21 @@ angular.module('momusApp', [
                 title: "Kilder"
             }
         )
-            .when('/sources/new',
+            .when('/kilder/ny',
             {
                 templateUrl: 'partials/source/edit.html',
                 controller: 'SourceEditCtrl',
                 title: "Ny kilde"
             }
         )
-            .when('/sources/tags',
+            .when('/kilder/tags',
             {
                 templateUrl: 'partials/source/tags.html',
                 controller: 'SourceTagsCtrl',
                 title: "Rediger kildetags"
             }
         )
-            .when('/sources/:id',
+            .when('/kilder/:id',
             {
                 templateUrl: 'partials/source/edit.html',
                 controller: 'SourceEditCtrl'

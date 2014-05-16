@@ -22,6 +22,8 @@ angular.module('momusApp.controllers')
             $scope.user = user;
         });
 
+        $scope.isCollapsed = true;
+
         /*  Checks if the current path is equal to the provided location
             If location ends with %, it will count as a wildcard.
             For instance, /sources% will match /sources/40

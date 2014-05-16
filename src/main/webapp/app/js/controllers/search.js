@@ -19,7 +19,7 @@
 angular.module('momusApp.controllers')
     .controller('SearchCtrl', function ($scope, $http) {
 
-        $scope.data = null;
+        $scope.data = [];
         $scope.search = {
             free: '',
             status: '',
@@ -34,10 +34,6 @@ angular.module('momusApp.controllers')
         $http.get('/api/person')
             .success(function(data) {
                 $scope.persons = data;
-                console.log("Persons loaded successfully");
-            })
-            .error(function() {
-                console.log("Error retrieving persons");
             });
 
 
@@ -47,27 +43,13 @@ angular.module('momusApp.controllers')
         $http.get('/api/publication/year/2014')
             .success(function (data) {
                 $scope.publications = data;
-                console.log("Publications loaded successfully");
-            })
-            .error(function() {
-                console.log("Error retrieving publications by year");
             });
 
 
 
-        $scope.articles = [
-            {id: 1, name: "Nyhet1", section: "Nyhet", publication: "2013 1"},
-            {id: 2, name: "Nyhet2", section: "Nyhet", publication: "2013 1"},
-            {id: 3, name: "Nyhet3", section: "Nyhet", publication: "2013 2"},
-            {id: 4, name: "Debatt1", section: "Debatt", publication: "2013 2"},
-            {id: 5, name: "Kultur1", section: "Kultur", publication: "2013 3"},
-            {id: 6, name: "Forbruker1", section: "Forbruker", publication: "2013 3"},
-            {id: 7, name: "Reportasje1", section: "Reportasje", publication: "2013 4"},
-            {id: 8, name: "Sport1", section: "Sport", publication: "2013 4"}
-        ];
 
 
-
+        // TODO get these from server
         $scope.sections = [
             {id: 1, name:"Nyhet"},
             {id: 2, name:"Debatt"},
@@ -85,17 +67,9 @@ angular.module('momusApp.controllers')
         ];
 
         $scope.searchFunc = function() {
-            console.log($scope.search);
-
             $http.post('/api/search', $scope.search)
                 .success(function(data) {
                     $scope.data = data;
-                    console.log("Data som ble hentet ut: " );
-                    console.log($scope.data);
-
-                })
-                .error(function() {
-                    console.log("Search function failed");
-                })
+                });
         }
     });

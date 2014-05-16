@@ -61,9 +61,9 @@
 
                 <!-- Publication search -->
                 <div class="col-md-3 col-md-offset-0">
-                    <label for="searchPublication">Publikasjoner</label>
+                    <label for="searchPublication">Utgaver</label>
                     <select class="form-control" id="searchPublication" ng-model="search.publication">
-                        <option value="">Velg publikasjon</option>
+                        <option value="">Velg utgave</option>
                         <option ng-repeat="publication in publications" value="{{publication.id}}">{{publication.name}}</option>
                     </select>
                 </div>
@@ -123,7 +123,7 @@
                     <td ng-style="{backgroundColor: article.status.color}">{{article.status.name}}</td>
                     <td>{{article.section.name}}Kultur</td>
                     <td>{{article.publication.name}}</td>
-                    <td class="hidden-print"><a href="#/article/{{article.id}}">Åpne</a></td>
+                    <td class="hidden-print"><a href="#/artikler/{{article.id}}">Åpne</a></td>
                 </tr>
                 </tbody>
 
