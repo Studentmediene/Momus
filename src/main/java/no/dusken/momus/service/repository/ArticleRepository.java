@@ -17,12 +17,9 @@
 package no.dusken.momus.service.repository;
 
 import no.dusken.momus.model.Article;
-import no.dusken.momus.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.security.crypto.keygen.StringKeyGenerator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 

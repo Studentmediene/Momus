@@ -21,7 +21,7 @@ import no.dusken.momus.test.AbstractTestRunner;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @Transactional
 public class SmmDbTokenTest extends AbstractTestRunner {

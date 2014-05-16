@@ -17,7 +17,6 @@
 package no.dusken.momus.authentication;
 
 import no.dusken.momus.exceptions.RestException;
-import no.dusken.momus.model.Group;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.PersonRepository;
 import org.slf4j.Logger;

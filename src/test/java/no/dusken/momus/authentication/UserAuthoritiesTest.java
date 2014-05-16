@@ -17,9 +17,7 @@
 package no.dusken.momus.authentication;
 
 import no.dusken.momus.exceptions.RestException;
-import no.dusken.momus.model.Group;
 import no.dusken.momus.model.Person;
-import no.dusken.momus.service.repository.GroupRepository;
 import no.dusken.momus.service.repository.PersonRepository;
 import no.dusken.momus.test.AbstractTestRunner;
 import org.junit.Before;
@@ -31,10 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
 
 @Transactional // <-- rollback the database after each test
 public class UserAuthoritiesTest extends AbstractTestRunner {
