@@ -169,8 +169,6 @@
         </dependency>
     </dependencies>
 
-
-
     <build>
         <plugins>
             <!-- Configuration of how the project should be compiled -->
