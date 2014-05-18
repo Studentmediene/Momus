@@ -15,7 +15,7 @@
  */
 
 angular.module('momusApp.directives').
-    directive('buttonLoader', function () {
+    directive('buttonLoader', function ($timeout) {
         return {
             restrict: 'A',
             scope: {
@@ -23,24 +23,57 @@ angular.module('momusApp.directives').
                 ngDisabled: '='
             },
             link: function (scope, elm, attrs) {
-                var btnContents = elm.html();
+                var standardText = elm.html();
+                // Default values
+                var loadingText = typeof attrs.loadingText !== 'undefined' ? attrs.loadingText : "Lagrer";
+                var completedText = typeof attrs.completedText !== 'undefined' ? attrs.completedText : "Lagret";
+                var shotStatus = !attrs.noStatus;
+
                 var spinner = '';
-                if (!attrs.buttonLoaderNospinner) {
+                var check = '';
+                var hasBeenDisabled;
+
+                if (shotStatus) {
                     spinner = '<i class="fa fa-spinner fa-spin"></i> ';
+                    check = '<i class="fa fa-check"></i> ';
                 }
-                scope.$watch('buttonLoader', function (value) {
-                    if (value) { // loading state
-                        elm.html(spinner + attrs.buttonLoaderText);
-                        elm.attr('disabled', true);
-                    } else { // not loading
-                        elm.html(btnContents);
-                        if (scope.ngDisabled) { // if it has a ngDisabled attribute, set disabled to that value
-                            elm.attr('disabled', scope.ngDisabled);
-                        } else { // if not, it's not longer disabled
-                            elm.attr('disabled', false);
+
+
+                scope.$watch('buttonLoader', function (isLoading) {
+                    if (isLoading) {
+                        showLoading()
+                    } else {
+                        if (hasBeenDisabled) {
+                            hasBeenDisabled = false;
+                            showCompleted();
+                            $timeout(function () {
+                                showStandard();
+                            }, 1500);
                         }
                     }
                 });
+
+                function showLoading() {
+                    elm.html(spinner + loadingText);
+                    elm.attr('disabled', true);
+                    hasBeenDisabled = true;
+                }
+
+                function showCompleted() {
+                    elm.addClass("btn-success");
+                    elm.html(check + completedText);
+                }
+
+                function showStandard() {
+                    elm.removeClass("btn-success");
+                    elm.html(standardText);
+
+                    if (scope.ngDisabled) { // if it has a ngDisabled attribute, set disabled to that value
+                        elm.attr('disabled', scope.ngDisabled);
+                    } else { // if not, it's not longer disabled
+                        elm.attr('disabled', false);
+                    }
+                }
             }
         }
     });

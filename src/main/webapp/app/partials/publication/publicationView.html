@@ -43,13 +43,6 @@
 
                 </div>
 
-                <!-- new publication button -->
-                <div class="col-xs-6">
-                    <button type="button" ng-click="editPublication({})"
-                            class="btn btn-default pull-right">Ny utgave
-                    </button>
-                </div>
-
             </div>
 
             <!-- list of publications -->
@@ -124,10 +117,10 @@
 
             <!-- buttons -->
             <div class="form-group">
-                <button type="submit" class="btn btn-primary" ng-disabled="publicationForm.$invalid"
-                        ng-click="saveEditedPublication()" button-loader="isSaving" button-loader-text="Lagrer">Lagre</button>
+                <button type="submit" class="btn btn-primary col-xs-4" ng-disabled="publicationForm.$invalid"
+                        ng-click="saveEditedPublication()" button-loader="isSaving">Lagre</button>
 
-                <button class="btn btn-default" ng-show="editing.id" ng-click="editPublication({})">Avbryt</button>
+                <button class="btn btn-default col-xs-4 col-xs-offset-1" ng-show="editing.id" ng-click="editPublication({})">Avbryt</button>
             </div>
 
         </div>
