@@ -14,28 +14,29 @@
   ~ limitations under the License.
   -->
 
-<div class="alert alert-info">
+<div class="alert alert-info" xmlns="http://www.w3.org/1999/html">
     <p>
-        Rediger tags og trykk <i class="fa fa-check fa-sm"></i> for å lagre, <i class="fa fa-times"></i> for å slette.
+        Rediger tags og trykk <i class="fa fa-save fa-sm"></i> for å lagre, <i class="fa fa-times"></i> for å slette.
     </p>
-</div>
-
-<div class="checkbox">
-    <label>
-        <input id="unused" type="checkbox" ng-model="showUnused"/> Vis bare ubrukte
-    </label>
 </div>
 
 <div class="row">
 
-    <div ng-repeat="tag in (showUnused ? unused : tags)" class="col-sm-4">
+    <div ng-repeat="tag in  tags" class="col-sm-4">
+        <form>
         <div class="input-group input-group-sm form-group">
             <input type="text" class="form-control" ng-model="tag.tag"/>
             <span class="input-group-btn">
-                <button class="btn btn-primary" ng-click="updateTag(tag, $index)" ng-disabled="!isChanged(tag, $index)">
-                    <i class="fa fa-check"></i></button>
-                <button class="btn btn-danger" ng-click="deleteTag($index)"><i class="fa fa-times"></i></button>
+                <button class="btn btn-primary" button-loader="isSaving[$index]" ng-click="updateTag(tag, $index)" ng-disabled="!isChanged(tag, $index)">
+                    <i class="fa fa-save"></i>
+                </button>
+
+                <button ng-if="tag.unused" ng-click="deleteTag($index)" class="btn btn-danger" tooltip="Det er ingen kilder som bruker denne tagen. Den kan trygt slettes." tooltip-append-to-body="true">
+                    Ubrukt! <i class="fa fa-times"></i>
+                </button>
+                <button ng-if="!tag.unused" class="btn btn-danger" ng-click="deleteTag($index)"><i class="fa fa-times"></i></button>
             </span>
         </div>
+        </form>
     </div>
 </div>
