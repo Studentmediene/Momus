@@ -13,7 +13,7 @@ public class Disposition {
     @OneToOne(fetch = FetchType.EAGER)
     private Publication publication;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private Set<Page> pages;
 
     public Disposition(){}

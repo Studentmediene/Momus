@@ -17,16 +17,24 @@
 package no.dusken.momus.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
 public class ArticleType {
 
     @Id
+    @GeneratedValue
     private Long id;
 
     private String name;
     private String description;
+
+    public ArticleType(){}
+
+    public ArticleType( String name ){
+        this.name = name;
+    }
 
 
     public Long getId() {

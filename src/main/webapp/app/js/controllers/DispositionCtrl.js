@@ -23,117 +23,168 @@ angular.module('momusApp.controllers')
 //            $scope.disposition.pages[page.pageNr-1].articles.push;
         };
 
+        //id, name, content, note, contentLength, status, type, publication,
+        // journalists, photographers, correctResponsible, lastUpdated
+        $http.get('/api/article').success(function (data) {
+            $scope.articles = data;
+            console.log(data + "Articles hentet");
+        });
+
+        function setDisposition(data) {
+            if (!data.pages) {
+                data.pages = [];
+            }
+            console.log("disp data: " + data);
+            $scope.disposition = data;
+        }
+
+        // Get sections from database
+        $http.get('/api/disp/section').success(function (data) {
+            $scope.sections = data;
+        });
+
+        //Get Disposition
+        $http.get('/api/disp/' + $routeParams.id).success(setDisposition);
+
+        //Update disp
+        function saveArticle() {
+            $http.put('/api/disp/' + $routeParams.id, $scope.disposition).success(setDisposition);
+        }
+
+
+        $scope.saveArticle = saveArticle;
         $scope.addPage = function () {
 
-            if (!$scope.disposition.pages) {
-                $scope.disposition.pages = [];
-            }
-
             var newPage = {
-                pageNr: $scope.disposition.pages.length + 1,
+                page_nr: $scope.disposition.pages.length + 1,
                 section: $scope.sections[0],
+                note: "",
                 articles: []
             };
             $scope.disposition.pages.push(newPage);
+
+            saveArticle();
         };
 
-        $scope.removePage = function () {
-
-            if (!$scope.disposition.pages) {
-                $scope.disposition.pages = [];
-            }
-
+        $scope.removeLastPage = function () {
             var pages = $scope.disposition.pages;
-            // If the page is empty (no article), remove it.
-            if (pages.length > 0) {
-                if (pages[pages.length - 1].articles.length === 0) {
-                    pages.pop();
-                } else {
-                    if (confirm("Slette denne siden?")) {
-                        pages.pop();
-                    }
+
+            if (!pages || pages.length < 1) {
+                return;
+            }
+            for ( var i = 0;  i < pages.length; i++ )
+            {
+                if(pages[i].page_nr == pages.length){
+                    pages.splice(i,1);
+                    saveArticle();
+                    return
                 }
             }
+        }
+
+        $scope.removePage = function (page) {
+            var pages = $scope.disposition.pages;
+            var k = -1;
+
+            for (var i = 0; i < pages.length; i++){
+                if( pages[i].page_nr == page.page_nr){
+                    k = i;
+                }
+            }
+            if( k < 0){
+                return;
+            }
+            // If the page is empty (no article), remove it.
+            if (pages[k].articles.length === 0 || confirm("Slette denne siden?")) {
+                pages.splice(k,1);
+
+                for (var i = 0; i < pages.length; i++){
+
+                    if( pages[i].page_nr > page.page_nr){
+                        pages[i].page_nr -= 1;
+                    }
+                }
+                saveArticle();
+            }
+
+
         };
 
 
-//        $http.get('/api/article/publication/' + $routeParams.id).success(function (data) {
-//            $scope.articles = data;
-//            console.log(data);
-//        });
-        $scope.articles = [
-            {
-                id: 1,
-                type: "KulturRaport",
-                name: "Fuglefrø",
-                status: "Skrives",
-                photoStatus: "tatt",
-                advertisement: false,
-                photographers: [
-                    {
-                        name: "jon",
-                        age: 24
-                    },
-                    {
-                        name: "birger",
-                        age: 22
-                    },
-                    {
-                        name: "olav",
-                        age: 45
-                    },
-                    {
-                        name: "kåre",
-                        age: 45
-                    }
-                ],
-                journalists: [
-                    {
-                        name: "håkon",
-                        age: 24
-                    },
-                    {
-                        name: "bård",
-                        age: 22
-                    },
-                    {
-                        name: "stian",
-                        age: 45
-                    }
-                ]
-            },
-            {
-                id: 2,
-                type: "Portrett",
-                name: "Nato Jens",
-                status: "Desk",
-                photoStatus: "lagt inn",
-                advertisement: true,
-                photographers: [],
-                journalists: [
-                    {
-                        name: "ole",
-                        age: 20
-                    }
-                ]
-            },
-            {
-                id: 3,
-                type: "Miljø",
-                name: "Oljesøl",
-                status: "Skrives",
-                photoStatus: "redigeres",
-                advertisement: false,
-                photographers: [],
-                journalists: [
-                    {
-                        name: "frode",
-                        age: 28
-                    }
-                ]
-            }
 
-        ];
+//        $scope.articles = [
+//            {
+//                id: 1,
+//                type: "KulturRaport",
+//                name: "Fuglefrø",
+//                status: "Skrives",
+//                photoStatus: "tatt",
+//                advertisement: false,
+//                photographers: [
+//                    {
+//                        name: "jon",
+//                        age: 24
+//                    },
+//                    {
+//                        name: "birger",
+//                        age: 22
+//                    },
+//                    {
+//                        name: "olav",
+//                        age: 45
+//                    },
+//                    {
+//                        name: "kåre",
+//                        age: 45
+//                    }
+//                ],
+//                journalists: [
+//                    {
+//                        name: "håkon",
+//                        age: 24
+//                    },
+//                    {
+//                        name: "bård",
+//                        age: 22
+//                    },
+//                    {
+//                        name: "stian",
+//                        age: 45
+//                    }
+//                ]
+//            },
+//            {
+//                id: 2,
+//                type: "Portrett",
+//                name: "Nato Jens",
+//                status: "Desk",
+//                photoStatus: "lagt inn",
+//                advertisement: true,
+//                photographers: [],
+//                journalists: [
+//                    {
+//                        name: "ole",
+//                        age: 20
+//                    }
+//                ]
+//            },
+//            {
+//                id: 3,
+//                type: "Miljø",
+//                name: "Oljesøl",
+//                status: "Skrives",
+//                photoStatus: "redigeres",
+//                advertisement: false,
+//                photographers: [],
+//                journalists: [
+//                    {
+//                        name: "frode",
+//                        age: 28
+//                    }
+//                ]
+//            }
+//
+//        ];
 
 
 //        $scope.sections = [
@@ -152,16 +203,6 @@ angular.module('momusApp.controllers')
 //            {id: 13, name: "BAKSIDE"},
 //            {id: 14, name: "TEST"}
 //        ];
-        // Get sections from database
-        $http.get('/api/disp/section').success(function (data) {
-            $scope.sections = data;
-        });
-
-        //Get Disposition
-        $http.get('/api/disp/' + $routeParams.id).success(function (data) {
-            $scope.disposition = data;
-        });
-
 
         // Test disposition
 //        $scope.disposition = {
@@ -172,6 +213,7 @@ angular.module('momusApp.controllers')
 //                {
 //                    pageNr: 1,
 //                    section: {id: 0, name: ""},
+//                    note:
 //                    articles: [
 //                        {
 //                            id: 1,

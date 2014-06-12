@@ -29,7 +29,7 @@ public class Page {
     private int pageNr;
     private String note;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Article> articles;
 
     @ManyToOne
@@ -62,5 +62,13 @@ public class Page {
 
     public void setArticles(Set<Article> articles) {
         this.articles = articles;
+    }
+
+    public Section getSection() {
+        return section;
+    }
+
+    public void setSection(Section section) {
+        this.section = section;
     }
 }

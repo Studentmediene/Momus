@@ -20,13 +20,8 @@ import no.dusken.momus.authentication.AuthUserDetails;
 import no.dusken.momus.authentication.Token;
 import no.dusken.momus.authentication.UserAuthorities;
 import no.dusken.momus.authentication.UserLoginService;
-import no.dusken.momus.model.Article;
-import no.dusken.momus.model.ArticleStatus;
-import no.dusken.momus.model.Person;
-import no.dusken.momus.model.Section;
-import no.dusken.momus.service.repository.ArticleRepository;
-import no.dusken.momus.service.repository.PersonRepository;
-import no.dusken.momus.service.repository.SectionRepository;
+import no.dusken.momus.model.*;
+import no.dusken.momus.service.repository.*;
 import no.dusken.momus.smmdb.Syncer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +29,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -65,6 +62,18 @@ public class DevController {
 
     @Autowired
     private PersonRepository personRepository;
+
+    @Autowired
+    private DispositionRepository dispositionRepository;
+
+    @Autowired
+    private PageRepository pageRepository;
+
+    @Autowired
+    private ArticleTypeRepository articleTypeRepository;
+
+    @Autowired
+    private ArticleStatusRepository articleStatusRepository;
 
     @Autowired
     private Syncer syncer;
@@ -115,6 +124,23 @@ public class DevController {
         article1.setNote("detta er et nottat");
         article1.setName("Artikkelnavn");
 
+        // Setting article Type
+        List<ArticleType> articleTypes = articleTypeRepository.findAll();
+        for (ArticleType articleType : articleTypes) {
+            if (articleType.getName().equals("KulturRaport")){
+                article1.setType(articleType);
+            }
+        }
+
+        // Setting article status
+        List<ArticleStatus> articleStatuses = articleStatusRepository.findAll();
+        for (ArticleStatus articlestatus : articleStatuses) {
+            if (articlestatus.getName().equals("Skrives")){
+                article1.setStatus(articlestatus);
+            }
+        }
+
+
         articleRepository.save(article1);
 
         Article article2 = new Article();
@@ -130,8 +156,39 @@ public class DevController {
         article2.setNote("detta er også et nottat");
         article2.setName("Artikkelnavn 2: Electric Boogaloo");
 
+        List<ArticleType> articleTypes2 = articleTypeRepository.findAll();
+        for (ArticleType articleType2 : articleTypes2) {
+            if (articleType2.getName().equals("KulturRaport")){
+                article2.setType(articleType2);
+            }
+        }
+
+        // Setting article status
+        for (ArticleStatus articlestatus : articleStatuses) {
+            if (articlestatus.getName().equals("Desk")){
+                article2.setStatus(articlestatus);
+            }
+        }
+
+
         articleRepository.save(article2);
 
+        return "ok";
+    }
+
+    @RequestMapping("/createDisp")
+    public @ResponseBody String createTestDisp() {
+
+        Disposition disp1 =  dispositionRepository.save(new Disposition(1L));
+        Set<Page> pageSet = new HashSet<>();
+        Page dummyPage1 = pageRepository.save(new Page());
+        dummyPage1.setNote("Page_Disp");
+        dummyPage1.setSection(sectionRepository.findOne(1L));
+        dummyPage1 = pageRepository.save(dummyPage1);
+        pageSet.add(dummyPage1);
+        disp1.setPages(pageSet);
+
+        Disposition save = dispositionRepository.save(disp1);
         return "ok";
     }
 
@@ -151,6 +208,19 @@ public class DevController {
         sectionRepository.save(new Section("SPIT"));
         sectionRepository.save(new Section("BAKSIDE"));
         sectionRepository.save(new Section("TEST"));
+
+
+        articleTypeRepository.save(new ArticleType("KulturRaport"));
+
+        return "ok";
+    }
+
+    @RequestMapping("/createArticleStatus")
+    public @ResponseBody String createTestStatuses() {
+
+        articleStatusRepository.save(new ArticleStatus("Desk"));
+        articleStatusRepository.save(new ArticleStatus("Skrives"));
+        articleStatusRepository.save(new ArticleStatus("Test"));
 
         return "ok";
     }

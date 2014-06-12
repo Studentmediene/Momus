@@ -16,7 +16,7 @@
 
 <div>
 
-<h1 style="text-align: center"> Disposition for {{disposition.publication.name}} </h1>
+<h1 style="text-align: center"> Disposition for {{disposition.publication.name}} </h1> <button ng-click="saveArticle()">save me</button>
 <div class="row">
     <div class="col-md-12">
         <table class="table-bordered" style="width: 100%" >
@@ -25,23 +25,24 @@
                 <th ng-repeat="header in ['Side ','Seksjon ','Artikler ','Notater ','Journalister ','Fotografer ','Status ','Fotostatus','Reklame']">{{header}}</th>
             </tr>
             <!--For every page in the disp-->
-            <tbody ng-repeat="page in disposition.pages">
+            <tbody ng-repeat="page in disposition.pages | orderBy:'page_nr'">
+            <!--<tbody ng-repeat="page in disposition.pages">-->
                 <tr ng-repeat="article in page.articles" >
                     <!--Side-->
-                    <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">{{page.pageNr}}</td>
+                    <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">{{page.page_nr}}</td>
                     <!--Seksjon-->
                     <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">
-                        <select ng-model="selection" ng-options="s.name for s in sections" style="border: none"></select>
+                        <select ng-model="page.section" ng-options="s.name for s in sections" style="border: none"></select>
                     </td>
                     <!--Artikkel-->
-                    <td class="articleHover" ng-click="articleModal(page)" style="text-align: center">{{article.type}} : {{article.name}}</td>
+                    <td class="articleHover" ng-click="articleModal(page)" style="text-align: center">{{article.type.name}} : {{article.name}}</td>
                     <!--Notater-->
-                    <td><textarea rows="2" style="border: none; height: 4em;"></textarea></td>
+                    <td><textarea ng-model="article.note" rows="2" style="border: none; height: 4em;"></textarea></td>
                     <!--Journalister-->
                     <td >
                         <table>
                             <tr ng-repeat="journalist in article.journalists">
-                                <td >{{journalist.name}}</td>
+                                <td >{{journalist.first_name}} {{journalist.last_name}}</td>
                             </tr>
                         </table>
                     </td>
@@ -49,12 +50,12 @@
                     <td>
                         <table>
                             <tr ng-repeat="photographer in article.photographers">
-                                <td >{{photographer.name}}</td>
+                                <td >{{photographer.first_name}} {{photographer.last_name}}</td>
                             </tr>
                         </table>
                     </td>
                     <!--Status-->
-                    <td style="text-align: center">{{article.status}}</td>
+                    <td style="text-align: center">{{article.status.name}}</td>
                     <!--Fotostatus-->
                     <td style="text-align: center">{{article.photoStatus}}</td>
                     <!--Reklame-->
@@ -64,15 +65,16 @@
                 <!--If there are no articles on the page-->
                 <tr ng-if="page.articles == 0">
                     <!--Side-->
-                    <td style="text-align: center">{{page.pageNr}}</td>
+                    <td style="text-align: center">{{page.page_nr}}</td>
                     <!--Seksjon-->
                     <td style="text-align: center">
-                        <select ng-model="selection" ng-options="s.name for s in sections"></select>
+                        <!--<select ng-model="page.section" ng-options="s.name for s in sections" style="border: none" ></select>-->
+                        <select ng-model="page.section.id" ng-options="s.id as s.name for s in sections" style="border: none" ></select>
                     </td>
                     <!--Artikkel-->
                     <td class="articleHover" ng-click="articleModal(page)" style="text-align: center"></td>
                     <!--Notater-->
-                    <td></td>
+                    <td ></td>
                     <!--Journalister-->
                     <td ></td>
                     <!--Fotografer-->
@@ -96,7 +98,7 @@
                 <td></td>
                 <td ></td>
                 <td ></td>
-                <td ng-click="removePage()" style="text-align: center"><span class="glyphicon glyphicon-minus"></span></td>
+                <td ng-click="removeLastPage()" style="text-align: center"><span class="glyphicon glyphicon-minus"></span></td>
             </tr>
         </table>
     </div>
