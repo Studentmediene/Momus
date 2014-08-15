@@ -128,4 +128,8 @@ public class ArticleService {
 
         return resultList;
     }
+
+    public ArticleRepository getArticleRepository() {
+        return articleRepository;
+    }
 }

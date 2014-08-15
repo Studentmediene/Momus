@@ -18,13 +18,11 @@ package no.dusken.momus.service.repository;
 
 import no.dusken.momus.model.Article;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
-import java.util.Set;
 
-public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpecificationExecutor<Article> {
+public interface ArticleRepository extends JpaRepository<Article, Long> {
 
-    public List<Article> findByIdIn(Set<Long> articleIDs);
+    public List<Article> findByPublicationId(Long id);
 
 }

@@ -46,6 +46,11 @@ public class ArticleController {
         return articleService.getArticleById(id);
     }
 
+    @RequestMapping(value = "/publication/{id}", method = RequestMethod.GET)
+    public @ResponseBody List<Article> getAllArticlesByPublicationID(@PathVariable("id") Long id) {
+        return articleService.getArticleRepository().findByPublicationId(id);
+    }
+
     /** Update (PUT) entire existing article */
     @RequestMapping(method = RequestMethod.PUT)
     public @ResponseBody Article saveArticleContents(@RequestBody Article article){

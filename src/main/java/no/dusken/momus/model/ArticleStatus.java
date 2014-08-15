@@ -30,6 +30,9 @@ public class ArticleStatus {
     private String name;
     private String color;
 
+    public ArticleStatus(){}
+
+    public ArticleStatus (String name) { this.name = name;}
 
     public Long getId() {
         return id;

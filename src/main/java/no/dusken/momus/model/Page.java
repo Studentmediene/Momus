@@ -16,10 +16,7 @@
 
 package no.dusken.momus.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
@@ -32,9 +29,11 @@ public class Page {
     private int pageNr;
     private String note;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Article> articles;
 
+    @ManyToOne
+    private Section section;
 
 
     public Long getId() {
@@ -63,5 +62,13 @@ public class Page {
 
     public void setArticles(Set<Article> articles) {
         this.articles = articles;
+    }
+
+    public Section getSection() {
+        return section;
+    }
+
+    public void setSection(Section section) {
+        this.section = section;
     }
 }

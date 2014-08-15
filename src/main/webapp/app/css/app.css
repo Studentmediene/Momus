@@ -67,3 +67,9 @@ a:focus {
 .nav, .pagination, .carousel, .panel-title a {
     cursor: pointer;
 }
+
+td.articleHover:hover {
+    cursor: pointer;
+    background-color: #d9edf7;
+
+}

@@ -1,0 +1,107 @@
+<!--
+  ~ Copyright 2014 Studentmediene i Trondheim AS
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div>
+
+<h1 style="text-align: center"> Disposition for {{disposition.publication.name}} </h1> <button ng-click="saveArticle()">save me</button>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table-bordered" style="width: 100%" >
+            <!--Top Row, Headers-->
+            <tr>
+                <th ng-repeat="header in ['Side ','Seksjon ','Artikler ','Notater ','Journalister ','Fotografer ','Status ','Fotostatus','Reklame']">{{header}}</th>
+            </tr>
+            <!--For every page in the disp-->
+            <tbody ng-repeat="page in disposition.pages | orderBy:'page_nr'">
+            <!--<tbody ng-repeat="page in disposition.pages">-->
+                <tr ng-repeat="article in page.articles" >
+                    <!--Side-->
+                    <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">{{page.page_nr}}</td>
+                    <!--Seksjon-->
+                    <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">
+                        <select ng-model="page.section" ng-options="s.name for s in sections" style="border: none"></select>
+                    </td>
+                    <!--Artikkel-->
+                    <td class="articleHover" ng-click="articleModal(page)" style="text-align: center">{{article.type.name}} : {{article.name}}</td>
+                    <!--Notater-->
+                    <td><textarea ng-model="article.note" rows="2" style="border: none; height: 4em;"></textarea></td>
+                    <!--Journalister-->
+                    <td >
+                        <table>
+                            <tr ng-repeat="journalist in article.journalists">
+                                <td >{{journalist.first_name}} {{journalist.last_name}}</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <!--Fotografer-->
+                    <td>
+                        <table>
+                            <tr ng-repeat="photographer in article.photographers">
+                                <td >{{photographer.first_name}} {{photographer.last_name}}</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <!--Status-->
+                    <td style="text-align: center">{{article.status.name}}</td>
+                    <!--Fotostatus-->
+                    <td style="text-align: center">{{article.photoStatus}}</td>
+                    <!--Reklame-->
+                    <td style="text-align: center"><input type="checkbox" ng-model="article.advertisement"></td>
+
+                </tr>
+                <!--If there are no articles on the page-->
+                <tr ng-if="page.articles == 0">
+                    <!--Side-->
+                    <td style="text-align: center">{{page.page_nr}}</td>
+                    <!--Seksjon-->
+                    <td style="text-align: center">
+                        <!--<select ng-model="page.section" ng-options="s.name for s in sections" style="border: none" ></select>-->
+                        <select ng-model="page.section.id" ng-options="s.id as s.name for s in sections" style="border: none" ></select>
+                    </td>
+                    <!--Artikkel-->
+                    <td class="articleHover" ng-click="articleModal(page)" style="text-align: center"></td>
+                    <!--Notater-->
+                    <td ></td>
+                    <!--Journalister-->
+                    <td ></td>
+                    <!--Fotografer-->
+                    <td></td>
+                    <!--Status-->
+                    <td style="text-align: center"></td>
+                    <!--Fotostatus-->
+                    <td style="text-align: center"></td>
+                    <!--Reklame-->
+                    <td style="text-align: center"></td>
+                </tr>
+            </tbody>
+            <!--Add new Page Row-->
+            <tr style="background-color: #F8F8F8;">
+                <!--Side-->
+                <td ng-click="addPage()" style="text-align: center"><span class="glyphicon glyphicon-plus"></span></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td ></td>
+                <td></td>
+                <td ></td>
+                <td ></td>
+                <td ng-click="removeLastPage()" style="text-align: center"><span class="glyphicon glyphicon-minus"></span></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</div>

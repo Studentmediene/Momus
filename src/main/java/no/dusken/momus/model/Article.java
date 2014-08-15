@@ -65,6 +65,7 @@ public class Article {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdated;
 
+
     /**
      * This is done after load instead of in a getter, since
      * it may happen that the content is set to empty to save bandwith/hide it, but
@@ -150,4 +151,5 @@ public class Article {
     public Publication getPublication() {return publication; }
 
     public void setPublication(Publication publication) {this.publication = publication; }
+
 }
