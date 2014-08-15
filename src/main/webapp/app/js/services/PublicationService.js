@@ -25,8 +25,8 @@ angular.module('momusApp.services')
             createNew: function(publication) {
                 return $http.post('/api/publication', publication);
             },
-            update: function(publication) {
-                return $http.put('/api/publication/' + publication.id, publication);
+            updateMetadata: function(publication) {
+                return $http.put('/api/publication/metadata/' + publication.id, publication);
             }
         }
     });

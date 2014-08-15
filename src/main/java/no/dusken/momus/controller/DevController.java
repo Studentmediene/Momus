@@ -75,6 +75,8 @@ public class DevController {
 
     @Autowired
     private ArticleStatusRepository articleStatusRepository;
+    @Autowired
+    private PublicationRepository publicationRepository;
 
     @Autowired
     private Syncer syncer;
@@ -186,7 +188,15 @@ public class DevController {
 
         Article article = new Article();
         article.setContent("test innhold lol");
-        article.setPublication(new Publication(2L));
+
+        article.setContent("test innhold lol");
+
+        Publication publication = new Publication();
+        publication.setName("testpub");
+        publication.setReleaseDate(new Date(114, 5, 5));
+        publication = publicationRepository.save(publication);
+
+        article.setPublication(publication);
         article.setName("Test name");
 
         articleRepository.save(article);

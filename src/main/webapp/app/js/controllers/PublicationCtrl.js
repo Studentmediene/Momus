@@ -82,7 +82,7 @@ angular.module('momusApp.controllers')
                         $scope.isSaving = false;
                     });
             } else { // it's an old one
-                PublicationService.update($scope.editing)
+                PublicationService.updateMetadata($scope.editing)
                     .success(function (savedPublication) {
                         $scope.publications[$scope.editingIndex] = savedPublication;
                         $scope.editing = savedPublication;

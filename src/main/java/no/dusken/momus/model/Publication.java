@@ -37,7 +37,7 @@ public class Publication {
     @OrderColumn
     private List<Page> pages;
 
-    @OneToMany
+    @OneToMany(mappedBy = "publication")
     private Set<Article> articles;
 
     public Publication() {

@@ -44,12 +44,15 @@ public class PublicationController {
     }
 
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/metadata/{id}", method = RequestMethod.PUT)
     public @ResponseBody Publication savePublication(@PathVariable("id") Long id, @RequestBody Publication publication) {
-        Publication savedPublication = publicationRepository.save(publication);
-        savedPublication = publicationRepository.findOne(savedPublication.getId());
-        return savedPublication;
+        Publication savedPublication = publicationRepository.findOne(id);
 
+        savedPublication.setName(publication.getName());
+        savedPublication.setReleaseDate(publication.getReleaseDate());
+
+        savedPublication = publicationRepository.save(savedPublication);
+        return savedPublication;
     }
 
     @RequestMapping(method = RequestMethod.POST)
