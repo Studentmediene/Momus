@@ -17,9 +17,15 @@
 'use strict';
 
 angular.module('momusApp.services')
-    .service('ArticleService', function($http){
+    .service('ArticleService', function ($http) {
         return {
-            updateObject: function(obj) {
+            getArticle: function (id) {
+                return $http.get('/api/article/' + id);
+            },
+            getPersons: function () {
+                return $http.get('/api/person/');
+            },
+            updateObject: function (obj) {
                 // When the server receives this object,
                 // it will overwrite the server data for each listed field and leave the others unchanged
                 return {
@@ -29,51 +35,22 @@ angular.module('momusApp.services')
             },
             updateArticle: function (updates, scope, success) {
                 $http.put('/api/article/update', updates)
-                    .success( function (data) {
-                        angular.forEach(updates.updated_fields, function(field) {
+                    .success(function (data) {
+                        angular.forEach(updates.updated_fields, function (field) {
                             scope.original[field] = angular.copy(data[field]);
                         });
                         success();
                     }
                 )
-                    .error( function () {
+                    .error(function () {
                         alert("Error!");
                     }
                 );
             },
-            getArticle: function(id, success) {
-                $http.get('/api/article/' + id)
-                    .success( function(data) {
-                        success(data);
-                    }
-                );
-            },
-            getPerson: function(id, success) {
-                $http.get('/api/person/' + id)
-                    .success( function (data) {
-                        success(data);
-                    }
-                );
-            },
-            listOfPersonsContainsID: function(list, id) {
-                for (var i = 0; i < list.length; i++) {
-                    // Note that this compares the object's integer ID to the string id
-                    if (list[i].id == id) {
-                        return true;
-                    }
-                }
-                return false;
-            },
-            removeFromArray: function(array, object) {
-                var index = array.indexOf(object);
-                if (index > -1) {
-                    array.splice(index, 1);
-                }
-            },
-            changed: function(object, scope) {
+            changed: function (object, scope) {
                 return !angular.equals(scope.article[object], scope.original[object]);
             },
-            revert: function(object, scope) {
+            revert: function (object, scope) {
                 scope.article[object] = angular.copy(scope.original[object]);
             }
         }

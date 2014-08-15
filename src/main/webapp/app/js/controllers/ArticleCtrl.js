@@ -17,19 +17,63 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function ($scope, $routeParams, ArticleService) {
+    .controller('ArticleCtrl', function (Article, Persons, noteParserRules, articleParserRules, ArticleService, $scope) {
 
-        // The scope of this controller is the entire article view.
-        // There are sub-controllers for the different panels
-        // that access the $scope of this controller
+        /* dependency resolution */
+        $scope.article = Article.data;
+        $scope.persons = Persons.data;
+        $scope.noteRules = noteParserRules;
+        $scope.articleRules = articleParserRules;
 
-        // Create these objects ASAP so that the console won't complain.
-        $scope.article = { content: "" };
-        $scope.original = { content: "" };
+        $scope.original = angular.copy($scope.article);
 
-        ArticleService.getArticle( $routeParams.id, function (data) {
-            $scope.article = angular.copy(data);
-            $scope.original = angular.copy(data);
-        });
+        /* content panel */
+        $scope.saveArticle = function () {
+            var updates = ArticleService.updateObject($scope.article);
+            updates.updated_fields.push("content");
+            ArticleService.updateArticle(updates, $scope, function(){});
+        };
+
+        /* note panel */
+        $scope.saveNote = function () {
+            var updates = ArticleService.updateObject($scope.article);
+            updates.updated_fields.push("note");
+            ArticleService.updateArticle(updates, $scope, function(){});
+        };
+
+        /* meta panel */
+        $scope.renderPerson = function(person) {
+            if (person.first_name === null && person.last_name === null) {
+                return person.username;
+            }
+
+            return person.first_name + ' ' + person.last_name
+        };
+
+        $scope.toggleEditMode = function() {
+            $scope.metaEditMode = !$scope.metaEditMode;
+        };
+
+        $scope.saveMeta = function() {
+            var updates = ArticleService.updateObject($scope.article);
+            if (ArticleService.changed("name", $scope)) {
+                updates.updated_fields.push("name");
+            }
+            if (ArticleService.changed("journalists", $scope)) {
+                updates.updated_fields.push("journalists");
+            }
+            if (ArticleService.changed("photographers", $scope)) {
+                updates.updated_fields.push("photographers");
+            }
+            ArticleService.updateArticle(updates, $scope, function() {
+                $scope.metaEditMode = false;
+            });
+        };
+
+        $scope.cancelMeta = function() {
+            ArticleService.revert("name", $scope);
+            ArticleService.revert("journalists", $scope);
+            ArticleService.revert("photographers", $scope);
+            $scope.metaEditMode = false;
+        };
     });
-

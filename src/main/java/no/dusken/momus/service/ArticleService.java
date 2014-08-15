@@ -16,6 +16,7 @@
 
 package no.dusken.momus.service;
 
+import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.Updates;
 import no.dusken.momus.service.repository.ArticleRepository;
@@ -51,7 +52,11 @@ public class ArticleService {
 
 
     public Article getArticleById(Long id) {
-        return articleRepository.findOne(id);
+        Article article = articleRepository.findOne(id);
+        if (article == null) {
+            throw new RestException("Article "+id+" not found", 404);
+        }
+        return article;
     }
 
     public List<Article> getAllArticles() {
