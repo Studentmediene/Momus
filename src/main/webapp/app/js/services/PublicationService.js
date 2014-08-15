@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
-package no.dusken.momus.service.repository;
+'use strict';
 
-import no.dusken.momus.model.Publication;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface PublicationRepository extends JpaRepository<Publication, Long> {
-
-}
+angular.module('momusApp.services')
+    .service('PublicationService', function ($http) {
+        return {
+            getAll: function () {
+                return $http.get('/api/publication');
+            },
+            createNew: function(publication) {
+                return $http.post('/api/publication', publication);
+            },
+            update: function(publication) {
+                return $http.put('/api/publication/' + publication.id, publication);
+            }
+        }
+    });

@@ -34,7 +34,7 @@
             <div class="col-md-12">
 
                 <!-- Status search -->
-                <div class="col-md-3 col-md-offset-0">
+                <div class="col-md-3">
                     <label for="searchStatus">Status</label>
                     <select class="form-control" id="searchStatus" ng-model="search.status" placeholder="Status">
                         <option class="" value="">Velg status</option>
@@ -43,7 +43,7 @@
                 </div>
 
                 <!-- Person search -->
-                <div class="col-md-3 col-md-offset-0">
+                <div class="col-md-3 ">
                     <label for="searchPersons">Personsøk</label>
                     <select multiple class="form-control" id="searchPersons" ui-select2 ng-model="search.persons">
                         <option ng-repeat="person in persons" value="{{person.id}}">{{person.username}} {{person.first_name}} {{person.last_name}}</option>
@@ -51,7 +51,7 @@
                 </div>
 
                 <!-- Section search -->
-                <div class="col-md-3 col-md-offset-0">
+                <div class="col-md-3">
                     <label for="searchSection">Redaksjon</label>
                     <select class="form-control" id="searchSection" ng-model="search.section">
                         <option value="">Velg redaksjon</option>
@@ -60,11 +60,11 @@
                 </div>
 
                 <!-- Publication search -->
-                <div class="col-md-3 col-md-offset-0">
+                <div class="col-md-3">
                     <label for="searchPublication">Utgaver</label>
                     <select class="form-control" id="searchPublication" ng-model="search.publication">
                         <option value="">Velg utgave</option>
-                        <option ng-repeat="publication in publications" value="{{publication.id}}">{{publication.name}}</option>
+                        <option ng-repeat="publication in publications | orderBy: '-name'" value="{{publication.id}}">{{publication.name}}</option>
                     </select>
                 </div>
             </div>

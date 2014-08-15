@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('SearchCtrl', function ($scope, $http, PersonService) {
+    .controller('SearchCtrl', function ($scope, $http, PersonService, PublicationService) {
 
         $scope.data = [];
         $scope.search = {
@@ -37,23 +37,19 @@ angular.module('momusApp.controllers')
         /**
          * Fetching publications from server
          */
-        $http.get('/api/publication/year/2014')
-            .success(function (data) {
-                $scope.publications = data;
-            });
-
-
-
+        PublicationService.getAll().success(function (data) {
+            $scope.publications = data;
+        });
 
 
         // TODO get these from server
         $scope.sections = [
-            {id: 1, name:"Nyhet"},
-            {id: 2, name:"Debatt"},
-            {id: 3, name:"Kultur"},
-            {id: 4, name:"Forbruker"},
-            {id: 5, name:"Reportasje"},
-            {id: 6, name:"Sport"}
+            {id: 1, name: "Nyhet"},
+            {id: 2, name: "Debatt"},
+            {id: 3, name: "Kultur"},
+            {id: 4, name: "Forbruker"},
+            {id: 5, name: "Reportasje"},
+            {id: 6, name: "Sport"}
         ];
 
         $scope.statuses = [
@@ -63,9 +59,9 @@ angular.module('momusApp.controllers')
             {id: 4, name: "Publisert"}
         ];
 
-        $scope.searchFunc = function() {
+        $scope.searchFunc = function () {
             $http.post('/api/search', $scope.search)
-                .success(function(data) {
+                .success(function (data) {
                     $scope.data = data;
                 });
         }

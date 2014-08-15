@@ -17,11 +17,12 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('PublicationCtrl', function ($scope, $http) {
+    .controller('PublicationCtrl', function ($scope, $http, PublicationService) {
 
-        $scope.publications = [];
         var today = new Date();
-        $scope.yearSelected = "Aktive utgaver";
+
+        $scope.viewYear = today.getFullYear();
+        $scope.publications = [];
         $scope.yearsInDropdown = [];
 
         $scope.editing = {};
@@ -31,23 +32,26 @@ angular.module('momusApp.controllers')
         };
 
 
-        $scope.getPublications = function (year) {
-            $scope.yearSelected = year;
+        PublicationService.getAll().success(function (data) {
+            $scope.publications = data;
+        });
 
-            if (year === "Aktive utgaver") {
-                getActivePublications();
-            } else {
-                getPublicationsByYear(year);
-            }
+        $scope.yearFilter = function (publication) {
+            // todo remove check?
+            return publication.release_date && publication.release_date.indexOf($scope.viewYear) != -1;
         };
 
+        $scope.yearSelected = function(year) {
+            $scope.viewYear = year;
+            $scope.editing = {};
+        };
 
-        $scope.getPublications($scope.yearSelected);
         calculateYearsInDropdownMenu();
 
 
         $scope.editPublication = function (publication) {
             $scope.editing = angular.copy(publication); // always work on a copy
+            $scope.editingIndex = $scope.publications.indexOf(publication);
 
             // clear form errors
             if (!$scope.editing.release_date) {
@@ -55,21 +59,6 @@ angular.module('momusApp.controllers')
             }
             $scope.publicationForm.$setPristine();
         };
-
-        function getPublicationsByYear(year) {
-            $http.get('/api/publication/year/' + year)
-                .success(function (data) {
-                    $scope.publications = data;
-                });
-        }
-
-        function getActivePublications() {
-            $http.get('/api/publication/activePublications')
-                .success(function (data) {
-                    $scope.publications = data;
-                });
-        }
-
 
         function calculateYearsInDropdownMenu() {
             var sinceYearX = 2009;
@@ -82,22 +71,21 @@ angular.module('momusApp.controllers')
 
         /**
          * This method saves either a new publication or an already existing publication.
-         * All publications are then reloaded
          */
         $scope.saveEditedPublication = function () {
             $scope.isSaving = true;
             if (!$scope.editing.id) { // no id means it's a new one
-                $http.post('/api/publication', $scope.editing)
+                PublicationService.createNew($scope.editing)
                     .success(function (savedPublication) {
                         $scope.editing = savedPublication;
-                        $scope.getPublications($scope.yearSelected); // reload all
+                        $scope.publications.push(savedPublication);
                         $scope.isSaving = false;
                     });
             } else { // it's an old one
-                $http.put('/api/publication/' + $scope.editing.id, $scope.editing)
+                PublicationService.update($scope.editing)
                     .success(function (savedPublication) {
+                        $scope.publications[$scope.editingIndex] = savedPublication;
                         $scope.editing = savedPublication;
-                        $scope.getPublications($scope.yearSelected); // reload all
                         $scope.isSaving = false;
                     });
             }
