@@ -22,9 +22,6 @@ angular.module('momusApp.services')
             getArticle: function (id) {
                 return $http.get('/api/article/' + id);
             },
-            getPersons: function () {
-                return $http.get('/api/person/');
-            },
             updateObject: function (obj) {
                 // When the server receives this object,
                 // it will overwrite the server data for each listed field and leave the others unchanged

@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('SearchCtrl', function ($scope, $http) {
+    .controller('SearchCtrl', function ($scope, $http, PersonService) {
 
         $scope.data = [];
         $scope.search = {
@@ -28,13 +28,10 @@ angular.module('momusApp.controllers')
             publication: ''
         };
 
-        /**
-         * Fetching persons from server
-         */
-        $http.get('/api/person')
-            .success(function(data) {
-                $scope.persons = data;
-            });
+
+        PersonService.getAll().success(function (data) {
+            $scope.persons = data;
+        });
 
 
         /**

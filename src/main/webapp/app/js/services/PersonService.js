@@ -16,5 +16,14 @@
 
 'use strict';
 
-angular.module('momusApp.services').
-    value('version', '0.1');
+angular.module('momusApp.services')
+    .service('PersonService', function ($http) {
+        return {
+            getCurrentUser: function() {
+                return $http.get('/api/person/me', {cache: true});
+            },
+            getAll: function () {
+                return $http.get('/api/person/', {cache: true});
+            }
+        }
+    });

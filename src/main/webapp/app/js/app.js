@@ -49,9 +49,9 @@ angular.module('momusApp', [
                         }
                     ],
                     Persons: [
-                        'ArticleService',
-                        function(ArticleService) {
-                            return ArticleService.getPersons();
+                        'PersonService',
+                        function(PersonService) {
+                            return PersonService.getAll();
                         }
                     ]
                 }

@@ -17,8 +17,8 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('NavbarCtrl', function ($scope, $location, CurrentUser) {
-        CurrentUser.getCurrentUser().then(function(user) {
+    .controller('NavbarCtrl', function ($scope, $location, PersonService) {
+        PersonService.getCurrentUser().then(function(user) {
             $scope.user = user;
         });
 
