@@ -167,6 +167,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>3.2.2</version>
+        </dependency>
+
         <!-- Only for the redirect in index.jsp ... -->
         <dependency>
             <groupId>javax.servlet</groupId>
