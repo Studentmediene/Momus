@@ -74,6 +74,13 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
+    <!-- Disable cache for the API -->
+    <mvc:interceptors>
+        <bean class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+            <property name="cacheSeconds" value="0" />
+        </bean>
+    </mvc:interceptors>
+
     <!-- In which packages to look for services etc. -->
     <context:component-scan base-package="no.dusken.momus" />
 
