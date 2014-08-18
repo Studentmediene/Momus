@@ -96,7 +96,7 @@ public class ArticleService {
         revision.setStatus(existing.getStatus());
         revision = articleRevisionRepository.save(revision);
 
-        logger.info("Saved new revision for article(id:{}) with id: {}, content:\n", article.getId(), revision.getId(), content);
+        logger.info("Saved new revision for article(id:{}) with id: {}, content:\n{}", article.getId(), revision.getId(), content);
 
         existing.setContent(content);
         return saveUpdatedArticle(existing);
