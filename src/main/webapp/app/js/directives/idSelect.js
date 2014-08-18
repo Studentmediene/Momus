@@ -13,16 +13,15 @@ angular.module('momusApp.directives')
                     scope.multiple = true;
                 }
                 scope.selectedIDs = [];
-                scope.selectedIDs = scope.target.map(function(o){
-                    return o.id;
-                });
-
                 scope.lookup = {};
-                scope.items.forEach(function(person){
-                    scope.lookup[person.id] = person;
+
+                scope.$watch('items', function () {
+                    scope.items.forEach(function(person){
+                        scope.lookup[person.id] = person;
+                    });
                 });
 
-                scope.$watch('selectedIDs', function() {
+                scope.changed = function() {
                     if (scope.multiple){
                         scope.target = scope.selectedIDs.map(function(id) {
                             return scope.lookup[id];
@@ -30,7 +29,14 @@ angular.module('momusApp.directives')
                     } else {
                         scope.target = [scope.lookup[scope.selectedIDs]];
                     }
+                };
+
+                scope.$watch('target', function () {
+                    scope.selectedIDs = scope.target.map(function(o){
+                        return o.id;
+                    });
                 });
+
             }
         };
     });

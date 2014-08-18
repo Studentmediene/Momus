@@ -17,6 +17,7 @@
 <select multiple
         ng-if="multiple"
         ui-select2
+        ng-change="changed()"
         ng-model="$parent.selectedIDs">
     <option ng-repeat="item in items" value="{{ item.id }}">
         {{ renderer(item) }}
@@ -25,6 +26,7 @@
 <select
         ng-if="!multiple"
         ui-select2
+        ng-change="changed()"
         ng-model="$parent.selectedIDs">
     <option ng-repeat="item in items" value="{{ item.id }}">
         {{ renderer(item) }}
