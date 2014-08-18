@@ -76,6 +76,14 @@ public class Article {
         contentLength = content.length();
     }
 
+    public Article() {
+
+    }
+
+    public Article(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

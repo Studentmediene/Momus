@@ -17,7 +17,6 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.model.Article;
-import no.dusken.momus.model.Updates;
 import no.dusken.momus.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,14 +31,6 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
-    /**
-     * TODO: Add pagination or something, getting all articles will possibly be MANY
-     * @return
-     */
-    @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody List<Article> getAllArticles() {
-        return articleService.getAllArticles();
-    }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody Article getArticleByID(@PathVariable("id") Long id) {
@@ -51,15 +42,23 @@ public class ArticleController {
         return articleService.getArticleRepository().findByPublicationId(id);
     }
 
-    /** Update (PUT) entire existing article */
     @RequestMapping(method = RequestMethod.PUT)
     public @ResponseBody Article saveArticleContents(@RequestBody Article article){
         return articleService.saveUpdatedArticle(article);
     }
 
-    /** Receive an update object with a list of fields to be updated */
-    @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    public @ResponseBody Article updateArticle(@RequestBody Updates<Article> updates){
-        return articleService.updateArticle(updates);
+    @RequestMapping(value = "/metadata", method = RequestMethod.PUT)
+    public @ResponseBody Article updateArticleMetadata(@RequestBody Article article){
+        return articleService.saveMetadata(article);
+    }
+
+    @RequestMapping(value = "/content", method = RequestMethod.PUT)
+    public @ResponseBody Article updateArticleContentText(@RequestBody Article article){
+        return articleService.saveNewContent(article);
+    }
+
+    @RequestMapping(value = "/note", method = RequestMethod.PUT)
+    public @ResponseBody Article updateArticleNote(@RequestBody Article article){
+        return articleService.saveNote(article);
     }
 }
