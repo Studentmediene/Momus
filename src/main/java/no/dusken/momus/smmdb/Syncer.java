@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Service
@@ -49,6 +50,14 @@ public class Syncer {
 
     @Autowired
     GroupMapper groupMapper;
+
+    /**
+     * This will be run when the server starts
+     */
+    @PostConstruct
+    public void startUp() {
+        sync();
+    }
 
     /**
      * Will pull data from SmmDb and update our local copy
