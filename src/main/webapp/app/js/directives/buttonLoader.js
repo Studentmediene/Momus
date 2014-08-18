@@ -18,22 +18,26 @@ angular.module('momusApp.directives').
     directive('buttonLoader', function ($timeout) {
         return {
             restrict: 'A',
+            template: '<span ng-if="!showingOriginal" ng-bind-html="customText | trustHtml"></span><span ng-if="showingOriginal" ng-transclude /></div> ',
+            transclude: true,
             scope: {
                 buttonLoader: '=',
                 ngDisabled: '='
             },
             link: function (scope, elm, attrs) {
-                var standardText = elm.html();
+                scope.showingOriginal = true;
+
                 // Default values
                 var loadingText = typeof attrs.loadingText !== 'undefined' ? attrs.loadingText : "Lagrer";
                 var completedText = typeof attrs.completedText !== 'undefined' ? attrs.completedText : "Lagret";
-                var shotStatus = !attrs.noStatus;
+                var showIcons = !attrs.noIcons;
 
                 var spinner = '';
                 var check = '';
                 var hasBeenDisabled;
 
-                if (shotStatus) {
+
+                if (showIcons) {
                     spinner = '<i class="fa fa-spinner fa-spin"></i> ';
                     check = '<i class="fa fa-check"></i> ';
                 }
@@ -41,32 +45,37 @@ angular.module('momusApp.directives').
 
                 scope.$watch('buttonLoader', function (isLoading) {
                     if (isLoading) {
-                        showLoading()
+                        showLoading();
                     } else {
                         if (hasBeenDisabled) {
                             hasBeenDisabled = false;
                             showCompleted();
+
                             $timeout(function () {
-                                showStandard();
+                                showOriginal();
                             }, 1500);
                         }
                     }
                 });
 
                 function showLoading() {
-                    elm.html(spinner + loadingText);
+                    scope.showingOriginal = false;
+                    scope.customText = spinner + loadingText;
+
                     elm.attr('disabled', true);
                     hasBeenDisabled = true;
                 }
 
                 function showCompleted() {
+                    scope.showingOriginal = false;
+                    scope.customText = check + completedText;
+
                     elm.addClass("btn-success");
-                    elm.html(check + completedText);
                 }
 
-                function showStandard() {
+                function showOriginal() {
+                    scope.showingOriginal = true;
                     elm.removeClass("btn-success");
-                    elm.html(standardText);
 
                     if (scope.ngDisabled) { // if it has a ngDisabled attribute, set disabled to that value
                         elm.attr('disabled', scope.ngDisabled);
