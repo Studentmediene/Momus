@@ -58,10 +58,17 @@ textarea.note {
     clear: both;
 }
 
-/* So that browsers doesn't display an outline around clicked links */
+/* So that browsers doesn't display an outline around clicked links and stuff */
 a:focus {
     outline: 0;
 }
+
+.btn:focus {
+    outline: 0;
+}
+
+
+
 
 /* used for ui-bootstrap */
 .nav, .pagination, .carousel, .panel-title a {

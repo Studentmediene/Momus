@@ -15,7 +15,7 @@
   -->
 
 <div class="row">
-<div class="col-md-8">
+<div class="col-md-7">
     <div id="content-panel" class="panel panel-primary">
         <div class="panel-heading">
             <h1 class="panel-title">
@@ -23,16 +23,11 @@
                 {{ article.name }}
                 <div class="pull-right">
                     <button class="btn btn-default btn-xs"
-                            ng-show="article.content != original.content"
-                            ng-click="saveArticle()">
+                            ng-disabled="article.content == unedited.content"
+                            ng-click="saveContent()"
+                            button-loader="savingContent">
                         <i class="fa fa-save"></i>
                         Lagre
-                    </button>
-                    <button disabled
-                            class="btn btn-default btn-xs"
-                            ng-show="article.content == original.content">
-                        <i class="fa fa-check"></i>
-                        Lagret
                     </button>
                 </div>
             </h1>
@@ -92,7 +87,7 @@
         </div>
     </div>
 </div>
-<div class="col-md-4">
+<div class="col-md-5">
     <div if="note-panel" class="panel panel-warning">
         <div class="panel-heading">
             <h1 class="panel-title">
@@ -100,16 +95,11 @@
                 Artikkel-notater
                 <div class="pull-right">
                     <button class="btn btn-default btn-xs"
-                            ng-show="article.note != original.note"
-                            ng-click="saveNote()">
+                            ng-disabled="article.note == unedited.note"
+                            ng-click="saveNote()"
+                            button-loader="savingNote">
                         <i class="fa fa-save"></i>
                         Lagre
-                    </button>
-                    <button disabled
-                            class="btn btn-default btn-xs"
-                            ng-show="article.note == original.note">
-                        <i class="fa fa-check"></i>
-                        Lagret
                     </button>
                 </div>
             </h1>
@@ -172,16 +162,14 @@
         <div class="panel-heading">
             <h1 class="panel-title">
                 <span class="fa fa-tag"></span>
-                Meta
+                Detaljer
                 <span class="pull-right">
-                    <button class="btn btn-xs btn-primary" ng-show="!metaEditMode" ng-click="toggleEditMode()">
-                        Rediger
-                    </button>
                     <button class="btn btn-xs btn-info" ng-show="metaEditMode" ng-click="cancelMeta()">
                         Avbryt
                     </button>
-                    <button class="btn btn-xs btn-primary" ng-show="metaEditMode" ng-click="saveMeta()">
-                        Lagre
+                    <button class="btn btn-xs btn-primary" ng-click="metaClicked()" button-loader="savingMeta">
+                        <span ng-show="!metaEditMode">Rediger</span>
+                        <span ng-show="metaEditMode">Lagre</span>
                     </button>
                 </span>
             </h1>
@@ -198,7 +186,7 @@
                         </p>
                     </div>
                     <div class="col-sm-8" ng-show="metaEditMode">
-                        <input class="form-control input-sm" type="text" ng-model="article.name">
+                        <input class="form-control input-sm" type="text" ng-model="metaEditing.name">
                     </div>
                 </div>
                 <div class="form-group">
@@ -214,7 +202,7 @@
                         <id-select multiple
                                 ng-show="metaEditMode"
                                 items="persons"
-                                target="article.journalists"
+                                target="metaEditing.journalists"
                                 renderer="renderPerson">
                         </id-select>
                     </div>
@@ -232,7 +220,7 @@
                         <id-select multiple
                                 ng-show="metaEditMode"
                                 items="persons"
-                                target="article.photographers"
+                                target="metaEditing.photographers"
                                 renderer="renderPerson">
                         </id-select>
                     </div>

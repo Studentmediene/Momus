@@ -39,22 +39,7 @@ angular.module('momusApp', [
             .when('/artikler/:id',
             {
                 templateUrl: 'partials/article/articleView.html',
-                controller: 'ArticleCtrl',
-                resolve: {
-                    Article: [
-                        'ArticleService',
-                        '$route',
-                        function(ArticleService, $route) {
-                            return ArticleService.getArticle($route.current.params.id);
-                        }
-                    ],
-                    Persons: [
-                        'PersonService',
-                        function(PersonService) {
-                            return PersonService.getAll();
-                        }
-                    ]
-                }
+                controller: 'ArticleCtrl'
             }
         )
 

@@ -22,33 +22,17 @@ angular.module('momusApp.services')
             getArticle: function (id) {
                 return $http.get('/api/article/' + id);
             },
-            updateObject: function (obj) {
-                // When the server receives this object,
-                // it will overwrite the server data for each listed field and leave the others unchanged
-                return {
-                    "object": obj,
-                    "updated_fields": []
-                };
+
+            updateMetadata: function (article) {
+                return $http.put('/api/article/metadata', article);
             },
-            updateArticle: function (updates, scope, success) {
-                $http.put('/api/article/update', updates)
-                    .success(function (data) {
-                        angular.forEach(updates.updated_fields, function (field) {
-                            scope.original[field] = angular.copy(data[field]);
-                        });
-                        success();
-                    }
-                )
-                    .error(function () {
-                        alert("Error!");
-                    }
-                );
+
+            updateContent: function (article) {
+                return $http.put('/api/article/content', article);
             },
-            changed: function (object, scope) {
-                return !angular.equals(scope.article[object], scope.original[object]);
-            },
-            revert: function (object, scope) {
-                scope.article[object] = angular.copy(scope.original[object]);
+
+            updateNote: function(article) {
+                return $http.put('/api/article/note', article);
             }
         }
     });

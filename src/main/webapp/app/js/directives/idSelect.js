@@ -16,12 +16,14 @@ angular.module('momusApp.directives')
                 scope.lookup = {};
 
                 scope.$watch('items', function () {
+                    if (!scope.items) return;
+
                     scope.items.forEach(function(person){
                         scope.lookup[person.id] = person;
                     });
                 });
 
-                scope.changed = function() {
+                scope.changed = function() { // when something is clicked
                     if (scope.multiple){
                         scope.target = scope.selectedIDs.map(function(id) {
                             return scope.lookup[id];
@@ -31,7 +33,11 @@ angular.module('momusApp.directives')
                     }
                 };
 
+                // when the model is changed somewhere else
+                // for instance, by the ctrl setting its value
                 scope.$watch('target', function () {
+                    if (!scope.target) return;
+
                     scope.selectedIDs = scope.target.map(function(o){
                         return o.id;
                     });

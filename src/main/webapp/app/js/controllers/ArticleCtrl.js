@@ -17,28 +17,40 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function (Article, Persons, noteParserRules, articleParserRules, ArticleService, $scope) {
-
-        /* dependency resolution */
-        $scope.article = Article.data;
-        $scope.persons = Persons.data;
+    .controller('ArticleCtrl', function ($scope, PersonService, ArticleService, PublicationService, noteParserRules, articleParserRules, $routeParams) {
+        $scope.metaEditMode = false;
         $scope.noteRules = noteParserRules;
         $scope.articleRules = articleParserRules;
 
-        $scope.original = angular.copy($scope.article);
+        PersonService.getAll().success(function(data) {
+           $scope.persons = data;
+        });
+
+        ArticleService.getArticle($routeParams.id).success(function (data) {
+            $scope.article = data;
+            $scope.unedited = angular.copy(data);
+        });
+
 
         /* content panel */
-        $scope.saveArticle = function () {
-            var updates = ArticleService.updateObject($scope.article);
-            updates.updated_fields.push("content");
-            ArticleService.updateArticle(updates, $scope, function(){});
+        $scope.saveContent = function () {
+            $scope.savingContent = true;
+            ArticleService.updateContent($scope.article).success(function (data) {
+                $scope.article.content = data.content;
+                $scope.unedited.content = data.content;
+                $scope.savingContent = false;
+            });
+
         };
 
         /* note panel */
         $scope.saveNote = function () {
-            var updates = ArticleService.updateObject($scope.article);
-            updates.updated_fields.push("note");
-            ArticleService.updateArticle(updates, $scope, function(){});
+            $scope.savingNote = true;
+            ArticleService.updateNote($scope.article).success(function (data) {
+                $scope.article.note = data.note;
+                $scope.unedited.note = data.note;
+                $scope.savingNote = false;
+            });
         };
 
         /* meta panel */
@@ -50,30 +62,39 @@ angular.module('momusApp.controllers')
             return person.first_name + ' ' + person.last_name
         };
 
-        $scope.toggleEditMode = function() {
-            $scope.metaEditMode = !$scope.metaEditMode;
+        $scope.metaClicked = function() {
+            if ($scope.metaEditMode) {
+                $scope.saveMeta();
+            } else {
+                $scope.editMeta();
+            }
         };
 
         $scope.saveMeta = function() {
-            var updates = ArticleService.updateObject($scope.article);
-            if (ArticleService.changed("name", $scope)) {
-                updates.updated_fields.push("name");
-            }
-            if (ArticleService.changed("journalists", $scope)) {
-                updates.updated_fields.push("journalists");
-            }
-            if (ArticleService.changed("photographers", $scope)) {
-                updates.updated_fields.push("photographers");
-            }
-            ArticleService.updateArticle(updates, $scope, function() {
+            $scope.savingMeta = true;
+            ArticleService.updateMetadata($scope.metaEditing).success(function(data) {
+                data.content = $scope.article.content;
+                data.note = $scope.article.note;
+                $scope.article = data;
+                $scope.unedited = angular.copy(data);
+                $scope.savingMeta = false;
                 $scope.metaEditMode = false;
             });
+
+        };
+
+        $scope.editMeta = function() {
+            $scope.metaEditMode = true;
+            $scope.metaEditing = angular.copy($scope.article);
+
+            if (!$scope.publications) {
+                PublicationService.getAll().success(function (data) {
+                    $scope.publications = data;
+                });
+            }
         };
 
         $scope.cancelMeta = function() {
-            ArticleService.revert("name", $scope);
-            ArticleService.revert("journalists", $scope);
-            ArticleService.revert("photographers", $scope);
             $scope.metaEditMode = false;
         };
     });
