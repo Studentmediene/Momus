@@ -46,7 +46,8 @@ angular.module('momusApp', [
             .when('/artikler',
             {
                 templateUrl: 'partials/search/searchView.html',
-                controller: 'SearchCtrl'
+                controller: 'SearchCtrl',
+                title: "Artikkelsøk"
             }
         )
 
@@ -62,7 +63,8 @@ angular.module('momusApp', [
             .when('/disposition/:id',
             {
                 templateUrl: 'partials/disposition/dispositionView.html',
-                controller: 'DispositionCtrl'
+                controller: 'DispositionCtrl',
+                title: "Disposisjon"
             }
         )
 
