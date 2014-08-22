@@ -51,6 +51,8 @@ public class Syncer {
     @Autowired
     GroupMapper groupMapper;
 
+    private boolean disabled = false;
+
     /**
      * This will be run when the server starts
      */
@@ -65,6 +67,11 @@ public class Syncer {
      */
     @Scheduled(cron = "0 0 2 * * *")
     public void sync() {
+        if (disabled) {
+            logger.info("Not syncing, is disabled");
+            return;
+        }
+
         logger.info("Starting SmmDb sync");
 
         boolean syncGroupSuccess = syncGroups();
@@ -109,5 +116,9 @@ public class Syncer {
 
         personRepository.save(smmDbPersons);
         return true;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
 }

@@ -25,6 +25,9 @@
 
     <!-- Swap the userLoginService to a dummy one -->
     <bean id="userLoginService" class="no.dusken.momus.authentication.UserLoginServiceMock" />
+    <bean id="syncer" class="no.dusken.momus.smmdb.Syncer">
+        <property name="disabled" value="true"/>
+    </bean>
 
     <!-- Override values in momus.properties with values from test.properties -->
     <context:property-placeholder
