@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
@@ -41,6 +42,22 @@ public class ArticleController {
     public @ResponseBody List<Article> getAllArticlesByPublicationID(@PathVariable("id") Long id) {
         return articleService.getArticleRepository().findByPublicationId(id);
     }
+
+
+    @RequestMapping(value = "/{id}/export", method = RequestMethod.GET)
+    public @ResponseBody String getIndesignExport(@PathVariable("id") Long id, HttpServletResponse response) {
+
+        Article article = articleService.getArticleById(id);
+
+        String content = articleService.exportArticle(article);
+        String filename = article.getPublication().getName() + "_" + article.getName();
+
+        response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+        response.addHeader("Content-Type", "application/xml");
+        return content;
+    }
+
+
 
     @RequestMapping(method = RequestMethod.PUT)
     public @ResponseBody Article saveArticleContents(@RequestBody Article article){
