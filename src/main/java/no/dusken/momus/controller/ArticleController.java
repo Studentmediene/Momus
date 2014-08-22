@@ -46,11 +46,13 @@ public class ArticleController {
 
     @RequestMapping(value = "/{id}/export", method = RequestMethod.GET)
     public @ResponseBody String getIndesignExport(@PathVariable("id") Long id, HttpServletResponse response) {
-
         Article article = articleService.getArticleById(id);
-
         String content = articleService.exportArticle(article);
-        String filename = article.getPublication().getName() + "_" + article.getName();
+
+        String filename = article.getName();
+        if (article.getPublication() != null) {
+            filename = article.getPublication().getName() + "_" + article.getName();
+        }
 
         response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
         response.addHeader("Content-Type", "application/xml");
