@@ -21,6 +21,7 @@ import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleRevision;
 import no.dusken.momus.model.Person;
+import no.dusken.momus.service.indesign.IndesignGenerator;
 import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.ArticleRevisionRepository;
 import no.dusken.momus.service.search.ArticleQueryBuilder;
@@ -48,6 +49,8 @@ public class ArticleService {
     @Autowired
     ArticleRevisionRepository articleRevisionRepository;
 
+    @Autowired
+    IndesignGenerator indesignGenerator;
 
     @Autowired
     private UserLoginService userLoginService;
@@ -149,6 +152,10 @@ public class ArticleService {
         }
 
         return resultList;
+    }
+
+    public String exportArticle(Article article) {
+        return indesignGenerator.generateFromArticle(article);
     }
 
     public ArticleRepository getArticleRepository() {
