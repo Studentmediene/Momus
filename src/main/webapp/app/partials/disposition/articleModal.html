@@ -13,7 +13,7 @@
                 <button type="button" class="btn btn-default" ng-click="addArticle(selectedArticles.addArticleModel)">Legg til</button>
             </div>
         </div>
-        <div class="row" style="padding-top: 10px;">
+        <div class="row" ng-show="page.articles.length > 0" style="padding-top: 10px;">
             <div class="col-xs-8">
                 <select ng-model="selectedArticles.delArticleModel" class="form-control" ng-options="a.type +': '+ a.name for a in page.articles">
                 </select>

@@ -15,7 +15,6 @@
   -->
 
 <div>
-
 <h1 style="text-align: center"> Disposition for {{disposition.publication.name}} </h1> <button ng-click="saveArticle()">save me</button>
 <div class="row">
     <div class="col-md-12">
@@ -32,10 +31,10 @@
                     <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">{{page.page_nr}}</td>
                     <!--Seksjon-->
                     <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">
-                        <select ng-model="page.section" ng-options="s.name for s in sections" style="border: none"></select>
+                        <select ng-model="page.section" ng-options="s.name for s in sections track by s.id" style="border: none"></select>
                     </td>
                     <!--Artikkel-->
-                    <td class="articleHover" ng-click="articleModal(page)" style="text-align: center">{{article.type.name}} : {{article.name}}</td>
+                    <td class="articleHover" ng-click="articleModal(page, article)" style="text-align: center">{{article.type.name}} : {{article.name}}</td>
                     <!--Notater-->
                     <td><textarea ng-model="article.note" rows="2" style="border: none; height: 4em;"></textarea></td>
                     <!--Journalister-->
@@ -59,7 +58,7 @@
                     <!--Fotostatus-->
                     <td style="text-align: center">{{article.photoStatus}}</td>
                     <!--Reklame-->
-                    <td style="text-align: center"><input type="checkbox" ng-model="article.advertisement"></td>
+                    <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center"><input type="checkbox" ng-model="page.advertisement"></td>
 
                 </tr>
                 <!--If there are no articles on the page-->
@@ -69,7 +68,7 @@
                     <!--Seksjon-->
                     <td style="text-align: center">
                         <!--<select ng-model="page.section" ng-options="s.name for s in sections" style="border: none" ></select>-->
-                        <select ng-model="page.section.id" ng-options="s.id as s.name for s in sections" style="border: none" ></select>
+                        <select ng-model="page.section" ng-options="s.name for s in sections track by s.id" style="border: none" ></select>
                     </td>
                     <!--Artikkel-->
                     <td class="articleHover" ng-click="articleModal(page)" style="text-align: center"></td>
@@ -84,7 +83,7 @@
                     <!--Fotostatus-->
                     <td style="text-align: center"></td>
                     <!--Reklame-->
-                    <td style="text-align: center"></td>
+                    <td style="text-align: center"><input type="checkbox" ng-model="page.advertisement"></td>
                 </tr>
             </tbody>
             <!--Add new Page Row-->

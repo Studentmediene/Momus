@@ -72,14 +72,14 @@ angular.module('momusApp.controllers')
             if (!pages || pages.length < 1) {
                 return;
             }
-            for ( var i = 0;  i < pages.length; i++ )
-            {
-                if(pages[i].page_nr == pages.length){
-                    pages.splice(i,1);
-                    saveArticle();
-                    return
+
+                for ( var i = 0; i < pages.length; i++) {
+                    if (pages[i].page_nr == pages.length) {
+                        pages.splice(i, 1);
+                        saveArticle();
+                        return
+                    }
                 }
-            }
         }
 
         $scope.removePage = function (page) {
@@ -311,19 +311,21 @@ angular.module('momusApp.controllers')
 //        };
 
 
-        var ModalInstanceCtrl = function ($scope, $modalInstance, articles, page) {
+        var ModalInstanceCtrl = function ($scope, $modalInstance, articles, page, article) {
 
 
             $scope.selectedArticles = { };
             $scope.page = page;
             $scope.articles = articles;
+            $scope.article = article;
 
             if (articles.length !== 0) {
                 $scope.selectedArticles.addArticleModel = articles[0];
             }
             // if the page.articles is not empty, set a default value for the model
             if ($scope.page.articles.length !== 0) {
-                $scope.selectedArticles.delArticleModel = $scope.page.articles[0];
+//              $scope.selectedArticles.delArticleModel = $scope.page.articles[0];
+                $scope.selectedArticles.delArticleModel = $scope.article;
             }
 
             $scope.addArticle = function (articleModel) {
@@ -338,7 +340,7 @@ angular.module('momusApp.controllers')
                 }
                 $scope.page.articles.push(articleModel);
                 //To make adding the first article look good: puts a default
-                $scope.selectedArticles.delArticleModel = $scope.page.articles[0];
+                $scope.selectedArticles.delArticleModel = articleModel;
 
             };
 
@@ -363,7 +365,7 @@ angular.module('momusApp.controllers')
 
         };
 
-        $scope.articleModal = function (page) {
+        $scope.articleModal = function (page , article) {
 
             var modalInstance = $modal.open({
                 templateUrl: 'partials/disposition/articleModal.html',
@@ -374,6 +376,9 @@ angular.module('momusApp.controllers')
                     },
                     page: function () {
                         return page;
+                    },
+                    article: function () {
+                        return article;
                     }
                 }
 
