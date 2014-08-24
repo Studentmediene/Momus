@@ -37,6 +37,8 @@ public class Article {
     @Column(length = 40960)
     private String note;
 
+    private String comment;
+
     @Transient
     private int contentLength;
 
@@ -62,6 +64,10 @@ public class Article {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdated;
 
+    private String photoStatus;
+
+
+
     /**
      * This is done after load instead of in a getter, since
      * it may happen that the content is set to empty to save bandwith/hide it, but
@@ -70,6 +76,14 @@ public class Article {
     @PostLoad
     private void calculateContentLength() {
         contentLength = content.length();
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public Long getId() {
@@ -90,6 +104,14 @@ public class Article {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getPhotoStatus() {
+        return photoStatus;
+    }
+
+    public void setPhotoStatus(String photoStatus) {
+        this.photoStatus = photoStatus;
     }
 
     public int getContentLength() {

@@ -36,7 +36,7 @@
                     <!--Artikkel-->
                     <td class="articleHover" ng-click="articleModal(page, article)" style="text-align: center">{{article.type.name}} : {{article.name}}</td>
                     <!--Notater-->
-                    <td><textarea ng-model="article.note" rows="2" style="border: none; height: 4em;"></textarea></td>
+                    <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center"><textarea ng-model="page.note" style="border: none; min-height: 4em; height: 100%;"></textarea></td>
                     <!--Journalister-->
                     <td >
                         <table>
@@ -56,7 +56,7 @@
                     <!--Status-->
                     <td style="text-align: center">{{article.status.name}}</td>
                     <!--Fotostatus-->
-                    <td style="text-align: center">{{article.photoStatus}}</td>
+                    <td style="text-align: center"><select ng-change="updateArticles()" ng-model="article.photo_status" ng-options="status for status in photostatus" style="border: none"></select></td>
                     <!--Reklame-->
                     <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center"><input type="checkbox" ng-model="page.advertisement"></td>
 
@@ -73,7 +73,7 @@
                     <!--Artikkel-->
                     <td class="articleHover" ng-click="articleModal(page)" style="text-align: center"></td>
                     <!--Notater-->
-                    <td ></td>
+                    <td rowspan="1" style="text-align: center"><textarea ng-model="page.note" style="border: none; min-height: 4em; height: 100%;"></textarea></td>
                     <!--Journalister-->
                     <td ></td>
                     <!--Fotografer-->

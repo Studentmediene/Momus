@@ -23,17 +23,37 @@ angular.module('momusApp.controllers')
 //            $scope.disposition.pages[page.pageNr-1].articles.push;
         };
 
-        //id, name, content, note, contentLength, status, type, publication,
-        // journalists, photographers, correctResponsible, lastUpdated
         $http.get('/api/article').success(function (data) {
             $scope.articles = data;
             console.log(data + "Articles hentet");
+
+            //Get Disposition
+            $http.get('/api/disp/' + $routeParams.id).success( setDisposition);
+
         });
 
+        //id, name, content, note, contentLength, status, type, publication,
+        // journalists, photographers, correctResponsible, lastUpdated
+
+
+        // Checks every article in the disposition and replaces them with
+        // articles from the database list.
+        // This makes all articles the same Objects
         function setDisposition(data) {
+            var art = $scope.articles;
             if (!data.pages) {
                 data.pages = [];
             }
+            data.pages.forEach( function (page) {
+               page.articles = page.articles.map(function(article){
+                for ( var i = 0; i < art.length; i++){
+                    if ( article.id === art[i].id ){
+                        return art[i];
+                    }
+                }
+                   return null;
+               });
+            });
             console.log("disp data: " + data);
             $scope.disposition = data;
         }
@@ -42,9 +62,6 @@ angular.module('momusApp.controllers')
         $http.get('/api/disp/section').success(function (data) {
             $scope.sections = data;
         });
-
-        //Get Disposition
-        $http.get('/api/disp/' + $routeParams.id).success(setDisposition);
 
         //Update disp
         function saveArticle() {
@@ -80,7 +97,7 @@ angular.module('momusApp.controllers')
                         return
                     }
                 }
-        }
+        };
 
         $scope.removePage = function (page) {
             var pages = $scope.disposition.pages;
@@ -110,6 +127,9 @@ angular.module('momusApp.controllers')
 
         };
 
+        $scope.photostatus = [
+            "Uferdig","Planlagt","Tatt"
+        ];
 
 
 //        $scope.articles = [
