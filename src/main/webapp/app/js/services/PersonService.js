@@ -19,11 +19,17 @@
 angular.module('momusApp.services')
     .service('PersonService', function ($http) {
         return {
-            getCurrentUser: function() {
+            getCurrentUser: function () {
                 return $http.get('/api/person/me', {cache: true});
             },
             getAll: function () {
                 return $http.get('/api/person/', {cache: true});
+            },
+            renderPerson: function (person) {
+                if (person.first_name === null && person.last_name === null) {
+                    return person.username;
+                }
+                return person.first_name + ' ' + person.last_name
             }
         }
     });

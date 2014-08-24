@@ -33,6 +33,8 @@ angular.module('momusApp.controllers')
             $scope.persons = data;
         });
 
+        $scope.renderPerson = PersonService.renderPerson;
+
 
         /**
          * Fetching publications from server
@@ -60,9 +62,14 @@ angular.module('momusApp.controllers')
         ];
 
         $scope.searchFunc = function () {
+            $scope.data = null;
+            $scope.loading = true;
             $http.post('/api/search', $scope.search)
                 .success(function (data) {
                     $scope.data = data;
+                })
+                .finally(function(data){
+                    $scope.loading = false;
                 });
         }
     });

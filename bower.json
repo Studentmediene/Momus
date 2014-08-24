@@ -9,7 +9,7 @@
     "components-font-awesome": "4.0.3",
     "wysihtml5": "https://raw.github.com/xing/wysihtml5/master/dist/wysihtml5-0.4.0pre.min.js",
     "angular-ui-select2": "0.0.5",
-    "select2-bootstrap3-css": "https://raw.github.com/fk/select2-bootstrap-css/master/select2-bootstrap.css",
+    "select2-bootstrap3-css": "https://raw.githubusercontent.com/t0m/select2-bootstrap-css/bootstrap3/select2-bootstrap.css",
     "select2": "3.4.6",
     "angular-mocks": "1.2.22",
     "angular-ui-bootstrap-bower": "0.10.0"
