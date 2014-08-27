@@ -20,28 +20,26 @@ angular.module('momusApp.services').
     value('articleParserRules',
     {
         tags: {
-            strong: {
-                rename_tag: "b"
-            },
-            b: {},
-            i: {},
-            em: {},
-            br: {},
-            p: {},
-            div: {},
-            span: {},
-            ul: {},
+            h1: {}, // Tittel
+            h2: {}, // Stikktittel
+            h3: {}, // Mellomtittel
+            h4: {}, // Ingress
+            blockquote: {}, // Sitat
+            ul: {}, // List45
             ol: {},
             li: {},
-            a: {
-                set_attributes: {
-                    target: "_blank",
-                    rel: "nofollow"
-                },
-                check_attributes: {
-                    href: "url" // important to avoid XSS
-                }
-            }
+            i: {}, // Utheving
+            strong: {
+                rename_tag: "i"
+            },
+            b: {
+                rename_tag: "i"
+            },
+            em: {
+                rename_tag: "i"
+            },
+            br: {},
+            p: {}
         }
     }
 ).value('noteParserRules',
@@ -49,8 +47,6 @@ angular.module('momusApp.services').
         tags: {
             br: {},
             p: {},
-            span: {},
-
             strong: {
                 rename_tag: "b"
             },
@@ -67,8 +63,7 @@ angular.module('momusApp.services').
             li: {},
             a: {
                 set_attributes: {
-                    target: "_blank",
-                    rel: "nofollow"
+                    target: "_blank"
                 },
                 check_attributes: {
                     href: "url" // important to avoid XSS
