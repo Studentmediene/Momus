@@ -33,8 +33,8 @@ angular.module('momusApp.directives').
                 scope.wysihtml5Editor = new wysihtml5.Editor(scope.id, {
                     parserRules: scope.richeditorRules,
                     toolbar: scope.toolbarId,
-                    useLineBreaks: false
-
+                    useLineBreaks: false,
+                    stylesheets: ['css/editor.css']
                 });
 
                 // update the editor content if the model changes
