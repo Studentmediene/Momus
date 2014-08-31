@@ -69,6 +69,10 @@ a:focus {
 
 
 
+.editor-toolbar .btn-group {
+    margin: 0 5px 10px 0;
+}
+
 
 /* used for ui-bootstrap */
 .nav, .pagination, .carousel, .panel-title a {
