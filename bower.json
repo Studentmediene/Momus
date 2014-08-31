@@ -11,6 +11,8 @@
     "angular-ui-select2": "0.0.5",
     "select2-bootstrap3-css": "https://raw.github.com/fk/select2-bootstrap-css/master/select2-bootstrap.css",
     "angular-mocks": "1.2.13",
-    "angular-ui-bootstrap-bower": "0.10.0"
+    "angular-ui-bootstrap-bower": "0.10.0",
+    "angular-ui-tree": "2.1.5"
+
   }
 }
