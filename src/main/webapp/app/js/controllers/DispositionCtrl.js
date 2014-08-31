@@ -54,6 +54,10 @@ angular.module('momusApp.controllers')
                    return null;
                });
             });
+
+            data.pages.sort( function ( a, b ) {
+                return a.page_nr - b.page_nr;
+            });
             console.log("disp data: " + data);
             $scope.disposition = data;
         }
@@ -124,13 +128,22 @@ angular.module('momusApp.controllers')
                 saveArticle();
             }
 
-
         };
 
         $scope.photostatus = [
             "Uferdig","Planlagt","Tatt"
         ];
 
+        // When a node is dropped we uppdate the page number/index+1
+        $scope.treeOptions = {
+            dropped: function(event) {
+                var pages = $scope.disposition.pages;
+                for ( var i = 0; i < pages.length; i++ ) {
+                    pages[i].page_nr = i+1;
+                }
+
+            }
+        };
 
 //        $scope.articles = [
 //            {

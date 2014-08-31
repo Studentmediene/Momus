@@ -15,20 +15,23 @@
   -->
 
 <div>
-<h1 style="text-align: center"> Disposition for {{disposition.publication.name}} </h1> <button ng-click="saveArticle()">save me</button>
+<h1 style="text-align: center"> Disposition for {{disposition.publication.name}} </h1>
+<div class="form-group">
+    <button class="btn btn-primary" ng-click="saveArticle()">save me</button>
+</div>
 <div class="row">
-    <div class="col-md-12">
-        <table class="table-bordered" style="width: 100%" >
+    <div ui-tree="treeOptions" class="col-md-12">
+        <table ui-tree-nodes="" ng-model="disposition.pages" class="table-bordered" style="width: 100%" >
             <!--Top Row, Headers-->
             <tr>
                 <th ng-repeat="header in ['Side ','Seksjon ','Artikler ','Notater ','Journalister ','Fotografer ','Status ','Fotostatus','Reklame']">{{header}}</th>
             </tr>
             <!--For every page in the disp-->
-            <tbody ng-repeat="page in disposition.pages | orderBy:'page_nr'">
+            <tbody ui-tree-node ng-repeat="page in disposition.pages">
             <!--<tbody ng-repeat="page in disposition.pages">-->
                 <tr ng-repeat="article in page.articles" >
                     <!--Side-->
-                    <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">{{page.page_nr}}</td>
+                    <td ui-tree-handle ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">{{page.page_nr}}</td>
                     <!--Seksjon-->
                     <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">
                         <select ng-model="page.section" ng-options="s.name for s in sections track by s.id" style="border: none"></select>
@@ -64,7 +67,7 @@
                 <!--If there are no articles on the page-->
                 <tr ng-if="page.articles == 0">
                     <!--Side-->
-                    <td style="text-align: center">{{page.page_nr}}</td>
+                    <td ui-tree-handle style="text-align: center">{{page.page_nr}}</td>
                     <!--Seksjon-->
                     <td style="text-align: center">
                         <!--<select ng-model="page.section" ng-options="s.name for s in sections" style="border: none" ></select>-->
