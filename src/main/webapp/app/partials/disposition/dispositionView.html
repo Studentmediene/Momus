@@ -18,20 +18,24 @@
 <h1 style="text-align: center"> Disposition for {{disposition.publication.name}} </h1>
 <div class="form-group">
     <button class="btn btn-primary" ng-click="saveArticle()">save me</button>
+    <button class="btn btn-danger" ng-click="removePage(selectedPage)">Delete</button>
+    <button class="btn btn-success" ng-click="addPage(selectedPage)">NewPage</button>
+    <button class="btn btn-warning" ng-click="addPage(selectedPage)">AddArticle</button>
+    <!-- TODO: Fix Add Article button -->
 </div>
 <div class="row">
     <div ui-tree="treeOptions" class="col-md-12">
-        <table ui-tree-nodes="" ng-model="disposition.pages" class="table-bordered" style="width: 100%" >
+        <table ui-tree-nodes="" ng-model="disposition.pages" class="table-bordered fixed">
             <!--Top Row, Headers-->
             <tr>
                 <th ng-repeat="header in ['Side ','Seksjon ','Artikler ','Notater ','Journalister ','Fotografer ','Status ','Fotostatus','Reklame']">{{header}}</th>
             </tr>
             <!--For every page in the disp-->
-            <tbody ui-tree-node ng-repeat="page in disposition.pages">
+            <tbody  ui-tree-node ng-repeat="page in disposition.pages" ng-class="{selectedPage: page.page_nr == selectedPage.page_nr}">
             <!--<tbody ng-repeat="page in disposition.pages">-->
                 <tr ng-repeat="article in page.articles" >
                     <!--Side-->
-                    <td ui-tree-handle ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">{{page.page_nr}}</td>
+                    <td ui-tree-handle ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center;" class="pageNr">{{page.page_nr}}</td>
                     <!--Seksjon-->
                     <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">
                         <select ng-model="page.section" ng-options="s.name for s in sections track by s.id" style="border: none"></select>
@@ -67,7 +71,7 @@
                 <!--If there are no articles on the page-->
                 <tr ng-if="page.articles == 0">
                     <!--Side-->
-                    <td ui-tree-handle style="text-align: center">{{page.page_nr}}</td>
+                    <td ui-tree-handle style="text-align: center" class="pageNr">{{page.page_nr}}</td>
                     <!--Seksjon-->
                     <td style="text-align: center">
                         <!--<select ng-model="page.section" ng-options="s.name for s in sections" style="border: none" ></select>-->
@@ -92,7 +96,7 @@
             <!--Add new Page Row-->
             <tr style="background-color: #F8F8F8;">
                 <!--Side-->
-                <td ng-click="addPage()" style="text-align: center"><span class="glyphicon glyphicon-plus"></span></td>
+                <td ng-click="addLastPage()" style="text-align: center"><span class="glyphicon glyphicon-plus"></span></td>
                 <td></td>
                 <td></td>
                 <td></td>

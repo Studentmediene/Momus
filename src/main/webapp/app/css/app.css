@@ -151,3 +151,23 @@ td.articleHover:hover {
     z-index: 999;
     opacity: .8;
 }
+
+.angular-ui-tree-drag tr td {
+    display: none;
+
+
+}
+
+.angular-ui-tree-drag .pageNr  {
+    display: table-cell;
+    height: 58px;
+
+}
+.selectedPage {
+    background-color: #b9def0;
+}
+
+/*Delete */
+/** Putting fixed sizes in an ng-if based on page size.**/
+table.fixed {width:100%;}/*Setting the table width is important!*/
+table.fixed td {overflow:hidden;}/*Hide text outside the cell.*/
