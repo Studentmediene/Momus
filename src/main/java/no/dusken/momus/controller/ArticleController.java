@@ -18,6 +18,7 @@ package no.dusken.momus.controller;
 
 import no.dusken.momus.model.Article;
 import no.dusken.momus.service.ArticleService;
+import no.dusken.momus.service.indesign.IndesignExport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -46,17 +47,12 @@ public class ArticleController {
 
     @RequestMapping(value = "/{id}/export", method = RequestMethod.GET)
     public @ResponseBody String getIndesignExport(@PathVariable("id") Long id, HttpServletResponse response) {
-        Article article = articleService.getArticleById(id);
-        String content = articleService.exportArticle(article);
+        IndesignExport indesignExport = articleService.exportArticle(id);
 
-        String filename = article.getName();
-        if (article.getPublication() != null) {
-            filename = article.getPublication().getName() + "_" + article.getName();
-        }
+        response.addHeader("Content-Disposition", "attachment; filename=\"" + indesignExport.getName() + ".txt\"");
+        response.addHeader("Content-Type", "text/plain");
 
-        response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
-        response.addHeader("Content-Type", "application/xml");
-        return content;
+        return indesignExport.getContent();
     }
 
 
