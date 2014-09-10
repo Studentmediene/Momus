@@ -1,12 +1,12 @@
 <div>
     <div class="modal-header" >
         <h3 style="text-align: center"> Fjern / Legg til artikler</h3>
-        <p style="text-align: center"> Side: {{page.pageNr}}</p>
+        <p style="text-align: center"> Side: {{page.page_nr}}</p>
     </div>
     <div class="modal-body">
         <div class="row">
             <div class="col-xs-8">
-                <select ng-model="selectedArticles.addArticleModel" class="form-control" ng-options="a.type +': '+ a.name for a in articles">
+                <select ng-model="selectedArticles.addArticleModel" class="form-control" ng-options="a.type.name +': '+ a.name for a in articles">
                 </select>
             </div>
             <div class="col-xs-4">
@@ -15,7 +15,7 @@
         </div>
         <div class="row" ng-show="page.articles.length > 0" style="padding-top: 10px;">
             <div class="col-xs-8">
-                <select ng-model="selectedArticles.delArticleModel" class="form-control" ng-options="a.type +': '+ a.name for a in page.articles">
+                <select ng-model="selectedArticles.delArticleModel" class="form-control" ng-options="a.type.name +': '+ a.name for a in page.articles">
                 </select>
             </div>
             <div class="col-xs-4">

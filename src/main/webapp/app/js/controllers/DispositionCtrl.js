@@ -161,7 +161,26 @@ angular.module('momusApp.controllers')
 
             }
         };
+        $scope.articleModal = function (page , article) {
 
+            var modalInstance = $modal.open({
+                templateUrl: 'partials/disposition/articleModal.html',
+                controller: ModalInstanceCtrl,
+                resolve: {
+                    articles: function () {
+                        return $scope.articles;
+                    },
+                    page: function () {
+                        return page;
+                    },
+                    article: function () {
+                        return article;
+                    }
+                }
+
+            });
+
+        };
 
         var ModalInstanceCtrl = function ($scope, $modalInstance, articles, page, article) {
 
@@ -176,8 +195,12 @@ angular.module('momusApp.controllers')
             }
             // if the page.articles is not empty, set a default value for the model
             if ($scope.page.articles.length !== 0) {
-//              $scope.selectedArticles.delArticleModel = $scope.page.articles[0];
-                $scope.selectedArticles.delArticleModel = $scope.article;
+                if ($scope.article){
+                    $scope.selectedArticles.delArticleModel = $scope.article;
+                }
+                else{
+                    $scope.selectedArticles.delArticleModel = $scope.page.articles[0];
+                }
             }
 
             $scope.addArticle = function (articleModel) {
@@ -217,24 +240,5 @@ angular.module('momusApp.controllers')
 
         };
 
-        $scope.articleModal = function (page , article) {
 
-            var modalInstance = $modal.open({
-                templateUrl: 'partials/disposition/articleModal.html',
-                controller: ModalInstanceCtrl,
-                resolve: {
-                    articles: function () {
-                        return $scope.articles;
-                    },
-                    page: function () {
-                        return page;
-                    },
-                    article: function () {
-                        return article;
-                    }
-                }
-
-            });
-
-        };
     });

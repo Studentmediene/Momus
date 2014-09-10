@@ -17,11 +17,14 @@
 <div>
 <h1 style="text-align: center"> Disposition for {{disposition.publication.name}} </h1>
 <div class="form-group">
-    <button class="btn btn-primary" ng-click="saveArticle()">save me</button>
-    <button class="btn btn-danger" ng-click="removePage(selectedPage)">Delete</button>
-    <button class="btn btn-success" ng-click="addPage(selectedPage)">NewPage</button>
-    <button class="btn btn-warning" ng-click="addPage(selectedPage)">AddArticle</button>
-    <!-- TODO: Fix Add Article button -->
+    <div class="row">
+        <div class="col-md-6">
+            <button class="btn btn-primary" ng-click="saveArticle()">save me</button>
+            <button class="btn btn-danger" ng-click="removePage(selectedPage)" style="margin: 10px">Delete</button>
+            <button class="btn btn-success" ng-click="addPage(selectedPage)">NewPage</button>
+            <button class="btn btn-warning" ng-click="articleModal(selectedPage)" ng-disabled="!selectedPage">AddArticle</button>
+        </div>
+    </div>
 </div>
 <div class="row">
     <div ui-tree="treeOptions" class="col-md-12">
