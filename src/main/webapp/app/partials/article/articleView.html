@@ -14,6 +14,17 @@
   ~ limitations under the License.
   -->
 
+
+<div class="row" ng-show="article.comment">
+    <div class="col-xs-12">
+        <div class="alert alert-info">
+        <p>
+            <strong>Kommentar:</strong> {{article.comment}}
+        </p>
+        </div>
+    </div>
+</div>
+
 <div class="row">
 <div class="col-md-7">
     <div id="content-panel" class="panel panel-primary">
@@ -251,6 +262,20 @@
                                    target="metaEditing.photographers"
                                    renderer="renderPerson">
                         </id-select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                        Kommentar
+                    </label>
+
+                    <div class="col-sm-8" ng-hide="metaEditMode">
+                        <p class="form-control-static">
+                            {{ article.comment }}
+                        </p>
+                    </div>
+                    <div class="col-sm-8" ng-show="metaEditMode">
+                        <input class="form-control input-sm" type="text" ng-model="metaEditing.comment">
                     </div>
                 </div>
             </form>
