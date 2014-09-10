@@ -111,6 +111,7 @@ public class ArticleService {
         existing.setName(article.getName());
         existing.setJournalists(article.getJournalists());
         existing.setPhotographers(article.getPhotographers());
+        existing.setComment(article.getComment());
         // TODO add the rest
 
         return saveUpdatedArticle(existing);

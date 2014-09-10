@@ -40,6 +40,9 @@ public class Article {
     @Column(length = 40960)
     private String note;
 
+    @Column(length = 1024)
+    private String comment;
+
     @Transient
     private int contentLength;
 
@@ -160,4 +163,11 @@ public class Article {
 
     public void setPublication(Publication publication) {this.publication = publication; }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 }
