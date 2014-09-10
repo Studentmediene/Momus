@@ -42,8 +42,20 @@ public class IndesignGenerator {
      */
 
     public IndesignGenerator() {
+        /*
+        Set up all the find&replace stuff needed.
+        replacements.put("a", "b") means all a's in the text will
+        be replaced with b's.
+         */
+
+
         // remove all new lines
         replacements.put("\n", "");
+
+        replacements.put("<br></", "</"); // ignore line breaks at end of tags
+        replacements.put("<br>", "<0x000A>"); // in-line line-breaks
+        replacements.put("–", "<0x2014>"); // m-dash?
+        replacements.put("—", "<0x2014>"); // m-dash
 
         // change paragraphs and stuff to InDesign equivalent
         replacements.put("<h1>", "<ParaStyle:Tittel>");
@@ -67,9 +79,23 @@ public class IndesignGenerator {
         replacements.put("<i>", "<cTypeface:Italic>");
         replacements.put("</i>", "<cTypeface:>");
 
+        /*
+            Converts:
+            <ul><li>pkt1</li><li>pkt2</li><li>pkt3</li></ul>
+            To:
+            <bnListType:Bullet>pkt1
+            pkt2
+            pkt3
 
-        replacements.put("<br>", "<0x000A>"); // in-line line-breaks
-        replacements.put("–", "<0x2014>"); // m-dash
+            and the same for <ol>, since that's the format for InDesign
+         */
+        replacements.put("<ul><li>", "<bnListType:Bullet>"); // special handling for first element
+        replacements.put("<ol><li>", "<bnListType:Numbered>"); // the same
+        replacements.put("<li>", "");
+        replacements.put("</li>", "\r\n");
+        replacements.put("</ul>", "");
+        replacements.put("</ol>", "");
+
 
     }
 
@@ -102,7 +128,7 @@ public class IndesignGenerator {
     }
 
     private void appendHeaders(StringBuilder sb) {
-        sb.append("<ANSI-WIN>\r\n<Version:6>\r\n");
+        sb.append("<ANSI-WIN>\r\n<Version:7.5>\r\n");
     }
 
 
