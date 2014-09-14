@@ -66,7 +66,6 @@ a:focus {
     outline: 0;
 }
 
-
 .editor-toolbar .btn-group {
     margin: 0 5px 10px 0;
 }
@@ -82,10 +81,8 @@ td.articleHover:hover {
 
 }
 
-@media (max-width: 992px) {
-    #articleSearchInterface .row > div {
-        margin-bottom: 5px;
-    }
+#articleSearchInterface .row > div {
+    margin-bottom: 10px;
 }
 
 td > ul, td > ol {

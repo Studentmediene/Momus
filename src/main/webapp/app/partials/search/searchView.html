@@ -19,7 +19,7 @@
     <form role="form" ng-submit="searchFunc()">
         <div class="row">
             <!-- Free search -->
-            <div class="col-sm-4 col-md-2">
+            <div class="col-sm-4">
                 <label class="sr-only" for="searchFree">
                     Fritekst
                 </label>
@@ -28,7 +28,7 @@
             </div>
 
             <!-- Status search -->
-            <div class="col-sm-4 col-md-2">
+            <div class="col-sm-4">
                 <label class="sr-only" for="searchStatus">
                     Status
                 </label>
@@ -43,7 +43,7 @@
             </div>
 
             <!-- Section search -->
-            <div class="col-sm-4 col-md-2">
+            <div class="col-sm-4">
                 <label class="sr-only" for="searchSection">
                     Redaksjon
                 </label>
@@ -58,7 +58,7 @@
             </div>
 
             <!-- Publication search -->
-            <div class="col-sm-4 col-md-2">
+            <div class="col-sm-4">
                 <label class="sr-only" for="searchPublication">
                     Utgave
                 </label>
@@ -73,7 +73,7 @@
             </div>
 
             <!-- Person search -->
-            <div class="col-sm-4 col-md-2">
+            <div class="col-sm-4">
                 <label class="sr-only" for="searchPersons">
                     Personer
                 </label>
@@ -85,8 +85,8 @@
                 </select>
             </div>
 
-            <div class="col-sm-4 col-md-2">
-                <button type="submit" id="searchSubmit" class="btn btn-info btn-sm form-control">
+            <div class="col-sm-4">
+                <button type="submit" id="searchSubmit" class="btn btn-primary btn-sm form-control">
                     Søk
                 </button>
             </div>
@@ -162,13 +162,13 @@
                     {{ article.status.name }}
                 </td>
                 <td>
-                    {{ article.section.name }}Kultur
+                    {{ article.section.name }}
                 </td>
                 <td>
                     {{ article.publication.name }}
                 </td>
                 <td class="hidden-print">
-                    <a href="#/artikler/{{ article.id }}" class="btn btn-xs btn-info">
+                    <a href="#/artikler/{{ article.id }}" class="">
                         Åpne
                     </a>
                 </td>
