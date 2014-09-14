@@ -154,6 +154,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article.setJournalists(journalists);
         article.setPhotographers(photographers);
         article.setContent("NEW CONTENT, SHOULD NOT BE CHANGED!");
+        article.setComment("my cool comment");
 
         // TODO add type, status, publication etc.
 
@@ -162,6 +163,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         assertEquals("Updated name", article.getName());
         assertEquals(0, article.getJournalists().size());
         assertEquals(1, article.getPhotographers().size());
+        assertEquals("my cool comment", article.getComment());
 
         assertEquals("Testinnhold for artikkel 1 yay", article.getContent());
     }
