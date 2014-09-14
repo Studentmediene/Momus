@@ -14,8 +14,26 @@
   ~ limitations under the License.
   -->
 
-<div class="row">
-<div class="col-md-7">
+<!-- Used when printing Ctrl+P-->
+<div class="visible-print" >
+    <div style="font-weight: bold;">Detaljer</div>
+    <div>
+        <div> <span style="font-weight: bold;"> Navn: </span>{{ article.name }}</div>
+        <div>
+            <span style="font-weight: bold;"> Journalister: </span>
+            <span ng-repeat="journalist in article.journalists"> {{ renderPerson(journalist) }} </span>
+        </div>
+        <div>
+            <span style="font-weight: bold;"> Fotografer: </span> <span ng-repeat="photographer in article.photographers">
+                {{ renderPerson(photographer) }}
+            </span>
+        </div>
+    </div>
+    <div style=" column-count: 2;" ng-bind-html="article.content | trustHtml"></div>
+</div>
+
+<div class="row hidden-print">
+<div class="col-md-7 hidden-print">
     <div id="content-panel" class="panel panel-primary">
         <div class="panel-heading">
             <h1 class="panel-title">
@@ -114,7 +132,7 @@
         </div>
     </div>
 </div>
-<div class="col-md-5">
+<div class="col-md-5 hidden-print">
     <div if="note-panel" class="panel panel-warning">
         <div class="panel-heading">
             <h1 class="panel-title">
@@ -203,7 +221,7 @@
             <form class="form-horizontal" role="form">
                 <div class="form-group">
                     <label class="col-sm-4 control-label">
-                        Tittel
+                        Navn
                     </label>
 
                     <div class="col-sm-8" ng-hide="metaEditMode">
