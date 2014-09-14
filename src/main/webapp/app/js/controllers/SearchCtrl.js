@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('SearchCtrl', function ($scope, $http, PersonService, PublicationService) {
+    .controller('SearchCtrl', function ($scope, $http, PersonService, PublicationService, ArticleService) {
 
         $scope.data = [];
         $scope.search = {
@@ -64,7 +64,7 @@ angular.module('momusApp.controllers')
         $scope.searchFunc = function () {
             $scope.data = null;
             $scope.loading = true;
-            $http.post('/api/search', $scope.search)
+            ArticleService.search($scope.search)
                 .success(function (data) {
                     $scope.data = data;
                 })

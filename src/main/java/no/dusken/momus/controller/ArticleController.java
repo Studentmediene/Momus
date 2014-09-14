@@ -18,6 +18,7 @@ package no.dusken.momus.controller;
 
 import no.dusken.momus.model.Article;
 import no.dusken.momus.service.ArticleService;
+import no.dusken.momus.service.search.ArticleSearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -79,5 +80,11 @@ public class ArticleController {
     @RequestMapping(value = "/note", method = RequestMethod.PUT)
     public @ResponseBody Article updateArticleNote(@RequestBody Article article){
         return articleService.saveNote(article);
+    }
+
+
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    public @ResponseBody List<Article> getSearchData(@RequestBody ArticleSearchParams search) {
+        return articleService.searchForArticles(search);
     }
 }

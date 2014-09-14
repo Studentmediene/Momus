@@ -17,10 +17,12 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('DispositionCtrl', function ($scope, $http, $routeParams, $modal) {
+    .controller('DispositionCtrl', function ($scope, $http, $routeParams, $modal, ArticleService) {
         var pages;
 
-        $http.get('/api/article').success(function (data) {
+        ArticleService.search({
+                publication: $routeParams.id
+            }).success(function (data) {
             $scope.articles = data;
             console.log(data + "Articles hentet");
 
@@ -79,7 +81,7 @@ angular.module('momusApp.controllers')
         // Adds a page to the end of the array
         $scope.addLastPage = function () {
             var newPage = {
-                page_nr: pages.length + 1,
+                page_nr: pages.length ? pages.length + 1 : 1,
                 section: $scope.sections[0],
                 note: "",
                 articles: []

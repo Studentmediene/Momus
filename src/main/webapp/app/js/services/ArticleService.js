@@ -33,6 +33,10 @@ angular.module('momusApp.services')
 
             updateNote: function(article) {
                 return $http.put('/api/article/note', article);
+            },
+
+            search: function(searchObject) {
+                return $http.post('/api/article/search', searchObject);
             }
         }
     });
