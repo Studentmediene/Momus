@@ -25,31 +25,27 @@ angular.module('momusApp.controllers')
             console.log(data + "Articles hentet");
 
             //Get Disposition
-            $http.get('/api/disp/' + $routeParams.id).success( setDisposition);
+            $http.get('/api/disp/' + $routeParams.id).success(setDisposition);
 
         });
 
-        //id, name, content, note, contentLength, status, type, publication,
-        // journalists, photographers, correctResponsible, lastUpdated
-
-
-        // Checks every article in the disposition and replaces them with
-        // articles from the database list.
-        // This makes all articles the same Objects
+        /** Checks every article in the disposition and replaces them with
+        articles from the database list.
+        This makes all articles the same Objects **/
         function setDisposition(data) {
             var art = $scope.articles;
             if (!data.pages) {
                 data.pages = [];
             }
-            data.pages.forEach( function (page) {
-               page.articles = page.articles.map(function(article){
-                for ( var i = 0; i < art.length; i++){
-                    if ( article.id === art[i].id ){
-                        return art[i];
+            data.pages.forEach(function (page) {
+                page.articles = page.articles.map(function (article) {
+                    for ( var i = 0; i < art.length; i++){
+                        if ( article.id === art[i].id ){
+                            return art[i];
+                        }
                     }
-                }
-                   return null;
-               });
+                    return null;
+                });
             });
 
             data.pages.sort( function ( a, b ) {
@@ -68,7 +64,8 @@ angular.module('momusApp.controllers')
             $scope.sections = data;
         });
 
-        //Update disp
+        //Update the entire disposition
+        $scope.saveArticle = saveArticle;
         function saveArticle() {
             $http.put('/api/disp/' + $routeParams.id, $scope.disposition).success(setDisposition);
         }
@@ -79,9 +76,8 @@ angular.module('momusApp.controllers')
             }
         }
 
-        $scope.saveArticle = saveArticle;
+        // Adds a page to the end of the array
         $scope.addLastPage = function () {
-
             var newPage = {
                 page_nr: pages.length + 1,
                 section: $scope.sections[0],
@@ -89,10 +85,10 @@ angular.module('momusApp.controllers')
                 articles: []
             };
             pages.push(newPage);
-
-//            saveArticle();
+//            saveArticle(); //Saving only through the saveMe button
         };
 
+        //Adds a page in front of a specific page
         $scope.addPage = function(page){
             var pageIndex = pages.indexOf(page);
             var newPage = {
@@ -104,24 +100,24 @@ angular.module('momusApp.controllers')
             pages.splice(pageIndex,0,newPage);
             pageIndex = pages.indexOf(page);
             SortPages();
-//            saveArticle();
+//            saveArticle(); //Saving only through the saveMe button
         };
 
+        //Removes the last page in the array
         $scope.removeLastPage = function () {
-
             if (!pages || pages.length < 1) {
                 return;
             }
-
-                for ( var i = 0; i < pages.length; i++) {
-                    if (pages[i].page_nr == pages.length) {
-                        pages.splice(i, 1);
+            for ( var i = 0; i < pages.length; i++) {
+                if (pages[i].page_nr == pages.length) {
+                    pages.splice(i, 1);
 //                        saveArticle();
-                        return
-                    }
+                    return
                 }
+            }
         };
 
+        //Removes the selected page from array
         $scope.removePage = function (page) {
             var k = -1;
 
@@ -133,12 +129,11 @@ angular.module('momusApp.controllers')
             if( k < 0){
                 return;
             }
-            // If the page is empty (no article), remove it.
+            // If the page is empty (no article), remove it. else ask for permission
             if (pages[k].articles.length === 0 || confirm("Slette denne siden?")) {
                 pages.splice(k,1);
 
                 for (var i = 0; i < pages.length; i++){
-
                     if( pages[i].page_nr > page.page_nr){
                         pages[i].page_nr -= 1;
                     }
@@ -146,21 +141,22 @@ angular.module('momusApp.controllers')
 //                saveArticle();
             }
             $scope.selectedPage = pages[k];
-
         };
 
+        // Types of Photo statuses available
         $scope.photostatus = [
             "Uferdig","Planlagt","Tatt"
         ];
 
-        // When a node is dropped we uppdate the page number/index+1
+        // When a node is dropped we update the page number, (page number = index+1)
         $scope.treeOptions = {
             dropped: function(event) {
                 $scope.selectedPage = pages[event.dest.index];
                 SortPages();
-
             }
         };
+
+        // Article modal (Pop up):
         $scope.articleModal = function (page , article) {
 
             var modalInstance = $modal.open({
@@ -177,13 +173,10 @@ angular.module('momusApp.controllers')
                         return article;
                     }
                 }
-
             });
-
         };
 
         var ModalInstanceCtrl = function ($scope, $modalInstance, articles, page, article) {
-
 
             $scope.selectedArticles = { };
             $scope.page = page;
@@ -216,7 +209,6 @@ angular.module('momusApp.controllers')
                 $scope.page.articles.push(articleModel);
                 //To make adding the first article look good: puts a default
                 $scope.selectedArticles.delArticleModel = articleModel;
-
             };
 
             $scope.removeArticle = function (articleModel) {
@@ -233,12 +225,7 @@ angular.module('momusApp.controllers')
                             return;
                         }
                     }
-
                 }
             };
-
-
         };
-
-
     });

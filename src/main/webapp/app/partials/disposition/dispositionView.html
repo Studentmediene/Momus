@@ -69,7 +69,6 @@
                     <td style="text-align: center"><select ng-change="updateArticles()" ng-model="article.photo_status" ng-options="status for status in photostatus" style="border: none"></select></td>
                     <!--Reklame-->
                     <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center"><input type="checkbox" ng-model="page.advertisement"></td>
-
                 </tr>
                 <!--If there are no articles on the page-->
                 <tr ng-if="page.articles == 0">
