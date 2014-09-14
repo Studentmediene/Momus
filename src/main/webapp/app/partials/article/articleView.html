@@ -33,57 +33,84 @@
             </h1>
         </div>
         <div class="panel-body">
-            <form name="articleForm">
-                <div class="btn-toolbar" id="article-toolbar">
-                    <div class="btn-group">
-                        <button class="btn btn-default"
-                                data-wysihtml5-command="bold"
-                                title="Fet tekst (Ctrl+B)">
-                            <i class="fa fa-bold"></i>
-                        </button>
-                        <button class="btn btn-default"
-                                data-wysihtml5-command="italic"
-                                title="Kursiv tekst (Ctrl+I)">
-                            <i class="fa fa-italic"></i>
-                        </button>
-                        <button class="btn btn-default"
-                                data-wysihtml5-command="underline"
-                                title="Understreket tekst (Ctrl+U)">
-                            <i class="fa fa-underline"></i>
-                        </button>
-                        <button class="btn btn-default"
-                                data-wysihtml5-command="strikethrough"
-                                title="Gjennomstreket tekst">
-                            <i class="fa fa-strikethrough"></i>
-                        </button>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn btn-default"
-                                data-wysihtml5-command="insertUnorderedList"
-                                title="Usortert liste">
-                            <i class="fa fa-list-ul"></i>
-                        </button>
-                        <button class="btn btn-default"
-                                data-wysihtml5-command="insertOrderedList"
-                                title="Sortert liste">
-                            <i class="fa fa-list-ol"></i>
-                        </button>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn btn-default"
-                                data-wysihtml5-action="change_view"
-                                title="Se rådata (avansert)">
-                            <i class="fa fa-exchange"></i>
-                        </button>
-                    </div>
+            <div id="article-toolbar" class="editor-toolbar">
+                <div class="btn-group">
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="formatBlock"
+                            data-wysihtml5-command-value="h1"
+                            title="Tittel">
+                        Tittel
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="formatBlock"
+                            data-wysihtml5-command-value="h2"
+                            title="Stikktittel">
+                        Stikktittel
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="formatBlock"
+                            data-wysihtml5-command-value="h4"
+                            title="Ingress">
+                        Ingress
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="formatBlock"
+                            data-wysihtml5-command-value="h3"
+                            title="Mellomtittel">
+                        Mellomtittel
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="formatBlock"
+                            data-wysihtml5-command-value="p"
+                            title="Brødtekst">
+                        Brødtekst
+                    </button>
                 </div>
-                <textarea id="articleArea"
-                          class="form-control article"
-                          richeditor="article.content"
-                          richeditor-rules="articleRules"
-                          richeditor-toolbar="article-toolbar">
-                </textarea>
-            </form>
+
+                <div class="btn-group">
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="italic"
+                            title="Utheving">
+                        <i class="fa fa-italic"></i>
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="formatBlock"
+                            data-wysihtml5-command-value="blockquote"
+                            title="Sitat">
+                        <i class="fa fa-quote-left"></i>
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="insertUnorderedList"
+                            title="Usortert liste">
+                        <i class="fa fa-list-ul"></i>
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="insertOrderedList"
+                            title="Sortert liste">
+                        <i class="fa fa-list-ol"></i>
+                    </button>
+                </div>
+
+                <div class="btn-group pull-right">
+                    <button class="btn btn-default"
+                            data-wysihtml5-action="change_view"
+                            title="Se rådata (avansert)">
+                        <i class="fa fa-exchange"></i>
+                    </button>
+                </div>
+
+
+            </div>
+
+
+            <textarea id="articleArea"
+                      class="form-control article"
+                      richeditor="article.content"
+                      richeditor-rules="articleRules"
+                      richeditor-toolbar="article-toolbar">
+            </textarea>
+
+
         </div>
     </div>
 </div>
@@ -105,57 +132,55 @@
             </h1>
         </div>
         <div class="panel-body">
-            <form name="noteForm">
-                <div class="btn-toolbar" id="note-toolbar">
-                    <div class="btn-group">
-                        <button class="btn btn-default"
-                                data-wysihtml5-command="bold"
-                                title="Fet tekst (Ctrl+B)">
-                            <i class="fa fa-bold"></i>
-                        </button>
-                        <button class="btn btn-default"
-                                data-wysihtml5-command="italic"
-                                title="Kursiv tekst (Ctrl+I)">
-                            <i class="fa fa-italic"></i>
-                        </button>
-                        <button class="btn btn-default"
-                                data-wysihtml5-command="underline"
-                                title="Understreket tekst (Ctrl+U)">
-                            <i class="fa fa-underline"></i>
-                        </button>
-                        <button class="btn btn-default"
-                                data-wysihtml5-command="strikethrough"
-                                title="Gjennomstreket tekst">
-                            <i class="fa fa-strikethrough"></i>
-                        </button>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn btn-default"
-                                data-wysihtml5-command="insertUnorderedList"
-                                title="Usortert liste">
-                            <i class="fa fa-list-ul"></i>
-                        </button>
-                        <button class="btn btn-default"
-                                data-wysihtml5-command="insertOrderedList"
-                                title="Sortert liste">
-                            <i class="fa fa-list-ol"></i>
-                        </button>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn btn-default"
-                                data-wysihtml5-action="change_view"
-                                title="Se rådata (avansert)">
-                            <i class="fa fa-exchange"></i>
-                        </button>
-                    </div>
+            <div id="note-toolbar" class="editor-toolbar">
+                <div class="btn-group">
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="bold"
+                            title="Fet tekst (Ctrl+B)">
+                        <i class="fa fa-bold"></i>
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="italic"
+                            title="Kursiv tekst (Ctrl+I)">
+                        <i class="fa fa-italic"></i>
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="underline"
+                            title="Understreket tekst (Ctrl+U)">
+                        <i class="fa fa-underline"></i>
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="strikethrough"
+                            title="Gjennomstreket tekst">
+                        <i class="fa fa-strikethrough"></i>
+                    </button>
                 </div>
-                <textarea id="noteArea"
-                          class="form-control note"
-                          richeditor="article.note"
-                          richeditor-rules="noteRules"
-                          richeditor-toolbar="note-toolbar">
-                </textarea>
-            </form>
+                <div class="btn-group">
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="insertUnorderedList"
+                            title="Usortert liste">
+                        <i class="fa fa-list-ul"></i>
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="insertOrderedList"
+                            title="Sortert liste">
+                        <i class="fa fa-list-ol"></i>
+                    </button>
+                </div>
+                <div class="btn-group pull-right">
+                    <button class="btn btn-default"
+                            data-wysihtml5-action="change_view"
+                            title="Se rådata (avansert)">
+                        <i class="fa fa-exchange"></i>
+                    </button>
+                </div>
+            </div>
+            <textarea id="noteArea"
+                      class="form-control note"
+                      richeditor="article.note"
+                      richeditor-rules="noteRules"
+                      richeditor-toolbar="note-toolbar">
+            </textarea>
         </div>
     </div>
     <div id="meta-panel" class="panel panel-info">
@@ -180,6 +205,7 @@
                     <label class="col-sm-4 control-label">
                         Tittel
                     </label>
+
                     <div class="col-sm-8" ng-hide="metaEditMode">
                         <p class="form-control-static">
                             {{ article.name }}
@@ -193,6 +219,7 @@
                     <label class="col-sm-4 control-label">
                         Journalister
                     </label>
+
                     <div class="col-sm-8">
                         <ul class="list-unstyled form-control-static" ng-hide="metaEditMode">
                             <li ng-repeat="journalist in article.journalists">
@@ -200,10 +227,10 @@
                             </li>
                         </ul>
                         <id-select multiple
-                                ng-show="metaEditMode"
-                                items="persons"
-                                target="metaEditing.journalists"
-                                renderer="renderPerson">
+                                   ng-show="metaEditMode"
+                                   items="persons"
+                                   target="metaEditing.journalists"
+                                   renderer="renderPerson">
                         </id-select>
                     </div>
                 </div>
@@ -211,6 +238,7 @@
                     <label class="col-sm-4 control-label">
                         Fotografer
                     </label>
+
                     <div class="col-sm-8">
                         <ul class="list-unstyled form-control-static" ng-hide="metaEditMode">
                             <li ng-repeat="photographer in article.photographers">
@@ -218,17 +246,18 @@
                             </li>
                         </ul>
                         <id-select multiple
-                                ng-show="metaEditMode"
-                                items="persons"
-                                target="metaEditing.photographers"
-                                renderer="renderPerson">
+                                   ng-show="metaEditMode"
+                                   items="persons"
+                                   target="metaEditing.photographers"
+                                   renderer="renderPerson">
                         </id-select>
                     </div>
                 </div>
             </form>
 
 
-            <a href="/api/article/{{article.id}}/export" class="btn btn-primary"><i class="fa fa-file-text-o"></i> InDesign fil</a>
+            <a href="/api/article/{{article.id}}/export" class="btn btn-primary"><i class="fa fa-file-text-o"></i>
+                InDesign fil</a>
         </div>
     </div>
 </div>

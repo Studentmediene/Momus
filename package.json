@@ -16,7 +16,7 @@
     "time-grunt": "0.2.3",
     "karma": "0.12.1",
     "karma-jasmine": "0.1.5",
-    "phantomjs": "1.9.7-1",
+    "phantomjs": "1.9.7-15",
     "grunt-karma": "0.8.2",
     "karma-phantomjs-launcher": "~0.1.2",
     "requirejs": "~2.1.11",
