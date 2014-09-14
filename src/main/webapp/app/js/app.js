@@ -25,14 +25,15 @@ angular.module('momusApp.directives', []);
 
 // Declare app level module which depends on filters, and services
 angular.module('momusApp', [
-    'momusApp.controllers',
-    'momusApp.filters',
-    'momusApp.services',
-    'momusApp.directives',
-    'ngRoute',
-    'ui.select2',
-    'ui.bootstrap'
-]).
+        'momusApp.controllers',
+        'momusApp.filters',
+        'momusApp.services',
+        'momusApp.directives',
+        'ngRoute',
+        'ui.select2',
+        'ui.bootstrap',
+        'ui.tree'
+    ]).
     config(['$routeProvider', function ($routeProvider) {
         // Admin interfaces
         $routeProvider

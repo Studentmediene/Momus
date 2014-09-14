@@ -18,24 +18,45 @@
 
 angular.module('momusApp.controllers')
     .controller('DispositionCtrl', function ($scope, $http, $routeParams, $modal) {
-        $scope.addArticle = function () {
-            console.log("TRYKKER PÅ NOE");
-//            $scope.disposition.pages[page.pageNr-1].articles.push;
-        };
+        var pages;
 
-        //id, name, content, note, contentLength, status, type, publication,
-        // journalists, photographers, correctResponsible, lastUpdated
         $http.get('/api/article').success(function (data) {
             $scope.articles = data;
             console.log(data + "Articles hentet");
+
+            //Get Disposition
+            $http.get('/api/disp/' + $routeParams.id).success(setDisposition);
+
         });
 
+        /** Checks every article in the disposition and replaces them with
+        articles from the database list.
+        This makes all articles the same Objects **/
         function setDisposition(data) {
+            var art = $scope.articles;
             if (!data.pages) {
                 data.pages = [];
             }
+            data.pages.forEach(function (page) {
+                page.articles = page.articles.map(function (article) {
+                    for ( var i = 0; i < art.length; i++){
+                        if ( article.id === art[i].id ){
+                            return art[i];
+                        }
+                    }
+                    return null;
+                });
+            });
+
+            data.pages.sort( function ( a, b ) {
+                return a.page_nr - b.page_nr;
+            });
             console.log("disp data: " + data);
             $scope.disposition = data;
+            pages = $scope.disposition.pages;
+            if ($scope.selectedPage){
+                $scope.selectedPage = pages[$scope.selectedPage.page_nr-1];
+            }
         }
 
         // Get sections from database
@@ -43,47 +64,61 @@ angular.module('momusApp.controllers')
             $scope.sections = data;
         });
 
-        //Get Disposition
-        $http.get('/api/disp/' + $routeParams.id).success(setDisposition);
-
-        //Update disp
+        //Update the entire disposition
+        $scope.saveArticle = saveArticle;
         function saveArticle() {
             $http.put('/api/disp/' + $routeParams.id, $scope.disposition).success(setDisposition);
         }
 
+        function SortPages(){
+            for ( var i = 0; i < pages.length; i++ ) {
+                pages[i].page_nr = i+1;
+            }
+        }
 
-        $scope.saveArticle = saveArticle;
-        $scope.addPage = function () {
-
+        // Adds a page to the end of the array
+        $scope.addLastPage = function () {
             var newPage = {
-                page_nr: $scope.disposition.pages.length + 1,
+                page_nr: pages.length + 1,
                 section: $scope.sections[0],
                 note: "",
                 articles: []
             };
-            $scope.disposition.pages.push(newPage);
-
-            saveArticle();
+            pages.push(newPage);
+//            saveArticle(); //Saving only through the saveMe button
         };
 
-        $scope.removeLastPage = function () {
-            var pages = $scope.disposition.pages;
+        //Adds a page in front of a specific page
+        $scope.addPage = function(page){
+            var pageIndex = pages.indexOf(page);
+            var newPage = {
+                page_nr: pageIndex +1,
+                section: $scope.sections[0],
+                note: "",
+                articles: []
+            };
+            pages.splice(pageIndex,0,newPage);
+            pageIndex = pages.indexOf(page);
+            SortPages();
+//            saveArticle(); //Saving only through the saveMe button
+        };
 
+        //Removes the last page in the array
+        $scope.removeLastPage = function () {
             if (!pages || pages.length < 1) {
                 return;
             }
-            for ( var i = 0;  i < pages.length; i++ )
-            {
-                if(pages[i].page_nr == pages.length){
-                    pages.splice(i,1);
-                    saveArticle();
+            for ( var i = 0; i < pages.length; i++) {
+                if (pages[i].page_nr == pages.length) {
+                    pages.splice(i, 1);
+//                        saveArticle();
                     return
                 }
             }
-        }
+        };
 
+        //Removes the selected page from array
         $scope.removePage = function (page) {
-            var pages = $scope.disposition.pages;
             var k = -1;
 
             for (var i = 0; i < pages.length; i++){
@@ -94,236 +129,71 @@ angular.module('momusApp.controllers')
             if( k < 0){
                 return;
             }
-            // If the page is empty (no article), remove it.
+            // If the page is empty (no article), remove it. else ask for permission
             if (pages[k].articles.length === 0 || confirm("Slette denne siden?")) {
                 pages.splice(k,1);
 
                 for (var i = 0; i < pages.length; i++){
-
                     if( pages[i].page_nr > page.page_nr){
                         pages[i].page_nr -= 1;
                     }
                 }
-                saveArticle();
+//                saveArticle();
             }
-
-
+            $scope.selectedPage = pages[k];
         };
 
+        // Types of Photo statuses available
+        $scope.photostatus = [
+            "Uferdig","Planlagt","Tatt"
+        ];
 
+        // When a node is dropped we update the page number, (page number = index+1)
+        $scope.treeOptions = {
+            dropped: function(event) {
+                $scope.selectedPage = pages[event.dest.index];
+                SortPages();
+            }
+        };
 
-//        $scope.articles = [
-//            {
-//                id: 1,
-//                type: "KulturRaport",
-//                name: "Fuglefrø",
-//                status: "Skrives",
-//                photoStatus: "tatt",
-//                advertisement: false,
-//                photographers: [
-//                    {
-//                        name: "jon",
-//                        age: 24
-//                    },
-//                    {
-//                        name: "birger",
-//                        age: 22
-//                    },
-//                    {
-//                        name: "olav",
-//                        age: 45
-//                    },
-//                    {
-//                        name: "kåre",
-//                        age: 45
-//                    }
-//                ],
-//                journalists: [
-//                    {
-//                        name: "håkon",
-//                        age: 24
-//                    },
-//                    {
-//                        name: "bård",
-//                        age: 22
-//                    },
-//                    {
-//                        name: "stian",
-//                        age: 45
-//                    }
-//                ]
-//            },
-//            {
-//                id: 2,
-//                type: "Portrett",
-//                name: "Nato Jens",
-//                status: "Desk",
-//                photoStatus: "lagt inn",
-//                advertisement: true,
-//                photographers: [],
-//                journalists: [
-//                    {
-//                        name: "ole",
-//                        age: 20
-//                    }
-//                ]
-//            },
-//            {
-//                id: 3,
-//                type: "Miljø",
-//                name: "Oljesøl",
-//                status: "Skrives",
-//                photoStatus: "redigeres",
-//                advertisement: false,
-//                photographers: [],
-//                journalists: [
-//                    {
-//                        name: "frode",
-//                        age: 28
-//                    }
-//                ]
-//            }
-//
-//        ];
+        // Article modal (Pop up):
+        $scope.articleModal = function (page , article) {
 
+            var modalInstance = $modal.open({
+                templateUrl: 'partials/disposition/articleModal.html',
+                controller: ModalInstanceCtrl,
+                resolve: {
+                    articles: function () {
+                        return $scope.articles;
+                    },
+                    page: function () {
+                        return page;
+                    },
+                    article: function () {
+                        return article;
+                    }
+                }
+            });
+        };
 
-//        $scope.sections = [
-//            {id: 1, name: "FORSIDE"},
-//            {id: 2, name: "INNHOLD"},
-//            {id: 3, name: "ANNONSE"},
-//            {id: 4, name: "NYHET"},
-//            {id: 5, name: "TRANSIT"},
-//            {id: 6, name: "FORSKNINGSFUNN"},
-//            {id: 7, name: "DAGSORDEN"},
-//            {id: 8, name: "MENINGER"},
-//            {id: 9, name: "AKTUALITET"},
-//            {id: 10, name: "SMÅREP"},
-//            {id: 11, name: "KULTUR"},
-//            {id: 12, name: "SPIT"},
-//            {id: 13, name: "BAKSIDE"},
-//            {id: 14, name: "TEST"}
-//        ];
-
-        // Test disposition
-//        $scope.disposition = {
-//            id: $routeParams.id,
-//            publicationNr: 3,
-//            release_date: 2014,
-//            pages: [
-//                {
-//                    pageNr: 1,
-//                    section: {id: 0, name: ""},
-//                    note:
-//                    articles: [
-//                        {
-//                            id: 1,
-//                            type: "KulturRaport",
-//                            name: "Fuglefrø",
-//                            status: "Skrives",
-//                            photoStatus: "tatt",
-//                            advertisement: false,
-//                            photographers: [
-//                                {
-//                                    name: "jon",
-//                                    age: 24
-//                                },
-//                                {
-//                                    name: "birger",
-//                                    age: 22
-//                                },
-//                                {
-//                                    name: "olav",
-//                                    age: 45
-//                                },
-//                                {
-//                                    name: "kåre",
-//                                    age: 45
-//                                }
-//                            ],
-//                            journalists: [
-//                                {
-//                                    name: "håkon",
-//                                    age: 24
-//                                },
-//                                {
-//                                    name: "bård",
-//                                    age: 22
-//                                },
-//                                {
-//                                    name: "stian",
-//                                    age: 45
-//                                }
-//                            ]
-//                        },
-//                        {
-//                            id: 2,
-//                            type: "Portrett",
-//                            name: "Nato Jens",
-//                            status: "Desk",
-//                            photoStatus: "lagt inn",
-//                            advertisement: true,
-//                            photographers: [],
-//                            journalists: [
-//                                {
-//                                    name: "ole",
-//                                    age: 20
-//                                }
-//                            ]
-//                        }
-//                    ]
-//                },
-//                {
-//                    pageNr: 2,
-//                    section: {id: 0, name: ""},
-//                    articles: [
-//                        {
-//                            id: 3,
-//                            type: "Miljø",
-//                            name: "Oljesøl",
-//                            status: "Skrives",
-//                            photoStatus: "redigeres",
-//                            advertisement: false,
-//                            photographers: [],
-//                            journalists: [
-//                                {
-//                                    name: "frode",
-//                                    age: 28
-//                                }
-//                            ]
-//                        }
-//                    ]
-//                },
-//                {
-//                    pageNr: 3,
-//                    section: {id: 0, name: ""},
-//                    articles: [
-//
-//                    ]
-//                },
-//                {
-//                    pageNr: 4,
-//                    section: {id: 0, name: ""},
-//                    articles: [
-//
-//                    ]
-//                }
-//            ]
-//        };
-
-
-        var ModalInstanceCtrl = function ($scope, $modalInstance, articles, page) {
-
+        var ModalInstanceCtrl = function ($scope, $modalInstance, articles, page, article) {
 
             $scope.selectedArticles = { };
             $scope.page = page;
             $scope.articles = articles;
+            $scope.article = article;
 
             if (articles.length !== 0) {
                 $scope.selectedArticles.addArticleModel = articles[0];
             }
             // if the page.articles is not empty, set a default value for the model
             if ($scope.page.articles.length !== 0) {
-                $scope.selectedArticles.delArticleModel = $scope.page.articles[0];
+                if ($scope.article){
+                    $scope.selectedArticles.delArticleModel = $scope.article;
+                }
+                else{
+                    $scope.selectedArticles.delArticleModel = $scope.page.articles[0];
+                }
             }
 
             $scope.addArticle = function (articleModel) {
@@ -338,8 +208,7 @@ angular.module('momusApp.controllers')
                 }
                 $scope.page.articles.push(articleModel);
                 //To make adding the first article look good: puts a default
-                $scope.selectedArticles.delArticleModel = $scope.page.articles[0];
-
+                $scope.selectedArticles.delArticleModel = articleModel;
             };
 
             $scope.removeArticle = function (articleModel) {
@@ -356,28 +225,7 @@ angular.module('momusApp.controllers')
                             return;
                         }
                     }
-
                 }
             };
-
-
-        };
-
-        $scope.articleModal = function (page) {
-
-            var modalInstance = $modal.open({
-                templateUrl: 'partials/disposition/articleModal.html',
-                controller: ModalInstanceCtrl,
-                resolve: {
-                    articles: function () {
-                        return $scope.articles;
-                    },
-                    page: function () {
-                        return page;
-                    }
-                }
-
-            });
-
         };
     });

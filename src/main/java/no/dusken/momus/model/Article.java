@@ -68,6 +68,8 @@ public class Article {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdated;
 
+    private String photoStatus;
+
 
     /**
      * This is done after load instead of in a getter, since
@@ -105,6 +107,14 @@ public class Article {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getPhotoStatus() {
+        return photoStatus;
+    }
+
+    public void setPhotoStatus(String photoStatus) {
+        this.photoStatus = photoStatus;
     }
 
     public int getContentLength() {
