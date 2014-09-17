@@ -20,6 +20,13 @@ body {
     padding-top: 70px;
     padding-bottom: 50px;
 }
+/* Removes padding when priting to avoid blank space*/
+@media print {
+body {
+    padding-top: 0px;
+}
+
+}
 
 
 textarea.article {
