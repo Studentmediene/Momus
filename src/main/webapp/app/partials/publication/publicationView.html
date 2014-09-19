@@ -56,7 +56,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="publication in publications | filter:yearFilter | orderBy: '-name'">
+                                <tr ng-repeat="publication in publications | filter:yearFilter | orderBy: '-release_date'">
                                     <td>{{publication.name}}</td>
                                     <td>{{publication.release_date}}</td>
                                     <!--<td><a href="#/disposition/{{publication.id}}">Disposisjon</a></td>-->

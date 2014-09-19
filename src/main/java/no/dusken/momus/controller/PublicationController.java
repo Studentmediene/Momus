@@ -52,6 +52,9 @@ public class PublicationController {
         savedPublication.setReleaseDate(publication.getReleaseDate());
 
         savedPublication = publicationRepository.save(savedPublication);
+
+
+        savedPublication = publicationRepository.findOne(savedPublication.getId());
         return savedPublication;
     }
 

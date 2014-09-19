@@ -85,7 +85,7 @@ angular.module('momusApp.controllers')
                 PublicationService.updateMetadata($scope.editing)
                     .success(function (savedPublication) {
                         $scope.publications[$scope.editingIndex] = savedPublication;
-                        $scope.editing = savedPublication;
+                        $scope.editPublication(savedPublication);
                         $scope.isSaving = false;
                     });
             }

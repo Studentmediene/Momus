@@ -55,8 +55,8 @@ angular.module('momusApp.controllers')
         ];
 
         $scope.statuses = [
-            {id: 1, name: "Skrives"},
-            {id: 2, name: "Desking"},
+            {id: 1, name: "Planlagt"},
+            {id: 2, name: "Skrives"},
             {id: 3, name: "Korrektur"},
             {id: 4, name: "Publisert"}
         ];
