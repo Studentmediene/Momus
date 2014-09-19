@@ -73,6 +73,6 @@ blockquote:before {
 }
 
 i { /* emphasis */
-    font-weight: bold;
+    /*font-weight: bold;*/
     font-style: italic;
 }

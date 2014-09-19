@@ -35,7 +35,7 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
     @Test
     public void testGenerateFromArticle() throws Exception {
         Article article = new Article(1L);
-        article.setContent("<p>Something</p>");
+        article.setContent("<h1>Tittel</h1><h2>Ingress</h2><p>Something</p>");
         article.setName("Min tittel");
 
         Set<Person> journalists = new HashSet<>();
@@ -47,17 +47,15 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
         photographers.add(new Person(3L, null, null, "user1", "Einar", "Einarsen", "einar@lala.org", "12345678", true));
         article.setPhotographers(photographers);
 
-        String expected = "<ANSI-WIN>\n" +
-                "<Version:6>\n" +
-                "<ParaStyle:Tittel>Min tittel\n" +
-                "<ParaStyle:Byline>Tekst: Mats Matsesen mats@mats.mats\n" +
-                "<ParaStyle:Byline>Tekst: Kåre Kål lala@lolo.com\n" +
-                "<ParaStyle:Byline>Foto: Einar Einarsen einar@lala.org\n" +
-                "<ParaStyle:Ingress>NHO er bekymret for det de kaller «mastersyken». Det er etterspørsel etter masterstudenter, mener historieprofessor.\n" +
-                "<ParaStyle:Brødtekst>Kostnadene ved å utdanne befolkningen er store, og NHO mener at vi bruker ressursene feil i universitets- og høgskolesektoren.\n";
+        String expected = "<ANSI-WIN>\r\n" +
+                "<Version:6>\r\n" +
+                "<ParaStyle:Tittel>Min tittel\r\n" +
+                "<ParaStyle:Byline>Tekst: Mats Matsesen mats@mats.mats\r\n" +
+                "<ParaStyle:Byline>Tekst: Kåre Kål lala@lolo.com\r\n" +
+                "<ParaStyle:Byline>Foto: Einar Einarsen einar@lala.org\r\n";
+        IndesignExport result = indesignGenerator.generateFromArticle(article);
 
-        String result = indesignGenerator.generateFromArticle(article);
-
-        assertEquals(expected, result);
+        assertEquals(expected, result.getContent());
+        assertEquals("", result.getName());
     }
 }

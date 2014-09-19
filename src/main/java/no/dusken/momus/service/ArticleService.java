@@ -21,6 +21,7 @@ import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleRevision;
 import no.dusken.momus.model.Person;
+import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
 import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.ArticleRevisionRepository;
@@ -155,7 +156,8 @@ public class ArticleService {
         return resultList;
     }
 
-    public String exportArticle(Article article) {
+    public IndesignExport exportArticle(Long id) {
+        Article article = getArticleById(id);
         return indesignGenerator.generateFromArticle(article);
     }
 

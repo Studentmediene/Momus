@@ -187,9 +187,36 @@ public class DevController {
     public @ResponseBody String test3() {
 
         Article article = new Article();
-        article.setContent("test innhold lol");
+        article.setContent("<h1>Flere enn før takler ikke presset</h1><h2>Studentvelferd</h2><h4>«Ingrid» forteller en historie om et sykelig fokus på perfeksjon som \n" +
+                "førte til at hun ignorerte kroppens signaler om hvile, og endte i \n" +
+                "kollaps. Ny undersøkelse viser at dette er en økende tendens.\n" +
+                "            </h4><p>Studentenes helse- og trivselsundersøkelse 2014 ble presentert i Oslo\n" +
+                " på onsdag. Lesningen er ifølge pressemeldinger fra hele landets \n" +
+                "studentpolitikere, «alarmerende».</p>\n" +
+                "<p>Det har vært en klar økning i psykiske problemer blant studenter. \n" +
+                "Spesielt blant kvinnelige studenter. Andelen kvinner som svarer at de \n" +
+                "har «middels», «alvorlige» eller «mange og alvorlige» symptomer har økt \n" +
+                "fra 31 til 40 prosent. Samtidig svarer 36 prosent av kvinnene at de er \n" +
+                "misfornøyd med egen vekt og 30 prosent svarer at de er misfornøyd med \n" +
+                "eget utseende.</p><h3>Avfeide kyssesyken</h3>\n" +
+                "<p>Ingrid studerer Kultur og kommunikasjon ved Universitetet i Oslo \n" +
+                "(UiO), og forteller at hun måtte møte veggen før hun gjorde en endring i\n" +
+                " livsstil. Hun var syk i eksamenstiden, men avfeide det som en vanlig \n" +
+                "influensa. Hun kom seg gjennom eksamene, men kollapset siste skoledag. \n" +
+                "Ingrid ble sendt i all hast til legevakten hvor de trodde hun hadde \n" +
+                "nyre- og leversvikt. Det viste seg at hun hadde hatt kyssesyken i lang \n" +
+                "tid som hadde utviklet seg til å bli veldig alvorlig.</p>\n" +
+                "<p>— Jeg måtte være sengeliggende i to måneder.</p>\n" +
+                "<p>Ingrid forteller åpenhjertig at hun tidligere slet med det såkalte «flink pike»-syndromet. Hun skulle prestere på alle områder. <br></p><h3>Enda en mellomtittel<br></h3>\n" +
+                "<p>— Jeg brukte enorme mengder energi på skolen samtidig som jeg trente \n" +
+                "fem ganger i uka, og var særlig opptatt av å spise riktig. Jeg ville \n" +
+                "være det perfekte mennesket på alle arenaer, sier hun.</p><blockquote>Jeg spiste bare jordbær hvvveeeer dag<br></blockquote>\n" +
+                "<p>Det var en kombinasjon av flere faktorer som drev atferden hennes \n" +
+                "framover. Ingrid forteller at det var en periode av livet hennes hvor \n" +
+                "hun ikke følte at hun hadde kontroll over egen kropp, eller det som \n" +
+                "foregikk rundt henne.</p>\n" +
+                "<p>— Jeg ville ta kontroll på et vis, forklarer hun.</p><br><br>");
 
-        article.setContent("test innhold lol");
 
         Publication publication = new Publication();
         publication.setName("testpub");
