@@ -17,31 +17,84 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('SearchCtrl', function ($scope, $http, PersonService, PublicationService, ArticleService) {
+    .controller('SearchCtrl', function ($scope, $http, $location, $q, PersonService, PublicationService, ArticleService) {
 
         $scope.data = [];
         $scope.search = {
             free: '',
             status: '',
-            persons: [],
+            persons: '',
             section: '',
             publication: ''
         };
 
+        // Get stuff from the server
+        $q.all([PersonService.getAll(), PublicationService.getAll()]).then(function (data) {
+            console.log(data);
+            $scope.persons = data[0].data;
+            $scope.publications = data[1].data;
 
-        PersonService.getAll().success(function (data) {
-            $scope.persons = data;
+            if (updateSearchParametersFromUrl()) { // If the URL contained a search
+                search();
+            } else if ($scope.publications.length > 0){ // default search on the newest publication
+                $scope.search.publication = data[0].id;
+                $location.search('publication', $scope.search.publication).replace();
+                search();
+            }
         });
 
-        $scope.renderPerson = PersonService.renderPerson;
+
+        $scope.$on('$routeUpdate', function(){ // when going back/forward
+            updateSearchParametersFromUrl();
+
+            if ($scope.data) { // if we're not doing a search, trigger one
+                search();
+            }
+        });
 
 
         /**
-         * Fetching publications from server
+         * Iterates over the $scope.search object and tries to read the
+         * corresponding values from the URL, if any is present the function will return true
          */
-        PublicationService.getAll().success(function (data) {
-            $scope.publications = data;
-        });
+        function updateSearchParametersFromUrl() {
+            var urlSearch = $location.search();
+            var aValueWasSet = false;
+
+            for (var key in $scope.search) {
+                var value = urlSearch[key];
+
+                $scope.search[key] = value;
+                if (value) {
+                    aValueWasSet = true;
+                }
+            }
+
+            if (typeof $scope.search.persons == "string") {
+                // convert persons to array, as if it's only one value it will look like a string
+                $scope.search.persons = [$scope.search.persons];
+            }
+
+            return aValueWasSet;
+        }
+
+
+        function rememberSearchState() {
+            var newValue = $scope.search;
+            for (var key in newValue) {
+                var value = newValue[key];
+
+                if (value) {
+                    $location.search(key, value);
+                } else {
+                    $location.search(key, null);
+                }
+            }
+
+        }
+
+
+        $scope.renderPerson = PersonService.renderPerson;
 
 
         // TODO get these from server
@@ -62,14 +115,19 @@ angular.module('momusApp.controllers')
         ];
 
         $scope.searchFunc = function () {
+            rememberSearchState();
+            search();
+        };
+
+
+        function search() {
             $scope.data = null;
             $scope.loading = true;
-            ArticleService.search($scope.search)
-                .success(function (data) {
-                    $scope.data = data;
-                })
-                .finally(function(data){
-                    $scope.loading = false;
-                });
+
+            ArticleService.search($scope.search).success(function (data) {
+                $scope.data = data;
+            }).finally(function () {
+                $scope.loading = false;
+            });
         }
     });
