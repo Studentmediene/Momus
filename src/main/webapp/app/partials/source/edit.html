@@ -17,7 +17,7 @@
 <form class="form-horizontal" name="sourceForm" novalidate>
     <div class="row">
 
-        <div class="col-xs-12 col-md-5">
+        <div class="col-xs-12 col-sm-5">
             <div class="form-group" ng-class="{'has-error': sourceForm.name.$invalid && sourceForm.name.$dirty}">
                 <label for="name" class="col-md-3 control-label">Navn</label>
                 <div class="col-md-8">
@@ -72,7 +72,8 @@
         </div>
 
 
-        <div class="col-xs-12 col-md-7">
+        <div class="col-xs-12 col-sm-7">
+            <label class="visible-xs visible-sm control-label pull-left">Notat</label>
             <textarea class="form-control" placeholder="Notat" ng-model="source.note" style="height: 370px"></textarea>
         </div>
 
