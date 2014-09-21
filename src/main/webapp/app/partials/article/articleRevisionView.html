@@ -1,0 +1,26 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title text-center">
+            Revisjoner
+        </h3>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-striped table-condensed" style="font-size: 85%;">
+            <thead>
+                <tr>
+                    <th>Navn</th>
+                    <th>Forfatter</th>
+                    <th>Dato</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="rev in revisions">
+                    <td>{{rev.article}}</td>
+                    <td>{{rev.author.first_name}} {{rev.author.last_name}}</td>
+                    <td>{{rev.saved_date}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
