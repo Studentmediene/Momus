@@ -104,4 +104,22 @@ angular.module('momusApp.controllers')
         $scope.cancelMeta = function() {
             $scope.metaEditMode = false;
         };
+
+        $scope.$on('$locationChangeStart', function(event){
+            if($scope.promptCondition()){
+                if(!confirm("Er du sikker på at du vil forlate siden? Det finnes ulagrede endringer.")){
+                    event.preventDefault();
+                }
+            }
+        });
+
+        window.onbeforeunload = function(){
+            if($scope.promptCondition()){
+                return "Det finnes ulagrede endringer.";
+            }
+        };
+
+        $scope.promptCondition = function() {
+            return $scope.unedited.content != $scope.article.content || $scope.metaEditMode == true || $scope.unedited.note != $scope.article.note;
+        };
     });
