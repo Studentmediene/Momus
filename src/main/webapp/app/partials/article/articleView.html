@@ -15,17 +15,55 @@
   -->
 
 
-<div class="row" ng-show="article.comment">
+<!-- Used when printing Ctrl+P-->
+<div class="visible-print">
+    <table class="table table-condensed">
+        <tr>
+            <th>Navn:</th>
+            <td>{{ article.name }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Journalister:</th>
+            <td>
+                <span ng-repeat="journalist in article.journalists">
+                    {{ renderPerson(journalist) }}<span ng-if="!$last">,</span>
+                </span>
+            </td>
+            <th>Kommentar:</th>
+            <td>{{article.comment}}</td>
+        </tr>
+        <tr>
+            <th>Fotografer:</th>
+            <td>
+                <span ng-repeat="photographer in article.photographers">
+                    {{ renderPerson(photographer) }}<span ng-if="!$last">,</span>
+                </span>
+            </td>
+            <th>Publikasjon:</th>
+            <td>{{article.publication.name}}</td>
+        </tr>
+    </table>
+
+    <div style="column-count: 2; -moz-column-count:2" ng-bind-html="article.content | trustHtml"></div>
+
+</div>
+
+
+<div class="row hidden-print" ng-show="article.comment">
     <div class="col-xs-12">
         <div class="alert alert-info">
-        <p>
-            <strong>Kommentar:</strong> {{article.comment}}
-        </p>
+            <p>
+                <strong>Kommentar:</strong> {{article.comment}}
+            </p>
         </div>
     </div>
 </div>
 
-<div class="row">
+
+
+<div class="row hidden-print">
 <div class="col-md-7">
     <div id="content-panel" class="panel panel-primary">
         <div class="panel-heading">
@@ -125,7 +163,7 @@
         </div>
     </div>
 </div>
-<div class="col-md-5">
+<div class="col-md-5 hidden-print">
     <div if="note-panel" class="panel panel-warning">
         <div class="panel-heading">
             <h1 class="panel-title">
@@ -214,7 +252,7 @@
             <form class="form-horizontal" role="form">
                 <div class="form-group">
                     <label class="col-sm-4 control-label">
-                        Tittel
+                        Navn
                     </label>
 
                     <div class="col-sm-8" ng-hide="metaEditMode">
@@ -289,7 +327,7 @@
                         </p>
                     </div>
                     <div class="col-sm-8" ng-show="metaEditMode">
-                        <select class="form-control input-sm" ng-model="metaEditing.publication" ng-options="s.name for s in publications track by s.id" style="border: none"></select>
+                        <select class="form-control input-sm" ng-model="metaEditing.publication" ng-options="s.name for s in publications track by s.id"></select>
                     </div>
                 </div>
                 <div class="form-group">
@@ -303,7 +341,7 @@
                         </p>
                     </div>
                     <div class="col-sm-8" ng-show="metaEditMode">
-                        <select class="form-control input-sm" ng-model="metaEditing.type" ng-options="s.name for s in types track by s.id" style="border: none"></select>
+                        <select class="form-control input-sm" ng-model="metaEditing.type" ng-options="s.name for s in types track by s.id"></select>
                     </div>
                 </div>
                 <div class="form-group">
@@ -313,11 +351,11 @@
 
                     <div class="col-sm-8" ng-hide="metaEditMode">
                         <p class="form-control-static">
-                            {{ article.status }}
+                            {{ article.status.name }}
                         </p>
                     </div>
                     <div class="col-sm-8" ng-show="metaEditMode">
-                        <select class="form-control input-sm" ng-model="metaEditing.status" ng-options="s.name for s in statuses track by s.id" style="border: none"></select>
+                        <select class="form-control input-sm" ng-model="metaEditing.status" ng-options="s.name for s in statuses track by s.id"></select>
                     </div>
                 </div>
             </form>
