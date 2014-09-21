@@ -106,7 +106,7 @@ angular.module('momusApp.controllers')
         };
 
         $scope.$on('$locationChangeStart', function(event){
-            if($scope.promptCondition()){
+            if(promptCondition()){
                 if(!confirm("Er du sikker på at du vil forlate siden? Det finnes ulagrede endringer.")){
                     event.preventDefault();
                 }
@@ -114,12 +114,12 @@ angular.module('momusApp.controllers')
         });
 
         window.onbeforeunload = function(){
-            if($scope.promptCondition()){
+            if(promptCondition()){
                 return "Det finnes ulagrede endringer.";
             }
         };
 
-        $scope.promptCondition = function() {
+        function promptCondition() {
             return $scope.unedited.content != $scope.article.content || $scope.metaEditMode == true || $scope.unedited.note != $scope.article.note;
-        };
+        }
     });
