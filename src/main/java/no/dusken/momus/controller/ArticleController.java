@@ -17,9 +17,13 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.model.Article;
+import no.dusken.momus.model.ArticleStatus;
+import no.dusken.momus.model.ArticleType;
 import no.dusken.momus.service.ArticleService;
-import no.dusken.momus.service.search.ArticleSearchParams;
 import no.dusken.momus.service.indesign.IndesignExport;
+import no.dusken.momus.service.search.ArticleSearchParams;
+import no.dusken.momus.service.repository.ArticleStatusRepository;
+import no.dusken.momus.service.repository.ArticleTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +38,11 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
+    @Autowired
+    private ArticleTypeRepository articleTypeRepository;
+
+    @Autowired
+    private ArticleStatusRepository articleStatusRepository;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody Article getArticleByID(@PathVariable("id") Long id) {
@@ -56,6 +65,15 @@ public class ArticleController {
         return indesignExport.getContent();
     }
 
+    @RequestMapping(value = "/types", method = RequestMethod.GET)
+    public @ResponseBody List<ArticleType> getAllArticleTypes(){
+        return articleTypeRepository.findAll();
+    }
+
+    @RequestMapping(value = "/statuses", method = RequestMethod.GET)
+    public @ResponseBody List<ArticleStatus> getAllArticleStatuses(){
+        return articleStatusRepository.findAll();
+    }
 
 
     @RequestMapping(method = RequestMethod.PUT)

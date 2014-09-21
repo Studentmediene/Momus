@@ -34,6 +34,12 @@ angular.module('momusApp.services')
             updateNote: function(article) {
                 return $http.put('/api/article/note', article);
             },
+            getTypes: function() {
+                return $http.get('/api/article/types');
+            },
+            getStatuses: function() {
+                return $http.get('/api/article/statuses');
+            },
 
             search: function(searchObject) {
                 return $http.post('/api/article/search', searchObject);

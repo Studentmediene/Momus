@@ -35,6 +35,15 @@ angular.module('momusApp.controllers')
             TitleChanger.setTitle($scope.article.name);
         });
 
+        ArticleService.getTypes().success(function (data) {
+            $scope.types = data;
+        });
+
+        ArticleService.getStatuses().success(function (data) {
+            $scope.statuses = data;
+        });
+
+
 
         /* content panel */
         $scope.saveContent = function () {

@@ -278,8 +278,49 @@
                         <input class="form-control input-sm" type="text" ng-model="metaEditing.comment">
                     </div>
                 </div>
-            </form>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                        Publikasjon
+                    </label>
 
+                    <div class="col-sm-8" ng-hide="metaEditMode">
+                        <p class="form-control-static">
+                            {{ article.publication.name }}
+                        </p>
+                    </div>
+                    <div class="col-sm-8" ng-show="metaEditMode">
+                        <select class="form-control input-sm" ng-model="metaEditing.publication" ng-options="s.name for s in publications track by s.id" style="border: none"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                        Type
+                    </label>
+
+                    <div class="col-sm-8" ng-hide="metaEditMode">
+                        <p class="form-control-static">
+                            {{ article.type.name }}
+                        </p>
+                    </div>
+                    <div class="col-sm-8" ng-show="metaEditMode">
+                        <select class="form-control input-sm" ng-model="metaEditing.type" ng-options="s.name for s in types track by s.id" style="border: none"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                        Status
+                    </label>
+
+                    <div class="col-sm-8" ng-hide="metaEditMode">
+                        <p class="form-control-static">
+                            {{ article.status }}
+                        </p>
+                    </div>
+                    <div class="col-sm-8" ng-show="metaEditMode">
+                        <select class="form-control input-sm" ng-model="metaEditing.status" ng-options="s.name for s in statuses track by s.id" style="border: none"></select>
+                    </div>
+                </div>
+            </form>
 
             <a href="/api/article/{{article.id}}/export" class="btn btn-primary"><i class="fa fa-file-text-o"></i>
                 InDesign fil</a>

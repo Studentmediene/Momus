@@ -229,6 +229,14 @@ public class DevController {
         articleRepository.save(article);
         return "ok";
     }
+    @RequestMapping ("/articleTypes")
+            public @ResponseBody String articleTypes(){
+        articleTypeRepository.save(new ArticleType("KulturRaport"));
+        articleTypeRepository.save(new ArticleType("Anmeldelse"));
+
+        return "ok";
+    }
+
 
 
     @RequestMapping("/test4")
