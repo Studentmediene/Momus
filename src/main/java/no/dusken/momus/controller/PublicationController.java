@@ -21,6 +21,7 @@ import no.dusken.momus.model.Publication;
 import no.dusken.momus.service.repository.DispositionRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +41,7 @@ public class PublicationController {
 
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody List<Publication> getAllPublications(){
-        return publicationRepository.findAll();
+        return publicationRepository.findAll(new Sort(new Sort.Order(Sort.Direction.DESC, "releaseDate")));
     }
 
 

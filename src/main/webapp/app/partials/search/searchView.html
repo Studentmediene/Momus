@@ -34,7 +34,7 @@
                 </label>
                 <select class="form-control" id="searchStatus" ui-select2 ng-model="search.status" placeholder="Status">
                     <option class="" value="">
-                        Velg status
+                        Alle statuser
                     </option>
                     <option ng-repeat="status in statuses" value="{{ status.id }}">
                         {{ status.name }}
@@ -49,7 +49,7 @@
                 </label>
                 <select class="form-control" id="searchSection" ui-select2 ng-model="search.section">
                     <option value="">
-                        Velg redaksjon
+                        Alle redaksjoner
                     </option>
                     <option ng-repeat="section in sections" value="{{ section.id }}">
                         {{ section.name }}
@@ -64,7 +64,7 @@
                 </label>
                 <select class="form-control" id="searchPublication" ui-select2 ng-model="search.publication">
                     <option value="">
-                        Velg utgave
+                        Alle utgaver
                     </option>
                     <option ng-repeat="publication in publications | orderBy: '-release_date'" value="{{ publication.id }}">
                         {{ publication.name }}

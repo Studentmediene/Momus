@@ -48,6 +48,7 @@ angular.module('momusApp', [
             {
                 templateUrl: 'partials/search/searchView.html',
                 controller: 'SearchCtrl',
+                reloadOnSearch: false,
                 title: "Artikkelsøk"
             }
         )
