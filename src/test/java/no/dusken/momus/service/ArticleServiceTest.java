@@ -46,6 +46,9 @@ public class ArticleServiceTest extends AbstractTestRunner {
     ArticleStatusRepository articleStatusRepository;
 
     @Autowired
+    ArticleTypeRepository articleTypeRepository;
+
+    @Autowired
     ArticleRevisionRepository articleRevisionRepository;
 
     @Autowired
@@ -55,6 +58,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
     private Article article2;
     private Article article3;
     private Article article4;
+
 
     @Before
     public void setUp() throws Exception {
@@ -145,6 +149,12 @@ public class ArticleServiceTest extends AbstractTestRunner {
     @Test
     public void testSaveArticleMetadata() throws Exception {
         Article article = new Article(article1.getId());
+        ArticleStatus articleStatus1 = articleStatusRepository.save(new ArticleStatus("Desk"));
+        ArticleType articleType1 = articleTypeRepository.save(new ArticleType("KulturRaport"));
+        Publication publication1 = new Publication();
+        publication1.setName("testpublication");
+        publication1.setReleaseDate(new Date(114, 5, 5));
+        publication1 = publicationRepository.save(publication1);
 
         Set<Person> journalists = new HashSet<>();
         Set<Person> photographers = new HashSet<>();
@@ -155,8 +165,9 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article.setPhotographers(photographers);
         article.setContent("NEW CONTENT, SHOULD NOT BE CHANGED!");
         article.setComment("my cool comment");
-
-        // TODO add type, status, publication etc.
+        article.setStatus(articleStatus1);
+        article.setType(articleType1);
+        article.setPublication(publication1);
 
         article = articleService.saveMetadata(article);
 
@@ -164,6 +175,9 @@ public class ArticleServiceTest extends AbstractTestRunner {
         assertEquals(0, article.getJournalists().size());
         assertEquals(1, article.getPhotographers().size());
         assertEquals("my cool comment", article.getComment());
+        assertEquals(articleStatus1.getName(), article.getStatus().getName());
+        assertEquals(articleType1.getName(), article.getType().getName());
+        assertEquals(publication1.getName(), article.getPublication().getName());
 
         assertEquals("Testinnhold for artikkel 1 yay", article.getContent());
     }
