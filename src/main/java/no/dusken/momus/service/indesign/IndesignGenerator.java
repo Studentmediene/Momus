@@ -119,7 +119,7 @@ public class IndesignGenerator {
         String fileName = "";
 
         if (article.getPublication() != null) {
-            fileName = article.getPublication().getName() + "_";
+            fileName = article.getPublication().getName() + " ";
         }
 
         fileName += article.getName();
