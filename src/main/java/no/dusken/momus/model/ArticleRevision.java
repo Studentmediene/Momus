@@ -33,6 +33,9 @@ public class ArticleRevision {
     @Column(length = 40960)
     private String content;
 
+    @Column(length = 40960)
+    private String name;
+
     @ManyToOne
     private ArticleStatus status;
 
@@ -63,6 +66,10 @@ public class ArticleRevision {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public String getName() { return name; }
+
+    public void setName(String name) { this.name = name; }
 
     public ArticleStatus getStatus() {
         return status;

@@ -1,26 +1,45 @@
-<div class="panel panel-default">
+<div class="panel panel-info">
     <div class="panel-heading">
         <h3 class="panel-title text-center">
             Revisjoner
         </h3>
     </div>
+</div>
+<div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped table-bordered table-condensed" style="font-size: 85%;">
+                    <thead>
+                        <tr>
+                            <th>Navn</th>
+                            <th>Forfatter</th>
+                            <th>Dato</th>
+                            <th>Vis</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="rev in revisions">
+                            <td>{{rev.article}}</td>
+                            <td>{{rev.author.first_name}} {{rev.author.last_name}}</td>
+                            <td>{{rev.saved_date}}</td>
+                            <td>
+                                <button class="btn btn-primary btn-xs" ng-click="gotoRev($index);renderHTML(revisions[onRev].content)">Vis</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel panel-heading">
+                    {{revisions[onRev].saved_date}}
+                </div>
+                <div class="panel-body" ng-bind-html="revCont" style="height: 400px; max-height: 400px; overflow-y: scroll; margin-right: 20px; margin-bottom: 20px">
 
-    <div class="table-responsive">
-        <table class="table table-hover table-striped table-condensed" style="font-size: 85%;">
-            <thead>
-                <tr>
-                    <th>Navn</th>
-                    <th>Forfatter</th>
-                    <th>Dato</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="rev in revisions">
-                    <td>{{rev.article}}</td>
-                    <td>{{rev.author.first_name}} {{rev.author.last_name}}</td>
-                    <td>{{rev.saved_date}}</td>
-                </tr>
-            </tbody>
-        </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
