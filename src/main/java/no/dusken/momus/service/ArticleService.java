@@ -143,7 +143,7 @@ public class ArticleService {
             query.setParameter(e.getKey(), e.getValue());
         }
 
-        query.setMaxResults(200);
+        query.setMaxResults(201);
         // TODO add paging of results?
 
         List<Article> resultList = query.getResultList();

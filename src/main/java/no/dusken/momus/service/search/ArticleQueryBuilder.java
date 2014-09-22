@@ -33,6 +33,7 @@ public class ArticleQueryBuilder {
     private Map<String, Object> queryParams = new HashMap<>();
 
     private final String baseQuery = "select a from Article a left join fetch a.status left join fetch a.publication";
+    private final String baseOrder = " order by a.publication.releaseDate DESC";
 
     public ArticleQueryBuilder(ArticleSearchParams search) {
         this.search = search;
@@ -76,12 +77,18 @@ public class ArticleQueryBuilder {
             fullQuery = baseQuery + " WHERE " + allConditions;
         }
 
+        fullQuery += baseOrder;
+
         logger.debug("Search query: {}", fullQuery);
 
     }
 
     public String getBaseQuery() {
         return baseQuery;
+    }
+
+    public String getBaseOrder() {
+        return baseOrder;
     }
 
     public String getFullQuery() {
