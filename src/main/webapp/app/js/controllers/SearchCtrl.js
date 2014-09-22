@@ -30,14 +30,13 @@ angular.module('momusApp.controllers')
 
         // Get stuff from the server
         $q.all([PersonService.getAll(), PublicationService.getAll()]).then(function (data) {
-            console.log(data);
             $scope.persons = data[0].data;
             $scope.publications = data[1].data;
 
             if (updateSearchParametersFromUrl()) { // If the URL contained a search
                 search();
             } else if ($scope.publications.length > 0){ // default search on the newest publication
-                $scope.search.publication = data[0].id;
+                $scope.search.publication = $scope.publications[0].id;
                 $location.search('publication', $scope.search.publication).replace();
                 search();
             }
