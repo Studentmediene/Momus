@@ -92,12 +92,23 @@ angular.module('momusApp.controllers')
             }
         };
 
+        /* Convert html to plain text for quoteCheck */
+        // OBS, kan se ut som at det er en makslengde på hva som kan sendes med mailto:
+        $scope.html2text = function (html) {
+            $scope.tempDiv = document.createElement('div');
+            $scope.tempDiv.innerHTML = html;
 
+            return $scope.tempDiv.innerText.replace(new RegExp("\n", 'g'), "%0D%0A");
+        };
+
+        /* quoteCheck */
         $scope.quoteCheck = function(){
             $scope.qcSubject = "Sitatsjekk Under Dusken";
             $scope.qcMessage = "Dette er en sitatgjennomgang fra studentavisa Under Dusken i Trondheim. %0D%0A" +
                 "Endring av avgitte uttalelser bør begrenses til korrigering av faktiske feil " +
                 "(jf. Vær Varsom-plakatens §3.8).%0D%0A%0D%0A";
+
+            $scope.qcArticle = $scope.html2text($scope.article.content) + "%0D%0A%0D%0A";
             $scope.qcAuthor = "";
 
             if($scope.article.journalists.length){
@@ -115,7 +126,7 @@ angular.module('momusApp.controllers')
                 $scope.qcSubject +
                 "&body=" +
                 $scope.qcMessage +
-                "<Kopier inn artikkel her >%0D%0A%0D%0A"+
+                $scope.qcArticle +
                 "Mvh %0D%0A" +
                 $scope.qcAuthor
             ;
