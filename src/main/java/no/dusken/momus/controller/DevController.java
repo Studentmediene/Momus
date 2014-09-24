@@ -218,12 +218,13 @@ public class DevController {
                 "<p>— Jeg ville ta kontroll på et vis, forklarer hun.</p><br><br>");
 
 
-        Publication publication = new Publication();
-        publication.setName("testpub");
-        publication.setReleaseDate(new Date(114, 5, 5));
-        publication = publicationRepository.save(publication);
+//        Publication publication = new Publication();
+//        publication.setName("testpub");
+//        publication.setReleaseDate(new Date(114, 5, 5));
+//        publication = publicationRepository.save(publication);
+//
+//        article.setPublication(publication);
 
-        article.setPublication(publication);
         article.setName("Test name");
 
         articleRepository.save(article);
