@@ -13,6 +13,7 @@
     "select2": "3.4.6",
     "angular-mocks": "1.2.22",
     "angular-ui-bootstrap-bower": "0.10.0",
-    "angular-ui-tree": "2.1.5"
+    "angular-ui-tree": "2.1.5",
+    "zeroclipboard": "2.1.6"
   }
 }

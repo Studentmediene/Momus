@@ -167,3 +167,8 @@ td > ul, td > ol {
 .selectedPage {
     background-color: #b9def0;
 }
+
+/* quoteCheck button effects */
+#qcCopyBtn.zeroclipboard-is-hover {
+    background-color:#3071a9;
+}
