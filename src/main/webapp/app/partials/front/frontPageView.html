@@ -14,4 +14,71 @@
   ~ limitations under the License.
   -->
 
-<h1>{{ yo }}</h1>
+<div id="note-panel" class="panel panel-warning">
+    <div class="panel-heading">
+        <h1 class="panel-title">
+            <span class="fa fa-list"></span>
+            Personlige notater
+            <div class="pull-right">
+                <button class="btn btn-default btn-xs"
+                        ng-disabled="note.content == unedited.content"
+                        ng-click="saveNote()"
+                        button-loader="savingNote">
+                    <i class="fa fa-save"></i>
+                    Lagre
+                </button>
+            </div>
+        </h1>
+    </div>
+    <div class="panel-body">
+        <div id="note-toolbar" class="editor-toolbar">
+            <div class="btn-group">
+                <button class="btn btn-default"
+                        data-wysihtml5-command="bold"
+                        title="Fet tekst (Ctrl+B)">
+                    <i class="fa fa-bold"></i>
+                </button>
+                <button class="btn btn-default"
+                        data-wysihtml5-command="italic"
+                        title="Kursiv tekst (Ctrl+I)">
+                    <i class="fa fa-italic"></i>
+                </button>
+                <button class="btn btn-default"
+                        data-wysihtml5-command="underline"
+                        title="Understreket tekst (Ctrl+U)">
+                    <i class="fa fa-underline"></i>
+                </button>
+                <button class="btn btn-default"
+                        data-wysihtml5-command="strikethrough"
+                        title="Gjennomstreket tekst">
+                    <i class="fa fa-strikethrough"></i>
+                </button>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-default"
+                        data-wysihtml5-command="insertUnorderedList"
+                        title="Usortert liste">
+                    <i class="fa fa-list-ul"></i>
+                </button>
+                <button class="btn btn-default"
+                        data-wysihtml5-command="insertOrderedList"
+                        title="Sortert liste">
+                    <i class="fa fa-list-ol"></i>
+                </button>
+            </div>
+            <div class="btn-group pull-right">
+                <button class="btn btn-default"
+                        data-wysihtml5-action="change_view"
+                        title="Se rådata (avansert)">
+                    <i class="fa fa-exchange"></i>
+                </button>
+            </div>
+        </div>
+        <textarea id="note-area"
+                  class="form-control note"
+                  richeditor="note.content"
+                  richeditor-rules="noteRules"
+                  richeditor-toolbar="note-toolbar">
+        </textarea>
+    </div>
+</div>

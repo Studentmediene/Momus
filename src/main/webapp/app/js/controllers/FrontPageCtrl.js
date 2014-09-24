@@ -17,6 +17,38 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope) {
-        $scope.yo = 'wadup?';
+    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules) {
+        $scope.noteRules = noteParserRules;
+
+        NoteService.getNote().success(function (data) {
+            $scope.note = data;
+            $scope.unedited = angular.copy(data);
+        });
+
+        $scope.saveNote = function () {
+            $scope.savingNote = true;
+            NoteService.updateNote($scope.note).success(function (data) {
+                $scope.note = data;
+                $scope.unedited = angular.copy(data);
+                $scope.savingNote = false;
+            });
+        };
+
+        $scope.$on('$locationChangeStart', function (event) {
+            if (promptCondition()) {
+                if (!confirm("Er du sikker på at du vil forlate siden? Det finnes ulagrede endringer.")) {
+                    event.preventDefault();
+                }
+            }
+        });
+
+        window.onbeforeunload = function () {
+            if (promptCondition()) {
+                return "Det finnes ulagrede endringer.";
+            }
+        };
+
+        function promptCondition() {
+            return $scope.unedited.content != $scope.note.content;
+        }
     });
