@@ -17,23 +17,25 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleRevisionCtrl', function($scope, ArticleService, $routeParams, $sce){
+    .controller('ArticleRevisionCtrl', function($scope, ArticleService, $routeParams){
         ArticleService.getRevisions($routeParams.id).success(function (data){
             $scope.revisions = data;
-            $scope.onRev = 0;
 
-            $scope.renderHTML = function(html){
-                $scope.revCont= $sce.trustAsHtml(html);
-                if(!$scope.$$phase){
-                    $scope.$apply();
-                }
-            };
+        });
+        ArticleService.getArticle($routeParams.id).success(function (data){
+            $scope.newest = data;
+        });
 
-            $scope.renderHTML($scope.revisions[$scope.onRev].content);
+        $scope.onRev = 0;
+        $scope.gotoRev = function(id){
+            $scope.onRev = id;
+        };
 
-            $scope.gotoRev = function(id){
-                $scope.onRev = id;
+        $scope.setActive = function(id){
+            if(id==$scope.onRev){
+                return "info";
+            }else{
+                return "active";
             }
-
-        })
+        };
     });
