@@ -101,4 +101,9 @@ public class ArticleController {
     public @ResponseBody List<Article> getSearchData(@RequestBody ArticleSearchParams search) {
         return articleService.searchForArticles(search);
     }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public @ResponseBody Article createArticle(@RequestBody Article article){
+        return articleService.createNewArticle(article);
+    }
 }

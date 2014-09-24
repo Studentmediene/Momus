@@ -41,8 +41,11 @@ angular.module('momusApp.services')
                 return $http.get('/api/article/statuses');
             },
 
-            search: function(searchObject) {
+            search: function (searchObject) {
                 return $http.post('/api/article/search', searchObject);
+            },
+            createNewArticle: function (article) {
+                return $http.post('/api/article', article);
             }
         }
     });
