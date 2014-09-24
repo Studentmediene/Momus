@@ -32,8 +32,6 @@ angular.module('momusApp.controllers')
             $scope.article = data;
             $scope.unedited = angular.copy(data);
 
-            $scope.quoteCheck();
-
             TitleChanger.setTitle($scope.article.name);
         });
 
@@ -46,7 +44,6 @@ angular.module('momusApp.controllers')
                 $scope.unedited.content = data.content;
                 $scope.savingContent = false;
 
-                $scope.quoteCheck();
             });
 
         };
@@ -96,17 +93,11 @@ angular.module('momusApp.controllers')
             }
         };
 
-        /* Convert html to plain text for quoteCheck */
-        // OBS, kan se ut som at det er en makslengde på hva som kan sendes med mailto:
-        $scope.html2text = function (html) {
-            $scope.tempDiv = document.createElement('div');
-            $scope.tempDiv.innerHTML = html;
-
-            return $scope.tempDiv.innerText.replace(new RegExp("\n", 'g'), "%0D%0A");
+        $scope.cancelMeta = function() {
+            $scope.metaEditMode = false;
         };
 
         /* quoteCheck */
-
         $scope.quoteCheck = function(){
             $scope.qcSubject = "Sitatsjekk Under Dusken";
             $scope.qcMessage = "Dette er en sitatgjennomgang fra studentavisa Under Dusken i Trondheim. <br>" +
@@ -123,21 +114,20 @@ angular.module('momusApp.controllers')
                         $scope.article.journalists[i].email + "<br>";
                 }
             } else {
-                $scope.qcAuthor = "";
+                $scope.qcAuthor = "Under Dusken";
             }
 
             $scope.qcEmail =
                 $scope.qcMessage +
                 $scope.qcArticle +
-                "Mvh <br>" +
+                "Med vennlig hilsen <br>" +
                 $scope.qcAuthor
             ;
             $scope.qcCopyBtn.setHtml($scope.qcEmail);
         };
 
         $scope.qcCopyBtn = new ZeroClipboard(document.getElementById("qcCopyBtn"));
-
-        $scope.cancelMeta = function() {
-            $scope.metaEditMode = false;
-        };
+        $scope.qcCopyBtn.on('copy',function(){
+           $scope.quoteCheck();
+        });
     });
