@@ -32,6 +32,8 @@ angular.module('momusApp.controllers')
             $scope.article = data;
             $scope.unedited = angular.copy(data);
 
+            $scope.quoteCheck();
+
             TitleChanger.setTitle($scope.article.name);
         });
 
@@ -43,6 +45,8 @@ angular.module('momusApp.controllers')
                 $scope.article.content = data.content;
                 $scope.unedited.content = data.content;
                 $scope.savingContent = false;
+
+                $scope.quoteCheck();
             });
 
         };
@@ -102,36 +106,36 @@ angular.module('momusApp.controllers')
         };
 
         /* quoteCheck */
+
         $scope.quoteCheck = function(){
             $scope.qcSubject = "Sitatsjekk Under Dusken";
-            $scope.qcMessage = "Dette er en sitatgjennomgang fra studentavisa Under Dusken i Trondheim. %0D%0A" +
+            $scope.qcMessage = "Dette er en sitatgjennomgang fra studentavisa Under Dusken i Trondheim. <br>" +
                 "Endring av avgitte uttalelser bør begrenses til korrigering av faktiske feil " +
-                "(jf. Vær Varsom-plakatens §3.8).%0D%0A%0D%0A";
+                "(jf. Vær Varsom-plakatens §3.8).<br><br>";
 
-            $scope.qcArticle = $scope.html2text($scope.article.content) + "%0D%0A%0D%0A";
+            $scope.qcArticle = "<h1>" + $scope.article.name + "</h1>" + $scope.article.content;
             $scope.qcAuthor = "";
 
             if($scope.article.journalists.length){
                 for(var i = 0; i < $scope.article.journalists.length;i++) {
                     $scope.qcAuthor +=
                         $scope.renderPerson($scope.article.journalists[i]) + " - " +
-                        $scope.article.journalists[i].email +
-                        "%0D%0A";
+                        $scope.article.journalists[i].email + "<br>";
                 }
             } else {
                 $scope.qcAuthor = "";
             }
 
-            $scope.qcEmail = "mailto:?subject=" +
-                $scope.qcSubject +
-                "&body=" +
+            $scope.qcEmail =
                 $scope.qcMessage +
                 $scope.qcArticle +
-                "Mvh %0D%0A" +
+                "Mvh <br>" +
                 $scope.qcAuthor
             ;
-            window.location.href = $scope.qcEmail;
+            $scope.qcCopyBtn.setHtml($scope.qcEmail);
         };
+
+        $scope.qcCopyBtn = new ZeroClipboard(document.getElementById("qcCopyBtn"));
 
         $scope.cancelMeta = function() {
             $scope.metaEditMode = false;
