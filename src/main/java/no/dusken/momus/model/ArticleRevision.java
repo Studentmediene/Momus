@@ -33,16 +33,13 @@ public class ArticleRevision {
     @Column(length = 40960)
     private String content;
 
-    @Column(length = 40960)
-    private String name;
-
     @ManyToOne
     private ArticleStatus status;
 
     @ManyToOne
     private Person author;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date savedDate;
 
 
@@ -66,10 +63,6 @@ public class ArticleRevision {
     public void setContent(String content) {
         this.content = content;
     }
-
-    public String getName() { return name; }
-
-    public void setName(String name) { this.name = name; }
 
     public ArticleStatus getStatus() {
         return status;
