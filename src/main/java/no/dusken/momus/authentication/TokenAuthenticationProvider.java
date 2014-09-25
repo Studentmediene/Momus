@@ -16,12 +16,17 @@
 
 package no.dusken.momus.authentication;
 
+import no.dusken.momus.exceptions.RestException;
+import no.dusken.momus.model.Person;
+import no.dusken.momus.service.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Will try to authenticate a user based on a token, and if the token is valid it will
@@ -31,25 +36,38 @@ import org.springframework.stereotype.Service;
 public class TokenAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
-    private UserAuthorities userAuthorities;
-
-    @Autowired
-    private TokenValidator tokenValidator;
+    private PersonRepository personRepository;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Token token = (Token) authentication;
-        if (tokenValidator.validateToken(token.getSmmDbToken())) {
-            AuthUserDetails authUserDetails = userAuthorities.getAuthoritiesForUser(token.getSmmDbToken().getId());
+        LdapUserPwd ldapUserPwd = token.getLdapUserPwd();
+        
+        if (validateLogin(ldapUserPwd)) {
+            Person loggedInUser = getLoggedInUser(ldapUserPwd.getUsername());
+            AuthUserDetails authUserDetails = new AuthUserDetails(loggedInUser);
             // Return an updated token with the right user details
-            return new Token(token.getSmmDbToken(), authUserDetails);
+            return new Token(ldapUserPwd, authUserDetails);
         }
-        throw new BadCredentialsException("Invalid token");
+
+        throw new BadCredentialsException("Invalid username or password");
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
         return authentication.equals(Token.class);
+    }
+
+    private boolean validateLogin(LdapUserPwd ldapUserPwd) {
+        return true;
+    }
+
+    private Person getLoggedInUser(String username) {
+        Person person = personRepository.findByUsername(username);
+        if (person == null) {
+            throw new RestException("User was logged in, but not found in our database!", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+        return person;
     }
 
 

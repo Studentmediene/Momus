@@ -18,11 +18,9 @@ package no.dusken.momus.controller;
 
 import no.dusken.momus.authentication.AuthUserDetails;
 import no.dusken.momus.authentication.Token;
-import no.dusken.momus.authentication.UserAuthorities;
 import no.dusken.momus.authentication.UserLoginService;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.*;
-import no.dusken.momus.smmdb.Syncer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +47,6 @@ public class DevController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private UserAuthorities userAuthorities;
 
     @Autowired
     private UserLoginService userLoginService;
@@ -78,33 +74,17 @@ public class DevController {
     @Autowired
     private PublicationRepository publicationRepository;
 
-    @Autowired
-    private Syncer syncer;
 
     /**
      * Bypass login and logs you in as the user with the provided id
      */
     @RequestMapping("/login/{id}")
     public @ResponseBody void login(@PathVariable("id") Long id) {
-        AuthUserDetails user = userAuthorities.getAuthoritiesForUser(id);
+        AuthUserDetails user = new AuthUserDetails(personRepository.findOne(id));
         Token token = new Token(null, user);
         SecurityContextHolder.getContext().setAuthentication(token);
     }
 
-    /**
-     * Syncs stuff from SmmDB
-     */
-    @RequestMapping("/sync")
-    public @ResponseBody String sync() {
-        syncer.sync();
-        return "sync ok";
-    }
-
-    @RequestMapping("/test")
-    public @ResponseBody String test() {
-        syncer.sync();
-        return "ok";
-    }
 
     @RequestMapping("/editor")
     @PreAuthorize("hasRole('momus:editor')")

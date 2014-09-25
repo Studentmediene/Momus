@@ -21,6 +21,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * A lightweight object holding info about the currently logged in user
@@ -29,13 +30,10 @@ public class AuthUserDetails implements UserDetails {
 
     private Long id;
     private final String username;
-    private Collection<? extends GrantedAuthority> grantedAuthorities;
 
-    public AuthUserDetails(Person person, Collection<? extends GrantedAuthority> grantedAuthorities) {
+    public AuthUserDetails(Person person) {
         id = person.getId();
         username = person.getUsername();
-
-        this.grantedAuthorities = grantedAuthorities;
     }
 
     public Long getId() {
@@ -44,7 +42,7 @@ public class AuthUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return grantedAuthorities;
+        return Collections.emptyList();
     }
 
     @Override
