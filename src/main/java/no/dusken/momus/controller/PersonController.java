@@ -18,7 +18,6 @@ package no.dusken.momus.controller;
 
 import no.dusken.momus.authentication.UserLoginService;
 import no.dusken.momus.model.Person;
-import no.dusken.momus.service.repository.GroupRepository;
 import no.dusken.momus.service.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,15 +37,13 @@ public class PersonController {
     @Autowired
     private PersonRepository personRepository;
 
-    @Autowired
-    private GroupRepository groupRepository;
 
     @Autowired
     private UserLoginService userLoginService;
 
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody List<Person> getAllPersons() {
-        return personRepository.findAll();
+        return personRepository.findByActiveTrue();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)

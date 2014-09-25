@@ -19,7 +19,10 @@ package no.dusken.momus.authentication;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.PersonRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -35,8 +38,13 @@ import javax.servlet.http.HttpServletResponse;
 @Service
 public class TokenAuthenticationProvider implements AuthenticationProvider {
 
+    Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private PersonRepository personRepository;
+
+    @Autowired
+    LdapTemplate ldapTemplate;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -46,6 +54,7 @@ public class TokenAuthenticationProvider implements AuthenticationProvider {
         if (validateLogin(ldapUserPwd)) {
             Person loggedInUser = getLoggedInUser(ldapUserPwd.getUsername());
             AuthUserDetails authUserDetails = new AuthUserDetails(loggedInUser);
+
             // Return an updated token with the right user details
             return new Token(ldapUserPwd, authUserDetails);
         }
@@ -59,7 +68,16 @@ public class TokenAuthenticationProvider implements AuthenticationProvider {
     }
 
     private boolean validateLogin(LdapUserPwd ldapUserPwd) {
-        return true;
+
+        boolean authenticate = ldapTemplate.authenticate("ou=Users", "(uid=" + ldapUserPwd.getUsername() + ")" , ldapUserPwd.getPassword());
+
+        if (authenticate) {
+            logger.info("User with username {} was authenticated by LDAP", ldapUserPwd.getUsername());
+        } else {
+            logger.error("Wrong username or password for user {}", ldapUserPwd.getUsername());
+        }
+
+        return authenticate;
     }
 
     private Person getLoggedInUser(String username) {

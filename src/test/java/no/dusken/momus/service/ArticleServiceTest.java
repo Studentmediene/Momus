@@ -62,9 +62,9 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Before
     public void setUp() throws Exception {
-        Person person1 = new Person(1L, null, null, "mts", "Mats", "Matsessen", "", "", true);
-        Person person2 = new Person(2L, null, null, "aaa", "Kåre", "Kåressen", "", "", true);
-        Person person3 = new Person(3L, null, null, "bbb", "Flaks", "Flaksesen", "", "", true);
+        Person person1 = new Person(1L, "mts", "Mats", "Matsessen", "", "", true);
+        Person person2 = new Person(2L, "aaa", "Kåre", "Kåressen", "", "", true);
+        Person person3 = new Person(3L, "bbb", "Flaks", "Flaksesen", "", "", true);
 
         person1 = personRepository.save(person1);
         person2 = personRepository.save(person2);

@@ -138,7 +138,7 @@ public class IndesignGenerator {
                     .append("Tekst: ")
                     .append(person.getFirstName())
                     .append(" ")
-                    .append(person.getLastName())
+                    .append(person.getFullName())
                     .append(" ")
                     .append(person.getEmail())
                     .append("\r\n");
@@ -149,7 +149,7 @@ public class IndesignGenerator {
                     .append("Foto: ")
                     .append(person.getFirstName())
                     .append(" ")
-                    .append(person.getLastName())
+                    .append(person.getFullName())
                     .append(" ")
                     .append(person.getEmail())
                     .append("\r\n");

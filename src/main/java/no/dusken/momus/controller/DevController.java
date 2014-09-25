@@ -17,8 +17,10 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.authentication.AuthUserDetails;
+import no.dusken.momus.authentication.LdapUserPwd;
 import no.dusken.momus.authentication.Token;
 import no.dusken.momus.authentication.UserLoginService;
+import no.dusken.momus.ldap.LdapSyncer;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.*;
 import org.slf4j.Logger;
@@ -74,6 +76,9 @@ public class DevController {
     @Autowired
     private PublicationRepository publicationRepository;
 
+    @Autowired
+    LdapSyncer ldapSyncer;
+
 
     /**
      * Bypass login and logs you in as the user with the provided id
@@ -83,6 +88,19 @@ public class DevController {
         AuthUserDetails user = new AuthUserDetails(personRepository.findOne(id));
         Token token = new Token(null, user);
         SecurityContextHolder.getContext().setAuthentication(token);
+    }
+
+
+    @RequestMapping("/login/test")
+    public @ResponseBody void logintest() {
+        userLoginService.login(new LdapUserPwd("sharon.nymo", "vague tacky drop"));
+    }
+
+
+    @RequestMapping("/ldaptest")
+    public @ResponseBody String ldaptest() {
+        ldapSyncer.sync();
+        return "oook";
     }
 
 
