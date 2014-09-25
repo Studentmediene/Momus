@@ -1,0 +1,38 @@
+<!--
+  ~ Copyright 2014 Studentmediene i Trondheim AS
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div ng-if="showLoginForm" id="loginForm">
+    <div class="inner">
+        <div class="container">
+            <form class="form-signin">
+                <img src="https://idp.smint.no/simplesaml/module.php/studentmediene/images/smit_logo_300px.png"
+                     width="300px">
+
+                <h2 class="form-signin-heading">Logg inn</h2>
+
+                <input type="text" ng-model="credentials.username" class="form-control" placeholder="Brukernavn"
+                       set-focus="focus">
+                <input type="password" ng-model="credentials.password" class="form-control" placeholder="Passord">
+
+                <div ng-show="error" class="alert alert-danger">Ugyldig brukernavn eller passord!</div>
+
+                <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="login()">Login</button>
+            </form>
+        </div>
+    </div>
+
+
+</div>
