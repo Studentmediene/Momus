@@ -115,7 +115,7 @@ public class LdapSyncer {
     }
 
 
-    public boolean isDisabled() {
-        return disabled;
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
 }
