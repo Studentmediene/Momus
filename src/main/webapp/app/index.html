@@ -58,8 +58,8 @@
             <li ng-class="{active: isActive('/kilder%')}"><a href="#/kilder"><i class="fa fa-comment"></i> Kilder</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a class="visible-sm" href="http://m.studentmediene.no/api/logout">Logg ut <i class="fa fa-power-off"></i></a></li>
-            <li><a class="hidden-sm" href="http://m.studentmediene.no/api/logout">Logg ut <b>{{user.first_name}} {{user.last_name}}</b> <i class="fa fa-power-off"></i></a></li>
+            <li><a class="visible-sm" ng-click="logout()">Logg ut <i class="fa fa-power-off"></i></a></li>
+            <li><a class="hidden-sm"  ng-click="logout()">Logg ut <b>{{user.first_name}} {{user.last_name}}</b> <i class="fa fa-power-off"></i></a></li>
         </ul>
     </div>
     </div>

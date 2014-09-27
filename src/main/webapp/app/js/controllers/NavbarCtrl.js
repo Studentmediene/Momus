@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('NavbarCtrl', function ($scope, $location, PersonService) {
+    .controller('NavbarCtrl', function ($scope, $location, PersonService, $http, MessageModal, $rootScope) {
         PersonService.getCurrentUser().success(function(user) {
             $scope.user = user;
         });
@@ -37,5 +37,13 @@ angular.module('momusApp.controllers')
 
             return location === $location.path();
         };
+
+        $scope.logout = function() {
+            $http.get('/api/auth/logout').success(function (data) {
+                MessageModal.info('Du har blitt logget ut', function() {
+                    $rootScope.$broadcast('showLogin');
+                });
+            });
+        }
     });
 
