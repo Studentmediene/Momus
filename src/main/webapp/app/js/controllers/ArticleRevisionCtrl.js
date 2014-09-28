@@ -17,10 +17,12 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleRevisionCtrl', function($scope, ArticleService, $routeParams){
+    .controller('ArticleRevisionCtrl', function($scope, ArticleService, $routeParams, $log){
         ArticleService.getRevisions($routeParams.id).success(function (data){
             $scope.revisions = data;
             $scope.current = data[data.length - 1];
+            $scope.showBoxes = false;
+            $scope.compare = [data.length-2,data.length-1];
         });
 
         ArticleService.getArticle($routeParams.id).success(function (data){
@@ -29,6 +31,10 @@ angular.module('momusApp.controllers')
 
         $scope.gotoRev = function(rev){
             $scope.current = rev;
+        };
+
+        $scope.showCompare = function(){
+            $scope.showBoxes = !$scope.showBoxes;
         };
 
     });

@@ -12,22 +12,34 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
+                            <th ng-show="showBoxes"></th>
+                            <th ng-show="showBoxes"></th>
                             <th>Forfatter</th>
                             <th>Dato</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="rev in revisions | orderBy: '-saved_date'" ng-click="gotoRev(rev)" ng-class="{active: rev == current}" class="interact">
+                            <td ng-show="showBoxes"><input type="radio" name="box1" ng-model="$parent.compare[0]" ng-value="$index"></td>
+                            <td ng-show="showBoxes"><input type="radio" name="box2" ng-model="$parent.compare[1]" ng-value="$index"></td>
                             <td>{{rev.author.first_name}} {{rev.author.last_name}}</td>
                             <td>{{rev.saved_date | date:"dd/MM/yy HH:mm"}}</td>
                         </tr>
                     </tbody>
                 </table>
                 <a href="#/artikler/{{article.id}}" class="btn btn-primary">Gå tilbake til artikkelen</a>
+                <a class="btn btn-primary" ng-click="showCompare()">Sammenlikn</a>
+                <p>{{compare1}}</p>
             </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-8" ng-hide="showBoxes">
                 <div class="panel-body" ng-bind-html="current.content | trustHtml" style="height: 500px; overflow-y: scroll;"></div>
+        </div>
+        <div class="col-md-4" ng-show="showBoxes">
+            <div class="panel-body" ng-bind-html="revisions[compare[0]].content | trustHtml" style="height: 500px; overflow-y: scroll;"></div>
+        </div>
+        <div class="col-md-4" ng-show="showBoxes">
+            <div class="panel-body" ng-bind-html="revisions[compare[1]].content | trustHtml" style="height: 500px; overflow-y: scroll;"></div>
         </div>
     </div>
 </div>
