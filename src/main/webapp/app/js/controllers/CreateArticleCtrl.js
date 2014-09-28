@@ -51,12 +51,13 @@ angular.module('momusApp.controllers')
 
         $scope.renderPerson = PersonService.renderPerson;
 
-        $scope.saveContent = function () {
-            $scope.savingContent = true;
+        $scope.createArticle = function () {
+            $scope.creating = true;
             ArticleService.createNewArticle($scope.article).success(function (data) {
                 $location.path("/artikler/" + data.id);
+            }).finally(function() {
+                $scope.creating = false;
             });
-            $scope.savingContent = false;
         };
 
     });
