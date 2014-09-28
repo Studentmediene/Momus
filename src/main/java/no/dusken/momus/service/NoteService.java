@@ -19,15 +19,11 @@ package no.dusken.momus.service;
 import no.dusken.momus.authentication.UserLoginService;
 import no.dusken.momus.model.Note;
 import no.dusken.momus.service.repository.NoteRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class NoteService {
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     NoteRepository noteRepository;
@@ -40,7 +36,7 @@ public class NoteService {
         Note note = noteRepository.findByOwner_Id(userLoginService.getId());
         if (note == null) {
             note = new Note();
-            note.setContent("NEW NOTE TEXT");
+            note.setContent("Her kan du skrive personlige notater.");
         }
         return note;
     }
