@@ -97,37 +97,32 @@ angular.module('momusApp.controllers')
             $scope.metaEditMode = false;
         };
 
-        /* quoteCheck */
-        $scope.quoteCheck = function(){
-            $scope.qcSubject = "Sitatsjekk Under Dusken";
-            $scope.qcMessage = "Dette er en sitatgjennomgang fra studentavisa Under Dusken i Trondheim. <br>" +
+
+
+        $scope.quoteCheck = function(zc){
+            var qcMessage = "Dette er en sitatgjennomgang fra studentavisa Under Dusken i Trondheim. <br>" +
                 "Endring av avgitte uttalelser bør begrenses til korrigering av faktiske feil " +
                 "(jf. Vær Varsom-plakatens §3.8).<br><br>";
 
-            $scope.qcArticle = "<h1>" + $scope.article.name + "</h1>" + $scope.article.content;
-            $scope.qcAuthor = "";
+            var qcArticle = "<h1>" + $scope.article.name + "</h1>" + $scope.article.content;
+            var qcAuthor = "";
 
             if($scope.article.journalists.length){
                 for(var i = 0; i < $scope.article.journalists.length;i++) {
-                    $scope.qcAuthor +=
+                    qcAuthor +=
                         $scope.renderPerson($scope.article.journalists[i]) + " - " +
                         $scope.article.journalists[i].email + "<br>";
                 }
             } else {
-                $scope.qcAuthor = "Under Dusken";
+                qcAuthor = "Under Dusken";
             }
 
-            $scope.qcEmail =
-                $scope.qcMessage +
-                $scope.qcArticle +
+            var qcEmail =
+                qcMessage +
+                qcArticle +
                 "Med vennlig hilsen <br>" +
-                $scope.qcAuthor
+                qcAuthor
             ;
-            $scope.qcCopyBtn.setHtml($scope.qcEmail);
+            zc.setHtml(qcEmail);
         };
-
-        $scope.qcCopyBtn = new ZeroClipboard(document.getElementById("qcCopyBtn"));
-        $scope.qcCopyBtn.on('copy',function(){
-           $scope.quoteCheck();
-        });
     });

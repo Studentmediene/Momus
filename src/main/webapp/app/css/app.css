@@ -169,6 +169,6 @@ td > ul, td > ol {
 }
 
 /* quoteCheck button effects */
-#qcCopyBtn.zeroclipboard-is-hover {
+a.zeroclipboard-is-hover {
     background-color:#3071a9;
 }
