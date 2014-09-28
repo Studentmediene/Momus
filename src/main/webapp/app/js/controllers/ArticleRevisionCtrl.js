@@ -20,22 +20,15 @@ angular.module('momusApp.controllers')
     .controller('ArticleRevisionCtrl', function($scope, ArticleService, $routeParams){
         ArticleService.getRevisions($routeParams.id).success(function (data){
             $scope.revisions = data;
-
+            $scope.current = data[data.length - 1];
         });
+
         ArticleService.getArticle($routeParams.id).success(function (data){
-            $scope.newest = data;
+            $scope.article = data;
         });
 
-        $scope.onRev = 0;
-        $scope.gotoRev = function(id){
-            $scope.onRev = id;
+        $scope.gotoRev = function(rev){
+            $scope.current = rev;
         };
 
-        $scope.setActive = function(id){
-            if(id==$scope.onRev){
-                return "info";
-            }else{
-                return "active";
-            }
-        };
     });
