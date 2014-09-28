@@ -120,7 +120,6 @@ public class ArticleService {
         return saveUpdatedArticle(existing);
     }
 
-
     public Article saveNote(Article article) {
         Article existing = articleRepository.findOne(article.getId());
 

@@ -55,7 +55,7 @@ textarea.note {
     cursor: pointer;
 }
 
-#meta-panel id-select .select2-container {
+.select2-container {
     width: 100%;
 }
 

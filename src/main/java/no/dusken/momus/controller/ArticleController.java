@@ -23,9 +23,9 @@ import no.dusken.momus.model.ArticleType;
 import no.dusken.momus.service.ArticleService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.repository.ArticleRevisionRepository;
-import no.dusken.momus.service.search.ArticleSearchParams;
 import no.dusken.momus.service.repository.ArticleStatusRepository;
 import no.dusken.momus.service.repository.ArticleTypeRepository;
+import no.dusken.momus.service.search.ArticleSearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -110,5 +110,10 @@ public class ArticleController {
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public @ResponseBody List<Article> getSearchData(@RequestBody ArticleSearchParams search) {
         return articleService.searchForArticles(search);
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public @ResponseBody Article createArticle(@RequestBody Article article){
+        return articleService.createNewArticle(article);
     }
 }

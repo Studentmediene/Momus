@@ -37,12 +37,7 @@ angular.module('momusApp', [
     config(['$routeProvider', function ($routeProvider) {
         // Admin interfaces
         $routeProvider
-            .when('/artikler/:id',
-            {
-                templateUrl: 'partials/article/articleView.html',
-                controller: 'ArticleCtrl'
-            }
-        )
+
 
             .when('/artikler',
             {
@@ -50,6 +45,19 @@ angular.module('momusApp', [
                 controller: 'SearchCtrl',
                 reloadOnSearch: false,
                 title: "Artikkelsøk"
+            }
+        )
+            .when('/artikler/ny',
+            {
+                templateUrl: 'partials/article/createArticle.html',
+                controller: 'CreateArticleCtrl',
+                title: "NyArtikkel"
+            }
+        )
+            .when('/artikler/:id',
+            {
+                templateUrl: 'partials/article/articleView.html',
+                controller: 'ArticleCtrl'
             }
         )
 
