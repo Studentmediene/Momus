@@ -95,27 +95,9 @@ angular.module('momusApp.controllers')
 
         $scope.renderPerson = PersonService.renderPerson;
 
-
-        // TODO get these from server
-        /*$scope.sections = [
-            {id: 1, name: "Nyhet"},
-            {id: 2, name: "Debatt"},
-            {id: 3, name: "Kultur"},
-            {id: 4, name: "Forbruker"},
-            {id: 5, name: "Reportasje"},
-            {id: 6, name: "Sport"}
-        ];*/
-
         ArticleService.getTypes().success( function(data){
             $scope.sections = data;
-        })
-
-        /*$scope.statuses = [
-            {id: 1, name: "Planlagt"},
-            {id: 2, name: "Skrives"},
-            {id: 3, name: "Korrektur"},
-            {id: 4, name: "Publisert"}
-        ];*/
+        });
 
         ArticleService.getStatuses().success( function(data){
             $scope.statuses = data;
