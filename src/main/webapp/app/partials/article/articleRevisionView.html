@@ -1,0 +1,33 @@
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title text-center">
+            Revisjoner av {{article.name}}
+        </h3>
+    </div>
+</div>
+<div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Forfatter</th>
+                            <th>Dato</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="rev in revisions | orderBy: '-saved_date'" ng-click="gotoRev(rev)" ng-class="{active: rev == current}" class="interact">
+                            <td>{{rev.author.first_name}} {{rev.author.last_name}}</td>
+                            <td>{{rev.saved_date | date:"dd/MM/yy HH:mm"}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href="#/artikler/{{article.id}}" class="btn btn-primary">Gå tilbake til artikkelen</a>
+            </div>
+        </div>
+        <div class="col-md-8">
+                <div class="panel-body" ng-bind-html="current.content | trustHtml" style="height: 500px; overflow-y: scroll;"></div>
+        </div>
+    </div>
+</div>

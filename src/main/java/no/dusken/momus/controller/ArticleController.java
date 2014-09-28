@@ -17,10 +17,12 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.model.Article;
+import no.dusken.momus.model.ArticleRevision;
 import no.dusken.momus.model.ArticleStatus;
 import no.dusken.momus.model.ArticleType;
 import no.dusken.momus.service.ArticleService;
 import no.dusken.momus.service.indesign.IndesignExport;
+import no.dusken.momus.service.repository.ArticleRevisionRepository;
 import no.dusken.momus.service.search.ArticleSearchParams;
 import no.dusken.momus.service.repository.ArticleStatusRepository;
 import no.dusken.momus.service.repository.ArticleTypeRepository;
@@ -44,6 +46,9 @@ public class ArticleController {
     @Autowired
     private ArticleStatusRepository articleStatusRepository;
 
+    @Autowired
+    private ArticleRevisionRepository articleRevisionRepository;
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody Article getArticleByID(@PathVariable("id") Long id) {
         return articleService.getArticleById(id);
@@ -63,6 +68,11 @@ public class ArticleController {
         response.addHeader("Content-Type", "text/plain");
 
         return indesignExport.getContent();
+    }
+
+    @RequestMapping(value = "/{id}/revisions", method = RequestMethod.GET)
+    public @ResponseBody List<ArticleRevision> getArticleRevisions(@PathVariable("id") Long id) {
+        return articleRevisionRepository.findByArticle_Id(id);
     }
 
     @RequestMapping(value = "/types", method = RequestMethod.GET)

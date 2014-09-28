@@ -39,7 +39,7 @@ public class ArticleRevision {
     @ManyToOne
     private Person author;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date savedDate;
 
 
