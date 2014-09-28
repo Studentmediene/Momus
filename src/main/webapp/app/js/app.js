@@ -48,7 +48,7 @@ angular.module('momusApp', [
         )
             .when('/artikler/ny',
             {
-                templateUrl: 'partials/article/createArticle.html',
+                templateUrl: 'partials/article/NoeAnnetcreateArticle.html',
                 controller: 'CreateArticleCtrl',
                 title: "NyArtikkel"
             }

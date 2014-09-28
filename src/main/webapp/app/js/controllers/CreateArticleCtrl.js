@@ -53,11 +53,9 @@ angular.module('momusApp.controllers')
 
         $scope.saveContent = function () {
             $scope.savingContent = true;
-            if ($scope.article.name !== "") {
-                ArticleService.createNewArticle($scope.article).success(function (data) {
-                    $location.path("/artikler/" + data.id);
-                });
-            }
+            ArticleService.createNewArticle($scope.article).success(function (data) {
+                $location.path("/artikler/" + data.id);
+            });
             $scope.savingContent = false;
         };
 

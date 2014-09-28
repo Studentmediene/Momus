@@ -1,0 +1,78 @@
+<div class="row">
+    <div class="col-md-8">
+        <form class="form-horizontal" name="createArticleForm">
+            <div class="form-group" ng-class="{'has-error': createArticleForm.ArticleName.$invalid }">
+                <label class="col-sm-4 control-label">
+                    Tittel
+                </label>
+
+                <div class="col-sm-8">
+                    <input name="ArticleName" class="form-control input-sm" type="text" ng-model="article.name" required="true">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    Journalister
+                </label>
+
+                <div class="col-sm-8">
+                    <id-select multiple
+                               items="persons"
+                               target="article.journalists"
+                               renderer="renderPerson">
+                    </id-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    Fotografer
+                </label>
+                <div class="col-sm-8">
+                    <id-select multiple
+                               items="persons"
+                               target="metaEditing.photographers"
+                               renderer="renderPerson">
+                    </id-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    Kommentar
+                </label>
+                <div class="col-sm-8">
+                    <input class="form-control input-sm" type="text" ng-model="article.comment">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    Publikasjon
+                </label>
+                <div class="col-sm-8">
+                    <select class="form-control input-sm" ng-model="article.publication" ng-options="s.name for s in publications track by s.id"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    Type
+                </label>
+                <div class="col-sm-8">
+                    <select class="form-control input-sm" ng-model="article.type" ng-options="s.name for s in types track by s.id" ></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    Status
+                </label>
+                <div class="col-sm-8">
+                    <select class="form-control input-sm" ng-model="article.status" ng-options="s.name for s in statuses track by s.id" ></select>
+                </div>
+            </div>
+
+        </form>
+        <div class="col-sm-offset-4">
+            <button class="btn btn-md btn-primary" ng-click="saveContent()" button-loader="savingContent" ng-disabled="createArticleForm.$invalid">
+                <span>Opprett artikkel</span>
+            </button>
+        </div>
+    </div>
+</div>
