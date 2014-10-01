@@ -52,6 +52,7 @@ angular.module('momusApp.controllers')
                 $scope.article.content = data.content;
                 $scope.unedited.content = data.content;
                 $scope.savingContent = false;
+
             });
 
         };
@@ -122,4 +123,34 @@ angular.module('momusApp.controllers')
         function promptCondition() {
             return $scope.unedited.content != $scope.article.content || $scope.metaEditMode == true || $scope.unedited.note != $scope.article.note;
         }
+
+
+        $scope.quoteCheck = function(zc){
+            var qcMessage = "Dette er en sitatgjennomgang fra studentavisa Under Dusken i Trondheim. <br />" +
+                "Endring av avgitte uttalelser bør begrenses til korrigering av faktiske feil " +
+                "(jf. Vær Varsom-plakatens §3.8).<br /><br />";
+
+            var qcArticle = $scope.article.content;
+            var qcAuthor = "";
+            var qcRed = "<br />Studentavisa Under Dusken <br /> Ansvarlig redaktør Fornavn Etternavn - mail@mail.com";
+
+            if($scope.article.journalists.length){
+                for(var i = 0; i < $scope.article.journalists.length;i++) {
+                    qcAuthor +=
+                        $scope.renderPerson($scope.article.journalists[i]) + " - " +
+                        $scope.article.journalists[i].email + "<br />";
+                }
+            } else {
+                qcAuthor = "Under Dusken";
+            }
+
+            var qcEmail =
+                qcMessage +
+                qcArticle +
+                "Med vennlig hilsen <br />" +
+                qcAuthor +
+                qcRed
+            ;
+            zc.setHtml(qcEmail);
+        };
     });
