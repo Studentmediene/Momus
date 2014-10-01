@@ -20,11 +20,12 @@ body {
     padding-top: 70px;
     padding-bottom: 50px;
 }
+
 /* Removes padding when priting to avoid blank space*/
 @media print {
-body {
-    padding-top: 0px;
-}
+    body {
+        padding-top: 0px;
+    }
 
 }
 
@@ -95,6 +96,7 @@ td.articleHover:hover {
 td > ul, td > ol {
     margin-bottom: 0;
 }
+
 /* Used in disposition to move (drag and drop) pages */
 .angular-ui-tree {
 
@@ -122,6 +124,7 @@ td > ul, td > ol {
 .angular-ui-tree-nodes .angular-ui-tree-nodes {
     padding-left: 20px;
 }
+
 .angular-ui-tree-node, .angular-ui-tree-placeholder {
     position: relative;
     margin: 0px;
@@ -165,7 +168,7 @@ td > ul, td > ol {
     display: none;
 }
 
-.angular-ui-tree-drag .pageNr  {
+.angular-ui-tree-drag .pageNr {
     display: table-cell;
     height: 58px;
 }
@@ -177,5 +180,65 @@ td > ul, td > ol {
 
 /* quoteCheck button effects */
 a.zeroclipboard-is-hover {
-    background-color:#3071a9;
+    background-color: #3071a9;
+}
+
+/* Login form */
+
+#loginForm {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1040; /* above the navbar */
+
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #eee;
+}
+
+#loginForm .inner {
+    background-color: #eee;
+}
+
+.form-signin {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 10px;
+}
+
+.form-signin .checkbox {
+    font-weight: normal;
+}
+
+.form-signin .form-control {
+    position: relative;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+
+.form-signin input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }

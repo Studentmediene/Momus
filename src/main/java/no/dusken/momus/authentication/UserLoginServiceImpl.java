@@ -48,7 +48,7 @@ public class UserLoginServiceImpl implements UserLoginService {
     }
 
     @Override
-    public boolean login(SmmDbToken token) {
+    public boolean login(LdapUserPwd token) {
         Authentication authentication = authenticationManager.authenticate(new Token(token));
         boolean isAuthenticated = isAuthenticated(authentication);
         if (isAuthenticated) {

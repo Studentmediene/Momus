@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-package no.dusken.momus.service.repository;
-
-import no.dusken.momus.model.Group;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface GroupRepository extends JpaRepository<Group, Long> {
-}
+angular.module('momusApp.directives').
+    directive('setFocus', function($timeout) {
+        return {
+            scope: {
+                trigger: '@setFocus'
+            },
+            link: function (scope, element) {
+                scope.$watch('trigger', function (value) {
+                    if (value) {
+                        $timeout(function () {
+                            element[0].focus();
+                        });
+                    }
+                });
+            }
+        };
+    });

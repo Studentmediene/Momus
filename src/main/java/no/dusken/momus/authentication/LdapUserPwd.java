@@ -16,37 +16,32 @@
 
 package no.dusken.momus.authentication;
 
-import no.dusken.momus.model.Person;
+public class LdapUserPwd {
 
-/**
- * A mock of the service that works when testing (since there is no "logged in user" then)
- * Always returns id 1 as the logged in user
- */
-public class UserLoginServiceMock implements UserLoginService {
+    private String username;
+    private String password;
 
-
-    @Override
-    public Long getId() {
-        return 1L;
+    public LdapUserPwd() {
     }
 
-    @Override
+    public LdapUserPwd(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public String getUsername() {
-        return null;
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     @Override
-    public boolean login(LdapUserPwd token) {
-        return false;
-    }
-
-    @Override
-    public void logout() {
-        // nothing
-    }
-
-    @Override
-    public Person getLoggedInUser() {
-        return null;
+    public String toString() {
+        return "LdapUserPwd{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

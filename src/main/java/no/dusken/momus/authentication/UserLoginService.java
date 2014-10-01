@@ -32,11 +32,11 @@ public interface UserLoginService {
     String getUsername();
 
     /**
-     * Try to auth a user based on a token
+     * Try to auth a user based on ldap credentials
      * @param token
      * @return whether the login succeeded or not.
      */
-    boolean login(SmmDbToken token);
+    boolean login(LdapUserPwd token);
 
     /**
      * Logs out the current user

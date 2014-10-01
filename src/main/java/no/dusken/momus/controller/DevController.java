@@ -17,12 +17,12 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.authentication.AuthUserDetails;
+import no.dusken.momus.authentication.LdapUserPwd;
 import no.dusken.momus.authentication.Token;
-import no.dusken.momus.authentication.UserAuthorities;
 import no.dusken.momus.authentication.UserLoginService;
+import no.dusken.momus.ldap.LdapSyncer;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.*;
-import no.dusken.momus.smmdb.Syncer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +49,6 @@ public class DevController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private UserAuthorities userAuthorities;
 
     @Autowired
     private UserLoginService userLoginService;
@@ -79,32 +77,32 @@ public class DevController {
     private PublicationRepository publicationRepository;
 
     @Autowired
-    private Syncer syncer;
+    LdapSyncer ldapSyncer;
+
 
     /**
      * Bypass login and logs you in as the user with the provided id
      */
     @RequestMapping("/login/{id}")
     public @ResponseBody void login(@PathVariable("id") Long id) {
-        AuthUserDetails user = userAuthorities.getAuthoritiesForUser(id);
+        AuthUserDetails user = new AuthUserDetails(personRepository.findOne(id));
         Token token = new Token(null, user);
         SecurityContextHolder.getContext().setAuthentication(token);
     }
 
-    /**
-     * Syncs stuff from SmmDB
-     */
-    @RequestMapping("/sync")
-    public @ResponseBody String sync() {
-        syncer.sync();
-        return "sync ok";
+
+    @RequestMapping("/login/test")
+    public @ResponseBody void logintest() {
+        userLoginService.login(new LdapUserPwd("sharon.nymo", "vague tacky drop"));
     }
 
-    @RequestMapping("/test")
-    public @ResponseBody String test() {
-        syncer.sync();
-        return "ok";
+
+    @RequestMapping("/ldaptest")
+    public @ResponseBody String ldaptest() {
+        ldapSyncer.sync();
+        return "oook";
     }
+
 
     @RequestMapping("/editor")
     @PreAuthorize("hasRole('momus:editor')")

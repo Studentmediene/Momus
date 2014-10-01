@@ -16,7 +16,7 @@
 
 package no.dusken.momus.controller;
 
-import no.dusken.momus.authentication.SmmDbToken;
+import no.dusken.momus.authentication.LdapUserPwd;
 import no.dusken.momus.authentication.UserLoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,9 +37,9 @@ public class AuthController {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public @ResponseBody void login(@RequestBody String token) {
-        logger.debug("TokenString: {}", token);
-        userLoginService.login(new SmmDbToken(token));
+    public @ResponseBody void login(@RequestBody LdapUserPwd ldapUserPwd) {
+        logger.debug("Login try with: {}", ldapUserPwd);
+        userLoginService.login(ldapUserPwd);
     }
 
     @RequestMapping("/logout")

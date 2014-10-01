@@ -58,12 +58,12 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
         article.setPublication(pub);
 
         Set<Person> journalists = new HashSet<>();
-        journalists.add(new Person(1L, null, null, "user1", "Mats", "Matsesen", "mats@mats.mats", "12345678", true));
-        journalists.add(new Person(2L, null, null, "user1", "Kåre", "Kål", "lala@lolo.com", "12345678", true));
+        journalists.add(new Person(1L, "user1", "Mats", "Matsesen", "mats@mats.mats", "12345678", true));
+        journalists.add(new Person(2L, "user1", "Kåre", "Kål", "lala@lolo.com", "12345678", true));
         article.setJournalists(journalists);
 
         Set<Person> photographers = new HashSet<>();
-        photographers.add(new Person(3L, null, null, "user1", "Einar", "Einarsen", "einar@lala.org", "12345678", true));
+        photographers.add(new Person(3L, "user1", "Einar", "Einarsen", "einar@lala.org", "12345678", true));
         article.setPhotographers(photographers);
 
         String expected = "<ANSI-WIN>\r\n" +
