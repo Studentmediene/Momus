@@ -451,36 +451,34 @@ public class DevController {
         return "ok";
     }
 
-    @RequestMapping("/createSections")
-    public @ResponseBody String createTestSections() {
-        sectionRepository.save(new Section("FORSIDE"));
-        sectionRepository.save(new Section("INNHOLD"));
-        sectionRepository.save(new Section("ANNONSE"));
-        sectionRepository.save(new Section("NYHET"));
-        sectionRepository.save(new Section("TRANSIT"));
-        sectionRepository.save(new Section("FORSKNINGSFUNN"));
-        sectionRepository.save(new Section("DAGSORDEN"));
-        sectionRepository.save(new Section("MENINGER"));
-        sectionRepository.save(new Section("AKTUALITET"));
-        sectionRepository.save(new Section("SMÅREP"));
-        sectionRepository.save(new Section("KULTUR"));
-        sectionRepository.save(new Section("SPIT"));
-        sectionRepository.save(new Section("BAKSIDE"));
-        sectionRepository.save(new Section("TEST"));
+    @RequestMapping("/createMetadata")
+    public @ResponseBody String createMetadata() {
+
+        sectionRepository.save(new Section("Kultur"));
+        sectionRepository.save(new Section("Debatt"));
+        sectionRepository.save(new Section("Nyhet"));
+        sectionRepository.save(new Section("Sport"));
+        sectionRepository.save(new Section("Forbruker"));
+        sectionRepository.save(new Section("Reportasje"));
+        sectionRepository.save(new Section("Spit"));
+        sectionRepository.save(new Section("Annet"));
 
 
-        articleTypeRepository.save(new ArticleType("KulturRaport"));
+        articleTypeRepository.save(new ArticleType("Anmeldelse"));
+        articleTypeRepository.save(new ArticleType("Nyhetsartikkel"));
+        articleTypeRepository.save(new ArticleType("Kulturartikkel"));
+        articleTypeRepository.save(new ArticleType("Kulturtegn"));
+        articleTypeRepository.save(new ArticleType("Reportasje"));
 
-        return "ok";
-    }
 
-    @RequestMapping("/createArticleStatus")
-    public @ResponseBody String createTestStatuses() {
-
-        articleStatusRepository.save(new ArticleStatus("Desk"));
+        articleStatusRepository.save(new ArticleStatus("Ukjent"));
+        articleStatusRepository.save(new ArticleStatus("Planlagt"));
         articleStatusRepository.save(new ArticleStatus("Skrives"));
-        articleStatusRepository.save(new ArticleStatus("Test"));
+        articleStatusRepository.save(new ArticleStatus("Korrektur"));
+        articleStatusRepository.save(new ArticleStatus("Deskes"));
+        articleStatusRepository.save(new ArticleStatus("Publisert"));
 
-        return "ok";
+
+        return "created sections, types and statuses";
     }
 }

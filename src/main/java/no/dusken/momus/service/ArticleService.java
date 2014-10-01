@@ -116,6 +116,7 @@ public class ArticleService {
         existing.setPublication(article.getPublication());
         existing.setType(article.getType());
         existing.setStatus(article.getStatus());
+        existing.setSection(article.getSection());
 
         return saveUpdatedArticle(existing);
     }

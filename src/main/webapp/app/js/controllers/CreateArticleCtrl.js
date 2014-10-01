@@ -28,6 +28,7 @@ angular.module('momusApp.controllers')
             publication: null,
             type: null,
             status: null,
+            section: null,
             content: ""
 
         };
@@ -39,10 +40,16 @@ angular.module('momusApp.controllers')
 
         ArticleService.getStatuses().success(function (data) {
             $scope.statuses = data;
+            $scope.article.status = data[0];
         });
 
         ArticleService.getTypes().success(function (data) {
             $scope.types = data;
+        });
+
+        ArticleService.getSections().success(function (data) {
+            $scope.sections = data;
+            $scope.article.section = data[0];
         });
 
         PersonService.getAll().success(function (data) {

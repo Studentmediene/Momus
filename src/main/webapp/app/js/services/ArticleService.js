@@ -57,7 +57,7 @@ angular.module('momusApp.services')
             },
 
             getSections: function() {
-                return $http.get('/api/article/statuses', {cache: true});
+                return $http.get('/api/article/sections', {cache: true});
             }
         }
     });

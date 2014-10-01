@@ -43,6 +43,10 @@ angular.module('momusApp.controllers')
             $scope.statuses = data;
         });
 
+        ArticleService.getSections().success(function (data) {
+            $scope.sections = data;
+        });
+
 
 
         /* content panel */
