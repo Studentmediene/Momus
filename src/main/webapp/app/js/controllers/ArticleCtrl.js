@@ -120,6 +120,10 @@ angular.module('momusApp.controllers')
             }
         };
 
+        $scope.$on('$destroy', function() {
+            window.onbeforeunload = undefined;
+        });
+
         function promptCondition() {
             return $scope.unedited.content != $scope.article.content || $scope.metaEditMode == true || $scope.unedited.note != $scope.article.note;
         }
