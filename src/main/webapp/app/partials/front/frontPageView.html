@@ -16,7 +16,48 @@
 
 <div class="row">
     <div class="col-md-8">
+        <div id="last-articles" class="panel panel-info">
+            <div class="panel-heading">
+                <h1 class="panel-title">
+                    <span class="fa fa-file-text-o"></span>
+                    Mine ti siste artikler
+                    <div class="pull-right">
+                        <a href="#/artikler?persons={{user.id}}">Vis alle</a>
+                    </div>
+                </h1>
+            </div>
 
+            <table class="table table-hover table-striped table-condensed">
+                <thead>
+                    <tr>
+                        <th>Navn</th>
+                        <th>Tegn</th>
+                        <th>Status</th>
+                        <th>Redaksjon</th>
+                        <th>Utgave</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr ng-if="loadingArticles">
+                        <td colspan="10" style="text-align: center;">
+                            <i class="fa fa-4x fa-spinner fa-spin"></i>
+                        </td>
+                    </tr>
+
+                    <tr ng-repeat="article in myArticles | limitTo:10">
+                            <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
+                            <td>{{article.content_length}}</td>
+                            <td>{{article.status}}</td>
+                            <td>{{article.section.name}}</td>
+                            <td>{{article.publication.name}}</td>
+                            <td><a href="#/artikler/{{article.id}}">Åpne</a></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
     </div>
 
     <div class="col-md-4">
