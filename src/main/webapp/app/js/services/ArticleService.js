@@ -19,10 +19,18 @@
 angular.module('momusApp.services')
     .service('ArticleService', function ($http) {
         return {
+            // Getting stuff
             getArticle: function (id) {
                 return $http.get('/api/article/' + id);
             },
+            search: function(searchObject) {
+                return $http.post('/api/article/search', searchObject);
+            },
+            getRevisions: function(id) {
+                return $http.get('/api/article/' + id + '/revisions');
+            },
 
+            // Updating stuff
             updateMetadata: function (article) {
                 return $http.put('/api/article/metadata', article);
             },
@@ -34,18 +42,17 @@ angular.module('momusApp.services')
             updateNote: function(article) {
                 return $http.put('/api/article/note', article);
             },
+
+            // Getting metadata, cache everything
             getTypes: function() {
-                return $http.get('/api/article/types');
+                return $http.get('/api/article/types', {cache: true});
             },
             getStatuses: function() {
-                return $http.get('/api/article/statuses');
+                return $http.get('/api/article/statuses', {cache: true});
             },
 
-            search: function(searchObject) {
-                return $http.post('/api/article/search', searchObject);
-            },
-            getRevisions: function(id) {
-                return $http.get('/api/article/' + id + '/revisions');
+            getSections: function() {
+                return $http.get('/api/article/statuses', {cache: true});
             }
         }
     });

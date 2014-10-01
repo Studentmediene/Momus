@@ -16,16 +16,14 @@
 
 package no.dusken.momus.controller;
 
-import no.dusken.momus.model.Article;
-import no.dusken.momus.model.ArticleRevision;
-import no.dusken.momus.model.ArticleStatus;
-import no.dusken.momus.model.ArticleType;
+import no.dusken.momus.model.*;
 import no.dusken.momus.service.ArticleService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.repository.ArticleRevisionRepository;
-import no.dusken.momus.service.search.ArticleSearchParams;
 import no.dusken.momus.service.repository.ArticleStatusRepository;
 import no.dusken.momus.service.repository.ArticleTypeRepository;
+import no.dusken.momus.service.repository.SectionRepository;
+import no.dusken.momus.service.search.ArticleSearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +46,9 @@ public class ArticleController {
 
     @Autowired
     private ArticleRevisionRepository articleRevisionRepository;
+
+    @Autowired
+    private SectionRepository sectionRepository;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody Article getArticleByID(@PathVariable("id") Long id) {
@@ -83,6 +84,10 @@ public class ArticleController {
     @RequestMapping(value = "/statuses", method = RequestMethod.GET)
     public @ResponseBody List<ArticleStatus> getAllArticleStatuses(){
         return articleStatusRepository.findAll();
+    }
+    @RequestMapping(value = "/sections", method = RequestMethod.GET)
+    public @ResponseBody List<Section> getAllSections(){
+        return sectionRepository.findAll();
     }
 
 

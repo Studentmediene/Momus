@@ -42,6 +42,14 @@ angular.module('momusApp.controllers')
             }
         });
 
+        ArticleService.getSections().success( function(data){
+            $scope.sections = data;
+        });
+
+        ArticleService.getStatuses().success( function(data){
+            $scope.statuses = data;
+        });
+
 
         $scope.$on('$routeUpdate', function(){ // when going back/forward
             updateSearchParametersFromUrl();
@@ -95,13 +103,6 @@ angular.module('momusApp.controllers')
 
         $scope.renderPerson = PersonService.renderPerson;
 
-        ArticleService.getTypes().success( function(data){
-            $scope.sections = data;
-        });
-
-        ArticleService.getStatuses().success( function(data){
-            $scope.statuses = data;
-        });
 
         $scope.searchFunc = function () {
             rememberSearchState();
