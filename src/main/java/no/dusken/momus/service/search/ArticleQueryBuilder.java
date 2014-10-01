@@ -61,7 +61,8 @@ public class ArticleQueryBuilder {
             }
         }
         if (search.getSection() != null) {
-            conditions.add("a.type.id = :secid");
+            conditions.add("a.section.id = :secid");
+            // TODO fix to use section!!
             queryParams.put("secid", search.getSection());
         }
         if (search.getPublication() != null) {

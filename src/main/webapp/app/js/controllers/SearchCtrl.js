@@ -42,6 +42,14 @@ angular.module('momusApp.controllers')
             }
         });
 
+        ArticleService.getSections().success( function(data){
+            $scope.sections = data;
+        });
+
+        ArticleService.getStatuses().success( function(data){
+            $scope.statuses = data;
+        });
+
 
         $scope.$on('$routeUpdate', function(){ // when going back/forward
             updateSearchParametersFromUrl();
@@ -95,23 +103,6 @@ angular.module('momusApp.controllers')
 
         $scope.renderPerson = PersonService.renderPerson;
 
-
-        // TODO get these from server
-        $scope.sections = [
-            {id: 1, name: "Nyhet"},
-            {id: 2, name: "Debatt"},
-            {id: 3, name: "Kultur"},
-            {id: 4, name: "Forbruker"},
-            {id: 5, name: "Reportasje"},
-            {id: 6, name: "Sport"}
-        ];
-
-        $scope.statuses = [
-            {id: 1, name: "Planlagt"},
-            {id: 2, name: "Skrives"},
-            {id: 3, name: "Korrektur"},
-            {id: 4, name: "Publisert"}
-        ];
 
         $scope.searchFunc = function () {
             rememberSearchState();

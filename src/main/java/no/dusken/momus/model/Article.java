@@ -47,6 +47,9 @@ public class Article {
     private int contentLength;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    private Section section;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     private ArticleStatus status;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -179,5 +182,13 @@ public class Article {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Section getSection() {
+        return section;
+    }
+
+    public void setSection(Section section) {
+        this.section = section;
     }
 }

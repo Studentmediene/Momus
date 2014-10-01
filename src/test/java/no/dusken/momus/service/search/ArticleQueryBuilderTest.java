@@ -107,7 +107,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = builder.getBaseQuery() + " where a.type.id = :secid" + builder.getBaseOrder();
+        String expectedQuery = builder.getBaseQuery() + " where a.section.id = :secid" + builder.getBaseOrder();
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("secid", 31337L);
 
@@ -142,7 +142,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
                                 ":personid0 member of a.photographers ) and ( " +
                                 ":personid1 member of a.journalists or " +
                                 ":personid1 member of a.photographers ) and " +
-                                "a.type.id = :secid and " +
+                                "a.section.id = :secid and " +
                                 "a.publication.id = :pubid" + builder.getBaseOrder();
 
         Map<String, Object> expectedMap = new HashMap<>();
