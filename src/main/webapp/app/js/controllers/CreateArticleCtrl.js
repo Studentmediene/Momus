@@ -56,8 +56,6 @@ angular.module('momusApp.controllers')
             $scope.persons = data;
         });
 
-        $scope.renderPerson = PersonService.renderPerson;
-
         $scope.createArticle = function () {
             $scope.creating = true;
             ArticleService.createNewArticle($scope.article).success(function (data) {

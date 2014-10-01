@@ -28,7 +28,7 @@
             <th>Journalister:</th>
             <td>
                 <span ng-repeat="journalist in article.journalists">
-                    {{ renderPerson(journalist) }}<span ng-if="!$last">,</span>
+                    {{ journalist.full_name }}<span ng-if="!$last">,</span>
                 </span>
             </td>
             <th>Kommentar:</th>
@@ -38,7 +38,7 @@
             <th>Fotografer:</th>
             <td>
                 <span ng-repeat="photographer in article.photographers">
-                    {{ renderPerson(photographer) }}<span ng-if="!$last">,</span>
+                    {{ photographer_full_name }}<span ng-if="!$last">,</span>
                 </span>
             </td>
             <th>Publikasjon:</th>
@@ -272,14 +272,14 @@
                     <div class="col-sm-8">
                         <ul class="list-unstyled form-control-static" ng-hide="metaEditMode">
                             <li ng-repeat="journalist in article.journalists">
-                                {{ renderPerson(journalist) }}
+                                {{ journalist.full_name }}
                             </li>
                         </ul>
                         <id-select multiple
                                    ng-show="metaEditMode"
                                    items="persons"
                                    target="metaEditing.journalists"
-                                   renderer="renderPerson">
+                                   show="full_name">
                         </id-select>
                     </div>
                 </div>
@@ -291,14 +291,14 @@
                     <div class="col-sm-8">
                         <ul class="list-unstyled form-control-static" ng-hide="metaEditMode">
                             <li ng-repeat="photographer in article.photographers">
-                                {{ renderPerson(photographer) }}
+                                {{ photographer.full_name }}
                             </li>
                         </ul>
                         <id-select multiple
                                    ng-show="metaEditMode"
                                    items="persons"
                                    target="metaEditing.photographers"
-                                   renderer="renderPerson">
+                                   show="full_name">
                         </id-select>
                     </div>
                 </div>

@@ -185,12 +185,13 @@ a.zeroclipboard-is-hover {
 
 /* Login form */
 
+
 #loginForm {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    bottom: 0;
+    right: 0;
     z-index: 1040; /* above the navbar */
 
     padding-top: 40px;
@@ -200,6 +201,8 @@ a.zeroclipboard-is-hover {
 
 #loginForm .inner {
     background-color: #eee;
+    height: 100%;
+    overflow: auto;
 }
 
 .form-signin {

@@ -24,12 +24,6 @@ angular.module('momusApp.services')
             },
             getAll: function () {
                 return $http.get('/api/person/', {cache: true});
-            },
-            renderPerson: function (person) {
-                if (person.first_name === null && person.last_name === null) {
-                    return person.username;
-                }
-                return person.first_name + ' ' + person.last_name
             }
         }
     });

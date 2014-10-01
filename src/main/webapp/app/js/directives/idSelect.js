@@ -6,7 +6,7 @@ angular.module('momusApp.directives')
             scope: {
                 items: '=',
                 target: '=',
-                renderer: '='
+                show: '@'
             },
             link: function(scope, element, attrs) {
                 if (attrs.$attr.multiple === "multiple") {

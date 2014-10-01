@@ -80,7 +80,7 @@
                 <select multiple class="form-control" id="searchPersons" ui-select2 ng-model="search.persons"
                         placeholder="Velg personer">
                     <option ng-repeat="person in persons" value="{{ person.id }}">
-                        {{ renderPerson(person) }}
+                        {{ person.full_name }}
                     </option>
                 </select>
             </div>
@@ -140,14 +140,14 @@
                 <td>
                     <ul class="list-unstyled">
                         <li ng-repeat="person in article.journalists">
-                            {{ renderPerson(person) }}
+                            {{ person.full_name }}
                         </li>
                     </ul>
                 </td>
                 <td>
                     <ul class="list-unstyled">
                         <li ng-repeat="person in article.photographers">
-                            {{ renderPerson(person) }}
+                            {{ person.full_name }}
                         </li>
                     </ul>
                 </td>

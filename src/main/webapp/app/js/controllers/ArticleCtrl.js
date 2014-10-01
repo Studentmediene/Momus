@@ -26,8 +26,6 @@ angular.module('momusApp.controllers')
            $scope.persons = data;
         });
 
-        $scope.renderPerson = PersonService.renderPerson;
-
         ArticleService.getArticle($routeParams.id).success(function (data) {
             $scope.article = data;
             $scope.unedited = angular.copy(data);
@@ -145,7 +143,7 @@ angular.module('momusApp.controllers')
             if($scope.article.journalists.length){
                 for(var i = 0; i < $scope.article.journalists.length;i++) {
                     qcAuthor +=
-                        $scope.renderPerson($scope.article.journalists[i]) + " - " +
+                        $scope.article.journalists[i].full_name + " - " +
                         $scope.article.journalists[i].email + "<br />";
                 }
             } else {

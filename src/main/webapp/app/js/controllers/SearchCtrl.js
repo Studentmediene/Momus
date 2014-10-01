@@ -101,8 +101,6 @@ angular.module('momusApp.controllers')
         }
 
 
-        $scope.renderPerson = PersonService.renderPerson;
-
 
         $scope.searchFunc = function () {
             rememberSearchState();

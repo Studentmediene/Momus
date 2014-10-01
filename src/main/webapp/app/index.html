@@ -59,7 +59,7 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><a class="visible-sm" ng-click="logout()">Logg ut <i class="fa fa-power-off"></i></a></li>
-            <li><a class="hidden-sm"  ng-click="logout()">Logg ut <b>{{user.first_name}} {{user.last_name}}</b> <i class="fa fa-power-off"></i></a></li>
+            <li><a class="hidden-sm"  ng-click="logout()">Logg ut <b>{{user.full_name}}</b> <i class="fa fa-power-off"></i></a></li>
         </ul>
     </div>
     </div>
@@ -116,13 +116,9 @@
 <script src="js/controllers/SourceEditCtrl.js"></script>
 <script src="js/controllers/SourceTagsCtrl.js"></script>
 <script src="js/controllers/DispositionCtrl.js"></script>
-<<<<<<< HEAD
 <script src="js/controllers/CreateArticleCtrl.js"></script>
 <script src="js/controllers/FrontPageCtrl.js"></script>
-
-=======
 <script src="js/controllers/LoginCtrl.js"></script>
->>>>>>> MOM-44_ldap
 <!-- Services -->
 <script src="js/services/parsingRules.js"></script>
 <script src="js/services/httpInterceptor.js"></script>

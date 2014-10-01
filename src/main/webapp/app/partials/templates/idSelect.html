@@ -20,7 +20,7 @@
         ng-change="changed()"
         ng-model="$parent.selectedIDs">
     <option ng-repeat="item in items" value="{{ item.id }}">
-        {{ renderer(item) }}
+        {{ item[show] }}
     </option>
 </select>
 <select
@@ -29,6 +29,6 @@
         ng-change="changed()"
         ng-model="$parent.selectedIDs">
     <option ng-repeat="item in items" value="{{ item.id }}">
-        {{ renderer(item) }}
+        {{ item[show] }}
     </option>
 </select>
