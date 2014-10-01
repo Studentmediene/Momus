@@ -100,18 +100,19 @@ angular.module('momusApp.controllers')
 
 
         $scope.quoteCheck = function(zc){
-            var qcMessage = "Dette er en sitatgjennomgang fra studentavisa Under Dusken i Trondheim. <br>" +
+            var qcMessage = "Dette er en sitatgjennomgang fra studentavisa Under Dusken i Trondheim. <br />" +
                 "Endring av avgitte uttalelser bør begrenses til korrigering av faktiske feil " +
-                "(jf. Vær Varsom-plakatens §3.8).<br><br>";
+                "(jf. Vær Varsom-plakatens §3.8).<br /><br />";
 
             var qcArticle = "<h1>" + $scope.article.name + "</h1>" + $scope.article.content;
             var qcAuthor = "";
+            var qcRed = "<br />Studentavisa Under Dusken <br /> Ansvarlig redaktør Fornavn Etternavn - mail@mail.com";
 
             if($scope.article.journalists.length){
                 for(var i = 0; i < $scope.article.journalists.length;i++) {
                     qcAuthor +=
                         $scope.renderPerson($scope.article.journalists[i]) + " - " +
-                        $scope.article.journalists[i].email + "<br>";
+                        $scope.article.journalists[i].email + "<br />";
                 }
             } else {
                 qcAuthor = "Under Dusken";
@@ -120,8 +121,9 @@ angular.module('momusApp.controllers')
             var qcEmail =
                 qcMessage +
                 qcArticle +
-                "Med vennlig hilsen <br>" +
-                qcAuthor
+                "Med vennlig hilsen <br />" +
+                qcAuthor +
+                qcRed
             ;
             zc.setHtml(qcEmail);
         };
