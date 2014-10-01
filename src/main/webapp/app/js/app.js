@@ -114,6 +114,11 @@ angular.module('momusApp', [
                 controller: 'SourceEditCtrl'
             }
         )
+            .when('/', {
+                templateUrl: 'partials/front/frontPageView.html',
+                controller: 'FrontPageCtrl'
+            }
+        )
 
             .otherwise({redirectTo: '/'});
 
