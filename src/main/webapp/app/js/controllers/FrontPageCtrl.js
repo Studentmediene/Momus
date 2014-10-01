@@ -34,7 +34,6 @@ angular.module('momusApp.controllers')
             });
         };
 
-        $scope.myArticles = [];
         $scope.loadingArticles = true;
         PersonService.getCurrentUser().success(function(user){
             $scope.user = user;
