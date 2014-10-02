@@ -14,239 +14,382 @@
   ~ limitations under the License.
   -->
 
-<div class="row">
-    <div class="col-md-8">
-        <div id="content-panel" ng-controller="ContentCtrl" class="panel panel-primary">
-            <div class="panel-heading">
-                <h1 class="panel-title">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                    {{ article.name }}
-                    <div class="pull-right">
-                        <button class="btn btn-default btn-xs"
-                                ng-show="article.content != original.content"
-                                ng-click="saveArticle()">
-                            <i class="icon-save"></i> Lagre
-                        </button>
-                        <button disabled
-                                class="btn btn-default btn-xs"
-                                ng-show="article.content == original.content">
-                            <i class="icon-ok"></i> Lagret
-                        </button>
-                    </div>
-                </h1>
-            </div>
-            <div class="panel-body">
-                <form name="articleForm">
-                    <div class="btn-toolbar" id="article-toolbar">
-                        <div class="btn-group">
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="bold"
-                                    title="Fet tekst (Ctrl+B)">
-                                <i class="icon-bold"></i>
-                            </button>
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="italic"
-                                    title="Kursiv tekst (Ctrl+I)">
-                                <i class="icon-italic"></i>
-                            </button>
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="underline"
-                                    title="Understreket tekst (Ctrl+U)">
-                                <i class="icon-underline"></i>
-                            </button>
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="strikethrough"
-                                    title="Gjennomstreket tekst">
-                                <i class="icon-strikethrough"></i>
-                            </button>
-                        </div>
-                        <div class="btn-group">
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="insertUnorderedList"
-                                    title="Usortert liste">
-                                <i class="icon-list-ul"></i>
-                            </button>
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="insertOrderedList"
-                                    title="Sortert liste">
-                                <i class="icon-list-ol"></i>
-                            </button>
-                        </div>
-                        <div class="btn-group">
-                            <button class="btn btn-default"
-                                    data-wysihtml5-action="change_view"
-                                    title="Se rådata (avansert)">
-                                <i class="icon-exchange"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <textarea id="articleArea"
-                              class="article"
-                              richeditor="article.content"
-                              richeditor-rules="articleRules"
-                              richeditor-toolbar="article-toolbar">
-                    </textarea>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div if="note-panel" ng-controller="NoteCtrl" class="panel panel-warning">
-            <div class="panel-heading">
-                <h1 class="panel-title">
-                    <span class="icon-list"></span>
-                    Artikkel-notater
-                    <div class="pull-right">
-                        <button class="btn btn-default btn-xs"
-                                ng-show="article.note != original.note"
-                                ng-click="saveNote()">
-                            <i class="icon-save"></i> Lagre
-                        </button>
-                        <button disabled
-                                class="btn btn-default btn-xs"
-                                ng-show="article.note == original.note">
-                            <i class="icon-ok"></i> Lagret
-                        </button>
-                    </div>
-                </h1>
-            </div>
-            <div class="panel-body">
-                <form name="noteForm">
-                    <div class="btn-toolbar" id="note-toolbar">
-                        <div class="btn-group">
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="bold"
-                                    title="Fet tekst (Ctrl+B)">
-                                <i class="icon-bold"></i>
-                            </button>
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="italic"
-                                    title="Kursiv tekst (Ctrl+I)">
-                                <i class="icon-italic"></i>
-                            </button>
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="underline"
-                                    title="Understreket tekst (Ctrl+U)">
-                                <i class="icon-underline"></i>
-                            </button>
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="strikethrough"
-                                    title="Gjennomstreket tekst">
-                                <i class="icon-strikethrough"></i>
-                            </button>
-                        </div>
-                        <div class="btn-group">
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="insertUnorderedList"
-                                    title="Usortert liste">
-                                <i class="icon-list-ul"></i>
-                            </button>
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="insertOrderedList"
-                                    title="Sortert liste">
-                                <i class="icon-list-ol"></i>
-                            </button>
-                        </div>
-                        <div class="btn-group">
-                            <button class="btn btn-default"
-                                    data-wysihtml5-action="change_view"
-                                    title="Se rådata (avansert)">
-                                <i class="icon-exchange"></i>
-                            </button>
-                        </div>
-                    </div>
 
-                    <textarea id="noteArea"
-                              class="note"
-                              richeditor="article.note"
-                              richeditor-rules="noteRules"
-                              richeditor-toolbar="note-toolbar">
-                    </textarea>
-                </form>
-            </div>
-        </div>
-        <div id="meta-panel" ng-controller="MetaCtrl" class="panel panel-info">
-            <div class="panel-heading">
-                <h1 class="panel-title">
-                    Meta
-                    <span class="pull-right">
-                        <button class="btn-xs btn-primary" ng-show="!metaEditMode" ng-click="toggleEditMode()">
-                            Rediger
-                        </button>
-                        <button class="btn-xs btn-info" ng-show="metaEditMode" ng-click="cancelMeta()">
-                            Avbryt
-                        </button>
-                        <button class="btn-xs btn-primary" ng-show="metaEditMode" ng-click="saveMeta()">
-                            Lagre
-                        </button>
-                    </span>
-                </h1>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <span class="col-xs-4">Tittel</span>
-                    <span class="col-xs-8" ng-show="!metaEditMode">
-                        {{ article.name }}
-                    </span>
-                    <span class="col-xs-8" ng-show="metaEditMode">
-                        <input type="text" ng-model="article.name">
-                    </span>
-                </div>
-                <div class="row">
-                    <span class="col-xs-4">Journalister</span>
-                    <span class="col-xs-8">
-                        <ul class="list-unstyled">
-                            <li ng-repeat="journalist in article.journalists" class="row">
-                                <span class="col-xs-10">
-                                    {{ journalist.first_name }} {{ journalist.last_name }}
-                                </span>
-                                <span class="col-xs-2" ng-show="metaEditMode">
-                                    <i class="icon-remove interact"
-                                       title="Fjern"
-                                       ng-click="removePerson(journalist, 'journalists')"></i>
-                                </span>
-                            </li>
-                            <li class="row" ng-show="metaEditMode">
-                                <span class="col-xs-10">
-                                    <input class="input-sm" type="text" ng-model="newJournalist"/>
-                                </span>
-                                <span class="col-xs-2">
-                                    <i class="icon-plus interact"
-                                       title="Legg til"
-                                       ng-click="addPerson(newJournalist, 'journalists')"></i>
-                                </span>
-                            </li>
-                        </ul>
-                    </span>
-                </div>
-                <div class="row">
-                    <span class="col-xs-4">Fotografer</span>
-                    <span class="col-xs-8">
-                        <ul class="list-unstyled">
-                            <li ng-repeat="photographer in article.photographers" class="row">
-                                <span class="col-xs-10">
-                                    {{ photographer.first_name }} {{ photographer.last_name }}
-                                </span>
-                                <span class="col-xs-2" ng-show="metaEditMode">
-                                    <i class="icon-remove interact"
-                                       title="Fjern"
-                                       ng-click="removePerson(photographer, 'photographers')"></i>
-                                </span>
-                            </li>
-                            <li class="row" ng-show="metaEditMode">
-                                <span class="col-xs-10">
-                                    <input class="input-sm" type="text" ng-model="newPhotographer"/>
-                                </span>
-                                <span class="col-xs-2">
-                                    <i class="icon-plus interact"
-                                       title="Legg til"
-                                       ng-click="addPerson(newPhotographer, 'photographers')"></i>
-                                </span>
-                            </li>
-                        </ul>
-                    </span>
-                </div>
-            </div>
+<!-- Used when printing Ctrl+P-->
+<div class="visible-print">
+    <table class="table table-condensed">
+        <tr>
+            <th>Navn:</th>
+            <td>{{ article.name }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Journalister:</th>
+            <td>
+                <span ng-repeat="journalist in article.journalists">
+                    {{ journalist.full_name }}<span ng-if="!$last">,</span>
+                </span>
+            </td>
+            <th>Kommentar:</th>
+            <td>{{article.comment}}</td>
+        </tr>
+        <tr>
+            <th>Fotografer:</th>
+            <td>
+                <span ng-repeat="photographer in article.photographers">
+                    {{ photographer_full_name }}<span ng-if="!$last">,</span>
+                </span>
+            </td>
+            <th>Publikasjon:</th>
+            <td>{{article.publication.name}}</td>
+        </tr>
+    </table>
+
+    <div style="column-count: 2; -moz-column-count:2" ng-bind-html="article.content | trustHtml"></div>
+
+</div>
+
+
+<div class="row hidden-print" ng-show="article.comment">
+    <div class="col-xs-12">
+        <div class="alert alert-info">
+            <p>
+                <strong>Kommentar:</strong> {{article.comment}}
+            </p>
         </div>
     </div>
+</div>
+
+
+
+<div class="row hidden-print">
+<div class="col-md-7">
+    <div id="content-panel" class="panel panel-primary">
+        <div class="panel-heading">
+            <h1 class="panel-title">
+                <span class="fa fa-pencil"></span>
+                {{ article.name }}
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs"
+                            ng-disabled="article.content == unedited.content"
+                            ng-click="saveContent()"
+                            button-loader="savingContent">
+                        <i class="fa fa-save"></i>
+                        Lagre
+                    </button>
+                </div>
+            </h1>
+        </div>
+        <div class="panel-body">
+            <div id="article-toolbar" class="editor-toolbar">
+                <div class="btn-group">
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="formatBlock"
+                            data-wysihtml5-command-value="h1"
+                            title="Tittel">
+                        Tittel
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="formatBlock"
+                            data-wysihtml5-command-value="h2"
+                            title="Stikktittel">
+                        Stikktittel
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="formatBlock"
+                            data-wysihtml5-command-value="h4"
+                            title="Ingress">
+                        Ingress
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="formatBlock"
+                            data-wysihtml5-command-value="h3"
+                            title="Mellomtittel">
+                        Mellomtittel
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="formatBlock"
+                            data-wysihtml5-command-value="p"
+                            title="Brødtekst">
+                        Brødtekst
+                    </button>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="italic"
+                            title="Utheving">
+                        <i class="fa fa-italic"></i>
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="formatBlock"
+                            data-wysihtml5-command-value="blockquote"
+                            title="Sitat">
+                        <i class="fa fa-quote-left"></i>
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="insertUnorderedList"
+                            title="Usortert liste">
+                        <i class="fa fa-list-ul"></i>
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="insertOrderedList"
+                            title="Sortert liste">
+                        <i class="fa fa-list-ol"></i>
+                    </button>
+                </div>
+
+                <div class="btn-group pull-right">
+                    <button class="btn btn-default"
+                            data-wysihtml5-action="change_view"
+                            title="Se rådata (avansert)">
+                        <i class="fa fa-exchange"></i>
+                    </button>
+                </div>
+
+
+            </div>
+
+
+            <textarea id="articleArea"
+                      class="form-control article"
+                      richeditor="article.content"
+                      richeditor-rules="articleRules"
+                      richeditor-toolbar="article-toolbar">
+            </textarea>
+
+
+        </div>
+    </div>
+</div>
+<div class="col-md-5 hidden-print">
+    <div if="note-panel" class="panel panel-warning">
+        <div class="panel-heading">
+            <h1 class="panel-title">
+                <span class="fa fa-list"></span>
+                Artikkel-notater
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs"
+                            ng-disabled="article.note == unedited.note"
+                            ng-click="saveNote()"
+                            button-loader="savingNote">
+                        <i class="fa fa-save"></i>
+                        Lagre
+                    </button>
+                </div>
+            </h1>
+        </div>
+        <div class="panel-body">
+            <div id="note-toolbar" class="editor-toolbar">
+                <div class="btn-group">
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="bold"
+                            title="Fet tekst (Ctrl+B)">
+                        <i class="fa fa-bold"></i>
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="italic"
+                            title="Kursiv tekst (Ctrl+I)">
+                        <i class="fa fa-italic"></i>
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="underline"
+                            title="Understreket tekst (Ctrl+U)">
+                        <i class="fa fa-underline"></i>
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="strikethrough"
+                            title="Gjennomstreket tekst">
+                        <i class="fa fa-strikethrough"></i>
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="insertUnorderedList"
+                            title="Usortert liste">
+                        <i class="fa fa-list-ul"></i>
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="insertOrderedList"
+                            title="Sortert liste">
+                        <i class="fa fa-list-ol"></i>
+                    </button>
+                </div>
+                <div class="btn-group pull-right">
+                    <button class="btn btn-default"
+                            data-wysihtml5-action="change_view"
+                            title="Se rådata (avansert)">
+                        <i class="fa fa-exchange"></i>
+                    </button>
+                </div>
+            </div>
+            <textarea id="noteArea"
+                      class="form-control note"
+                      richeditor="article.note"
+                      richeditor-rules="noteRules"
+                      richeditor-toolbar="note-toolbar">
+            </textarea>
+        </div>
+    </div>
+    <div id="meta-panel" class="panel panel-info">
+        <div class="panel-heading">
+            <h1 class="panel-title">
+                <span class="fa fa-tag"></span>
+                Detaljer
+                <span class="pull-right">
+                    <button class="btn btn-xs btn-info" ng-show="metaEditMode" ng-click="cancelMeta()">
+                        Avbryt
+                    </button>
+                    <button class="btn btn-xs btn-primary" ng-click="metaClicked()" button-loader="savingMeta">
+                        <span ng-show="!metaEditMode">Rediger</span>
+                        <span ng-show="metaEditMode">Lagre</span>
+                    </button>
+                </span>
+            </h1>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                        Navn
+                    </label>
+
+                    <div class="col-sm-8" ng-hide="metaEditMode">
+                        <p class="form-control-static">
+                            {{ article.name }}
+                        </p>
+                    </div>
+                    <div class="col-sm-8" ng-show="metaEditMode">
+                        <input class="form-control input-sm" type="text" ng-model="metaEditing.name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                        Journalister
+                    </label>
+
+                    <div class="col-sm-8">
+                        <ul class="list-unstyled form-control-static" ng-hide="metaEditMode">
+                            <li ng-repeat="journalist in article.journalists">
+                                {{ journalist.full_name }}
+                            </li>
+                        </ul>
+                        <id-select multiple
+                                   ng-show="metaEditMode"
+                                   items="persons"
+                                   target="metaEditing.journalists"
+                                   show="full_name">
+                        </id-select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                        Fotografer
+                    </label>
+
+                    <div class="col-sm-8">
+                        <ul class="list-unstyled form-control-static" ng-hide="metaEditMode">
+                            <li ng-repeat="photographer in article.photographers">
+                                {{ photographer.full_name }}
+                            </li>
+                        </ul>
+                        <id-select multiple
+                                   ng-show="metaEditMode"
+                                   items="persons"
+                                   target="metaEditing.photographers"
+                                   show="full_name">
+                        </id-select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                        Kommentar
+                    </label>
+
+                    <div class="col-sm-8" ng-hide="metaEditMode">
+                        <p class="form-control-static">
+                            {{ article.comment }}
+                        </p>
+                    </div>
+                    <div class="col-sm-8" ng-show="metaEditMode">
+                        <input class="form-control input-sm" type="text" ng-model="metaEditing.comment">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                        Publikasjon
+                    </label>
+
+                    <div class="col-sm-8" ng-hide="metaEditMode">
+                        <p class="form-control-static">
+                            {{ article.publication.name }}
+                        </p>
+                    </div>
+                    <div class="col-sm-8" ng-show="metaEditMode">
+                        <select class="form-control input-sm" ng-model="metaEditing.publication" ng-options="s.name for s in publications track by s.id"></select>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                        Seksjon
+                    </label>
+
+                    <div class="col-sm-8" ng-hide="metaEditMode">
+                        <p class="form-control-static">
+                            {{ article.section.name }}
+                        </p>
+                    </div>
+                    <div class="col-sm-8" ng-show="metaEditMode">
+                        <select class="form-control input-sm" ng-model="metaEditing.section" ng-options="s.name for s in sections track by s.id"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                        Type
+                    </label>
+
+                    <div class="col-sm-8" ng-hide="metaEditMode">
+                        <p class="form-control-static">
+                            {{ article.type.name }}
+                        </p>
+                    </div>
+                    <div class="col-sm-8" ng-show="metaEditMode">
+                        <select class="form-control input-sm" ng-model="metaEditing.type" ng-options="s.name for s in types track by s.id"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                        Status
+                    </label>
+
+                    <div class="col-sm-8" ng-hide="metaEditMode">
+                        <p class="form-control-static">
+                            {{ article.status.name }}
+                        </p>
+                    </div>
+                    <div class="col-sm-8" ng-show="metaEditMode">
+                        <select class="form-control input-sm" ng-model="metaEditing.status" ng-options="s.name for s in statuses track by s.id"></select>
+                    </div>
+                </div>
+            </form>
+
+            <a href="/api/article/{{article.id}}/export" class="btn btn-primary" ><i class="fa fa-file-text-o"></i>
+                InDesign fil
+            </a>
+
+            <a href="#/artikler/revisjon/{{article.id}}" class="btn btn-primary"><i class="fa fa-file-text-o"></i>
+                Historikk
+            </a>
+
+
+            <span tooltip="Kopier sitatsjekk-tekst" class="btn-group">
+            <a zc-btn="quoteCheck" button-loader="copying" loading-text="Kopierer" completed-text="Kopiert" ng-click="" class="btn btn-primary"><i class="fa fa-quote-right"></i>
+                Sitatsjekk
+            </a>
+            </span>
+        </div>
+    </div>
+</div>
 </div>

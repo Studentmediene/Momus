@@ -16,8 +16,13 @@
 
 package no.dusken.momus.service;
 
+import no.dusken.momus.authentication.UserLoginService;
+import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Article;
-import no.dusken.momus.model.Updates;
+import no.dusken.momus.model.ArticleRevision;
+import no.dusken.momus.model.Person;
+import no.dusken.momus.service.indesign.IndesignExport;
+import no.dusken.momus.service.indesign.IndesignGenerator;
 import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.ArticleRevisionRepository;
 import no.dusken.momus.service.search.ArticleQueryBuilder;
@@ -30,9 +35,9 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 public class ArticleService {
@@ -45,54 +50,83 @@ public class ArticleService {
     @Autowired
     ArticleRevisionRepository articleRevisionRepository;
 
+    @Autowired
+    IndesignGenerator indesignGenerator;
+
+    @Autowired
+    private UserLoginService userLoginService;
+
     @PersistenceContext
     EntityManager entityManager;
 
 
 
     public Article getArticleById(Long id) {
-        return articleRepository.findOne(id);
+        Article article = articleRepository.findOne(id);
+        if (article == null) {
+            logger.warn("Article with id {} not found, tried by user {}", id, userLoginService.getId());
+            throw new RestException("Article "+id+" not found", 404);
+        }
+        return article;
     }
 
-    public List<Article> getAllArticles() {
-        return articleRepository.findAll();
-    }
 
-    public Article saveNewArticle(Article article) {
+    public Article createNewArticle(Article article) {
         Long newID = articleRepository.saveAndFlush(article).getId();
         return articleRepository.findOne(newID);
     }
 
     public Article saveUpdatedArticle(Article article) {
-        articleRepository.saveAndFlush(article);
-        return articleRepository.findOne(article.getId());
+        article.setLastUpdated(new Date());
+
+        logger.info("Article \"{}\" (id: {}) updated by user {}", article.getName(), article.getId(), userLoginService.getId());
+
+//        if (article.getStatus().getName().equals("Publisert")) {
+            // export
+//        }
+
+        return articleRepository.saveAndFlush(article);
     }
 
-    public Article updateArticle(Updates<Article> updates) {
-        Article articleFromClient = updates.getObject();
-        Article articleFromServer = getArticleById(articleFromClient.getId());
+    public Article saveNewContent(Article article) {
+        Article existing = articleRepository.findOne(article.getId());
+        String content = article.getContent();
 
-        Set<String> updatedFields = updates.getUpdatedFields();
-        if (updatedFields.contains("content")) {
-            articleFromServer.setContent(articleFromClient.getContent());
-        }
-        if (updatedFields.contains("note")) {
-            articleFromServer.setNote(articleFromClient.getNote());
-        }
-        if (updatedFields.contains("name")) {
-            articleFromServer.setName(articleFromClient.getName());
-        }
-        if (updatedFields.contains("journalists")) {
-            articleFromServer.setJournalists(articleFromClient.getJournalists());
-        }
-        if (updatedFields.contains("photographers")) {
-            articleFromServer.setPhotographers(articleFromClient.getPhotographers());
-        }
-        if (updatedFields.contains("publication")) {
-            articleFromServer.setPublication(articleFromClient.getPublication());
-        }
+        ArticleRevision revision = new ArticleRevision();
+        revision.setContent(content);
+        revision.setArticle(existing);
+        revision.setAuthor(new Person(userLoginService.getId()));
+        revision.setSavedDate(new Date());
+        revision.setStatus(existing.getStatus());
+        revision = articleRevisionRepository.save(revision);
 
-        return saveUpdatedArticle(articleFromServer);
+        logger.info("Saved new revision for article(id:{}) with id: {}, content:\n{}", article.getId(), revision.getId(), content);
+
+        existing.setContent(content);
+        return saveUpdatedArticle(existing);
+    }
+
+    public Article saveMetadata(Article article) {
+        Article existing = articleRepository.findOne(article.getId());
+
+        existing.setName(article.getName());
+        existing.setJournalists(article.getJournalists());
+        existing.setPhotographers(article.getPhotographers());
+        existing.setComment(article.getComment());
+        existing.setPublication(article.getPublication());
+        existing.setType(article.getType());
+        existing.setStatus(article.getStatus());
+        existing.setSection(article.getSection());
+
+        return saveUpdatedArticle(existing);
+    }
+
+    public Article saveNote(Article article) {
+        Article existing = articleRepository.findOne(article.getId());
+
+        existing.setNote(article.getNote());
+
+        return saveUpdatedArticle(existing);
     }
 
     public List<Article> searchForArticles(ArticleSearchParams params) {
@@ -109,7 +143,7 @@ public class ArticleService {
             query.setParameter(e.getKey(), e.getValue());
         }
 
-        query.setMaxResults(200);
+        query.setMaxResults(201);
         // TODO add paging of results?
 
         List<Article> resultList = query.getResultList();
@@ -123,4 +157,14 @@ public class ArticleService {
 
         return resultList;
     }
+
+    public IndesignExport exportArticle(Long id) {
+        Article article = getArticleById(id);
+        return indesignGenerator.generateFromArticle(article);
+    }
+
+    public ArticleRepository getArticleRepository() {
+        return articleRepository;
+    }
+
 }

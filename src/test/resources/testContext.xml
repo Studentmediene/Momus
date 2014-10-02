@@ -23,6 +23,14 @@
     <!-- Load standard applicationContext -->
     <import resource="classpath:applicationContext.xml" />
 
+    <!-- Swap the userLoginService to a dummy one -->
+    <bean id="userLoginService" class="no.dusken.momus.authentication.UserLoginServiceMock" />
+
+    <!-- Disable syncing -->
+    <bean id="ldapSyncer" class="no.dusken.momus.ldap.LdapSyncer">
+        <property name="disabled" value="true"/>
+    </bean>
+
     <!-- Override values in momus.properties with values from test.properties -->
     <context:property-placeholder
             location="classpath:momus.properties,

@@ -75,7 +75,7 @@ module.exports = function (grunt) {
                 files: {
                     src: [
                         dist + '/js/{,*/}*.js',
-                        dist + '/css/{,*/}*.css'
+                        dist + '/css/!(editor).css' // all css-files except the editor.css
                     ]
                 }
             }
@@ -150,6 +150,26 @@ module.exports = function (grunt) {
                         dest: dist + '/css'
                     }
                 ]
+            },
+            editorCSS: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: app + '/css/',
+                        src: ['editor.css'],
+                        dest: dist + '/css'
+                    }
+                ]
+            },
+            zeroClipboardSWF: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: app + '/libs/zeroclipboard/dist',
+                        src: ['ZeroClipboard.swf'],
+                        dest: dist + '/js'
+                    }
+                ]
             }
         },
         ngmin: {
@@ -183,10 +203,7 @@ module.exports = function (grunt) {
         'clean:dist',
         'useminPrepare',
         'concat',
-        'copy:dist',
-        'copy:fonts',
-        'copy:favicon',
-        'copy:select2images',
+        'copy',
         'ngmin',
         'cssmin',
         'uglify',

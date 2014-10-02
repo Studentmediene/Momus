@@ -16,48 +16,120 @@
 
 describe('Button Loader tests', function() {
 
-    beforeEach(module('momusApp.directives'));
+    beforeEach(function() {module('momusApp.directives'), module('momusApp.services')});
 
+    function getDefaultElm(elm) {
+        var firstChild = angular.element(elm.children()[0]);
+        var innerChild = angular.element(firstChild.children()[0]);
+        return innerChild;
+    }
 
-    it('should display different text and a spinner while loading, and default text when not loading', inject(function($compile, $rootScope) {
+    function getCustomTextElm(elm) {
+        return angular.element(elm.children()[0]);
+    }
+
+    it('should show different texts depending on state', inject(function($compile, $rootScope, $timeout) {
         var scope = $rootScope;
         var element = angular.element(
-            '<button button-loader="isLoading" button-loader-text="Lagrer">Lagre</button>'
+            '<button button-loader="isLoading" loading-text="loading text" completed-text="completed text">default text</button>'
         );
         $compile(element)(scope);
 
         scope.isLoading = false;
         scope.$digest();
-        expect(element.html()).toBe('Lagre');
+        expect(getDefaultElm(element).html()).toBe('default text');
 
         scope.isLoading = true;
         scope.$digest();
-        expect(element.html()).toBe('<i class="fa fa-spinner fa-spin"></i> Lagrer');
+        expect(getCustomTextElm(element).html()).toBe('<i class="fa fa-spinner fa-spin"></i> loading text');
 
         scope.isLoading = false;
         scope.$digest();
-        expect(element.html()).toBe('Lagre');
+        expect(getCustomTextElm(element).html()).toBe('<i class="fa fa-check"></i> completed text');
+
+        $timeout.flush();
+        expect(getDefaultElm(element).html()).toBe('default text');
     }));
 
-
-    it('should not use a spinner when loading if option is set', inject(function($compile, $rootScope) {
+    it('should support data binding', inject(function($compile, $rootScope, $timeout) {
         var scope = $rootScope;
         var element = angular.element(
-            '<button button-loader="isLoading" button-loader-text="Lagrer uten spinner" button-loader-nospinner="true">Lagre</button>'
+            '<button button-loader="isLoading" loading-text="loading text" completed-text="completed text">default {{myValue}}</button>'
         );
+        scope.myValue = 'text';
         $compile(element)(scope);
+
+        scope.isLoading = false;
+        scope.$digest();
+        expect(getDefaultElm(element).html()).toBe('default text');
+
+        scope.myValue = 'newVal';
+        scope.$digest();
+        expect(getDefaultElm(element).html()).toBe('default newVal');
 
         scope.isLoading = true;
         scope.$digest();
-        expect(element.html()).toBe('Lagrer uten spinner');
+
+        scope.isLoading = false;
+        scope.myValue = 'thirdVal';
+        scope.$digest();
+
+        $timeout.flush();
+        expect(getDefaultElm(element).html()).toBe('default thirdVal');
+    }));
+
+    it('should show default texts if none is specified', inject(function($compile, $rootScope, $timeout) {
+        var scope = $rootScope;
+        var element = angular.element(
+            '<button button-loader="isLoading">Lagre</button>'
+        );
+        $compile(element)(scope);
+
+        scope.isLoading = false;
+        scope.$digest();
+        expect(getDefaultElm(element).html()).toBe('Lagre');
+
+        scope.isLoading = true;
+        scope.$digest();
+        expect(getCustomTextElm(element).html()).toBe('<i class="fa fa-spinner fa-spin"></i> Lagrer');
+
+        scope.isLoading = false;
+        scope.$digest();
+        expect(getCustomTextElm(element).html()).toBe('<i class="fa fa-check"></i> Lagret');
+
+        $timeout.flush();
+        expect(getDefaultElm(element).html()).toBe('Lagre');
+    }));
+
+    it('should not show status (spinners, check mark) if turned off', inject(function($compile, $rootScope, $timeout) {
+        var scope = $rootScope;
+        var element = angular.element(
+            '<button button-loader="isLoading" no-icons="true" loading-text="loading text" completed-text="completed text">default text</button>'
+        );
+        $compile(element)(scope);
+
+        scope.isLoading = false;
+        scope.$digest();
+        expect(getDefaultElm(element).html()).toBe('default text');
+
+        scope.isLoading = true;
+        scope.$digest();
+        expect(getCustomTextElm(element).html()).toBe('loading text');
+
+        scope.isLoading = false;
+        scope.$digest();
+        expect(getCustomTextElm(element).html()).toBe('completed text');
+
+        $timeout.flush();
+        expect(getDefaultElm(element).html()).toBe('default text');
     }));
 
 
 
-    it('should still be disabled when loading is done if ngDisabled says so', inject(function($compile, $rootScope) {
+    it('should still be disabled when loading is done if ngDisabled says so', inject(function($compile, $rootScope, $timeout) {
         var scope = $rootScope;
         var element = angular.element(
-            '<button ng-disabled="isDisabled" button-loader="isLoading" button-loader-text="Lagrer">Lagre</button>'
+            '<button ng-disabled="isDisabled" button-loader="isLoading">Lagre</button>'
         );
         $compile(element)(scope);
 
@@ -72,8 +144,12 @@ describe('Button Loader tests', function() {
 
         scope.isLoading = false;
         scope.$digest();
+        $timeout.flush();
         // expect it to be disabled since ng-disabled applies
         expect(element.attr('disabled')).toBe('disabled');
     }));
+
+
+
 
 });

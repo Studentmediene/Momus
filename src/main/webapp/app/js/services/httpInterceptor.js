@@ -18,23 +18,20 @@
 
 angular.module('momusApp.services').
 
-    factory('HttpInterceptor', function ($q, $location, $injector) {
+    factory('HttpInterceptor', function ($q, $location, $injector, $rootScope) {
         /*
          This interceptor will intercept http requests that have failed.
 
-         If the reason for failing is 401 it means we are not logged in on our server, so then
-         we try to get a ticket from SmmDb and send it to our server to verify the user.
-         However, if SmmDb also returns a 401 the user is not logged in there either. So then we redirect
-         to SmmDb for login.
-         When a ticket has been sent to the server and we got a successful response, the interceptor will try
-         to resend all requests that failed and register a logout url in SmmDb.
+         If the reason for failing is 401 it means we are not logged in on our server.
+         So we show a login form and wait for the LoginCtrl to tell us that the user is logged in.
+         All failed 401 requests will be put in a buffer so they can be resent when logged in.
 
-         If we get a 403 error, that means the user doesn't have authority to do the request.
+         If the reason is something else, a modal will pop up with an error message.
          */
 
 
-        // Make sure we only send one request to SmmDb
-        var hasSentRequestForTicket = false;
+        // Make sure we only send one request for login form
+        var hasRequestedLogin = false;
 
         // Buffer holding all requests that failed
         var resendBuffer = [];
@@ -65,52 +62,17 @@ angular.module('momusApp.services').
             );
         }
 
-        function tryLoginThroughSmmDb() {
-            hasSentRequestForTicket = true;
-            var $http = $injector.get('$http');
-            getTicketFromSmmDb($http).success(function (smmDbData) {
 
-                // We are logged in at SmmDb, should validate the ticket with our server
-                validateTicket($http, smmDbData.ticket).success(function (loginResponse) {
-                    registerSmmDbLogoutUrl($http);
+        function requestLogin() {
+            hasRequestedLogin = true;
 
-                    // We are now logged in, should resend the requests that have failed
-                    resendAllInBuffer();
-                    hasSentRequestForTicket = false;
-                })
-                    .error(function (loginResponse) {
-                        // Couldn't validate ticket on the server
-                        alert('Noe gikk feil under innlogging.');
-                    });
-            })
-                .error(function (smmDbData) {
-                    // error from SmmDb, means we're not logged in there, so we redirect to the login-form
-                    window.location = 'http://m.studentmediene.no/api/login?next=' + encodeURIComponent(window.location.href);
-                });
+            $rootScope.$broadcast('showLogin');
         }
 
-        function getTicketFromSmmDb($http) {
-            return $http.get('http://m.studentmediene.no/api/ticket/get', {withCredentials: true});
-        }
-
-        function validateTicket($http, ticket) {
-            // convert the ticket to a string. Change all " with \", and add " around it.
-            var ticketString = '"' + JSON.stringify(ticket).replace(/"/g, '\\"') + '"';
-            return $http.post('/api/auth/login', ticketString);
-        }
-
-        function registerSmmDbLogoutUrl($http) {
-            var ourUrl = 'http://' + $location.host() + ($location.port() ? ':' + $location.port() : '') + '/api/auth/logout';
-
-            $http.get('http://m.studentmediene.no/api/register_logout_url?logout_url=' + encodeURIComponent(ourUrl), {withCredentials: true});
-        }
-
-        function isInIgnoreList(url) {
-            return (
-                url.indexOf('m.studentmediene.no') > -1
-                || url.indexOf('/api/auth/login') > -1
-                );
-        }
+        $rootScope.$on('loginComplete', function() {
+            hasRequestedLogin = false;
+            resendAllInBuffer();
+        });
 
         return {
             'responseError': function (response) {
@@ -119,11 +81,13 @@ angular.module('momusApp.services').
                     return $q.reject(response);
                 }
 
-                // is the problem we're not logged in?
-                if (response.status === 401 && (!isInIgnoreList(response.config.url))) {
 
-                    if (!hasSentRequestForTicket) {
-                        tryLoginThroughSmmDb();
+                // is the problem we're not logged in?
+                if (response.status === 401) {
+
+                    // show login form if we haven't already
+                    if (!hasRequestedLogin) {
+                        requestLogin();
                     }
 
                     // add the request to the buffer to be sent later
@@ -131,15 +95,13 @@ angular.module('momusApp.services').
                     addToBuffer(response.config, deferred);
                     return deferred.promise;
 
-                } else if (!isInIgnoreList(response.config.url)) {
+                } else {
                     // show an error message
                     var errorMessage = '';
 
                     if (response.data.error) {
                         errorMessage = response.data.error;
-                    } //else {
-                    //errorMessage = response.data;
-
+                    }
                     var MessageModal = $injector.get('MessageModal');
                     MessageModal.error(errorMessage, true);
 

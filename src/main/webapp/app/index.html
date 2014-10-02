@@ -41,7 +41,7 @@
 <div class="navbar navbar-default navbar-fixed-top" ng-controller="NavbarCtrl">
     <div class="container">
     <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".main-nav-collapse">
+        <button type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -50,16 +50,16 @@
         <a class="navbar-brand">Momus</a>
     </div>
 
-    <div class="collapse navbar-collapse main-nav-collapse">
+    <div class="collapse navbar-collapse" collapse="isCollapsed" ng-click="isCollapsed = true">
         <ul class="nav navbar-nav">
             <li ng-class="{active: isActive('/')}"><a href="#"><i class="fa fa-th-large"></i> Front</a></li>
-            <li ng-class="{active: isActive('/article%')}"><a href="#"><i class="fa fa-pencil"></i> Articler</a></li>
-            <li ng-class="{active: isActive('/publications')}"><a href="#/publications"><i class="fa fa-list"></i> Publikasjoner</a></li>
-            <li ng-class="{active: isActive('/sources%')}"><a href="#/sources"><i class="fa fa-comment"></i> Kilder</a></li>
+            <li ng-class="{active: isActive('/artikler%')}"><a href="#/artikler"><i class="fa fa-pencil"></i> Artikler</a></li>
+            <li ng-class="{active: isActive('/utgaver')}"><a href="#/utgaver"><i class="fa fa-list"></i> Utgaver</a></li>
+            <li ng-class="{active: isActive('/kilder%')}"><a href="#/kilder"><i class="fa fa-comment"></i> Kilder</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a class="visible-sm" href="http://m.studentmediene.no/api/logout">Logg ut <i class="fa fa-power-off"></i></a></li>
-            <li><a class="hidden-sm" href="http://m.studentmediene.no/api/logout">Logg ut <b>{{user.first_name}} {{user.last_name}}</b> <i class="fa fa-power-off"></i></a></li>
+            <li><a class="visible-sm" ng-click="logout()">Logg ut <i class="fa fa-power-off"></i></a></li>
+            <li><a class="hidden-sm"  ng-click="logout()">Logg ut <b>{{user.full_name}}</b> <i class="fa fa-power-off"></i></a></li>
         </ul>
     </div>
     </div>
@@ -69,7 +69,8 @@
     <div ng-view></div>
 </div>
 
-
+<div ng-controller="LoginCtrl" ng-include="'partials/login/loginForm.html'">
+</div>
 
 <!-- Include libraries -->
 <!-- build:js js/libs.js -->
@@ -82,11 +83,17 @@
 <script src="libs/angular-route/angular-route.js"></script>
 
 <script src="libs/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"></script>
+<script src="libs/angular-ui-tree/dist/angular-ui-tree.js"></script>
+
+<!-- ZeroClipboard -->
+<script src="libs/zeroclipboard/dist/ZeroClipboard.js"></script>
+
 <!-- Include wysihtml5, the text editor -->
 <script src="libs/wysihtml5/index.js"></script>
 
 <!-- Include select2, the selector -->
 <script src="libs/select2/select2.js"></script>
+<script src="libs/select2/select2_locale_no.js"></script>
 <script src="libs/angular-ui-select2/src/select2.js"></script>
 
 <!-- endbuild -->
@@ -101,32 +108,36 @@
 <!-- Controllers -->
 <script src="js/controllers/AdminRoleCtrl.js"></script>
 <script src="js/controllers/ArticleCtrl.js"></script>
-<script src="js/controllers/Navbar.js"></script>
-<script src="js/controllers/NoteCtrl.js"></script>
-<script src="js/controllers/ContentCtrl.js"></script>
-<script src="js/controllers/MetaCtrl.js"></script>
-<script src="js/controllers/search.js"></script>
-<script src="js/controllers/publication.js"></script>
+<script src="js/controllers/ArticleRevisionCtrl.js"></script>
+<script src="js/controllers/NavbarCtrl.js"></script>
+<script src="js/controllers/SearchCtrl.js"></script>
+<script src="js/controllers/PublicationCtrl.js"></script>
 <script src="js/controllers/SourceSearchCtrl.js"></script>
 <script src="js/controllers/SourceEditCtrl.js"></script>
 <script src="js/controllers/SourceTagsCtrl.js"></script>
+<script src="js/controllers/DispositionCtrl.js"></script>
+<script src="js/controllers/CreateArticleCtrl.js"></script>
+<script src="js/controllers/FrontPageCtrl.js"></script>
+<script src="js/controllers/LoginCtrl.js"></script>
 <!-- Services -->
-<script src="js/services/version.js"></script>
 <script src="js/services/parsingRules.js"></script>
 <script src="js/services/httpInterceptor.js"></script>
-<script src="js/services/currentUser.js"></script>
 <script src="js/services/ArticleService.js"></script>
+<script src="js/services/PersonService.js"></script>
+<script src="js/services/PublicationService.js"></script>
 <script src="js/services/TitleChanger.js"></script>
 <script src="js/services/messageModal.js"></script>
 <script src="js/services/Utils.js"></script>
+<script src="js/services/NoteService.js"></script>
 
 <!-- Filters -->
 <!-- Directives -->
-<script src="js/directives/version.js"></script>
 <script src="js/directives/richEditor.js"></script>
 <script src="js/directives/buttonLoader.js"></script>
 <script src="js/directives/textwrapper.js"></script>
-
+<script src="js/directives/idSelect.js"></script>
+<script src="js/directives/zcBtn.js"></script>
+<script src="js/directives/focus.js"></script>
 <!-- endbuild -->
 
 

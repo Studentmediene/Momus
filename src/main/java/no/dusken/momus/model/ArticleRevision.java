@@ -29,6 +29,8 @@ public class ArticleRevision {
     @ManyToOne(fetch = FetchType.LAZY)
     private Article article;
 
+    @Lob
+    @Column(length = 40960)
     private String content;
 
     @ManyToOne
@@ -37,7 +39,7 @@ public class ArticleRevision {
     @ManyToOne
     private Person author;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date savedDate;
 
 

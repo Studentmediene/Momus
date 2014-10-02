@@ -3,14 +3,17 @@
   "private": true,
   "dependencies": {
     "jquery": "1.9.1",
-    "angular": "1.2.13",
-    "angular-route": "1.2.13",
-    "bootstrap": "3.0.3",
+    "angular": "1.2.22",
+    "angular-route": "1.2.22",
+    "bootstrap": "3.2.0",
     "components-font-awesome": "4.0.3",
     "wysihtml5": "https://raw.github.com/xing/wysihtml5/master/dist/wysihtml5-0.4.0pre.min.js",
     "angular-ui-select2": "0.0.5",
-    "select2-bootstrap3-css": "https://raw.github.com/fk/select2-bootstrap-css/master/select2-bootstrap.css",
-    "angular-mocks": "1.2.13",
-    "angular-ui-bootstrap-bower": "0.10.0"
+    "select2-bootstrap3-css": "https://raw.githubusercontent.com/t0m/select2-bootstrap-css/bootstrap3/select2-bootstrap.css",
+    "select2": "3.4.6",
+    "angular-mocks": "1.2.22",
+    "angular-ui-bootstrap-bower": "0.10.0",
+    "angular-ui-tree": "2.1.5",
+    "zeroclipboard": "2.1.6"
   }
 }

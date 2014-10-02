@@ -33,7 +33,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = builder.getBaseQuery();
+        String expectedQuery = builder.getBaseQuery() + builder.getBaseOrder();
 
         assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
         assertEquals(0, builder.getQueryParams().size());
@@ -46,7 +46,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = builder.getBaseQuery();
+        String expectedQuery = builder.getBaseQuery() + builder.getBaseOrder();
 
         assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
         assertEquals(0, builder.getQueryParams().size());
@@ -59,7 +59,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = builder.getBaseQuery() + " where a.content like :free";
+        String expectedQuery = builder.getBaseQuery() + " where a.content like :free" + builder.getBaseOrder();
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("free", "%finn meg%");
 
@@ -73,7 +73,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = builder.getBaseQuery() + " where a.status.id = :statusid";
+        String expectedQuery = builder.getBaseQuery() + " where a.status.id = :statusid" + builder.getBaseOrder();
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("statusid", 1L);
 
@@ -92,7 +92,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
                                 ":personid0 member of a.journalists or " +
                                 ":personid0 member of a.photographers ) and ( " +
                                 ":personid1 member of a.journalists or " +
-                                ":personid1 member of a.photographers )";
+                                ":personid1 member of a.photographers )"  + builder.getBaseOrder();
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("personid0", 594L);
         expectedMap.put("personid1", 1337L);
@@ -107,7 +107,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = builder.getBaseQuery() + " where a.type.id = :secid";
+        String expectedQuery = builder.getBaseQuery() + " where a.section.id = :secid" + builder.getBaseOrder();
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("secid", 31337L);
 
@@ -121,7 +121,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = builder.getBaseQuery() + " where a.publication.id = :pubid";
+        String expectedQuery = builder.getBaseQuery() + " where a.publication.id = :pubid" + builder.getBaseOrder();
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("pubid", 2L);
 
@@ -142,8 +142,8 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
                                 ":personid0 member of a.photographers ) and ( " +
                                 ":personid1 member of a.journalists or " +
                                 ":personid1 member of a.photographers ) and " +
-                                "a.type.id = :secid and " +
-                                "a.publication.id = :pubid";
+                                "a.section.id = :secid and " +
+                                "a.publication.id = :pubid" + builder.getBaseOrder();
 
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("free", "%kombinert test%");

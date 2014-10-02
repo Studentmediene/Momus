@@ -19,11 +19,6 @@ package no.dusken.momus.service.repository;
 import no.dusken.momus.model.Publication;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Date;
-import java.util.List;
-
 public interface PublicationRepository extends JpaRepository<Publication, Long> {
-
-    public List<Publication> findByReleaseDateBetween(Date startTime, Date endTime);
 
 }

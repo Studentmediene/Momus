@@ -16,14 +16,8 @@
 
 package no.dusken.momus.service;
 
-import no.dusken.momus.model.Article;
-import no.dusken.momus.model.ArticleStatus;
-import no.dusken.momus.model.Person;
-import no.dusken.momus.model.Publication;
-import no.dusken.momus.service.repository.ArticleRepository;
-import no.dusken.momus.service.repository.ArticleStatusRepository;
-import no.dusken.momus.service.repository.PersonRepository;
-import no.dusken.momus.service.repository.PublicationRepository;
+import no.dusken.momus.model.*;
+import no.dusken.momus.service.repository.*;
 import no.dusken.momus.service.search.ArticleSearchParams;
 import no.dusken.momus.test.AbstractTestRunner;
 import org.junit.Before;
@@ -52,6 +46,12 @@ public class ArticleServiceTest extends AbstractTestRunner {
     ArticleStatusRepository articleStatusRepository;
 
     @Autowired
+    ArticleTypeRepository articleTypeRepository;
+
+    @Autowired
+    ArticleRevisionRepository articleRevisionRepository;
+
+    @Autowired
     ArticleService articleService;
 
     private Article article1;
@@ -59,11 +59,12 @@ public class ArticleServiceTest extends AbstractTestRunner {
     private Article article3;
     private Article article4;
 
+
     @Before
     public void setUp() throws Exception {
-        Person person1 = new Person(1L, null, null, "mts", "Mats", "Matsessen", "", "", true);
-        Person person2 = new Person(2L, null, null, "aaa", "Kåre", "Kåressen", "", "", true);
-        Person person3 = new Person(2L, null, null, "aaa", "Kåre", "Kåressen", "", "", true);
+        Person person1 = new Person(1L, "mts", "Mats", "Matsessen", "", "", true);
+        Person person2 = new Person(2L, "aaa", "Kåre", "Kåressen", "", "", true);
+        Person person3 = new Person(3L, "bbb", "Flaks", "Flaksesen", "", "", true);
 
         person1 = personRepository.save(person1);
         person2 = personRepository.save(person2);
@@ -91,7 +92,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article1journalists.add(person2);
         article1.setJournalists(article1journalists);
         article1.setPublication(publication1);
-        article1 = articleRepository.save(article1);
+        article1 = articleRepository.saveAndFlush(article1);
 
 
 
@@ -139,13 +140,64 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
 
     @Test
-    public void testSaveArticle() throws Exception {
+    public void testSaveArticleUpdates() throws Exception {
+        // Todo: Mock user and date
+    }
 
+
+
+    @Test
+    public void testSaveArticleMetadata() throws Exception {
+        Article article = new Article(article1.getId());
+        ArticleStatus articleStatus1 = articleStatusRepository.save(new ArticleStatus("Desk"));
+        ArticleType articleType1 = articleTypeRepository.save(new ArticleType("KulturRaport"));
+        Publication publication1 = new Publication();
+        publication1.setName("testpublication");
+        publication1.setReleaseDate(new Date(114, 5, 5));
+        publication1 = publicationRepository.save(publication1);
+
+        Set<Person> journalists = new HashSet<>();
+        Set<Person> photographers = new HashSet<>();
+        photographers.add(personRepository.findOne(3L));
+
+        article.setName("Updated name");
+        article.setJournalists(journalists);
+        article.setPhotographers(photographers);
+        article.setContent("NEW CONTENT, SHOULD NOT BE CHANGED!");
+        article.setComment("my cool comment");
+        article.setStatus(articleStatus1);
+        article.setType(articleType1);
+        article.setPublication(publication1);
+
+        article = articleService.saveMetadata(article);
+
+        assertEquals("Updated name", article.getName());
+        assertEquals(0, article.getJournalists().size());
+        assertEquals(1, article.getPhotographers().size());
+        assertEquals("my cool comment", article.getComment());
+        assertEquals(articleStatus1.getName(), article.getStatus().getName());
+        assertEquals(articleType1.getName(), article.getType().getName());
+        assertEquals(publication1.getName(), article.getPublication().getName());
+
+        assertEquals("Testinnhold for artikkel 1 yay", article.getContent());
     }
 
     @Test
-    public void testSaveArticleContents() throws Exception {
+    public void testSaveArticleContentsGeneratesARevision() throws Exception {
+        Article article = new Article(article1.getId());
+        article.setContent("NEW CONTENT for article 1");
 
+        Article updated = articleService.saveNewContent(article);
+
+        assertEquals("NEW CONTENT for article 1", updated.getContent());
+
+        // Fetch the revision
+        List<ArticleRevision> revisions = articleRevisionRepository.findByArticle(updated);
+        assertEquals(1, revisions.size());
+
+        ArticleRevision rev = revisions.get(0);
+        assertEquals("NEW CONTENT for article 1", rev.getContent());
+        assertEquals(new Person(1L), rev.getAuthor());
     }
 
     @Test

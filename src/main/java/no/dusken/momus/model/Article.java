@@ -40,8 +40,14 @@ public class Article {
     @Column(length = 40960)
     private String note;
 
+    @Column(length = 1024)
+    private String comment;
+
     @Transient
     private int contentLength;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Section section;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private ArticleStatus status;
@@ -65,6 +71,9 @@ public class Article {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdated;
 
+    private String photoStatus;
+
+
     /**
      * This is done after load instead of in a getter, since
      * it may happen that the content is set to empty to save bandwith/hide it, but
@@ -73,6 +82,14 @@ public class Article {
     @PostLoad
     private void calculateContentLength() {
         contentLength = content.length();
+    }
+
+    public Article() {
+
+    }
+
+    public Article(Long id) {
+        this.id = id;
     }
 
     public Long getId() {
@@ -93,6 +110,14 @@ public class Article {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getPhotoStatus() {
+        return photoStatus;
+    }
+
+    public void setPhotoStatus(String photoStatus) {
+        this.photoStatus = photoStatus;
     }
 
     public int getContentLength() {
@@ -150,4 +175,20 @@ public class Article {
     public Publication getPublication() {return publication; }
 
     public void setPublication(Publication publication) {this.publication = publication; }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Section getSection() {
+        return section;
+    }
+
+    public void setSection(Section section) {
+        this.section = section;
+    }
 }

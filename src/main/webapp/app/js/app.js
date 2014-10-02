@@ -31,40 +31,44 @@ angular.module('momusApp', [
         'momusApp.directives',
         'ngRoute',
         'ui.select2',
-        'ui.bootstrap'
+        'ui.bootstrap',
+        'ui.tree'
     ]).
     config(['$routeProvider', function ($routeProvider) {
         // Admin interfaces
-        $routeProvider.
-            when('/admin/role',
+        $routeProvider
+
+
+            .when('/artikler',
             {
-                templateUrl: 'partials/admin/role.html',
-                controller: 'AdminRoleCtrl'
+                templateUrl: 'partials/search/searchView.html',
+                controller: 'SearchCtrl',
+                reloadOnSearch: false,
+                title: "Artikkelsøk"
             }
         )
-            // Article interfaces
-            .when('/article',
+            .when('/artikler/ny',
             {
-                redirectTo: '/article/1' // TODO: make this go to article search view?
+                templateUrl: 'partials/article/createArticle.html',
+                controller: 'CreateArticleCtrl',
+                title: "NyArtikkel"
             }
         )
-            .when('/article/:id',
+            .when('/artikler/:id',
             {
                 templateUrl: 'partials/article/articleView.html',
                 controller: 'ArticleCtrl'
             }
         )
 
-            // Search interfaces
-            .when('/search',
+            .when('/artikler/revisjon/:id',
             {
-                templateUrl: 'partials/search/searchView.html',
-                controller: 'SearchCtrl'
+                templateUrl: 'partials/article/articleRevisionView.html',
+                controller: 'ArticleRevisionCtrl'
             }
         )
 
-            // Publications (utgaver) interfaces
-            .when('/publications',
+            .when('/utgaver',
             {
                 templateUrl: 'partials/publication/publicationView.html',
                 controller: 'PublicationCtrl',
@@ -76,12 +80,13 @@ angular.module('momusApp', [
             .when('/disposition/:id',
             {
                 templateUrl: 'partials/disposition/dispositionView.html',
-                controller: 'DispositionCtrl'
+                controller: 'DispositionCtrl',
+                title: "Disposisjon"
             }
         )
 
             // Sources
-            .when('/sources',
+            .when('/kilder',
             {
                 templateUrl: 'partials/source/search.html',
                 controller: 'SourceSearchCtrl',
@@ -89,24 +94,29 @@ angular.module('momusApp', [
                 title: "Kilder"
             }
         )
-            .when('/sources/new',
+            .when('/kilder/ny',
             {
                 templateUrl: 'partials/source/edit.html',
                 controller: 'SourceEditCtrl',
                 title: "Ny kilde"
             }
         )
-            .when('/sources/tags',
+            .when('/kilder/tags',
             {
                 templateUrl: 'partials/source/tags.html',
                 controller: 'SourceTagsCtrl',
                 title: "Rediger kildetags"
             }
         )
-            .when('/sources/:id',
+            .when('/kilder/:id',
             {
                 templateUrl: 'partials/source/edit.html',
                 controller: 'SourceEditCtrl'
+            }
+        )
+            .when('/', {
+                templateUrl: 'partials/front/frontPageView.html',
+                controller: 'FrontPageCtrl'
             }
         )
 

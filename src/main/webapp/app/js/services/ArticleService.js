@@ -17,64 +17,47 @@
 'use strict';
 
 angular.module('momusApp.services')
-    .service('ArticleService', function($http){
+    .service('ArticleService', function ($http) {
         return {
-            updateObject: function(obj) {
-                // When the server receives this object,
-                // it will overwrite the server data for each listed field and leave the others unchanged
-                return {
-                    "object": obj,
-                    "updated_fields": []
-                };
+            // Getting stuff
+            getArticle: function (id) {
+                return $http.get('/api/article/' + id);
             },
-            updateArticle: function (updates, scope, success) {
-                $http.put('/api/article/update', updates)
-                    .success( function (data) {
-                        angular.forEach(updates.updated_fields, function(field) {
-                            scope.original[field] = angular.copy(data[field]);
-                        });
-                        success();
-                    }
-                )
-                    .error( function () {
-                        alert("Error!");
-                    }
-                );
+            search: function(searchObject) {
+                return $http.post('/api/article/search', searchObject);
             },
-            getArticle: function(id, success) {
-                $http.get('/api/article/' + id)
-                    .success( function(data) {
-                        success(data);
-                    }
-                );
+            getRevisions: function(id) {
+                return $http.get('/api/article/' + id + '/revisions');
             },
-            getPerson: function(id, success) {
-                $http.get('/api/person/' + id)
-                    .success( function (data) {
-                        success(data);
-                    }
-                );
+
+            // Editing stuff
+            updateMetadata: function (article) {
+                return $http.put('/api/article/metadata', article);
             },
-            listOfPersonsContainsID: function(list, id) {
-                for (var i = 0; i < list.length; i++) {
-                    // Note that this compares the object's integer ID to the string id
-                    if (list[i].id == id) {
-                        return true;
-                    }
-                }
-                return false;
+
+            updateContent: function (article) {
+                return $http.put('/api/article/content', article);
             },
-            removeFromArray: function(array, object) {
-                var index = array.indexOf(object);
-                if (index > -1) {
-                    array.splice(index, 1);
-                }
+
+            updateNote: function(article) {
+                return $http.put('/api/article/note', article);
             },
-            changed: function(object, scope) {
-                return !angular.equals(scope.article[object], scope.original[object]);
+            createNewArticle: function (article) {
+                return $http.post('/api/article', article);
             },
-            revert: function(object, scope) {
-                scope.article[object] = angular.copy(scope.original[object]);
+
+
+            // Getting metadata, cache everything
+            getTypes: function() {
+                return $http.get('/api/article/types', {cache: true});
+            },
+
+            getStatuses: function() {
+                return $http.get('/api/article/statuses', {cache: true});
+            },
+
+            getSections: function() {
+                return $http.get('/api/article/sections', {cache: true});
             }
         }
     });

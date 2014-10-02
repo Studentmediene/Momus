@@ -71,15 +71,14 @@ angular.module('momusApp.controllers')
         }
 
         function updateSearchParametersFromUrl() {
-            if ($location.search().name) {
-                $scope.search.name = $location.search().name;
-            }
-            if ($location.search().freetext) {
-                $scope.search.freetext = $location.search().freetext;
-            }
+            var s = $location.search();
 
-            if ($location.search().tags) {
-                $scope.search.tags = $location.search().tags;
+            for (var key in s) {
+                var value = s[key];
+
+                if (value) {
+                    $scope.search[key] = value;
+                }
             }
 
         }
@@ -90,7 +89,18 @@ angular.module('momusApp.controllers')
             });
 
             $scope.$watch('search', function (newValue) {
-                $location.search(newValue).replace();
+                for (var key in newValue) {
+                    var value = newValue[key];
+
+                    if (value) {
+                        $location.search(key, value);
+                    } else {
+                        $location.search(key, null);
+                    }
+                }
+
+                $location.replace();
+
             }, true);
         }
 

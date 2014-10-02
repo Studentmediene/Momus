@@ -14,22 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * Copyright 2013 Studentmediene i Trondheim AS
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 /* app css stylesheet */
 
 body {
@@ -37,13 +21,14 @@ body {
     padding-bottom: 50px;
 }
 
+/* Removes padding when priting to avoid blank space*/
+@media print {
+    body {
+        padding-top: 0px;
+    }
 
+}
 
-/*textarea {*/
-    /*width: 100%;*/
-    /*box-sizing: border-box;*/
-    /*-moz-box-sizing: border-box;*/
-/*}*/
 textarea.article {
     height: 500px;
 }
@@ -71,10 +56,192 @@ textarea.note {
     cursor: pointer;
 }
 
-/* So that browsers doesn't display an outline around clicked links */
+.select2-container {
+    width: 100%;
+}
+
+#meta-panel id-select .select2-search-choice,
+#meta-panel id-select .select2-search-field {
+    clear: both;
+}
+
+/* So that browsers doesn't display an outline around clicked links and stuff */
 a:focus {
     outline: 0;
 }
 
+.btn:focus {
+    outline: 0;
+}
+
+.editor-toolbar .btn-group {
+    margin: 0 5px 10px 0;
+}
+
 /* used for ui-bootstrap */
-.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+.nav, .pagination, .carousel, .panel-title a {
+    cursor: pointer;
+}
+
+td.articleHover:hover {
+    cursor: pointer;
+    background-color: #d9edf7;
+
+}
+
+#articleSearchInterface .row > div {
+    margin-bottom: 10px;
+}
+
+td > ul, td > ol {
+    margin-bottom: 0;
+}
+
+/* Used in disposition to move (drag and drop) pages */
+.angular-ui-tree {
+
+}
+
+.angular-ui-tree-empty {
+    border: 1px dashed #bbb;
+    min-height: 100px;
+    background-color: #e5e5e5;
+    background-image: -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image: -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image: linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px;
+}
+
+.angular-ui-tree-nodes {
+    /*display: block;*/
+    position: relative;
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+
+.angular-ui-tree-nodes .angular-ui-tree-nodes {
+    padding-left: 20px;
+}
+
+.angular-ui-tree-node, .angular-ui-tree-placeholder {
+    position: relative;
+    margin: 0px;
+    padding: 0px;
+    min-height: 20px;
+    line-height: 20px;
+}
+
+.angular-ui-tree-hidden {
+    display: none;
+}
+
+.angular-ui-tree-placeholder {
+    display: table-row;
+    white-space: nowrap;
+    height: 100px;
+    margin: 5px 0;
+    padding: 0;
+    min-height: 30px;
+}
+
+.angular-ui-tree-handle {
+    cursor: move;
+    text-decoration: none;
+    font-weight: bold;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    min-height: 20px;
+    line-height: 20px;
+}
+
+.angular-ui-tree-drag {
+    position: absolute;
+    pointer-events: none;
+    z-index: 999;
+    opacity: .8;
+}
+
+.angular-ui-tree-drag tr td {
+    display: none;
+}
+
+.angular-ui-tree-drag .pageNr {
+    display: table-cell;
+    height: 58px;
+}
+
+/*Disposition, highlight selected Page*/
+.selectedPage {
+    background-color: #b9def0;
+}
+
+/* quoteCheck button effects */
+a.zeroclipboard-is-hover {
+    background-color: #3071a9;
+}
+
+/* Login form */
+
+
+#loginForm {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1040; /* above the navbar */
+
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #eee;
+}
+
+#loginForm .inner {
+    background-color: #eee;
+    height: 100%;
+    overflow: auto;
+}
+
+.form-signin {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 10px;
+}
+
+.form-signin .checkbox {
+    font-weight: normal;
+}
+
+.form-signin .form-control {
+    position: relative;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+
+.form-signin input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}

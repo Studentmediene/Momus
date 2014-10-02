@@ -17,19 +17,155 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function ($scope, $routeParams, ArticleService) {
+    .controller('ArticleCtrl', function ($scope, PersonService,$timeout, ArticleService, PublicationService, TitleChanger, noteParserRules, articleParserRules, $routeParams) {
+        $scope.metaEditMode = false;
+        $scope.noteRules = noteParserRules;
+        $scope.articleRules = articleParserRules;
 
-        // The scope of this controller is the entire article view.
-        // There are sub-controllers for the different panels
-        // that access the $scope of this controller
-
-        // Create these objects ASAP so that the console won't complain.
-        $scope.article = { content: "" };
-        $scope.original = { content: "" };
-
-        ArticleService.getArticle( $routeParams.id, function (data) {
-            $scope.article = angular.copy(data);
-            $scope.original = angular.copy(data);
+        PersonService.getAll().success(function(data) {
+           $scope.persons = data;
         });
-    });
 
+        ArticleService.getArticle($routeParams.id).success(function (data) {
+            $scope.article = data;
+            $scope.unedited = angular.copy(data);
+
+            TitleChanger.setTitle($scope.article.name);
+        });
+
+        ArticleService.getTypes().success(function (data) {
+            $scope.types = data;
+        });
+
+        ArticleService.getStatuses().success(function (data) {
+            $scope.statuses = data;
+        });
+
+        ArticleService.getSections().success(function (data) {
+            $scope.sections = data;
+        });
+
+
+
+        /* content panel */
+        $scope.saveContent = function () {
+            $scope.savingContent = true;
+            ArticleService.updateContent($scope.article).success(function (data) {
+                $scope.article.content = data.content;
+                $scope.unedited.content = data.content;
+                $scope.savingContent = false;
+
+            });
+
+        };
+
+        /* note panel */
+        $scope.saveNote = function () {
+            $scope.savingNote = true;
+            ArticleService.updateNote($scope.article).success(function (data) {
+                $scope.article.note = data.note;
+                $scope.unedited.note = data.note;
+                $scope.savingNote = false;
+            });
+        };
+
+        /* meta panel */
+        $scope.metaClicked = function() {
+            if ($scope.metaEditMode) {
+                $scope.saveMeta();
+            } else {
+                $scope.editMeta();
+            }
+        };
+
+        $scope.saveMeta = function() {
+            $scope.savingMeta = true;
+            ArticleService.updateMetadata($scope.metaEditing).success(function(data) {
+                data.content = $scope.article.content;
+                data.note = $scope.article.note;
+                $scope.article = data;
+                $scope.unedited = angular.copy(data);
+                $scope.savingMeta = false;
+                $scope.metaEditMode = false;
+
+                TitleChanger.setTitle($scope.article.name);
+            });
+
+        };
+
+        $scope.editMeta = function() {
+            $scope.metaEditMode = true;
+            $scope.metaEditing = angular.copy($scope.article);
+
+            if (!$scope.publications) {
+                PublicationService.getAll().success(function (data) {
+                    $scope.publications = data;
+                });
+            }
+        };
+
+        $scope.cancelMeta = function() {
+            $scope.metaEditMode = false;
+        };
+
+        $scope.$on('$locationChangeStart', function(event){
+            if(promptCondition()){
+                if(!confirm("Er du sikker på at du vil forlate siden? Det finnes ulagrede endringer.")){
+                    event.preventDefault();
+                }
+            }
+        });
+
+        window.onbeforeunload = function(){
+            if(promptCondition()){
+                return "Det finnes ulagrede endringer.";
+            }
+        };
+
+        $scope.$on('$destroy', function() {
+            window.onbeforeunload = undefined;
+        });
+
+        function promptCondition() {
+            return $scope.unedited.content != $scope.article.content || $scope.metaEditMode == true || $scope.unedited.note != $scope.article.note;
+        }
+
+
+
+        $scope.quoteCheck = function(zc){
+
+            $scope.copying = true;
+
+            var qcMessage = "Dette er en sitatgjennomgang fra studentavisa Under Dusken i Trondheim. <br />" +
+                "Endring av avgitte uttalelser bør begrenses til korrigering av faktiske feil " +
+                "(jf. Vær Varsom-plakatens §3.8).<br /><br />";
+
+            var qcArticle = $scope.article.content;
+            var qcAuthor = "";
+            var qcRed = "<br />Studentavisa Under Dusken <br /> Ansvarlig redaktør Fornavn Etternavn - mail@mail.com";
+
+            if($scope.article.journalists.length){
+                for(var i = 0; i < $scope.article.journalists.length;i++) {
+                    qcAuthor +=
+                        $scope.article.journalists[i].full_name + " - " +
+                        $scope.article.journalists[i].email + "<br />";
+                }
+            } else {
+                qcAuthor = "Under Dusken";
+            }
+
+            var qcEmail =
+                qcMessage +
+                qcArticle +
+                "Med vennlig hilsen <br />" +
+                qcAuthor +
+                qcRed
+            ;
+            zc.setHtml(qcEmail);
+
+
+            $timeout(function() {
+                $scope.copying = false;
+            }, 0);
+        };
+    });
