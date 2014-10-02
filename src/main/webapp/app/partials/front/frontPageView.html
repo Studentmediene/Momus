@@ -22,7 +22,7 @@
                     <span class="fa fa-file-text-o"></span>
                     Mine ti siste artikler
                     <div class="pull-right">
-                        <a href="#/artikler?persons={{user.id}}">Vis alle</a>
+                        <a href="#/artikler?persons={{user.id}}">Vis flere</a>
                     </div>
                 </h1>
             </div>
@@ -50,7 +50,7 @@
                         <tr ng-repeat="article in myArticles | limitTo:10">
                                 <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
                                 <td>{{article.content_length}}</td>
-                                <td>{{article.status}}</td>
+                                <td>{{article.status.name}}</td>
                                 <td>{{article.section.name}}</td>
                                 <td>{{article.publication.name}}</td>
                                 <td><a href="#/artikler/{{article.id}}">Åpne</a></td>
