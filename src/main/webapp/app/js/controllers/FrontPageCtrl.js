@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules) {
+    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService) {
         $scope.noteRules = noteParserRules;
 
         NoteService.getNote().success(function (data) {
@@ -33,6 +33,15 @@ angular.module('momusApp.controllers')
                 $scope.savingNote = false;
             });
         };
+
+        $scope.loadingArticles = true;
+        PersonService.getCurrentUser().success(function(user){
+            $scope.user = user;
+            ArticleService.search({"persons": [user.id]}).success(function (articles) {
+                $scope.loadingArticles = false;
+                $scope.myArticles = articles;
+            });
+        });
 
         $scope.$on('$locationChangeStart', function (event) {
             if (promptCondition()) {
