@@ -2,7 +2,7 @@ angular.module('momusApp.directives')
     .directive('idSelect', function() {
         return {
             restrict: 'E',
-            templateUrl: '/app/partials/templates/idSelect.html',
+            templateUrl: 'partials/templates/idSelect.html',
             scope: {
                 items: '=',
                 target: '=',
