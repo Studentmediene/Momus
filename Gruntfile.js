@@ -160,6 +160,16 @@ module.exports = function (grunt) {
                         dest: dist + '/css'
                     }
                 ]
+            },
+            zeroClipboardSWF: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: app + '/libs/zeroclipboard/dist',
+                        src: ['ZeroClipboard.swf'],
+                        dest: dist + '/js'
+                    }
+                ]
             }
         },
         ngmin: {
