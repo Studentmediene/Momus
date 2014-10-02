@@ -230,8 +230,8 @@ public class DevController {
     }
     @RequestMapping ("/articleTypes")
             public @ResponseBody String articleTypes(){
-        articleTypeRepository.save(new ArticleType("KulturRaport"));
-        articleTypeRepository.save(new ArticleType("Anmeldelse"));
+        articleTypeRepository.save(new ArticleType("KulturRaport", ""));
+        articleTypeRepository.save(new ArticleType("Anmeldelse", ""));
 
         return "ok";
     }
@@ -241,15 +241,15 @@ public class DevController {
     @RequestMapping("/test4")
     public @ResponseBody String test4() {
 
-        ArticleStatus s1 = articleStatusRepository.save(new ArticleStatus("Planlagt"));
-        ArticleStatus s2 = articleStatusRepository.save(new ArticleStatus("Skrives"));
-        ArticleStatus s3 = articleStatusRepository.save(new ArticleStatus("Korrektur"));
-        ArticleStatus s4 = articleStatusRepository.save(new ArticleStatus("Publisert"));
+        ArticleStatus s1 = articleStatusRepository.save(new ArticleStatus("Planlagt", ""));
+        ArticleStatus s2 = articleStatusRepository.save(new ArticleStatus("Skrives", ""));
+        ArticleStatus s3 = articleStatusRepository.save(new ArticleStatus("Korrektur", ""));
+        ArticleStatus s4 = articleStatusRepository.save(new ArticleStatus("Publisert", ""));
 
-        ArticleType t1 = articleTypeRepository.save(new ArticleType("Anmeldelse"));
-        ArticleType t2 = articleTypeRepository.save(new ArticleType("Nyhetsartikkel"));
-        ArticleType t3 = articleTypeRepository.save(new ArticleType("Reportasje"));
-        ArticleType t4 = articleTypeRepository.save(new ArticleType("Debattinnlegg"));
+        ArticleType t1 = articleTypeRepository.save(new ArticleType("Anmeldelse", ""));
+        ArticleType t2 = articleTypeRepository.save(new ArticleType("Nyhetsartikkel", ""));
+        ArticleType t3 = articleTypeRepository.save(new ArticleType("Reportasje", ""));
+        ArticleType t4 = articleTypeRepository.save(new ArticleType("Debattinnlegg", ""));
 
         Publication p1 = new Publication();
         p1.setName("12-2014");
@@ -462,19 +462,19 @@ public class DevController {
         sectionRepository.save(new Section("Annet"));
 
 
-        articleTypeRepository.save(new ArticleType("Anmeldelse"));
-        articleTypeRepository.save(new ArticleType("Nyhetsartikkel"));
-        articleTypeRepository.save(new ArticleType("Kulturartikkel"));
-        articleTypeRepository.save(new ArticleType("Kulturtegn"));
-        articleTypeRepository.save(new ArticleType("Reportasje"));
+        articleTypeRepository.save(new ArticleType("Anmeldelse", ""));
+        articleTypeRepository.save(new ArticleType("Nyhetsartikkel", ""));
+        articleTypeRepository.save(new ArticleType("Kulturartikkel", ""));
+        articleTypeRepository.save(new ArticleType("Kulturtegn", ""));
+        articleTypeRepository.save(new ArticleType("Reportasje", ""));
 
 
-        articleStatusRepository.save(new ArticleStatus("Ukjent"));
-        articleStatusRepository.save(new ArticleStatus("Planlagt"));
-        articleStatusRepository.save(new ArticleStatus("Skrives"));
-        articleStatusRepository.save(new ArticleStatus("Korrektur"));
-        articleStatusRepository.save(new ArticleStatus("Deskes"));
-        articleStatusRepository.save(new ArticleStatus("Publisert"));
+        articleStatusRepository.save(new ArticleStatus("Ukjent", "#fff"));
+        articleStatusRepository.save(new ArticleStatus("Planlagt", "#eee"));
+        articleStatusRepository.save(new ArticleStatus("Skrives", "#aaf"));
+        articleStatusRepository.save(new ArticleStatus("Korrektur", "#faa"));
+        articleStatusRepository.save(new ArticleStatus("Deskes", "#afa"));
+        articleStatusRepository.save(new ArticleStatus("Publisert", "#0f0"));
 
 
         return "created sections, types and statuses";

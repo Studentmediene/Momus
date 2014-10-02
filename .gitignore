@@ -4,6 +4,7 @@
 *.iws
 .idea/
 atlassian-ide-plugin.xml
+npm-debug.log
 
 log/
 database/

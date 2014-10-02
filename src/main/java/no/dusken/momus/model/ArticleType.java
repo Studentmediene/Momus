@@ -30,10 +30,12 @@ public class ArticleType {
     private String name;
     private String description;
 
-    public ArticleType(){}
+    public ArticleType() {
+    }
 
-    public ArticleType( String name ){
+    public ArticleType(String name, String description) {
         this.name = name;
+        this.description = description;
     }
 
 
