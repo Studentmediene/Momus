@@ -22,7 +22,7 @@
 
     <groupId>no.dusken.momus</groupId>
     <artifactId>momus</artifactId>
-    <version>0.1.2-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <!-- Some boilerplate info -->
