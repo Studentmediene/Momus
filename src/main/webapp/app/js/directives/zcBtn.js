@@ -20,14 +20,12 @@ angular.module('momusApp.directives').
     directive('zcBtn', function() {
         return {
             restrict: 'A',
-            scope: {
-                callback: '=zcBtn'
-            },
             link: function (scope, element, attrs) {
 
                 var zc = new ZeroClipboard(element);
                 zc.on('copy',function(){
-                    scope.callback(zc);
+                    // call the correct function on the parent scope
+                    scope[attrs['zcBtn']](zc);
                 });
 
 

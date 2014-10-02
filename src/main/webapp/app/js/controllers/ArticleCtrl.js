@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function ($scope, PersonService, ArticleService, PublicationService, TitleChanger, noteParserRules, articleParserRules, $routeParams) {
+    .controller('ArticleCtrl', function ($scope, PersonService,$timeout, ArticleService, PublicationService, TitleChanger, noteParserRules, articleParserRules, $routeParams) {
         $scope.metaEditMode = false;
         $scope.noteRules = noteParserRules;
         $scope.articleRules = articleParserRules;
@@ -131,7 +131,11 @@ angular.module('momusApp.controllers')
         }
 
 
+
         $scope.quoteCheck = function(zc){
+
+            $scope.copying = true;
+
             var qcMessage = "Dette er en sitatgjennomgang fra studentavisa Under Dusken i Trondheim. <br />" +
                 "Endring av avgitte uttalelser bør begrenses til korrigering av faktiske feil " +
                 "(jf. Vær Varsom-plakatens §3.8).<br /><br />";
@@ -158,5 +162,10 @@ angular.module('momusApp.controllers')
                 qcRed
             ;
             zc.setHtml(qcEmail);
+
+
+            $timeout(function() {
+                $scope.copying = false;
+            }, 0);
         };
     });
