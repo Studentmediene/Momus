@@ -149,8 +149,8 @@ public class ArticleServiceTest extends AbstractTestRunner {
     @Test
     public void testSaveArticleMetadata() throws Exception {
         Article article = new Article(article1.getId());
-        ArticleStatus articleStatus1 = articleStatusRepository.save(new ArticleStatus("Desk"));
-        ArticleType articleType1 = articleTypeRepository.save(new ArticleType("KulturRaport"));
+        ArticleStatus articleStatus1 = articleStatusRepository.save(new ArticleStatus("Desk", ""));
+        ArticleType articleType1 = articleTypeRepository.save(new ArticleType("KulturRaport", ""));
         Publication publication1 = new Publication();
         publication1.setName("testpublication");
         publication1.setReleaseDate(new Date(114, 5, 5));
