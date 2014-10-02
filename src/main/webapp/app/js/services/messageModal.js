@@ -22,7 +22,7 @@ angular.module('momusApp.services')
         function showModal(color, heading, content, callback) {
             var config = {
                 template: '<form>\n<div class="panel panel-{{color}}" style="margin: 0px">\n    <div class="panel-heading" style="padding: 20px">\n        <h4 class="modal-title">{{heading}}</h4>\n    </div>\n    <div class="modal-body">\n        <p ng-bind-html="content|trustHtml"></p>\n    </div>\n    <div class="modal-footer" style="margin-top: 0px"><button type="submit" class="btn btn-default" ng-click="closeAction()">Ok</button> </div>\n</div>\n</form>',
-                controller: function($scope, $modalInstance) {
+                controller: ['$scope', '$modalInstance', function($scope, $modalInstance) {
                     $scope.content = content;
                     $scope.color = color;
                     $scope.heading = heading;
@@ -36,7 +36,7 @@ angular.module('momusApp.services')
                     }
 
 
-                }
+                }]
 
             };
 
