@@ -26,6 +26,7 @@ import no.dusken.momus.service.repository.ArticleRevisionRepository;
 import no.dusken.momus.service.search.ArticleSearchParams;
 import no.dusken.momus.service.repository.ArticleStatusRepository;
 import no.dusken.momus.service.repository.ArticleTypeRepository;
+import no.dusken.momus.diff.DiffUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +49,9 @@ public class ArticleController {
 
     @Autowired
     private ArticleRevisionRepository articleRevisionRepository;
+
+    @Autowired
+    private DiffUtil diffUtil;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody Article getArticleByID(@PathVariable("id") Long id) {
@@ -73,6 +77,11 @@ public class ArticleController {
     @RequestMapping(value = "/{id}/revisions", method = RequestMethod.GET)
     public @ResponseBody List<ArticleRevision> getArticleRevisions(@PathVariable("id") Long id) {
         return articleRevisionRepository.findByArticle_Id(id);
+    }
+
+    @RequestMapping(value = "/{id}/revisions/{id1}/{id2}", method = RequestMethod.GET)
+    public @ResponseBody String getRevisionsDiffs(@PathVariable("id") Long id, @PathVariable("id1") Long id1, @PathVariable("id2") Long id2) {
+        return diffUtil.getDiffString(id, id1, id2);
     }
 
     @RequestMapping(value = "/types", method = RequestMethod.GET)

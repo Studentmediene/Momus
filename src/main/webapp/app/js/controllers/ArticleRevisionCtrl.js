@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleRevisionCtrl', function($scope, ArticleService, $routeParams, $log){
+    .controller('ArticleRevisionCtrl', function($scope, ArticleService, $routeParams){
         ArticleService.getRevisions($routeParams.id).success(function (data){
             $scope.revisions = data;
             $scope.current = data[data.length - 1];
@@ -35,6 +35,15 @@ angular.module('momusApp.controllers')
 
         $scope.showCompare = function(){
             $scope.showBoxes = !$scope.showBoxes;
+            $scope.getDiffs();
+        };
+
+        $scope.getDiffs = function(){
+            ArticleService.getDiffs($scope.article.id, $scope.compare[0], $scope.compare[1]).success(function (data){
+                $scope.diff = data;
+                $scope.diff = $scope.diff.slice(1,$scope.diff.length-1);
+                $scope.diff = $scope.diff.replace(/\\/g,"");
+            });
         };
 
     });
