@@ -127,7 +127,7 @@ angular.module('momusApp.controllers')
         });
 
         function promptCondition() {
-            return $scope.unedited.content != $scope.article.content || $scope.metaEditMode == true || $scope.unedited.note != $scope.article.note;
+            return $scope.unedited.content != $scope.article.content || $scope.metaEditMode === true || $scope.unedited.note != $scope.article.note;
         }
 
 

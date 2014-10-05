@@ -39,7 +39,7 @@ angular.module('momusApp.controllers')
             $http.put('/api/source', $scope.source).success(function (data) {
                 setSource(data);
                 $scope.isLoading = false;
-            })
+            });
         };
 
         $scope.back = function () {
@@ -70,7 +70,7 @@ angular.module('momusApp.controllers')
             $scope.source = source;
             TitleChanger.setTitle(source.name + ' - Kilder');
             $scope.source.tags = source.tags.map(function (e) {
-                return e.tag
+                return e.tag;
             });
         }
 

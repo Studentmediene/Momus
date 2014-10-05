@@ -28,5 +28,5 @@ angular.module('momusApp.services')
             updateMetadata: function(publication) {
                 return $http.put('/api/publication/metadata/' + publication.id, publication);
             }
-        }
+        };
     });

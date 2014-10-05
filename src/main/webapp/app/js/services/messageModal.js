@@ -33,7 +33,7 @@ angular.module('momusApp.services')
                         if (callback) {
                             callback();
                         }
-                    }
+                    };
 
 
                 }]
@@ -46,7 +46,7 @@ angular.module('momusApp.services')
 
         return {
             info: function(content, callback) {
-                showModal('info', 'Info', content, callback)
+                showModal('info', 'Info', content, callback);
             },
 
             success: function(content, callback) {
@@ -62,5 +62,5 @@ angular.module('momusApp.services')
 
                 showModal('danger', 'Noe gikk feil', content, callback);
             }
-        }
+        };
     });
