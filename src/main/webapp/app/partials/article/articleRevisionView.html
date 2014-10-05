@@ -20,8 +20,8 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="rev in revisions | orderBy: '-saved_date'" ng-click="gotoRev(rev)" ng-class="{active: rev == current}" class="interact">
-                            <td ng-show="showBoxes"><input type="radio" name="box1" ng-model="$parent.compare[0]" ng-value="$index" ng-change="getDiffs()"></td>
-                            <td ng-show="showBoxes"><input type="radio" name="box2" ng-model="$parent.compare[1]" ng-value="$index" ng-change="getDiffs()"></td>
+                            <td ng-show="showBoxes"><input type="radio" name="box1" ng-model="$parent.compare[0]" ng-value="rev.id-1" ng-change="getDiffs()"></td>
+                            <td ng-show="showBoxes"><input type="radio" name="box2" ng-model="$parent.compare[1]" ng-value="rev.id-1" ng-change="getDiffs()"></td>
                             <td>{{rev.author.first_name}} {{rev.author.last_name}}</td>
                             <td>{{rev.saved_date | date:"dd/MM/yy HH:mm"}}</td>
                         </tr>

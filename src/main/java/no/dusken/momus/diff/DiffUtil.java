@@ -29,8 +29,37 @@ public class DiffUtil {
 
         LinkedList<DiffMatchPatch.Diff> diffs = diffMatchPatch.diff_main(oldText, newText, false);
         diffMatchPatch.diff_cleanupSemantic(diffs);
+        diffs = cleanUpDiffs(diffs);
         String diffText = diffMatchPatch.diff_prettyHtml(diffs);
 
         return tagToUnicodeConverter.addTags(diffText);
+    }
+
+    public LinkedList<DiffMatchPatch.Diff> cleanUpDiffs(LinkedList<DiffMatchPatch.Diff> diffs){
+        for (int i = 0; i < diffs.size();i++) {
+            if(diffs.get(i).operation == DiffMatchPatch.Operation.DELETE || diffs.get(i).operation == DiffMatchPatch.Operation.INSERT){
+                for ( int j = 0; j < diffs.get(i).text.length();j++){
+                    if((int) diffs.get(i).text.toCharArray()[j] >=44035){
+                        int endOld = j;
+                        DiffMatchPatch.Diff tags = new DiffMatchPatch.Diff(DiffMatchPatch.Operation.EQUAL, "");
+                        for( int a = j; a<diffs.get(i).text.length();a++){
+                            if((int) diffs.get(i).text.toCharArray()[a] >=44035){
+                                tags.text += diffs.get(i).text.toCharArray()[j];
+                                j++;
+                            }else{
+                                break;
+                            }
+                        }
+                        DiffMatchPatch.Diff etter = new DiffMatchPatch.Diff(diffs.get(i).operation, diffs.get(i).text.substring(j));
+                        diffs.get(i).text = diffs.get(i).text.substring(0, endOld);
+                        diffs.add(i+1, tags);
+                        diffs.add(i+2, etter);
+                        i+=2;
+
+                    }
+                }
+            }
+        }
+        return diffs;
     }
 }

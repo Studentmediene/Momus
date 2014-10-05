@@ -29,6 +29,8 @@ public class TagToUnicodeConverter {
 
     private void setUpTags() {
         int unicodeChar = 44032;
+        tagsAndReplacement.put("<span>", unicodeChar++);
+        tagsAndReplacement.put("</span>", unicodeChar++);
         tagsAndReplacement.put("<h1>", unicodeChar++);
         tagsAndReplacement.put("</h1>", unicodeChar++);
         tagsAndReplacement.put("<h2>", unicodeChar++);
@@ -48,8 +50,6 @@ public class TagToUnicodeConverter {
         tagsAndReplacement.put("</strike>", unicodeChar++);
         tagsAndReplacement.put("<p>", unicodeChar++);
         tagsAndReplacement.put("</p>", unicodeChar++);
-        tagsAndReplacement.put("<span>", unicodeChar++);
-        tagsAndReplacement.put("</span>", unicodeChar++);
         tagsAndReplacement.put("<ul>", unicodeChar++);
         tagsAndReplacement.put("</ul>", unicodeChar++);
         tagsAndReplacement.put("<ol>", unicodeChar++);
