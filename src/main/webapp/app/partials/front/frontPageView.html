@@ -47,6 +47,12 @@
                             </td>
                         </tr>
 
+                        <tr ng-if="noArticles">
+                            <td colspan="10" style="text-align: center;">
+                                Du har ikke skrevet noen artikler enda
+                            </td>
+                        </tr>
+
                         <tr ng-repeat="article in myArticles | limitTo:10">
                                 <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
                                 <td>{{article.content_length}}</td>

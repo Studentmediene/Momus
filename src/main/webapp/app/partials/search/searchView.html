@@ -126,6 +126,11 @@
                     <i class="fa fa-4x fa-spinner fa-spin"></i>
                 </td>
             </tr>
+            <tr ng-if="noArticles">
+                <td colspan="10" style="text-align: center;">
+                    Ingen artikler stemmer med søket
+                </td>
+            </tr>
             <tr ng-repeat="article in data">
                 <td>
                     <a href="#/artikler/{{ article.id }}">

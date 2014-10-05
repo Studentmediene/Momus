@@ -116,6 +116,9 @@ angular.module('momusApp.controllers')
                 $scope.data = data;
             }).finally(function () {
                 $scope.loading = false;
+                if($scope.data.length <= 0){
+                    $scope.noArticles = true;
+                }
             });
         }
     });
