@@ -56,7 +56,7 @@ angular.module('momusApp.directives').
                     timerId = $timeout(function() {
                         updateModel();
                         startTimer();
-                    }, 500)
+                    }, 500);
                 }
 
                 // cancel the timeout so we don't waste resources when not needed
@@ -71,10 +71,10 @@ angular.module('momusApp.directives').
                 scope.wysihtml5Editor.on('blur', function() {
                     // update one last time in case of changes since last update
                     updateModel();
-                    stopTimer()
+                    stopTimer();
                 });
 
             }
-        }
+        };
     }
 );

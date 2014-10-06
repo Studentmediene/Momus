@@ -111,11 +111,15 @@ angular.module('momusApp.controllers')
         function search() {
             $scope.data = null;
             $scope.loading = true;
+            $scope.noArticles = false;
 
             ArticleService.search($scope.search).success(function (data) {
                 $scope.data = data;
             }).finally(function () {
                 $scope.loading = false;
+                if($scope.data.length <= 0){
+                    $scope.noArticles = true;
+                }
             });
         }
     });

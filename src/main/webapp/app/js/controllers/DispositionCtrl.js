@@ -72,7 +72,7 @@ angular.module('momusApp.controllers')
             $http.put('/api/disp/' + $routeParams.id, $scope.disposition).success(setDisposition);
         }
 
-        function SortPages(){
+        function sortPages(){
             for ( var i = 0; i < pages.length; i++ ) {
                 pages[i].page_nr = i+1;
             }
@@ -101,7 +101,7 @@ angular.module('momusApp.controllers')
             };
             pages.splice(pageIndex,0,newPage);
             pageIndex = pages.indexOf(page);
-            SortPages();
+            sortPages();
 //            saveArticle(); //Saving only through the saveMe button
         };
 
@@ -114,7 +114,7 @@ angular.module('momusApp.controllers')
                 if (pages[i].page_nr == pages.length) {
                     pages.splice(i, 1);
 //                        saveArticle();
-                    return
+                    return;
                 }
             }
         };
@@ -135,9 +135,9 @@ angular.module('momusApp.controllers')
             if (pages[k].articles.length === 0 || confirm("Slette denne siden?")) {
                 pages.splice(k,1);
 
-                for (var i = 0; i < pages.length; i++){
-                    if( pages[i].page_nr > page.page_nr){
-                        pages[i].page_nr -= 1;
+                for (var j = 0; j < pages.length; j++){
+                    if( pages[j].page_nr > page.page_nr){
+                        pages[j].page_nr -= 1;
                     }
                 }
 //                saveArticle();
@@ -154,7 +154,7 @@ angular.module('momusApp.controllers')
         $scope.treeOptions = {
             dropped: function(event) {
                 $scope.selectedPage = pages[event.dest.index];
-                SortPages();
+                sortPages();
             }
         };
 
@@ -220,7 +220,7 @@ angular.module('momusApp.controllers')
                         if (pageAricles[i].id == articleModel.id) {
                             $scope.page.articles.splice(i, 1);
                             //To make removal look good: re-checking list to put a new default
-                            if ($scope.page.articles.length != 0) {
+                            if ($scope.page.articles.length > 0) {
                                 console.log("Noe", $scope.page.articles[0]);
                                 $scope.selectedArticles.delArticleModel = $scope.page.articles[0];
                             }

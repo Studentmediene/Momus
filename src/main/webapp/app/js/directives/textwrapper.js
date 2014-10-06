@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+'use strict';
+
 /**
  * Takes a text and a maximum length. If the text is too long, the text will be cut to the max length,
  * and hovering the cut text will show a tooltip with the full text
@@ -41,5 +43,5 @@ angular.module('momusApp.directives').
                 scope.showTooltip = showTooltip;
                 scope.fullText = fullText;
             }
-        }
+        };
     });

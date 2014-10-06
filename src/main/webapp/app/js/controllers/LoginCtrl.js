@@ -41,5 +41,5 @@ angular.module('momusApp.controllers')
             }).error(function(data) {
                 $scope.error = true;
             });
-        }
+        };
     });

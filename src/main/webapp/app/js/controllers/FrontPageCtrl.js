@@ -40,6 +40,9 @@ angular.module('momusApp.controllers')
             ArticleService.search({"persons": [user.id]}).success(function (articles) {
                 $scope.loadingArticles = false;
                 $scope.myArticles = articles;
+                if($scope.myArticles.length <= 0 ){
+                    $scope.noArticles = true;
+                }
             });
         });
 

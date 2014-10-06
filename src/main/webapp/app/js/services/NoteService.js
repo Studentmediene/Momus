@@ -26,5 +26,5 @@ angular.module('momusApp.services')
             updateNote: function (note) {
                 return $http.put('/api/note/', note);
             }
-        }
+        };
     });

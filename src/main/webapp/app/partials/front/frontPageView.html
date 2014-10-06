@@ -47,6 +47,12 @@
                             </td>
                         </tr>
 
+                        <tr ng-if="noArticles">
+                            <td colspan="10" style="text-align: center;">
+                                Du har ikke skrevet noen artikler enda
+                            </td>
+                        </tr>
+
                         <tr ng-repeat="article in myArticles | limitTo:10">
                                 <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
                                 <td>{{article.content_length}}</td>
@@ -205,6 +211,7 @@
             <li>Historikk over alle versjonene av en artikkel samt hvem som skrev den. Senere vises også hva som ble endret mellom hva versjon klarere.</li>
             <li>Eksportering til InDesign. Får en fil man kan importere. InDesign-dokumentet man har må ha definert forskjellige ParagraphStyles som styrer hvordan
             den importerte artikkelen blir seendes ut. Dokumentet må ha definert Tittel, Stikktittel, Mellomtittel, Ingress, Brødtekst og Sitat. <b>Trengs andre typer?</b> </li>
+            <li>Akkurat nå er det ingenting som hindrer flere i å skrive på samme artikkel samtidig og dermed overskrive hverandres endringer. Alle endringer blir lagret i historikken, så ingenting forsvinner, men det er kanskje ikke optimalt. I Pegadi bruktes "låsing" av artikler slik at bare en person kunne redigere om gangen. <b>Er noe tilsvarende ønskelig her? Andre løsninger?</b></li>
         </ul>
 
         <h3>Utgaver</h3>
@@ -225,6 +232,7 @@
         <h2>Hva som kommer</h2>
         <ul>
             <li>Disposisjonsfunksjon. Man lager hvilke sider man skal ha i avisen og hvilke artikler som skal være hvor. Kan drag&drop ting rundt. <b>Her trenger vi innspill! Noe dere ønsker å bruke? Hvordan bør det fungere, hvilken funksjonalitet skal inn?</b></li>
+            <li>Tilgangskontroll? Som det er nå har alle tilgang til å gjøre alt. Tidligere redaktører mente det var greiest slik, da begrensningene i Pegadi ofte var til bry. <b>Har dere noen tanker?</b></li>
             <li><b>Hva enn dere ønsker?</b></li>
         </ul>
 

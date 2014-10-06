@@ -44,6 +44,6 @@ angular.module('momusApp.controllers')
                     $rootScope.$broadcast('showLogin');
                 });
             });
-        }
+        };
     });
 

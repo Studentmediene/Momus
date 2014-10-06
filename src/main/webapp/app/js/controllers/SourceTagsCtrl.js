@@ -70,14 +70,14 @@ angular.module('momusApp.controllers')
 
             $q.all([tagPromise, unusedPromise]).then(function () {
                 markUnusedTags($scope.tags, $scope.unused);
-            })
+            });
         }
 
         function markUnusedTags(allTags, unused) {
             for (var i = 0; i < unused.length; i++) {
                 for (var j = 0; j < allTags.length; j++) {
                     if (unused[i].tag == allTags[j].tag) {
-                        allTags[j]["unused"] = true;
+                        allTags[j].unused = true;
                     }
                 }
             }

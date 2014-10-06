@@ -40,7 +40,7 @@ angular.module('momusApp.services').
             resendBuffer.push({
                 request: request,
                 deferred: deferred
-            })
+            });
         }
 
         function resendAllInBuffer() {
@@ -108,5 +108,5 @@ angular.module('momusApp.services').
                 }
                 return $q.reject(response);
             }
-        }
+        };
     });

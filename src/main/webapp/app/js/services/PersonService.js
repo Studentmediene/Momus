@@ -25,5 +25,5 @@ angular.module('momusApp.services')
             getAll: function () {
                 return $http.get('/api/person/', {cache: true});
             }
-        }
+        };
     });
