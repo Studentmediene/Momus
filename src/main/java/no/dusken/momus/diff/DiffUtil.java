@@ -55,7 +55,7 @@ public class DiffUtil {
                         DiffMatchPatch.Diff etter = new DiffMatchPatch.Diff(diffs.get(i).operation, diffs.get(i).text.substring(j));
                         diffs.get(i).text = diffs.get(i).text.substring(0, endOld);
                         diffs.add(i+1, tags);
-                        if(etter.text != " ") {
+                        if(!etter.text.equals(" ")) {
                             diffs.add(i + 2, etter);
                             i++;
                         }
