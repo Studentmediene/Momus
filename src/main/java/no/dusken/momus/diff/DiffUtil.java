@@ -30,6 +30,8 @@ public class DiffUtil {
         LinkedList<DiffMatchPatch.Diff> diffs = diffMatchPatch.diff_main(oldText, newText, false);
         diffMatchPatch.diff_cleanupSemantic(diffs);
         diffs = cleanUpDiffs(diffs);
+
+        printStuff(diffs);
         String diffText = diffMatchPatch.diff_prettyHtml(diffs);
 
         return tagToUnicodeConverter.addTags(diffText);
@@ -53,13 +55,21 @@ public class DiffUtil {
                         DiffMatchPatch.Diff etter = new DiffMatchPatch.Diff(diffs.get(i).operation, diffs.get(i).text.substring(j));
                         diffs.get(i).text = diffs.get(i).text.substring(0, endOld);
                         diffs.add(i+1, tags);
-                        diffs.add(i+2, etter);
-                        i+=2;
+                        if(etter.text != " ") {
+                            diffs.add(i + 2, etter);
+                            i++;
+                        }
+                        i++;
 
                     }
                 }
             }
         }
         return diffs;
+    }
+    private void printStuff(LinkedList<DiffMatchPatch.Diff> diffs){
+        for (DiffMatchPatch.Diff diff : diffs){
+            System.out.println(diff);
+        }
     }
 }

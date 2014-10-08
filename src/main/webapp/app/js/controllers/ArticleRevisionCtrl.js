@@ -43,6 +43,7 @@ angular.module('momusApp.controllers')
                 $scope.diff = data;
                 $scope.diff = $scope.diff.slice(1,$scope.diff.length-1);
                 $scope.diff = $scope.diff.replace(/\\/g,"");
+                $scope.diff = $scope.diff.replace(/&amp;nbsp;/g,"&nbsp;");
             });
         };
 
