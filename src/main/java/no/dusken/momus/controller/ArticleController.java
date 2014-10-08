@@ -16,6 +16,7 @@
 
 package no.dusken.momus.controller;
 
+import no.dusken.momus.diff.DiffMatchPatch;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleRevision;
 import no.dusken.momus.model.ArticleStatus;
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -80,8 +82,9 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "/{id}/revisions/{id1}/{id2}", method = RequestMethod.GET)
-    public @ResponseBody String getRevisionsDiffs(@PathVariable("id") Long id, @PathVariable("id1") Long id1, @PathVariable("id2") Long id2) {
-        return diffUtil.getDiffString(id, id1, id2);
+    public @ResponseBody
+    LinkedList<DiffMatchPatch.Diff> getRevisionsDiffs(@PathVariable("id") Long id, @PathVariable("id1") Long id1, @PathVariable("id2") Long id2) {
+        return diffUtil.getDiffList(id, id1, id2);
     }
 
     @RequestMapping(value = "/types", method = RequestMethod.GET)

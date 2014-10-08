@@ -15,35 +15,41 @@ public class DiffUtil {
     @Autowired
     private ArticleRevisionRepository articleRevisionRepository;
 
-    public @ResponseBody String getDiffString(long art, long oldId, long newId){
+    public @ResponseBody LinkedList<DiffMatchPatch.Diff> getDiffList(long art, long oldId, long newId){
         List<ArticleRevision> revision = articleRevisionRepository.findByArticle_Id(art);
-        String oldText = revision.get((int) oldId).getContent();
-        String newText = revision.get((int) newId).getContent();
-        oldText = oldText.replace("\n","");
-        newText = newText.replace("\n","");
+        String oldText = revision.get((int) oldId).getContent().replace("\n", "");
+        String newText = revision.get((int) newId).getContent().replace("\n", "");
 
         DiffMatchPatch diffMatchPatch = new DiffMatchPatch();
         TagToUnicodeConverter tagToUnicodeConverter = new TagToUnicodeConverter();
         oldText = tagToUnicodeConverter.removeTags(oldText);
         newText = tagToUnicodeConverter.removeTags(newText);
-
         LinkedList<DiffMatchPatch.Diff> diffs = diffMatchPatch.diff_main(oldText, newText, false);
         diffMatchPatch.diff_cleanupSemantic(diffs);
         diffs = cleanUpDiffs(diffs);
 
-        printStuff(diffs);
-        String diffText = diffMatchPatch.diff_prettyHtml(diffs);
+        return addTagsToDiffs(diffs);
 
-        return tagToUnicodeConverter.addTags(diffText);
     }
-
+    public LinkedList<DiffMatchPatch.Diff> addTagsToDiffs(LinkedList<DiffMatchPatch.Diff> diffs){
+        TagToUnicodeConverter tagToUnicodeConverter = new TagToUnicodeConverter();
+        for (DiffMatchPatch.Diff diff : diffs){
+            diff.text = tagToUnicodeConverter.addTags(diff.text);
+        }
+        return diffs;
+    }
     public LinkedList<DiffMatchPatch.Diff> cleanUpDiffs(LinkedList<DiffMatchPatch.Diff> diffs){
         for (int i = 0; i < diffs.size();i++) {
             if(diffs.get(i).operation == DiffMatchPatch.Operation.DELETE || diffs.get(i).operation == DiffMatchPatch.Operation.INSERT){
                 for ( int j = 0; j < diffs.get(i).text.length();j++){
-                    if((int) diffs.get(i).text.toCharArray()[j] >=44035){
+                    if((int) diffs.get(i).text.toCharArray()[j] >=44035 ){
                         int endOld = j;
                         DiffMatchPatch.Diff tags = new DiffMatchPatch.Diff(DiffMatchPatch.Operation.EQUAL, "");
+                        if(diffs.get(i).operation == DiffMatchPatch.Operation.DELETE){
+                            tags.operation = DiffMatchPatch.Operation.DELETETAG;
+                        }else{
+                            tags.operation = DiffMatchPatch.Operation.INSERTTAG;
+                        }
                         for( int a = j; a<diffs.get(i).text.length();a++){
                             if((int) diffs.get(i).text.toCharArray()[a] >=44035){
                                 tags.text += diffs.get(i).text.toCharArray()[j];
@@ -59,17 +65,10 @@ public class DiffUtil {
                             diffs.add(i + 2, etter);
                             i++;
                         }
-                        i++;
-
                     }
                 }
             }
         }
         return diffs;
-    }
-    private void printStuff(LinkedList<DiffMatchPatch.Diff> diffs){
-        for (DiffMatchPatch.Diff diff : diffs){
-            System.out.println(diff);
-        }
     }
 }

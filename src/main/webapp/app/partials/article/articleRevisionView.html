@@ -39,8 +39,13 @@
         <div class="col-md-8" ng-hide="showBoxes">
                 <div class="panel-body" ng-bind-html="current.content | trustHtml" style="height: 500px; overflow-y: scroll;"></div>
         </div>
-        <div class="col-md-8" ng-show="showBoxes">
-            <div class="panel-body" ng-bind-html="diff | trustHtml" style="height: 500px; overflow-y: scroll;">{{diff}}</div>
+        <div style="overflow-y: scroll; height: 500px">
+            <div class="col-md-6" ng-show="showBoxes">
+                <div class="panel-body" ng-bind-html="diff | diffsToHtml:'del'"></div>
+            </div>
+            <div class="col-md-6" ng-show="showBoxes">
+                <div class="panel-body" ng-bind-html="diff | diffsToHtml:'add'"></div>
+            </div>
         </div>
     </div>
 </div>
