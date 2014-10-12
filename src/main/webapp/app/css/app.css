@@ -245,3 +245,12 @@ a.zeroclipboard-is-hover {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
+/* popover - used by personWidget */
+.popover {
+    max-width:500px;
+}
+
+.popover .arrow {
+    top:100% !important;
+}

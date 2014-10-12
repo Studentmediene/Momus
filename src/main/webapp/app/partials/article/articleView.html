@@ -272,7 +272,7 @@
                     <div class="col-sm-8">
                         <ul class="list-unstyled form-control-static" ng-hide="metaEditMode">
                             <li ng-repeat="journalist in article.journalists">
-                                {{ journalist.full_name }}
+                                <span person-widget="journalist">{{ journalist.full_name }}</span>
                             </li>
                         </ul>
                         <id-select multiple
@@ -291,7 +291,7 @@
                     <div class="col-sm-8">
                         <ul class="list-unstyled form-control-static" ng-hide="metaEditMode">
                             <li ng-repeat="photographer in article.photographers">
-                                {{ photographer.full_name }}
+                                <span person-widget="photographer">{{ photographer.full_name }}</span>
                             </li>
                         </ul>
                         <id-select multiple
