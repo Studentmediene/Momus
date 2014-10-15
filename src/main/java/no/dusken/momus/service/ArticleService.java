@@ -21,6 +21,7 @@ import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleRevision;
 import no.dusken.momus.model.Person;
+import no.dusken.momus.service.chimera.ChimeraExport;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
 import no.dusken.momus.service.repository.ArticleRepository;
@@ -56,6 +57,9 @@ public class ArticleService {
     @Autowired
     private UserLoginService userLoginService;
 
+    @Autowired
+    ChimeraExport chimeraExport;
+
     @PersistenceContext
     EntityManager entityManager;
 
@@ -76,8 +80,15 @@ public class ArticleService {
         return articleRepository.findOne(newID);
     }
 
+    public boolean getChimeraExport(Long id) {
+        Article article = getArticleById(id);
+        return chimeraExport.exportToChimera(article);
+
+    }
+
     public Article saveUpdatedArticle(Article article) {
         article.setLastUpdated(new Date());
+
 
         logger.info("Article \"{}\" (id: {}) updated by user {}", article.getName(), article.getId(), userLoginService.getId());
 

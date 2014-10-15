@@ -21,6 +21,7 @@ angular.module('momusApp.controllers')
         $scope.metaEditMode = false;
         $scope.noteRules = noteParserRules;
         $scope.articleRules = articleParserRules;
+        $scope.ting = true;
 
         PersonService.getAll().success(function(data) {
            $scope.persons = data;
@@ -106,6 +107,12 @@ angular.module('momusApp.controllers')
 
         $scope.cancelMeta = function() {
             $scope.metaEditMode = false;
+        };
+
+        $scope.sendToChimera = function(id) {
+            ArticleService.toChimera(id).success(function (data) {
+                $scope.ting = data;
+            });
         };
 
         $scope.$on('$locationChangeStart', function(event){

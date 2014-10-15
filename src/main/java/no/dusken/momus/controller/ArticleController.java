@@ -117,6 +117,11 @@ public class ArticleController {
         return articleService.searchForArticles(search);
     }
 
+    @RequestMapping(value = "/{id}/toChimera", method = RequestMethod.GET)
+    public @ResponseBody Boolean getChimeraExport(@PathVariable("id") Long id) {
+        return articleService.getChimeraExport(id);
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody Article createArticle(@RequestBody Article article){
         return articleService.createNewArticle(article);
