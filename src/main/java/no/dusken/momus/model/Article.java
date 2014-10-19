@@ -81,7 +81,7 @@ public class Article {
      */
     @PostLoad
     private void calculateContentLength() {
-        contentLength = content.length();
+        contentLength = content != null ? content.length() : 0;
     }
 
     public Article() {
