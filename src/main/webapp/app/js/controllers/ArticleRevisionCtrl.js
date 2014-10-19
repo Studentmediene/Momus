@@ -18,12 +18,14 @@
 
 angular.module('momusApp.controllers')
     .controller('ArticleRevisionCtrl', function($scope, ArticleService, $routeParams){
+
+        $scope.diff = "";
+        $scope.showDiff = false;
+
         ArticleService.getRevisions($routeParams.id).success(function (data){
             $scope.revisions = data;
             $scope.current = data[data.length - 1];
-            $scope.showBoxes = false;
             $scope.compare = [data.length-2,data.length-1];
-            $scope.diff = 0;
         });
 
         ArticleService.getArticle($routeParams.id).success(function (data){
@@ -35,7 +37,7 @@ angular.module('momusApp.controllers')
         };
 
         $scope.showCompare = function(){
-            $scope.showBoxes = !$scope.showBoxes;
+            $scope.showDiff = !$scope.showDiff;
             $scope.getDiffs();
         };
 

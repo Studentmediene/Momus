@@ -17,6 +17,13 @@ public class DiffUtil {
 
     public @ResponseBody LinkedList<DiffMatchPatch.Diff> getDiffList(long art, long oldId, long newId){
         List<ArticleRevision> revision = articleRevisionRepository.findByArticle_Id(art);
+
+        if (oldId > newId) {
+            long tmp = newId;
+            newId = oldId;
+            oldId = tmp;
+        }
+
         String oldText = revision.get((int) oldId).getContent().replace("\n", "");
         String newText = revision.get((int) newId).getContent().replace("\n", "");
 
