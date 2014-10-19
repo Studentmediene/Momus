@@ -298,6 +298,8 @@
     <changeSet id="3" author="Mats" context="dev">
         <!-- First some persons. These will be overridden by LDAP sync data shortly, but are needed here or the database gets angry -->
         <insert tableName="person"><column name="id">1006</column></insert>
+        <insert tableName="person"><column name="id">1003</column></insert>
+        <insert tableName="person"><column name="id">2411</column></insert>
 
 
         <!-- Some Publications -->
@@ -317,19 +319,165 @@
         <insert tableName="article">
             <column name="id">1</column><column name="name">Siden Sist</column><column name="comment"></column><column name="lastUpdated"></column>
             <column name="publication_id">8</column><column name="section_id">3</column><column name="status_id">2</column><column name="type_id">2</column>
-            <column name="content"></column>
+            <column name="content"><![CDATA[]]></column>
             <column name="note"><![CDATA[<p>Hva har skjedd siden sist a?</p>]]></column>
+        </insert>
+        <insert tableName="article">
+            <column name="id">2</column><column name="name">Lovlig Norsk</column><column name="comment">Må ikke deskes før lørdag</column><column name="lastUpdated"></column>
+            <column name="publication_id">8</column><column name="section_id">6</column><column name="status_id">5</column><column name="type_id">5</column>
+            <column name="content"><![CDATA[<h1>Lovlig Norsk</h1><h4>I 2011 ble tidligere NTNU-student Maria Amelie tvangsreturnert etter åtte års ulovlig opphold i Norge. I går var hun tilbake på Studentersamfundet for å fortelle om boka Takk.</h4><p>Maria Amelie engasjerte tusenvis av nordmenn og skapte stor debatt da Utlendingsnemnda i januar 2011 vedtok at Amelie ikke hadde rett til å
+bli i Norge. Hun måtte returnere til Russland – til tross for at hun
+snakket norsk, hadde et norsk nettverk, mastergrad fra NTNU og var selve
+ kroneksempelet på vellykket integrering. I Russland hadde hun kanskje
+ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet. Et sted hun trolig har vært mye, gjennom verv i ISFiT, UKA og Kulturutvalget. Hennes første bok, titulert&nbsp;<i>Ulovlig norsk</i>, bidro til både æresmedlemsskap på Samfundet og tvangsdeportering til «hjemlandet». I går leste hun fra&nbsp;<i>Takk</i>. Den handler om oppholdet på Trandum asylfengsel, et sted som selveste FNs torturkomite har rettet sterk kritikk mot.</p><blockquote>«Vi skal kroppsvisitere deg», sa en av politikvinnene. «Du må ta av deg alt du har på deg», sa hun mens hun dro på seg tynne plasthansker. «Absolutt alt?» spurte jeg. «Ja», svarte hun. Hjertet mitt slo fortere. Jeg nølte, men bet tennene sammen og begynte å ta av meg kardigan, skjørt, topp, behå, sko, strømpebukser, truse, sokker. (…) «Dette er rutinene våre, vi gjør det med alle, selv om det kan føles litt ubehagelig». «Jeg skrev ikke boken for å ha det behagelig», sa jeg mens jeg tok av meg trusene.</blockquote><p>– Jeg måtte forsøke å dele meg i to: kroppen, og tankene. Jeg tenkte på eldre damer og små barn som måtte gjennom samme undersøkelse. Og jeg var veldig glad foreldrene mine slapp dette, sier hun.</p><p>Amelies foreldre reiste tilbake til Russland i 2011. Begge to hadde i lang tid vært syke.</p><p>– De ønsket begge å arbeide for å bidra i samfunnet. Men det kunne de ikke uten oppholdstillatelse. Nå har de endelige fått profesjonell hjelp av psykolog, og helsa har blitt bedre.</p><h3>Helt usynlig</h3><p>Som papirløs har du ingen rettigheter: Ikke studielån fra Lånekassen, ikke fastlege. Det er ingen statistikk som fanger deg opp. Dette ble særlig klart for Maria Amelie etter en sykdomsperiode hvor hun ikke torde å oppsøke lege.</p><p>– Jeg tenkte: Hva om jeg hadde en kjempesmittsom sykdom? Hva om jeg ble gravid? Hva om jeg ble vitne til en kriminell hendelse?</p><p>Da hun i september 2011 ga ut boken Ulovlig norsk som blant annet er basert på hennes egne dagboknotater, følte hun for første gang på lenge at «nå finnes jeg».</p><p>Trandum asylfengsel Konsekvensen av «å finnes» ble Trandum asylfengsel, et sted like ved Gardemoen for midlertidig oppbevaring av asylsøkere. Både Maria og mange organisasjoner har kritisert Trandum for brudd på menneskerettighetene. Blant det som er blitt kritisert er stedets strenge sikkerhetsprosedyrer og minimale aktivitetstilbud.</p><p>– Trandum har betydd mye for meg. På godt og vondt. Mest på vondt.</p><p><i>Takk</i>&nbsp;handler mye om tida på Trandum. Herfra ser man ironisk nok kun fly som forlater Norge, og ingen som lander, forteller Maria.</p><p>– Å være asylsøker betyr “ingen ende på reisen”. Jeg visste aldri hvor lenge jeg måtte vente på Trandum. Andre kriminelle får vite hvor lenge de skal sitte fengslet, og i det ligger det litt verdighet. Den verdigheten fikk ikke jeg, sier hun.</p><h3>Regelendring</h3><p>Som en følge av den voldsomme støtten fra både offentligheten og politikere endret regjeringen regelverket i Utlendingsloven. Etter april 2011 kunne personer med relevant fagutdanning og jobbtilbud komme tilbake til Norge som arbeidsinnvandrere, etter avslag på søknad om asyl.</p><br>]]></column>
+            <column name="note"><![CDATA[<p>notater er <b>bra</b></p>]]></column>
+        </insert>
+        <insert tableName="article">
+            <column name="id">3</column><column name="name">Mora mi</column><column name="comment">Venter på sitatsjekk</column><column name="lastUpdated"></column>
+            <column name="publication_id">7</column><column name="section_id">3</column><column name="status_id">4</column><column name="type_id">1</column>
+            <column name="content"><![CDATA[<h1>Lovlig Norsk</h1><h4>I 2011 ble tidligere NTNU-student Maria Amelie tvangsreturnert etter åtte års ulovlig opphold i Norge. I går var hun tilbake på Studentersamfundet for å fortelle om boka Takk.</h4><p>Maria Amelie engasjerte tusenvis av nordmenn og skapte stor debatt da Utlendingsnemnda i januar 2011 vedtok at Amelie ikke hadde rett til å
+bli i Norge. Hun måtte returnere til Russland – til tross for at hun
+snakket norsk, hadde et norsk nettverk, mastergrad fra NTNU og var selve
+ kroneksempelet på vellykket integrering. I Russland hadde hun kanskje
+ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet. Et sted hun trolig har vært mye, gjennom verv i ISFiT, UKA og Kulturutvalget. Hennes første bok, titulert&nbsp;<i>Ulovlig norsk</i>, bidro til både æresmedlemsskap på Samfundet og tvangsdeportering til «hjemlandet». I går leste hun fra&nbsp;<i>Takk</i>. Den handler om oppholdet på Trandum asylfengsel, et sted som selveste FNs torturkomite har rettet sterk kritikk mot.</p><blockquote>«Vi skal kroppsvisitere deg», sa en av politikvinnene. «Du må ta av deg alt du har på deg», sa hun mens hun dro på seg tynne plasthansker. «Absolutt alt?» spurte jeg. «Ja», svarte hun. Hjertet mitt slo fortere. Jeg nølte, men bet tennene sammen og begynte å ta av meg kardigan, skjørt, topp, behå, sko, strømpebukser, truse, sokker. (…) «Dette er rutinene våre, vi gjør det med alle, selv om det kan føles litt ubehagelig». «Jeg skrev ikke boken for å ha det behagelig», sa jeg mens jeg tok av meg trusene.</blockquote><p>– Jeg måtte forsøke å dele meg i to: kroppen, og tankene. Jeg tenkte på eldre damer og små barn som måtte gjennom samme undersøkelse. Og jeg var veldig glad foreldrene mine slapp dette, sier hun.</p><p>Amelies foreldre reiste tilbake til Russland i 2011. Begge to hadde i lang tid vært syke.</p><p>– De ønsket begge å arbeide for å bidra i samfunnet. Men det kunne de ikke uten oppholdstillatelse. Nå har de endelige fått profesjonell hjelp av psykolog, og helsa har blitt bedre.</p><h3>Helt usynlig</h3><p>Som papirløs har du ingen rettigheter: Ikke studielån fra Lånekassen, ikke fastlege. Det er ingen statistikk som fanger deg opp. Dette ble særlig klart for Maria Amelie etter en sykdomsperiode hvor hun ikke torde å oppsøke lege.</p><p>– Jeg tenkte: Hva om jeg hadde en kjempesmittsom sykdom? Hva om jeg ble gravid? Hva om jeg ble vitne til en kriminell hendelse?</p><p>Da hun i september 2011 ga ut boken Ulovlig norsk som blant annet er basert på hennes egne dagboknotater, følte hun for første gang på lenge at «nå finnes jeg».</p><p>Trandum asylfengsel Konsekvensen av «å finnes» ble Trandum asylfengsel, et sted like ved Gardemoen for midlertidig oppbevaring av asylsøkere. Både Maria og mange organisasjoner har kritisert Trandum for brudd på menneskerettighetene. Blant det som er blitt kritisert er stedets strenge sikkerhetsprosedyrer og minimale aktivitetstilbud.</p><p>– Trandum har betydd mye for meg. På godt og vondt. Mest på vondt.</p><p><i>Takk</i>&nbsp;handler mye om tida på Trandum. Herfra ser man ironisk nok kun fly som forlater Norge, og ingen som lander, forteller Maria.</p><p>– Å være asylsøker betyr “ingen ende på reisen”. Jeg visste aldri hvor lenge jeg måtte vente på Trandum. Andre kriminelle får vite hvor lenge de skal sitte fengslet, og i det ligger det litt verdighet. Den verdigheten fikk ikke jeg, sier hun.</p><h3>Regelendring</h3><p>Som en følge av den voldsomme støtten fra både offentligheten og politikere endret regjeringen regelverket i Utlendingsloven. Etter april 2011 kunne personer med relevant fagutdanning og jobbtilbud komme tilbake til Norge som arbeidsinnvandrere, etter avslag på søknad om asyl.</p><br>]]></column>
+            <column name="note"></column>
+        </insert>
+        <insert tableName="article">
+            <column name="id">4</column><column name="name">Mats er deilig</column><column name="comment">Alle er enige</column><column name="lastUpdated"></column>
+            <column name="publication_id">8</column><column name="section_id">1</column><column name="status_id">3</column><column name="type_id">4</column>
+            <column name="content"><![CDATA[<h1>Lalalala</h1>]]></column>
+            <column name="note"><![CDATA[<p><b>Whoho!</b></p>]]></column>
         </insert>
 
         <!-- Some people connected to articles -->
         <insert tableName="article_journalist"><column name="Article_id">1</column><column name="journalists_id">1006</column></insert>
+        <insert tableName="article_journalist"><column name="Article_id">2</column><column name="journalists_id">1006</column></insert>
+        <insert tableName="article_photographer"><column name="Article_id">2</column><column name="photographers_id">1003</column></insert>
+        <insert tableName="article_journalist"><column name="Article_id">3</column><column name="journalists_id">2411</column></insert>
+        <insert tableName="article_photographer"><column name="Article_id">3</column><column name="photographers_id">1006</column></insert>
 
         <!-- And some revisions -->
 
         <!-- Some sources with tags, and some unused tags -->
+        <insert tableName="sourcetag"><column name="tag">ap</column></insert>
+        <insert tableName="sourcetag"><column name="tag">dekan</column></insert>
+        <insert tableName="sourcetag"><column name="tag">frp</column></insert>
+        <insert tableName="sourcetag"><column name="tag">hf</column></insert>
+        <insert tableName="sourcetag"><column name="tag">ikm</column></insert>
+        <insert tableName="sourcetag"><column name="tag">ime</column></insert>
+        <insert tableName="sourcetag"><column name="tag">nato</column></insert>
+        <insert tableName="sourcetag"><column name="tag">ntnu</column></insert>
+        <insert tableName="sourcetag"><column name="tag">politiker</column></insert>
+        <insert tableName="sourcetag"><column name="tag">rektor</column></insert>
+        <insert tableName="sourcetag"><column name="tag">student</column></insert>
+        <insert tableName="sourcetag"><column name="tag">studenttinget</column></insert>
+        <insert tableName="sourcetag"><column name="tag">kul type</column></insert>
+
+        <insert tableName="source">
+            <column name="id">1</column>
+            <column name="name">Jens Stolfjell</column>
+            <column name="description">Tidligere statsminister</column>
+            <column name="telephone">12345678</column>
+            <column name="email">jens@jensemann.com</column>
+            <column name="webPage">jensemann.com</column>
+            <column name="address">Natobygningen\n123</column>
+            <column name="note">Var der før, er der nå</column>
+        </insert>
+        <insert tableName="source">
+            <column name="id">2</column>
+            <column name="name">Siv Jansrud</column>
+            <column name="description">Politiker frp</column>
+            <column name="telephone">666666</column>
+            <column name="email">siv@sivsiv.com</column>
+            <column name="webPage"></column>
+            <column name="address">Stooortinget</column>
+            <column name="note">Mornaaa Jeeeens</column>
+        </insert>
+        <insert tableName="source">
+            <column name="id">3</column>
+            <column name="name">Gunnar Bovim</column>
+            <column name="description">Rektor for NTNU</column>
+            <column name="telephone">13371337</column>
+            <column name="email">thaboss@ntnu.no</column>
+            <column name="webPage">ntnu.edu</column>
+            <column name="address">Galtvort</column>
+            <column name="note"></column>
+        </insert>
+        <insert tableName="source">
+            <column name="id">4</column>
+            <column name="name">Anne Mols Myr</column>
+            <column name="description">leder Institutt for kunst- og medievitenskap</column>
+            <column name="telephone"></column>
+            <column name="email"></column>
+            <column name="webPage"></column>
+            <column name="address"></column>
+            <column name="note"></column>
+        </insert>
+        <insert tableName="source">
+            <column name="id">5</column>
+            <column name="name">Kathrine Ssssr</column>
+            <column name="description">dekan Det humanistiske fakultet</column>
+            <column name="telephone"></column>
+            <column name="email"></column>
+            <column name="webPage"></column>
+            <column name="address"></column>
+            <column name="note"></column>
+        </insert>
+        <insert tableName="source">
+            <column name="id">6</column>
+            <column name="name">Elena Etternavn</column>
+            <column name="description">leder studenttinget</column>
+            <column name="telephone"></column>
+            <column name="email">naiv@over9000.com</column>
+            <column name="webPage"></column>
+            <column name="address"></column>
+            <column name="note"></column>
+        </insert>
+        <insert tableName="source">
+            <column name="id">7</column>
+            <column name="name">Marta Mellomnavn Etternavn</column>
+            <column name="description">IMEs rep Studenttinget</column>
+            <column name="telephone">12344321</column>
+            <column name="email"></column>
+            <column name="webPage"></column>
+            <column name="address"></column>
+            <column name="note"></column>
+        </insert>
+
+        <insert tableName="source_sourcetag"><column name="Source_id">1</column><column name="tags_tag">ap</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">1</column><column name="tags_tag">nato</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">1</column><column name="tags_tag">politiker</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">2</column><column name="tags_tag">politiker</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">2</column><column name="tags_tag">frp</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">3</column><column name="tags_tag">rektor</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">3</column><column name="tags_tag">ntnu</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">4</column><column name="tags_tag">ntnu</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">4</column><column name="tags_tag">ikm</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">5</column><column name="tags_tag">dekan</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">5</column><column name="tags_tag">hf</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">5</column><column name="tags_tag">ntnu</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">6</column><column name="tags_tag">ntnu</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">6</column><column name="tags_tag">politiker</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">6</column><column name="tags_tag">student</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">7</column><column name="tags_tag">studenttinget</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">7</column><column name="tags_tag">ntnu</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">7</column><column name="tags_tag">student</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">7</column><column name="tags_tag">politiker</column></insert>
+        <insert tableName="source_sourcetag"><column name="Source_id">7</column><column name="tags_tag">ime</column></insert>
+
+
 
         <!-- Some private notes -->
-
+        <insert tableName="note">
+            <column name="id">1</column>
+            <column name="content"><![CDATA[<p><b>Whoho!</b><br>Et notat</p><p>for meg!</p>]]></column>
+            <column name="owner_id">1003</column>
+        </insert>
+        <insert tableName="note">
+            <column name="id">2</column>
+            <column name="content"><![CDATA[<p>Mitt notat...</p>]]></column>
+            <column name="owner_id">1006</column>
+        </insert>
 
     </changeSet>
 
