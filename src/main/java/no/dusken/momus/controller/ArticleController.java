@@ -16,6 +16,8 @@
 
 package no.dusken.momus.controller;
 
+import no.dusken.momus.diff.DiffMatchPatch;
+import no.dusken.momus.diff.DiffUtil;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.ArticleService;
 import no.dusken.momus.service.indesign.IndesignExport;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -49,6 +52,9 @@ public class ArticleController {
 
     @Autowired
     private SectionRepository sectionRepository;
+
+    @Autowired
+    private DiffUtil diffUtil;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody Article getArticleByID(@PathVariable("id") Long id) {
@@ -74,6 +80,12 @@ public class ArticleController {
     @RequestMapping(value = "/{id}/revisions", method = RequestMethod.GET)
     public @ResponseBody List<ArticleRevision> getArticleRevisions(@PathVariable("id") Long id) {
         return articleRevisionRepository.findByArticle_Id(id);
+    }
+
+    @RequestMapping(value = "/{articleId}/revisions/{revId1}/{revId2}", method = RequestMethod.GET)
+    public @ResponseBody
+    LinkedList<DiffMatchPatch.Diff> getRevisionsDiffs(@PathVariable("articleId") Long articleId, @PathVariable("revId1") Long revId1, @PathVariable("revId2") Long revId2) {
+        return diffUtil.getDiffList(articleId, revId1, revId2);
     }
 
     @RequestMapping(value = "/types", method = RequestMethod.GET)
