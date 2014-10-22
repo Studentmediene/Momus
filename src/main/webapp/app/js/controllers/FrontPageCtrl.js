@@ -23,7 +23,8 @@ angular.module('momusApp.controllers')
         $scope.randomTips = [
             '<h4>Sitatsjekk</h4><p>Ved å trykke på knappen Sitatsjekk på artikkelvisningssiden kopier du en tekst til utklippstavlen som er tilpasset til å sende til kilder som er brukt i artikkelen. Teksten inneholder artikkelen, en introduksjon og kontaktinfo.</p>',
             '<h4>Revisjoner</h4><p>Ved å trykke på knappen Historikk på artikkelvisningssiden kan du se tidligere versjoner av artikkelen du jobber på. Her kan du også sammenlikne flere versjoner og se hva som har blitt endret mellom dem.</p>',
-            '<h4>Lagre søk</h4><p>Når du søker på artikler vil alle filtrene du har lagt inn dukke opp i URL-en. Hvis du lager et bokmerke av denne URL-en kan du få tilgang til akkurat det samme søket senere.</p>'];
+            '<h4>Lagre søk</h4><p>Når du søker på artikler eller kilder vil alle filtrene du har lagt inn dukke opp i URL-en. Hvis du lager et bokmerke av denne URL-en kan du få tilgang til akkurat det samme søket senere.</p>',
+            '<h4>Se rå HTML</h4><p>Du kan se rå html når du skriver en artikkel ved å trykke på knappen <i class="fa fa-exchange"></i> i artikkeleditoren.</p>'];
         $scope.showTip = Math.floor(Math.random()*$scope.randomTips.length);
 
         NoteService.getNote().success(function (data) {
