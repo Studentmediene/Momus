@@ -382,16 +382,14 @@
             <a href="#/artikler/revisjon/{{article.id}}" class="btn btn-primary"><i class="fa fa-file-text-o"></i>
                 Historikk
             </a>
-
-
+            <a href="#/artikler/{{article.id}}" ng-click="sendToChimera(article.id)" class="btn btn-primary"><i class="fa fa-cloud"></i>
+                Chimera
+            </a>
             <span tooltip="Kopier sitatsjekk-tekst" class="btn-group">
             <a zc-btn="quoteCheck" button-loader="copying" loading-text="Kopierer" completed-text="Kopiert" ng-click="" class="btn btn-primary"><i class="fa fa-quote-right"></i>
                 Sitatsjekk
             </a>
             </span>
-            <a href="#/artikler/{{article.id}}" ng-click="sendToChimera(article.id)" class="btn btn-primary"><i class="fa fa-file-text-o"></i>
-                Chimera
-            </a>
         </div>
     </div>
 </div>
