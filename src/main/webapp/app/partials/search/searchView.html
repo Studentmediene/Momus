@@ -69,7 +69,8 @@
                     <option value="">
                         Alle utgaver
                     </option>
-                    <option ng-repeat="publication in publications | orderBy: '-release_date'" value="{{ publication.id }}">
+                    <option ng-repeat="publication in publications | orderBy: '-release_date'"
+                            value="{{ publication.id }}">
                         {{ publication.name }}
                     </option>
                 </select>
@@ -186,5 +187,19 @@
         </table>
     </div>
 
-<div class="alert-info" ng-show="data.length == 201" style="padding: 5px">For mange resultat, viser bare de nyeste. Juster søket.</div>
+</div>
+
+<div class="text-center" style="font-size: 2em;">
+    <button class="btn btn-lg btn-info"
+            ng-disabled="search.page_number <= 1"
+            ng-click="searchFunc(-1)">
+        <i class="fa fa-angle-left"/>
+    </button>
+        <span>
+            {{ search.page_number }}
+        </span>
+    <button class="btn btn-lg btn-info"
+            ng-click="searchFunc(1)">
+        <i class="fa fa-angle-right"/>
+    </button>
 </div>

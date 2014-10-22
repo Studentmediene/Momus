@@ -25,7 +25,9 @@ angular.module('momusApp.controllers')
             status: '',
             persons: '',
             section: '',
-            publication: ''
+            publication: '',
+            page_size: 3,
+            page_number: 1
         };
 
         // Get stuff from the server
@@ -35,23 +37,24 @@ angular.module('momusApp.controllers')
 
             if (updateSearchParametersFromUrl()) { // If the URL contained a search
                 search();
-            } else if ($scope.publications.length > 0){ // default search on the newest publication
+            } else if ($scope.publications.length > 0) { // default search on the newest publication
                 $scope.search.publication = $scope.publications[0].id;
                 $location.search('publication', $scope.search.publication).replace();
+
                 search();
             }
         });
 
-        ArticleService.getSections().success( function(data){
+        ArticleService.getSections().success(function (data) {
             $scope.sections = data;
         });
 
-        ArticleService.getStatuses().success( function(data){
+        ArticleService.getStatuses().success(function (data) {
             $scope.statuses = data;
         });
 
 
-        $scope.$on('$routeUpdate', function(){ // when going back/forward
+        $scope.$on('$routeUpdate', function () { // when going back/forward
             updateSearchParametersFromUrl();
 
             if ($scope.data) { // if we're not doing a search, trigger one
@@ -71,8 +74,8 @@ angular.module('momusApp.controllers')
             for (var key in $scope.search) {
                 var value = urlSearch[key];
 
-                $scope.search[key] = value;
                 if (value) {
+                    $scope.search[key] = value;
                     aValueWasSet = true;
                 }
             }
@@ -87,23 +90,23 @@ angular.module('momusApp.controllers')
 
 
         function rememberSearchState() {
-            var newValue = $scope.search;
-            for (var key in newValue) {
-                var value = newValue[key];
+            var newValues = $scope.search;
+            for (var key in newValues) {
+                var value = newValues[key];
 
-                if (value) {
-                    $location.search(key, value);
-                } else {
-                    $location.search(key, null);
-                }
+                $location.search(key, value ? value : null);
             }
-
         }
 
 
-
-        $scope.searchFunc = function () {
+        $scope.searchFunc = function (pageDelta) {
             rememberSearchState();
+
+            if (pageDelta) {
+                $scope.search.page_number = parseInt($scope.search.page_number) + pageDelta;
+                $location.search('page_number', $scope.search.page_number.toString());
+            }
+
             search();
         };
 
@@ -117,7 +120,7 @@ angular.module('momusApp.controllers')
                 $scope.data = data;
             }).finally(function () {
                 $scope.loading = false;
-                if($scope.data.length <= 0){
+                if ($scope.data.length <= 0) {
                     $scope.noArticles = true;
                 }
             });

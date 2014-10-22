@@ -60,12 +60,11 @@ public class ArticleService {
     EntityManager entityManager;
 
 
-
     public Article getArticleById(Long id) {
         Article article = articleRepository.findOne(id);
         if (article == null) {
             logger.warn("Article with id {} not found, tried by user {}", id, userLoginService.getId());
-            throw new RestException("Article "+id+" not found", 404);
+            throw new RestException("Article " + id + " not found", 404);
         }
         return article;
     }
@@ -82,7 +81,7 @@ public class ArticleService {
         logger.info("Article \"{}\" (id: {}) updated by user {}", article.getName(), article.getId(), userLoginService.getId());
 
 //        if (article.getStatus().getName().equals("Publisert")) {
-            // export
+        // export
 //        }
 
         return articleRepository.saveAndFlush(article);
@@ -143,8 +142,8 @@ public class ArticleService {
             query.setParameter(e.getKey(), e.getValue());
         }
 
-        query.setMaxResults(201);
-        // TODO add paging of results?
+        query.setMaxResults(params.getPageSize());
+        query.setFirstResult(params.getStartOfNextPage());
 
         List<Article> resultList = query.getResultList();
 
