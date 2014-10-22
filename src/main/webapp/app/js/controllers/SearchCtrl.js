@@ -20,13 +20,14 @@ angular.module('momusApp.controllers')
     .controller('SearchCtrl', function ($scope, $http, $location, $q, PersonService, PublicationService, ArticleService) {
 
         $scope.data = [];
+        $scope.peek = [];
         $scope.search = {
             free: '',
             status: '',
             persons: '',
             section: '',
             publication: '',
-            page_size: 3,
+            page_size: 10,
             page_number: 1
         };
 
@@ -107,7 +108,12 @@ angular.module('momusApp.controllers')
                 $location.search('page_number', $scope.search.page_number.toString());
             }
 
-            search();
+            if (pageDelta === 1) {
+                $scope.data = $scope.peek;
+                peek();
+            } else {
+                search();
+            }
         };
 
 
@@ -123,6 +129,18 @@ angular.module('momusApp.controllers')
                 if ($scope.data.length <= 0) {
                     $scope.noArticles = true;
                 }
+            });
+
+            peek();
+        }
+
+        function peek() {
+            $scope.peek = [];
+            var search = angular.copy($scope.search);
+            search.page_number = parseInt(search.page_number) + 1;
+
+            ArticleService.search(search).success(function (data) {
+                $scope.peek = data;
             });
         }
     });
