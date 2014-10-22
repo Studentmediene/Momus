@@ -20,6 +20,12 @@ angular.module('momusApp.controllers')
     .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService) {
         $scope.noteRules = noteParserRules;
 
+        $scope.randomTips = [
+            '<h4>Sitatsjekk</h4><p>Ved å trykke på knappen Sitatsjekk på artikkelvisningssiden kopier du en tekst til utklippstavlen som er tilpasset til å sende til kilder som er brukt i artikkelen. Teksten inneholder artikkelen, en introduksjon og kontaktinfo.</p>',
+            '<h4>Revisjoner</h4><p>Ved å trykke på knappen Historikk på artikkelvisningssiden kan du se tidligere versjoner av artikkelen du jobber på. Her kan du også sammenlikne flere versjoner og se hva som har blitt endret mellom dem.</p>',
+            '<h4>Lagre søk</h4><p>Når du søker på artikler vil alle filtrene du har lagt inn dukke opp i URL-en. Hvis du lager et bokmerke av denne URL-en kan du få tilgang til akkurat det samme søket senere.</p>'];
+        $scope.showTip = Math.floor(Math.random()*$scope.randomTips.length);
+
         NoteService.getNote().success(function (data) {
             $scope.note = data;
             $scope.unedited = angular.copy(data);

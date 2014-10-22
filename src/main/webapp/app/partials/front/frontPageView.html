@@ -137,6 +137,10 @@
                 </textarea>
             </div>
         </div>
+        <div class="panel panel-info">
+            <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-question-circle"></i>Tilfeldig tips</h1></div>
+            <div class="panel-body" ng-bind-html="randomTips[showTip] | trustHtml"></div>
+        </div>
     </div>
 </div>
 <div class="row">
