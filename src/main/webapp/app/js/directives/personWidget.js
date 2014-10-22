@@ -17,14 +17,33 @@
 'use strict';
 
 angular.module('momusApp.directives').
-    directive( 'personWidget', ['$tooltip', '$templateCache', function ($tooltip, $templateCache) {
+    directive( 'personWidget', ['$tooltip', '$templateCache', '$http', '$compile', function ($tooltip, $templateCache, $http, $compile) {
         return {
             restrict: 'AE',
+            scope:true,
             link: function(scope, element, attrs){
+                $http.get('partials/templates/personWidget.html').success(function(data){
+                    scope.hidePopover = function(){
+                        $(element).popover("hide");
+                    };
+
+                    $(element).popover({
+                        html: true,
+                        placement: 'top',
+                        trigger: trigger,
+                        delay : {"show": 0, "hide":0},
+                        title: person.full_name,
+                        content: content,
+                        template:$compile(data)(scope)
+                    });
+                });
+
                 element.css({
                     borderBottom: '1px dotted #ccc',
                     cursor: 'pointer'
                 });
+
+                element.attr('tabindex', 0);
 
                 if(attrs.personWidget){
                     var person = scope[attrs.personWidget];
@@ -38,18 +57,11 @@ angular.module('momusApp.directives').
                     var trigger = "click";
                 }
 
-                var content = [
-                        "<b>E-post:</b> <a href='mailto:" + person.email + "'>" + person.email + "</a>",
-                        "<b>Telefon:</b> " + person.phone_number
-                ].join('<br/>');
-
-                $(element).popover({
-                    html: true,
-                    placement: 'top',
-                    trigger: trigger,
-                    title: person.full_name,
-                    content: content
-                });
+                var content =
+                        "<table>" +
+                        "<tr><td><b>E-post:</b></td> <td><a href='mailto:" + person.email + "'>" + person.email + "</a></td></tr>" +
+                        "<tr><td><b>Telefon:</b></td><td> " + person.phone_number + "</td></tr>" +
+                        "</table>"
             }
         };
     }]
