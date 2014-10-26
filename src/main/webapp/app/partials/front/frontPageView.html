@@ -139,7 +139,32 @@
         </div>
         <div class="panel panel-info">
             <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-question-circle"></i>Tilfeldig tips</h1></div>
-            <div class="panel-body" ng-bind-html="randomTips[showTip] | trustHtml"></div>
+            <div class="panel-body" ng-bind-html="tip | trustHtml"></div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-exclamation-circle"></i>Nyheter fra utviklerne</h1></div>
+            <div class="panel-body" style="height:300px; overflow-y: auto">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Dato</th>
+                            <th>Tittel</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="new in news | orderBy: '-date'">
+                        <tr ng-click="showText($index)"ng-class="{danger: new.new, active:!new.new}">
+                            <td width="35%">{{new.date | date}}</td>
+                            <td ng-bind-html="new.title | trustHtml"></td>
+                            <td width="5%" ng-show="$index != show"><i class="fa fa-arrow-circle-down"></i></td>
+                            <td width="5%" ng-show="$index == show"><i class="fa fa-arrow-circle-up"></i></td>
+                        </tr>
+                        <tr ng-show="$index == show">
+                            <td colspan="3" ng-bind-html="new.text | trustHtml"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
