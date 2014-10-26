@@ -5,7 +5,6 @@ import java.util.List;
 
 
 public class ArticleSearchParams {
-
     private String free;
     private Long status;
     private List<Long> persons;
@@ -57,8 +56,8 @@ public class ArticleSearchParams {
                 ", persons=" + persons +
                 ", section='" + section + '\'' +
                 ", publication='" + publication + '\'' +
-                ", pageSize='" + getPageSize() + '\'' +
-                ", pageNumber='" + getPageNumber() + '\'' +
+                ", pageSize='" + this.pageSize + '\'' +
+                ", pageNumber='" + this.pageNumber + '\'' +
                 '}';
     }
 
@@ -70,8 +69,8 @@ public class ArticleSearchParams {
         return pageNumber;
     }
 
-
-    public int getStartOfNextPage() {
+    public int getStartOfPage() {
         return pageSize * (pageNumber - 1);
     }
+
 }

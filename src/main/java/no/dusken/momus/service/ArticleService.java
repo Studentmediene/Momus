@@ -143,7 +143,7 @@ public class ArticleService {
         }
 
         query.setMaxResults(params.getPageSize());
-        query.setFirstResult(params.getStartOfNextPage());
+        query.setFirstResult(params.getStartOfPage());
 
         List<Article> resultList = query.getResultList();
 

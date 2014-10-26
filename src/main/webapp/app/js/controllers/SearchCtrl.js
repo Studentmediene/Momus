@@ -27,7 +27,6 @@ angular.module('momusApp.controllers')
             persons: '',
             section: '',
             publication: '',
-            page_size: 10,
             page_number: 1
         };
 

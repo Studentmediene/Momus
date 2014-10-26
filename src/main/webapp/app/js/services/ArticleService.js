@@ -23,10 +23,18 @@ angular.module('momusApp.services')
             getArticle: function (id) {
                 return $http.get('/api/article/' + id);
             },
-            search: function(searchObject) {
+            search: function (searchObject) {
+                if (searchObject.page_number === undefined || searchObject.page_number <= 0) {
+                    searchObject.page_number = 1;
+                }
+
+                if (searchObject.page_size === undefined || searchObject.page_size <= 0) {
+                    searchObject.page_size = 200;
+                }
+
                 return $http.post('/api/article/search', searchObject);
             },
-            getRevisions: function(id) {
+            getRevisions: function (id) {
                 return $http.get('/api/article/' + id + '/revisions');
             },
 
@@ -39,7 +47,7 @@ angular.module('momusApp.services')
                 return $http.put('/api/article/content', article);
             },
 
-            updateNote: function(article) {
+            updateNote: function (article) {
                 return $http.put('/api/article/note', article);
             },
             createNewArticle: function (article) {
@@ -48,15 +56,15 @@ angular.module('momusApp.services')
 
 
             // Getting metadata, cache everything
-            getTypes: function() {
+            getTypes: function () {
                 return $http.get('/api/article/types', {cache: true});
             },
 
-            getStatuses: function() {
+            getStatuses: function () {
                 return $http.get('/api/article/statuses', {cache: true});
             },
 
-            getSections: function() {
+            getSections: function () {
                 return $http.get('/api/article/sections', {cache: true});
             }
         };
