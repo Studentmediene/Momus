@@ -15,7 +15,7 @@ public class DiffUtil {
     @Autowired
     private ArticleRevisionRepository articleRevisionRepository;
 
-    public @ResponseBody LinkedList<DiffMatchPatch.Diff> getDiffList(long art, long oldId, long newId){
+    public @ResponseBody LinkedList<DiffMatchPatch.Diff> getDiffList(long art, long oldId, long newId) {
         List<ArticleRevision> revision = articleRevisionRepository.findByArticle_Id(art);
 
         if (oldId > newId) {
@@ -38,44 +38,69 @@ public class DiffUtil {
         return addTagsToDiffs(diffs);
 
     }
-    public LinkedList<DiffMatchPatch.Diff> addTagsToDiffs(LinkedList<DiffMatchPatch.Diff> diffs){
+
+    public LinkedList<DiffMatchPatch.Diff> addTagsToDiffs(LinkedList<DiffMatchPatch.Diff> diffs) {
         TagToUnicodeConverter tagToUnicodeConverter = new TagToUnicodeConverter();
-        for (DiffMatchPatch.Diff diff : diffs){
+        for (DiffMatchPatch.Diff diff : diffs) {
             diff.text = tagToUnicodeConverter.addTags(diff.text);
         }
         return diffs;
     }
-    public LinkedList<DiffMatchPatch.Diff> cleanUpDiffs(LinkedList<DiffMatchPatch.Diff> diffs){
-        for (int i = 0; i < diffs.size();i++) {
-            if(diffs.get(i).operation == DiffMatchPatch.Operation.DELETE || diffs.get(i).operation == DiffMatchPatch.Operation.INSERT){
-                for ( int j = 0; j < diffs.get(i).text.length();j++){
-                    if((int) diffs.get(i).text.toCharArray()[j] >=44035 ){
-                        int endOld = j;
-                        DiffMatchPatch.Diff tags = new DiffMatchPatch.Diff(DiffMatchPatch.Operation.EQUAL, "");
-                        if(diffs.get(i).operation == DiffMatchPatch.Operation.DELETE){
-                            tags.operation = DiffMatchPatch.Operation.DELETETAG;
-                        }else{
-                            tags.operation = DiffMatchPatch.Operation.INSERTTAG;
-                        }
-                        for( int a = j; a<diffs.get(i).text.length();a++){
-                            if((int) diffs.get(i).text.toCharArray()[a] >=44035){
-                                tags.text += diffs.get(i).text.toCharArray()[j];
-                                j++;
-                            }else{
-                                break;
-                            }
-                        }
-                        DiffMatchPatch.Diff etter = new DiffMatchPatch.Diff(diffs.get(i).operation, diffs.get(i).text.substring(j));
-                        diffs.get(i).text = diffs.get(i).text.substring(0, endOld);
-                        diffs.add(i+1, tags);
-                        if(!etter.text.equals(" ")) {
-                            diffs.add(i + 2, etter);
-                            i++;
-                        }
-                    }
+
+
+    private LinkedList<DiffMatchPatch.Diff> cleanUpDiffs(LinkedList<DiffMatchPatch.Diff> diffs) {
+        LinkedList<DiffMatchPatch.Diff> cleaned = new LinkedList<>();
+
+        for (DiffMatchPatch.Diff diff : diffs) {
+            cleanDiff(diff, cleaned);
+        }
+
+        return cleaned;
+
+    }
+
+    private void cleanDiff(DiffMatchPatch.Diff diff, List<DiffMatchPatch.Diff> cleaned) {
+        if (diff.operation == DiffMatchPatch.Operation.EQUAL) {
+            cleaned.add(diff);
+            return;
+        }
+
+        String text = diff.text;
+
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+
+            if (c >= 44032) { // if the character is one of the unicodes we use in TagToUnicodeConverter
+                DiffMatchPatch.Operation type;
+
+                if (diff.operation == DiffMatchPatch.Operation.DELETE) {
+                    type = DiffMatchPatch.Operation.DELETETAG;
+                } else {
+                    type = DiffMatchPatch.Operation.INSERTTAG;
                 }
+
+                String textBefore = text.substring(0, i);
+
+                if (textBefore.length() > 0) {
+                    DiffMatchPatch.Diff before = new DiffMatchPatch.Diff(diff.operation, textBefore);
+                    cleaned.add(before); // this contained no unicodes
+                }
+
+                DiffMatchPatch.Diff tag = new DiffMatchPatch.Diff(type, String.valueOf(c));
+                cleaned.add(tag);
+
+                String textAfter = text.substring(i + 1);
+
+                if (textAfter.length() > 0) {
+                    DiffMatchPatch.Diff after = new DiffMatchPatch.Diff(diff.operation, textAfter);
+                    cleanDiff(after, cleaned); // call recursively on the new, unchecked text
+                }
+
+                return;
             }
         }
-        return diffs;
+
+        cleaned.add(diff); // no unicodes, so we add it
     }
+
 }

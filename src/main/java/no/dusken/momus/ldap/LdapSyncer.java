@@ -64,6 +64,7 @@ public class LdapSyncer {
             logger.info("Not syncing, it is disabled");
             return;
         }
+        logger.info("Starting LDAP sync");
 
         long start = System.currentTimeMillis();
 

@@ -245,3 +245,11 @@ a.zeroclipboard-is-hover {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
+
+.article-revisions del, .article-revisions .del {
+    background:#ffe6e6;
+}
+.article-revisions ins, .article-revisions .ins {
+    background:#e6ffe6;
+}
