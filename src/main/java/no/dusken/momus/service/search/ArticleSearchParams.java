@@ -3,7 +3,6 @@ package no.dusken.momus.service.search;
 
 import java.util.List;
 
-
 public class ArticleSearchParams {
 
     private String free;
