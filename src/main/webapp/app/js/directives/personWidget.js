@@ -17,51 +17,31 @@
 'use strict';
 
 angular.module('momusApp.directives').
-    directive( 'personWidget', ['$tooltip', '$templateCache', '$http', '$compile', function ($tooltip, $templateCache, $http, $compile) {
+    directive( 'personWidget', ['$rootScope', function ($rootScope) {
         return {
-            restrict: 'AE',
+            restrict: 'A',
             scope:true,
+            template: '<div class="person-widget-element" ng-show="isVisible"><div class="popover-title">{{pw_person.full_name}}<span ng-click="togglePW()" class="closePw pull-right"><i class="fa fa-times"></i></span></div><div class="popover-content"><table><tr><td><b>E-post:</b></td> <td><a href="mailto:{{person.email}}">{{pw_person.email}}</a></td></tr><tr><td><b>Telefon:</b></td><td>{{pw_person.phone_number}}</td></tr></table><div class="arrow"></div></div></div><span ng-click="togglePW()" class="person-widget-btn" ng-transclude></span>',
+            transclude: true,
             link: function(scope, element, attrs){
-                $http.get('partials/templates/personWidget.html').success(function(data){
-                    scope.hidePopover = function(){
-                        $(element).popover("hide");
-                    };
-
-                    $(element).popover({
-                        html: true,
-                        placement: 'top',
-                        trigger: trigger,
-                        delay : {"show": 0, "hide":0},
-                        title: person.full_name,
-                        content: content,
-                        template:$compile(data)(scope)
-                    });
-                });
-
-                element.css({
-                    borderBottom: '1px dotted #ccc',
-                    cursor: 'pointer'
-                });
-
-                element.attr('tabindex', 0);
+                scope.isVisible = false;
+                element.css({position : 'relative'});
 
                 if(attrs.personWidget){
-                    var person = scope[attrs.personWidget];
+                    scope.pw_person = scope[attrs.personWidget];
                 } else {
-                    var person = scope.person;
+                    scope.pw_person = scope.person;
                 }
 
-                if(attrs.pwTrigger){
-                    var trigger = attrs.pwTrigger;
-                } else {
-                    var trigger = "click";
-                }
+                scope.togglePW = function(){
+                    var visi = scope.isVisible;
+                    $rootScope.$broadcast('closePersonWidgets');
+                    scope.isVisible = !(visi);
+                };
 
-                var content =
-                        "<table>" +
-                        "<tr><td><b>E-post:</b></td> <td><a href='mailto:" + person.email + "'>" + person.email + "</a></td></tr>" +
-                        "<tr><td><b>Telefon:</b></td><td> " + person.phone_number + "</td></tr>" +
-                        "</table>"
+                $rootScope.$on('closePersonWidgets', function(){
+                    scope.isVisible = false;
+                });
             }
         };
     }]

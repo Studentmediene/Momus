@@ -247,23 +247,44 @@ a.zeroclipboard-is-hover {
 }
 
 /* popover - used by personWidget */
-.popover {
-    max-width:500px;
+
+.person-widget-btn {
+    border-bottom: 1px dotted #ccc;
+    cursor: pointer;
 }
 
-.popover .arrow {
+.person-widget-btn :hover {
+    border-bottom: 1px dotted #999;
+}
+
+.person-widget-element {
+    position:absolute;
+    background-color: #FFFFFF;
+    border:1px solid #CCC;
+    border-radius:5px;
+    z-index:100;
+    cursor:default;
+    top:-95px;
+}
+
+.person-widget-btn * {
+    border-bottom: 1px dotted #ccc;
+    cursor: pointer;
+}
+
+.person-widget-element .arrow {
     top:100% !important;
 }
 
-.popover td {
+.person-widget-element td {
     min-width:60px;
 }
 
 .closePw {
-    position:absolute;
-    top:10px;
-    right:10px;
     opacity:0.5;
+    cursor:pointer;
+    padding:0;
+    margin:0;
 }
 
 .closePw:hover {
