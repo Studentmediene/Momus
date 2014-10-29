@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('SearchCtrl', function ($scope, $http, $location, $q, PersonService, PublicationService, ArticleService) {
+    .controller('SearchCtrl', function ($scope, $http, $location, $q, PersonService, PublicationService, ArticleService, SavedSearchService, $log) {
 
         $scope.data = [];
         $scope.search = {
@@ -27,6 +27,7 @@ angular.module('momusApp.controllers')
             section: '',
             publication: ''
         };
+        $scope.searchname= "";
 
         // Get stuff from the server
         $q.all([PersonService.getAll(), PublicationService.getAll()]).then(function (data) {
@@ -120,6 +121,12 @@ angular.module('momusApp.controllers')
                 if($scope.data.length <= 0){
                     $scope.noArticles = true;
                 }
+            });
+        }
+
+        $scope.saveSearch = function () {
+            SavedSearchService.saveSearch($scope.searchname, $scope.search).success(function(data){
+               //$log.log("yes");
             });
         }
     });

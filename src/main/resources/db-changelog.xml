@@ -107,6 +107,15 @@
             <column name="owner_id" type="BIGINT(19)"/>
         </createTable>
 
+        <createTable tableName="savedsearch">
+            <column autoIncrement="true" name="id" type="BIGINT(19)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="LONGTEXT"/>
+            <column name="url" type="LONGTEXT"/>
+            <column name="owner_id" type="BIGINT(19)"/>
+        </createTable>
+
         <createTable tableName="page">
             <column autoIncrement="true" name="id" type="BIGINT(19)">
                 <constraints primaryKey="true"/>

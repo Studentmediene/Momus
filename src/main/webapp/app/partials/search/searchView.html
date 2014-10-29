@@ -13,11 +13,29 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<a href="#/artikler/ny" class="btn btn-primary btn-xs" style="margin-bottom: 5px;">
-    <i class="fa fa-plus-circle"></i> Opprett ny artikkel
-</a>
-
+<div class="row" style="margin-bottom: 5px">
+    <div class="col-xs-8">
+        <a href="#/artikler/ny" class="btn btn-primary btn-sm">
+            <i class="fa fa-plus-circle"></i> Opprett ny artikkel
+        </a>
+    </div>
+    <div class="col-xs-4 text-right">
+        <form role="form" ng-submit="saveSearch()">
+            <table>
+                <tr>
+                    <td width="40%">Lagre gjeldende søk:&nbsp;</td>
+                    <td>
+                        <label class="sr-only" for="searchName">
+                            Navn
+                        </label>
+                        <input class="form-control input-sm" id="searchName" ng-model="searchname" placeholder="Navn">
+                    </td>
+                    <td><button type="submit" id="saveSearchSubmit" class="btn btn-primary btn-sm"><i class="fa fa-save"></i> Lagre</button></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
 <div class="well well-sm" id="articleSearchInterface">
     <form role="form" ng-submit="searchFunc()">
         <div class="row">
@@ -87,7 +105,6 @@
                     </option>
                 </select>
             </div>
-
             <div class="col-sm-4">
                 <button type="submit" id="searchSubmit" class="btn btn-primary btn-sm form-control">
                     Søk

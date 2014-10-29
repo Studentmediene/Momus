@@ -69,23 +69,25 @@
             <div class="panel-heading">
                 <h1 class="panel-title">Lagrede søk</h1>
             </div>
-            <div class="panel panel-body">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Navn</th>
-                                <th>Filtre</th>
-                                <th>Gå til</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="search in savedSearches">
-                                <td>{{search.name}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="table-responsive">
+                <table class="table table-condensed table-striped table-hover" style="font-size: 85%">
+                    <thead>
+                        <tr>
+                            <th>Navn</th>
+                            <th>Filtre</th>
+                            <th>Gå til</th>
+                            <th width="10%">Slett</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="search in savedSearches">
+                            <td>{{search.name}}</td>
+                            <td>{{search.url}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
