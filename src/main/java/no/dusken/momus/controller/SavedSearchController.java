@@ -5,10 +5,7 @@ import no.dusken.momus.service.SavedSearchService;
 import no.dusken.momus.service.search.ArticleSearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,9 +20,13 @@ public class SavedSearchController {
         return savedSearchService.getAllFromUser();
     }
 
-    @RequestMapping(value = "/put", method = RequestMethod.POST)
+    @RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody SavedSearch saveSearch(@RequestBody SavedSearch savedSearch){
-        System.out.println("hei");
         return savedSearchService.saveNewSearch(savedSearch);
+    }
+
+    @RequestMapping(value = "/del/{id}", method = RequestMethod.DELETE)
+    public @ResponseBody String deleteSearch(@PathVariable("id") Long id){
+        return savedSearchService.deleteSearch(id);
     }
 }

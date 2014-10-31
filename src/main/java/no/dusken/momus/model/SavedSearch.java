@@ -1,7 +1,5 @@
 package no.dusken.momus.model;
 
-import no.dusken.momus.service.search.ArticleSearchParams;
-
 import javax.persistence.*;
 
 @Entity
@@ -16,7 +14,10 @@ public class SavedSearch {
     private String name;
 
     @Column(length = 40960)
-    private ArticleSearchParams url;
+    private String description;
+
+    @Column(length = 40960)
+    private String url;
 
     @OneToOne(fetch = FetchType.LAZY)
     private Person owner;
@@ -27,9 +28,13 @@ public class SavedSearch {
 
     public void setName(String name) { this.name = name; }
 
-    public ArticleSearchParams getUrl() { return url; }
+    public String getDescription() { return description; }
 
-    public void setUrl(ArticleSearchParams url) { this.url = url; }
+    public void setDescription(String description) { this.description = description; }
+
+    public String getUrl() { return url; }
+
+    public void setUrl(String url) { this.url = url; }
 
     public Person getOwner() { return owner; }
 

@@ -35,8 +35,11 @@ public class SavedSearchService {
         Person user = userLoginService.getLoggedInUser();
         savedSearch.setOwner(user);
         Long newId = savedSearchRepository.saveAndFlush(savedSearch).getId();
-        logger.info("Lagret!");
         return savedSearchRepository.findOne(newId);
+    }
 
+    public String deleteSearch(Long id){
+        savedSearchRepository.delete(id);
+        return "Deleted";
     }
 }

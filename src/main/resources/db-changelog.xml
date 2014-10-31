@@ -112,6 +112,7 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="name" type="LONGTEXT"/>
+            <column name="description" type="LONGTEXT"/>
             <column name="url" type="LONGTEXT"/>
             <column name="owner_id" type="BIGINT(19)"/>
         </createTable>

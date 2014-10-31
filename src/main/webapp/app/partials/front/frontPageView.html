@@ -74,17 +74,30 @@
                     <thead>
                         <tr>
                             <th>Navn</th>
-                            <th>Filtre</th>
-                            <th>Gå til</th>
-                            <th width="10%">Slett</th>
+                            <th>Fritekst</th>
+                            <th>Publikasjon</th>
+                            <th>Personer</th>
+                            <th>Seksjon</th>
+                            <th>Status</th>
+                            <th width="7%">Gå til</th>
+                            <th width="7%">Slett</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <tr ng-if="noSearches">
+                            <td colspan="4">Du har ikke lagret noen søk.</td>
+                        </tr>
                         <tr ng-repeat="search in savedSearches">
-                            <td>{{search.name}}</td>
-                            <td>{{search.url}}</td>
-                            <td></td>
-                            <td></td>
+                            <td><a ng-click="gotosearch(search)" style="cursor: pointer">{{search.name}}</a></td>
+                            <td>{{search.description.free}}</td>
+                            <td>{{search.description.publication}}</td>
+                            <td>
+                                <span ng-repeat="person in search.description.persons">{{person}}{{", "}}</span>
+                            </td>
+                            <td>{{search.description.section}}</td>
+                            <td>{{search.description.status}}</td>
+                            <td><button class=" btn btn-primary btn-sm fa fa-arrow-circle-right" ng-click="gotosearch(search)"></button></td>
+                            <td><button class=" btn btn-primary btn-sm fa fa-trash-o" ng-click="deleteS(search.id)"></button></td>
                         </tr>
                     </tbody>
                 </table>

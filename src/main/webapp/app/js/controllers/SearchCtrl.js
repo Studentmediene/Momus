@@ -86,7 +86,6 @@ angular.module('momusApp.controllers')
             return aValueWasSet;
         }
 
-
         function rememberSearchState() {
             var newValue = $scope.search;
             for (var key in newValue) {
@@ -98,10 +97,7 @@ angular.module('momusApp.controllers')
                     $location.search(key, null);
                 }
             }
-
         }
-
-
 
         $scope.searchFunc = function () {
             rememberSearchState();
@@ -125,7 +121,8 @@ angular.module('momusApp.controllers')
         }
 
         $scope.saveSearch = function () {
-            SavedSearchService.saveSearch($scope.searchname, $scope.search).success(function(data){
+            var desc = SavedSearchService.getDesc($scope.search, $scope.persons, $scope.publications, $scope.statuses, $scope.sections);
+            SavedSearchService.saveSearch($scope.searchname, $location.url().replace("/artikler",""), desc).success(function(data){
                //$log.log("yes");
             });
         }

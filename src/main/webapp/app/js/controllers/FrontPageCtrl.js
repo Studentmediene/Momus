@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, SavedSearchService) {
+    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, SavedSearchService, $location) {
         $scope.noteRules = noteParserRules;
 
         NoteService.getNote().success(function (data) {
@@ -45,10 +45,29 @@ angular.module('momusApp.controllers')
                 }
             });
         });
+        function update(){
+            SavedSearchService.getSavedSearches().success(function (data) {
+                $scope.savedSearches = data;
+                if($scope.savedSearches.length <= 0){
+                    $scope.noSearches = true;
+                }else{
+                    for(var i=0;i<$scope.savedSearches.length;i++){
+                        $scope.savedSearches[i].description = JSON.parse($scope.savedSearches[i].description);
+                    }
+                }
+            });
+        }
+        update();
 
-        SavedSearchService.getSavedSearches().success(function (data) {
-            $scope.savedSearches = data;
-        })
+        $scope.gotosearch = function(search){
+            $location.url("artikler/" + search.url);
+        };
+
+        $scope.deleteS = function(id){
+            SavedSearchService.deleteSearch(id).success(function (data){
+                update();
+            })
+        };
 
         $scope.$on('$locationChangeStart', function (event) {
             if (promptCondition()) {
