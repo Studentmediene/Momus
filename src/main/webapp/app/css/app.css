@@ -264,7 +264,9 @@ a.zeroclipboard-is-hover {
     border-radius:5px;
     z-index:100;
     cursor:default;
-    top:-95px;
+    top:-100px;
+    overflow: visible;
+    width:auto;
 }
 
 .person-widget-btn * {
@@ -289,4 +291,30 @@ a.zeroclipboard-is-hover {
 
 .closePw:hover {
     opacity:1;
+}
+
+
+.person-widget-element:after, .person-widget-element:before {
+    top: 100%;
+    left: 15%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+
+.person-widget-element:after {
+    border-color: rgba(255, 255, 255, 0);
+    border-top-color: #ffffff;
+    border-width: 10px;
+    margin-left: -10px;
+}
+.person-widget-element:before {
+    border-color: rgba(204, 204, 204, 0);
+    border-top-color: #CCC;
+    border-width: 11px;
+    margin-left: -11px;
 }

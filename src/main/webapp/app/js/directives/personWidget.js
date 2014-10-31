@@ -17,11 +17,12 @@
 'use strict';
 
 angular.module('momusApp.directives').
-    directive( 'personWidget', ['$rootScope', function ($rootScope) {
+    directive( 'personWidget', ['$rootScope', '$injector', function ($rootScope, $injector) {
         return {
             restrict: 'A',
             scope:true,
-            template: '<div class="person-widget-element" ng-show="isVisible"><div class="popover-title">{{pw_person.full_name}}<span ng-click="togglePW()" class="closePw pull-right"><i class="fa fa-times"></i></span></div><div class="popover-content"><table><tr><td><b>E-post:</b></td> <td><a href="mailto:{{person.email}}">{{pw_person.email}}</a></td></tr><tr><td><b>Telefon:</b></td><td>{{pw_person.phone_number}}</td></tr></table><div class="arrow"></div></div></div><span ng-click="togglePW()" class="person-widget-btn" ng-transclude></span>',
+            template: '<span class="hidden-xs"><div class="person-widget-element" ng-show="isVisible"><div class="popover-title">{{pw_person.full_name}}<span ng-click="togglePW()" class="closePw pull-right"><i class="fa fa-times"></i></span></div><div class="popover-content"><table><tr><td><b>E-post:</b></td> <td><a href="mailto:{{person.email}}">{{pw_person.email}}</a></td></tr><tr><td><b>Telefon:</b></td><td>{{pw_person.phone_number}}</td></tr></table><div class="arrow"></div></div></div><span ng-click="togglePW()" class="person-widget-btn" ng-transclude></span></span>'
+            + '<span class="visible-xs"><span ng-click="openModal()" class="person-widget-btn" ng-transclude></span></span>',
             transclude: true,
             link: function(scope, element, attrs){
                 scope.isVisible = false;
@@ -37,6 +38,11 @@ angular.module('momusApp.directives').
                     var visi = scope.isVisible;
                     $rootScope.$broadcast('closePersonWidgets');
                     scope.isVisible = !(visi);
+                };
+
+                scope.openModal = function(){
+                    var messageModal = $injector.get("MessageModal");
+                    messageModal.info('<table class="table"><tr><td>Navn:</td><td>'+ scope.pw_person.full_name + '</td></tr><tr><td>Email:</td><td><a href="mailto:' + scope.pw_person.email + '">' + scope.pw_person.email + '</a></td></tr><tr><td>Telefon:</td><td>' + scope.pw_person.phone_number + '</td></tr></table>');
                 };
 
                 $rootScope.$on('closePersonWidgets', function(){
