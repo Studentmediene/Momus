@@ -246,7 +246,11 @@ a.zeroclipboard-is-hover {
     border-top-right-radius: 0;
 }
 
-/* popover - used by personWidget */
+/* Person Widget */
+
+.person-widget-wrapper {
+    position:relative;
+}
 
 .person-widget-wrapper {
     position:relative;
