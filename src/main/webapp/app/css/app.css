@@ -248,6 +248,10 @@ a.zeroclipboard-is-hover {
 
 /* popover - used by personWidget */
 
+.person-widget-wrapper {
+    position:relative;
+}
+
 .person-widget-btn {
     border-bottom: 1px dotted #ccc;
     cursor: pointer;

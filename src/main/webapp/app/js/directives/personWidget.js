@@ -25,7 +25,6 @@ angular.module('momusApp.directives').
             transclude: true,
             link: function(scope, element, attrs){
                 scope.isVisible = false;
-                element.css({position : 'relative'});
 
                 if(attrs.personWidget){
                     scope.pw_person = scope[attrs.personWidget];
