@@ -148,14 +148,14 @@
                 <td>
                     <ul class="list-unstyled">
                         <li ng-repeat="person in article.journalists">
-                            {{ person.full_name }}
+                            <span person-widget>{{ person.full_name }}</span>
                         </li>
                     </ul>
                 </td>
                 <td>
                     <ul class="list-unstyled">
                         <li ng-repeat="person in article.photographers">
-                            {{ person.full_name }}
+                            <span person-widget>{{ person.full_name }}</span>
                         </li>
                     </ul>
                 </td>
