@@ -265,7 +265,7 @@
 
 
     <!-- Adding some article metadata -->
-    <changeSet id="2" author="Mats">
+    <changeSet id="2" author="Mats" context="live,dev">
         <!-- sections -->
         <insert tableName="section"><column name="id">1</column><column name="name">Anmeldelse</column></insert>
         <insert tableName="section"><column name="id">2</column><column name="name">Debatt</column></insert>
