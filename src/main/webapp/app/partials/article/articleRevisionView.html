@@ -30,7 +30,7 @@
                             <input type="radio" name="box2" ng-model="$parent.compare[1]" ng-value="rev.id-1"
                                    ng-change="getDiffs()">
                         </td>
-                        <td>{{rev.author.full_name}}</td>
+                        <td person-widget="rev.author">{{rev.author.full_name}}</td>
                         <td>{{rev.saved_date | date:"dd/MM/yy HH:mm"}}</td>
                         <td>
                             <span tooltip="{{ rev.status.name }}" style="background-color: {{rev.status.color}}; display: inline-block; width: 10px; height: 10px;">
