@@ -17,8 +17,25 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService) {
+    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipService) {
         $scope.noteRules = noteParserRules;
+
+        $scope.tip = randomTip();
+
+        function randomTip(){
+            return TipService.getRandomTip();
+        }
+
+        $scope.news = TipService.getNews();
+
+        $scope.showText = function(id){
+            if($scope.show == id){
+                $scope.show = -1;
+            }else{
+                $scope.show = id;
+            }
+        };
+        $scope.show = 0;
 
         NoteService.getNote().success(function (data) {
             $scope.note = data;
