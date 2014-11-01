@@ -281,7 +281,7 @@ a.zeroclipboard-is-hover {
     z-index:100;
     cursor:default;
     bottom:40%;
-    left:-110%;
+    left:-20%;
     overflow: visible;
 }
 
@@ -304,7 +304,7 @@ a.zeroclipboard-is-hover {
 
 .person-widget-element:after, .person-widget-element:before {
     top: 100%;
-    left: 48%;
+    left: 20%;
     border: solid transparent;
     content: " ";
     height: 0;
