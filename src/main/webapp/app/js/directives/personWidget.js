@@ -17,20 +17,16 @@
 'use strict';
 
 angular.module('momusApp.directives').
-    directive( 'personWidget', ['$rootScope', '$injector', function ($rootScope, MessageModal) {
+    directive( 'personWidget', ['$rootScope', 'MessageModal', function ($rootScope, MessageModal) {
         return {
             restrict: 'A',
-            scope:true,
+            scope:{
+                pw_person : '=personWidget'
+            },
             templateUrl: 'partials/templates/personWidget.html',
             transclude: true,
             link: function(scope, element, attrs){
                 scope.isVisible = false;
-
-                if(attrs.personWidget){
-                    scope.pw_person = scope[attrs.personWidget];
-                } else {
-                    scope.pw_person = scope.person;
-                }
 
                 scope.togglePW = function(){
                     var oldValue = scope.isVisible;
