@@ -1,0 +1,21 @@
+<span class="hidden-xs">
+    <div class="person-widget-element panel panel-default" ng-show="isVisible">
+        <div class="panel-heading">{{pw_person.full_name}}
+            <span ng-click="togglePW()" class="closePw pull-right">
+                <i class="fa fa-times"></i>
+            </span>
+        </div>
+        <table class="table table-condensed table-hover">
+            <tr>
+                <td><b>E-post:</b></td>
+                <td><a href="mailto:{{person.email}}">{{pw_person.email}}</a></td>
+            </tr>
+            <tr>
+                <td><b>Telefon:</b></td>
+                <td>{{pw_person.phone_number}}</td>
+            </tr>
+        </table>
+    </div>
+    <span ng-click="togglePW()" class="person-widget-btn" ng-transclude></span>
+</span>
+<span class="visible-xs"><span ng-click="openModal()" class="person-widget-btn" ng-transclude></span></span>
