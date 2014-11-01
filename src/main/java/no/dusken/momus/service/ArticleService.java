@@ -78,12 +78,7 @@ public class ArticleService {
 
     public Article saveUpdatedArticle(Article article) {
         article.setLastUpdated(new Date());
-
         logger.info("Article \"{}\" (id: {}) updated by user {}", article.getName(), article.getId(), userLoginService.getId());
-
-//        if (article.getStatus().getName().equals("Publisert")) {
-            // export
-//        }
 
         return articleRepository.saveAndFlush(article);
     }
@@ -108,6 +103,10 @@ public class ArticleService {
 
     public Article saveMetadata(Article article) {
         Article existing = articleRepository.findOne(article.getId());
+
+        if (!article.getStatus().equals(existing.getStatus())) {
+            updateLatestRevisionToThisStatus(article);
+        }
 
         existing.setName(article.getName());
         existing.setJournalists(article.getJournalists());
@@ -165,6 +164,23 @@ public class ArticleService {
 
     public ArticleRepository getArticleRepository() {
         return articleRepository;
+    }
+
+    private void updateLatestRevisionToThisStatus(Article article) {
+        List<ArticleRevision> revisions = articleRevisionRepository.findByArticle_Id(article.getId());
+
+        if (revisions.size() == 0) {
+            logger.info("No revisions to update for article id {}", article.getId());
+            return;
+        }
+
+        ArticleRevision latest = revisions.get(revisions.size() - 1);
+        latest.setStatus(article.getStatus());
+        articleRevisionRepository.save(latest);
+
+        logger.info("Updated revision {} for article {} to status {}", latest, article.getId(), article.getStatus());
+
+
     }
 
 }

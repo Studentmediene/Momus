@@ -16,6 +16,7 @@
                         <th ng-show="showDiff"></th>
                         <th>Forfatter</th>
                         <th>Dato</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -31,6 +32,10 @@
                         </td>
                         <td>{{rev.author.full_name}}</td>
                         <td>{{rev.saved_date | date:"dd/MM/yy HH:mm"}}</td>
+                        <td>
+                            <span tooltip="{{ rev.status.name }}" style="background-color: {{rev.status.color}}; display: inline-block; width: 10px; height: 10px;">
+                            </span>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
