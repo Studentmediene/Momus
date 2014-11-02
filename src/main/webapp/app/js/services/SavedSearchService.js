@@ -25,17 +25,20 @@ angular.module('momusApp.services')
                         }
                     }
                 }
-                if(search.persons.length >0){
-                    obj.persons = [];
-                    for(var j=0;j<search.persons.length;j++){
-                        for(var k=0;k<persons.length;k++){
-                            if(persons[k].id == search.persons[j]){
-                                $log.log(persons[k].full_name);
-                                obj.persons.push(persons[k]);
+                if(search.persons){
+                    if(search.persons.length >0){
+                        obj.persons = [];
+                        for(var j=0;j<search.persons.length;j++){
+                            for(var k=0;k<persons.length;k++){
+                                if(persons[k].id == search.persons[j]){
+                                    $log.log(persons[k].full_name);
+                                    obj.persons.push(persons[k]);
+                                }
                             }
                         }
                     }
                 }
+
                 if(search.status){
                     for(var i=0;i<statuses.length;i++){
                         if(statuses[i].id == search.status){

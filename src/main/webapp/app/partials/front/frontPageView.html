@@ -85,14 +85,14 @@
                     </thead>
                     <tbody>
                         <tr ng-if="noSearches">
-                            <td colspan="4">Du har ikke lagret noen søk.</td>
+                            <td colspan="8">Du har ikke lagret noen søk.</td>
                         </tr>
                         <tr ng-repeat="search in savedSearches">
                             <td><a ng-click="gotosearch(search)" style="cursor: pointer">{{search.name}}</a></td>
                             <td>{{search.description.free}}</td>
                             <td>{{search.description.publication}}</td>
                             <td>
-                                <span ng-repeat="person in search.description.persons">{{person}}{{", "}}</span>
+                                <span ng-repeat="person in search.description.persons">{{person.full_name}}{{", "}}</span>
                             </td>
                             <td>{{search.description.section}}</td>
                             <td>{{search.description.status}}</td>
