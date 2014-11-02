@@ -24,9 +24,10 @@ angular.module('momusApp.controllers')
 
         ArticleService.getRevisions($routeParams.id).success(function (data){
             $scope.revisions = data;
-            $log.log($scope.revisions);
             $scope.current = data[data.length - 1];
-            $scope.compare = [data[data.length-2].id,data[data.length-1].id];
+            if($scope.revisions.length > 1){
+                $scope.compare = [data[data.length-2].id,data[data.length-1].id];
+            }
         });
 
         ArticleService.getArticle($routeParams.id).success(function (data){
