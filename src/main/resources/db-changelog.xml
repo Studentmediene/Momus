@@ -36,6 +36,7 @@
             <column name="section_id" type="BIGINT(19)"/>
             <column name="status_id" type="BIGINT(19)"/>
             <column name="type_id" type="BIGINT(19)"/>
+            <column name="rawContent" type="LONGTEXT"/>
         </createTable>
 
         <createTable tableName="article_journalist">

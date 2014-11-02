@@ -44,7 +44,7 @@ public class ArticleQueryBuilder {
         List<String> conditions = new ArrayList<>();
 
         if (search.getFree() != null && search.getFree().length() > 0) {
-            conditions.add("a.content like :free");
+            conditions.add("upper(a.rawContent) like upper(:free)");
             queryParams.put("free", "%" + search.getFree() + "%");
         }
         if (search.getStatus() != null) {

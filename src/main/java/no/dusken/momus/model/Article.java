@@ -73,6 +73,9 @@ public class Article {
 
     private String photoStatus;
 
+    @Column(length = 40960)
+    private String rawContent;
+
 
     /**
      * This is done after load instead of in a getter, since
@@ -191,4 +194,8 @@ public class Article {
     public void setSection(Section section) {
         this.section = section;
     }
+
+    public String getRawContent() { return rawContent; }
+
+    public void setRawContent(String rawContent) { this.rawContent = rawContent; }
 }

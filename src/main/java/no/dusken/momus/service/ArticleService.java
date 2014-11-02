@@ -72,6 +72,7 @@ public class ArticleService {
 
 
     public Article createNewArticle(Article article) {
+        article.setRawContent(createRawContent(article));
         Long newID = articleRepository.saveAndFlush(article).getId();
         return articleRepository.findOne(newID);
     }
@@ -79,7 +80,6 @@ public class ArticleService {
     public Article saveUpdatedArticle(Article article) {
         article.setLastUpdated(new Date());
         logger.info("Article \"{}\" (id: {}) updated by user {}", article.getName(), article.getId(), userLoginService.getId());
-
         return articleRepository.saveAndFlush(article);
     }
 
@@ -96,8 +96,8 @@ public class ArticleService {
         revision = articleRevisionRepository.save(revision);
 
         logger.info("Saved new revision for article(id:{}) with id: {}, content:\n{}", article.getId(), revision.getId(), content);
-
         existing.setContent(content);
+        existing.setRawContent(createRawContent(existing));
         return saveUpdatedArticle(existing);
     }
 
@@ -116,6 +116,7 @@ public class ArticleService {
         existing.setType(article.getType());
         existing.setStatus(article.getStatus());
         existing.setSection(article.getSection());
+        existing.setRawContent(createRawContent(existing));
 
         return saveUpdatedArticle(existing);
     }
@@ -179,8 +180,27 @@ public class ArticleService {
         articleRevisionRepository.save(latest);
 
         logger.info("Updated revision {} for article {} to status {}", latest, article.getId(), article.getStatus());
+    }
 
+    private String createRawContent(Article article){
+        StringBuilder raw = new StringBuilder();
+        String content = stripOffHtml(article.getContent()).replaceAll("\\p{P}"," ").replaceAll(" +"," ");
+        raw.append(content)
+                .append(" ")
+                .append(article.getName())
+                .append(" ")
+                .append(article.getSection().getName())
+                .append(" ")
+                .append(article.getStatus().getName());
+        return raw.toString().toLowerCase();
 
+    }
+    private String stripOffHtml(String html){
+        String[] tags = {"<h1>","<h2>","<h3>","<h4>","<p>","<i>","<blockquote>","<br>","<ul>","<ol>","<li>"};
+        for (String tag : tags) {
+            html = html.replaceAll(tag," ").replaceAll(tag.substring(0,1)+"/"+tag.substring(1,tag.length()),"");
+        }
+        return html;
     }
 
 }

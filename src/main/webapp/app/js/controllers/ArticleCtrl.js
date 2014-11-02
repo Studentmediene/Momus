@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function ($scope, PersonService,$timeout, ArticleService, PublicationService, TitleChanger, noteParserRules, articleParserRules, $routeParams) {
+    .controller('ArticleCtrl', function ($scope, PersonService,$timeout, ArticleService, PublicationService, TitleChanger, noteParserRules, articleParserRules, $routeParams, $log) {
         $scope.metaEditMode = false;
         $scope.noteRules = noteParserRules;
         $scope.articleRules = articleParserRules;
@@ -29,7 +29,6 @@ angular.module('momusApp.controllers')
         ArticleService.getArticle($routeParams.id).success(function (data) {
             $scope.article = data;
             $scope.unedited = angular.copy(data);
-
             TitleChanger.setTitle($scope.article.name);
         });
 
