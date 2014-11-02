@@ -16,6 +16,13 @@
 
 package no.dusken.momus.controller;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.model.Permission;
 import no.dusken.momus.authentication.AuthUserDetails;
 import no.dusken.momus.authentication.LdapUserPwd;
 import no.dusken.momus.authentication.Token;
@@ -26,6 +33,7 @@ import no.dusken.momus.service.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -37,6 +45,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.GeneralSecurityException;
 import java.util.*;
 
 /**
@@ -101,6 +113,93 @@ public class DevController {
     public @ResponseBody String ldaptest() {
         ldapSyncer.sync();
         return "oook";
+    }
+
+    private GoogleCredential credential = null;
+
+    @RequestMapping("/gdoc")
+    public @ResponseBody String gdocTest() {
+
+        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+        HttpTransport httpTransport = null;
+        try {
+            httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+        }
+        try {
+
+
+            if (credential == null) {
+
+                String email = "68986569027-ecn9md3ej7krhquhvamf7phfovro8aru@developer.gserviceaccount.com";
+
+                InputStream keyStream = ClassLoader.getSystemResourceAsStream("googlekey.p12");
+
+                ClassPathResource classPathResource = new ClassPathResource("googlekey.p12");
+                File file = classPathResource.getFile();
+
+
+                Collection<String> scopes = new ArrayList<>();
+                scopes.add("https://www.googleapis.com/auth/drive");
+
+                logger.info("making credentials");
+
+                credential = new GoogleCredential.Builder()
+                        .setTransport(httpTransport)
+                        .setJsonFactory(jsonFactory)
+                        .setServiceAccountId(email)
+//                    .setServiceAccountPrivateKey
+                        .setServiceAccountPrivateKeyFromP12File(file)
+                        .setServiceAccountScopes(scopes)
+                        .build();
+
+                logger.info("made credentials");
+            }
+
+
+            long start = System.currentTimeMillis();
+
+
+            Drive drive = new Drive.Builder(httpTransport, jsonFactory, credential).setApplicationName("momustest-molten-aurora-752").build();
+
+            logger.info("made drive");
+
+
+
+//            Drive.Files.List request = drive.files().list();
+//            FileList fileList = request.execute();
+//
+//            List<com.google.api.services.drive.model.File> items = fileList.getItems();
+//            for (com.google.api.services.drive.model.File item : items) {
+//                logger.info("file: {}", item);
+//                Map<String, String> exportLinks = item.getExportLinks();//.get("text/html");
+//                String s = exportLinks.get("text/plain"); // will crash for stuff not having this
+//                logger.debug("test");
+//            }
+
+            com.google.api.services.drive.model.File insertFile = new com.google.api.services.drive.model.File();
+            insertFile.setTitle("mats2.odt");
+            insertFile.setMimeType("application/vnd.google-apps.document");
+            com.google.api.services.drive.model.File uploaded = drive.files().insert(insertFile).execute();
+            logger.info("uploaded file id({}): {}", uploaded.getId(), uploaded);
+
+            Permission permission = new Permission();
+            permission.setRole("writer");
+            permission.setType("anyone");
+            permission.setValue("default");
+
+            drive.permissions().insert(uploaded.getId(), permission).execute();
+
+            long end = System.currentTimeMillis();
+            long timeUsed = end - start;
+            logger.debug("Time spent: {}ms", timeUsed);
+
+        } catch (GeneralSecurityException | IOException e) {
+            logger.debug("Ex: ", e);
+        }
+
+        return "gdoc ok";
     }
 
 

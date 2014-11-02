@@ -173,6 +173,14 @@
             <version>3.2.2</version>
         </dependency>
 
+
+        <!-- Google Drive API -->
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-drive</artifactId>
+            <version>v2-rev151-1.19.0</version>
+        </dependency>
+
         <!-- Only for the redirect in index.jsp ... -->
         <dependency>
             <groupId>javax.servlet</groupId>
