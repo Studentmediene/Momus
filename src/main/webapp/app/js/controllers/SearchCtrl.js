@@ -122,8 +122,9 @@ angular.module('momusApp.controllers')
 
         $scope.saveSearch = function () {
             var desc = SavedSearchService.getDesc($scope.search, $scope.persons, $scope.publications, $scope.statuses, $scope.sections);
+            $scope.savingSearch = true;
             SavedSearchService.saveSearch($scope.searchname, $location.url().replace("/artikler",""), desc).success(function(data){
-               //$log.log("yes");
+                $scope.savingSearch = false;
             });
         }
     });
