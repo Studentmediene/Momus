@@ -23,11 +23,11 @@
                     <tr ng-repeat="rev in revisions | orderBy: '-saved_date'" ng-click="gotoRev(rev)"
                         ng-class="{active: !showDiff && rev == current}" class="interact">
                         <td ng-show="showDiff">
-                            <input type="radio" name="box1" ng-model="$parent.compare[0]" ng-value="rev.id-1"
+                            <input type="radio" name="box1" ng-model="$parent.compare[0]" ng-value="rev.id"
                                    ng-change="getDiffs()">
                         </td>
                         <td ng-show="showDiff">
-                            <input type="radio" name="box2" ng-model="$parent.compare[1]" ng-value="rev.id-1"
+                            <input type="radio" name="box2" ng-model="$parent.compare[1]" ng-value="rev.id"
                                    ng-change="getDiffs()">
                         </td>
                         <td person-widget="rev.author">{{rev.author.full_name}}</td>
@@ -49,9 +49,11 @@
         <div class="col-md-8" ng-show="showDiff">
             <div class="row">
                 <div class="col-sm-6">
+
                     <div class="panel-body" ng-bind-html="diff | diffsToHtml:'del'"></div>
                 </div>
                 <div class="col-sm-6">
+
                     <div class="panel-body" ng-bind-html="diff | diffsToHtml:'add'"></div>
                 </div>
             </div>
