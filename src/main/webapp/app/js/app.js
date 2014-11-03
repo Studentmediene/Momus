@@ -32,7 +32,8 @@ angular.module('momusApp', [
         'ngRoute',
         'ui.select2',
         'ui.bootstrap',
-        'ui.tree'
+        'ui.tree',
+        'ngCookies'
     ]).
     config(['$routeProvider', function ($routeProvider) {
         // Admin interfaces
