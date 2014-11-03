@@ -22,7 +22,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.model.Permission;
+import com.google.api.services.drive.model.About;
 import no.dusken.momus.authentication.AuthUserDetails;
 import no.dusken.momus.authentication.LdapUserPwd;
 import no.dusken.momus.authentication.Token;
@@ -47,7 +47,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.util.*;
 
@@ -116,6 +115,7 @@ public class DevController {
     }
 
     private GoogleCredential credential = null;
+    private Drive drive = null;
 
     @RequestMapping("/gdoc")
     public @ResponseBody String gdocTest() {
@@ -134,7 +134,6 @@ public class DevController {
 
                 String email = "68986569027-ecn9md3ej7krhquhvamf7phfovro8aru@developer.gserviceaccount.com";
 
-                InputStream keyStream = ClassLoader.getSystemResourceAsStream("googlekey.p12");
 
                 ClassPathResource classPathResource = new ClassPathResource("googlekey.p12");
                 File file = classPathResource.getFile();
@@ -157,16 +156,20 @@ public class DevController {
                 logger.info("made credentials");
             }
 
+            if (drive == null) {
+
+                drive = new Drive.Builder(httpTransport, jsonFactory, credential).setApplicationName("momustest-molten-aurora-752").build();
+
+                logger.info("made drive");
+            }
+
 
             long start = System.currentTimeMillis();
 
 
-            Drive drive = new Drive.Builder(httpTransport, jsonFactory, credential).setApplicationName("momustest-molten-aurora-752").build();
-
-            logger.info("made drive");
 
 
-
+        // list all files
 //            Drive.Files.List request = drive.files().list();
 //            FileList fileList = request.execute();
 //
@@ -178,18 +181,24 @@ public class DevController {
 //                logger.debug("test");
 //            }
 
-            com.google.api.services.drive.model.File insertFile = new com.google.api.services.drive.model.File();
-            insertFile.setTitle("mats2.odt");
-            insertFile.setMimeType("application/vnd.google-apps.document");
-            com.google.api.services.drive.model.File uploaded = drive.files().insert(insertFile).execute();
-            logger.info("uploaded file id({}): {}", uploaded.getId(), uploaded);
 
-            Permission permission = new Permission();
-            permission.setRole("writer");
-            permission.setType("anyone");
-            permission.setValue("default");
+            About execute = drive.about().get().execute();
 
-            drive.permissions().insert(uploaded.getId(), permission).execute();
+
+            // insert file
+//            com.google.api.services.drive.model.File insertFile = new com.google.api.services.drive.model.File();
+//            insertFile.setTitle("mats2.odt");
+//            insertFile.setMimeType("application/vnd.google-apps.document");
+//            com.google.api.services.drive.model.File uploaded = drive.files().insert(insertFile).execute();
+//            logger.info("uploaded file id({}): {}", uploaded.getId(), uploaded);
+//
+//            Permission permission = new Permission();
+//            permission.setRole("writer");
+//            permission.setType("anyone");
+//            permission.setValue("default");
+//            permission.setWithLink(true);
+//
+//            drive.permissions().insert(uploaded.getId(), permission).execute();
 
             long end = System.currentTimeMillis();
             long timeUsed = end - start;
