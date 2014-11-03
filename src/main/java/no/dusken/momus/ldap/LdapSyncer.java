@@ -21,6 +21,7 @@ import no.dusken.momus.service.repository.PersonRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -44,7 +45,9 @@ public class LdapSyncer {
     @Autowired
     PersonRepository personRepository;
 
-    private boolean disabled = false;
+
+    @Value("${ldap.syncEnabled}")
+    private boolean enabled;
 
     /**
      * This will be run when the server starts
@@ -60,7 +63,7 @@ public class LdapSyncer {
      */
     @Scheduled(cron = "0 0 2 * * *")
     public void sync() {
-        if (disabled) {
+        if (!enabled) {
             logger.info("Not syncing, it is disabled");
             return;
         }
@@ -115,8 +118,4 @@ public class LdapSyncer {
         return persons;
     }
 
-
-    public void setDisabled(boolean disabled) {
-        this.disabled = disabled;
-    }
 }
