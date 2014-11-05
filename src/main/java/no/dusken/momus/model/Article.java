@@ -73,10 +73,11 @@ public class Article {
 
     private String photoStatus;
 
+    private String googleDriveId;
 
     /**
      * This is done after load instead of in a getter, since
-     * it may happen that the content is set to empty to save bandwith/hide it, but
+     * it may happen that the content is set to empty to save bandwidth/hide it, but
      * the length of it is still needed.
      */
     @PostLoad
@@ -190,5 +191,13 @@ public class Article {
 
     public void setSection(Section section) {
         this.section = section;
+    }
+
+    public String getGoogleDriveId() {
+        return googleDriveId;
+    }
+
+    public void setGoogleDriveId(String googleDriveId) {
+        this.googleDriveId = googleDriveId;
     }
 }

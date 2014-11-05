@@ -482,6 +482,12 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
     </changeSet>
 
 
+    <!-- Add support for Google Drive -->
+    <changeSet id="4" author="Mats">
+        <addColumn tableName="article">
+            <column name="googleDriveId" type="VARCHAR(255)" />
+        </addColumn>
+    </changeSet>
 
 
 

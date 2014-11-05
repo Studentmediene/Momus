@@ -22,20 +22,24 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.model.Change;
+import com.google.api.services.drive.model.ChangeList;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.Permission;
-import no.dusken.momus.model.Article;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class GoogleDriveService {
@@ -67,7 +71,7 @@ public class GoogleDriveService {
         HttpTransport httpTransport;
         java.io.File keyFile;
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-        List<String> scopes = Arrays.asList("https://www.googleapis.com/auth/drive");
+        List<String> scopes = Arrays.asList("https://www.googleapis.com/auth/drive"); // We want full access
 
 
         try {
@@ -95,32 +99,38 @@ public class GoogleDriveService {
 
 
     /**
-     * Creates a new Google Document for the article
-     * and returns the file. Returns null if an error occured
+     * Creates a new Google Document for the name
+     * and returns the file. Returns null if an error occurred
+     *
+     * @param name
      */
-    public File createDocument(Article article) {
+    public File createDocument(String name) {
         File file = null;
         try {
-            file = createFile(article);
+            file = createFile(name);
             createPermission(file);
         } catch (IOException e) {
-            logger.warn("Couldn't create Google Drive file for article id {}", article.getId());
+            logger.warn("Couldn't create Google Drive file for article  {}", name);
         }
 
         return file;
     }
 
-    private File createFile(Article article) throws IOException {
+    private File createFile(String name) throws IOException {
         File insertFile = new File();
-        insertFile.setTitle(article.getName() + " - Momus.odt");
+        insertFile.setTitle(name + " - Momus");
         insertFile.setMimeType("application/vnd.google-apps.document"); // Google Docs filetype
 
         File createdFile = drive.files().insert(insertFile).execute();
 
-        logger.info("Created Google Drive file with id {} for article with id {}", createdFile.getId(), article.getId());
+        logger.info("Created Google Drive file with id {} for article with name {}", createdFile.getId(), name);
         return createdFile;
     }
 
+    /**
+     * Creates a permission for the Google Docs file that allows
+     * anyone to view it if they have the correct link
+     */
     private void createPermission(File file) throws IOException {
         Permission permission = new Permission();
         permission.setRole("writer");
@@ -129,10 +139,58 @@ public class GoogleDriveService {
         permission.setWithLink(true);
 
         drive.permissions().insert(file.getId(), permission).execute();
-        logger.info("Created permissions for file with id {}", file.getId());
+        logger.info("Created permissions for Google Drive file with id {}", file.getId());
     }
 
-    public void sync() {
 
+    /**
+     * Will pull data from Google Drive and update our local copy
+     * every minute ("each time the seconds are 0")
+     *
+     * (second minute hour day month weekdays)
+     */
+    @Scheduled(cron = "0 * * * * *")
+    public void sync() {
+        if (!enabled) {
+            logger.debug("Not syncing Google Drive");
+            return;
+        }
+        logger.debug("Starting Google Drive sync");
+
+        Set<String> modifiedFileIds = findModifiedFileIds();
+
+
+        // Get the articles having these IDs
+
+
+
+    }
+
+    /**
+     * Returns the 200 next changes from Google Drive
+     * The IDs returned are Google Drive file IDs.
+     */
+    private Set<String> findModifiedFileIds() {
+        Set<String> modifiedFileIds = new HashSet<>();
+
+        try {
+            Drive.Changes.List request =  drive.changes().list();
+            request.setIncludeSubscribed(false);
+            request.setMaxResults(200);
+            request.setStartChangeId(146L);
+
+            ChangeList results = request.execute();
+            List<Change> changes = results.getItems();
+
+            for (Change change : changes) {
+                modifiedFileIds.add(change.getFileId());
+            }
+
+
+        } catch (IOException e) {
+            logger.error("Couldn't get changed file IDs from Google Drive", e);
+        }
+
+        return modifiedFileIds;
     }
 }

@@ -23,6 +23,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.About;
+import com.google.api.services.drive.model.FileList;
 import no.dusken.momus.authentication.AuthUserDetails;
 import no.dusken.momus.authentication.LdapUserPwd;
 import no.dusken.momus.authentication.Token;
@@ -170,16 +171,16 @@ public class DevController {
 
 
         // list all files
-//            Drive.Files.List request = drive.files().list();
-//            FileList fileList = request.execute();
-//
-//            List<com.google.api.services.drive.model.File> items = fileList.getItems();
-//            for (com.google.api.services.drive.model.File item : items) {
-//                logger.info("file: {}", item);
+            Drive.Files.List request = drive.files().list();
+            FileList fileList = request.execute();
+
+            List<com.google.api.services.drive.model.File> items = fileList.getItems();
+            for (com.google.api.services.drive.model.File item : items) {
+                logger.info("file: {}", item);
 //                Map<String, String> exportLinks = item.getExportLinks();//.get("text/html");
 //                String s = exportLinks.get("text/plain"); // will crash for stuff not having this
 //                logger.debug("test");
-//            }
+            }
 
 
             About execute = drive.about().get().execute();

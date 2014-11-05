@@ -58,7 +58,7 @@ public class LdapSyncer {
     }
 
     /**
-     * Will pull data from SmmDb and update our local copy
+     * Will pull data from LDAP and update our local copy
      * 02:00 each day (second minute hour day month weekdays)
      */
     @Scheduled(cron = "0 0 2 * * *")

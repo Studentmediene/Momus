@@ -16,11 +16,13 @@
 
 package no.dusken.momus.service;
 
+import com.google.api.services.drive.model.File;
 import no.dusken.momus.authentication.UserLoginService;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleRevision;
 import no.dusken.momus.model.Person;
+import no.dusken.momus.service.drive.GoogleDriveService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
 import no.dusken.momus.service.repository.ArticleRepository;
@@ -54,7 +56,10 @@ public class ArticleService {
     IndesignGenerator indesignGenerator;
 
     @Autowired
-    private UserLoginService userLoginService;
+    UserLoginService userLoginService;
+
+    @Autowired
+    GoogleDriveService googleDriveService;
 
     @PersistenceContext
     EntityManager entityManager;
@@ -72,8 +77,18 @@ public class ArticleService {
 
 
     public Article createNewArticle(Article article) {
-        Long newID = articleRepository.saveAndFlush(article).getId();
-        return articleRepository.findOne(newID);
+        File document = googleDriveService.createDocument(article.getName());
+
+        if (document == null) {
+            throw new RestException("Couldn't create article, Google Docs failed", 500);
+        }
+
+        article.setGoogleDriveId(document.getId());
+
+        Article newArticle = articleRepository.saveAndFlush(article);
+
+        logger.info("Article {} ({}) created ", newArticle.getId(), newArticle.getName());
+        return articleRepository.findOne(newArticle.getId());
     }
 
     public Article saveUpdatedArticle(Article article) {
