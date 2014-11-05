@@ -191,7 +191,19 @@ public class ArticleService {
                 .append(" ")
                 .append(article.getSection().getName())
                 .append(" ")
-                .append(article.getStatus().getName());
+                .append(article.getStatus().getName())
+                .append(" ")
+                .append(article.getType().getName())
+                .append(" ")
+                .append(article.getComment())
+                .append(" ");
+        for(Person journalist : article.getJournalists()){
+            raw.append(journalist.getFullName()).append(" ");
+        }
+        for(Person photo : article.getPhotographers()){
+            raw.append(photo.getFullName()).append(" ");
+        }
+        logger.info(raw.toString());
         return raw.toString().toLowerCase();
 
     }
