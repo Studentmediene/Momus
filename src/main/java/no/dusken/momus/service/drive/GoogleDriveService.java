@@ -101,8 +101,6 @@ public class GoogleDriveService {
     /**
      * Creates a new Google Document for the name
      * and returns the file. Returns null if an error occurred
-     *
-     * @param name
      */
     public File createDocument(String name) {
         File file = null;
@@ -167,7 +165,7 @@ public class GoogleDriveService {
     }
 
     /**
-     * Returns the 200 next changes from Google Drive
+     * Returns the (up to) 200 next changed files from Google Drive
      * The IDs returned are Google Drive file IDs.
      */
     private Set<String> findModifiedFileIds() {
