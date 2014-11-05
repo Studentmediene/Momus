@@ -17,9 +17,9 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService) {
+    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, MailService) {
         $scope.noteRules = noteParserRules;
-
+        $scope.mailmessage = "Ikke sendt";
 
 
         $scope.randomTip = function() {
@@ -53,6 +53,11 @@ angular.module('momusApp.controllers')
             });
         };
 
+        $scope.sendMail = function() {
+            MailService.sendMail().success(function (data) {
+                $scope.mailmessage = data;
+            })
+        };
         $scope.loadingArticles = true;
         PersonService.getCurrentUser().success(function(user){
             $scope.user = user;

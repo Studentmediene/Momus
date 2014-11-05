@@ -141,6 +141,15 @@
         <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
 
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="localhost"/>
+    </bean>
+
+    <bean id="tempMsg" class="org.springframework.mail.SimpleMailMessage">
+        <property name="from" value="momus@smitit.no"/>
+        <property name="subject" value="Email fra Momus"/>
+    </bean>
+
 
     <!-- LDAP -->
     <ldap:context-source
