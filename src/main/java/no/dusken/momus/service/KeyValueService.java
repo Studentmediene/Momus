@@ -78,7 +78,7 @@ public class KeyValueService {
         KeyValue pair = new KeyValue(key, value);
         keyValueRepository.save(pair);
 
-        logger.debug("Key {} was assigned value {}", key, value);
+        logger.info("Key {} was assigned value {}", key, value);
     }
 
     public void setValue(String key, long value) {

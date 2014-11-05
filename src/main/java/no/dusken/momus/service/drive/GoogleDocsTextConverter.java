@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package no.dusken.momus.service.repository;
+package no.dusken.momus.service.drive;
 
-import no.dusken.momus.model.Article;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
+/**
+ * Converts content from a Google Drive Document
+ * to our representation
+ */
+@Service
+public class GoogleDocsTextConverter {
 
-public interface ArticleRepository extends JpaRepository<Article, Long> {
-
-    public List<Article> findByPublicationId(Long id);
-
-    public List<Article> findByGoogleDriveIdIn(Iterable<String> ids);
+    public String convert(String input) {
+        return input; // TODO
+    }
 }

@@ -492,13 +492,13 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
     <!-- Adding KeyValue for storing of simple data that doesn't fit anywhere else -->
     <changeSet id="5" author="Mats">
         <createTable tableName="keyvalue">
-            <column name="key" type="VARCHAR(255)">
+            <column name="k" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="val" type="VARCHAR(255)" />
         </createTable>
 
-        <addPrimaryKey columnNames="key" tableName="keyvalue"/>
+        <addPrimaryKey columnNames="k" tableName="keyvalue"/>
     </changeSet>
 
 

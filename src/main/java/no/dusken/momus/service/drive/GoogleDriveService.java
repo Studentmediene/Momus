@@ -18,6 +18,7 @@ package no.dusken.momus.service.drive;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -26,8 +27,13 @@ import com.google.api.services.drive.model.Change;
 import com.google.api.services.drive.model.ChangeList;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.Permission;
+import no.dusken.momus.model.Article;
+import no.dusken.momus.service.ArticleService;
+import no.dusken.momus.service.KeyValueService;
+import no.dusken.momus.service.repository.ArticleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,11 +41,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.GeneralSecurityException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class GoogleDriveService {
@@ -52,6 +56,18 @@ public class GoogleDriveService {
 
     @Value("${drive.email}")
     private String email;
+
+    @Autowired
+    KeyValueService keyValueService;
+
+    @Autowired
+    GoogleDocsTextConverter googleDocsTextConverter;
+
+    @Autowired
+    ArticleRepository articleRepository;
+
+    @Autowired
+    ArticleService articleService;
 
     private Drive drive = null;
 
@@ -108,7 +124,7 @@ public class GoogleDriveService {
             file = createFile(name);
             createPermission(file);
         } catch (IOException e) {
-            logger.warn("Couldn't create Google Drive file for article  {}", name);
+            logger.error("Couldn't create Google Drive file for article  {}", name);
         }
 
         return file;
@@ -143,7 +159,7 @@ public class GoogleDriveService {
 
     /**
      * Will pull data from Google Drive and update our local copy
-     * every minute ("each time the seconds are 0")
+     * every minute (each time the seconds are "0")
      *
      * (second minute hour day month weekdays)
      */
@@ -156,12 +172,17 @@ public class GoogleDriveService {
         logger.debug("Starting Google Drive sync");
 
         Set<String> modifiedFileIds = findModifiedFileIds();
+        if (modifiedFileIds.size() == 0) {
+            return;
+        }
 
+        List<Article> articles = articleRepository.findByGoogleDriveIdIn(modifiedFileIds);
+        for (Article article : articles) {
+            updateContentFromDrive(article);
+            articleService.saveNewContent(article);
+        }
 
-        // Get the articles having these IDs
-
-
-
+        logger.debug("Done syncing, updated {} articles", articles.size());
     }
 
     /**
@@ -171,18 +192,24 @@ public class GoogleDriveService {
     private Set<String> findModifiedFileIds() {
         Set<String> modifiedFileIds = new HashSet<>();
 
+        long latestChange = keyValueService.getValueAsLong("DRIVE_LATEST", 0L);
+
         try {
             Drive.Changes.List request =  drive.changes().list();
+            request.setStartChangeId(latestChange + 1);
             request.setIncludeSubscribed(false);
             request.setMaxResults(200);
-            request.setStartChangeId(146L);
 
             ChangeList results = request.execute();
             List<Change> changes = results.getItems();
 
             for (Change change : changes) {
                 modifiedFileIds.add(change.getFileId());
+                latestChange = change.getId();
+                logger.debug("Change found, id {}, fileid: {}", change.getId(), change.getFileId());
             }
+
+            keyValueService.setValue("DRIVE_LATEST", latestChange);
 
 
         } catch (IOException e) {
@@ -190,5 +217,23 @@ public class GoogleDriveService {
         }
 
         return modifiedFileIds;
+    }
+
+    private void updateContentFromDrive(Article article) {
+        String downloadUrl = "https://docs.google.com/feeds/download/documents/export/Export?id=" + article.getGoogleDriveId() + "&exportFormat=html";
+
+        try {
+            // Read data, small hack to convert the stream to a string
+            InputStream inputStream = drive.getRequestFactory().buildGetRequest(new GenericUrl(downloadUrl)).execute().getContent();
+            Scanner s = new java.util.Scanner(inputStream).useDelimiter("\\A");
+            String content = s.hasNext() ? s.next() : "";
+
+
+            String convertedContent = googleDocsTextConverter.convert(content);
+            article.setContent(convertedContent);
+        } catch (IOException e) {
+            logger.error("Couldn't get content for article", e);
+            // Let the content remain as it was
+        }
     }
 }

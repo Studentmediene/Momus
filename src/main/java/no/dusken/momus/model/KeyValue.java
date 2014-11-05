@@ -27,9 +27,10 @@ import javax.persistence.Id;
 public class KeyValue {
 
     @Id
+    @Column(name = "k")
     String key;
 
-    @Column(name = "val") // value is reserved word in SQL...
+    @Column(name = "val") // key and value is reserved word in SQL...
     String value;
 
     public KeyValue() {

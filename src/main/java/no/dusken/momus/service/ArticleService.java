@@ -21,7 +21,6 @@ import no.dusken.momus.authentication.UserLoginService;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleRevision;
-import no.dusken.momus.model.Person;
 import no.dusken.momus.service.drive.GoogleDriveService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
@@ -93,7 +92,8 @@ public class ArticleService {
 
     public Article saveUpdatedArticle(Article article) {
         article.setLastUpdated(new Date());
-        logger.info("Article \"{}\" (id: {}) updated by user {}", article.getName(), article.getId(), userLoginService.getId());
+//        logger.info("Article \"{}\" (id: {}) updated by user {}", article.getName(), article.getId(), userLoginService.getId());
+        logger.info("Article \"{}\" (id: {}) updated", article.getName(), article.getId());
 
         return articleRepository.saveAndFlush(article);
     }
@@ -105,7 +105,7 @@ public class ArticleService {
         ArticleRevision revision = new ArticleRevision();
         revision.setContent(content);
         revision.setArticle(existing);
-        revision.setAuthor(new Person(userLoginService.getId()));
+//        revision.setAuthor(new Person(userLoginService.getId()));
         revision.setSavedDate(new Date());
         revision.setStatus(existing.getStatus());
         revision = articleRevisionRepository.save(revision);
