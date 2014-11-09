@@ -181,6 +181,12 @@
             <version>v2-rev151-1.19.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.3.2</version>
+        </dependency>
+
         <!-- Only for the redirect in index.jsp ... -->
         <dependency>
             <groupId>javax.servlet</groupId>

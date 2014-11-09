@@ -16,6 +16,7 @@
 
 package no.dusken.momus.service.drive;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.regex.Matcher;
@@ -29,25 +30,33 @@ import java.util.regex.Pattern;
 public class GoogleDocsTextConverter {
 
     Pattern body = Pattern.compile("<body.*?>(.*)</body>");
-    Pattern aTags = Pattern.compile("<a name=.*?></a>");
+    Pattern aTags = Pattern.compile("<a.*?></a>");
     Pattern classes = Pattern.compile(" class=\".*?\"");
-    Pattern spans = Pattern.compile("</?span>");
-    Pattern emptyP = Pattern.compile("<p></p>");
+    Pattern spans = Pattern.compile("</?span.*?>");
+    Pattern emptyP = Pattern.compile("<p>\\s?</p>");
 
     Pattern inlineComments = Pattern.compile("<sup>.*?</sup>");
     Pattern spaces = Pattern.compile("&nbsp;");
     Pattern comments = Pattern.compile("<div><p>.*?</p></div>");
 
+    Pattern lists = Pattern.compile(" start=\".*?\"");
+
+    Pattern table = Pattern.compile("<table.*?>.*?</table>");
+    Pattern img = Pattern.compile("<img.*?>");
+
     public String convert(String input) {
         String out = extractBody(input);
+
 
         out = removeATags(out);
         out = removeClasses(out);
         out = removeSpans(out);
-        out = removeEmptyPTags(out);
         out = removeComments(out);
+        out = removeInvalidContent(out);
+        out = removeListAttributes(out);
+        out = removeEmptyPTags(out);
 
-
+        out = StringEscapeUtils.unescapeHtml4(out);
 
         return out;
     }
@@ -105,6 +114,28 @@ public class GoogleDocsTextConverter {
 
         m = comments.matcher(out);
         out = m.replaceAll("");
+
+        return out;
+    }
+
+    /**
+     * Removes some stuff from the lists
+     */
+    private String removeListAttributes(String in) {
+        Matcher m = lists.matcher(in);
+        return m.replaceAll("");
+    }
+
+    /**
+     * Removes images and tables, should possibly remove more stuff
+     * but try to keep the contents, not just the formatting.
+     */
+    private String removeInvalidContent(String in) {
+        Matcher m = table.matcher(in);
+        String out = m.replaceAll("");
+
+        m = img.matcher(out);
+        out = m.replaceAll(" ");
 
         return out;
     }
