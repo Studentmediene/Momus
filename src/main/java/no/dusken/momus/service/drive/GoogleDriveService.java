@@ -124,7 +124,7 @@ public class GoogleDriveService {
             file = createFile(name);
             createPermission(file);
         } catch (IOException e) {
-            logger.error("Couldn't create Google Drive file for article  {}", name);
+            logger.error("Couldn't create Google Drive file for article", e);
         }
 
         return file;
@@ -219,6 +219,10 @@ public class GoogleDriveService {
         return modifiedFileIds;
     }
 
+    /**
+     * Fetches the new content from Google Drive as HTML, and sends
+     * it to the googleDocsTextConverter
+     */
     private void updateContentFromDrive(Article article) {
         String downloadUrl = "https://docs.google.com/feeds/download/documents/export/Export?id=" + article.getGoogleDriveId() + "&exportFormat=html";
 
@@ -227,7 +231,7 @@ public class GoogleDriveService {
             InputStream inputStream = drive.getRequestFactory().buildGetRequest(new GenericUrl(downloadUrl)).execute().getContent();
             Scanner s = new java.util.Scanner(inputStream).useDelimiter("\\A");
             String content = s.hasNext() ? s.next() : "";
-
+            logger.debug("Got new content:\n{}", content);
 
             String convertedContent = googleDocsTextConverter.convert(content);
             article.setContent(convertedContent);
