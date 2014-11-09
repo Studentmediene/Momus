@@ -199,7 +199,7 @@
             {{ search.page_number }}
         </span>
     <button class="btn btn-lg btn-info"
-            ng-disabled="peek.length <= 0"
+            ng-disabled="!hasNextPage"
             ng-click="searchFunc(1)">
         <i class="fa fa-angle-right"/>
     </button>

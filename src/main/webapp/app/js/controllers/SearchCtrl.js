@@ -19,8 +19,10 @@
 angular.module('momusApp.controllers')
     .controller('SearchCtrl', function ($scope, $http, $location, $q, PersonService, PublicationService, ArticleService) {
 
+        var pageSize = 200;
+
         $scope.data = [];
-        $scope.peek = [];
+        $scope.hasNextPage = false;
         $scope.search = {
             free: '',
             status: '',
@@ -68,7 +70,7 @@ angular.module('momusApp.controllers')
          * corresponding values from the URL, if any is present the function will return true
          */
         function updateSearchParametersFromUrl() {
-            var urlSearch = $location.search();
+            var urlSearch = $location.search;
             var aValueWasSet = false;
 
             for (var key in $scope.search) {
@@ -107,12 +109,7 @@ angular.module('momusApp.controllers')
                 $location.search('page_number', $scope.search.page_number.toString());
             }
 
-            if (pageDelta === 1) {
-                $scope.data = $scope.peek;
-                peek();
-            } else {
-                search();
-            }
+            search();
         };
 
 
@@ -121,25 +118,14 @@ angular.module('momusApp.controllers')
             $scope.loading = true;
             $scope.noArticles = false;
 
-            ArticleService.search($scope.search).success(function (data) {
-                $scope.data = data;
+            ArticleService.search($scope.search, pageSize).success(function (data) {
+                $scope.hasNextPage = (data.length > pageSize);
+                $scope.data = data.slice(0, pageSize);
             }).finally(function () {
                 $scope.loading = false;
                 if ($scope.data.length <= 0) {
                     $scope.noArticles = true;
                 }
-            });
-
-            peek();
-        }
-
-        function peek() {
-            $scope.peek = [];
-            var search = angular.copy($scope.search);
-            search.page_number = parseInt(search.page_number) + 1;
-
-            ArticleService.search(search).success(function (data) {
-                $scope.peek = data;
             });
         }
     });

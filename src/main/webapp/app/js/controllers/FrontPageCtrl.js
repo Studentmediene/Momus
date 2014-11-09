@@ -37,7 +37,7 @@ angular.module('momusApp.controllers')
         $scope.loadingArticles = true;
         PersonService.getCurrentUser().success(function(user){
             $scope.user = user;
-            ArticleService.search({persons: [user.id], page_size: 10}).success(function (articles) {
+            ArticleService.search({persons: [user.id]}, 10).success(function (articles) {
                 $scope.loadingArticles = false;
                 $scope.myArticles = articles;
                 if($scope.myArticles.length <= 0 ){

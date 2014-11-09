@@ -23,13 +23,13 @@ angular.module('momusApp.services')
             getArticle: function (id) {
                 return $http.get('/api/article/' + id);
             },
-            search: function (searchObject) {
+            search: function (searchObject, pageSize) {
                 if (searchObject.page_number === undefined || searchObject.page_number <= 0) {
                     searchObject.page_number = 1;
                 }
 
                 if (searchObject.page_size === undefined || searchObject.page_size <= 0) {
-                    searchObject.page_size = 200;
+                    searchObject.page_size = (pageSize || 200);
                 }
 
                 return $http.post('/api/article/search', searchObject);
