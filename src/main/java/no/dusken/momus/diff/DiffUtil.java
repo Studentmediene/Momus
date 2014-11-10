@@ -24,8 +24,8 @@ public class DiffUtil {
             oldId = tmp;
         }
 
-        String oldText = revision.get((int) oldId).getContent().replace("\n", "");
-        String newText = revision.get((int) newId).getContent().replace("\n", "");
+        String oldText = getRevisionContentById(revision, oldId).replace("\n", "");
+        String newText = getRevisionContentById(revision, newId).replace("\n", "");
 
         DiffMatchPatch diffMatchPatch = new DiffMatchPatch();
         TagToUnicodeConverter tagToUnicodeConverter = new TagToUnicodeConverter();
@@ -101,6 +101,14 @@ public class DiffUtil {
         }
 
         cleaned.add(diff); // no unicodes, so we add it
+    }
+    private String getRevisionContentById(List<ArticleRevision> revisions, long id){
+        for (ArticleRevision rev: revisions){
+            if(rev.getId() == id){
+                return rev.getContent();
+            }
+        }
+        return "Not found";
     }
 
 }
