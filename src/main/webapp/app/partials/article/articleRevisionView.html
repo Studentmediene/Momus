@@ -12,11 +12,9 @@
                 <table class="table table-hover">
                     <thead>
                     <tr>
-                        <th ng-show="showDiff"></th>
-                        <th ng-show="showDiff"></th>
-                        <th>Forfatter</th>
+                        <th ng-show="showDiff" colspan="2">Sammenlign</th>
                         <th>Dato</th>
-                        <th></th>
+                        <th>Status</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -30,17 +28,15 @@
                             <input type="radio" name="box2" ng-model="$parent.compare[1]" ng-value="rev.id"
                                    ng-change="getDiffs()">
                         </td>
-                        <td person-widget="rev.author">{{rev.author.full_name}}</td>
                         <td>{{rev.saved_date | date:"dd/MM/yy HH:mm"}}</td>
                         <td>
-                            <span tooltip="{{ rev.status.name }}" style="background-color: {{rev.status.color}}; display: inline-block; width: 10px; height: 10px;">
-                            </span>
+                            <span style="background-color: {{article.status.color}}; padding: 3px;">{{ article.status.name }}</span>
                         </td>
                     </tr>
                     </tbody>
                 </table>
                 <a href="#/artikler/{{article.id}}" class="btn btn-primary">Gå tilbake til artikkelen</a>
-                <a ng-if="revisions.length > 1" class="btn btn-primary" ng-click="showCompare()">Sammenlign</a>
+                <a ng-disabled="revisions.length <= 1" class="btn btn-primary" ng-click="showCompare()">Sammenlign</a>
             </div>
         </div>
         <div class="col-md-8" ng-hide="showDiff">
