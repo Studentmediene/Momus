@@ -79,7 +79,7 @@ public class ArticleController {
 
     @RequestMapping(value = "/{id}/revisions", method = RequestMethod.GET)
     public @ResponseBody List<ArticleRevision> getArticleRevisions(@PathVariable("id") Long id) {
-        return articleRevisionRepository.findByArticle_Id(id);
+        return articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(id);
     }
 
     @RequestMapping(value = "/{articleId}/revisions/{revId1}/{revId2}", method = RequestMethod.GET)

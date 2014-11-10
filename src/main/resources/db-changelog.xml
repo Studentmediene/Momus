@@ -63,7 +63,6 @@
             <column name="content" type="LONGTEXT"/>
             <column name="savedDate" type="datetime"/>
             <column name="article_id" type="BIGINT(19)"/>
-            <column name="author_id" type="BIGINT(19)"/>
             <column name="status_id" type="BIGINT(19)"/>
         </createTable>
 
@@ -251,8 +250,6 @@
         <addForeignKeyConstraint baseColumnNames="status_id" baseTableName="articlerevision" constraintName="FK_articlerevision_articlestatus" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="articlestatus"/>
 
         <addForeignKeyConstraint baseColumnNames="article_id" baseTableName="articlerevision" constraintName="FK_articlerevision_article" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="article"/>
-
-        <addForeignKeyConstraint baseColumnNames="author_id" baseTableName="articlerevision" constraintName="FK_articlerevision_person" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="person"/>
 
         <addForeignKeyConstraint baseColumnNames="Article_id" baseTableName="article_journalist" constraintName="FK_article_journalist_article" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="article"/>
 
