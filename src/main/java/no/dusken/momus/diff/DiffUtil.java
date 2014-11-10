@@ -16,7 +16,7 @@ public class DiffUtil {
     private ArticleRevisionRepository articleRevisionRepository;
 
     public @ResponseBody LinkedList<DiffMatchPatch.Diff> getDiffList(long art, long oldId, long newId) {
-        List<ArticleRevision> revision = articleRevisionRepository.findByArticle_Id(art);
+        List<ArticleRevision> revision = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(art);
 
         if (oldId > newId) {
             long tmp = newId;

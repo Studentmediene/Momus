@@ -14,20 +14,10 @@
  * limitations under the License.
  */
 
-package no.dusken.momus.model;
+package no.dusken.momus.service.repository;
 
-import java.util.Set;
+import no.dusken.momus.model.KeyValue;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public class Updates<T> {
-    private T object;
-    private Set<String> updatedFields;
-
-
-    public T getObject() {
-        return object;
-    }
-
-    public Set<String> getUpdatedFields() {
-        return updatedFields;
-    }
+public interface KeyValueRepository extends JpaRepository<KeyValue, String> {
 }

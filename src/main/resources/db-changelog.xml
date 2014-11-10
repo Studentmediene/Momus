@@ -63,7 +63,6 @@
             <column name="content" type="LONGTEXT"/>
             <column name="savedDate" type="datetime"/>
             <column name="article_id" type="BIGINT(19)"/>
-            <column name="author_id" type="BIGINT(19)"/>
             <column name="status_id" type="BIGINT(19)"/>
         </createTable>
 
@@ -251,8 +250,6 @@
         <addForeignKeyConstraint baseColumnNames="status_id" baseTableName="articlerevision" constraintName="FK_articlerevision_articlestatus" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="articlestatus"/>
 
         <addForeignKeyConstraint baseColumnNames="article_id" baseTableName="articlerevision" constraintName="FK_articlerevision_article" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="article"/>
-
-        <addForeignKeyConstraint baseColumnNames="author_id" baseTableName="articlerevision" constraintName="FK_articlerevision_person" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="person"/>
 
         <addForeignKeyConstraint baseColumnNames="Article_id" baseTableName="article_journalist" constraintName="FK_article_journalist_article" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="article"/>
 
@@ -482,6 +479,24 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
     </changeSet>
 
 
+    <!-- Add support for Google Drive -->
+    <changeSet id="4" author="Mats">
+        <addColumn tableName="article">
+            <column name="googleDriveId" type="VARCHAR(255)" />
+        </addColumn>
+    </changeSet>
+
+    <!-- Adding KeyValue for storing of simple data that doesn't fit anywhere else -->
+    <changeSet id="5" author="Mats">
+        <createTable tableName="keyvalue">
+            <column name="k" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="val" type="VARCHAR(255)" />
+        </createTable>
+
+        <addPrimaryKey columnNames="k" tableName="keyvalue"/>
+    </changeSet>
 
 
 
