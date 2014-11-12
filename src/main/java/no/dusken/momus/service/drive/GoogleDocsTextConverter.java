@@ -44,6 +44,14 @@ public class GoogleDocsTextConverter {
     Pattern table = Pattern.compile("<table.*?>.*?</table>");
     Pattern img = Pattern.compile("<img.*?>");
 
+
+    String ltUnicode = Character.toString((char) 44000);
+    String gtUnicode = Character.toString((char) 44001);
+    Pattern ltToUnicode = Pattern.compile("&lt;");
+    Pattern gtToUnicode = Pattern.compile("&gt;");
+    Pattern unicodeToLt = Pattern.compile(ltUnicode);
+    Pattern unicodeToGt = Pattern.compile(gtUnicode);
+
     public String convert(String input) {
         String out = extractBody(input);
 
@@ -55,8 +63,9 @@ public class GoogleDocsTextConverter {
         out = removeInvalidContent(out);
         out = removeListAttributes(out);
         out = removeEmptyPTags(out);
+        out = unescapeHtml(out);
 
-        out = StringEscapeUtils.unescapeHtml4(out);
+
 
         return out;
     }
@@ -136,6 +145,34 @@ public class GoogleDocsTextConverter {
 
         m = img.matcher(out);
         out = m.replaceAll(" ");
+
+        return out;
+    }
+
+    /**
+     * Converts HTML entities to "normal characters", for instance
+     * it converts &aring; to å
+     *
+     * But &lt; (<) and &gt; (>) are ignored, to avoid < and > in the written
+     * text to affect our HTML.
+     */
+    private String unescapeHtml(String in) {
+        // replace all &gt; and &lt;
+        Matcher m = ltToUnicode.matcher(in);
+        String out = m.replaceAll(ltUnicode);
+
+        m = gtToUnicode.matcher(out);
+        out = m.replaceAll(gtUnicode);
+
+        // convert stuff
+        out = StringEscapeUtils.unescapeHtml4(out);
+
+        // add the &gt; and &lt;s back
+        m = unicodeToLt.matcher(out);
+        out = m.replaceAll("&lt;");
+
+        m = unicodeToGt.matcher(out);
+        out = m.replaceAll("&gt;");
 
         return out;
     }

@@ -103,19 +103,9 @@ public class ArticleController {
     }
 
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public @ResponseBody Article saveArticleContents(@RequestBody Article article){
-        return articleService.saveUpdatedArticle(article);
-    }
-
     @RequestMapping(value = "/metadata", method = RequestMethod.PUT)
     public @ResponseBody Article updateArticleMetadata(@RequestBody Article article){
         return articleService.saveMetadata(article);
-    }
-
-    @RequestMapping(value = "/content", method = RequestMethod.PUT)
-    public @ResponseBody Article updateArticleContentText(@RequestBody Article article){
-        return articleService.saveNewContent(article);
     }
 
     @RequestMapping(value = "/note", method = RequestMethod.PUT)

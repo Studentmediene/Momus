@@ -73,4 +73,13 @@ public class GoogleDocsTextConverterTest extends AbstractTestRunner {
 
         assertEquals(expectedOut, googleDocsTextConverter.convert(in));
     }
+
+    @Test
+    public void escapesHtmlTags() {
+        String in = "<html><head><title>driiiive - Momus</title><meta content=\"text/html; charset=UTF-8\" http-equiv=\"content-type\"><style type=\"text/css\">ol{margin:0;padding:0}.c1{widows:2;orphans:2;direction:ltr;page-break-after:avoid}.c0{widows:2;orphans:2;height:11pt;direction:ltr}.c2{max-width:468pt;background-color:#ffffff;padding:72pt 72pt 72pt 72pt}.c3{widows:2;orphans:2;direction:ltr}.title{widows:2;padding-top:0pt;line-height:1.15;orphans:2;text-align:left;color:#000000;font-size:21pt;font-family:\"Trebuchet MS\";padding-bottom:0pt;page-break-after:avoid}.subtitle{widows:2;padding-top:0pt;line-height:1.15;orphans:2;text-align:left;color:#666666;font-style:italic;font-size:13pt;font-family:\"Trebuchet MS\";padding-bottom:10pt;page-break-after:avoid}li{color:#000000;font-size:11pt;font-family:\"Arial\"}p{color:#000000;font-size:11pt;margin:0;font-family:\"Arial\"}h1{widows:2;padding-top:10pt;line-height:1.15;orphans:2;text-align:left;color:#000000;font-size:16pt;font-family:\"Trebuchet MS\";padding-bottom:0pt;page-break-after:avoid}h2{widows:2;padding-top:10pt;line-height:1.15;orphans:2;text-align:left;color:#000000;font-size:13pt;font-family:\"Trebuchet MS\";font-weight:bold;padding-bottom:0pt;page-break-after:avoid}h3{widows:2;padding-top:8pt;line-height:1.15;orphans:2;text-align:left;color:#666666;font-size:12pt;font-family:\"Trebuchet MS\";font-weight:bold;padding-bottom:0pt;page-break-after:avoid}h4{widows:2;padding-top:8pt;line-height:1.15;orphans:2;text-align:left;color:#666666;font-size:11pt;text-decoration:underline;font-family:\"Trebuchet MS\";padding-bottom:0pt;page-break-after:avoid}h5{widows:2;padding-top:8pt;line-height:1.15;orphans:2;text-align:left;color:#666666;font-size:11pt;font-family:\"Trebuchet MS\";padding-bottom:0pt;page-break-after:avoid}h6{widows:2;padding-top:8pt;line-height:1.15;orphans:2;text-align:left;color:#666666;font-style:italic;font-size:11pt;font-family:\"Trebuchet MS\";padding-bottom:0pt;page-break-after:avoid}</style></head><body class=\"c2\"><h1 class=\"c1\"><a name=\"h.a3lf94q9n7x7\"></a><span>Min artikkel, yay</span></h1><p class=\"c0\"><span></span></p><h3 class=\"c1\"><a name=\"h.pm5s5pceyhc9\"></a><span>hehehe &lt;b&gt;fet&lt;/b&gt;</span></h3><p class=\"c3\"><span>vanlig tekst &lt; og &gt;!</span></p><p class=\"c0\"><span></span></p></body></html>";
+
+        String expectedOut = "<h1>Min artikkel, yay</h1><h3>hehehe &lt;b&gt;fet&lt;/b&gt;</h3><p>vanlig tekst &lt; og &gt;!</p>";
+
+        assertEquals(expectedOut, googleDocsTextConverter.convert(in));
+    }
 }

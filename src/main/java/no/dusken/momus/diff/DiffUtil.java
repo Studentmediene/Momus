@@ -18,6 +18,9 @@ public class DiffUtil {
     @Autowired
     private ArticleRevisionRepository articleRevisionRepository;
 
+    @Autowired
+    TagToUnicodeConverter tagToUnicodeConverter;
+
     private Logger logger = LoggerFactory.getLogger(getClass());
 
 
@@ -34,7 +37,6 @@ public class DiffUtil {
         String newText = getRevisionContentById(revision, newId).replace("\n", "");
 
         DiffMatchPatch diffMatchPatch = new DiffMatchPatch();
-        TagToUnicodeConverter tagToUnicodeConverter = new TagToUnicodeConverter();
         oldText = tagToUnicodeConverter.removeTags(oldText);
         newText = tagToUnicodeConverter.removeTags(newText);
         LinkedList<DiffMatchPatch.Diff> diffs = diffMatchPatch.diff_main(oldText, newText, false);
@@ -76,7 +78,7 @@ public class DiffUtil {
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
 
-            if (c >= 44032) { // if the character is one of the unicodes we use in TagToUnicodeConverter
+            if (c >= tagToUnicodeConverter.tagStart) { // if the character is one of the unicodes we use in TagToUnicodeConverter
                 DiffMatchPatch.Operation type;
 
                 if (diff.operation == DiffMatchPatch.Operation.DELETE) {
