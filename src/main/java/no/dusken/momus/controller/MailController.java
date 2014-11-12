@@ -16,6 +16,6 @@ public class MailController {
 
     @RequestMapping(value = "/send", method = RequestMethod.GET)
     public @ResponseBody String sendMail(){
-        return mailService.sendMail();
+        return mailService.sendHTMLMail();
     }
 }

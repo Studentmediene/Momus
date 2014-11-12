@@ -8,10 +8,12 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.MailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.Iterator;
 
 @Service
@@ -20,18 +22,10 @@ public class MailService {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private MailSender mailSender;
+    private JavaMailSenderImpl mailSender;
 
     @Autowired
     private SimpleMailMessage tempMsg;
-
-    public void setMailSender(MailSender mailSender){
-        this.mailSender = mailSender;
-    }
-
-    public void setTempMsg(SimpleMailMessage tempMsg) {
-        this.tempMsg = tempMsg;
-    }
 
     public String sendMail(){
         SimpleSmtpServer server = SimpleSmtpServer.start();
@@ -50,12 +44,44 @@ public class MailService {
 
         server.stop();
 
-        logger.info("E-poster mottat: " + String.valueOf(server.getReceivedEmailSize()));
+        logger.info("E-poster mottatt: " + String.valueOf(server.getReceivedEmailSize()));
         Iterator emailIter = server.getReceivedEmail();
         SmtpMessage email = (SmtpMessage)emailIter.next();
         logger.info(email.toString());
 
         return result;
 
+    }
+
+    public String sendHTMLMail(){
+        SimpleSmtpServer server = SimpleSmtpServer.start();
+
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = null;
+        try {
+            helper = new MimeMessageHelper(mimeMessage, false, "utf-8");
+        } catch (MessagingException e) {
+            logger.warn(e.toString());
+            return "error";
+        }
+        String msg = "<h3>Halla</h3><p>Dette er en e-post fra Momus</p>";
+        try{
+            mimeMessage.setContent(msg, "text/html");
+            helper.setTo("egrimstad95@gmail.com");
+            helper.setSubject("E-post fra Momus");
+            helper.setFrom("momus@smint.no");
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            logger.warn(e.toString());
+            return "error";
+        }
+        server.stop();
+
+        logger.info("E-poster mottatt: " + String.valueOf(server.getReceivedEmailSize()));
+        Iterator emailIter = server.getReceivedEmail();
+        SmtpMessage email = (SmtpMessage)emailIter.next();
+        logger.info(email.toString());
+
+        return "hei";
     }
 }
