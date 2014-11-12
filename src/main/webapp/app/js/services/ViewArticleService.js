@@ -20,39 +20,32 @@ angular.module('momusApp.services')
     .service('ViewArticleService', function ($cookieStore) {
         return {
 
-            viewArticle : function(title, article){
-                //$cookieStore.remove("recentlyViewed");
-                //$cookieStore.remove("recentlyViewedNames");
-                var articles = $cookieStore.get("recentlyViewed");
-                var articleNames = $cookieStore.get("recentlyViewedNames");
-                console.log(articles);
-                if(!articles){
-                    articles = [article];
-                    articleNames = [title]
-                } else if($.inArray(article, articles) > -1){
-                    articles.splice($.inArray(article, articles),1);
-                    articleNames.splice($.inArray(title, articleNames), 1);
-                    articles.push(article);
-                    articleNames.push(title);
-                } else if(articles >= 10){
-                    articles.shift().push(article);
-                    articleNames.shift().push(title)
-                } else {
-                    articles.push(article);
-                    articleNames.push(title);
+            checkRecentlyViewed: function(newValue){
+                var temp_array = $cookieStore.get("recentlyViewed");
+                var duplicateIndex = temp_array.indexOf(newValue);
+                while(duplicateIndex >= 0) {
+                    temp_array.splice(duplicateIndex, 1);
+                    duplicateIndex = temp_array.indexOf(newValue);
                 }
-                $cookieStore.put("recentlyViewed", articles);
-                $cookieStore.put("recentlyViewedNames", articleNames);
-                console.log($cookieStore.get("recentlyViewed"));
-                console.log($cookieStore.get("recentlyViewedNames"));
+                if(temp_array.length > 4){
+                    temp_array.splice(0, temp_array.length-4);
+                }
+                temp_array.push(newValue);
+                return temp_array;
+            },
+
+            viewArticle : function(article){
+                //$cookieStore.remove("recentlyViewed");
+                if($cookieStore.get("recentlyViewed")) {
+                    $cookieStore.put("recentlyViewed", this.checkRecentlyViewed(article));
+                } else {
+                    $cookieStore.put("recentlyViewed", [article]);
+                }
+
             },
 
             getRecentViews : function(){
                 return $cookieStore.get("recentlyViewed");
-            },
-
-            getRecentNames : function(){
-                return $cookieStore.get("recentlyViewedNames");
             }
         }
     });

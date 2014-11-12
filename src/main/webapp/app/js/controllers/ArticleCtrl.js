@@ -172,6 +172,6 @@ angular.module('momusApp.controllers')
 
         $scope.saveViewed = function(){
             var viewedArticle = $routeParams.id;
-            ViewArticleService.viewArticle($scope.article.name, viewedArticle);
+            ViewArticleService.viewArticle(viewedArticle);
         }
     });
