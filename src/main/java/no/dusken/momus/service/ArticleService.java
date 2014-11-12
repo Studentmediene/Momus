@@ -184,7 +184,7 @@ public class ArticleService {
 
     private String createRawContent(Article article){
         StringBuilder raw = new StringBuilder();
-        String content = stripOffHtml(article.getContent()).replaceAll("\\p{P}"," ").replaceAll(" +"," ");
+        String content = stripOffHtml(article.getContent()).replaceAll("\\p{P}"," ").replaceAll("nbsp"," ").replaceAll(" +"," ");
         raw.append(content)
                 .append(" ")
                 .append(article.getName())
@@ -203,7 +203,7 @@ public class ArticleService {
         for(Person photo : article.getPhotographers()){
             raw.append(photo.getFullName()).append(" ");
         }
-        logger.info(raw.toString());
+        logger.info(raw.toString().toLowerCase());
         return raw.toString().toLowerCase();
 
     }
