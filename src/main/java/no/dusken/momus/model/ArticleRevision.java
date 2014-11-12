@@ -36,9 +36,6 @@ public class ArticleRevision {
     @ManyToOne
     private ArticleStatus status;
 
-    @ManyToOne
-    private Person author;
-
     @Temporal(TemporalType.TIMESTAMP)
     private Date savedDate;
 
@@ -78,13 +75,5 @@ public class ArticleRevision {
 
     public void setSavedDate(Date savedDate) {
         this.savedDate = savedDate;
-    }
-
-    public Person getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Person author) {
-        this.author = author;
     }
 }

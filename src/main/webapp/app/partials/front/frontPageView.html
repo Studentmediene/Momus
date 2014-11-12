@@ -137,6 +137,37 @@
                 </textarea>
             </div>
         </div>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h1 class="panel-title"><i class="fa fa-question-circle"></i> Tilfeldig tips
+
+                    <div class="pull-right">
+                        <button class="btn btn-default btn-xs" ng-click="randomTip()" tooltip="Nytt tips">
+                            <i class="fa fa-refresh"></i>
+                        </button>
+                    </div>
+                </h1>
+            </div>
+            <div class="panel-body" ng-bind-html="tip | trustHtml"></div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-bullhorn"></i> Nyheter om Momus</h1></div>
+            <div class="panel-body" style="height:300px; overflow-y: auto">
+                <table class="table">
+                    <tbody ng-repeat="new in news | orderBy: '-date'">
+                        <tr ng-click="showNews($index)"ng-class="{danger: new.new, active:!new.new}" class="interact">
+                            <td width="35%">{{new.date | date}}</td>
+                            <td ng-bind-html="new.title | trustHtml"></td>
+                            <td width="5%" ng-show="$index != show"><i class="fa fa-arrow-circle-down"></i></td>
+                            <td width="5%" ng-show="$index == show"><i class="fa fa-arrow-circle-up"></i></td>
+                        </tr>
+                        <tr ng-show="$index == show">
+                            <td colspan="3" ng-bind-html="new.text | trustHtml"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 <div class="row">

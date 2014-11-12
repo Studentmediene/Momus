@@ -18,9 +18,16 @@
 
 angular.module('momusApp.controllers')
     .controller('ArticleRevisionCtrl', function($scope, ArticleService, $routeParams){
+
+        $scope.diff = "";
+        $scope.showDiff = false;
+
         ArticleService.getRevisions($routeParams.id).success(function (data){
             $scope.revisions = data;
-            $scope.current = data[data.length - 1];
+            $scope.current = data[0];
+            if($scope.revisions.length > 1){
+                $scope.compare = [data[0].id,data[1].id];
+            }
         });
 
         ArticleService.getArticle($routeParams.id).success(function (data){
@@ -29,6 +36,17 @@ angular.module('momusApp.controllers')
 
         $scope.gotoRev = function(rev){
             $scope.current = rev;
+        };
+
+        $scope.showCompare = function(){
+            $scope.showDiff = !$scope.showDiff;
+            $scope.getDiffs();
+        };
+
+        $scope.getDiffs = function(){
+            ArticleService.getDiffs($scope.article.id, $scope.compare[0], $scope.compare[1]).success(function (data){
+                $scope.diff = data;
+            });
         };
 
     });

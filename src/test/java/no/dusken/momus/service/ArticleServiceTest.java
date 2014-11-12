@@ -192,12 +192,11 @@ public class ArticleServiceTest extends AbstractTestRunner {
         assertEquals("NEW CONTENT for article 1", updated.getContent());
 
         // Fetch the revision
-        List<ArticleRevision> revisions = articleRevisionRepository.findByArticle(updated);
+        List<ArticleRevision> revisions = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(updated.getId());
         assertEquals(1, revisions.size());
 
         ArticleRevision rev = revisions.get(0);
         assertEquals("NEW CONTENT for article 1", rev.getContent());
-        assertEquals(new Person(1L), rev.getAuthor());
     }
 
     @Test

@@ -22,7 +22,7 @@
 
     <groupId>no.dusken.momus</groupId>
     <artifactId>momus</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.3.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <!-- Some boilerplate info -->
@@ -165,6 +165,26 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.23</version>
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>3.2.2</version>
+        </dependency>
+
+
+        <!-- Google Drive API -->
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-drive</artifactId>
+            <version>v2-rev151-1.19.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.3.2</version>
         </dependency>
 
         <!-- Only for the redirect in index.jsp ... -->

@@ -20,4 +20,28 @@ angular.module('momusApp.services')
         return function(text) {
             return $sce.trustAsHtml(text);
         };
+    }])
+    .filter('diffsToHtml', ['$sce', function($sce){
+        return function(diffs, type){
+            var html = "";
+            for (var i = 0; i < diffs.length; i++) {
+                if (diffs[i].operation == "DELETE" && type == "del") {
+                    html += "<del>";
+                    html += diffs[i].text;
+                    html += "</del>";
+                } else if (diffs[i].operation == "DELETETAG" && type == "del") {
+                    html += diffs[i].text.slice(0, -1) + " class=\"del\">"; // add a del class
+                } else if (diffs[i].operation == "EQUAL") {
+                    html += diffs[i].text;
+                } else if (diffs[i].operation == "INSERT" && type == "add") {
+                    html += "<ins>";
+                    html += diffs[i].text;
+                    html += "</ins>";
+                } else if (diffs[i].operation == "INSERTTAG" && type == "add") {
+                    html += diffs[i].text.slice(0, -1) + " class=\"ins\">"; //add a ins class
+                }
+            }
+
+            return $sce.trustAsHtml(html);
+        }
     }]);

@@ -16,11 +16,12 @@
 
 package no.dusken.momus.service;
 
+import com.google.api.services.drive.model.File;
 import no.dusken.momus.authentication.UserLoginService;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleRevision;
-import no.dusken.momus.model.Person;
+import no.dusken.momus.service.drive.GoogleDriveService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
 import no.dusken.momus.service.repository.ArticleRepository;
@@ -54,7 +55,10 @@ public class ArticleService {
     IndesignGenerator indesignGenerator;
 
     @Autowired
-    private UserLoginService userLoginService;
+    UserLoginService userLoginService;
+
+    @Autowired
+    GoogleDriveService googleDriveService;
 
     @PersistenceContext
     EntityManager entityManager;
@@ -72,42 +76,68 @@ public class ArticleService {
 
 
     public Article createNewArticle(Article article) {
-        Long newID = articleRepository.saveAndFlush(article).getId();
-        return articleRepository.findOne(newID);
+        File document = googleDriveService.createDocument(article.getName());
+
+        if (document == null) {
+            throw new RestException("Couldn't create article, Google Docs failed", 500);
+        }
+
+        article.setGoogleDriveId(document.getId());
+
+        Article newArticle = articleRepository.saveAndFlush(article);
+
+        logger.info("Article {} ({}) created ", newArticle.getId(), newArticle.getName());
+        return articleRepository.findOne(newArticle.getId());
     }
 
     public Article saveUpdatedArticle(Article article) {
         article.setLastUpdated(new Date());
-
-        logger.info("Article \"{}\" (id: {}) updated by user {}", article.getName(), article.getId(), userLoginService.getId());
-
-//        if (article.getStatus().getName().equals("Publisert")) {
-            // export
-//        }
+        logger.info("Article \"{}\" (id: {}) updated", article.getName(), article.getId());
 
         return articleRepository.saveAndFlush(article);
     }
 
     public Article saveNewContent(Article article) {
         Article existing = articleRepository.findOne(article.getId());
-        String content = article.getContent();
+        String newContent = article.getContent();
+        String oldContent = existing.getContent();
 
-        ArticleRevision revision = new ArticleRevision();
-        revision.setContent(content);
+        if (newContent.equals(oldContent)) {
+            // Inserting comments in the Google Docs triggers a change, but the content we see is the same.
+            // So it would look weird having multiple revisions without any changes.
+            logger.info("No changes made to content of article {}", article.getId());
+            return existing;
+        }
+
+        ArticleRevision revision;
+
+        // Update the latest revision if it's only a short time since it was created
+        List<ArticleRevision> revisions = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(article.getId());
+        if (revisions.size() > 0 && (new Date().getTime() - revisions.get(0).getSavedDate().getTime()) < 10*60*1000 ) { // 10 minutes
+            revision = revisions.get(0);
+            logger.info("Reusing revision {} for article {}", revision.getId(), article.getId());
+        } else {
+            revision = new ArticleRevision();
+        }
+
+        revision.setContent(newContent);
         revision.setArticle(existing);
-        revision.setAuthor(new Person(userLoginService.getId()));
-        revision.setSavedDate(new Date());
         revision.setStatus(existing.getStatus());
+        revision.setSavedDate(new Date());
+
         revision = articleRevisionRepository.save(revision);
+        logger.info("Saved revision for article(id:{}) with id: {}, content:\n{}", article.getId(), revision.getId(), newContent);
 
-        logger.info("Saved new revision for article(id:{}) with id: {}, content:\n{}", article.getId(), revision.getId(), content);
-
-        existing.setContent(content);
+        existing.setContent(newContent);
         return saveUpdatedArticle(existing);
     }
 
     public Article saveMetadata(Article article) {
         Article existing = articleRepository.findOne(article.getId());
+
+        if (!article.getStatus().equals(existing.getStatus())) {
+            updateLatestRevisionToThisStatus(article);
+        }
 
         existing.setName(article.getName());
         existing.setJournalists(article.getJournalists());
@@ -165,6 +195,23 @@ public class ArticleService {
 
     public ArticleRepository getArticleRepository() {
         return articleRepository;
+    }
+
+    private void updateLatestRevisionToThisStatus(Article article) {
+        List<ArticleRevision> revisions = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(article.getId());
+
+        if (revisions.size() == 0) {
+            logger.info("No revisions to update for article id {}", article.getId());
+            return;
+        }
+
+        ArticleRevision latest = revisions.get(0);
+        latest.setStatus(article.getStatus());
+        articleRevisionRepository.save(latest);
+
+        logger.info("Updated revision {} for article {} to status {}", latest, article.getId(), article.getStatus());
+
+
     }
 
 }
