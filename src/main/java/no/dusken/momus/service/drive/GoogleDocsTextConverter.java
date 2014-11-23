@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 public class GoogleDocsTextConverter {
 
     Pattern body = Pattern.compile("<body.*?>(.*)</body>");
-    Pattern aTags = Pattern.compile("<a.*?></a>");
+    Pattern aTags = Pattern.compile("<a[^>]*?></a>");
     Pattern classes = Pattern.compile(" class=\".*?\"");
     Pattern spans = Pattern.compile("</?span.*?>");
     Pattern emptyP = Pattern.compile("<p>\\s?</p>");
@@ -41,7 +41,7 @@ public class GoogleDocsTextConverter {
 
     Pattern lists = Pattern.compile(" start=\".*?\"");
 
-    Pattern table = Pattern.compile("<table.*?>.*?</table>");
+    Pattern table = Pattern.compile("<table[^>]*?>.*?</table>");
     Pattern img = Pattern.compile("<img.*?>");
 
 
