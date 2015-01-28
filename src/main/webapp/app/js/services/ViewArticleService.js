@@ -20,26 +20,27 @@ angular.module('momusApp.services')
     .service('ViewArticleService', function ($cookieStore) {
         return {
 
-            checkRecentlyViewed: function(newValue){
-                var temp_array = $cookieStore.get("recentlyViewed");
-                var duplicateIndex = temp_array.indexOf(newValue);
+            checkRecentlyViewed: function(articleId){
+                var currentViewed = $cookieStore.get("recentlyViewed");
+                var duplicateIndex = currentViewed.indexOf(articleId);
+
                 while(duplicateIndex >= 0) {
-                    temp_array.splice(duplicateIndex, 1);
-                    duplicateIndex = temp_array.indexOf(newValue);
+                    currentViewed.splice(duplicateIndex, 1);
+                    duplicateIndex = currentViewed.indexOf(articleId);
                 }
-                if(temp_array.length > 4){
-                    temp_array.splice(0, temp_array.length-4);
+                if(currentViewed.length > 4){
+                    currentViewed.splice(0, currentViewed.length-4);
                 }
-                temp_array.push(newValue);
-                return temp_array;
+                currentViewed.push(articleId);
+                return currentViewed;
             },
 
-            viewArticle : function(article){
-                //$cookieStore.remove("recentlyViewed");
+            viewArticle : function(articleId){
                 if($cookieStore.get("recentlyViewed")) {
-                    $cookieStore.put("recentlyViewed", this.checkRecentlyViewed(article));
+                    var updated = this.checkRecentlyViewed(articleId);
+                    $cookieStore.put("recentlyViewed", updated);
                 } else {
-                    $cookieStore.put("recentlyViewed", [article]);
+                    $cookieStore.put("recentlyViewed", [articleId]);
                 }
 
             },
