@@ -23,6 +23,9 @@ angular.module('momusApp.services')
             getArticle: function (id) {
                 return $http.get('/api/article/' + id);
             },
+            getMultiple: function(ids) {
+                return $http.post('/api/article/multiple', ids);
+            },
             search: function (searchObject) {
                 return $http.post('/api/article/search', searchObject);
             },
