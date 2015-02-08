@@ -30,6 +30,11 @@ import java.util.regex.Pattern;
 public class GoogleDocsTextConverter {
 
     Pattern body = Pattern.compile("<body.*?>(.*)</body>");
+    Pattern css = Pattern.compile("<style type=\"text/css\">(.*)</style>");
+    Pattern italicStyleName = Pattern.compile("\\.([^{]*?)\\{font-style:italic\\}");
+    Pattern boldStyleName = Pattern.compile("\\.([^{]*?)\\{font-weight:bold\\}");
+
+
     Pattern aTags = Pattern.compile("<a[^>]*?></a>");
     Pattern classes = Pattern.compile(" class=\".*?\"");
     Pattern spans = Pattern.compile("</?span.*?>");
@@ -53,10 +58,14 @@ public class GoogleDocsTextConverter {
     Pattern unicodeToGt = Pattern.compile(gtUnicode);
 
     public String convert(String input) {
-        String out = extractBody(input);
+        String body = extractBody(input);
+        String css = extractCss(input);
 
+        String out;
 
-        out = removeATags(out);
+        out = findItalicsAndBold(body, css);
+
+        out = removeEmptyATags(out);
         out = removeClasses(out);
         out = removeSpans(out);
         out = removeComments(out);
@@ -82,10 +91,55 @@ public class GoogleDocsTextConverter {
         return in;
     }
 
+    private String extractCss(String in) {
+        Matcher m = css.matcher(in);
+
+        if (m.find()) {
+            return m.group(1);
+        }
+        return  in;
+    }
+
+
+    /**
+     * Bold and italics are not marked with tags in GDocs, instead it is applied with CSS.
+     * For instance:
+     * .c1{font-weight:bold}
+     * lalala <span class="c1">bold</span>
+     *
+     * The classnames change each time, so need to dynamicall find it and change the span to <i> or <b>
+     */
+    private String findItalicsAndBold(String body, String css) {
+        Matcher italicsMatcher = italicStyleName.matcher(css);
+        Matcher boldMatcher = boldStyleName.matcher(css);
+
+        if (italicsMatcher.find()) {
+            String italicSelectorName = italicsMatcher.group(1);
+
+            Pattern italicClasses = Pattern.compile("<span class=\"" + italicSelectorName + "\">(.*?)</span>");
+            Matcher spanMatcherItalics = italicClasses.matcher(body);
+
+            body = spanMatcherItalics.replaceAll("<i>$1</i>"); // $1 means what is matched inside the parentheses in the pattern
+        }
+
+
+        if (boldMatcher.find()) {
+            String boldSelectorName = boldMatcher.group(1);
+
+            Pattern boldClasses = Pattern.compile("<span class=\"" + boldSelectorName + "\">(.*?)</span>");
+            Matcher spanMatcherBold = boldClasses.matcher(body);
+
+            body = spanMatcherBold.replaceAll("<b>$1</b>");
+        }
+
+
+        return body;
+    }
+
     /**
      * Remove <a name=*></a> stuff google inserts everywhere
      */
-    private String removeATags(String in) {
+    private String removeEmptyATags(String in) {
         Matcher m = aTags.matcher(in);
         return m.replaceAll("");
     }
