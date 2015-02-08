@@ -67,10 +67,19 @@
 
 <div class="row hidden-print">
     <div class="col-xs-12">
-        <a href="https://docs.google.com/document/d/{{article.google_drive_id}}/edit" target="_blank" class="btn btn-success">
-            <span class="fa fa-pencil"></span>
-            Rediger i Google Docs
-        </a>
+
+        <div class="btn-group">
+
+            <a href="https://docs.google.com/document/d/{{article.google_drive_id}}/edit" target="_blank" class="btn btn-success">
+                <span class="fa fa-pencil"></span>
+                Rediger i Google Docs
+            </a>
+
+            <a ng-click="showHelp()" class="btn btn-success">
+                <span class="fa fa-question"></span>
+            </a>
+
+        </div>
 
 
         <a href="#/artikler/revisjon/{{article.id}}" class="btn btn-primary"><i class="fa fa-file-text-o"></i>
@@ -115,74 +124,7 @@
     </div>
 </div>
 <div class="col-md-5 hidden-print">
-<div if="note-panel" class="panel panel-warning">
-    <div class="panel-heading">
-        <h1 class="panel-title">
-            <span class="fa fa-list"></span>
-            Artikkel-notater
-            <div class="pull-right">
-                <button class="btn btn-default btn-xs"
-                        ng-disabled="article.note == unedited.note"
-                        ng-click="saveNote()"
-                        button-loader="savingNote">
-                    <i class="fa fa-save"></i>
-                    Lagre
-                </button>
-            </div>
-        </h1>
-    </div>
-    <div class="panel-body">
-        <div id="note-toolbar" class="editor-toolbar">
-            <div class="btn-group">
-                <button class="btn btn-default"
-                        data-wysihtml5-command="bold"
-                        title="Fet tekst (Ctrl+B)">
-                    <i class="fa fa-bold"></i>
-                </button>
-                <button class="btn btn-default"
-                        data-wysihtml5-command="italic"
-                        title="Kursiv tekst (Ctrl+I)">
-                    <i class="fa fa-italic"></i>
-                </button>
-                <button class="btn btn-default"
-                        data-wysihtml5-command="underline"
-                        title="Understreket tekst (Ctrl+U)">
-                    <i class="fa fa-underline"></i>
-                </button>
-                <button class="btn btn-default"
-                        data-wysihtml5-command="strikethrough"
-                        title="Gjennomstreket tekst">
-                    <i class="fa fa-strikethrough"></i>
-                </button>
-            </div>
-            <div class="btn-group">
-                <button class="btn btn-default"
-                        data-wysihtml5-command="insertUnorderedList"
-                        title="Usortert liste">
-                    <i class="fa fa-list-ul"></i>
-                </button>
-                <button class="btn btn-default"
-                        data-wysihtml5-command="insertOrderedList"
-                        title="Sortert liste">
-                    <i class="fa fa-list-ol"></i>
-                </button>
-            </div>
-            <div class="btn-group pull-right">
-                <button class="btn btn-default"
-                        data-wysihtml5-action="change_view"
-                        title="Se rådata (avansert)">
-                    <i class="fa fa-exchange"></i>
-                </button>
-            </div>
-        </div>
-        <textarea id="noteArea"
-                  class="form-control note"
-                  richeditor="article.note"
-                  richeditor-rules="noteRules"
-                  richeditor-toolbar="note-toolbar">
-        </textarea>
-    </div>
-</div>
+
 <div id="meta-panel" class="panel panel-info">
     <div class="panel-heading">
         <h1 class="panel-title">
@@ -334,5 +276,78 @@
 
     </div>
 </div>
+
+
+    <div if="note-panel" class="panel panel-warning">
+        <div class="panel-heading">
+            <h1 class="panel-title">
+                <span class="fa fa-list"></span>
+                Artikkel-notater
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs"
+                            ng-disabled="article.note == unedited.note"
+                            ng-click="saveNote()"
+                            button-loader="savingNote">
+                        <i class="fa fa-save"></i>
+                        Lagre
+                    </button>
+                </div>
+            </h1>
+        </div>
+        <div class="panel-body">
+            <div id="note-toolbar" class="editor-toolbar">
+                <div class="btn-group">
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="bold"
+                            title="Fet tekst (Ctrl+B)">
+                        <i class="fa fa-bold"></i>
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="italic"
+                            title="Kursiv tekst (Ctrl+I)">
+                        <i class="fa fa-italic"></i>
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="underline"
+                            title="Understreket tekst (Ctrl+U)">
+                        <i class="fa fa-underline"></i>
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="strikethrough"
+                            title="Gjennomstreket tekst">
+                        <i class="fa fa-strikethrough"></i>
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="insertUnorderedList"
+                            title="Usortert liste">
+                        <i class="fa fa-list-ul"></i>
+                    </button>
+                    <button class="btn btn-default"
+                            data-wysihtml5-command="insertOrderedList"
+                            title="Sortert liste">
+                        <i class="fa fa-list-ol"></i>
+                    </button>
+                </div>
+                <!--
+                <div class="btn-group pull-right">
+                    <button class="btn btn-default"
+                            data-wysihtml5-action="change_view"
+                            title="Se rådata (avansert)">
+                        <i class="fa fa-exchange"></i>
+                    </button>
+                </div>-->
+            </div>
+        <textarea id="noteArea"
+                  class="form-control note"
+                  richeditor="article.note"
+                  richeditor-rules="noteRules"
+                  richeditor-toolbar="note-toolbar">
+        </textarea>
+        </div>
+    </div>
+
+
 </div>
 </div>

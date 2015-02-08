@@ -17,32 +17,7 @@
 'use strict';
 
 angular.module('momusApp.services').
-    value('articleParserRules',
-    {
-        tags: {
-            h1: {}, // Tittel
-            h2: {}, // Stikktittel
-            h3: {}, // Mellomtittel
-            h4: {}, // Ingress
-            blockquote: {}, // Sitat
-            ul: {}, // List45
-            ol: {},
-            li: {},
-            i: {}, // Utheving
-            strong: {
-                rename_tag: "i"
-            },
-            b: {
-                rename_tag: "i"
-            },
-            em: {
-                rename_tag: "i"
-            },
-            br: {},
-            p: {}
-        }
-    }
-).value('noteParserRules',
+    value('noteParserRules',
     {
         tags: {
             br: {},
