@@ -17,10 +17,9 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function ($scope, PersonService,$timeout, ArticleService, PublicationService, TitleChanger, noteParserRules, articleParserRules, $routeParams, ViewArticleService) {
+    .controller('ArticleCtrl', function ($scope, PersonService,$timeout, ArticleService, PublicationService, TitleChanger, noteParserRules, $routeParams, ViewArticleService, MessageModal) {
         $scope.metaEditMode = false;
         $scope.noteRules = noteParserRules;
-        $scope.articleRules = articleParserRules;
 
         PersonService.getAll().success(function(data) {
            $scope.persons = data;
@@ -31,7 +30,7 @@ angular.module('momusApp.controllers')
             $scope.unedited = angular.copy(data);
 
             TitleChanger.setTitle($scope.article.name);
-            $scope.saveViewed();
+            ViewArticleService.viewArticle($routeParams.id);
         });
 
         ArticleService.getTypes().success(function (data) {
@@ -109,6 +108,16 @@ angular.module('momusApp.controllers')
             $scope.metaEditMode = false;
         };
 
+        $scope.showHelp = function () {
+            MessageModal.info("<p>Momus tar seg bare av organiseringen av artiklene, selve skrivingen foregår i Google Docs. " +
+            "For at artikkelen skal se riktig ut her og når den blir eksporter til grafikerne er det viktig å formatere den riktig i Google Docs.</p>" +
+            "<p><b>Formatering</b><br>Overskrift 1 = Tittel<br>Overskrift 2 = Stikktittel<br>Overskrift 3 = Mellomtittel<br>Overskrift 4 = Ingress<br>Fet skrift og kursiv virker som vanlig.</p>" +
+            "<p>Bilder, tabeller og lignende kan ikke brukes. Kommentarer og forslagmodus fungerer fint.</p>" +
+            "<p>Momus synkroniseres regelmessig med Google Docs, men det kan være litt forsinkelser. " +
+            "Har det gått mer enn 5 minutter og en endring ikke dukker opp her, legg til noen bokstaver og slett dem igjen i Google Docs for å aktivere en ny synkronisering.</p>");
+        };
+
+
         $scope.$on('$locationChangeStart', function(event){
             if(promptCondition()){
                 if(!confirm("Er du sikker på at du vil forlate siden? Det finnes ulagrede endringer.")){
@@ -169,9 +178,4 @@ angular.module('momusApp.controllers')
                 $scope.copying = false;
             }, 0);
         };
-
-        $scope.saveViewed = function(){
-            var viewedArticle = $routeParams.id;
-            ViewArticleService.viewArticle(viewedArticle);
-        }
     });
