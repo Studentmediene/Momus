@@ -23,51 +23,51 @@
     <!-- The initial changeset, containing the full database layout at release -->
     <changeSet id="1412787818529-1" author="Mats (generated)">
         <createTable tableName="article">
-            <column autoIncrement="true" name="id" type="BIGINT(19)">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="comment" type="LONGTEXT"/>
-            <column name="content" type="LONGTEXT"/>
+            <column name="comment" type="TEXT"/>
+            <column name="content" type="TEXT"/>
             <column name="lastUpdated" type="datetime"/>
             <column name="name" type="VARCHAR(255)"/>
-            <column name="note" type="LONGTEXT"/>
+            <column name="note" type="TEXT"/>
             <column name="photoStatus" type="VARCHAR(255)"/>
-            <column name="publication_id" type="BIGINT(19)"/>
-            <column name="section_id" type="BIGINT(19)"/>
-            <column name="status_id" type="BIGINT(19)"/>
-            <column name="type_id" type="BIGINT(19)"/>
+            <column name="publication_id" type="BIGINT"/>
+            <column name="section_id" type="BIGINT"/>
+            <column name="status_id" type="BIGINT"/>
+            <column name="type_id" type="BIGINT"/>
         </createTable>
 
         <createTable tableName="article_journalist">
-            <column name="Article_id" type="BIGINT(19)">
+            <column name="Article_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="journalists_id" type="BIGINT(19)">
+            <column name="journalists_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
 
         <createTable tableName="article_photographer">
-            <column name="Article_id" type="BIGINT(19)">
+            <column name="Article_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="photographers_id" type="BIGINT(19)">
+            <column name="photographers_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
 
         <createTable tableName="articlerevision">
-            <column autoIncrement="true" name="id" type="BIGINT(19)">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="content" type="LONGTEXT"/>
+            <column name="content" type="TEXT"/>
             <column name="savedDate" type="datetime"/>
-            <column name="article_id" type="BIGINT(19)"/>
-            <column name="status_id" type="BIGINT(19)"/>
+            <column name="article_id" type="BIGINT"/>
+            <column name="status_id" type="BIGINT"/>
         </createTable>
 
         <createTable tableName="articlestatus">
-            <column autoIncrement="true" name="id" type="BIGINT(19)">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
             <column name="color" type="VARCHAR(255)"/>
@@ -75,7 +75,7 @@
         </createTable>
 
         <createTable tableName="articletype">
-            <column autoIncrement="true" name="id" type="BIGINT(19)">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
             <column name="description" type="VARCHAR(255)"/>
@@ -83,55 +83,55 @@
         </createTable>
 
         <createTable tableName="disposition">
-            <column name="id" type="BIGINT(19)">
+            <column name="id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="publication_id" type="BIGINT(19)"/>
+            <column name="publication_id" type="BIGINT"/>
         </createTable>
 
         <createTable tableName="disposition_page">
-            <column name="Disposition_id" type="BIGINT(19)">
+            <column name="Disposition_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="pages_id" type="BIGINT(19)">
+            <column name="pages_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
 
         <createTable tableName="note">
-            <column autoIncrement="true" name="id" type="BIGINT(19)">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="content" type="LONGTEXT"/>
-            <column name="owner_id" type="BIGINT(19)"/>
+            <column name="content" type="TEXT"/>
+            <column name="owner_id" type="BIGINT"/>
         </createTable>
 
         <createTable tableName="page">
-            <column autoIncrement="true" name="id" type="BIGINT(19)">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
             <column name="advertisement" type="BOOLEAN" defaultValueBoolean="false"/>
             <column name="note" type="VARCHAR(255)"/>
-            <column name="pageNr" type="INT(10)">
+            <column name="pageNr" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="section_id" type="BIGINT(19)"/>
+            <column name="section_id" type="BIGINT"/>
         </createTable>
 
         <createTable tableName="page_article">
-            <column name="Page_id" type="BIGINT(19)">
+            <column name="Page_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="articles_id" type="BIGINT(19)">
+            <column name="articles_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="articles_ORDER" type="INT(10)">
+            <column name="articles_ORDER" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
 
         <createTable tableName="person">
-            <column name="id" type="BIGINT(19)">
+            <column name="id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="active" type="BOOLEAN" defaultValueBoolean="false"/>
@@ -143,7 +143,7 @@
         </createTable>
 
         <createTable tableName="publication">
-            <column autoIncrement="true" name="id" type="BIGINT(19)">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
             <column name="name" type="VARCHAR(255)"/>
@@ -151,39 +151,39 @@
         </createTable>
 
         <createTable tableName="publication_page">
-            <column name="Publication_id" type="BIGINT(19)">
+            <column name="Publication_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="pages_id" type="BIGINT(19)">
+            <column name="pages_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="pages_ORDER" type="INT(10)">
+            <column name="pages_ORDER" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
 
         <createTable tableName="section">
-            <column autoIncrement="true" name="id" type="BIGINT(19)">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
             <column name="name" type="VARCHAR(255)"/>
         </createTable>
 
         <createTable tableName="source">
-            <column autoIncrement="true" name="id" type="BIGINT(19)">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="address" type="LONGTEXT"/>
+            <column name="address" type="TEXT"/>
             <column name="description" type="VARCHAR(255)"/>
             <column name="email" type="VARCHAR(255)"/>
             <column name="name" type="VARCHAR(255)"/>
-            <column name="note" type="LONGTEXT"/>
+            <column name="note" type="TEXT"/>
             <column name="telephone" type="VARCHAR(255)"/>
             <column name="webPage" type="VARCHAR(255)"/>
         </createTable>
 
         <createTable tableName="source_sourcetag">
-            <column name="Source_id" type="BIGINT(19)">
+            <column name="Source_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="tags_tag" type="VARCHAR(255)">
