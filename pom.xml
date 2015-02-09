@@ -179,6 +179,12 @@
             <artifactId>postgresql</artifactId>
             <version>9.4-1200-jdbc41</version>
             <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
 
