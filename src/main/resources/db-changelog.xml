@@ -28,10 +28,10 @@
             </column>
             <column name="comment" type="TEXT"/>
             <column name="content" type="TEXT"/>
-            <column name="lastUpdated" type="datetime"/>
+            <column name="lastupdated" type="datetime"/>
             <column name="name" type="VARCHAR(255)"/>
             <column name="note" type="TEXT"/>
-            <column name="photoStatus" type="VARCHAR(255)"/>
+            <column name="photostatus" type="VARCHAR(255)"/>
             <column name="publication_id" type="BIGINT"/>
             <column name="section_id" type="BIGINT"/>
             <column name="status_id" type="BIGINT"/>
@@ -39,7 +39,7 @@
         </createTable>
 
         <createTable tableName="article_journalist">
-            <column name="Article_id" type="BIGINT">
+            <column name="article_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="journalists_id" type="BIGINT">
@@ -48,7 +48,7 @@
         </createTable>
 
         <createTable tableName="article_photographer">
-            <column name="Article_id" type="BIGINT">
+            <column name="article_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="photographers_id" type="BIGINT">
@@ -61,7 +61,7 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="content" type="TEXT"/>
-            <column name="savedDate" type="datetime"/>
+            <column name="saveddate" type="datetime"/>
             <column name="article_id" type="BIGINT"/>
             <column name="status_id" type="BIGINT"/>
         </createTable>
@@ -90,7 +90,7 @@
         </createTable>
 
         <createTable tableName="disposition_page">
-            <column name="Disposition_id" type="BIGINT">
+            <column name="disposition_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="pages_id" type="BIGINT">
@@ -112,20 +112,20 @@
             </column>
             <column name="advertisement" type="BOOLEAN" defaultValueBoolean="false"/>
             <column name="note" type="VARCHAR(255)"/>
-            <column name="pageNr" type="BIGINT">
+            <column name="pagenr" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="section_id" type="BIGINT"/>
         </createTable>
 
         <createTable tableName="page_article">
-            <column name="Page_id" type="BIGINT">
+            <column name="page_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="articles_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="articles_ORDER" type="BIGINT">
+            <column name="articles_order" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -136,9 +136,9 @@
             </column>
             <column name="active" type="BOOLEAN" defaultValueBoolean="false"/>
             <column name="email" type="VARCHAR(255)"/>
-            <column name="firstName" type="VARCHAR(255)"/>
-            <column name="fullName" type="VARCHAR(255)"/>
-            <column name="phoneNumber" type="VARCHAR(255)"/>
+            <column name="firstname" type="VARCHAR(255)"/>
+            <column name="fullname" type="VARCHAR(255)"/>
+            <column name="phonenumber" type="VARCHAR(255)"/>
             <column name="username" type="VARCHAR(255)"/>
         </createTable>
 
@@ -147,17 +147,17 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="name" type="VARCHAR(255)"/>
-            <column name="releaseDate" type="date"/>
+            <column name="releasedate" type="date"/>
         </createTable>
 
         <createTable tableName="publication_page">
-            <column name="Publication_id" type="BIGINT">
+            <column name="publication_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="pages_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="pages_ORDER" type="BIGINT">
+            <column name="pages_order" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -179,11 +179,11 @@
             <column name="name" type="VARCHAR(255)"/>
             <column name="note" type="TEXT"/>
             <column name="telephone" type="VARCHAR(255)"/>
-            <column name="webPage" type="VARCHAR(255)"/>
+            <column name="webpage" type="VARCHAR(255)"/>
         </createTable>
 
         <createTable tableName="source_sourcetag">
-            <column name="Source_id" type="BIGINT">
+            <column name="source_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="tags_tag" type="VARCHAR(255)">
@@ -197,21 +197,21 @@
             </column>
         </createTable>
 
-        <addPrimaryKey columnNames="Article_id, journalists_id"  tableName="article_journalist"/>
+        <addPrimaryKey columnNames="article_id, journalists_id"  tableName="article_journalist"/>
 
-        <addPrimaryKey columnNames="Article_id, photographers_id"  tableName="article_photographer"/>
+        <addPrimaryKey columnNames="article_id, photographers_id"  tableName="article_photographer"/>
 
         <addPrimaryKey columnNames="id" tableName="disposition"/>
 
-        <addPrimaryKey columnNames="Disposition_id, pages_id" tableName="disposition_page"/>
+        <addPrimaryKey columnNames="disposition_id, pages_id" tableName="disposition_page"/>
 
-        <addPrimaryKey columnNames="Page_id, articles_ORDER" tableName="page_article"/>
+        <addPrimaryKey columnNames="page_id, articles_order" tableName="page_article"/>
 
         <addPrimaryKey columnNames="id" tableName="person"/>
 
-        <addPrimaryKey columnNames="Publication_id, pages_ORDER" tableName="publication_page"/>
+        <addPrimaryKey columnNames="publication_id, pages_order" tableName="publication_page"/>
 
-        <addPrimaryKey columnNames="Source_id, tags_tag" tableName="source_sourcetag"/>
+        <addPrimaryKey columnNames="source_id, tags_tag" tableName="source_sourcetag"/>
 
         <addPrimaryKey columnNames="tag" tableName="sourcetag"/>
 
@@ -231,17 +231,17 @@
 
         <addForeignKeyConstraint baseColumnNames="photographers_id" baseTableName="article_photographer" constraintName="FK_article_photographer_person" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="person"/>
 
-        <addForeignKeyConstraint baseColumnNames="Article_id" baseTableName="article_photographer" constraintName="FK_article_photographer_article" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="article"/>
+        <addForeignKeyConstraint baseColumnNames="article_id" baseTableName="article_photographer" constraintName="FK_article_photographer_article" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="article"/>
 
-        <addForeignKeyConstraint baseColumnNames="Page_id" baseTableName="page_article" constraintName="FK_page_article_page" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="page"/>
+        <addForeignKeyConstraint baseColumnNames="page_id" baseTableName="page_article" constraintName="FK_page_article_page" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="page"/>
 
         <addForeignKeyConstraint baseColumnNames="articles_id" baseTableName="page_article" constraintName="FK_page_article_article" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="article"/>
 
         <addForeignKeyConstraint baseColumnNames="pages_id" baseTableName="publication_page" constraintName="FK_publication_page_page" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="page"/>
 
-        <addForeignKeyConstraint baseColumnNames="Publication_id" baseTableName="publication_page" constraintName="FK_publication_page_publication" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="publication"/>
+        <addForeignKeyConstraint baseColumnNames="publication_id" baseTableName="publication_page" constraintName="FK_publication_page_publication" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="publication"/>
 
-        <addForeignKeyConstraint baseColumnNames="Disposition_id" baseTableName="disposition_page" constraintName="FK_disposition_page_disposition" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="disposition"/>
+        <addForeignKeyConstraint baseColumnNames="disposition_id" baseTableName="disposition_page" constraintName="FK_disposition_page_disposition" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="disposition"/>
 
         <addForeignKeyConstraint baseColumnNames="pages_id" baseTableName="disposition_page" constraintName="FK_disposition_page_page" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="page"/>
 
@@ -251,27 +251,28 @@
 
         <addForeignKeyConstraint baseColumnNames="article_id" baseTableName="articlerevision" constraintName="FK_articlerevision_article" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="article"/>
 
-        <addForeignKeyConstraint baseColumnNames="Article_id" baseTableName="article_journalist" constraintName="FK_article_journalist_article" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="article"/>
+        <addForeignKeyConstraint baseColumnNames="article_id" baseTableName="article_journalist" constraintName="FK_article_journalist_article" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="article"/>
 
         <addForeignKeyConstraint baseColumnNames="journalists_id" baseTableName="article_journalist" constraintName="FK_article_journalist_person" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="person"/>
 
         <addForeignKeyConstraint baseColumnNames="tags_tag" baseTableName="source_sourcetag" constraintName="FK_source_sourcetag_sourcetag" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="tag" referencedTableName="sourcetag"/>
 
-        <addForeignKeyConstraint baseColumnNames="Source_id" baseTableName="source_sourcetag" constraintName="FK_source_sourcetag_source" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="source"/>
+        <addForeignKeyConstraint baseColumnNames="source_id" baseTableName="source_sourcetag" constraintName="FK_source_sourcetag_source" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="source"/>
     </changeSet>
 
 
     <!-- Adding some article metadata -->
     <changeSet id="2" author="Mats" context="live,dev">
         <!-- sections -->
-        <insert tableName="section"><column name="id">1</column><column name="name">Anmeldelse</column></insert>
+        <insert tableName="section"><column name="id">1</column><column name="name">Musikk</column></insert>
         <insert tableName="section"><column name="id">2</column><column name="name">Debatt</column></insert>
         <insert tableName="section"><column name="id">3</column><column name="name">Nyhet</column></insert>
         <insert tableName="section"><column name="id">4</column><column name="name">Sport</column></insert>
         <insert tableName="section"><column name="id">5</column><column name="name">Forbruker</column></insert>
         <insert tableName="section"><column name="id">6</column><column name="name">Reportasje</column></insert>
         <insert tableName="section"><column name="id">7</column><column name="name">Spit</column></insert>
-        <insert tableName="section"><column name="id">8</column><column name="name">Annet</column></insert>
+        <insert tableName="section"><column name="id">8</column><column name="name">Kultur</column></insert>
+        <insert tableName="section"><column name="id">9</column><column name="name">Annet</column></insert>
 
         <!-- article types -->
         <insert tableName="articletype"><column name="id">1</column><column name="name">Anmeldelse</column></insert>
@@ -279,6 +280,8 @@
         <insert tableName="articletype"><column name="id">3</column><column name="name">Kulturartikkel</column></insert>
         <insert tableName="articletype"><column name="id">4</column><column name="name">Kulturtegn</column></insert>
         <insert tableName="articletype"><column name="id">5</column><column name="name">Reportasje</column></insert>
+        <insert tableName="articletype"><column name="id">6</column><column name="name">Kommentar</column></insert>
+        <insert tableName="articletype"><column name="id">7</column><column name="name">Debatt</column></insert>
 
         <!-- statuses -->
         <insert tableName="articlestatus"><column name="id">1</column><column name="color">#fff</column><column name="name">Ukjent</column></insert>
@@ -300,27 +303,27 @@
 
 
         <!-- Some Publications -->
-        <insert tableName="publication"><column name="id">1</column><column name="name">UD14-2013</column><column name="releaseDate" valueDate="2013-09-02"/></insert>
-        <insert tableName="publication"><column name="id">2</column><column name="name">UD15-2013</column><column name="releaseDate" valueDate="2013-10-18"/></insert>
-        <insert tableName="publication"><column name="id">3</column><column name="name">UD16-2013</column><column name="releaseDate" valueDate="2013-12-17"/></insert>
-        <insert tableName="publication"><column name="id">4</column><column name="name">UD11-2014</column><column name="releaseDate" valueDate="2014-08-01"/></insert>
-        <insert tableName="publication"><column name="id">5</column><column name="name">UD12-2014</column><column name="releaseDate" valueDate="2014-10-05"/></insert>
-        <insert tableName="publication"><column name="id">6</column><column name="name">UD13-2014</column><column name="releaseDate" valueDate="2014-11-22"/></insert>
-        <insert tableName="publication"><column name="id">7</column><column name="name">UD14-2014</column><column name="releaseDate" valueDate="2014-12-05"/></insert>
-        <insert tableName="publication"><column name="id">8</column><column name="name">UD15-2014</column><column name="releaseDate" valueDate="2014-12-21"/></insert>
+        <insert tableName="publication"><column name="id">1</column><column name="name">UD14-2013</column><column name="releasedate" valueDate="2013-09-02"/></insert>
+        <insert tableName="publication"><column name="id">2</column><column name="name">UD15-2013</column><column name="releasedate" valueDate="2013-10-18"/></insert>
+        <insert tableName="publication"><column name="id">3</column><column name="name">UD16-2013</column><column name="releasedate" valueDate="2013-12-17"/></insert>
+        <insert tableName="publication"><column name="id">4</column><column name="name">UD11-2014</column><column name="releasedate" valueDate="2014-08-01"/></insert>
+        <insert tableName="publication"><column name="id">5</column><column name="name">UD12-2014</column><column name="releasedate" valueDate="2014-10-05"/></insert>
+        <insert tableName="publication"><column name="id">6</column><column name="name">UD13-2014</column><column name="releasedate" valueDate="2014-11-22"/></insert>
+        <insert tableName="publication"><column name="id">7</column><column name="name">UD14-2014</column><column name="releasedate" valueDate="2014-12-05"/></insert>
+        <insert tableName="publication"><column name="id">8</column><column name="name">UD15-2014</column><column name="releasedate" valueDate="2014-12-21"/></insert>
 
         <!-- Some dispositions -->
         <!-- TODO -->
 
         <!-- Some articles -->
         <insert tableName="article">
-            <column name="id">1</column><column name="name">Siden Sist</column><column name="comment"></column><column name="lastUpdated"></column>
+            <column name="id">1</column><column name="name">Siden Sist</column><column name="comment"></column><column name="lastupdated"></column>
             <column name="publication_id">8</column><column name="section_id">3</column><column name="status_id">2</column><column name="type_id">2</column>
             <column name="content"><![CDATA[]]></column>
             <column name="note"><![CDATA[<p>Hva har skjedd siden sist a?</p>]]></column>
         </insert>
         <insert tableName="article">
-            <column name="id">2</column><column name="name">Lovlig Norsk</column><column name="comment">Må ikke deskes før lørdag</column><column name="lastUpdated"></column>
+            <column name="id">2</column><column name="name">Lovlig Norsk</column><column name="comment">Må ikke deskes før lørdag</column><column name="lastupdated"></column>
             <column name="publication_id">8</column><column name="section_id">6</column><column name="status_id">5</column><column name="type_id">5</column>
             <column name="content"><![CDATA[<h1>Lovlig Norsk</h1><h4>I 2011 ble tidligere NTNU-student Maria Amelie tvangsreturnert etter åtte års ulovlig opphold i Norge. I går var hun tilbake på Studentersamfundet for å fortelle om boka Takk.</h4><p>Maria Amelie engasjerte tusenvis av nordmenn og skapte stor debatt da Utlendingsnemnda i januar 2011 vedtok at Amelie ikke hadde rett til å
 bli i Norge. Hun måtte returnere til Russland – til tross for at hun
@@ -330,7 +333,7 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="note"><![CDATA[<p>notater er <b>bra</b></p>]]></column>
         </insert>
         <insert tableName="article">
-            <column name="id">3</column><column name="name">Mora mi</column><column name="comment">Venter på sitatsjekk</column><column name="lastUpdated"></column>
+            <column name="id">3</column><column name="name">Mora mi</column><column name="comment">Venter på sitatsjekk</column><column name="lastupdated"></column>
             <column name="publication_id">7</column><column name="section_id">3</column><column name="status_id">4</column><column name="type_id">1</column>
             <column name="content"><![CDATA[<h1>Lovlig Norsk</h1><h4>I 2011 ble tidligere NTNU-student Maria Amelie tvangsreturnert etter åtte års ulovlig opphold i Norge. I går var hun tilbake på Studentersamfundet for å fortelle om boka Takk.</h4><p>Maria Amelie engasjerte tusenvis av nordmenn og skapte stor debatt da Utlendingsnemnda i januar 2011 vedtok at Amelie ikke hadde rett til å
 bli i Norge. Hun måtte returnere til Russland – til tross for at hun
@@ -340,18 +343,18 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="note"></column>
         </insert>
         <insert tableName="article">
-            <column name="id">4</column><column name="name">Mats er deilig</column><column name="comment">Alle er enige</column><column name="lastUpdated"></column>
+            <column name="id">4</column><column name="name">Mats er deilig</column><column name="comment">Alle er enige</column><column name="lastupdated"></column>
             <column name="publication_id">8</column><column name="section_id">1</column><column name="status_id">3</column><column name="type_id">4</column>
             <column name="content"><![CDATA[<h1>Lalalala</h1>]]></column>
             <column name="note"><![CDATA[<p><b>Whoho!</b></p>]]></column>
         </insert>
 
         <!-- Some people connected to articles -->
-        <insert tableName="article_journalist"><column name="Article_id">1</column><column name="journalists_id">1006</column></insert>
-        <insert tableName="article_journalist"><column name="Article_id">2</column><column name="journalists_id">1006</column></insert>
-        <insert tableName="article_photographer"><column name="Article_id">2</column><column name="photographers_id">1003</column></insert>
-        <insert tableName="article_journalist"><column name="Article_id">3</column><column name="journalists_id">2411</column></insert>
-        <insert tableName="article_photographer"><column name="Article_id">3</column><column name="photographers_id">1006</column></insert>
+        <insert tableName="article_journalist"><column name="article_id">1</column><column name="journalists_id">1006</column></insert>
+        <insert tableName="article_journalist"><column name="article_id">2</column><column name="journalists_id">1006</column></insert>
+        <insert tableName="article_photographer"><column name="article_id">2</column><column name="photographers_id">1003</column></insert>
+        <insert tableName="article_journalist"><column name="article_id">3</column><column name="journalists_id">2411</column></insert>
+        <insert tableName="article_photographer"><column name="article_id">3</column><column name="photographers_id">1006</column></insert>
 
         <!-- And some revisions -->
 
@@ -376,7 +379,7 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="description">Tidligere statsminister</column>
             <column name="telephone">12345678</column>
             <column name="email">jens@jensemann.com</column>
-            <column name="webPage">jensemann.com</column>
+            <column name="webpage">jensemann.com</column>
             <column name="address">Natobygningen\n123</column>
             <column name="note">Var der før, er der nå</column>
         </insert>
@@ -386,7 +389,7 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="description">Politiker frp</column>
             <column name="telephone">666666</column>
             <column name="email">siv@sivsiv.com</column>
-            <column name="webPage"></column>
+            <column name="webpage"></column>
             <column name="address">Stooortinget</column>
             <column name="note">Mornaaa Jeeeens</column>
         </insert>
@@ -396,7 +399,7 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="description">Rektor for NTNU</column>
             <column name="telephone">13371337</column>
             <column name="email">thaboss@ntnu.no</column>
-            <column name="webPage">ntnu.edu</column>
+            <column name="webpage">ntnu.edu</column>
             <column name="address">Galtvort</column>
             <column name="note"></column>
         </insert>
@@ -406,7 +409,7 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="description">leder Institutt for kunst- og medievitenskap</column>
             <column name="telephone"></column>
             <column name="email"></column>
-            <column name="webPage"></column>
+            <column name="webpage"></column>
             <column name="address"></column>
             <column name="note"></column>
         </insert>
@@ -416,7 +419,7 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="description">dekan Det humanistiske fakultet</column>
             <column name="telephone"></column>
             <column name="email"></column>
-            <column name="webPage"></column>
+            <column name="webpage"></column>
             <column name="address"></column>
             <column name="note"></column>
         </insert>
@@ -426,7 +429,7 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="description">leder studenttinget</column>
             <column name="telephone"></column>
             <column name="email">naiv@over9000.com</column>
-            <column name="webPage"></column>
+            <column name="webpage"></column>
             <column name="address"></column>
             <column name="note"></column>
         </insert>
@@ -436,31 +439,31 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="description">IMEs rep Studenttinget</column>
             <column name="telephone">12344321</column>
             <column name="email"></column>
-            <column name="webPage"></column>
+            <column name="webpage"></column>
             <column name="address"></column>
             <column name="note"></column>
         </insert>
 
-        <insert tableName="source_sourcetag"><column name="Source_id">1</column><column name="tags_tag">ap</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">1</column><column name="tags_tag">nato</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">1</column><column name="tags_tag">politiker</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">2</column><column name="tags_tag">politiker</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">2</column><column name="tags_tag">frp</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">3</column><column name="tags_tag">rektor</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">3</column><column name="tags_tag">ntnu</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">4</column><column name="tags_tag">ntnu</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">4</column><column name="tags_tag">ikm</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">5</column><column name="tags_tag">dekan</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">5</column><column name="tags_tag">hf</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">5</column><column name="tags_tag">ntnu</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">6</column><column name="tags_tag">ntnu</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">6</column><column name="tags_tag">politiker</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">6</column><column name="tags_tag">student</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">7</column><column name="tags_tag">studenttinget</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">7</column><column name="tags_tag">ntnu</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">7</column><column name="tags_tag">student</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">7</column><column name="tags_tag">politiker</column></insert>
-        <insert tableName="source_sourcetag"><column name="Source_id">7</column><column name="tags_tag">ime</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">1</column><column name="tags_tag">ap</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">1</column><column name="tags_tag">nato</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">1</column><column name="tags_tag">politiker</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">2</column><column name="tags_tag">politiker</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">2</column><column name="tags_tag">frp</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">3</column><column name="tags_tag">rektor</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">3</column><column name="tags_tag">ntnu</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">4</column><column name="tags_tag">ntnu</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">4</column><column name="tags_tag">ikm</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">5</column><column name="tags_tag">dekan</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">5</column><column name="tags_tag">hf</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">5</column><column name="tags_tag">ntnu</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">6</column><column name="tags_tag">ntnu</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">6</column><column name="tags_tag">politiker</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">6</column><column name="tags_tag">student</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">7</column><column name="tags_tag">studenttinget</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">7</column><column name="tags_tag">ntnu</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">7</column><column name="tags_tag">student</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">7</column><column name="tags_tag">politiker</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">7</column><column name="tags_tag">ime</column></insert>
 
 
 
@@ -482,7 +485,7 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
     <!-- Add support for Google Drive -->
     <changeSet id="4" author="Mats">
         <addColumn tableName="article">
-            <column name="googleDriveId" type="VARCHAR(255)" />
+            <column name="googledriveid" type="VARCHAR(255)" />
         </addColumn>
     </changeSet>
 
