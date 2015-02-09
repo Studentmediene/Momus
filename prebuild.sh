@@ -10,6 +10,7 @@ rm -rf target
 
 # copy in production values
 cp /srv/momus/local.properties src/main/resources/local.properties
+cp /srv/momus/Momuslive-6b43d0b81c8e.p12 src/main/resources/googlekey.p12
 
 # install frontend dependencies
 npm install
