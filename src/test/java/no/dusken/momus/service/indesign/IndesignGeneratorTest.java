@@ -50,7 +50,7 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
                 "<h3>En mellomtittel</h3><p>Med et nytt avsnitt</p><ul><li>Med en punktliste</li><li>element 2</li><li>element 3</li></ul>" +
                 "<p>et nytt avsnitt</p><ol><li>Med nummerert liste</li><li>element 2</li></ol>" +
                 "<blockquote>og så et kult sitat</blockquote>" +
-                "<p>og til slutt et avsnitt med <i>utheving</i>, kult?<br></p>");
+                "<p>og til slutt et avsnitt med <i>utheving</i> og <b>fet skrift</b>, kult?<br></p>");
         article.setName("Min tittel");
 
         Publication pub = new Publication();
@@ -85,7 +85,7 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
                 "<bnListType:Numbered>Med nummerert liste\r\n" +
                 "element 2\r\n" +
                 "<ParaStyle:Sitat>og så et kult sitat\r\n" +
-                "<ParaStyle:Brødtekst>og til slutt et avsnitt med <cTypeface:Italic>utheving<cTypeface:>, kult?\r\n"
+                "<ParaStyle:Brødtekst>og til slutt et avsnitt med <cTypeface:Italic>utheving<cTypeface:> og <cTypeface:Bold>fet skrift<cTypeface:>, kult?\r\n"
                 ;
         IndesignExport result = indesignGenerator.generateFromArticle(article);
 

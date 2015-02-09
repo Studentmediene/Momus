@@ -79,6 +79,9 @@ public class IndesignGenerator {
         replacements.put("<i>", "<cTypeface:Italic>");
         replacements.put("</i>", "<cTypeface:>");
 
+        replacements.put("<b>", "<cTypeface:Bold>");
+        replacements.put("</b>", "<cTypeface:>");
+
         /*
             Converts:
             <ul><li>pkt1</li><li>pkt2</li><li>pkt3</li></ul>

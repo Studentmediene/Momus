@@ -17,10 +17,21 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService) {
+    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService) {
         $scope.noteRules = noteParserRules;
 
+        $scope.recentArticles = ViewArticleService.getRecentViews();
+        if($scope.recentArticles){
+            $scope.loadingRecent = true;
+            ArticleService.getMultiple($scope.recentArticles).success(function(data){
+                $scope.loadingRecent = false;
+                $scope.recentArticleInfo = data;
+            });
+        }
 
+        $scope.orderRecentArticles = function(item){
+            return $scope.recentArticles.indexOf(item.id.toString());
+        };
 
         $scope.randomTip = function() {
             $scope.tip = TipAndNewsService.getRandomTip();

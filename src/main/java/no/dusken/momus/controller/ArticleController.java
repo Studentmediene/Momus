@@ -61,6 +61,13 @@ public class ArticleController {
         return articleService.getArticleById(id);
     }
 
+
+    @RequestMapping(value = "/multiple", method = RequestMethod.POST)
+    public @ResponseBody List<Article> getArticleByID(@RequestBody List<Long> ids) {
+        return articleService.getArticleRepository().findAll(ids);
+    }
+
+
     @RequestMapping(value = "/publication/{id}", method = RequestMethod.GET)
     public @ResponseBody List<Article> getAllArticlesByPublicationID(@PathVariable("id") Long id) {
         return articleService.getArticleRepository().findByPublicationId(id);

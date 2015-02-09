@@ -62,7 +62,7 @@
             </root>
         </then>
         <else>
-            <root level="INFO">
+            <root level="DEBUG">
                 <!-- File only when not in dev -->
                 <appender-ref ref="FILE" />
             </root>
