@@ -502,6 +502,13 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
     </changeSet>
 
 
+    <!-- Adding new field to a revision, that states if that revision is
+    saved to mark a status change, or because the text was updated -->
+    <changeSet id="6" author="Mats">
+        <addColumn tableName="articlerevision">
+            <column name="statuschanged" type="BOOLEAN" />
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
 

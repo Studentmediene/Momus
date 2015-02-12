@@ -39,6 +39,8 @@ public class ArticleRevision {
     @Temporal(TemporalType.TIMESTAMP)
     private Date savedDate;
 
+    private boolean statusChanged;
+
 
 
     public Long getId() {
@@ -75,5 +77,13 @@ public class ArticleRevision {
 
     public void setSavedDate(Date savedDate) {
         this.savedDate = savedDate;
+    }
+
+    public boolean isStatusChanged() {
+        return statusChanged;
+    }
+
+    public void setStatusChanged(boolean statusChanged) {
+        this.statusChanged = statusChanged;
     }
 }
