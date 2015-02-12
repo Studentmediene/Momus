@@ -41,15 +41,6 @@ angular.module('momusApp.controllers')
 
         $scope.news = TipAndNewsService.getNews();
 
-        $scope.showNews = function(id){
-            if($scope.show == id){
-                $scope.show = -1;
-            }else{
-                $scope.show = id;
-            }
-        };
-        $scope.show = 0;
-
         NoteService.getNote().success(function (data) {
             $scope.note = data;
             $scope.unedited = angular.copy(data);

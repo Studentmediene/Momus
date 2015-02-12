@@ -109,26 +109,10 @@ public class ArticleService {
             return existing;
         }
 
-        ArticleRevision revision;
-
-        // Update the latest revision if it's only a short time since it was created
-        List<ArticleRevision> revisions = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(article.getId());
-        if (revisions.size() > 0 && (new Date().getTime() - revisions.get(0).getSavedDate().getTime()) < 10*60*1000 ) { // 10 minutes
-            revision = revisions.get(0);
-            logger.info("Reusing revision {} for article {}", revision.getId(), article.getId());
-        } else {
-            revision = new ArticleRevision();
-        }
-
-        revision.setContent(newContent);
-        revision.setArticle(existing);
-        revision.setStatus(existing.getStatus());
-        revision.setSavedDate(new Date());
-
-        revision = articleRevisionRepository.save(revision);
-        logger.info("Saved revision for article(id:{}) with id: {}, content:\n{}", article.getId(), revision.getId(), newContent);
-
         existing.setContent(newContent);
+
+        createNewRevision(existing, false);
+
         return saveUpdatedArticle(existing);
     }
 
@@ -136,7 +120,7 @@ public class ArticleService {
         Article existing = articleRepository.findOne(article.getId());
 
         if (!article.getStatus().equals(existing.getStatus())) {
-            updateLatestRevisionToThisStatus(article);
+            createNewRevision(article, true);
         }
 
         existing.setName(article.getName());
@@ -197,21 +181,48 @@ public class ArticleService {
         return articleRepository;
     }
 
-    private void updateLatestRevisionToThisStatus(Article article) {
+
+    private void createNewRevision(Article article, boolean changedStatus) {
+        ArticleRevision revision = getExistingRevision(article, changedStatus);
+
+
+        revision.setStatusChanged(changedStatus);
+        revision.setContent(article.getContent());
+        revision.setArticle(article);
+        revision.setStatus(article.getStatus());
+
+        revision = articleRevisionRepository.save(revision);
+        logger.info("Saved revision for article(id:{}) with id: {}, content:\n{}", article.getId(), revision.getId(), revision.getContent());
+    }
+
+    /**
+     * Returns a reusable revision if one is found, or a new one otherwise.
+     * This is to not get too man small revision.
+     * If the revision is for a status change, a new one is returned anyway
+     * A reusable revision is one that wasn't for a status change and not too old
+     */
+    private ArticleRevision getExistingRevision(Article article, boolean changedStatus) {
+        ArticleRevision newRevision = new ArticleRevision();
+        newRevision.setSavedDate(new Date());
+
+        if (changedStatus) {
+            return newRevision;
+        }
+
         List<ArticleRevision> revisions = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(article.getId());
 
         if (revisions.size() == 0) {
-            logger.info("No revisions to update for article id {}", article.getId());
-            return;
+            return newRevision;
         }
 
-        ArticleRevision latest = revisions.get(0);
-        latest.setStatus(article.getStatus());
-        articleRevisionRepository.save(latest);
+        ArticleRevision existing = revisions.get(0);
+        long timeDiff = new Date().getTime() - existing.getSavedDate().getTime();
 
-        logger.info("Updated revision {} for article {} to status {}", latest, article.getId(), article.getStatus());
-
-
+        if (timeDiff < 3 * 60 * 1000 && !existing.isStatusChanged()) {
+            logger.info("Reusing revision {} for article {}", existing.getId(), article.getId());
+            return existing;
+        } else {
+            return newRevision;
+        }
     }
-
 }

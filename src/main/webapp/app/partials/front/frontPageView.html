@@ -204,121 +204,29 @@
             <div class="panel-body" ng-bind-html="tip | trustHtml"></div>
         </div>
         <div class="panel panel-info">
-            <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-bullhorn"></i> Nyheter om Momus</h1></div>
+            <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-bullhorn"></i> Nyheter</h1></div>
             <div class="panel-body" style="height:300px; overflow-y: auto">
                 <table class="table">
-                    <tbody ng-repeat="new in news | orderBy: '-date'">
-                        <tr ng-click="showNews($index)"ng-class="{danger: new.new, active:!new.new}" class="interact">
-                            <td width="35%">{{new.date | date}}</td>
-                            <td ng-bind-html="new.title | trustHtml"></td>
-                            <td width="5%" ng-show="$index != show"><i class="fa fa-arrow-circle-down"></i></td>
-                            <td width="5%" ng-show="$index == show"><i class="fa fa-arrow-circle-up"></i></td>
+                    <tbody ng-repeat="n in news | orderBy: '-date'">
+                        <tr ng-class="{danger: n.new, active:!n.new}" class="interact" ng-click="n.show = !n.show">
+                            <td ng-show="n.new" style="font-weight: bold; width: 40%">{{n.date | date}}</td>
+                            <td ng-show="!n.new" style="width: 40%;">{{n.date | date}}</td>
+
+                            <td ng-show="n.new" style="font-weight: bold">{{n.title}}</td>
+                            <td ng-show="!n.new">{{n.title}}</td>
+
+
+                            <td width="5%">
+                                <i ng-show="!n.show" class="fa fa-arrow-circle-down"></i>
+                                <i ng-show="n.show" class="fa fa-arrow-circle-up"></i>
+                            </td>
                         </tr>
-                        <tr ng-show="$index == show">
-                            <td colspan="3" ng-bind-html="new.text | trustHtml"></td>
+                        <tr ng-show="n.show">
+                            <td colspan="3" ng-bind-html="n.text | trustHtml"></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-xs-12">
-        <h1>Velkommen til testversjon av Momus!</h1>
-        <p class="lead">Tilbakemeldinger kan gjøres til momus@smitit.no, les gjerne igjennom teksten under.</p>
-
-        <h2>Generelt</h2>
-        <p>Momus er erstatteren til gamle Pegadi. Som dere sikkert merker kjører det i nettleseren
-        deres og trenger ingen installasjon. Det betyr at det lett kan brukes fra hvor som helst og på
-        de fleste enheter.
-            Test gjerne Momus på nettbrett og mobil. Tanken er ikke at dere skal <em>produsere</em> så mye fra
-        slike enheter, men at man i hvert fall skal kunne logge inn og få en oversikt over hva som foregår.</p>
-        <p>
-            Denne testversjonen er satt opp slik at dere ikke kan ødelegge noe viktig, så <b>"go crazy" og gjør akkurat som dere vil.</b> Det er bedre å finne
-            bugs nå enn når det faktisk brukes i produksjon.
-        </p>
-
-        <h2>Hva vi har så langt</h2>
-        <p>Det er kanskje ikke alt som er like åpenbart når man klikker rundt, så her følger en
-        beskrivelse av det meste av funksjonaliten samt noen ord om hvorfor noe er inkludert.
-        Tenk gjerne over om dette er noe dere faktisk ønsker å bruke, om det kan gjøres annerledes, om
-        det er annen funksjonalitet dere ønsker osv. Vi tåler å høre om noe er bortkastet funksjonalitet, dårlig tenkt igjennom osv.
-        Vi ønsker tross alt å lage et system som dere ønsker å bruke.</p>
-
-        <h3>Generelt</h3>
-        <ul>
-            <li>Login koblet opp mot den nye, felles brukerdatabasen</li>
-            <li>Trenger ingen installasjon</li>
-            <li>Virker på de fleste enheter, ser bra ut i alle størrelser</li>
-            <li>Bra og moderne kodebase gjør det lett for oss å legge til ny funksjonalitet dere ønsker</li>
-            <li>Enormt mye kjappere enn Pegadi på f. eks. søk</li>
-        </ul>
-
-        <h3>Forsiden</h3>
-        <ul>
-            <li>Privat notat, tiltenkt for å kjapt notere ned stuff for en selv</li>
-            <li>Mine artikler, kjapp oversikt over ens seneste artikler</li>
-            <li><b>Annet nyttig å ha her?</b></li>
-        </ul>
-
-        <h3>Artikkelsøk</h3>
-        <ul>
-            <li>Et automagisk søk viser artiklene til nyeste utgave</li>
-            <li>Filtrering på mange kriterier</li>
-            <li>Sortert etter utgave, nyeste først </li>
-            <li>Kan gå frem og tilbake i nettleseren imellom forskjellige søk </li>
-            <li>Lenkbare søk, etter å ha trykket søk endres adressen i nettleseren. Denne kan
-            bokmerkes og deles. F. eks. er dette et søk på <a href="/#/artikler?section=1">alle kulturartikler</a> </li>
-            <li>Åpne flere artikler samtidig ved å ctrl+klikke eller høyreklikke og velge åpne i ny fane.</li>
-            <li><b>Ønskes andre filtreringstyper? Annen sortering? Hvilken info bør vises i tabellen?</b></li>
-        </ul>
-
-        <h3>Opprette artikkel</h3>
-        <ul>
-            <li>En artikkel må ha et navn, en publikasjon og en seksjon </li>
-            <li><b>Er det annen info som må være satt? Noe som man ikke trenger å sette? Hva skal standardverdiene være?</b></li>
-            <li><b>Hvilke seksjoner og typer ønskes?</b></li>
-            <li><b>Hvilke statuser ønskes?</b></li>
-            <li><b>Er det annen data dere ønsker å sette på artiklene? Er det noe data som kan fjernes?</b></li>
-        </ul>
-
-        <h3>Skrive artikkel</h3>
-        <ul>
-            <li>"Rik tekst" skriving av artikkel, ikke noe markdown. <b>Trengs det flere teksttyper? Test den gjerne ut en del så vi kan få luket ut evt. bugs</b></li>
-            <li>Bruker nettleserens stavekontroll om man har det aktivert</li>
-            <li>Notater på siden. F. eks. et utkast, kommentarer på artikkelen, transkripsjon fra intervju</li>
-            <li>Kan legge på en spesiell kommentar på artikkelen. Et ønske fra tidligere redaktører. Denne kommentaren blir spesielt synlig, både på toppen av siden og når man søker etter artikler</li>
-            <li>Applikasjonen minnner en om at man har ulagrede endringer</li>
-            <li>Printervennlig. Prøv å printe med en artikkel åpen og se resultatet</li>
-            <li>Sitatsjekkfunksjon, trykk på knappen og du har ferdig tekst som kan limes inn i en mail. <b>Er teksten riktig? Ser det bra ut når det limes inn i en mail? Andre måter å løse dette på?</b></li>
-            <li>Historikk over alle versjonene av en artikkel samt hvem som skrev den. Senere vises også hva som ble endret mellom hva versjon klarere.</li>
-            <li>Eksportering til InDesign. Får en fil man kan importere. InDesign-dokumentet man har må ha definert forskjellige ParagraphStyles som styrer hvordan
-            den importerte artikkelen blir seendes ut. Dokumentet må ha definert Tittel, Stikktittel, Mellomtittel, Ingress, Brødtekst og Sitat. <b>Trengs andre typer?</b> </li>
-            <li>Akkurat nå er det ingenting som hindrer flere i å skrive på samme artikkel samtidig og dermed overskrive hverandres endringer. Alle endringer blir lagret i historikken, så ingenting forsvinner, men det er kanskje ikke optimalt. I Pegadi bruktes "låsing" av artikler slik at bare en person kunne redigere om gangen. <b>Er noe tilsvarende ønskelig her? Andre løsninger?</b></li>
-        </ul>
-
-        <h3>Utgaver</h3>
-        <ul>
-            <li>Opprette nye utgaver av avisen</li>
-            <li>Hver utgave har en tilhørende publiseringsdato</li>
-        </ul>
-
-        <h3>Kilder</h3>
-        <ul>
-            <li>Lagre kontaktinfo over personer man har vært i kontakt med</li>
-            <li>Ønsket av tidligere redaktører</li>
-            <li>Notatfelt for å notere tidligere kontakt og annet</li>
-            <li>"Tagging" for lett å finne relevant personer. F. eks.
-                finne noen som er <a href="#/kilder?tags=politiker&tags=student">både student og politiker</a> </li>
-        </ul>
-
-        <h2>Hva som kommer</h2>
-        <ul>
-            <li>Disposisjonsfunksjon. Man lager hvilke sider man skal ha i avisen og hvilke artikler som skal være hvor. Kan drag&drop ting rundt. <b>Her trenger vi innspill! Noe dere ønsker å bruke? Hvordan bør det fungere, hvilken funksjonalitet skal inn?</b></li>
-            <li>Tilgangskontroll? Som det er nå har alle tilgang til å gjøre alt. Tidligere redaktører mente det var greiest slik, da begrensningene i Pegadi ofte var til bry. <b>Har dere noen tanker?</b></li>
-            <li><b>Hva enn dere ønsker?</b></li>
-        </ul>
-
     </div>
 </div>
