@@ -123,6 +123,7 @@
         <property name="testOnBorrow" value="false" />
         <property name="testWhileIdle" value="true" />
         <property name="timeBetweenEvictionRunsMillis" value="1800000" />
+        <property name="defaultAutoCommit" value="false" />
     </bean>
 
     <!-- Use the DB inside JPA managers -->
