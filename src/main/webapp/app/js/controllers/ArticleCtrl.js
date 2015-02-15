@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function ($scope, PersonService,$timeout, ArticleService, PublicationService, TitleChanger, noteParserRules, articleParserRules, $routeParams, $log) {
+    .controller('ArticleCtrl', function ($scope, PersonService, $timeout, ArticleService, PublicationService, TitleChanger, noteParserRules, articleParserRules, $routeParams) {
         $scope.metaEditMode = false;
         $scope.noteRules = noteParserRules;
         $scope.articleRules = articleParserRules;
