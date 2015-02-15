@@ -72,6 +72,7 @@
             </column>
             <column name="color" type="VARCHAR(255)"/>
             <column name="name" type="VARCHAR(255)"/>
+            <column name="statusorder" type="BIGINT" />
         </createTable>
 
         <createTable tableName="articletype">
@@ -80,6 +81,7 @@
             </column>
             <column name="description" type="VARCHAR(255)"/>
             <column name="name" type="VARCHAR(255)"/>
+            <column name="typeorder" type="BIGINT" />
         </createTable>
 
         <createTable tableName="disposition">
@@ -275,21 +277,21 @@
         <insert tableName="section"><column name="id">9</column><column name="name">Annet</column></insert>
 
         <!-- article types -->
-        <insert tableName="articletype"><column name="id">1</column><column name="name">Anmeldelse</column></insert>
-        <insert tableName="articletype"><column name="id">2</column><column name="name">Nyhetsartikkel</column></insert>
-        <insert tableName="articletype"><column name="id">3</column><column name="name">Kulturartikkel</column></insert>
-        <insert tableName="articletype"><column name="id">4</column><column name="name">Kulturtegn</column></insert>
-        <insert tableName="articletype"><column name="id">5</column><column name="name">Reportasje</column></insert>
-        <insert tableName="articletype"><column name="id">6</column><column name="name">Kommentar</column></insert>
-        <insert tableName="articletype"><column name="id">7</column><column name="name">Debatt</column></insert>
+        <insert tableName="articletype"><column name="id">1</column><column name="typeorder">7</column><column name="name">Anmeldelse</column></insert>
+        <insert tableName="articletype"><column name="id">2</column><column name="typeorder">6</column><column name="name">Nyhetsartikkel</column></insert>
+        <insert tableName="articletype"><column name="id">3</column><column name="typeorder">5</column><column name="name">Kulturartikkel</column></insert>
+        <insert tableName="articletype"><column name="id">4</column><column name="typeorder">4</column><column name="name">Kulturtegn</column></insert>
+        <insert tableName="articletype"><column name="id">5</column><column name="typeorder">3</column><column name="name">Reportasje</column></insert>
+        <insert tableName="articletype"><column name="id">6</column><column name="typeorder">2</column><column name="name">Kommentar</column></insert>
+        <insert tableName="articletype"><column name="id">7</column><column name="typeorder">1</column><column name="name">Debatt</column></insert>
 
         <!-- statuses -->
-        <insert tableName="articlestatus"><column name="id">1</column><column name="color">#fff</column><column name="name">Ukjent</column></insert>
-        <insert tableName="articlestatus"><column name="id">2</column><column name="color">#eee</column><column name="name">Planlagt</column></insert>
-        <insert tableName="articlestatus"><column name="id">3</column><column name="color">#aaf</column><column name="name">Skrives</column></insert>
-        <insert tableName="articlestatus"><column name="id">4</column><column name="color">#faa</column><column name="name">Korrektur</column></insert>
-        <insert tableName="articlestatus"><column name="id">5</column><column name="color">#afa</column><column name="name">Deskes</column></insert>
-        <insert tableName="articlestatus"><column name="id">6</column><column name="color">#0f0</column><column name="name">Publisert</column></insert>
+        <insert tableName="articlestatus"><column name="id">1</column><column name="statusorder">6</column><column name="color">#fff</column><column name="name">Ukjent</column></insert>
+        <insert tableName="articlestatus"><column name="id">2</column><column name="statusorder">5</column><column name="color">#eee</column><column name="name">Planlagt</column></insert>
+        <insert tableName="articlestatus"><column name="id">3</column><column name="statusorder">4</column><column name="color">#aaf</column><column name="name">Skrives</column></insert>
+        <insert tableName="articlestatus"><column name="id">4</column><column name="statusorder">3</column><column name="color">#faa</column><column name="name">Korrektur</column></insert>
+        <insert tableName="articlestatus"><column name="id">5</column><column name="statusorder">2</column><column name="color">#afa</column><column name="name">Deskes</column></insert>
+        <insert tableName="articlestatus"><column name="id">6</column><column name="statusorder">1</column><column name="color">#0f0</column><column name="name">Publisert</column></insert>
     </changeSet>
 
 

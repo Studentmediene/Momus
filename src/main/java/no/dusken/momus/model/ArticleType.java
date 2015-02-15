@@ -30,6 +30,7 @@ public class ArticleType {
 
     private String name;
     private String description;
+    private int typeOrder;
 
     public ArticleType() {
     }
@@ -59,4 +60,8 @@ public class ArticleType {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public int getTypeOrder(){ return typeOrder; }
+
+    public void setTypeOrder(int typeOrder) { this.typeOrder = typeOrder; }
 }

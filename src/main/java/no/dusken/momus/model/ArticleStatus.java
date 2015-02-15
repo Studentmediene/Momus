@@ -30,6 +30,7 @@ public class ArticleStatus {
 
     private String name;
     private String color;
+    private int statusOrder;
 
     public ArticleStatus() {
     }
@@ -58,6 +59,10 @@ public class ArticleStatus {
     public void setColor(String color) {
         this.color = color;
     }
+
+    public int getStatusOrder() { return statusOrder; }
+
+    public void setStatusOrder(int statusOrder) { this.statusOrder = statusOrder; }
 
 
     @Override
