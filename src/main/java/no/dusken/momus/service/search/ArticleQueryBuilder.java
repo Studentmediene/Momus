@@ -44,8 +44,12 @@ public class ArticleQueryBuilder {
         List<String> conditions = new ArrayList<>();
 
         if (search.getFree() != null && search.getFree().length() > 0) {
-            conditions.add("a.content like :free");
-            queryParams.put("free", "%" + search.getFree() + "%");
+            String[] words = search.getFree().split(" ");
+
+            for (int i = 0; i < words.length; i++) {
+                conditions.add("a.rawcontent like :free"+i);
+                queryParams.put("free"+i, "%" + words[i].toLowerCase() + "%");
+            }
         }
         if (search.getStatus() != null) {
             conditions.add("a.status.id = :statusid");

@@ -75,6 +75,10 @@ public class Article {
 
     private String googleDriveId;
 
+    @Column(length = 40960)
+    private String rawcontent;
+
+
     /**
      * This is done after load instead of in a getter, since
      * it may happen that the content is set to empty to save bandwidth/hide it, but
@@ -217,4 +221,8 @@ public class Article {
     public int hashCode() {
         return id.hashCode();
     }
+
+    public String getRawcontent() { return rawcontent; }
+
+    public void setRawcontent(String rawContent) { this.rawcontent = rawContent; }
 }

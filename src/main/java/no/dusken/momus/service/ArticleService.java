@@ -21,6 +21,7 @@ import no.dusken.momus.authentication.UserLoginService;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleRevision;
+import no.dusken.momus.model.Person;
 import no.dusken.momus.service.drive.GoogleDriveService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
@@ -84,6 +85,8 @@ public class ArticleService {
 
         article.setGoogleDriveId(document.getId());
 
+        article.setRawcontent(createRawContent(article));
+
         Article newArticle = articleRepository.saveAndFlush(article);
 
         logger.info("Article {} ({}) created ", newArticle.getId(), newArticle.getName());
@@ -93,7 +96,6 @@ public class ArticleService {
     public Article saveUpdatedArticle(Article article) {
         article.setLastUpdated(new Date());
         logger.info("Article \"{}\" (id: {}) updated", article.getName(), article.getId());
-
         return articleRepository.saveAndFlush(article);
     }
 
@@ -110,6 +112,7 @@ public class ArticleService {
         }
 
         existing.setContent(newContent);
+        existing.setRawcontent(createRawContent(existing));
 
         createNewRevision(existing, false);
 
@@ -131,6 +134,7 @@ public class ArticleService {
         existing.setType(article.getType());
         existing.setStatus(article.getStatus());
         existing.setSection(article.getSection());
+        existing.setRawcontent(createRawContent(existing));
 
         return saveUpdatedArticle(existing);
     }
@@ -225,4 +229,34 @@ public class ArticleService {
             return newRevision;
         }
     }
+
+    public String createRawContent(Article article){
+        StringBuilder raw = new StringBuilder();
+//        String content = stripOffHtml(article.getContent()).replaceAll("\\p{P}"," ").replaceAll("nbsp"," ").replaceAll(" +"," ");
+        String content = stripOffHtml(article.getContent());
+        raw.append(content).append(" ")
+                .append(article.getName()).append(" ")
+                .append(article.getSection() != null ? article.getSection().getName() : "").append(" ")
+                .append(article.getStatus() != null ? article.getStatus().getName() : "").append(" ")
+                .append(article.getType() != null ? article.getType().getName() : "").append(" ")
+                .append(article.getComment()).append(" ");
+
+        for(Person journalist : article.getJournalists()){
+            raw.append(journalist.getFullName()).append(" ");
+        }
+        for(Person photo : article.getPhotographers()){
+            raw.append(photo.getFullName()).append(" ");
+        }
+        logger.info(raw.toString().toLowerCase());
+        return raw.toString().toLowerCase();
+    }
+
+    private String stripOffHtml(String html){
+        String[] tags = {"<h1>","<h2>","<h3>","<h4>","<p>","<i>","<blockquote>","<br>","<ul>","<ol>","<li>"};
+        for (String tag : tags) {
+            html = html.replaceAll(tag," ").replaceAll(tag.substring(0,1)+"/"+tag.substring(1,tag.length()),"");
+        }
+        return html;
+    }
+
 }

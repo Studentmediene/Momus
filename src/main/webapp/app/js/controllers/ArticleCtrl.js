@@ -28,7 +28,6 @@ angular.module('momusApp.controllers')
         ArticleService.getArticle($routeParams.id).success(function (data) {
             $scope.article = data;
             $scope.unedited = angular.copy(data);
-
             TitleChanger.setTitle($scope.article.name);
             ViewArticleService.viewArticle($routeParams.id);
         });
