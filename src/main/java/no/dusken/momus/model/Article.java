@@ -74,7 +74,7 @@ public class Article {
     private String photoStatus;
 
     @Column(length = 40960)
-    private String rawContent;
+    private String rawcontent;
 
 
     /**
@@ -195,7 +195,7 @@ public class Article {
         this.section = section;
     }
 
-    public String getRawContent() { return rawContent; }
+    public String getRawcontent() { return rawcontent; }
 
-    public void setRawContent(String rawContent) { this.rawContent = rawContent; }
+    public void setRawcontent(String rawContent) { this.rawcontent = rawContent; }
 }

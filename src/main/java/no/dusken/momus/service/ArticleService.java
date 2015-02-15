@@ -72,7 +72,7 @@ public class ArticleService {
 
 
     public Article createNewArticle(Article article) {
-        article.setRawContent(createRawContent(article));
+        article.setRawcontent(createRawContent(article));
         Long newID = articleRepository.saveAndFlush(article).getId();
         return articleRepository.findOne(newID);
     }
@@ -97,7 +97,7 @@ public class ArticleService {
 
         logger.info("Saved new revision for article(id:{}) with id: {}, content:\n{}", article.getId(), revision.getId(), content);
         existing.setContent(content);
-        existing.setRawContent(createRawContent(existing));
+        existing.setRawcontent(createRawContent(existing));
         return saveUpdatedArticle(existing);
     }
 
@@ -116,7 +116,7 @@ public class ArticleService {
         existing.setType(article.getType());
         existing.setStatus(article.getStatus());
         existing.setSection(article.getSection());
-        existing.setRawContent(createRawContent(existing));
+        existing.setRawcontent(createRawContent(existing));
 
         return saveUpdatedArticle(existing);
     }
@@ -184,19 +184,15 @@ public class ArticleService {
 
     private String createRawContent(Article article){
         StringBuilder raw = new StringBuilder();
-        String content = stripOffHtml(article.getContent()).replaceAll("\\p{P}"," ").replaceAll("nbsp"," ").replaceAll(" +"," ");
-        raw.append(content)
-                .append(" ")
-                .append(article.getName())
-                .append(" ")
-                .append(article.getSection().getName())
-                .append(" ")
-                .append(article.getStatus().getName())
-                .append(" ")
-                .append(article.getType().getName())
-                .append(" ")
-                .append(article.getComment())
-                .append(" ");
+//        String content = stripOffHtml(article.getContent()).replaceAll("\\p{P}"," ").replaceAll("nbsp"," ").replaceAll(" +"," ");
+        String content = stripOffHtml(article.getContent());
+        raw.append(content).append(" ")
+                .append(article.getName()).append(" ")
+                .append(article.getSection() != null ? article.getSection().getName() : "").append(" ")
+                .append(article.getStatus() != null ? article.getStatus().getName() : "").append(" ")
+                .append(article.getType() != null ? article.getType().getName() : "").append(" ")
+                .append(article.getComment()).append(" ");
+
         for(Person journalist : article.getJournalists()){
             raw.append(journalist.getFullName()).append(" ");
         }

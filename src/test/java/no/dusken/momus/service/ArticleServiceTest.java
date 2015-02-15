@@ -91,8 +91,9 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article1journalists.add(person1);
         article1journalists.add(person2);
         article1.setJournalists(article1journalists);
+        article1.setPhotographers(new HashSet<Person>());
         article1.setPublication(publication1);
-        article1 = articleRepository.saveAndFlush(article1);
+        article1 = articleService.createNewArticle(article1);
 
 
 
@@ -106,7 +107,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article2.setJournalists(article2journalists);
         article2.setPhotographers(article2photographers);
         article2.setPublication(publication1);
-        article2 = articleRepository.save(article2);
+        article2 = articleService.createNewArticle(article2);
 
 
 
@@ -120,7 +121,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article3.setJournalists(article3journalists);
         article3.setPhotographers(article3photographers);
         article3.setPublication(publication1);
-        article3 = articleRepository.save(article3);
+        article3 = articleService.createNewArticle(article3);
 
 
         article4 = new Article();
@@ -134,7 +135,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article4.setPhotographers(article4photographers);
         article4.setPublication(publication2);
         article4.setStatus(articleStatus1);
-        article4 = articleRepository.save(article4);
+        article4 = articleService.createNewArticle(article4);
     }
 
 
@@ -222,7 +223,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForContent() {
-        ArticleSearchParams params = new ArticleSearchParams("søke i dette", null, Collections.<Long>emptyList(), null, null);
+        ArticleSearchParams params = new ArticleSearchParams("søKE dette KÅre", null, Collections.<Long>emptyList(), null, null);
 
         List<Article> expected = new ArrayList<>();
         expected.add(article2);
