@@ -32,15 +32,10 @@ public class Article {
 
     private String name;
 
-    @Lob
-    @Column(length = 40960)
     private String content;
 
-    @Lob
-    @Column(length = 40960)
     private String note;
 
-    @Column(length = 1024)
     private String comment;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -72,7 +67,6 @@ public class Article {
 
     private String googleDriveId;
 
-    @Column(length = 40960)
     private String rawcontent;
 
     private int contentLength;

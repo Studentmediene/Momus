@@ -29,8 +29,6 @@ public class ArticleRevision {
     @ManyToOne(fetch = FetchType.LAZY)
     private Article article;
 
-    @Lob
-    @Column(length = 40960)
     private String content;
 
     @ManyToOne
