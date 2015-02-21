@@ -93,7 +93,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article1.setJournalists(article1journalists);
         article1.setPhotographers(new HashSet<Person>());
         article1.setPublication(publication1);
-        article1.setRawcontent(articleService.createRawContent(article1));
+        articleService.createRawContent(article1);
         article1 = articleRepository.saveAndFlush(article1);
 
 
@@ -108,7 +108,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article2.setJournalists(article2journalists);
         article2.setPhotographers(article2photographers);
         article2.setPublication(publication1);
-        article2.setRawcontent(articleService.createRawContent(article2));
+        articleService.createRawContent(article2);
         article2 = articleRepository.save(article2);
 
 
@@ -123,7 +123,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article3.setJournalists(article3journalists);
         article3.setPhotographers(article3photographers);
         article3.setPublication(publication1);
-        article3.setRawcontent(articleService.createRawContent(article3));
+        articleService.createRawContent(article3);
         article3 = articleRepository.save(article3);
 
 
@@ -138,7 +138,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article4.setPhotographers(article4photographers);
         article4.setPublication(publication2);
         article4.setStatus(articleStatus1);
-        article4.setRawcontent(articleService.createRawContent(article4));
+        articleService.createRawContent(article4);
         article4 = articleRepository.save(article4);
     }
 

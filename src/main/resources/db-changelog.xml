@@ -527,5 +527,25 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         </addColumn>
     </changeSet>
 
+
+
+
+
+    <!-- Storing the length of the article -->
+    <changeSet id="7" author="Mats">
+        <addColumn tableName="article">
+            <column name="contentlength" type="BIGINT" />
+        </addColumn>
+    </changeSet>
+
+
+    <!-- Update dev-data with lengths -->
+    <changeSet id="8" author="Mats" context="dev">
+        <update tableName="article"><column name="contentlength">28</column><where>id=1</where></update>
+        <update tableName="article"><column name="contentlength">3688</column><where>id=2</where></update>
+        <update tableName="article"><column name="contentlength">3688</column><where>id=3</where></update>
+        <update tableName="article"><column name="contentlength">8</column><where>id=4</where></update>
+    </changeSet>
+
 </databaseChangeLog>
 
