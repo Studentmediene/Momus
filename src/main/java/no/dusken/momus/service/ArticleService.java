@@ -262,6 +262,10 @@ public class ArticleService {
         for (String tag : tags) {
             html = html.replaceAll(tag," ").replaceAll(tag.substring(0,1)+"/"+tag.substring(1,tag.length()),"");
         }
+
+        // Remove consecutive spaces
+        html = html.replaceAll("\\s+", " ");
+
         return html;
     }
 
