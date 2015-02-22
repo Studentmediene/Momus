@@ -32,19 +32,11 @@ public class Article {
 
     private String name;
 
-    @Lob
-    @Column(length = 40960)
     private String content;
 
-    @Lob
-    @Column(length = 40960)
     private String note;
 
-    @Column(length = 1024)
     private String comment;
-
-    @Transient
-    private int contentLength;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Section section;
@@ -75,19 +67,10 @@ public class Article {
 
     private String googleDriveId;
 
-    @Column(length = 40960)
     private String rawcontent;
 
+    private int contentLength;
 
-    /**
-     * This is done after load instead of in a getter, since
-     * it may happen that the content is set to empty to save bandwidth/hide it, but
-     * the length of it is still needed.
-     */
-    @PostLoad
-    private void calculateContentLength() {
-        contentLength = content != null ? content.length() : 0;
-    }
 
     public Article() {
 
@@ -225,4 +208,8 @@ public class Article {
     public String getRawcontent() { return rawcontent; }
 
     public void setRawcontent(String rawContent) { this.rawcontent = rawContent; }
+
+    public void setContentLength(int contentLength) {
+        this.contentLength = contentLength;
+    }
 }

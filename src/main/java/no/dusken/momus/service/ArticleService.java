@@ -85,8 +85,6 @@ public class ArticleService {
 
         article.setGoogleDriveId(document.getId());
 
-        article.setRawcontent(createRawContent(article));
-
         Article newArticle = articleRepository.saveAndFlush(article);
 
         logger.info("Article {} ({}) created ", newArticle.getId(), newArticle.getName());
@@ -112,7 +110,7 @@ public class ArticleService {
         }
 
         existing.setContent(newContent);
-        existing.setRawcontent(createRawContent(existing));
+        createRawContent(existing);
 
         createNewRevision(existing, false);
 
@@ -134,7 +132,7 @@ public class ArticleService {
         existing.setType(article.getType());
         existing.setStatus(article.getStatus());
         existing.setSection(article.getSection());
-        existing.setRawcontent(createRawContent(existing));
+        createRawContent(existing);
 
         return saveUpdatedArticle(existing);
     }
@@ -230,10 +228,13 @@ public class ArticleService {
         }
     }
 
-    public String createRawContent(Article article){
+    public void createRawContent(Article article){
         StringBuilder raw = new StringBuilder();
-//        String content = stripOffHtml(article.getContent()).replaceAll("\\p{P}"," ").replaceAll("nbsp"," ").replaceAll(" +"," ");
+
         String content = stripOffHtml(article.getContent());
+
+        int contentLength = content.length();
+
         raw.append(content).append(" ")
                 .append(article.getName()).append(" ")
                 .append(article.getSection() != null ? article.getSection().getName() : "").append(" ")
@@ -247,15 +248,24 @@ public class ArticleService {
         for(Person photo : article.getPhotographers()){
             raw.append(photo.getFullName()).append(" ");
         }
-        logger.info(raw.toString().toLowerCase());
-        return raw.toString().toLowerCase();
+
+
+        String rawContent = raw.toString().toLowerCase();
+        logger.info("Raw content {}, length of content: {}", rawContent, contentLength);
+
+        article.setRawcontent(rawContent);
+        article.setContentLength(contentLength);
     }
 
     private String stripOffHtml(String html){
-        String[] tags = {"<h1>","<h2>","<h3>","<h4>","<p>","<i>","<blockquote>","<br>","<ul>","<ol>","<li>"};
+        String[] tags = {"<h1>","<h2>","<h3>","<h4>","<h5>","<p>","<i>","<b>", "<blockquote>","<br>","<ul>","<ol>","<li>"};
         for (String tag : tags) {
             html = html.replaceAll(tag," ").replaceAll(tag.substring(0,1)+"/"+tag.substring(1,tag.length()),"");
         }
+
+        // Remove consecutive spaces
+        html = html.replaceAll("\\s+", " ");
+
         return html;
     }
 
