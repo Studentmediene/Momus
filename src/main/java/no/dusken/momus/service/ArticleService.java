@@ -132,6 +132,7 @@ public class ArticleService {
         existing.setType(article.getType());
         existing.setStatus(article.getStatus());
         existing.setSection(article.getSection());
+        existing.setUseIllustration(article.getUseIllustration());
         createRawContent(existing);
 
         return saveUpdatedArticle(existing);
