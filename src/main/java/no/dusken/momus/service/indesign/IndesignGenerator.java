@@ -136,27 +136,38 @@ public class IndesignGenerator {
 
 
     private void appendByLines(StringBuilder sb, Article article) {
-        for (Person person : article.getJournalists()) {
-            sb.append("<ParaStyle:Byline>")
-                    .append("Tekst: ")
-                    .append(person.getFirstName())
-                    .append(" ")
-                    .append(person.getFullName())
-                    .append(" ")
-                    .append(person.getEmail())
-                    .append("\r\n");
+        if (article.getJournalists().size() > 0) {
+            sb.append("<ParaStyle:Byline>Tekst: ");
+            String delim = "";
+
+            for (Person person : article.getJournalists()) {
+                sb.append(delim).append(person.getFullName());
+                delim = ", ";
+            }
+
+            sb.append("\r\n");
         }
 
-        for (Person person : article.getPhotographers()) {
-            sb.append("<ParaStyle:Byline>")
-                    .append("Foto: ")
-                    .append(person.getFirstName())
-                    .append(" ")
-                    .append(person.getFullName())
-                    .append(" ")
-                    .append(person.getEmail())
-                    .append("\r\n");
+
+        if (article.getPhotographers().size() > 0) {
+            sb.append("<ParaStyle:Byline>");
+
+            if (article.getUseIllustration()) {
+                sb.append("Illustrasjon: ");
+            } else {
+                sb.append("Foto: ");
+            }
+
+            String delim = "";
+            for (Person person : article.getPhotographers()) {
+                sb.append(delim).append(person.getFullName());
+                delim = ", ";
+            }
+
+            sb.append("\r\n");
         }
+
+
     }
 
     private void appendContent(StringBuilder sb, Article article) {

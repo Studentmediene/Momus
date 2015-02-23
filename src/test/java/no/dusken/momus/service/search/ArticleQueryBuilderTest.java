@@ -55,13 +55,14 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
     @Test
     public void testTextQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("finn meg", null, emptyList, null, null);
+        ArticleSearchParams params = new ArticleSearchParams("fInn Meg", null, emptyList, null, null);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = builder.getBaseQuery() + " where a.content like :free" + builder.getBaseOrder();
+        String expectedQuery = builder.getBaseQuery() + " where a.rawcontent like :free0 and a.rawcontent like :free1" + builder.getBaseOrder();
         Map<String, Object> expectedMap = new HashMap<>();
-        expectedMap.put("free", "%finn meg%");
+        expectedMap.put("free0", "%finn%");
+        expectedMap.put("free1", "%meg%");
 
         assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
         assertEquals(expectedMap, builder.getQueryParams());
@@ -136,7 +137,8 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
         String expectedQuery = builder.getBaseQuery() + " where " +
-                                "a.content like :free and " +
+                                "a.rawcontent like :free0 and " +
+                                "a.rawcontent like :free1 and " +
                                 "a.status.id = :statusid and ( " +
                                 ":personid0 member of a.journalists or " +
                                 ":personid0 member of a.photographers ) and ( " +
@@ -146,7 +148,8 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
                                 "a.publication.id = :pubid" + builder.getBaseOrder();
 
         Map<String, Object> expectedMap = new HashMap<>();
-        expectedMap.put("free", "%kombinert test%");
+        expectedMap.put("free0", "%kombinert%");
+        expectedMap.put("free1", "%test%");
         expectedMap.put("statusid", 1L);
         expectedMap.put("personid0", 594L);
         expectedMap.put("personid1", 1337L);

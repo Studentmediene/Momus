@@ -36,12 +36,8 @@ public class Source {
 
     private String webPage;
 
-    @Lob
-    @Column(length = 4096)
     private String address;
 
-    @Lob
-    @Column(length = 40960)
     private String note;
 
     @ManyToMany(fetch = FetchType.EAGER)

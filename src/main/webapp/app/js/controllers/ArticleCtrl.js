@@ -28,7 +28,6 @@ angular.module('momusApp.controllers')
         ArticleService.getArticle($routeParams.id).success(function (data) {
             $scope.article = data;
             $scope.unedited = angular.copy(data);
-
             TitleChanger.setTitle($scope.article.name);
             ViewArticleService.viewArticle($routeParams.id);
         });
@@ -45,6 +44,8 @@ angular.module('momusApp.controllers')
             $scope.sections = data;
         });
 
+
+        $scope.photoTypes = [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}];
 
 
         /* content panel */

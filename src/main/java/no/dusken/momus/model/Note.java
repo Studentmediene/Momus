@@ -25,8 +25,6 @@ public class Note {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
-    @Column(length = 40960)
     private String content;
 
     @OneToOne(fetch = FetchType.LAZY)

@@ -29,7 +29,8 @@ angular.module('momusApp.controllers')
             type: null,
             status: null,
             section: null,
-            content: ""
+            content: "",
+            use_illustration: false
 
         };
 
@@ -55,6 +56,9 @@ angular.module('momusApp.controllers')
         PersonService.getAll().success(function (data) {
             $scope.persons = data;
         });
+
+        $scope.photoTypes = [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}];
+
 
         $scope.createArticle = function () {
             $scope.creating = true;
