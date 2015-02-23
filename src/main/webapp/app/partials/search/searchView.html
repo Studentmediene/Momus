@@ -113,13 +113,12 @@
                 <th>Navn</th>
                 <th>Type</th>
                 <th>Journalister</th>
-                <th>Fotografer</th>
+                <th>Foto/Illustrasjon</th>
                 <th>Kommentar</th>
                 <th>Tegn</th>
                 <th>Status</th>
                 <th>Redaksjon</th>
                 <th>Utgave</th>
-                <th></th>
             </tr>
             </thead>
 
@@ -154,7 +153,11 @@
                 </td>
                 <td>
                     <ul class="list-unstyled">
+
                         <li ng-repeat="person in article.photographers">
+
+                            <i class="fa fa-paint-brush" ng-show="article.use_illustration"> </i>
+                            <i class="fa fa-camera" ng-show="!article.use_illustration"> </i>
                             <span person-widget="person">{{ person.full_name }}</span>
                         </li>
                     </ul>
@@ -174,11 +177,6 @@
                 </td>
                 <td>
                     {{ article.publication.name }}
-                </td>
-                <td class="hidden-print">
-                    <a href="#/artikler/{{ article.id }}" class="">
-                        Åpne
-                    </a>
                 </td>
             </tr>
             </tbody>

@@ -58,19 +58,18 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
         article.setPublication(pub);
 
         Set<Person> journalists = new HashSet<>();
-        journalists.add(new Person(1L, "user1", "Mats", "Matsesen", "mats@mats.mats", "12345678", true));
-        journalists.add(new Person(2L, "user1", "Kåre", "Kål", "lala@lolo.com", "12345678", true));
+        journalists.add(new Person(1L, "user1", "Mats", "Mats Matsesen", "mats@mats.mats", "12345678", true));
+        journalists.add(new Person(2L, "user1", "Kåre", "Kåre Kål", "lala@lolo.com", "12345678", true));
         article.setJournalists(journalists);
 
         Set<Person> photographers = new HashSet<>();
-        photographers.add(new Person(3L, "user1", "Einar", "Einarsen", "einar@lala.org", "12345678", true));
+        photographers.add(new Person(3L, "user1", "Einar", "Einar Einarsen", "einar@lala.org", "12345678", true));
         article.setPhotographers(photographers);
 
         String expected = "<ANSI-WIN>\r\n" +
                 "<Version:7.5>\r\n" +
-                "<ParaStyle:Byline>Tekst: Mats Matsesen mats@mats.mats\r\n" +
-                "<ParaStyle:Byline>Tekst: Kåre Kål lala@lolo.com\r\n" +
-                "<ParaStyle:Byline>Foto: Einar Einarsen einar@lala.org\r\n" +
+                "<ParaStyle:Byline>Tekst: Mats Matsesen, Kåre Kål\r\n" +
+                "<ParaStyle:Byline>Foto: Einar Einarsen\r\n" +
                 "<ParaStyle:Tittel>Tittel\r\n" +
                 "<ParaStyle:Stikktittel>Stikktittel\r\n" +
                 "<ParaStyle:Ingress>En lang ingress\r\n" +
@@ -91,5 +90,34 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
 
         assertEquals(expected, result.getContent());
         assertEquals("TestPub Min tittel", result.getName());
+    }
+
+    @Test
+    public void changesToIllustratorNoJournalists() {
+        Article article = new Article(1L);
+
+
+        Publication pub = new Publication();
+        pub.setName("TestPub");
+        article.setPublication(pub);
+
+        article.setContent("");
+
+        article.setJournalists(new HashSet<Person>());
+
+        Set<Person> photographers = new HashSet<>();
+        photographers.add(new Person(3L, "user1", "Einar", "Einar Einarsen", "einar@lala.org", "12345678", true));
+        photographers.add(new Person(10L, "user1", "Roy", "Roy Royce", "einar@lala.org", "12345678", true));
+        article.setPhotographers(photographers);
+
+        article.setUseIllustration(true);
+
+        String expected = "<ANSI-WIN>\r\n" +
+                "<Version:7.5>\r\n" +
+                "<ParaStyle:Byline>Illustrasjon: Einar Einarsen, Roy Royce\r\n";
+
+        IndesignExport result = indesignGenerator.generateFromArticle(article);
+
+        assertEquals(expected, result.getContent());
     }
 }

@@ -26,7 +26,16 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">
-                    Fotografer
+                    Foto/Illu
+                </label>
+                <div class="col-sm-9" >
+                    <select class="form-control input-sm" ng-model="article.use_illustration"
+                            ng-options="o.value as o.name for o in [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}]"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">
+                    {{article.use_illustration ? 'Illustratører' : 'Fotografer'}}
                 </label>
 
                 <div class="col-sm-9">

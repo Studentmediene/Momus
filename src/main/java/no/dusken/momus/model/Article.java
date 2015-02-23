@@ -71,6 +71,9 @@ public class Article {
 
     private int contentLength;
 
+    /** If the article is assigned illustrator(s), not photographer(s) */
+    private boolean useIllustration;
+
 
     public Article() {
 
@@ -211,5 +214,13 @@ public class Article {
 
     public void setContentLength(int contentLength) {
         this.contentLength = contentLength;
+    }
+
+    public boolean getUseIllustration() {
+        return useIllustration;
+    }
+
+    public void setUseIllustration(boolean useIllustration) {
+        this.useIllustration = useIllustration;
     }
 }

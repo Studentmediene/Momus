@@ -179,7 +179,24 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-4 control-label">
-                    Fotografer
+                    Foto/Illu
+                </label>
+
+                <div class="col-sm-8" ng-hide="metaEditMode">
+                    <p class="form-control-static">
+                        <span ng-show="article.use_illustration"><i class="fa fa-paint-brush"> </i> Illustrasjon</span>
+                        <span ng-show="!article.use_illustration"><i class="fa fa-camera"> </i> Foto</span>
+
+                    </p>
+                </div>
+                <div class="col-sm-8" ng-show="metaEditMode">
+                    <select class="form-control input-sm" ng-model="metaEditing.use_illustration"
+                            ng-options="o.value as o.name for o in [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}]"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    {{article.use_illustration ? 'Illustratører' : 'Fotografer'}}
                 </label>
 
                 <div class="col-sm-8">
@@ -243,7 +260,7 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-4 control-label">
-                    Type
+                    Artikkeltype
                 </label>
 
                 <div class="col-sm-8" ng-hide="metaEditMode">

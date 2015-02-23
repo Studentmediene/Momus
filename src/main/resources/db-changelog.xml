@@ -538,7 +538,6 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         </addColumn>
     </changeSet>
 
-
     <!-- Update dev-data with lengths -->
     <changeSet id="8" author="Mats" context="dev">
         <update tableName="article"><column name="contentlength">28</column><where>id=1</where></update>
@@ -547,5 +546,16 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         <update tableName="article"><column name="contentlength">8</column><where>id=4</where></update>
     </changeSet>
 
-</databaseChangeLog>
 
+
+
+
+    <!-- Save if the article should have illustration instead of photo -->
+    <changeSet id="9" author="Mats">
+        <addColumn tableName="article">
+            <column name="useillustration" type="BOOLEAN" defaultValueBoolean="false" />
+        </addColumn>
+    </changeSet>
+
+
+</databaseChangeLog>

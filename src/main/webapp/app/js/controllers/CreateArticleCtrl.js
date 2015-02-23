@@ -29,7 +29,8 @@ angular.module('momusApp.controllers')
             type: null,
             status: null,
             section: null,
-            content: ""
+            content: "",
+            use_illustration: false
 
         };
 
