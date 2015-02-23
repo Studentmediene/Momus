@@ -57,6 +57,9 @@ angular.module('momusApp.controllers')
             $scope.persons = data;
         });
 
+        $scope.photoTypes = [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}];
+
+
         $scope.createArticle = function () {
             $scope.creating = true;
             ArticleService.createNewArticle($scope.article).success(function (data) {

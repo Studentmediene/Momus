@@ -46,11 +46,11 @@ angular.module('momusApp.services')
 
 
         // Date: year, month - 1, day
-        var news = [/*{
-                date: new Date(2015, 1, 9),
-                title: "Dette er en nyhet som er veldig lang",
-                text: "<p>Momus er nå live! Sjekk ut alle de fete funksjonene. Dette er heftige greier.</p>"
-            },*/
+        var news = [{
+            date: new Date(2015, 1, 23),
+            title: "Tegnlengde, søk og illustrasjon",
+            text: "<p>Tegnlengde på artikler skal nå være mer nøyaktig.</p><p>Fritekstsøket er fikset og forbedret.</p><p>Kan nå markere om en artikkel skal ha illustratører eller fotografer. Eksporteringa til InDesign setter automagisk riktig byline basert på dette.</p>"
+        },
             {
                 date: new Date(2015, 1, 8),
                 title: "Lansering!",

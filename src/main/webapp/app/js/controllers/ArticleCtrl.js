@@ -45,6 +45,8 @@ angular.module('momusApp.controllers')
         });
 
 
+        $scope.photoTypes = [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}];
+
 
         /* content panel */
         $scope.saveContent = function () {
