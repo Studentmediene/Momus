@@ -534,7 +534,7 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
     <!-- Storing the length of the article -->
     <changeSet id="7" author="Mats">
         <addColumn tableName="article">
-            <column name="contentlength" type="BIGINT" />
+            <column name="contentlength" type="BIGINT" defaultValueNumeric="0" />
         </addColumn>
     </changeSet>
 
