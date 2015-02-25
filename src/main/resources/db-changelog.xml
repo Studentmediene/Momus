@@ -558,4 +558,14 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
     </changeSet>
 
 
+
+
+    <!-- Image texts -->
+    <changeSet id="10" author="Mats">
+        <addColumn tableName="article">
+            <column name="imagetext" type="TEXT" />
+        </addColumn>
+    </changeSet>
+
+
 </databaseChangeLog>

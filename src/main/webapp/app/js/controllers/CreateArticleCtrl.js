@@ -31,7 +31,6 @@ angular.module('momusApp.controllers')
             section: null,
             content: "",
             use_illustration: false
-
         };
 
         PublicationService.getAll().success(function (data) {

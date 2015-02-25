@@ -170,6 +170,12 @@
 
                 <td>{{ article.content_length }}</td>
                 <td>
+                    <span class="status-icon-stack" tooltip="Om bildetekster er satt">
+                        <i class="fa fa-user back"></i>
+                        <i class="fa fa-times text-danger front"  ng-show="!article.image_text || article.image_text.length == 0"></i>
+                        <i class="fa fa-check text-success front" ng-show="article.image_text.length > 0"></i>
+                    </span>
+
                     <span style="background-color: {{article.status.color}}; padding: 3px;">{{ article.status.name }}</span>
                 </td>
                 <td>
