@@ -594,4 +594,17 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
     </changeSet>
 
 
+
+    <!-- Dev only: Google Drive ID's -->
+    <changeSet id="11" author="Mats" context="dev">
+        <update tableName="article"><column name="googledriveid">1ruyVYOp2GdUCVEJ0v8qs9hfj7XFepCCViUHjTxadL5Y</column><where>id=1</where></update>
+        <update tableName="article"><column name="googledriveid">1Fq5PFGf9FDnYR-2-F9slDGfmPCvT_eIyhENuN_gStNw</column><where>id=2</where></update>
+        <update tableName="article"><column name="googledriveid">1b0_RpgHHYg3-B9pFdBqqumeZVW-RpUDQAEu7M42Nzoc</column><where>id=3</where></update>
+        <update tableName="article"><column name="googledriveid">14ZIZ_q3m0aEUMLn-zOrGzWhW6g42sfIU3tMy3don76E</column><where>id=4</where></update>
+    </changeSet>
+
+
+
+
+
 </databaseChangeLog>
