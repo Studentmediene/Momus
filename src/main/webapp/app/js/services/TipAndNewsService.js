@@ -47,6 +47,10 @@ angular.module('momusApp.services')
 
         // Date: year, month - 1, day
         var news = [{
+            date: new Date(2015, 2, 1),
+            title: "Bildetekst og sitatsjekk",
+            text: "<p>Kan nå legge til bildetekst, denne teksten blir med i eksporten til InDesign. Kan også markere om en artikkel har godkjent sitatsjekk.</p>"
+        },{
             date: new Date(2015, 1, 23),
             title: "Tegnlengde, søk og illustrasjon",
             text: "<p>Tegnlengde på artikler skal nå være mer nøyaktig.</p><p>Fritekstsøket er fikset og forbedret.</p><p>Kan nå markere om en artikkel skal ha illustratører eller fotografer. Eksporteringa til InDesign setter automagisk riktig byline basert på dette.</p>"
