@@ -618,6 +618,29 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         </addColumn>
     </changeSet>
 
+    <!-- Add and change some statuses etc. -->
+    <changeSet id="13" author="Mats">
+        <!-- new status -->
+        <insert tableName="articlestatus">
+            <column name="id">7</column>
+            <column name="color">#009F00</column>
+            <column name="name">Til korrektur</column>
+            <column name="statusorder">700</column>
+        </insert>
 
+        <!-- "delete" by hiding it -->
+        <update tableName="section">
+            <column name="deleted" valueBoolean="true" />
+            <where>id=5</where>
+        </update>
+
+        <insert tableName="articletype"><column name="id">8</column><column name="name">Forbruker</column><column name="typeorder">800</column></insert>
+        <insert tableName="articletype"><column name="id">9</column><column name="name">Forskning</column><column name="typeorder">900</column></insert>
+        <insert tableName="articletype"><column name="id">10</column><column name="name">Aktualitet</column><column name="typeorder">1000</column></insert>
+        <insert tableName="articletype"><column name="id">11</column><column name="name">Smårep</column><column name="typeorder">1100</column></insert>
+        <insert tableName="articletype"><column name="id">12</column><column name="name">Portrett</column><column name="typeorder">1200</column></insert>
+        <insert tableName="articletype"><column name="id">13</column><column name="name">Sidespor</column><column name="typeorder">1300</column></insert>
+        <insert tableName="articletype"><column name="id">14</column><column name="name">Småspalter</column><column name="typeorder">1400</column></insert>
+    </changeSet>
 </databaseChangeLog>
 
