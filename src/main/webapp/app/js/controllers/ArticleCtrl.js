@@ -17,11 +17,10 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function ($scope, PersonService,$timeout, ArticleService, PublicationService, TitleChanger, noteParserRules, articleParserRules, $routeParams) {
+    .controller('ArticleCtrl', function ($scope, PersonService,$timeout, ArticleService, PublicationService, TitleChanger, noteParserRules, articleParserRules, $routeParams, $modal) {
         $scope.metaEditMode = false;
         $scope.noteRules = noteParserRules;
         $scope.articleRules = articleParserRules;
-        $scope.ting = true;
 
         PersonService.getAll().success(function(data) {
            $scope.persons = data;
@@ -110,9 +109,27 @@ angular.module('momusApp.controllers')
         };
 
         $scope.sendToChimera = function(id) {
+            $scope.sending = true;
             ArticleService.toChimera(id).success(function (data) {
-                $scope.ting = data;
+                var url = JSON.parse(data);
+                $scope.sending = false;
+                $scope.chimeraModal(url);
             });
+        };
+
+        $scope.chimeraModal = function(url){
+            var modalInstance = $modal.open({
+                templateUrl: 'partials/article/chimeraModal.html',
+                controller: chimeraModalInstanceCtrl,
+                resolve: {
+                    url: function(){
+                        return url;
+                    }
+                }
+            });
+        };
+        var chimeraModalInstanceCtrl = function($scope, $modalInstance, url){
+            $scope.url = "http://staging.dusken.no" + url;
         };
 
         $scope.$on('$locationChangeStart', function(event){

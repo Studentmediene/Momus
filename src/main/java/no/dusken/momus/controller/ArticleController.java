@@ -118,7 +118,7 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "/{id}/toChimera", method = RequestMethod.GET)
-    public @ResponseBody Boolean getChimeraExport(@PathVariable("id") Long id) {
+    public @ResponseBody String getChimeraExport(@PathVariable("id") Long id) {
         return articleService.getChimeraExport(id);
     }
 

@@ -80,7 +80,7 @@ public class ArticleService {
         return articleRepository.findOne(newID);
     }
 
-    public boolean getChimeraExport(Long id) {
+    public String getChimeraExport(Long id) {
         Article article = getArticleById(id);
         return chimeraExport.exportToChimera(article);
 

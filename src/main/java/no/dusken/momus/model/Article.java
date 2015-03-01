@@ -79,10 +79,10 @@ public class Article {
      * it may happen that the content is set to empty to save bandwith/hide it, but
      * the length of it is still needed.
      */
-    @PostLoad
+    /*@PostLoad
     private void calculateContentLength() {
         contentLength = content.length();
-    }
+    }*/
 
     public Article() {
 

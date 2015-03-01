@@ -382,7 +382,7 @@
             <a href="#/artikler/revisjon/{{article.id}}" class="btn btn-primary"><i class="fa fa-file-text-o"></i>
                 Historikk
             </a>
-            <a href="#/artikler/{{article.id}}" ng-click="sendToChimera(article.id)" class="btn btn-primary"><i class="fa fa-cloud"></i>
+            <a href="#/artikler/{{article.id}}" ng-click="sendToChimera(article.id)" button-loader="sending" loading-text="Eksporterer" class="btn btn-primary"><i class="fa fa-cloud"></i>
                 Chimera
             </a>
             <span tooltip="Kopier sitatsjekk-tekst" class="btn-group">
