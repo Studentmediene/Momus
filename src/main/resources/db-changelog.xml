@@ -501,6 +501,7 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         <addPrimaryKey columnNames="k" tableName="keyvalue"/>
     </changeSet>
 
+    <!-- Add order fields for article status and types -->
     <changeSet id="6" author="Christoffer">
         <addColumn tableName="articlestatus">
             <column name="statusorder" type="BIGINT" />
