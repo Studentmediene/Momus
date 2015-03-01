@@ -39,7 +39,7 @@
                     <option class="" value="">
                         Alle statuser
                     </option>
-                    <option ng-repeat="status in statuses" value="{{ status.id }}" style="background: #0f0">
+                    <option ng-repeat="status in statuses | filter:{deleted: false} | orderBy:'status_order'" value="{{ status.id }}" style="background: #0f0">
                         {{ status.name }}
                     </option>
                 </select>
@@ -54,7 +54,7 @@
                     <option value="">
                         Alle redaksjoner
                     </option>
-                    <option ng-repeat="section in sections" value="{{ section.id }}">
+                    <option ng-repeat="section in sections | filter:{deleted: false}" value="{{ section.id }}">
                         {{ section.name }}
                     </option>
                 </select>
@@ -170,6 +170,17 @@
 
                 <td>{{ article.content_length }}</td>
                 <td>
+                    <span class="status-icon-stack" tooltip="Om bildetekster er satt">
+                        <i class="fa fa-user back"></i>
+                        <i class="fa fa-times text-danger front"  ng-show="!article.image_text || article.image_text.length == 0"></i>
+                        <i class="fa fa-check text-success front" ng-show="article.image_text.length > 0"></i>
+                    </span>
+
+                    <span class="status-icon-stack" tooltip="Om sitatsjekk er gjennomført">
+                        <i class="fa fa-quote-right back"></i>
+                        <i class="fa fa-times text-danger front"  ng-show="!article.quote_check_status"></i>
+                        <i class="fa fa-check text-success front" ng-show="article.quote_check_status"></i>
+                    </span>
                     <span style="background-color: {{article.status.color}}; padding: 3px;">{{ article.status.name }}</span>
                 </td>
                 <td>

@@ -72,7 +72,7 @@
 
                 <div class="col-sm-9">
                     <select class="form-control input-sm" ng-model="article.section"
-                            ng-options="s.name for s in sections track by s.id"></select>
+                            ng-options="s.name for s in sections | filter:{deleted: false} track by s.id"></select>
                 </div>
             </div>
             <div class="form-group">
@@ -82,7 +82,7 @@
 
                 <div class="col-sm-9">
                     <select class="form-control input-sm" ng-model="article.type"
-                            ng-options="s.name for s in types track by s.id"></select>
+                            ng-options="s.name for s in types | orderBy:'type_order' | filter:{deleted: false} track by s.id "></select>
                 </div>
             </div>
             <div class="form-group">
@@ -92,7 +92,7 @@
 
                 <div class="col-sm-9">
                     <select class="form-control input-sm" ng-model="article.status"
-                            ng-options="s.name for s in statuses track by s.id"></select>
+                            ng-options="s.name for s in statuses | orderBy:'status_order' | filter:{deleted: false} track by s.id "></select>
                 </div>
             </div>
 

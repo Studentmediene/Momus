@@ -501,6 +501,32 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         <addPrimaryKey columnNames="k" tableName="keyvalue"/>
     </changeSet>
 
+    <!-- Add order fields for article status and types -->
+    <changeSet id="6" author="Christoffer">
+        <addColumn tableName="articlestatus">
+            <column name="statusorder" type="BIGINT" />
+        </addColumn>
+        <addColumn tableName="articletype">
+            <column name="typeorder" type="BIGINT" />
+        </addColumn>
+
+        <update tableName="articlestatus"><column name="statusorder">100</column><where>id=1</where></update>
+        <update tableName="articlestatus"><column name="statusorder">200</column><where>id=2</where></update>
+        <update tableName="articlestatus"><column name="statusorder">300</column><where>id=3</where></update>
+        <update tableName="articlestatus"><column name="statusorder">400</column><where>id=4</where></update>
+        <update tableName="articlestatus"><column name="statusorder">500</column><where>id=5</where></update>
+        <update tableName="articlestatus"><column name="statusorder">600</column><where>id=6</where></update>
+
+        <update tableName="articletype"><column name="typeorder">100</column><where>id=1</where></update>
+        <update tableName="articletype"><column name="typeorder">200</column><where>id=2</where></update>
+        <update tableName="articletype"><column name="typeorder">300</column><where>id=3</where></update>
+        <update tableName="articletype"><column name="typeorder">400</column><where>id=4</where></update>
+        <update tableName="articletype"><column name="typeorder">500</column><where>id=5</where></update>
+        <update tableName="articletype"><column name="typeorder">600</column><where>id=6</where></update>
+        <update tableName="articletype"><column name="typeorder">700</column><where>id=7</where></update>
+
+    </changeSet>
+
 
 
     <!-- Add support for "raw content" for better free text search -->
@@ -526,10 +552,6 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="statuschanged" type="BOOLEAN" />
         </addColumn>
     </changeSet>
-
-
-
-
 
     <!-- Storing the length of the article -->
     <changeSet id="7" author="Mats">
@@ -558,4 +580,71 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
     </changeSet>
 
 
+
+
+    <!-- Image texts -->
+    <changeSet id="10" author="Mats">
+        <addColumn tableName="article">
+            <column name="imagetext" type="TEXT" />
+        </addColumn>
+    </changeSet>
+
+
+
+    <!-- Dev only: Google Drive ID's -->
+    <changeSet id="11" author="Mats" context="dev">
+        <update tableName="article"><column name="googledriveid">1ruyVYOp2GdUCVEJ0v8qs9hfj7XFepCCViUHjTxadL5Y</column><where>id=1</where></update>
+        <update tableName="article"><column name="googledriveid">1Fq5PFGf9FDnYR-2-F9slDGfmPCvT_eIyhENuN_gStNw</column><where>id=2</where></update>
+        <update tableName="article"><column name="googledriveid">1b0_RpgHHYg3-B9pFdBqqumeZVW-RpUDQAEu7M42Nzoc</column><where>id=3</where></update>
+        <update tableName="article"><column name="googledriveid">14ZIZ_q3m0aEUMLn-zOrGzWhW6g42sfIU3tMy3don76E</column><where>id=4</where></update>
+    </changeSet>
+
+
+    <!-- We can't delete statuses etc. because articles may be linked to them, so we add a field
+        and hide it instead -->
+    <changeSet id="12" author="Mats">
+        <addColumn tableName="articlestatus">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false" />
+        </addColumn>
+        <addColumn tableName="articletype">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false" />
+        </addColumn>
+        <addColumn tableName="section">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false" />
+        </addColumn>
+    </changeSet>
+
+    <!-- Add and change some statuses etc. -->
+    <changeSet id="13" author="Mats">
+        <!-- new status -->
+        <insert tableName="articlestatus">
+            <column name="id">7</column>
+            <column name="color">#009F00</column>
+            <column name="name">Til korrektur</column>
+            <column name="statusorder">700</column>
+        </insert>
+
+        <!-- "delete" by hiding it -->
+        <update tableName="section">
+            <column name="deleted" valueBoolean="true" />
+            <where>id=5</where>
+        </update>
+
+        <insert tableName="articletype"><column name="id">8</column><column name="name">Forbruker</column><column name="typeorder">800</column></insert>
+        <insert tableName="articletype"><column name="id">9</column><column name="name">Forskning</column><column name="typeorder">900</column></insert>
+        <insert tableName="articletype"><column name="id">10</column><column name="name">Aktualitet</column><column name="typeorder">1000</column></insert>
+        <insert tableName="articletype"><column name="id">11</column><column name="name">Smårep</column><column name="typeorder">1100</column></insert>
+        <insert tableName="articletype"><column name="id">12</column><column name="name">Portrett</column><column name="typeorder">1200</column></insert>
+        <insert tableName="articletype"><column name="id">13</column><column name="name">Sidespor</column><column name="typeorder">1300</column></insert>
+        <insert tableName="articletype"><column name="id">14</column><column name="name">Småspalter</column><column name="typeorder">1400</column></insert>
+    </changeSet>
+
+    <!-- Add field for "sitatsjekk" -->
+    <changeSet id="14" author="Christoffer">
+        <addColumn tableName="article">
+            <column name="quotecheckstatus" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
+

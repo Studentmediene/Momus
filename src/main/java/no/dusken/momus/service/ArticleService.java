@@ -133,7 +133,9 @@ public class ArticleService {
         existing.setStatus(article.getStatus());
         existing.setSection(article.getSection());
         existing.setUseIllustration(article.getUseIllustration());
+        existing.setImageText(article.getImageText());
         createRawContent(existing);
+        existing.setQuoteCheckStatus(article.getQuoteCheckStatus());
 
         return saveUpdatedArticle(existing);
     }

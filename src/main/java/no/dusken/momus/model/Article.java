@@ -74,6 +74,10 @@ public class Article {
     /** If the article is assigned illustrator(s), not photographer(s) */
     private boolean useIllustration;
 
+    private String imageText;
+    private boolean quoteCheckStatus;
+
+
 
     public Article() {
 
@@ -191,6 +195,10 @@ public class Article {
         this.googleDriveId = googleDriveId;
     }
 
+    public boolean getQuoteCheckStatus(){ return quoteCheckStatus; }
+
+    public void setQuoteCheckStatus( boolean quoteCheckStatus ) { this.quoteCheckStatus = quoteCheckStatus; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -222,5 +230,13 @@ public class Article {
 
     public void setUseIllustration(boolean useIllustration) {
         this.useIllustration = useIllustration;
+    }
+
+    public String getImageText() {
+        return imageText;
+    }
+
+    public void setImageText(String imageText) {
+        this.imageText = imageText;
     }
 }

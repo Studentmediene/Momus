@@ -191,7 +191,7 @@
                 </div>
                 <div class="col-sm-8" ng-show="metaEditMode">
                     <select class="form-control input-sm" ng-model="metaEditing.use_illustration"
-                            ng-options="o.value as o.name for o in phototypes"></select>
+                            ng-options="o.value as o.name for o in photoTypes"></select>
                 </div>
             </div>
             <div class="form-group">
@@ -229,6 +229,18 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-4 control-label">
+                    Bildetekster
+                </label>
+
+                <div class="col-sm-8" ng-hide="metaEditMode">
+                    <p class="form-control-static" style="overflow: auto; max-height: 75px; white-space: pre-wrap;">{{ article.image_text }}</p>
+                </div>
+                <div class="col-sm-8" ng-show="metaEditMode">
+                    <textarea class="form-control" ng-model="metaEditing.image_text" style="height: 150px;"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
                     Publikasjon
                 </label>
 
@@ -239,7 +251,7 @@
                 </div>
                 <div class="col-sm-8" ng-show="metaEditMode">
                     <select class="form-control input-sm" ng-model="metaEditing.publication"
-                            ng-options="s.name for s in publications track by s.id"></select>
+                            ng-options="s.name for s in publications | filter:{deleted: false} track by s.id"></select>
 
                 </div>
             </div>
@@ -255,7 +267,7 @@
                 </div>
                 <div class="col-sm-8" ng-show="metaEditMode">
                     <select class="form-control input-sm" ng-model="metaEditing.section"
-                            ng-options="s.name for s in sections track by s.id"></select>
+                            ng-options="s.name for s in sections  | filter:{deleted: false} track by s.id"></select>
                 </div>
             </div>
             <div class="form-group">
@@ -270,7 +282,7 @@
                 </div>
                 <div class="col-sm-8" ng-show="metaEditMode">
                     <select class="form-control input-sm" ng-model="metaEditing.type"
-                            ng-options="s.name for s in types track by s.id"></select>
+                            ng-options="s.name for s in types | orderBy:'type_order' | filter:{deleted: false} track by s.id "></select>
                 </div>
             </div>
             <div class="form-group">
@@ -285,7 +297,26 @@
                 </div>
                 <div class="col-sm-8" ng-show="metaEditMode">
                     <select class="form-control input-sm" ng-model="metaEditing.status"
-                            ng-options="s.name for s in statuses track by s.id"></select>
+                            ng-options="s.name for s in statuses | orderBy:'status_order' track by s.id "></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    Sitatsjekk
+                </label>
+
+                <div class="col-sm-8" ng-hide="metaEditMode">
+                    <p class="form-control-static">
+                        <span ng-show="article.quote_check_status">
+                            Gjennomført
+                        </span>
+                        <span ng-hide="article.quote_check_status">
+                            Ikke gjennomført
+                        </span>
+                    </p>
+                </div>
+                <div class="col-sm-8" ng-show="metaEditMode">
+                    <input type="checkbox" ng-model="metaEditing.quote_check_status" class="form-control input-sm">
                 </div>
             </div>
         </form>
