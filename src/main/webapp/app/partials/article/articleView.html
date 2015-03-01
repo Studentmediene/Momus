@@ -251,7 +251,7 @@
                 </div>
                 <div class="col-sm-8" ng-show="metaEditMode">
                     <select class="form-control input-sm" ng-model="metaEditing.publication"
-                            ng-options="s.name for s in publications | filter:{deleted: false} track by s.id"></select>
+                            ng-options="s.name for s in publications track by s.id"></select>
 
                 </div>
             </div>
@@ -297,7 +297,7 @@
                 </div>
                 <div class="col-sm-8" ng-show="metaEditMode">
                     <select class="form-control input-sm" ng-model="metaEditing.status"
-                            ng-options="s.name for s in statuses | orderBy:'status_order' track by s.id "></select>
+                            ng-options="s.name for s in statuses | filter:{deleted: false} | orderBy:'status_order' track by s.id "></select>
                 </div>
             </div>
             <div class="form-group">
