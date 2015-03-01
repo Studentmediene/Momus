@@ -31,6 +31,7 @@ public class ArticleStatus {
     private String name;
     private String color;
     private int statusOrder;
+    private boolean deleted;
 
     public ArticleStatus() {
     }
@@ -64,6 +65,13 @@ public class ArticleStatus {
 
     public void setStatusOrder(int statusOrder) { this.statusOrder = statusOrder; }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 
     @Override
     public boolean equals(Object o) {

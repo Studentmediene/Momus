@@ -604,7 +604,20 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
     </changeSet>
 
 
-
+    <!-- We can't delete statuses etc. because articles may be linked to them, so we add a field
+        and hide it instead -->
+    <changeSet id="12" author="Mats">
+        <addColumn tableName="articlestatus">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false" />
+        </addColumn>
+        <addColumn tableName="articletype">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false" />
+        </addColumn>
+        <addColumn tableName="section">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false" />
+        </addColumn>
+    </changeSet>
 
 
 </databaseChangeLog>
+
