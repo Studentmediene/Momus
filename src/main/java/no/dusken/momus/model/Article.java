@@ -75,6 +75,8 @@ public class Article {
     private boolean useIllustration;
 
     private String imageText;
+    private boolean quoteCheckStatus;
+
 
 
     public Article() {
@@ -192,6 +194,10 @@ public class Article {
     public void setGoogleDriveId(String googleDriveId) {
         this.googleDriveId = googleDriveId;
     }
+
+    public boolean getQuoteCheckStatus(){ return quoteCheckStatus; }
+
+    public void setQuoteCheckStatus( boolean quoteCheckStatus ) { this.quoteCheckStatus = quoteCheckStatus; }
 
     @Override
     public boolean equals(Object o) {

@@ -553,10 +553,6 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         </addColumn>
     </changeSet>
 
-
-
-
-
     <!-- Storing the length of the article -->
     <changeSet id="7" author="Mats">
         <addColumn tableName="article">
@@ -642,5 +638,13 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         <insert tableName="articletype"><column name="id">13</column><column name="name">Sidespor</column><column name="typeorder">1300</column></insert>
         <insert tableName="articletype"><column name="id">14</column><column name="name">Småspalter</column><column name="typeorder">1400</column></insert>
     </changeSet>
+
+    <!-- Add field for "sitatsjekk" -->
+    <changeSet id="14" author="Christoffer">
+        <addColumn tableName="article">
+            <column name="quotecheckstatus" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 
