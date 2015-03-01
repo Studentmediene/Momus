@@ -120,4 +120,28 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
 
         assertEquals(expected, result.getContent());
     }
+
+    @Test
+    public void testImageTextIsAdded() {
+        Article article = new Article(1L);
+        article.setContent("<h1>Min kule tittel!</h1><p>Ingen bildetekst her, plz!</p>");
+
+        article.setImageText("Bilde 1 er tatt av Kåre, viser John.\nBilde med grønn fyr viser en grønn fyr.");
+
+        article.setJournalists(new HashSet<Person>());
+        Set<Person> photographers = new HashSet<>();
+        photographers.add(new Person(3L, "user1", "Einar", "Einar Einarsen", "einar@lala.org", "12345678", true));
+        article.setPhotographers(photographers);
+
+        String expected = "<ANSI-WIN>\r\n" +
+                "<Version:7.5>\r\n" +
+                "<ParaStyle:Byline>Foto: Einar Einarsen\r\n" +
+                "<ParaStyle:Tittel>Min kule tittel!\r\n" +
+                "<ParaStyle:Brødtekst>Ingen bildetekst her, plz!\r\n" +
+                "<ParaStyle:Bildetekster>Bilde 1 er tatt av Kåre, viser John.<0x000A>Bilde med grønn fyr viser en grønn fyr.\r\n";
+
+        IndesignExport result = indesignGenerator.generateFromArticle(article);
+
+        assertEquals(expected, result.getContent());
+    }
 }

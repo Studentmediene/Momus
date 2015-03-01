@@ -108,6 +108,7 @@ public class IndesignGenerator {
         appendHeaders(sb);
         appendByLines(sb, article);
         appendContent(sb, article);
+        apppendImageText(sb, article);
 
         String text = sb.toString();
 
@@ -133,7 +134,6 @@ public class IndesignGenerator {
     private void appendHeaders(StringBuilder sb) {
         sb.append("<ANSI-WIN>\r\n<Version:7.5>\r\n");
     }
-
 
     private void appendByLines(StringBuilder sb, Article article) {
         if (article.getJournalists().size() > 0) {
@@ -170,6 +170,7 @@ public class IndesignGenerator {
 
     }
 
+
     private void appendContent(StringBuilder sb, Article article) {
         String text = article.getContent();
 
@@ -178,5 +179,17 @@ public class IndesignGenerator {
         }
 
         sb.append(text);
+    }
+
+    private void apppendImageText(StringBuilder sb, Article article) {
+        String text = article.getImageText();
+
+        if (text == null || text.isEmpty()) {
+            return;
+        }
+
+        text = text.replaceAll("\n", "<0x000A>");
+
+        sb.append("<ParaStyle:Bildetekster>").append(text).append("\r\n");
     }
 }
