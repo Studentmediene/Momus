@@ -39,7 +39,7 @@
                     <option class="" value="">
                         Alle statuser
                     </option>
-                    <option ng-repeat="status in statuses" value="{{ status.id }}" style="background: #0f0">
+                    <option ng-repeat="status in statuses | orderBy:'status_order'" value="{{ status.id }}" style="background: #0f0">
                         {{ status.name }}
                     </option>
                 </select>
