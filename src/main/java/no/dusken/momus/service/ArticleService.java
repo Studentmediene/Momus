@@ -135,6 +135,7 @@ public class ArticleService {
         existing.setStatus(article.getStatus());
         existing.setSection(article.getSection());
         existing.setRawcontent(createRawContent(existing));
+        existing.setQuoteCheckStatus(article.getQuoteCheckStatus());
 
         return saveUpdatedArticle(existing);
     }

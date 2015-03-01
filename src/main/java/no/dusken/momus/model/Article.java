@@ -78,6 +78,8 @@ public class Article {
     @Column(length = 40960)
     private String rawcontent;
 
+    private Boolean quoteCheckStatus;
+
 
     /**
      * This is done after load instead of in a getter, since
@@ -204,6 +206,10 @@ public class Article {
     public void setGoogleDriveId(String googleDriveId) {
         this.googleDriveId = googleDriveId;
     }
+
+    public boolean getQuoteCheckStatus(){ return quoteCheckStatus; }
+
+    public void setQuoteCheckStatus( boolean quoteCheckStatus ) { this.quoteCheckStatus = quoteCheckStatus; }
 
     @Override
     public boolean equals(Object o) {
