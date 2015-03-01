@@ -31,6 +31,7 @@ public class ArticleType {
     private String name;
     private String description;
     private int typeOrder;
+    private boolean deleted;
 
     public ArticleType() {
     }
@@ -64,4 +65,12 @@ public class ArticleType {
     public int getTypeOrder(){ return typeOrder; }
 
     public void setTypeOrder(int typeOrder) { this.typeOrder = typeOrder; }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 }

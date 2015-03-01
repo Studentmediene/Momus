@@ -39,7 +39,7 @@
                     <option class="" value="">
                         Alle statuser
                     </option>
-                    <option ng-repeat="status in statuses | orderBy:'status_order'" value="{{ status.id }}" style="background: #0f0">
+                    <option ng-repeat="status in statuses | filter:{deleted: false} | orderBy:'status_order'" value="{{ status.id }}" style="background: #0f0">
                         {{ status.name }}
                     </option>
                 </select>
@@ -54,7 +54,7 @@
                     <option value="">
                         Alle redaksjoner
                     </option>
-                    <option ng-repeat="section in sections" value="{{ section.id }}">
+                    <option ng-repeat="section in sections | filter:{deleted: false}" value="{{ section.id }}">
                         {{ section.name }}
                     </option>
                 </select>
