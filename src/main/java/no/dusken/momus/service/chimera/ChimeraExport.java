@@ -26,7 +26,8 @@ import java.util.Set;
 
 @Service
 public class ChimeraExport {
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
+    private Article article;
 
     @Value("${chimera.username}")
     String username;
@@ -38,6 +39,7 @@ public class ChimeraExport {
     String url;
 
     public String exportToChimera(Article article){
+        this.article = article;
         String json = articleToJson(article);
 
         return postToURL(json);
@@ -52,12 +54,11 @@ public class ChimeraExport {
             ArrayList<String> responses = getResponse(connection);
             ObjectMapper mapper = new ObjectMapper();
             response = mapper.readTree(responses.get(0));
-            logger.debug("Response code: {}", connection.getResponseCode());
-            logger.debug("Response message {}", connection.getResponseMessage());
+            logger.info("Posted article with id " + article.getId() + "to Chimera");
             connection.disconnect();
             return response.get("url").asText();
         }catch(IOException e){
-            logger.error("An error occurred when POSTing to Chimera:" + e);
+            logger.error("An error occurred when posting to Chimera: {}", e);
             if(connection != null){
                 connection.disconnect();
             }
@@ -85,12 +86,13 @@ public class ChimeraExport {
 
     private HttpURLConnection configureConnection() throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-        String userpswd = username +":" + password;
+        String userpswd = username + ":" + password;
+        logger.debug(userpswd);
         String encoded = new String(Base64.encode(userpswd.getBytes()));
-        connection.setRequestProperty("Authorization", "Basic "+encoded);
-        connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
+        connection.setRequestProperty("Authorization", "Basic "+encoded);
+        connection.setRequestProperty("Content-Type", "application/json");
         connection.setDoInput(true);
         connection.setRequestProperty("Accept", "application/json");
         return connection;
@@ -105,16 +107,20 @@ public class ChimeraExport {
             String title = content.substring(content.indexOf("<h1>"), content.indexOf("</h1>")+5);
             content = content.replace(title,"");
             json.put("headline", title.replace("<h1>","").replace("</h1>",""));
+        }else{
+            json.put("headline","");
         }
         if(content.contains("<h4>")){
             String lead = content.substring(content.indexOf("<h4>"), content.indexOf("</h4>")+5);
             content = content.replace(lead,"");
             json.put("lead", lead.replace("<h4>","").replace("</h4>", ""));
+        }else{
+            json.put("lead","");
         }
-        json.put("id", article.getId());
+        //json.put("id", article.getId());
         json.put("body", htmlToMarkdown(content));
         json.put("external_authors", getJournalistsAsString(article));
-        json.put("ldap_authors", journalistsJson(article));
+        //json.put("ldap_authors", journalistsJson(article));
 
         return json.toString();
     }
