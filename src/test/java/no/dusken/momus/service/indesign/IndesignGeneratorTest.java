@@ -66,7 +66,7 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
         photographers.add(new Person(3L, "user1", "Einar", "Einar Einarsen", "einar@lala.org", "12345678", true));
         article.setPhotographers(photographers);
 
-        String expected = "<ANSI-WIN>\r\n" +
+        String expected = "<UNICODE-WIN>\r\n" +
                 "<Version:7.5>\r\n" +
                 "<ParaStyle:Byline>Tekst: Mats Matsesen, Kåre Kål\r\n" +
                 "<ParaStyle:Byline>Foto: Einar Einarsen\r\n" +
@@ -112,7 +112,7 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
 
         article.setUseIllustration(true);
 
-        String expected = "<ANSI-WIN>\r\n" +
+        String expected = "<UNICODE-WIN>\r\n" +
                 "<Version:7.5>\r\n" +
                 "<ParaStyle:Byline>Illustrasjon: Einar Einarsen, Roy Royce\r\n";
 
@@ -133,7 +133,7 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
         photographers.add(new Person(3L, "user1", "Einar", "Einar Einarsen", "einar@lala.org", "12345678", true));
         article.setPhotographers(photographers);
 
-        String expected = "<ANSI-WIN>\r\n" +
+        String expected = "<UNICODE-WIN>\r\n" +
                 "<Version:7.5>\r\n" +
                 "<ParaStyle:Byline>Foto: Einar Einarsen\r\n" +
                 "<ParaStyle:Tittel>Min kule tittel!\r\n" +

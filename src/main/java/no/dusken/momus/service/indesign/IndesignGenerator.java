@@ -132,7 +132,7 @@ public class IndesignGenerator {
     }
 
     private void appendHeaders(StringBuilder sb) {
-        sb.append("<ANSI-WIN>\r\n<Version:7.5>\r\n");
+        sb.append("<UNICODE-WIN>\r\n<Version:7.5>\r\n");
     }
 
     private void appendByLines(StringBuilder sb, Article article) {

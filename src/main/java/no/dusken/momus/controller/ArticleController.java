@@ -79,7 +79,7 @@ public class ArticleController {
         IndesignExport indesignExport = articleService.exportArticle(id);
 
         response.addHeader("Content-Disposition", "attachment; filename=\"" + indesignExport.getName() + ".txt\"");
-        response.addHeader("Content-Type", "text/plain");
+        response.addHeader("Content-Type", "text/plain;charset=UTF-16LE"); // Encoding InDesign likes
 
         return indesignExport.getContent();
     }
