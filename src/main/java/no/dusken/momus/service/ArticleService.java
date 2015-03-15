@@ -136,6 +136,8 @@ public class ArticleService {
         existing.setImageText(article.getImageText());
         createRawContent(existing);
         existing.setQuoteCheckStatus(article.getQuoteCheckStatus());
+        existing.setExternalAuthor(article.getExternalAuthor());
+        existing.setExternalPhotographer(article.getExternalPhotographer());
 
         return saveUpdatedArticle(existing);
     }
