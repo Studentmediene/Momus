@@ -179,6 +179,20 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-4 control-label">
+                    Ekstern
+                </label>
+
+                <div class="col-sm-8" ng-hide="metaEditMode">
+                    <p class="form-control-static">
+                        {{ article.external_author }}
+                    </p>
+                </div>
+                <div class="col-sm-8" ng-show="metaEditMode">
+                    <input class="form-control input-sm" type="text" ng-model="metaEditing.external_author">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
                     Foto/Illu
                 </label>
 
@@ -211,6 +225,20 @@
                                target="metaEditing.photographers"
                                show="full_name">
                     </id-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    Ekstern
+                </label>
+
+                <div class="col-sm-8" ng-hide="metaEditMode">
+                    <p class="form-control-static">
+                        {{ article.external_photographer }}
+                    </p>
+                </div>
+                <div class="col-sm-8" ng-show="metaEditMode">
+                    <input class="form-control input-sm" type="text" ng-model="metaEditing.external_photographer">
                 </div>
             </div>
             <div class="form-group">

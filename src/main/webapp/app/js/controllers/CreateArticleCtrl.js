@@ -30,7 +30,9 @@ angular.module('momusApp.controllers')
             status: null,
             section: null,
             content: "",
-            use_illustration: false
+            use_illustration: false,
+            external_author: '',
+            external_photographer: ''
         };
 
         PublicationService.getAll().success(function (data) {
