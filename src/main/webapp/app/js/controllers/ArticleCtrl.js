@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function ($scope, PersonService,$timeout, ArticleService, PublicationService, TitleChanger, noteParserRules, $routeParams, ViewArticleService, MessageModal) {
+    .controller('ArticleCtrl', function ($scope, PersonService,$timeout, ArticleService, PublicationService, TitleChanger, noteParserRules, $routeParams, ViewArticleService, MessageModal, ClipService) {
         $scope.metaEditMode = false;
         $scope.noteRules = noteParserRules;
 
@@ -30,6 +30,7 @@ angular.module('momusApp.controllers')
             $scope.unedited = angular.copy(data);
             TitleChanger.setTitle($scope.article.name);
             ViewArticleService.viewArticle($routeParams.id);
+            ClipService.loadWordClippy($scope.article, 1);
         });
 
         ArticleService.getTypes().success(function (data) {
@@ -90,6 +91,7 @@ angular.module('momusApp.controllers')
                 $scope.metaEditMode = false;
 
                 TitleChanger.setTitle($scope.article.name);
+                ClipService.playAnimation("Save", 1);
             });
 
         };

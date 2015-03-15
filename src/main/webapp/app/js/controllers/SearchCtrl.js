@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('SearchCtrl', function ($scope, $http, $location, $q, PersonService, PublicationService, ArticleService) {
+    .controller('SearchCtrl', function ($scope, $http, $location, $q, PersonService, PublicationService, ArticleService, ClipService) {
 
         $scope.data = [];
         $scope.search = {
@@ -121,5 +121,6 @@ angular.module('momusApp.controllers')
                     $scope.noArticles = true;
                 }
             });
+            ClipService.playAnimation("Searching", 1);
         }
     });
