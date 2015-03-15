@@ -144,4 +144,30 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
 
         assertEquals(expected, result.getContent());
     }
+
+
+
+    @Test
+    public void testExternalAuthors() {
+        Article article = new Article(1L);
+        article.setContent("<h1>Min kule tittel!</h1>");
+
+        article.setJournalists(new HashSet<Person>());
+        Set<Person> photographers = new HashSet<>();
+        photographers.add(new Person(3L, "user1", "Einar", "Einar Einarsen", "einar@lala.org", "12345678", true));
+        article.setPhotographers(photographers);
+
+        article.setExternalAuthor("Ekstern Eksternsen");
+        article.setExternalPhotographer("Fotogjengen");
+
+        String expected = "<UNICODE-WIN>\r\n" +
+                "<Version:7.5>\r\n" +
+                "<ParaStyle:Byline>Tekst: Ekstern Eksternsen\r\n" +
+                "<ParaStyle:Byline>Foto: Einar Einarsen, Fotogjengen\r\n" +
+                "<ParaStyle:Tittel>Min kule tittel!\r\n";
+
+        IndesignExport result = indesignGenerator.generateFromArticle(article);
+
+        assertEquals(expected, result.getContent());
+    }
 }

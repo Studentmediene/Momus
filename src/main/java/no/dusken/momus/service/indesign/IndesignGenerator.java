@@ -22,8 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 /**
@@ -136,38 +135,36 @@ public class IndesignGenerator {
     }
 
     private void appendByLines(StringBuilder sb, Article article) {
-        if (article.getJournalists().size() > 0) {
-            sb.append("<ParaStyle:Byline>Tekst: ");
+        appendByLine(sb, article.getJournalists(), article.getExternalAuthor(), "Tekst");
+
+        String type = article.getUseIllustration() ? "Illustrasjon" : "Foto";
+        appendByLine(sb, article.getPhotographers(), article.getExternalPhotographer(), type);
+
+    }
+
+    private void appendByLine(StringBuilder sb, Set<Person> persons, String external, String type) {
+        List<String> names = new ArrayList<>();
+
+        for (Person person : persons) {
+            names.add(person.getFullName());
+        }
+
+        if (external != null && !external.isEmpty()) {
+            names.add(external);
+        }
+
+        if (names.size() > 0) {
+            sb.append("<ParaStyle:Byline>").append(type).append(": ");
+
             String delim = "";
 
-            for (Person person : article.getJournalists()) {
-                sb.append(delim).append(person.getFullName());
+            for (String name : names) {
+                sb.append(delim).append(name);
                 delim = ", ";
             }
 
             sb.append("\r\n");
         }
-
-
-        if (article.getPhotographers().size() > 0) {
-            sb.append("<ParaStyle:Byline>");
-
-            if (article.getUseIllustration()) {
-                sb.append("Illustrasjon: ");
-            } else {
-                sb.append("Foto: ");
-            }
-
-            String delim = "";
-            for (Person person : article.getPhotographers()) {
-                sb.append(delim).append(person.getFullName());
-                delim = ", ";
-            }
-
-            sb.append("\r\n");
-        }
-
-
     }
 
 
