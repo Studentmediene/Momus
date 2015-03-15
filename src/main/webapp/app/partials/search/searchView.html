@@ -143,12 +143,12 @@
                     {{ article.type.name }}
                 </td>
 
-                <!-- If there are multiple people, we display them with smaller text -->
                 <td>
                     <ul class="list-unstyled">
                         <li ng-repeat="person in article.journalists">
                             <span person-widget="person">{{ person.full_name }}</span>
                         </li>
+                        <li><i tooltip="Ekstern">{{article.external_author}}</i></li>
                     </ul>
                 </td>
                 <td>
@@ -160,6 +160,7 @@
                             <i class="fa fa-camera" ng-show="!article.use_illustration"> </i>
                             <span person-widget="person">{{ person.full_name }}</span>
                         </li>
+                        <li><i tooltip="Ekstern">{{article.external_author}}</i></li>
                     </ul>
                 </td>
 
