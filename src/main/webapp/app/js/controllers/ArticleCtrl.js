@@ -129,7 +129,7 @@ angular.module('momusApp.controllers')
             });
         };
         var chimeraModalInstanceCtrl = function($scope, $modalInstance, url){
-            $scope.url = "http://staging.dusken.no" + url;
+            $scope.url = url;
         };
 
         $scope.$on('$locationChangeStart', function(event){

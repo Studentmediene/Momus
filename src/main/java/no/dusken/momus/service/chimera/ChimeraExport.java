@@ -54,9 +54,9 @@ public class ChimeraExport {
             ArrayList<String> responses = getResponse(connection);
             ObjectMapper mapper = new ObjectMapper();
             response = mapper.readTree(responses.get(0));
-            logger.info("Posted article with id " + article.getId() + "to Chimera");
+            logger.info("Posted article with id " + article.getId() + " to Chimera");
             connection.disconnect();
-            return response.get("url").asText();
+            return response.get("admin_url").asText();
         }catch(IOException e){
             logger.error("An error occurred when posting to Chimera: {}", e);
             if(connection != null){
