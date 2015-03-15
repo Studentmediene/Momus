@@ -61,14 +61,11 @@ public class IndesignGenerator {
         replacements.put("<h1>", "<ParaStyle:Tittel>");
         replacements.put("</h1>", "\r\n");
 
-        replacements.put("<h2>", "<ParaStyle:Stikktittel>");
+        replacements.put("<h2>", "<ParaStyle:Ingress>");
         replacements.put("</h2>", "\r\n");
 
         replacements.put("<h3>", "<ParaStyle:Mellomtittel>");
         replacements.put("</h3>", "\r\n");
-
-        replacements.put("<h4>", "<ParaStyle:Ingress>");
-        replacements.put("</h4>", "\r\n");
 
         replacements.put("<p>", "<ParaStyle:Brødtekst>");
         replacements.put("</p>", "\r\n");
