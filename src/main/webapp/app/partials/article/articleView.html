@@ -14,6 +14,17 @@
   ~ limitations under the License.
   -->
 
+
+<div class="row hidden-print top-spacing" ng-show="article.archived">
+    <div class="col-xs-12">
+        <div class="alert alert-danger">
+            <p>
+                <i class="fa fa-exclamation-circle fa-2"></i><strong> Artikkelen er arkivert.</strong> Den vil ikke vises i søk.
+            </p>
+        </div>
+    </div>
+</div>
+
 <h1>{{article.name}}</h1>
 
 <!-- Used when printing Ctrl+P-->
@@ -50,9 +61,6 @@
     <div style="column-count: 2; -moz-column-count:2" ng-bind-html="article.content | trustHtml"></div>
 
 </div>
-
-
-
 
 <div class="row hidden-print top-spacing" ng-show="article.comment">
     <div class="col-xs-12">
@@ -95,6 +103,18 @@
                ng-click=""
                class="btn btn-primary"><i class="fa fa-quote-right"></i>
                 Sitatsjekk
+            </a>
+        </span>
+
+        <span ng-hide="article.archived">
+            <a ng-click="deleteArticle()" class="btn btn-danger"><i class="fa fa-trash-o" ></i>
+                Arkiver artikkelen
+            </a>
+        </span>
+
+        <span ng-show="article.archived">
+            <a ng-click="restoreArticle()" class="btn btn-success"><i class="fa fa-plus" ></i>
+                Gjenopprett
             </a>
         </span>
     </div>

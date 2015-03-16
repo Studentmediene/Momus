@@ -11,6 +11,7 @@ public class ArticleSearchParams {
     private List<Long> persons;
     private Long section;
     private Long publication;
+    private Boolean archived;
 
     public ArticleSearchParams() {
         // empty
@@ -22,6 +23,16 @@ public class ArticleSearchParams {
         this.persons = persons;
         this.section = section;
         this.publication = publication;
+        this.archived = false;
+    }
+
+    public ArticleSearchParams(String free, Long status, List<Long> persons, Long section, Long publication, Boolean archived) {
+        this.free = free;
+        this.status = status;
+        this.persons = persons;
+        this.section = section;
+        this.publication = publication;
+        this.archived = archived;
     }
 
     public Long getPublication() {
@@ -43,6 +54,8 @@ public class ArticleSearchParams {
         return section;
     }
 
+    public Boolean getArchived() { return archived; }
+
     @Override
     public String toString() {
         return "ArticleSearchParams{" +
@@ -51,6 +64,7 @@ public class ArticleSearchParams {
                 ", persons=" + persons +
                 ", section='" + section + '\'' +
                 ", publication='" + publication + '\'' +
+                ", archived='" + archived + '\''+
                 '}';
     }
 }

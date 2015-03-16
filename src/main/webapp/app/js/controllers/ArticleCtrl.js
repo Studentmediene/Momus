@@ -27,6 +27,7 @@ angular.module('momusApp.controllers')
 
         ArticleService.getArticle($routeParams.id).success(function (data) {
             $scope.article = data;
+            console.log(data);
             $scope.unedited = angular.copy(data);
             TitleChanger.setTitle($scope.article.name);
             ViewArticleService.viewArticle($routeParams.id);
@@ -140,6 +141,18 @@ angular.module('momusApp.controllers')
         function promptCondition() {
             return $scope.unedited.content != $scope.article.content || $scope.metaEditMode === true || $scope.unedited.note != $scope.article.note;
         }
+
+        $scope.deleteArticle = function(){
+            if(confirm("Er du sikker på at du vil slette artikkelen?")){
+                ArticleService.deleteArticle($scope.article);
+                $scope.article.archived = true;
+            }
+        };
+
+        $scope.restoreArticle = function(){
+            ArticleService.restoreArticle($scope.article);
+            $scope.article.archived = false;
+        };
 
 
 

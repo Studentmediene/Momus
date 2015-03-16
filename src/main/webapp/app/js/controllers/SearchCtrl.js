@@ -25,14 +25,14 @@ angular.module('momusApp.controllers')
             status: '',
             persons: '',
             section: '',
-            publication: ''
+            publication: '',
+            archived: ''
         };
 
         // Get stuff from the server
         $q.all([PersonService.getAll(), PublicationService.getAll()]).then(function (data) {
             $scope.persons = data[0].data;
             $scope.publications = data[1].data;
-
             if (updateSearchParametersFromUrl()) { // If the URL contained a search
                 search();
             } else if ($scope.publications.length > 0){ // default search on the newest publication
@@ -112,8 +112,11 @@ angular.module('momusApp.controllers')
             $scope.data = null;
             $scope.loading = true;
             $scope.noArticles = false;
+            $scope.search.archived = false;
 
             ArticleService.search($scope.search).success(function (data) {
+                console.log($scope.search);
+                console.log(data);
                 $scope.data = data;
             }).finally(function () {
                 $scope.loading = false;

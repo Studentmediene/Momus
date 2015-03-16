@@ -117,6 +117,26 @@ public class ArticleService {
         return saveUpdatedArticle(existing);
     }
 
+    public Article archiveArticle(Article article){
+        Article existing = articleRepository.findOne(article.getId());
+
+        if(!existing.getArchived()){
+            existing.setArchived(true);
+        }
+
+        return saveUpdatedArticle(existing);
+    }
+
+    public Article restoreArticle(Article article){
+        Article existing = articleRepository.findOne(article.getId());
+
+        if(existing.getArchived()){
+           existing.setArchived(false);
+        }
+
+        return saveUpdatedArticle(existing);
+    }
+
     public Article saveMetadata(Article article) {
         Article existing = articleRepository.findOne(article.getId());
 
