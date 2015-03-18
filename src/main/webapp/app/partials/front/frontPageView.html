@@ -99,7 +99,7 @@
                             </td>
                         </tr>
                         <tr ng-repeat="article in recentArticleInfo | orderBy: orderRecentArticles : true">
-                            <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
+                            <td><a href="#/artikler/{{article.id}}">{{article.name}} <i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></a></i></td>
                             <td>{{article.type.name}}</td>
                             <td>
                                 <ul class="list-unstyled">

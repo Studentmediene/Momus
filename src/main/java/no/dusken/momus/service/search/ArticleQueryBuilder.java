@@ -74,9 +74,11 @@ public class ArticleQueryBuilder {
             queryParams.put("pubid", search.getPublication());
         }
 
-        if (search.getArchived() != null) {
-            conditions.add("a.archived = :arch");
-            queryParams.put("arch", search.getArchived());
+        conditions.add("a.archived = :arch");
+        if (search.getArchived() != null && search.getArchived() == true) {
+                queryParams.put("arch", true);
+        } else {
+            queryParams.put("arch", false);
         }
 
         String allConditions = StringUtils.collectionToDelimitedString(conditions, " AND ");
