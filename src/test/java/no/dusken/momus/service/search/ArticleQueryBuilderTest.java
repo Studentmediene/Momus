@@ -29,27 +29,27 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
     @Test
     public void testEmptyQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("", null, emptyList, null, null);
+        ArticleSearchParams params = new ArticleSearchParams("", null, emptyList, null, null, null);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = builder.getBaseQuery() + builder.getBaseOrder();
+        String expectedQuery = builder.getBaseQuery() + " where a.archived = :arch " + builder.getBaseOrder();
 
         assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
-        assertEquals(0, builder.getQueryParams().size());
+        assertEquals(1, builder.getQueryParams().size());
 
     }
 
     @Test
     public void testNullQuery() {
-        ArticleSearchParams params = new ArticleSearchParams(null, null, null, null, null);
+        ArticleSearchParams params = new ArticleSearchParams(null, null, null, null, null, null);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = builder.getBaseQuery() + builder.getBaseOrder();
+        String expectedQuery = builder.getBaseQuery()  + " where a.archived = :arch " + builder.getBaseOrder();
 
         assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
-        assertEquals(0, builder.getQueryParams().size());
+        assertEquals(1, builder.getQueryParams().size());
 
     }
 
@@ -59,10 +59,11 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = builder.getBaseQuery() + " where a.rawcontent like :free0 and a.rawcontent like :free1" + builder.getBaseOrder();
+        String expectedQuery = builder.getBaseQuery() + " where a.rawcontent like :free0 and a.rawcontent like :free1 and a.archived = :arch " + builder.getBaseOrder();
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("free0", "%finn%");
         expectedMap.put("free1", "%meg%");
+        expectedMap.put("arch", false);
 
         assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
         assertEquals(expectedMap, builder.getQueryParams());
@@ -74,9 +75,10 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = builder.getBaseQuery() + " where a.status.id = :statusid" + builder.getBaseOrder();
+        String expectedQuery = builder.getBaseQuery() + " where a.status.id = :statusid and a.archived = :arch " + builder.getBaseOrder();
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("statusid", 1L);
+        expectedMap.put("arch", false);
 
         assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
         assertEquals(expectedMap, builder.getQueryParams());
@@ -93,10 +95,12 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
                                 ":personid0 member of a.journalists or " +
                                 ":personid0 member of a.photographers ) and ( " +
                                 ":personid1 member of a.journalists or " +
-                                ":personid1 member of a.photographers )"  + builder.getBaseOrder();
+                                ":personid1 member of a.photographers ) " +
+                                "and a.archived = :arch "  + builder.getBaseOrder();
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("personid0", 594L);
         expectedMap.put("personid1", 1337L);
+        expectedMap.put("arch", false);
 
         assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
         assertEquals(expectedMap, builder.getQueryParams());
@@ -108,9 +112,10 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = builder.getBaseQuery() + " where a.section.id = :secid" + builder.getBaseOrder();
+        String expectedQuery = builder.getBaseQuery() + " where a.section.id = :secid and a.archived = :arch " + builder.getBaseOrder();
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("secid", 31337L);
+        expectedMap.put("arch", false);
 
         assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
         assertEquals(expectedMap, builder.getQueryParams());
@@ -122,9 +127,10 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
-        String expectedQuery = builder.getBaseQuery() + " where a.publication.id = :pubid" + builder.getBaseOrder();
+        String expectedQuery = builder.getBaseQuery() + " where a.publication.id = :pubid and a.archived = :arch " + builder.getBaseOrder();
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("pubid", 2L);
+        expectedMap.put("arch", false);
 
         assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
         assertEquals(expectedMap, builder.getQueryParams());
@@ -132,7 +138,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
     @Test
     public void testCombinedQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("kombinert test", 1L, Arrays.asList(594L, 1337L), 31337L, 2L);
+        ArticleSearchParams params = new ArticleSearchParams("kombinert test", 1L, Arrays.asList(594L, 1337L), 31337L, 2L, true);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
@@ -145,7 +151,8 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
                                 ":personid1 member of a.journalists or " +
                                 ":personid1 member of a.photographers ) and " +
                                 "a.section.id = :secid and " +
-                                "a.publication.id = :pubid" + builder.getBaseOrder();
+                                "a.publication.id = :pubid and " +
+                                "a.archived = :arch " + builder.getBaseOrder();
 
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("free0", "%kombinert%");
@@ -155,6 +162,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
         expectedMap.put("personid1", 1337L);
         expectedMap.put("secid", 31337L);
         expectedMap.put("pubid", 2L);
+        expectedMap.put("arch", true);
 
         assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
         assertEquals(expectedMap, builder.getQueryParams());
