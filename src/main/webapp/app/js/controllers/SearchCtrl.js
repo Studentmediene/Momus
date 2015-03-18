@@ -112,11 +112,11 @@ angular.module('momusApp.controllers')
             $scope.data = null;
             $scope.loading = true;
             $scope.noArticles = false;
-            $scope.search.archived = false;
+            if($scope.search.archived != "true"){
+                $scope.search.archived = false;
+            }
 
             ArticleService.search($scope.search).success(function (data) {
-                console.log($scope.search);
-                console.log(data);
                 $scope.data = data;
             }).finally(function () {
                 $scope.loading = false;
