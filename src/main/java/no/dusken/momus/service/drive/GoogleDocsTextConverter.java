@@ -75,7 +75,6 @@ public class GoogleDocsTextConverter {
         out = unescapeHtml(out);
 
 
-
         return out;
     }
 
@@ -217,6 +216,10 @@ public class GoogleDocsTextConverter {
 
         m = gtToUnicode.matcher(out);
         out = m.replaceAll(gtUnicode);
+
+        //Convert quotes to "guillemets"
+        out = out.replaceAll("&ldquo;","«");
+        out = out.replaceAll("&rdquo;","»");
 
         // convert stuff
         out = StringEscapeUtils.unescapeHtml4(out);
