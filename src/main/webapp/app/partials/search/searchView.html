@@ -175,7 +175,7 @@
                        ng-class="{'text-danger': !article.image_text || article.image_text.length == 0, 'text-success': article.image_text.length > 0}"></i>
 
                     <i class="fa fa-quote-right fa-lg" tooltip="Om sitatsjekk er i orden"
-                       ng-class="{'text-danger': !article.quote_check_status, 'text-success': article.quote_check_status}"></i>
+                       ng-class="{'text-danger': article.quote_check_status, 'text-success': !article.quote_check_status}"></i>
 
                     <span style="background-color: {{article.status.color}}; padding: 3px;">{{ article.status.name }}</span>
                 </td>
