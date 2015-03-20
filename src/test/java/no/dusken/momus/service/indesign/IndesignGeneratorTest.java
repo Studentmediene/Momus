@@ -66,7 +66,7 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
         photographers.add(new Person(3L, "user1", "Einar", "Einar Einarsen", "einar@lala.org", "12345678", true));
         article.setPhotographers(photographers);
 
-        String expected = "<ANSI-WIN>\r\n" +
+        String expected = "<UNICODE-WIN>\r\n" +
                 "<Version:7.5>\r\n" +
                 "<ParaStyle:Byline>Tekst: Mats Matsesen, Kåre Kål\r\n" +
                 "<ParaStyle:Byline>Foto: Einar Einarsen\r\n" +
@@ -112,7 +112,7 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
 
         article.setUseIllustration(true);
 
-        String expected = "<ANSI-WIN>\r\n" +
+        String expected = "<UNICODE-WIN>\r\n" +
                 "<Version:7.5>\r\n" +
                 "<ParaStyle:Byline>Illustrasjon: Einar Einarsen, Roy Royce\r\n";
 
@@ -133,12 +133,38 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
         photographers.add(new Person(3L, "user1", "Einar", "Einar Einarsen", "einar@lala.org", "12345678", true));
         article.setPhotographers(photographers);
 
-        String expected = "<ANSI-WIN>\r\n" +
+        String expected = "<UNICODE-WIN>\r\n" +
                 "<Version:7.5>\r\n" +
                 "<ParaStyle:Byline>Foto: Einar Einarsen\r\n" +
                 "<ParaStyle:Tittel>Min kule tittel!\r\n" +
                 "<ParaStyle:Brødtekst>Ingen bildetekst her, plz!\r\n" +
                 "<ParaStyle:Bildetekster>Bilde 1 er tatt av Kåre, viser John.<0x000A>Bilde med grønn fyr viser en grønn fyr.\r\n";
+
+        IndesignExport result = indesignGenerator.generateFromArticle(article);
+
+        assertEquals(expected, result.getContent());
+    }
+
+
+
+    @Test
+    public void testExternalAuthors() {
+        Article article = new Article(1L);
+        article.setContent("<h1>Min kule tittel!</h1>");
+
+        article.setJournalists(new HashSet<Person>());
+        Set<Person> photographers = new HashSet<>();
+        photographers.add(new Person(3L, "user1", "Einar", "Einar Einarsen", "einar@lala.org", "12345678", true));
+        article.setPhotographers(photographers);
+
+        article.setExternalAuthor("Ekstern Eksternsen");
+        article.setExternalPhotographer("Fotogjengen");
+
+        String expected = "<UNICODE-WIN>\r\n" +
+                "<Version:7.5>\r\n" +
+                "<ParaStyle:Byline>Tekst: Ekstern Eksternsen\r\n" +
+                "<ParaStyle:Byline>Foto: Einar Einarsen, Fotogjengen\r\n" +
+                "<ParaStyle:Tittel>Min kule tittel!\r\n";
 
         IndesignExport result = indesignGenerator.generateFromArticle(article);
 

@@ -179,6 +179,20 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-4 control-label">
+                    Ekstern
+                </label>
+
+                <div class="col-sm-8" ng-hide="metaEditMode">
+                    <p class="form-control-static">
+                        {{ article.external_author }}
+                    </p>
+                </div>
+                <div class="col-sm-8" ng-show="metaEditMode">
+                    <input class="form-control input-sm" type="text" ng-model="metaEditing.external_author">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
                     Foto/Illu
                 </label>
 
@@ -211,6 +225,20 @@
                                target="metaEditing.photographers"
                                show="full_name">
                     </id-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    Ekstern
+                </label>
+
+                <div class="col-sm-8" ng-hide="metaEditMode">
+                    <p class="form-control-static">
+                        {{ article.external_photographer }}
+                    </p>
+                </div>
+                <div class="col-sm-8" ng-show="metaEditMode">
+                    <input class="form-control input-sm" type="text" ng-model="metaEditing.external_photographer">
                 </div>
             </div>
             <div class="form-group">
@@ -308,15 +336,16 @@
                 <div class="col-sm-8" ng-hide="metaEditMode">
                     <p class="form-control-static">
                         <span ng-show="article.quote_check_status">
-                            Gjennomført
+                            Trenger sitatsjekk
                         </span>
                         <span ng-hide="article.quote_check_status">
-                            Ikke gjennomført
+                            I orden
                         </span>
                     </p>
                 </div>
                 <div class="col-sm-8" ng-show="metaEditMode">
-                    <input type="checkbox" ng-model="metaEditing.quote_check_status" class="form-control input-sm">
+                    <select class="form-control input-sm" ng-model="metaEditing.quote_check_status"
+                            ng-options="o.value as o.name for o in quoteCheckTypes"></select>
                 </div>
             </div>
         </form>

@@ -58,8 +58,7 @@ public class KeyValueService {
      * the long 0L if not set
      */
     public long getValueAsLong(String key) {
-        String stringValue = getValue(key);
-        return Long.parseLong(stringValue);
+        return getValueAsLong(key, 0L);
     }
 
     /**

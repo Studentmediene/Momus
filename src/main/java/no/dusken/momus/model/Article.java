@@ -77,6 +77,9 @@ public class Article {
     private String imageText;
     private boolean quoteCheckStatus;
 
+    private String externalAuthor;
+    private String externalPhotographer;
+
 
 
     public Article() {
@@ -238,5 +241,21 @@ public class Article {
 
     public void setImageText(String imageText) {
         this.imageText = imageText;
+    }
+
+    public String getExternalAuthor() {
+        return externalAuthor;
+    }
+
+    public void setExternalAuthor(String externalAuthor) {
+        this.externalAuthor = externalAuthor;
+    }
+
+    public String getExternalPhotographer() {
+        return externalPhotographer;
+    }
+
+    public void setExternalPhotographer(String externalPhotographer) {
+        this.externalPhotographer = externalPhotographer;
     }
 }

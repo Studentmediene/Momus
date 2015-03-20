@@ -64,6 +64,13 @@ public class KeyValueServiceTest extends AbstractTestRunner {
     }
 
     @Test
+    public void zeroWhenLongNotSet() {
+        long value = keyValueService.getValueAsLong("My long");
+
+        assertEquals(0L, value);
+    }
+
+    @Test
     public void canSetAndRetrieveAsLong() {
         keyValueService.setValue("My long", 5L);
         long value = keyValueService.getValueAsLong("My long");

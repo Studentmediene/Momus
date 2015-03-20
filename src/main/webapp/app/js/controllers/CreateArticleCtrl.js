@@ -30,7 +30,10 @@ angular.module('momusApp.controllers')
             status: null,
             section: null,
             content: "",
-            use_illustration: false
+            use_illustration: false,
+            external_author: '',
+            external_photographer: '',
+            quote_check_status: false
         };
 
         PublicationService.getAll().success(function (data) {
@@ -57,6 +60,7 @@ angular.module('momusApp.controllers')
         });
 
         $scope.photoTypes = [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}];
+        $scope.quoteCheckTypes = [{value: false, name: 'I orden'}, {value: true, name: 'Trenger sitatsjekk'}];
 
 
         $scope.createArticle = function () {

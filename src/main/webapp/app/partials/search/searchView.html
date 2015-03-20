@@ -143,12 +143,12 @@
                     {{ article.type.name }}
                 </td>
 
-                <!-- If there are multiple people, we display them with smaller text -->
                 <td>
                     <ul class="list-unstyled">
                         <li ng-repeat="person in article.journalists">
                             <span person-widget="person">{{ person.full_name }}</span>
                         </li>
+                        <li><i tooltip="Ekstern">{{article.external_author}}</i></li>
                     </ul>
                 </td>
                 <td>
@@ -160,6 +160,7 @@
                             <i class="fa fa-camera" ng-show="!article.use_illustration"> </i>
                             <span person-widget="person">{{ person.full_name }}</span>
                         </li>
+                        <li><i tooltip="Ekstern">{{article.external_author}}</i></li>
                     </ul>
                 </td>
 
@@ -169,18 +170,13 @@
                 </td>
 
                 <td>{{ article.content_length }}</td>
-                <td>
-                    <span class="status-icon-stack" tooltip="Om bildetekster er satt">
-                        <i class="fa fa-user back"></i>
-                        <i class="fa fa-times text-danger front"  ng-show="!article.image_text || article.image_text.length == 0"></i>
-                        <i class="fa fa-check text-success front" ng-show="article.image_text.length > 0"></i>
-                    </span>
+                <td style="white-space: nowrap">
+                    <i class="fa fa-user fa-lg" tooltip="Om bildetekster er satt"
+                       ng-class="{'text-danger': !article.image_text || article.image_text.length == 0, 'text-success': article.image_text.length > 0}"></i>
 
-                    <span class="status-icon-stack" tooltip="Om sitatsjekk er gjennomført">
-                        <i class="fa fa-quote-right back"></i>
-                        <i class="fa fa-times text-danger front"  ng-show="!article.quote_check_status"></i>
-                        <i class="fa fa-check text-success front" ng-show="article.quote_check_status"></i>
-                    </span>
+                    <i class="fa fa-quote-right fa-lg" tooltip="Om sitatsjekk er i orden"
+                       ng-class="{'text-danger': article.quote_check_status, 'text-success': !article.quote_check_status}"></i>
+
                     <span style="background-color: {{article.status.color}}; padding: 3px;">{{ article.status.name }}</span>
                 </td>
                 <td>
