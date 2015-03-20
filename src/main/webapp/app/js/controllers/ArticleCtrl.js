@@ -154,7 +154,7 @@ angular.module('momusApp.controllers')
 
             var qcArticle = $scope.article.content;
             var qcAuthor = "";
-            var qcRed = "<br />Studentavisa Under Dusken <br /> Ansvarlig redaktør Fornavn Etternavn - mail@mail.com";
+            var qcRed = "<br />Studentavisa Under Dusken <br /> Ansvarlig redaktør " + "Syn" + "ne Ha" + "mmervik " + "synn" + "ehammer" + "vik@gmail.com";
 
             if($scope.article.journalists.length){
                 for(var i = 0; i < $scope.article.journalists.length;i++) {
