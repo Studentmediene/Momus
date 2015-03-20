@@ -34,6 +34,8 @@ angular.module('momusApp.services')
             '<h4>Historikk</h4><p>På historikk-siden for en artikkel kan man aktivere "sammenligning". Da kan man se hva som er endret mellom to versjoner av artikkelen. Nyttig f. eks. om grafisk skal se hva som har blitt endret.</p>',
             '<h4>Historikk</h4><p>Om en artikkel endres flere ganger innenfor et kort intervall, blir endringene slått sammen til bare én hendelse i historikken.</p>',
             '<h4>InDesign</h4><p>Artiklene i Momus kan eksporteres til InDesign. </p>',
+            '<h4>Fnutter</h4><p>"Tekst" i Google Docs blir konvertert til «Tekst» i Momus.</p>',
+            '<h4>Eksterne fotografer</h4><p>Bildekreditering til eksterne kan legges på en artikkel, og vil bli inkludert i eksporteringen til InDesign.</p>',
 
             // Publications
             '<h4>Utgaver</h4><p>Opprett utgaver som hver artikkel senere kan lenkes til.</p>',
@@ -47,6 +49,10 @@ angular.module('momusApp.services')
 
         // Date: year, month - 1, day
         var news = [{
+            date: new Date(2015, 2, 20),
+            title: "InDesign, eksterne personer++",
+            text: "<p>Fikset spesialtegn ved eksportering til InDesign. Engelske klammer blir konvertert til norske.</p><p>Skal være lettere å se status på bildetekst/sitatsjekk. Sitatsjekk er nå OK som standard.</p><p>Kan legge til eksterne personer som journalister og fotografer.</p>"
+        },{
             date: new Date(2015, 2, 1),
             title: "Bildetekst og sitatsjekk",
             text: "<p>Kan nå legge til bildetekst, denne teksten blir med i eksporten til InDesign. Kan også markere om en artikkel har godkjent sitatsjekk.</p>"
