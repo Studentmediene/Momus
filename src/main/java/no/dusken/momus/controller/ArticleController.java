@@ -126,6 +126,16 @@ public class ArticleController {
         return articleService.searchForArticles(search);
     }
 
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public @ResponseBody Article deleteArticle(@RequestBody Article article) {
+        return articleService.archiveArticle(article);
+    }
+
+    @RequestMapping(value = "/restore", method = RequestMethod.POST)
+    public @ResponseBody Article restoreArticle(@RequestBody Article article) {
+        return articleService.restoreArticle(article);
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody Article createArticle(@RequestBody Article article){
         return articleService.createNewArticle(article);

@@ -30,7 +30,8 @@ angular.module('momusApp.controllers')
             section: '',
             publication: '',
             page_number: 1,
-            page_size: pageSize
+            page_size: pageSize,
+            archived: false
         };
 
         $scope.search = angular.copy($scope.defaultSearch);
@@ -39,7 +40,6 @@ angular.module('momusApp.controllers')
         $q.all([PersonService.getAll(), PublicationService.getAll()]).then(function (data) {
             $scope.persons = data[0].data;
             $scope.publications = data[1].data;
-
             if (updateSearchParametersFromUrl()) { // If the URL contained a search
                 search();
             } else if ($scope.publications.length > 0) { // default search on the newest publication

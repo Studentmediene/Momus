@@ -98,6 +98,10 @@
     </form>
 </div>
 
+<div ng-if="search.archived" class="alert alert-danger">
+        Du søker nå kun i arkiverte artikler
+</div>
+
 <div class="panel panel-default">
 
     <!-- Results of the search -->
@@ -136,6 +140,7 @@
             </tr>
             <tr ng-repeat="article in data">
                 <td>
+                    <i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i>
                     <a href="#/artikler/{{ article.id }}">
                         {{ article.name }}
                     </a>

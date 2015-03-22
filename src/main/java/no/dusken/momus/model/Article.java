@@ -80,6 +80,8 @@ public class Article {
     private String externalAuthor;
     private String externalPhotographer;
 
+    private boolean archived;
+
 
 
     public Article() {
@@ -201,6 +203,10 @@ public class Article {
     public boolean getQuoteCheckStatus(){ return quoteCheckStatus; }
 
     public void setQuoteCheckStatus( boolean quoteCheckStatus ) { this.quoteCheckStatus = quoteCheckStatus; }
+
+    public boolean getArchived(){ return archived; }
+
+    public void setArchived(Boolean archived) { this.archived = archived; }
 
     @Override
     public boolean equals(Object o) {

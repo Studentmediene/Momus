@@ -142,6 +142,18 @@ angular.module('momusApp.controllers')
             return $scope.unedited.content != $scope.article.content || $scope.metaEditMode === true || $scope.unedited.note != $scope.article.note;
         }
 
+        $scope.deleteArticle = function(){
+            if(confirm("Er du sikker på at du vil slette artikkelen?")){
+                ArticleService.deleteArticle($scope.article);
+                $scope.article.archived = true;
+            }
+        };
+
+        $scope.restoreArticle = function(){
+            ArticleService.restoreArticle($scope.article);
+            $scope.article.archived = false;
+        };
+
 
 
         $scope.quoteCheck = function(zc){

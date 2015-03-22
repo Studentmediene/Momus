@@ -10,21 +10,27 @@ public class ArticleSearchParams {
     private List<Long> persons;
     private Long section;
     private Long publication;
+
     private int pageSize = 200;
     private int pageNumber = 1;
+    private boolean archived = false;
+
 
     public ArticleSearchParams() {
         // empty
     }
 
-    public ArticleSearchParams(String free, Long status, List<Long> persons, Long section, Long publication, int pageSize, int pageNumber) {
+    public ArticleSearchParams(String free, Long status, List<Long> persons, Long section, Long publication, int pageSize, int pageNumber, boolean archived) {
         this.free = free;
         this.status = status;
         this.persons = persons;
         this.section = section;
         this.publication = publication;
+
         this.pageSize = pageSize;
         this.pageNumber = pageNumber;
+
+        this.archived = archived;
     }
 
     /**
@@ -55,6 +61,8 @@ public class ArticleSearchParams {
         return section;
     }
 
+    public boolean getArchived() { return archived; }
+
     @Override
     public String toString() {
         return "ArticleSearchParams{" +
@@ -65,6 +73,7 @@ public class ArticleSearchParams {
                 ", publication='" + publication + '\'' +
                 ", pageSize='" + this.pageSize + '\'' +
                 ", pageNumber='" + this.pageNumber + '\'' +
+                ", archived='" + archived + '\''+
                 '}';
     }
 
