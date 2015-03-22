@@ -38,6 +38,11 @@ textarea.note {
     background-color: #fff95d;;
 }
 
+hr.divider {
+    width:100%;
+    border-color: #00b3ee;
+}
+
 .articleContent h2{
     font-size: 18px;
     font-weight: bold;

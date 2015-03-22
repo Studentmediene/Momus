@@ -146,6 +146,68 @@
             <input type="submit" style="display: none;"/><!-- This is required to submit with enter -->
             <div class="form-group">
                 <label class="col-sm-4 control-label">
+                    Kommentar
+                </label>
+
+                <div class="col-sm-8" ng-hide="metaEditMode">
+                    <p class="form-control-static">
+                        {{ article.comment }}
+                    </p>
+                </div>
+                <div class="col-sm-8" ng-show="metaEditMode">
+                    <input class="form-control input-sm" type="text" ng-model="metaEditing.comment">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    Bildetekster
+                </label>
+
+                <div class="col-sm-8" ng-hide="metaEditMode">
+                    <p class="form-control-static" style="overflow: auto; max-height: 75px; white-space: pre-wrap;">{{ article.image_text }}</p>
+                </div>
+                <div class="col-sm-8" ng-show="metaEditMode">
+                    <textarea class="form-control" ng-model="metaEditing.image_text" style="height: 150px;"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    Status
+                </label>
+
+                <div class="col-sm-8" ng-hide="metaEditMode">
+                    <p class="form-control-static">
+                        {{ article.status.name }}
+                    </p>
+                </div>
+                <div class="col-sm-8" ng-show="metaEditMode">
+                    <select class="form-control input-sm" ng-model="metaEditing.status"
+                            ng-options="s.name for s in statuses | filter:{deleted: false} | orderBy:'status_order' track by s.id "></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    Sitatsjekk
+                </label>
+
+                <div class="col-sm-8" ng-hide="metaEditMode">
+                    <p class="form-control-static">
+                        <span ng-show="article.quote_check_status">
+                            Trenger sitatsjekk
+                        </span>
+                        <span ng-hide="article.quote_check_status">
+                            I orden
+                        </span>
+                    </p>
+                </div>
+                <div class="col-sm-8" ng-show="metaEditMode">
+                    <select class="form-control input-sm" ng-model="metaEditing.quote_check_status"
+                            ng-options="o.value as o.name for o in quoteCheckTypes"></select>
+                </div>
+            </div>
+            <hr class="divider">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
                     Navn
                 </label>
 
@@ -158,6 +220,7 @@
                     <input class="form-control input-sm" type="text" ng-model="metaEditing.name" required="true">
                 </div>
             </div>
+            <hr class="divider">
             <div class="form-group">
                 <label class="col-sm-4 control-label">
                     Journalister
@@ -191,6 +254,7 @@
                     <input class="form-control input-sm" type="text" ng-model="metaEditing.external_author">
                 </div>
             </div>
+            <hr class="divider">
             <div class="form-group">
                 <label class="col-sm-4 control-label">
                     Foto/Illu
@@ -241,32 +305,7 @@
                     <input class="form-control input-sm" type="text" ng-model="metaEditing.external_photographer">
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
-                    Kommentar
-                </label>
-
-                <div class="col-sm-8" ng-hide="metaEditMode">
-                    <p class="form-control-static">
-                        {{ article.comment }}
-                    </p>
-                </div>
-                <div class="col-sm-8" ng-show="metaEditMode">
-                    <input class="form-control input-sm" type="text" ng-model="metaEditing.comment">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
-                    Bildetekster
-                </label>
-
-                <div class="col-sm-8" ng-hide="metaEditMode">
-                    <p class="form-control-static" style="overflow: auto; max-height: 75px; white-space: pre-wrap;">{{ article.image_text }}</p>
-                </div>
-                <div class="col-sm-8" ng-show="metaEditMode">
-                    <textarea class="form-control" ng-model="metaEditing.image_text" style="height: 150px;"></textarea>
-                </div>
-            </div>
+            <hr class="divider">
             <div class="form-group">
                 <label class="col-sm-4 control-label">
                     Publikasjon
@@ -311,41 +350,6 @@
                 <div class="col-sm-8" ng-show="metaEditMode">
                     <select class="form-control input-sm" ng-model="metaEditing.type"
                             ng-options="s.name for s in types | orderBy:'type_order' | filter:{deleted: false} track by s.id "></select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
-                    Status
-                </label>
-
-                <div class="col-sm-8" ng-hide="metaEditMode">
-                    <p class="form-control-static">
-                        {{ article.status.name }}
-                    </p>
-                </div>
-                <div class="col-sm-8" ng-show="metaEditMode">
-                    <select class="form-control input-sm" ng-model="metaEditing.status"
-                            ng-options="s.name for s in statuses | filter:{deleted: false} | orderBy:'status_order' track by s.id "></select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
-                    Sitatsjekk
-                </label>
-
-                <div class="col-sm-8" ng-hide="metaEditMode">
-                    <p class="form-control-static">
-                        <span ng-show="article.quote_check_status">
-                            Trenger sitatsjekk
-                        </span>
-                        <span ng-hide="article.quote_check_status">
-                            I orden
-                        </span>
-                    </p>
-                </div>
-                <div class="col-sm-8" ng-show="metaEditMode">
-                    <select class="form-control input-sm" ng-model="metaEditing.quote_check_status"
-                            ng-options="o.value as o.name for o in quoteCheckTypes"></select>
                 </div>
             </div>
         </form>
