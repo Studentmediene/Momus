@@ -118,22 +118,14 @@ public class ArticleService {
     }
 
     public Article archiveArticle(Article article){
-        Article existing = articleRepository.findOne(article.getId());
-
-        if(!existing.getArchived()){
-            existing.setArchived(true);
-        }
-
+        Article existing = getArticleById(article.getId());
+        existing.setArchived(true);
         return saveUpdatedArticle(existing);
     }
 
     public Article restoreArticle(Article article){
-        Article existing = articleRepository.findOne(article.getId());
-
-        if(existing.getArchived()){
-           existing.setArchived(false);
-        }
-
+        Article existing = getArticleById(article.getId());
+        existing.setArchived(false);
         return saveUpdatedArticle(existing);
     }
 

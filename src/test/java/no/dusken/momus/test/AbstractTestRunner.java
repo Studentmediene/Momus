@@ -20,7 +20,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-/**tooltip="Gjenopprett artikkelen"
+/**
  * Values needed for most of the test cases
  */
 @RunWith(SpringJUnit4ClassRunner.class)
