@@ -19,18 +19,21 @@
 angular.module('momusApp.controllers')
     .controller('SearchCtrl', function ($scope, $http, $location, $q, PersonService, PublicationService, ArticleService) {
 
-        var pageSize = 200;
+        var pageSize = 100;
 
         $scope.data = [];
         $scope.hasNextPage = false;
-        $scope.search = {
+        $scope.defaultSearch = {
             free: '',
             status: '',
-            persons: '',
+            persons: [],
             section: '',
             publication: '',
-            page_number: 1
+            page_number: 1,
+            page_size: pageSize
         };
+
+        $scope.search = angular.copy($scope.defaultSearch);
 
         // Get stuff from the server
         $q.all([PersonService.getAll(), PublicationService.getAll()]).then(function (data) {
@@ -70,8 +73,10 @@ angular.module('momusApp.controllers')
          * corresponding values from the URL, if any is present the function will return true
          */
         function updateSearchParametersFromUrl() {
-            var urlSearch = $location.search;
+            var urlSearch = $location.search();
             var aValueWasSet = false;
+
+            $scope.search = angular.copy($scope.defaultSearch);
 
             for (var key in $scope.search) {
                 var value = urlSearch[key];
@@ -102,13 +107,11 @@ angular.module('momusApp.controllers')
 
 
         $scope.searchFunc = function (pageDelta) {
-            rememberSearchState();
-
             if (pageDelta) {
-                $scope.search.page_number = parseInt($scope.search.page_number) + pageDelta;
-                $location.search('page_number', $scope.search.page_number.toString());
+                $scope.search.page_number = parseInt($scope.search.page_number, 10) + pageDelta; // parse, as suddenly it's a string!
             }
 
+            rememberSearchState();
             search();
         };
 
@@ -118,8 +121,8 @@ angular.module('momusApp.controllers')
             $scope.loading = true;
             $scope.noArticles = false;
 
-            ArticleService.search($scope.search, pageSize).success(function (data) {
-                $scope.hasNextPage = (data.length > pageSize);
+            ArticleService.search($scope.search).success(function (data) {
+                $scope.hasNextPage = (data.length > pageSize); // search always returns one too many
                 $scope.data = data.slice(0, pageSize);
             }).finally(function () {
                 $scope.loading = false;

@@ -206,7 +206,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testEmptyArticleSearchReturnsAll() {
-        ArticleSearchParams params = new ArticleSearchParams("", null, Collections.<Long>emptyList(), null, null, 0, 0);
+        ArticleSearchParams params = new ArticleSearchParams("", null, Collections.<Long>emptyList(), null, null, 20, 1);
 
         List<Article> expected = new ArrayList<>();
         expected.add(article1);
@@ -248,9 +248,9 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForPerson() {
-        ArticleSearchParams params1 = new ArticleSearchParams("", null, Arrays.asList(2L), null, null, 0, 0);
-        ArticleSearchParams params2 = new ArticleSearchParams(null, null, Arrays.asList(1L,2L), null, null, 0, 0);
-        ArticleSearchParams params3 = new ArticleSearchParams("", null, Arrays.asList(1L,2L,3L), null, null, 0, 0);
+        ArticleSearchParams params1 = new ArticleSearchParams("", null, Arrays.asList(2L), null, null, 20, 1);
+        ArticleSearchParams params2 = new ArticleSearchParams(null, null, Arrays.asList(1L,2L), null, null, 20, 1);
+        ArticleSearchParams params3 = new ArticleSearchParams("", null, Arrays.asList(1L,2L,3L), null, null, 20, 1);
 
         List<Article> expected1 = new ArrayList<>();
         List<Article> expected2 = new ArrayList<>();
@@ -275,8 +275,8 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForBothPersonAndContent() {
-        ArticleSearchParams params = new ArticleSearchParams("its about hard you can GET hit", null, Arrays.asList(1L, 2L), null,null, 0, 0);
-        ArticleSearchParams params2 = new ArticleSearchParams("du", null, Arrays.asList(2L), null, null, 0, 0);
+        ArticleSearchParams params = new ArticleSearchParams("its about hard you can GET hit", null, Arrays.asList(1L, 2L), null,null, 20, 1);
+        ArticleSearchParams params2 = new ArticleSearchParams("du", null, Arrays.asList(2L), null, null, 20, 1);
 
         List<Article> expected = new ArrayList<>();
         List<Article> expected2 = new ArrayList<>();

@@ -163,7 +163,7 @@ public class ArticleService {
             query.setParameter(e.getKey(), e.getValue());
         }
 
-        query.setMaxResults(params.getPageSize() + 1);
+        query.setMaxResults(params.getPageSize() + 1); // One extra, so searchpage can see if there is "more pages"
         query.setFirstResult(params.getStartOfPage());
 
         List<Article> resultList = query.getResultList();

@@ -10,8 +10,8 @@ public class ArticleSearchParams {
     private List<Long> persons;
     private Long section;
     private Long publication;
-    private int pageSize;
-    private int pageNumber;
+    private int pageSize = 200;
+    private int pageNumber = 1;
 
     public ArticleSearchParams() {
         // empty
@@ -25,6 +25,13 @@ public class ArticleSearchParams {
         this.publication = publication;
         this.pageSize = pageSize;
         this.pageNumber = pageNumber;
+    }
+
+    /**
+     * Jackson, the JSON converter will use this one, so we can limit the size
+     */
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize <= 500 ? pageSize : 500;
     }
 
     public Long getPublication() {
