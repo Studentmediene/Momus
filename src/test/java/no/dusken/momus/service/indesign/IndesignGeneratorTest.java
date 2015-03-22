@@ -45,7 +45,7 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
             a new line inside the html
          */
 
-        article.setContent("<h1>Tittel</h1><h2>Stikktittel<br></h2><h4>En lang ingress</h4><p>Et avsnitt</p>\n" +
+        article.setContent("<h1>Tittel</h1><h2>Ingress<br></h2><h3>En mellomtittel</h3><p>Et avsnitt</p>\n" +
                 "<p>Enda et avsnitt og dette avsnittet har<br>linjeskift midt inni!<br></p>" +
                 "<h3>En mellomtittel</h3><p>Med et nytt avsnitt</p><ul><li>Med en punktliste</li><li>element 2</li><li>element 3</li></ul>" +
                 "<p>et nytt avsnitt</p><ol><li>Med nummerert liste</li><li>element 2</li></ol>" +
@@ -71,8 +71,8 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
                 "<ParaStyle:Byline>Tekst: Mats Matsesen, Kåre Kål\r\n" +
                 "<ParaStyle:Byline>Foto: Einar Einarsen\r\n" +
                 "<ParaStyle:Tittel>Tittel\r\n" +
-                "<ParaStyle:Stikktittel>Stikktittel\r\n" +
-                "<ParaStyle:Ingress>En lang ingress\r\n" +
+                "<ParaStyle:Ingress>Ingress\r\n" +
+                "<ParaStyle:Mellomtittel>En mellomtittel\r\n" +
                 "<ParaStyle:Brødtekst>Et avsnitt\r\n" +
                 "<ParaStyle:Brødtekst>Enda et avsnitt og dette avsnittet har<0x000A>linjeskift midt inni!\r\n" +
                 "<ParaStyle:Mellomtittel>En mellomtittel\r\n" +
