@@ -27,6 +27,24 @@ angular.module('momusApp.services')
             },
             updateMetadata: function(publication) {
                 return $http.put('/api/publication/metadata/' + publication.id, publication);
+            },
+            getActive: function(publications) {
+                var active = this.toDate(publications[0].release_date);
+                var activeIndex = 0;
+                for(var i = 1; i < data.length;i++){
+                    var date = this.toDate(publications[i].release_date);
+                    if(date < active && date > new Date()){
+                        active = date;
+                        activeIndex = i;
+                    }
+                }
+                return publications[activeIndex];
+            },
+            toDate: function(strDate){
+                var year = strDate.substring(0,4);
+                var month = strDate.substring(5,7);
+                var day = strDate.substring(8);
+                return new Date(year, month-1, day);
             }
         };
     });
