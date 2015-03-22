@@ -5,30 +5,35 @@ import java.util.List;
 
 
 public class ArticleSearchParams {
-
     private String free;
     private Long status;
     private List<Long> persons;
     private Long section;
     private Long publication;
+    private int pageSize;
+    private int pageNumber;
 
     public ArticleSearchParams() {
         // empty
     }
 
-    public ArticleSearchParams(String free, Long status, List<Long> persons, Long section, Long publication) {
+    public ArticleSearchParams(String free, Long status, List<Long> persons, Long section, Long publication, int pageSize, int pageNumber) {
         this.free = free;
         this.status = status;
         this.persons = persons;
         this.section = section;
         this.publication = publication;
+        this.pageSize = pageSize;
+        this.pageNumber = pageNumber;
     }
 
     public Long getPublication() {
         return publication;
     }
 
-    public List<Long> getPersons() {return persons; }
+    public List<Long> getPersons() {
+        return persons;
+    }
 
     public String getFree() {
         return free;
@@ -51,6 +56,21 @@ public class ArticleSearchParams {
                 ", persons=" + persons +
                 ", section='" + section + '\'' +
                 ", publication='" + publication + '\'' +
+                ", pageSize='" + this.pageSize + '\'' +
+                ", pageNumber='" + this.pageNumber + '\'' +
                 '}';
     }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+    public int getStartOfPage() {
+        return pageSize * (pageNumber - 1);
+    }
+
 }

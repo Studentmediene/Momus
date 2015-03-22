@@ -29,7 +29,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
     @Test
     public void testEmptyQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("", null, emptyList, null, null);
+        ArticleSearchParams params = new ArticleSearchParams("", null, emptyList, null, null, 0, 0);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
@@ -42,7 +42,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
     @Test
     public void testNullQuery() {
-        ArticleSearchParams params = new ArticleSearchParams(null, null, null, null, null);
+        ArticleSearchParams params = new ArticleSearchParams(null, null, null, null, null, 0, 0);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
@@ -55,7 +55,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
     @Test
     public void testTextQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("fInn Meg", null, emptyList, null, null);
+        ArticleSearchParams params = new ArticleSearchParams("fInn meg", null, emptyList, null, null, 0, 0);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
@@ -70,7 +70,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
     @Test
     public void testStatusQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("", 1L, emptyList, null, null);
+        ArticleSearchParams params = new ArticleSearchParams("", 1L, emptyList, null, null, 0, 0);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
@@ -85,7 +85,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
     @Test
     public void testPersonQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("", null, Arrays.asList(594L, 1337L), null, null);
+        ArticleSearchParams params = new ArticleSearchParams("", null, Arrays.asList(594L, 1337L), null, null, 0, 0);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
@@ -104,7 +104,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
     @Test
     public void testSectionQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("", null, emptyList, 31337L, null);
+        ArticleSearchParams params = new ArticleSearchParams("", null, emptyList, 31337L, null, 0, 0);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
@@ -118,7 +118,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
     @Test
     public void testPublicationQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("", null, emptyList, null, 2L);
+        ArticleSearchParams params = new ArticleSearchParams("", null, emptyList, null, 2L, 0, 0);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 
@@ -132,7 +132,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
     @Test
     public void testCombinedQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("kombinert test", 1L, Arrays.asList(594L, 1337L), 31337L, 2L);
+        ArticleSearchParams params = new ArticleSearchParams("kombinert test", 1L, Arrays.asList(594L, 1337L), 31337L, 2L, 0, 0);
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
 

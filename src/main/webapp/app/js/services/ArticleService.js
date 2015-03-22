@@ -26,7 +26,15 @@ angular.module('momusApp.services')
             getMultiple: function(ids) {
                 return $http.post('/api/article/multiple', ids);
             },
-            search: function (searchObject) {
+            search: function (searchObject, pageSize) {
+                if (searchObject.page_number === undefined || searchObject.page_number <= 0) {
+                    searchObject.page_number = 1;
+                }
+
+                if (searchObject.page_size === undefined || searchObject.page_size <= 0) {
+                    searchObject.page_size = (pageSize || 200);
+                }
+
                 return $http.post('/api/article/search', searchObject);
             },
             getRevisions: function (id) {
@@ -65,6 +73,5 @@ angular.module('momusApp.services')
             getSections: function () {
                 return $http.get('/api/article/sections', {cache: true});
             }
-
         };
     });
