@@ -49,6 +49,10 @@ angular.module('momusApp.services')
 
         // Date: year, month - 1, day
         var news = [{
+            date: new Date(2015, 3, 10),
+            title: "Aktiv utgave, arkivering",
+            text: "<p>Aktiv utgave er nå valgt som standard de fleste plasser. Kan arkivere (slette) artikler.</p>"
+        },{
             date: new Date(2015, 2, 20),
             title: "InDesign, eksterne personer++",
             text: "<p>Fikset spesialtegn ved eksportering til InDesign. Engelske klammer blir konvertert til norske.</p><p>Skal være lettere å se status på bildetekst/sitatsjekk. Sitatsjekk er nå OK som standard.</p><p>Kan legge til eksterne personer som journalister og fotografer.</p>"
