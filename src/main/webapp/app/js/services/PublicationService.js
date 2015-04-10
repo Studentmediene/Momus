@@ -29,11 +29,13 @@ angular.module('momusApp.services')
                 return $http.put('/api/publication/metadata/' + publication.id, publication);
             },
             getActive: function(publications) {
-                var active = this.toDate(publications[0].release_date);
+                var today = new Date();
+
+                var active = new Date(publications[0].release_date);
                 var activeIndex = 0;
-                for(var i = 1; i < data.length;i++){
-                    var date = this.toDate(publications[i].release_date);
-                    if(date < active && date > new Date()){
+                for(var i = 1; i < publications.length;i++){
+                    var date = new Date(publications[i].release_date);
+                    if(date < active && date > today){
                         active = date;
                         activeIndex = i;
                     }
