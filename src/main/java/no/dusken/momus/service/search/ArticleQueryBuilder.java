@@ -33,7 +33,7 @@ public class ArticleQueryBuilder {
     private Map<String, Object> queryParams = new HashMap<>();
 
     private final String baseQuery = "select a from Article a left join fetch a.status left join fetch a.publication";
-    private final String baseOrder = " order by a.publication.releaseDate DESC";
+    private final String baseOrder = "order by a.publication.releaseDate DESC";
 
     public ArticleQueryBuilder(ArticleSearchParams search) {
         this.search = search;
@@ -74,6 +74,9 @@ public class ArticleQueryBuilder {
             queryParams.put("pubid", search.getPublication());
         }
 
+        conditions.add("a.archived = :arch");
+        queryParams.put("arch", search.getArchived());
+
         String allConditions = StringUtils.collectionToDelimitedString(conditions, " AND ");
 
         if (allConditions.equals("")) {
@@ -82,7 +85,7 @@ public class ArticleQueryBuilder {
             fullQuery = baseQuery + " WHERE " + allConditions;
         }
 
-        fullQuery += baseOrder;
+        fullQuery += " " + baseOrder;
 
         logger.debug("Search query: {}", fullQuery);
 

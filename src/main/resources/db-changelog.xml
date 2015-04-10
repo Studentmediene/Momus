@@ -657,5 +657,11 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         </addColumn>
     </changeSet>
 
+    <changeSet id="16" author="Christoffer">
+        <addColumn tableName="article">
+            <column name="archived" type="BOOLEAN" defaultValueBoolean="false" />
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 

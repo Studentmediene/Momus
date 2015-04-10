@@ -38,6 +38,11 @@ textarea.note {
     background-color: #fff95d;;
 }
 
+.articleContent h2{
+    font-size: 18px;
+    font-weight: bold;
+}
+
 .wysihtml5-command-active {
     background-color: #cccccc;
     background-image: none;

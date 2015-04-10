@@ -38,7 +38,7 @@ angular.module('momusApp.controllers')
 
         PublicationService.getAll().success(function (data) {
             $scope.publications = data;
-            $scope.article.publication = data[0];
+            $scope.article.publication = PublicationService.getActive(data);
         });
 
         ArticleService.getStatuses().success(function (data) {

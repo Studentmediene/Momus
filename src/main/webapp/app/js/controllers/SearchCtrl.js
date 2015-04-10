@@ -19,39 +19,47 @@
 angular.module('momusApp.controllers')
     .controller('SearchCtrl', function ($scope, $http, $location, $q, PersonService, PublicationService, ArticleService) {
 
+        var pageSize = 100;
+
         $scope.data = [];
-        $scope.search = {
+        $scope.hasNextPage = false;
+        $scope.defaultSearch = {
             free: '',
             status: '',
-            persons: '',
+            persons: [],
             section: '',
-            publication: ''
+            publication: '',
+            page_number: 1,
+            page_size: pageSize,
+            archived: false
         };
+
+        $scope.search = angular.copy($scope.defaultSearch);
 
         // Get stuff from the server
         $q.all([PersonService.getAll(), PublicationService.getAll()]).then(function (data) {
             $scope.persons = data[0].data;
             $scope.publications = data[1].data;
-
             if (updateSearchParametersFromUrl()) { // If the URL contained a search
                 search();
-            } else if ($scope.publications.length > 0){ // default search on the newest publication
-                $scope.search.publication = $scope.publications[0].id;
+            } else if ($scope.publications.length > 0) { // default search on the newest publication
+                $scope.search.publication = PublicationService.getActive($scope.publications).id;
                 $location.search('publication', $scope.search.publication).replace();
+
                 search();
             }
         });
 
-        ArticleService.getSections().success( function(data){
+        ArticleService.getSections().success(function (data) {
             $scope.sections = data;
         });
 
-        ArticleService.getStatuses().success( function(data){
+        ArticleService.getStatuses().success(function (data) {
             $scope.statuses = data;
         });
 
 
-        $scope.$on('$routeUpdate', function(){ // when going back/forward
+        $scope.$on('$routeUpdate', function () { // when going back/forward
             updateSearchParametersFromUrl();
 
             if ($scope.data) { // if we're not doing a search, trigger one
@@ -68,11 +76,13 @@ angular.module('momusApp.controllers')
             var urlSearch = $location.search();
             var aValueWasSet = false;
 
+            $scope.search = angular.copy($scope.defaultSearch);
+
             for (var key in $scope.search) {
                 var value = urlSearch[key];
 
-                $scope.search[key] = value;
                 if (value) {
+                    $scope.search[key] = value;
                     aValueWasSet = true;
                 }
             }
@@ -87,22 +97,20 @@ angular.module('momusApp.controllers')
 
 
         function rememberSearchState() {
-            var newValue = $scope.search;
-            for (var key in newValue) {
-                var value = newValue[key];
+            var newValues = $scope.search;
+            for (var key in newValues) {
+                var value = newValues[key];
 
-                if (value) {
-                    $location.search(key, value);
-                } else {
-                    $location.search(key, null);
-                }
+                $location.search(key, value ? value : null);
             }
-
         }
 
 
+        $scope.searchFunc = function (pageDelta) {
+            if (pageDelta) {
+                $scope.search.page_number = parseInt($scope.search.page_number, 10) + pageDelta; // parse, as suddenly it's a string!
+            }
 
-        $scope.searchFunc = function () {
             rememberSearchState();
             search();
         };
@@ -114,10 +122,11 @@ angular.module('momusApp.controllers')
             $scope.noArticles = false;
 
             ArticleService.search($scope.search).success(function (data) {
-                $scope.data = data;
+                $scope.hasNextPage = (data.length > pageSize); // search always returns one too many
+                $scope.data = data.slice(0, pageSize);
             }).finally(function () {
                 $scope.loading = false;
-                if($scope.data.length <= 0){
+                if ($scope.data.length <= 0) {
                     $scope.noArticles = true;
                 }
             });

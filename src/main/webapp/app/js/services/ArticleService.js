@@ -51,6 +51,12 @@ angular.module('momusApp.services')
             createNewArticle: function (article) {
                 return $http.post('/api/article', article);
             },
+            deleteArticle: function(article){
+                return $http.post('/api/article/delete', article);
+            },
+            restoreArticle: function(article){
+                return $http.post('/api/article/restore', article);
+            },
 
 
             // Getting metadata, cache everything
@@ -65,6 +71,5 @@ angular.module('momusApp.services')
             getSections: function () {
                 return $http.get('/api/article/sections', {cache: true});
             }
-
         };
     });

@@ -65,12 +65,11 @@ public class ArticleService {
     EntityManager entityManager;
 
 
-
     public Article getArticleById(Long id) {
         Article article = articleRepository.findOne(id);
         if (article == null) {
             logger.warn("Article with id {} not found, tried by user {}", id, userLoginService.getId());
-            throw new RestException("Article "+id+" not found", 404);
+            throw new RestException("Article " + id + " not found", 404);
         }
         return article;
     }
@@ -114,6 +113,18 @@ public class ArticleService {
 
         createNewRevision(existing, false);
 
+        return saveUpdatedArticle(existing);
+    }
+
+    public Article archiveArticle(Article article){
+        Article existing = getArticleById(article.getId());
+        existing.setArchived(true);
+        return saveUpdatedArticle(existing);
+    }
+
+    public Article restoreArticle(Article article){
+        Article existing = getArticleById(article.getId());
+        existing.setArchived(false);
         return saveUpdatedArticle(existing);
     }
 
@@ -164,8 +175,8 @@ public class ArticleService {
             query.setParameter(e.getKey(), e.getValue());
         }
 
-        query.setMaxResults(201);
-        // TODO add paging of results?
+        query.setMaxResults(params.getPageSize() + 1); // One extra, so searchpage can see if there is "more pages"
+        query.setFirstResult(params.getStartOfPage());
 
         List<Article> resultList = query.getResultList();
 
