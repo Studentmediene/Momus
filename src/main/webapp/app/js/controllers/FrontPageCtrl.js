@@ -67,6 +67,15 @@ angular.module('momusApp.controllers')
             });
         });
 
+        $scope.loadingLastPublished = true;
+        ArticleService.search({status:6, page_size: 5}).success(function(articles){
+            $scope.loadingLastPublished = false;
+            $scope.lastPublished = articles;
+            if($scope.lastPublished.length <= 0){
+                $scope.noPublished = true;
+            }
+        });
+
         $scope.$on('$locationChangeStart', function (event) {
             if (promptCondition()) {
                 if (!confirm("Er du sikker på at du vil forlate siden? Det finnes ulagrede endringer.")) {
