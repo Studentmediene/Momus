@@ -331,3 +331,11 @@ a.zeroclipboard-is-hover {
     margin-left: -11px;
 }
 
+/* bootstrap override */
+.panel-warning {
+    border-color: #F5E625;
+}
+.panel-warning > .panel-heading {
+    background-color: #F5E625;
+    border-color: #F5E625;
+}

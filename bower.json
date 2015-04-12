@@ -5,7 +5,7 @@
     "jquery": "1.9.1",
     "angular": "1.2.22",
     "angular-route": "1.2.22",
-    "bootstrap": "3.2.0",
+    "bootswatch-dist": "3.2.0-flatly",
     "components-font-awesome": "4.3.0",
     "wysihtml5": "https://raw.github.com/xing/wysihtml5/master/dist/wysihtml5-0.4.0pre.min.js",
     "angular-ui-select2": "0.0.5",
