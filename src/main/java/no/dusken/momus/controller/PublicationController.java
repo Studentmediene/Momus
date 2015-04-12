@@ -20,6 +20,8 @@ import no.dusken.momus.model.Disposition;
 import no.dusken.momus.model.Publication;
 import no.dusken.momus.service.repository.DispositionRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -31,9 +33,10 @@ import java.util.List;
 @RequestMapping("/publication")
 public class PublicationController {
 
+    Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private PublicationRepository publicationRepository;
-
 
     @Autowired
     private DispositionRepository dispositionRepository;
@@ -51,9 +54,9 @@ public class PublicationController {
 
         savedPublication.setName(publication.getName());
         savedPublication.setReleaseDate(publication.getReleaseDate());
-
         savedPublication = publicationRepository.save(savedPublication);
 
+        logger.info("Updated publication {} with data: {}", publication.getName(), publication);
 
         savedPublication = publicationRepository.findOne(savedPublication.getId());
         return savedPublication;
@@ -67,6 +70,8 @@ public class PublicationController {
         Disposition disposition = new Disposition(newPublication.getId());
         disposition.setPublication(newPublication);
         dispositionRepository.save(disposition);
+
+        logger.info("Created new publication with data: {}", newPublication);
 
         return newPublication;
     }

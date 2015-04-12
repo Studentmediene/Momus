@@ -54,6 +54,8 @@ public class SourceService {
     public Source save(Source source) {
         tagRepository.save(source.getTags());
         source = sourceRepository.save(source);
+
+        logger.info("Saving source: {}", source.dump());
         return source;
     }
 
@@ -62,7 +64,7 @@ public class SourceService {
      * Logs everything so it can be undone
      */
     public void deleteTag(SourceTag tag) {
-        logger.info("Deleting tag {}", tag.getTag());
+        logger.info("Deleting tag {}", tag);
 
         List<Source> sources = sourceRepository.findByTag(tag.getTag());
 

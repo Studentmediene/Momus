@@ -83,6 +83,7 @@ public class TokenAuthenticationProvider implements AuthenticationProvider {
     private Person getLoggedInUser(String username) {
         Person person = personRepository.findByUsername(username);
         if (person == null) {
+            logger.error("User was logged in, but not found in our database: {}", username);
             throw new RestException("User was logged in, but not found in our database!", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
         return person;
