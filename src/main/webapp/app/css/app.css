@@ -83,6 +83,12 @@ a:focus {
     margin: 0 5px 10px 0;
 }
 
+.btn-row .btn {
+    margin-bottom: 2px;
+    margin-top: 2px;
+
+}
+
 /* used for ui-bootstrap */
 .nav, .pagination, .carousel, .panel-title a {
     cursor: pointer;

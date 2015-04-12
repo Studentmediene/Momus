@@ -76,47 +76,46 @@
 <div class="row hidden-print">
     <div class="col-xs-12">
 
-        <div class="btn-group">
+        <div class="btn-row">
+            <div class="btn-group">
+                <a href="https://docs.google.com/document/d/{{article.google_drive_id}}/edit" target="_blank" class="btn btn-success">
+                    <span class="fa fa-pencil"></span>
+                    Rediger i Google Docs
+                </a>
 
-            <a href="https://docs.google.com/document/d/{{article.google_drive_id}}/edit" target="_blank" class="btn btn-success">
-                <span class="fa fa-pencil"></span>
-                Rediger i Google Docs
+                <a ng-click="showHelp()" class="btn btn-success">
+                    <span class="fa fa-question"></span>
+                </a>
+            </div>
+
+            <a href="#/artikler/revisjon/{{article.id}}" class="btn btn-primary"><i class="fa fa-file-text-o"></i>
+                Historikk
             </a>
 
-            <a ng-click="showHelp()" class="btn btn-success">
-                <span class="fa fa-question"></span>
+            <a href="/api/article/{{article.id}}/export" class="btn btn-primary"><i class="fa fa-file-text-o"></i>
+                InDesign fil
             </a>
 
+            <span tooltip="Kopier sitatsjekk-tekst">
+                <a zc-btn="quoteCheck" button-loader="copying" loading-text="Kopierer" completed-text="Kopiert"
+                   ng-click=""
+                   class="btn btn-primary"><i class="fa fa-quote-right"></i>
+                    Sitatsjekk
+                </a>
+            </span>
+
+            <span ng-hide="article.archived">
+                <a ng-click="deleteArticle()" class="btn btn-danger"><i class="fa fa-trash-o" ></i>
+                    Arkiver artikkelen
+                </a>
+            </span>
+
+            <span ng-show="article.archived">
+                <a ng-click="restoreArticle()" class="btn btn-success" tooltip="Gjenopprett artikkelen så den vil vises i søk"><i class="fa fa-plus" ></i>
+                    Gjenopprett
+                </a>
+            </span>
         </div>
-
-
-        <a href="#/artikler/revisjon/{{article.id}}" class="btn btn-primary"><i class="fa fa-file-text-o"></i>
-            Historikk
-        </a>
-
-        <a href="/api/article/{{article.id}}/export" class="btn btn-primary"><i class="fa fa-file-text-o"></i>
-            InDesign fil
-        </a>
-
-        <span tooltip="Kopier sitatsjekk-tekst" class="btn-group">
-            <a zc-btn="quoteCheck" button-loader="copying" loading-text="Kopierer" completed-text="Kopiert"
-               ng-click=""
-               class="btn btn-primary"><i class="fa fa-quote-right"></i>
-                Sitatsjekk
-            </a>
-        </span>
-
-        <span ng-hide="article.archived">
-            <a ng-click="deleteArticle()" class="btn btn-danger"><i class="fa fa-trash-o" ></i>
-                Arkiver artikkelen
-            </a>
-        </span>
-
-        <span ng-show="article.archived">
-            <a ng-click="restoreArticle()" class="btn btn-success" tooltip="Gjenopprett artikkelen så den vil vises i søk"><i class="fa fa-plus" ></i>
-                Gjenopprett
-            </a>
-        </span>
     </div>
 </div>
 
