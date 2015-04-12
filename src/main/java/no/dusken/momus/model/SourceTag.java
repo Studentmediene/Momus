@@ -57,4 +57,11 @@ public class SourceTag {
     public int hashCode() {
         return tag != null ? tag.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return "SourceTag{" +
+                "tag='" + tag + '\'' +
+                '}';
+    }
 }

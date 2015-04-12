@@ -264,4 +264,12 @@ public class Article {
     public void setExternalPhotographer(String externalPhotographer) {
         this.externalPhotographer = externalPhotographer;
     }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

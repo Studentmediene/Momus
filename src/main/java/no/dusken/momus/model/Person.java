@@ -120,4 +120,13 @@ public class Person {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", fullName='" + fullName + '\'' +
+                '}';
+    }
 }

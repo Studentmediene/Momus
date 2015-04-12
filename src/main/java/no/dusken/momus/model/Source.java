@@ -124,4 +124,12 @@ public class Source {
     public void setTags(Set<SourceTag> tags) {
         this.tags = tags;
     }
+
+    @Override
+    public String toString() {
+        return "Source{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
