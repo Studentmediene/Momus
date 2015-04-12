@@ -19,6 +19,9 @@
 body {
     padding-top: 70px;
     padding-bottom: 50px;
+    background: url('pegasus_faded.png') no-repeat fixed;
+    background-position: 50% 100px;
+    background-size: contain;
 }
 
 /* Removes padding when priting to avoid blank space*/
@@ -335,5 +338,9 @@ a.zeroclipboard-is-hover {
     border-top-color: #CCC;
     border-width: 11px;
     margin-left: -11px;
+}
+
+.panel {
+    background-color: inherit;
 }
 
