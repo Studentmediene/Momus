@@ -43,6 +43,10 @@ hr.divider {
     border-color: #00b3ee;
 }
 
+label.important-field {
+    font-size: 18px;
+}
+
 .articleContent h2{
     font-size: 18px;
     font-weight: bold;
