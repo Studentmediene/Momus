@@ -20,6 +20,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Set;
 
@@ -263,5 +264,40 @@ public class Article {
 
     public void setExternalPhotographer(String externalPhotographer) {
         this.externalPhotographer = externalPhotographer;
+    }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    public String dump() {
+        return "Article{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", content='" + content + '\'' +
+                ", note='" + note + '\'' +
+                ", comment='" + comment + '\'' +
+                ", section=" + section +
+                ", status=" + status +
+                ", type=" + type +
+                ", publication=" + publication +
+                ", journalists=" + (journalists == null ? "[]" : Arrays.toString(journalists.toArray())) +
+                ", photographers=" + (photographers == null ? "[]" : Arrays.toString(photographers.toArray())) +
+                ", lastUpdated=" + lastUpdated +
+                ", photoStatus='" + photoStatus + '\'' +
+                ", googleDriveId='" + googleDriveId + '\'' +
+//                ", rawcontent='" + rawcontent + '\'' + // ignored
+                ", contentLength=" + contentLength +
+                ", useIllustration=" + useIllustration +
+                ", imageText='" + imageText + '\'' +
+                ", quoteCheckStatus=" + quoteCheckStatus +
+                ", externalAuthor='" + externalAuthor + '\'' +
+                ", externalPhotographer='" + externalPhotographer + '\'' +
+                ", archived=" + archived +
+                '}';
     }
 }

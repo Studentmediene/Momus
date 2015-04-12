@@ -20,6 +20,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Set;
 
 @Entity
@@ -123,5 +124,27 @@ public class Source {
 
     public void setTags(Set<SourceTag> tags) {
         this.tags = tags;
+    }
+
+    @Override
+    public String toString() {
+        return "Source{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    public String dump() {
+        return "Source{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", email='" + email + '\'' +
+                ", webPage='" + webPage + '\'' +
+                ", address='" + address + '\'' +
+                ", note='" + note + '\'' +
+                ", tags=" + (tags == null ? "[]" : Arrays.toString(tags.toArray())) +
+                '}';
     }
 }

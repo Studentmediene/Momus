@@ -36,7 +36,6 @@ public class KeyValueService {
      */
     public String getValue(String key) {
         KeyValue keyValue = keyValueRepository.findOne(key);
-
         return keyValue != null ? keyValue.getValue() : null;
     }
 
@@ -50,6 +49,7 @@ public class KeyValueService {
             value = defaultValue;
         }
 
+        logger.debug("Value for {} was {}", key, value);
         return value;
     }
 
@@ -77,7 +77,7 @@ public class KeyValueService {
         KeyValue pair = new KeyValue(key, value);
         keyValueRepository.save(pair);
 
-        logger.debug("Key {} was assigned value {}", key, value);
+        logger.info("Key {} was assigned value {}", key, value);
     }
 
     public void setValue(String key, long value) {

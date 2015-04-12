@@ -89,4 +89,12 @@ public class ArticleStatus {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return "ArticleStatus{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

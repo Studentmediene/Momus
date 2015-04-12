@@ -73,4 +73,12 @@ public class ArticleType {
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
+
+    @Override
+    public String toString() {
+        return "ArticleType{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
