@@ -86,13 +86,13 @@ public class ArticleService {
 
         Article newArticle = articleRepository.saveAndFlush(article);
 
-        logger.info("Article {} ({}) created ", newArticle.getId(), newArticle.getName());
+        logger.info("Article with id {} created with data: {}", newArticle.getId(), newArticle.dump());
         return articleRepository.findOne(newArticle.getId());
     }
 
     public Article saveUpdatedArticle(Article article) {
         article.setLastUpdated(new Date());
-        logger.info("Article \"{}\" (id: {}) updated", article.getName(), article.getId());
+        logger.info("Article with id {} updated, data: {}", article.getId(), article.dump());
         return articleRepository.saveAndFlush(article);
     }
 
@@ -104,7 +104,7 @@ public class ArticleService {
         if (newContent.equals(oldContent)) {
             // Inserting comments in the Google Docs triggers a change, but the content we see is the same.
             // So it would look weird having multiple revisions without any changes.
-            logger.info("No changes made to content of article {}", article.getId());
+            logger.info("No changes made to content of article with id {}, not updating it", article.getId());
             return existing;
         }
 
@@ -119,12 +119,16 @@ public class ArticleService {
     public Article archiveArticle(Article article){
         Article existing = getArticleById(article.getId());
         existing.setArchived(true);
+
+        logger.info("Setting article with id {} to archived", article.getId());
         return saveUpdatedArticle(existing);
     }
 
     public Article restoreArticle(Article article){
         Article existing = getArticleById(article.getId());
         existing.setArchived(false);
+
+        logger.info("Setting article with id {} to no longer archived", article.getId());
         return saveUpdatedArticle(existing);
     }
 
@@ -210,7 +214,7 @@ public class ArticleService {
         revision.setStatus(article.getStatus());
 
         revision = articleRevisionRepository.save(revision);
-        logger.info("Saved revision for article(id:{}) with id: {}, content:\n{}", article.getId(), revision.getId(), revision.getContent());
+        logger.info("Saved revision for article(id:{}) with id: {}", article.getId(), revision.getId());
     }
 
     /**
@@ -267,7 +271,7 @@ public class ArticleService {
 
 
         String rawContent = raw.toString().toLowerCase();
-        logger.info("Raw content {}, length of content: {}", rawContent, contentLength);
+        logger.debug("Raw content {}, length of content: {}", rawContent, contentLength);
 
         article.setRawcontent(rawContent);
         article.setContentLength(contentLength);

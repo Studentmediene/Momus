@@ -84,4 +84,13 @@ public class Publication {
     public void setArticles(Set<Article> articles) {
         this.articles = articles;
     }
+
+    @Override
+    public String toString() {
+        return "Publication{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", releaseDate=" + releaseDate +
+                '}';
+    }
 }

@@ -102,7 +102,7 @@ public class GoogleDriveService {
                     .setServiceAccountScopes(scopes)
                     .build();
         } catch (GeneralSecurityException | IOException e) {
-            logger.warn("Couldn't create Google Drive credentials: ", e);
+            logger.error("Couldn't create Google Drive credentials: ", e);
             return;
         }
 
@@ -166,7 +166,7 @@ public class GoogleDriveService {
     @Scheduled(cron = "0 * * * * *")
     public void sync() {
         if (!enabled) {
-            logger.debug("Not syncing Google Drive");
+            logger.info("Not syncing Google Drive");
             return;
         }
         logger.debug("Starting Google Drive sync");
@@ -192,11 +192,12 @@ public class GoogleDriveService {
     private Set<String> findModifiedFileIds() {
         Set<String> modifiedFileIds = new HashSet<>();
 
-        long latestChange = keyValueService.getValueAsLong("DRIVE_LATEST", 0L);
+        long oldLatestChange = keyValueService.getValueAsLong("DRIVE_LATEST", 0L);
+        long latestChange = oldLatestChange;
 
         try {
             Drive.Changes.List request =  drive.changes().list();
-            request.setStartChangeId(latestChange + 1);
+            request.setStartChangeId(oldLatestChange + 1);
             request.setIncludeSubscribed(false);
             request.setMaxResults(200);
 
@@ -209,11 +210,13 @@ public class GoogleDriveService {
                 logger.debug("Change found, id {}, fileid: {}", change.getId(), change.getFileId());
             }
 
-            keyValueService.setValue("DRIVE_LATEST", latestChange);
+            if (latestChange != oldLatestChange) {
+                keyValueService.setValue("DRIVE_LATEST", latestChange);
+            }
 
 
         } catch (IOException e) {
-            logger.error("Couldn't get changed file IDs from Google Drive", e);
+            logger.warn("Couldn't get changed file IDs from Google Drive", e); // may happen once in a while, not that interesting
         }
 
         return modifiedFileIds;
@@ -231,7 +234,7 @@ public class GoogleDriveService {
             InputStream inputStream = drive.getRequestFactory().buildGetRequest(new GenericUrl(downloadUrl)).execute().getContent();
             Scanner s = new java.util.Scanner(inputStream).useDelimiter("\\A");
             String content = s.hasNext() ? s.next() : "";
-            logger.debug("Got new content:\n{}", content);
+            logger.info("Got new content:\n{}", content);
 
             String convertedContent = googleDocsTextConverter.convert(content);
             article.setContent(convertedContent);
