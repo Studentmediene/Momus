@@ -49,6 +49,10 @@ angular.module('momusApp.services')
 
         // Date: year, month - 1, day
         var news = [{
+            date: new Date(2015, 5, 15),
+            title: "God sommer",
+            text: "<p>Momus ønsker alle en god sommer!</p>"
+        },{
             date: new Date(2015, 3, 10),
             title: "Aktiv utgave, arkivering",
             text: "<p>Aktiv utgave er nå valgt som standard de fleste plasser. Kan arkivere (slette) artikler.</p>"
