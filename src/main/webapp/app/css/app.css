@@ -38,6 +38,21 @@ textarea.note {
     background-color: #fff95d;;
 }
 
+hr.divider {
+    width:100%;
+    border-color: #bce8f1;
+    border-width: 1px;
+}
+
+div.metaline {
+    margin-top: -10px;
+
+}
+
+label.important-field {
+    font-size: 17px;
+}
+
 .articleContent h2{
     font-size: 18px;
     font-weight: bold;
