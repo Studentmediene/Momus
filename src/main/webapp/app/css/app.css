@@ -337,3 +337,17 @@ a.zeroclipboard-is-hover {
     margin-left: -11px;
 }
 
+
+/* Fix table overflow if article name contains a word that is too long */
+@media (max-width: 992px) { /* use the max to specify at each container level */
+    .search-article-name {
+        max-width:80px;  /* adjust to desired wrapping */
+        word-wrap: break-word; /* Internet Explorer 5.5+ */
+    }
+}
+
+@media (max-width: 768px){
+    .search-article-name {
+        max-width:none;
+    }
+}
