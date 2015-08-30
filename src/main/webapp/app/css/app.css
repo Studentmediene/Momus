@@ -40,11 +40,17 @@ textarea.note {
 
 hr.divider {
     width:100%;
-    border-color: #00b3ee;
+    border-color: #bce8f1;
+    border-width: 1px;
+}
+
+div.metaline {
+    margin-top: -10px;
+
 }
 
 label.important-field {
-    font-size: 18px;
+    font-size: 17px;
 }
 
 .articleContent h2{
