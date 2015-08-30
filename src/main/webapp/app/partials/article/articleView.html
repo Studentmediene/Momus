@@ -163,105 +163,8 @@
     <div class="panel-body">
         <form class="form-horizontal" role="form" ng-submit="metaClicked()">
             <input type="submit" style="display: none;"/><!-- This is required to submit with enter -->
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
-                    Navn
-                </label>
-
-                <div class="col-sm-8" ng-hide="metaEditMode">
-                    <p class="form-control-static">
-                        {{ article.name }}
-                    </p>
-                </div>
-                <div class="col-sm-8" ng-show="metaEditMode">
-                    <input class="form-control input-sm" type="text" ng-model="metaEditing.name" required="true">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
-                    Journalister
-                </label>
-
-                <div class="col-sm-8">
-                    <ul class="list-unstyled form-control-static" ng-hide="metaEditMode">
-                        <li ng-repeat="journalist in article.journalists">
-                            <span person-widget="journalist">{{ journalist.full_name }}</span>
-                        </li>
-                    </ul>
-                    <id-select multiple
-                               ng-show="metaEditMode"
-                               items="persons"
-                               target="metaEditing.journalists"
-                               show="full_name">
-                    </id-select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
-                    Ekstern
-                </label>
-
-                <div class="col-sm-8" ng-hide="metaEditMode">
-                    <p class="form-control-static">
-                        {{ article.external_author }}
-                    </p>
-                </div>
-                <div class="col-sm-8" ng-show="metaEditMode">
-                    <input class="form-control input-sm" type="text" ng-model="metaEditing.external_author">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
-                    Foto/Illu
-                </label>
-
-                <div class="col-sm-8" ng-hide="metaEditMode">
-                    <p class="form-control-static">
-                        <span ng-show="article.use_illustration"><i class="fa fa-paint-brush"> </i> Illustrasjon</span>
-                        <span ng-show="!article.use_illustration"><i class="fa fa-camera"> </i> Foto</span>
-
-                    </p>
-                </div>
-                <div class="col-sm-8" ng-show="metaEditMode">
-                    <select class="form-control input-sm" ng-model="metaEditing.use_illustration"
-                            ng-options="o.value as o.name for o in photoTypes"></select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
-                    {{article.use_illustration ? 'Illustratører' : 'Fotografer'}}
-                </label>
-
-                <div class="col-sm-8">
-                    <ul class="list-unstyled form-control-static" ng-hide="metaEditMode">
-                        <li ng-repeat="photographer in article.photographers">
-                            <span person-widget="photographer">{{ photographer.full_name }}</span>
-                        </li>
-                    </ul>
-                    <id-select multiple
-                               ng-show="metaEditMode"
-                               items="persons"
-                               target="metaEditing.photographers"
-                               show="full_name">
-                    </id-select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
-                    Ekstern
-                </label>
-
-                <div class="col-sm-8" ng-hide="metaEditMode">
-                    <p class="form-control-static">
-                        {{ article.external_photographer }}
-                    </p>
-                </div>
-                <div class="col-sm-8" ng-show="metaEditMode">
-                    <input class="form-control input-sm" type="text" ng-model="metaEditing.external_photographer">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
+            <div class="form-group metaline">
+                <label class="col-sm-4 control-label important-field">
                     Kommentar
                 </label>
 
@@ -274,8 +177,8 @@
                     <input class="form-control input-sm" type="text" ng-model="metaEditing.comment">
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
+            <div class="form-group metaline">
+                <label class="col-sm-4 control-label important-field">
                     Bildetekster
                 </label>
 
@@ -286,54 +189,8 @@
                     <textarea class="form-control" ng-model="metaEditing.image_text" style="height: 150px;"></textarea>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
-                    Publikasjon
-                </label>
-
-                <div class="col-sm-8" ng-hide="metaEditMode">
-                    <p class="form-control-static">
-                        {{ article.publication.name }}
-                    </p>
-                </div>
-                <div class="col-sm-8" ng-show="metaEditMode">
-                    <select class="form-control input-sm" ng-model="metaEditing.publication"
-                            ng-options="s.name for s in publications track by s.id"></select>
-
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
-                    Seksjon
-                </label>
-
-                <div class="col-sm-8" ng-hide="metaEditMode">
-                    <p class="form-control-static">
-                        {{ article.section.name }}
-                    </p>
-                </div>
-                <div class="col-sm-8" ng-show="metaEditMode">
-                    <select class="form-control input-sm" ng-model="metaEditing.section"
-                            ng-options="s.name for s in sections  | filter:{deleted: false} track by s.id"></select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
-                    Artikkeltype
-                </label>
-
-                <div class="col-sm-8" ng-hide="metaEditMode">
-                    <p class="form-control-static">
-                        {{ article.type.name }}
-                    </p>
-                </div>
-                <div class="col-sm-8" ng-show="metaEditMode">
-                    <select class="form-control input-sm" ng-model="metaEditing.type"
-                            ng-options="s.name for s in types | orderBy:'type_order' | filter:{deleted: false} track by s.id "></select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
+            <div class="form-group metaline">
+                <label class="col-sm-4 control-label important-field">
                     Status
                 </label>
 
@@ -347,8 +204,8 @@
                             ng-options="s.name for s in statuses | filter:{deleted: false} | orderBy:'status_order' track by s.id "></select>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
+            <div class="form-group metaline">
+                <label class="col-sm-4 control-label important-field">
                     Sitatsjekk
                 </label>
 
@@ -367,9 +224,154 @@
                             ng-options="o.value as o.name for o in quoteCheckTypes"></select>
                 </div>
             </div>
+            <hr class="divider">
+            <div class="form-group metaline">
+                <label class="col-sm-4 control-label">
+                    Navn
+                </label>
+
+                <div class="col-sm-8" ng-hide="metaEditMode">
+                    <p class="form-control-static">
+                        {{ article.name }}
+                    </p>
+                </div>
+                <div class="col-sm-8" ng-show="metaEditMode">
+                    <input class="form-control input-sm" type="text" ng-model="metaEditing.name" required="true">
+                </div>
+            </div>
+
+            <div class="form-group metaline">
+                <label class="col-sm-4 control-label">
+                    Journalister
+                </label>
+
+                <div class="col-sm-8">
+                    <ul class="list-unstyled form-control-static" ng-hide="metaEditMode">
+                        <li ng-repeat="journalist in article.journalists">
+                            <span person-widget="journalist">{{ journalist.full_name }}</span>
+                        </li>
+                    </ul>
+                    <id-select multiple
+                               ng-show="metaEditMode"
+                               items="persons"
+                               target="metaEditing.journalists"
+                               show="full_name">
+                    </id-select>
+                </div>
+            </div>
+            <div class="form-group metaline">
+                <label class="col-sm-4 control-label">
+                    Ekstern
+                </label>
+
+                <div class="col-sm-8" ng-hide="metaEditMode">
+                    <p class="form-control-static">
+                        {{ article.external_author }}
+                    </p>
+                </div>
+                <div class="col-sm-8" ng-show="metaEditMode">
+                    <input class="form-control input-sm" type="text" ng-model="metaEditing.external_author">
+                </div>
+            </div>
+            <hr class="divider">
+            <div class="form-group metaline">
+                <label class="col-sm-4 control-label">
+                    Foto/Illu
+                </label>
+
+                <div class="col-sm-8" ng-hide="metaEditMode">
+                    <p class="form-control-static">
+                        <span ng-show="article.use_illustration"><i class="fa fa-paint-brush"> </i> Illustrasjon</span>
+                        <span ng-show="!article.use_illustration"><i class="fa fa-camera"> </i> Foto</span>
+
+                    </p>
+                </div>
+                <div class="col-sm-8" ng-show="metaEditMode">
+                    <select class="form-control input-sm" ng-model="metaEditing.use_illustration"
+                            ng-options="o.value as o.name for o in photoTypes"></select>
+                </div>
+            </div>
+            <div class="form-group metaline">
+                <label class="col-sm-4 control-label">
+                    {{article.use_illustration ? 'Illustratører' : 'Fotografer'}}
+                </label>
+
+                <div class="col-sm-8">
+                    <ul class="list-unstyled form-control-static" ng-hide="metaEditMode">
+                        <li ng-repeat="photographer in article.photographers">
+                            <span person-widget="photographer">{{ photographer.full_name }}</span>
+                        </li>
+                    </ul>
+                    <id-select multiple
+                               ng-show="metaEditMode"
+                               items="persons"
+                               target="metaEditing.photographers"
+                               show="full_name">
+                    </id-select>
+                </div>
+            </div>
+            <div class="form-group metaline">
+                <label class="col-sm-4 control-label">
+                    Ekstern
+                </label>
+
+                <div class="col-sm-8" ng-hide="metaEditMode">
+                    <p class="form-control-static">
+                        {{ article.external_photographer }}
+                    </p>
+                </div>
+                <div class="col-sm-8" ng-show="metaEditMode">
+                    <input class="form-control input-sm" type="text" ng-model="metaEditing.external_photographer">
+                </div>
+            </div>
+            <hr class="divider">
+            <div class="form-group metaline">
+                <label class="col-sm-4 control-label">
+                    Publikasjon
+                </label>
+
+                <div class="col-sm-8" ng-hide="metaEditMode">
+                    <p class="form-control-static">
+                        {{ article.publication.name }}
+                    </p>
+                </div>
+                <div class="col-sm-8" ng-show="metaEditMode">
+                    <select class="form-control input-sm" ng-model="metaEditing.publication"
+                            ng-options="s.name for s in publications track by s.id"></select>
+
+                </div>
+            </div>
+            <div class="form-group metaline">
+                <label class="col-sm-4 control-label">
+                    Seksjon
+                </label>
+
+                <div class="col-sm-8" ng-hide="metaEditMode">
+                    <p class="form-control-static">
+                        {{ article.section.name }}
+                    </p>
+                </div>
+                <div class="col-sm-8" ng-show="metaEditMode">
+                    <select class="form-control input-sm" ng-model="metaEditing.section"
+                            ng-options="s.name for s in sections  | filter:{deleted: false} track by s.id"></select>
+                </div>
+            </div>
+            <div class="form-group metaline">
+                <label class="col-sm-4 control-label">
+                    Artikkeltype
+                </label>
+
+                <div class="col-sm-8" ng-hide="metaEditMode">
+                    <p class="form-control-static">
+                        {{ article.type.name }}
+                    </p>
+                </div>
+                <div class="col-sm-8" ng-show="metaEditMode">
+                    <select class="form-control input-sm" ng-model="metaEditing.type"
+                            ng-options="s.name for s in types | orderBy:'type_order' | filter:{deleted: false} track by s.id "></select>
+                </div>
+            </div>
         </form>
-
-
     </div>
 </div>
 

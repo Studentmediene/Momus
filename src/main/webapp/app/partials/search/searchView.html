@@ -139,7 +139,7 @@
                 </td>
             </tr>
             <tr ng-repeat="article in data">
-                <td>
+                <td class="search-article-name">
                     <i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i>
                     <a href="#/artikler/{{ article.id }}">
                         {{ article.name }}
