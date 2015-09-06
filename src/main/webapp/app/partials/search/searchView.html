@@ -139,7 +139,7 @@
                 </td>
             </tr>
             <tr ng-repeat="article in data">
-                <td class="search-article-name word-break">
+                <td class="search-article-name break-word">
                     <i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i>
                     <a href="#/artikler/{{ article.id }}">
                         {{ article.name }}
@@ -183,7 +183,7 @@
                     <i class="fa fa-quote-right fa-lg" tooltip="Om sitatsjekk er i orden"
                        ng-class="{'text-danger': article.quote_check_status, 'text-success': !article.quote_check_status}"></i>
                 </td>
-                <td style="background-color: {{article.status.color}}; padding: 3px;">
+                <td class="break-word" style="background-color: {{article.status.color}}; padding: 3px;">
                     {{ article.status.name }}
                 </td>
                 <td>
