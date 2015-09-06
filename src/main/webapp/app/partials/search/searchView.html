@@ -121,7 +121,7 @@
                 <th>Foto/Illustrasjon</th>
                 <th>Kommentar</th>
                 <th>Tegn</th>
-                <th>Status</th>
+                <th colspan="2" style="text-align: center;">Status</th>
                 <th>Redaksjon</th>
                 <th>Utgave</th>
             </tr>
@@ -139,7 +139,7 @@
                 </td>
             </tr>
             <tr ng-repeat="article in data">
-                <td class="search-article-name">
+                <td class="search-article-name word-break">
                     <i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i>
                     <a href="#/artikler/{{ article.id }}">
                         {{ article.name }}
@@ -182,8 +182,9 @@
 
                     <i class="fa fa-quote-right fa-lg" tooltip="Om sitatsjekk er i orden"
                        ng-class="{'text-danger': article.quote_check_status, 'text-success': !article.quote_check_status}"></i>
-
-                    <span style="background-color: {{article.status.color}}; padding: 3px;">{{ article.status.name }}</span>
+                </td>
+                <td style="background-color: {{article.status.color}}; padding: 3px;">
+                    {{ article.status.name }}
                 </td>
                 <td>
                     {{ article.section.name }}
