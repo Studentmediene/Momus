@@ -366,3 +366,8 @@ a.zeroclipboard-is-hover {
         max-width:none;
     }
 }
+
+.sortBtn:hover {
+    text-decoration: underline;
+    cursor:pointer;
+}
