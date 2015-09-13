@@ -672,6 +672,17 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="owner_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-
+    
+    <changeSet id="18" author="Eivind">
+        <dropTable tableName="favouriteSection"/>
+    </changeSet>
+    <changeSet id="19" author="Eivind">
+        <createTable tableName="favouritesection">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="section_id" type="BIGINT"/>
+            <column name="owner_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
-
