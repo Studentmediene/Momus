@@ -49,6 +49,10 @@ angular.module('momusApp.services')
 
         // Date: year, month - 1, day
         var news = [{
+            date: new Date(2015, 8, 13),
+            title: "Favorittseksjon, sortering i artikkelsøk",
+            text: "<p>Kan nå velge favorittseksjon, og få de nyeste artiklene herifra på forsiden. Man kan også sortere artikkelsøket på de forskjellige kolonnene. Det er også lagt til støtte for å vise fulle kommentarer i artikkelsøket.</p>"
+        },{
             date: new Date(2015, 7, 30),
             title: "Forsidetabeller, artikkelside",
             text: "<p>Tabellene på forsiden ser nå like ut, og metadatafeltene på artikkelsiden er sortert på en mer hensiktsmessig måte.</p>"
