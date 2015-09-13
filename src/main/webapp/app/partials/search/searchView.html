@@ -108,22 +108,28 @@
     <div class="panel-heading">
         <h3 class="panel-title text-center">
             Artikler
+            <div class="pull-right">
+                <button class="btn btn-default btn-xs" ng-click="collapse = !collapse">
+                    <span ng-hide="collapse">Vis kommentarer</span>
+                    <span ng-if="collapse">Skjul kommentarer</span>
+                </button>
+            </div>
         </h3>
     </div>
 
-    <div class="table-responsive">
+    <div class="table-responsive" style="overflow-x:auto;">
         <table class="table table-hover table-striped table-condensed" style="font-size: 85%;">
             <thead>
             <tr>
-                <th>Navn</th>
-                <th>Type</th>
+                <th search-sort-button="name" class="sortBtn">Navn</th>
+                <th search-sort-button="type.name" class="sortBtn">Type</th>
                 <th>Journalister</th>
                 <th>Foto/Illustrasjon</th>
                 <th>Kommentar</th>
-                <th>Tegn</th>
-                <th>Status</th>
-                <th>Redaksjon</th>
-                <th>Utgave</th>
+                <th search-sort-button="content_length" class="sortBtn">Tegn</th>
+                <th search-sort-button="status.id" class="sortBtn" colspan="2" style="text-align: center;">Status</th>
+                <th search-sort-button="section.id" class="sortBtn">Redaksjon</th>
+                <th search-sort-button="publication.id" class="sortBtn">Utgave</th>
             </tr>
             </thead>
 
@@ -138,8 +144,8 @@
                     Ingen artikler stemmer med søket
                 </td>
             </tr>
-            <tr ng-repeat="article in data">
-                <td class="search-article-name">
+            <tr ng-repeat="article in data | orderBy:articleSortType:articleSortReverse">
+                <td class="search-article-name break-word">
                     <i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i>
                     <a href="#/artikler/{{ article.id }}">
                         {{ article.name }}
@@ -166,24 +172,29 @@
                             <i class="fa fa-camera" ng-show="!article.use_illustration"> </i>
                             <span person-widget="person">{{ person.full_name }}</span>
                         </li>
-                        <li><i tooltip="Ekstern">{{article.external_author}}</i></li>
+                        <li><i tooltip="Ekstern">{{article.external_photographer}}</i></li>
                     </ul>
                 </td>
 
                 <!-- Show only a small part of a long message, with tooltip for the long text -->
-                <td>
-                    <textwrapper text="article.comment" length="20"></textwrapper>
+                <td ng-hide="collapse">
+                    <textwrapper length="20" text="article.comment"></textwrapper>
+                </td>
+
+                <td class="col-xs-2" style="white-space: normal !important;" ng-show="collapse">
+                    <textwrapper text="article.comment"></textwrapper>
                 </td>
 
                 <td>{{ article.content_length }}</td>
                 <td style="white-space: nowrap">
-                    <i class="fa fa-user fa-lg" tooltip="Om bildetekster er satt"
+                    <i class="fa fa-user fa-lg" tooltip="{{article.image_text ? 'Bildetekst er satt' : 'Bildetekst er ikke satt'}}"
                        ng-class="{'text-danger': !article.image_text || article.image_text.length == 0, 'text-success': article.image_text.length > 0}"></i>
 
-                    <i class="fa fa-quote-right fa-lg" tooltip="Om sitatsjekk er i orden"
+                    <i class="fa fa-quote-right fa-lg" tooltip="{{article.quote_check_status ? 'Sitatsjekk er ikke i orden' : 'Sitatetsjekk er i orden'}}"
                        ng-class="{'text-danger': article.quote_check_status, 'text-success': !article.quote_check_status}"></i>
-
-                    <span style="background-color: {{article.status.color}}; padding: 3px;">{{ article.status.name }}</span>
+                </td>
+                <td class="break-word" style="background-color: {{article.status.color}}; padding: 3px;">
+                    {{ article.status.name }}
                 </td>
                 <td>
                     {{ article.section.name }}

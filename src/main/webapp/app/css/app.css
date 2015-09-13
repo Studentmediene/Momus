@@ -356,7 +356,10 @@ a.zeroclipboard-is-hover {
 /* Fix table overflow if article name contains a word that is too long */
 @media (max-width: 992px) { /* use the max to specify at each container level */
     .search-article-name {
-        max-width:80px;  /* adjust to desired wrapping */
+        max-width: 80px; /* adjust to desired wrapping */
+    }
+
+    .break-word {
         word-wrap: break-word; /* Internet Explorer 5.5+ */
     }
 }
@@ -365,4 +368,12 @@ a.zeroclipboard-is-hover {
     .search-article-name {
         max-width:none;
     }
+}
+
+.sortBtn:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.fav {
+    line-height:32px;
 }
