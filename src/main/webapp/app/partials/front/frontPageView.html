@@ -127,6 +127,69 @@
                 </table>
             </div>
         </div>
+        <div class="panel panel-info">
+            <div class="panel-heading clearfix">
+                <div class="pull-right">
+                    <select id="favsec" class="form-control input-sm" ng-model="favouriteSection.section" ng-change="updateFavouriteSection()"
+                            ng-options="s.name for s in sections  | filter:{deleted: false} track by s.id">
+                    </select>
+                </div>
+                <h1 class="panel-title fav">
+                    <i class="fa fa-star"></i> {{favouriteSection.section == null ? "Velg favorittseksjon for å vise de nyeste artiklene derfra" : "Siste artikler fra din favorittseksjon (" + favouriteSection.section.name + ")" }}
+                </h1>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-condensed table-responsive" style="font-size:85%">
+                    <thead>
+                    <tr>
+                        <th style="width:2%"></th>
+                        <th style="width:25%">Navn</th>
+                        <th style="width:5%">Tegn</th>
+                        <th style="width:25%;">Journalister</th>
+                        <th style="width:15%">Status</th>
+                        <th style="width:13%">Redaksjon</th>
+                        <th style="width:15%">Utgave</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr ng-if="loadingRecent">
+                        <td colspan="10" style="text-align: center;">
+                            <i class="fa fa-4x fa-spinner fa-spin"></i>
+                        </td>
+                    </tr>
+
+                    <tr ng-if="favouriteSection.section == null">
+                        <td colspan="10" style="text-align: center;">
+                            Du har ikke satt en favorittseksjon
+                        </td>
+                    </tr>
+                    <tr ng-if="favouriteSection.section != null && favSectionArticles.length == 0">
+                        <td colspan="10" style="text-align: center;">
+                            Det finnes ingen artikler i denne seksjonen
+                        </td>
+                    </tr>
+                    <tr ng-repeat="article in favSectionArticles">
+                        <td><i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i></td>
+                        <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
+                        <td>{{article.content_length}}</td>
+                        <td>
+                            <ul class="list-unstyled">
+                                <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.full_name}}</span></li>
+                            </ul>
+                        </td>
+                        <td style="background-color: {{article.status.color}};">
+                            {{article.status.name}}
+                        </td>
+                        <td>
+                            {{article.section.name}}
+                        </td>
+                        <td>{{article.publication.name}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <div class="col-md-4">

@@ -366,3 +366,7 @@ a.zeroclipboard-is-hover {
         max-width:none;
     }
 }
+
+.fav {
+    line-height:32px;
+}
