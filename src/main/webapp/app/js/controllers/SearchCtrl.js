@@ -135,7 +135,6 @@ angular.module('momusApp.controllers')
         }
 
         $scope.sortSearch = function(type){
-            console.log(type);
             if($scope.articleSortType != type){
                 $scope.articleSortReverse = false;
                 $scope.articleSortType = type;

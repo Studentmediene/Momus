@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService) {
+    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService) {
         $scope.noteRules = noteParserRules;
 
         $scope.recentArticles = ViewArticleService.getRecentViews();
@@ -45,6 +45,30 @@ angular.module('momusApp.controllers')
             $scope.note = data;
             $scope.unedited = angular.copy(data);
         });
+
+        ArticleService.getSections().success(function (data) {
+            $scope.sections = data;
+        });
+
+        FavouriteSectionService.getFavouriteSection().success(function(data){
+            $scope.favouriteSection = data;
+            searchForArticlesFromFavoriteSection();
+        });
+
+        $scope.updateFavouriteSection = function(){
+            FavouriteSectionService.updateFavouriteSection($scope.favouriteSection).success(function (data){
+                $scope.favouriteSection = data;
+                searchForArticlesFromFavoriteSection();
+            });
+        };
+
+        var searchForArticlesFromFavoriteSection = function(){
+            if($scope.favouriteSection.section != null){
+                ArticleService.search({section: $scope.favouriteSection.section.id, page_size: 9}).success(function(articles){
+                    $scope.favSectionArticles = articles;
+                });
+            }
+        };
 
         $scope.saveNote = function () {
             $scope.savingNote = true;
