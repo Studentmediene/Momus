@@ -366,3 +366,13 @@ a.zeroclipboard-is-hover {
         max-width:none;
     }
 }
+
+.inDesignIcon {
+    width:20px;
+    heigth:20px;
+    opacity:0.8;
+}
+
+.inDesignIcon:hover {
+    opacity:1;
+}

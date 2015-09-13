@@ -124,6 +124,7 @@
                 <th>Status</th>
                 <th>Redaksjon</th>
                 <th>Utgave</th>
+                <th></th>
             </tr>
             </thead>
 
@@ -190,6 +191,9 @@
                 </td>
                 <td>
                     {{ article.publication.name }}
+                </td>
+                <td>
+                    <a tooltip="Eksporter til inDesign" href="/api/article/{{article.id}}/export"><img class="inDesignIcon" src="css/indesign.png"></img></a>
                 </td>
             </tr>
             </tbody>
