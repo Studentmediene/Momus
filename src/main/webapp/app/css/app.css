@@ -370,6 +370,10 @@ a.zeroclipboard-is-hover {
     }
 }
 
+.sortBtn:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
 .fav {
     line-height:32px;
 }

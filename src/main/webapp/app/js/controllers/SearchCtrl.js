@@ -34,6 +34,8 @@ angular.module('momusApp.controllers')
             archived: false
         };
 
+        $scope.articleSortReverse = false;
+        $scope.articleSortType = "section.id";
         $scope.search = angular.copy($scope.defaultSearch);
 
         // Get stuff from the server
@@ -130,5 +132,16 @@ angular.module('momusApp.controllers')
                     $scope.noArticles = true;
                 }
             });
+        }
+
+        $scope.sortSearch = function(type){
+            if($scope.articleSortType != type){
+                $scope.articleSortReverse = false;
+                $scope.articleSortType = type;
+            } else {
+                $scope.articleSortReverse = !$scope.articleSortReverse;
+            }
+
+            $scope.$apply();
         }
     });

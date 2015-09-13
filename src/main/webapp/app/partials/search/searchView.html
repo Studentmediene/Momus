@@ -121,15 +121,15 @@
         <table class="table table-hover table-striped table-condensed" style="font-size: 85%;">
             <thead>
             <tr>
-                <th>Navn</th>
-                <th>Type</th>
+                <th search-sort-button="name" class="sortBtn">Navn</th>
+                <th search-sort-button="type.name" class="sortBtn">Type</th>
                 <th>Journalister</th>
                 <th>Foto/Illustrasjon</th>
                 <th>Kommentar</th>
-                <th>Tegn</th>
-                <th colspan="2" style="text-align: center;">Status</th>
-                <th>Redaksjon</th>
-                <th>Utgave</th>
+                <th search-sort-button="content_length" class="sortBtn">Tegn</th>
+                <th search-sort-button="status.id" class="sortBtn" colspan="2" style="text-align: center;">Status</th>
+                <th search-sort-button="section.id" class="sortBtn">Redaksjon</th>
+                <th search-sort-button="publication.id">Utgave</th>
             </tr>
             </thead>
 
@@ -144,7 +144,7 @@
                     Ingen artikler stemmer med søket
                 </td>
             </tr>
-            <tr ng-repeat="article in data">
+            <tr ng-repeat="article in data | orderBy:articleSortType:articleSortReverse">
                 <td class="search-article-name break-word">
                     <i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i>
                     <a href="#/artikler/{{ article.id }}">
