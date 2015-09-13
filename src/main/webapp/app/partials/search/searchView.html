@@ -108,10 +108,16 @@
     <div class="panel-heading">
         <h3 class="panel-title text-center">
             Artikler
+            <div class="pull-right">
+                <button class="btn btn-default btn-xs" ng-click="collapse = !collapse">
+                    <span ng-hide="collapse">Vis kommentarer</span>
+                    <span ng-if="collapse">Skjul kommentarer</span>
+                </button>
+            </div>
         </h3>
     </div>
 
-    <div class="table-responsive">
+    <div class="table-responsive" style="overflow-x:auto;">
         <table class="table table-hover table-striped table-condensed" style="font-size: 85%;">
             <thead>
             <tr>
@@ -171,8 +177,12 @@
                 </td>
 
                 <!-- Show only a small part of a long message, with tooltip for the long text -->
-                <td>
-                    <textwrapper text="article.comment" length="20"></textwrapper>
+                <td ng-hide="collapse">
+                    <textwrapper length="20" text="article.comment"></textwrapper>
+                </td>
+
+                <td class="col-xs-2" style="white-space: normal !important;" ng-show="collapse">
+                    <textwrapper text="article.comment"></textwrapper>
                 </td>
 
                 <td>{{ article.content_length }}</td>
