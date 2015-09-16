@@ -16,9 +16,9 @@
 
 package no.dusken.momus.controller;
 
-import no.dusken.momus.model.Disposition;
+import no.dusken.momus.model.Page;
 import no.dusken.momus.model.Publication;
-import no.dusken.momus.service.repository.DispositionRepository;
+import no.dusken.momus.service.repository.PageRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequestMapping("/publication")
@@ -39,7 +41,7 @@ public class PublicationController {
     private PublicationRepository publicationRepository;
 
     @Autowired
-    private DispositionRepository dispositionRepository;
+    private PageRepository pageRepository;
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -47,6 +49,10 @@ public class PublicationController {
         return publicationRepository.findAll(new Sort(new Sort.Order(Sort.Direction.DESC, "releaseDate")));
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public @ResponseBody Publication getPublicationById(@PathVariable("id") Long id){
+        return publicationRepository.findOne(id);
+    }
 
     @RequestMapping(value = "/metadata/{id}", method = RequestMethod.PUT)
     public @ResponseBody Publication savePublication(@PathVariable("id") Long id, @RequestBody Publication publication) {
@@ -54,6 +60,15 @@ public class PublicationController {
 
         savedPublication.setName(publication.getName());
         savedPublication.setReleaseDate(publication.getReleaseDate());
+
+        Set<Page> pages = publication.getPages();
+        Set<Page> savedPages = new HashSet<>();
+        for (Page page : pages) {
+            Page saved = pageRepository.save(page);
+            savedPages.add(saved);
+        }
+        savedPublication.setPages(savedPages);
+
         savedPublication = publicationRepository.save(savedPublication);
 
         logger.info("Updated publication {} with data: {}", publication.getName(), publication);
@@ -66,11 +81,6 @@ public class PublicationController {
     public @ResponseBody Publication addPublication(@RequestBody Publication publication) {
         Publication newPublication = publicationRepository.save(publication);
         newPublication = publicationRepository.findOne(newPublication.getId());
-
-        Disposition disposition = new Disposition(newPublication.getId());
-        disposition.setPublication(newPublication);
-        dispositionRepository.save(disposition);
-
         logger.info("Created new publication with data: {}", newPublication);
 
         return newPublication;

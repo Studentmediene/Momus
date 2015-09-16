@@ -18,6 +18,7 @@ package no.dusken.momus.model;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Page {
@@ -31,13 +32,7 @@ public class Page {
     private boolean advertisement;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @OrderColumn
-    private List<Article> articles;
-
-    @ManyToOne
-    private Section section;
-
-
+    private Set<Article> articles;
 
     public Long getId() {
         return id;
@@ -66,19 +61,11 @@ public class Page {
         return this.advertisement;
     }
 
-    public List<Article> getArticles() {
+    public Set<Article> getArticles() {
         return articles;
     }
 
-    public void setArticles(List<Article> articles) {
+    public void setArticles(Set<Article> articles) {
         this.articles = articles;
-    }
-
-    public Section getSection() {
-        return section;
-    }
-
-    public void setSection(Section section) {
-        this.section = section;
     }
 }

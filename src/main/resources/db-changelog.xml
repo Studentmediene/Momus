@@ -685,4 +685,33 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="owner_id" type="BIGINT"/>
         </createTable>
     </changeSet>
+
+    <changeSet id="20" author="Eivind">
+        <dropTable tableName="disposition_page"/>
+        <dropTable tableName="page_article"/>
+        <dropTable tableName="publication_page"/>
+    </changeSet>
+
+    <changeSet id="21" author="Eivind">
+        <dropTable tableName="disposition"/>
+        <dropTable tableName="page"/>
+    </changeSet>
+
+    <changeSet id="22" author="Eivind">
+        <createTable tableName="page">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="page_nr" type="BIGINT"/>
+            <column name="note" type="VARCHAR(255)"/>
+            <column name="advertisement" type="BOOLEAN"/>
+        </createTable>
+        <createTable tableName="page_article">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="article" type="BIGINT"/>
+            <column name="page" type="BIGINT"/>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>

@@ -34,8 +34,7 @@ public class Publication {
     private Date releaseDate;
 
     @OneToMany
-    @OrderColumn
-    private List<Page> pages;
+    private Set<Page> pages;
 
     @OneToMany(mappedBy = "publication")
     private Set<Article> articles;
@@ -69,11 +68,11 @@ public class Publication {
         this.releaseDate = releaseDate;
     }
 
-    public List<Page> getPages() {
+    public Set<Page> getPages() {
         return pages;
     }
 
-    public void setPages(List<Page> pages) {
+    public void setPages(Set<Page> pages) {
         this.pages = pages;
     }
 
@@ -93,4 +92,6 @@ public class Publication {
                 ", releaseDate=" + releaseDate +
                 '}';
     }
+
+
 }
