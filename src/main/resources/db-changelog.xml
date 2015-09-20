@@ -702,7 +702,7 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="page_nr" type="BIGINT"/>
+            <column name="pagenr" type="BIGINT"/>
             <column name="note" type="VARCHAR(255)"/>
             <column name="advertisement" type="BOOLEAN"/>
         </createTable>
@@ -710,8 +710,8 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="article" type="BIGINT"/>
-            <column name="page" type="BIGINT"/>
+            <column name="articles_id" type="BIGINT"/>
+            <column name="page_id" type="BIGINT"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

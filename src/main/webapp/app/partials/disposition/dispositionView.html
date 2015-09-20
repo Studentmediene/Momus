@@ -14,102 +14,59 @@
   ~ limitations under the License.
   -->
 
-<div>
-<h1 style="text-align: center"> Disposition for {{disposition.publication.name}} </h1>
-<div class="form-group">
-    <div class="row">
-        <div class="col-md-6">
-            <button class="btn btn-primary" ng-click="saveArticle()">save me</button>
-            <button class="btn btn-danger" ng-click="removePage(selectedPage)" style="margin: 10px">Delete</button>
-            <button class="btn btn-success" ng-click="addPage(selectedPage)">NewPage</button>
-            <button class="btn btn-warning" ng-click="articleModal(selectedPage)" ng-disabled="!selectedPage">AddArticle</button>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div ui-tree="treeOptions" class="col-md-12">
-        <table ui-tree-nodes="" ng-model="disposition.pages" class="table-bordered fixed">
-            <!--Top Row, Headers-->
-            <tr>
-                <th ng-repeat="header in ['Side ','Seksjon ','Artikler ','Notater ','Journalister ','Fotografer ','Status ','Fotostatus','Reklame']">{{header}}</th>
-            </tr>
-            <!--For every page in the disp-->
-            <tbody  ui-tree-node ng-repeat="page in disposition.pages" ng-class="{selectedPage: page.page_nr == selectedPage.page_nr}">
-            <!--<tbody ng-repeat="page in disposition.pages">-->
-                <tr ng-repeat="article in page.articles" >
-                    <!--Side-->
-                    <td ui-tree-handle ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center;" class="pageNr">{{page.page_nr}}</td>
-                    <!--Seksjon-->
-                    <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">
-                        <select ng-model="page.section" ng-options="s.name for s in sections track by s.id" style="border: none"></select>
-                    </td>
-                    <!--Artikkel-->
-                    <td class="articleHover" ng-click="articleModal(page, article)" style="text-align: center">{{article.type.name}} : {{article.name}}</td>
-                    <!--Notater-->
-                    <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center"><textarea ng-model="page.note" style="border: none; min-height: 4em; height: 100%;"></textarea></td>
-                    <!--Journalister-->
-                    <td >
-                        <table>
-                            <tr ng-repeat="journalist in article.journalists">
-                                <td >{{journalist.full_name}}</td>
-                            </tr>
-                        </table>
-                    </td>
-                    <!--Fotografer-->
-                    <td>
-                        <table>
-                            <tr ng-repeat="photographer in article.photographers">
-                                <td >{{photographer.full_name}}</td>
-                            </tr>
-                        </table>
-                    </td>
-                    <!--Status-->
-                    <td style="text-align: center">{{article.status.name}}</td>
-                    <!--Fotostatus-->
-                    <td style="text-align: center"><select ng-change="updateArticles()" ng-model="article.photo_status" ng-options="status for status in photostatus" style="border: none"></select></td>
-                    <!--Reklame-->
-                    <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center"><input type="checkbox" ng-model="page.advertisement"></td>
-                </tr>
-                <!--If there are no articles on the page-->
-                <tr ng-if="page.articles == 0">
-                    <!--Side-->
-                    <td ui-tree-handle style="text-align: center" class="pageNr">{{page.page_nr}}</td>
-                    <!--Seksjon-->
-                    <td style="text-align: center">
-                        <!--<select ng-model="page.section" ng-options="s.name for s in sections" style="border: none" ></select>-->
-                        <select ng-model="page.section" ng-options="s.name for s in sections track by s.id" style="border: none" ></select>
-                    </td>
-                    <!--Artikkel-->
-                    <td class="articleHover" ng-click="articleModal(page)" style="text-align: center"></td>
-                    <!--Notater-->
-                    <td rowspan="1" style="text-align: center"><textarea ng-model="page.note" style="border: none; min-height: 4em; height: 100%;"></textarea></td>
-                    <!--Journalister-->
-                    <td ></td>
-                    <!--Fotografer-->
-                    <td></td>
-                    <!--Status-->
-                    <td style="text-align: center"></td>
-                    <!--Fotostatus-->
-                    <td style="text-align: center"></td>
-                    <!--Reklame-->
-                    <td style="text-align: center"><input type="checkbox" ng-model="page.advertisement"></td>
-                </tr>
-            </tbody>
-            <!--Add new Page Row-->
-            <tr style="background-color: #F8F8F8;">
-                <!--Side-->
-                <td ng-click="addLastPage()" style="text-align: center"><span class="glyphicon glyphicon-plus"></span></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td ></td>
-                <td></td>
-                <td ></td>
-                <td ></td>
-                <td ng-click="removeLastPage()" style="text-align: center"><span class="glyphicon glyphicon-minus"></span></td>
-            </tr>
-        </table>
-    </div>
+<div ng-if="!publication">
+    <h1>Ugyldig utgave</h1>
 </div>
 
+<div class="container">
+    <h1>Disposisjon for {{publication.name}}</h1>
+
+    <div class="btn-row">
+        <div class="btn-group">
+            <a class="btn btn-success" ng-click="generateDispBtn()">
+                Generer disposisjon
+            </a>
+            <a class="btn btn-success" ng-click="showHelp()">
+                <span class="fa fa-question"></span>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Sider
+            </div>
+            <table class="table">
+                <thead>
+                    <th>#</th>
+                    <th>Artikler</th>
+                    <th>Kommentar</th>
+                    <th>Reklame</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="page in publication.pages">
+                        <td>{{page.page_nr}}</td>
+                        <td><span ng-repeat="article in page.articles">{{article.name}}</span></td>
+                        <td>{{page.note}}</td>
+                        <td><input type="checkbox" ng-model="page.ad"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="col-md-3 pull-right">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Artikler i {{publication.name}}
+            </div>
+            <ul class="list-group">
+                <li ng-repeat="article in publication.articles" class="list-group-item">
+                    {{article.name}}
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>

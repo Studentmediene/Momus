@@ -22,6 +22,9 @@ angular.module('momusApp.services')
             getAll: function () {
                 return $http.get('/api/publication');
             },
+            getById: function(id) {
+                return $http.get('/api/publication/' + id);
+            },
             createNew: function(publication) {
                 return $http.post('/api/publication', publication);
             },
