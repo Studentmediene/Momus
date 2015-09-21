@@ -31,6 +31,9 @@ public class Page {
     private String note;
     private boolean advertisement;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Publication publication;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Article> articles;
 
@@ -67,5 +70,13 @@ public class Page {
 
     public void setArticles(Set<Article> articles) {
         this.articles = articles;
+    }
+
+    public Publication getPublication() {
+        return publication;
+    }
+
+    public void setPublication(Publication publication) {
+        this.publication = publication;
     }
 }

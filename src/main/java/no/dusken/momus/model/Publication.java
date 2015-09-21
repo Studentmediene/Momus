@@ -18,7 +18,6 @@ package no.dusken.momus.model;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -33,11 +32,11 @@ public class Publication {
     @Temporal(TemporalType.DATE)
     private Date releaseDate;
 
-    @OneToMany
-    private Set<Page> pages;
-
-    @OneToMany(mappedBy = "publication")
+    @OneToMany(mappedBy = "publication", fetch = FetchType.LAZY)
     private Set<Article> articles;
+
+    @OneToMany(mappedBy = "publication", fetch = FetchType.LAZY)
+    private Set<Page> pages;
 
     public Publication() {
 
@@ -68,20 +67,20 @@ public class Publication {
         this.releaseDate = releaseDate;
     }
 
-    public Set<Page> getPages() {
-        return pages;
-    }
-
-    public void setPages(Set<Page> pages) {
-        this.pages = pages;
-    }
-
     public Set<Article> getArticles() {
         return articles;
     }
 
     public void setArticles(Set<Article> articles) {
         this.articles = articles;
+    }
+
+    public Set<Page> getPages() {
+        return pages;
+    }
+
+    public void setPages(Set<Page> pages) {
+        this.pages = pages;
     }
 
     @Override

@@ -705,6 +705,7 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="pagenr" type="BIGINT"/>
             <column name="note" type="VARCHAR(255)"/>
             <column name="advertisement" type="BOOLEAN"/>
+            <column name="publication_id" type="BIGINT"/>
         </createTable>
         <createTable tableName="page_article">
             <column autoIncrement="true" name="id" type="BIGINT">
@@ -712,6 +713,13 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             </column>
             <column name="articles_id" type="BIGINT"/>
             <column name="page_id" type="BIGINT"/>
+        </createTable>
+        <createTable tableName="publication_page">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="publication_id" type="BIGINT"/>
+            <column name="pages_id" type="BIGINT"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

@@ -45,7 +45,7 @@
                     <th>Reklame</th>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="page in publication.pages">
+                    <tr ng-repeat="page in publication.pages | orderBy:'page_nr'">
                         <td>{{page.page_nr}}</td>
                         <td><span ng-repeat="article in page.articles">{{article.name}}</span></td>
                         <td>{{page.note}}</td>

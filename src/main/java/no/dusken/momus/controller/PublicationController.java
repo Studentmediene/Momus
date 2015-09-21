@@ -18,6 +18,7 @@ package no.dusken.momus.controller;
 
 import no.dusken.momus.model.Page;
 import no.dusken.momus.model.Publication;
+import no.dusken.momus.service.PublicationService;
 import no.dusken.momus.service.repository.PageRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
 import org.slf4j.Logger;
@@ -27,7 +28,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +37,9 @@ import java.util.Set;
 public class PublicationController {
 
     Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private PublicationService publicationService;
 
     @Autowired
     private PublicationRepository publicationRepository;
@@ -54,27 +58,9 @@ public class PublicationController {
         return publicationRepository.findOne(id);
     }
 
-    @RequestMapping(value = "/metadata/{id}", method = RequestMethod.PUT)
-    public @ResponseBody Publication savePublication(@PathVariable("id") Long id, @RequestBody Publication publication) {
-        Publication savedPublication = publicationRepository.findOne(id);
-
-        savedPublication.setName(publication.getName());
-        savedPublication.setReleaseDate(publication.getReleaseDate());
-
-        Set<Page> pages = publication.getPages();
-        Set<Page> savedPages = new HashSet<>();
-        for (Page page : pages) {
-            Page saved = pageRepository.save(page);
-            savedPages.add(saved);
-        }
-        savedPublication.setPages(savedPages);
-
-        savedPublication = publicationRepository.save(savedPublication);
-
-        logger.info("Updated publication {} with data: {}", publication.getName(), publication);
-
-        savedPublication = publicationRepository.findOne(savedPublication.getId());
-        return savedPublication;
+    @RequestMapping(value = "/metadata", method = RequestMethod.PUT)
+    public @ResponseBody Publication savePublication(@RequestBody Publication publication) {
+        return publicationService.savePublication(publication);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -84,5 +70,15 @@ public class PublicationController {
         logger.info("Created new publication with data: {}", newPublication);
 
         return newPublication;
+    }
+
+    @RequestMapping(value = "/pages/{id}", method = RequestMethod.GET)
+    public @ResponseBody List<Page> getPagesByPublication(@PathVariable("id") Long id) {
+        return pageRepository.findByPublicationId(id);
+    }
+
+    @RequestMapping(value = "pages/delete/{id}", method = RequestMethod.DELETE)
+    public @ResponseBody void deletePages(@PathVariable("id") Long id){
+        publicationService.deletePagesInPublication(id);
     }
 }
