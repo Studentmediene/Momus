@@ -197,6 +197,8 @@ td > ul, td > ol {
 .angular-ui-tree-drag .pageNr {
     display: table-cell;
     height: 58px;
+    border: 1px solid #444;
+    width:100%;
 }
 
 /*Disposition, highlight selected Page*/

@@ -37,16 +37,16 @@
             <div class="panel-heading">
                 Sider
             </div>
-            <table class="table">
+            <table class="table" ui-tree="treeOptions">
                 <thead>
                     <th>#</th>
                     <th>Artikler</th>
                     <th>Kommentar</th>
                     <th>Reklame</th>
                 </thead>
-                <tbody>
-                    <tr ng-repeat="page in publication.pages | orderBy:'page_nr'">
-                        <td>{{page.page_nr}}</td>
+                <tbody ui-tree-nodes ng-model="publication.pages">
+                    <tr ng-repeat="page in publication.pages" ui-tree-node>
+                        <td ui-tree-handle class="pageNr">{{page.page_nr}}</td>
                         <td><span ng-repeat="article in page.articles">{{article.name}}</span></td>
                         <td>{{page.note}}</td>
                         <td><input type="checkbox" ng-model="page.ad"></td>

@@ -74,7 +74,7 @@ public class PublicationController {
 
     @RequestMapping(value = "/pages/{id}", method = RequestMethod.GET)
     public @ResponseBody List<Page> getPagesByPublication(@PathVariable("id") Long id) {
-        return pageRepository.findByPublicationId(id);
+        return pageRepository.findByPublicationIdOrderByPageNrAsc(id);
     }
 
     @RequestMapping(value = "pages/delete/{id}", method = RequestMethod.DELETE)

@@ -85,6 +85,13 @@ angular.module('momusApp', [
                 title: "Disposisjon"
             }
         )
+            .when('/disposition',
+            {
+                templateUrl:'partials/disposition/dispositionView.html',
+                controller:'DispositionCtrl',
+                title: "Disposisjon"
+            }
+        )
 
             // Sources
             .when('/kilder',

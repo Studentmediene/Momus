@@ -20,20 +20,27 @@ angular.module('momusApp.controllers')
     .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal) {
         $scope.pubId = $routeParams.id;
 
-        PublicationService.getById($scope.pubId).success(function(data){
-            $scope.publication = data;
+        if($scope.pubId){
+            PublicationService.getById($scope.pubId).success(function(data) {
+                $scope.publication = data;
 
-            console.log(data);
+                $scope.getPages($scope.publication.id);
+            });
+        } else {
+            PublicationService.getAll().success(function(data){
+                $scope.publication = PublicationService.getActive(data);
+                $scope.getPages($scope.publication.id);
+            });
+        }
 
-            if(data) {
-                ArticleService.search({publication: $scope.pubId}).success(function (data) {
-                    $scope.publication.articles = data;
-                });
-                PublicationService.getPages(data.id).success(function (data){
-                    $scope.publication.pages = data;
-                })
-            }
-        });
+        $scope.getPages = function(pubId){
+            ArticleService.search({publication: pubId}).success(function (data) {
+                $scope.publication.articles = data;
+            });
+            PublicationService.getPages(pubId).success(function (data){
+                $scope.publication.pages = data;
+            })
+        };
 
         $scope.showHelp = function(){
             MessageModal.info("<p>Genererer en disposisjon etter beste evne. Bruker artiklene i den gjeldende utgaven til å " +
@@ -73,6 +80,20 @@ angular.module('momusApp.controllers')
             }
             PublicationService.updateMetadata($scope.publication);
 
+        };
+
+        $scope.treeOptions = {
+            dropped: function(event){
+                $scope.selectedPage = $scope.publication.pages[event.dest.index];
+                sortPages();
+                PublicationService.updateMetadata($scope.publication);
+            }
+        };
+
+        function sortPages(){
+            for ( var i = 0; i < $scope.publication.pages.length; i++ ) {
+                $scope.publication.pages[i].page_nr = i+1;
+            }
         }
 
     });
