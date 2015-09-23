@@ -16,16 +16,20 @@
 
 package no.dusken.momus.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
-public class Article {
+@JsonIgnoreProperties(value = { "dispsort" })
+public class Article implements Comparator<Article>, Comparable<Article>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,6 +87,9 @@ public class Article {
 
     private boolean archived;
 
+    @JsonIgnore
+    @Transient
+    private Integer dispsort;
 
 
     public Article() {
@@ -209,6 +216,14 @@ public class Article {
 
     public void setArchived(Boolean archived) { this.archived = archived; }
 
+    public Integer getDispsort() {
+        return dispsort;
+    }
+
+    public void setDispsort(Integer dispsort) {
+        this.dispsort = dispsort;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -299,5 +314,13 @@ public class Article {
                 ", externalPhotographer='" + externalPhotographer + '\'' +
                 ", archived=" + archived +
                 '}';
+    }
+
+    public int compareTo(Article a){
+        return this.dispsort.compareTo(a.getDispsort());
+    }
+
+    public int compare(Article a1, Article a2){
+        return Integer.compare(a1.getDispsort(),a2.getDispsort());
     }
 }

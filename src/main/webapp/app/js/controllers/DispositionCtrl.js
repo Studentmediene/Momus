@@ -47,32 +47,10 @@ angular.module('momusApp.controllers')
         };
 
         $scope.generateDisp = function(){
-            if($scope.publication.pages.length > 0){
-                console.log($scope.publication.pages);
-                PublicationService.deletePages($scope.publication.id).success(function(data){
-                    $scope.generatePages();
-                })
-            }else{
-                $scope.generatePages();
-            }
+            PublicationService.generateDisp($scope.publication.id).success(function(data){
+                $scope.publication.pages = data;
+                console.log(data);
+            })
         };
-
-        $scope.generatePages = function(){
-            $scope.publication.pages = [];
-            for(var i = 0; i < $scope.publication.articles.length; i++){
-
-                var temp_page = {
-                    page_nr : i+1,
-                    note : "",
-                    advertisement: false,
-                    articles: [$scope.publication.articles[i]],
-                    publication: $scope.publication.id
-                };
-
-                $scope.publication.pages.push(temp_page);
-            }
-            PublicationService.updateMetadata($scope.publication);
-
-        }
 
     });
