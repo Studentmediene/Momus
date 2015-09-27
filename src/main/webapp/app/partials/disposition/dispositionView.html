@@ -47,7 +47,11 @@
                 <tbody ui-tree-nodes ng-model="publication.pages">
                     <tr ng-repeat="page in publication.pages" ui-tree-node>
                         <td ui-tree-handle class="pageNr">{{page.page_nr}}</td>
-                        <td><span ng-repeat="article in page.articles">{{article.name}}</span></td>
+                        <td ui-tree-nodes ng-model="page.articles">
+                            <span ng-repeat="article in page.articles" ui-tree-node>
+                                {{article.name}}
+                            </span>
+                        </td>
                         <td>{{page.note}}</td>
                         <td><input type="checkbox" ng-model="page.ad"></td>
                     </tr>
@@ -62,10 +66,12 @@
             <div class="panel-heading">
                 Artikler i {{publication.name}}
             </div>
-            <ul class="list-group">
-                <li ng-repeat="article in publication.articles" class="list-group-item">
-                    {{article.name}}
-                </li>
+            <ul class="list-group" ui-tree data-nodrop-enabled="true" data-clone-enabled="true">
+                <div ui-tree-nodes ng-model="publication.articles">
+                    <li ng-repeat="article in publication.articles" ui-tree-node="" class="list-group-item">
+                        {{article.name}}
+                    </li>
+                </div>
             </ul>
         </div>
     </div>
