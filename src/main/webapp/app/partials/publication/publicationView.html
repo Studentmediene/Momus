@@ -17,58 +17,35 @@
 <div class="row">
     <!-- left panel -->
     <div class="col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title text-center">Utgaver</h3>
+        <div class="panel panel-info">
+            <div class="panel-heading clearfix">
+                <div class="pull-right">
+                    <select id="yeardrop" class="input-sm" ng-model="viewYear">
+                        <option ng-repeat="year in yearsInDropdown">{{year}}</option>
+                    </select>
+                </div>
+                <h3 class="panel-title text-center fav">Utgaver</h3>
             </div>
-            <div class="panel-body">
-                <div class="row">
-
-                    <!-- dropdown year button -->
-                    <div class="col-xs-6">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle">
-                                {{viewYear}}
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li class="interact" ng-repeat="year in yearsInDropdown | orderBy: '-year'">
-                                    <a ng-click="yearSelected(year)">{{year}}</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <!-- list of publications -->
-                <div class="row top-spacing">
-                    <div class="col-xs-12">
-                        <div class="table-responsive">
-                            <table class="table table-hover table-striped">
-                                <thead>
-                                <tr>
-                                    <th>Navn</th>
-                                    <th>Dato</th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="publication in publications | filter:yearFilter | orderBy: '-release_date'">
-                                    <td>{{publication.name}}</td>
-                                    <td>{{publication.release_date}}</td>
-                                    <td><a href="#/artikler?publication={{publication.id}}">Se artikler</a></td>
-                                    <!--<td><a href="#/disposition/{{publication.id}}">Disposisjon</a></td>-->
-                                    <td class=""><a class="interact" ng-click="editPublication(publication)">Endre</a></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>Navn</th>
+                        <th>Utgivelsesdato</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="publication in publications | filter:yearFilter | orderBy: '-release_date'">
+                        <td>{{publication.name}}</td>
+                        <td>{{publication.release_date}}</td>
+                        <td><a href="#/artikler?publication={{publication.id}}">Se artikler</a></td>
+                        <!--<td><a href="#/disposition/{{publication.id}}">Disposisjon</a></td>-->
+                        <td class=""><a class="interact" ng-click="editPublication(publication)">Endre</a></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -76,7 +53,7 @@
 
     <!-- right panel, for editing/new -->
     <div class="col-sm-6">
-        <div class="panel panel-default">
+        <div class="panel panel-warning">
             <div class="panel-heading">
                 <h4 class="panel-title text-center">{{editing.id ? 'Rediger ' + editing.name : 'Ny utgave'}}</h4>
             </div>

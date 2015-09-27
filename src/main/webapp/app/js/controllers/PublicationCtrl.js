@@ -41,11 +41,6 @@ angular.module('momusApp.controllers')
             return publication.release_date && publication.release_date.indexOf($scope.viewYear) != -1;
         };
 
-        $scope.yearSelected = function(year) {
-            $scope.viewYear = year;
-            $scope.editing = {};
-        };
-
         calculateYearsInDropdownMenu();
 
 
@@ -90,7 +85,6 @@ angular.module('momusApp.controllers')
                     });
             }
         };
-
 
     });
 
