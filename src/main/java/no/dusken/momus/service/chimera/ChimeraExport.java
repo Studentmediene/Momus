@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -67,10 +66,7 @@ public class ChimeraExport {
     }
 
     private void write(String str, HttpURLConnection connection) throws IOException {
-        OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
-        wr.write(str);
-        wr.flush();
-        wr.close();
+        connection.getOutputStream().write(str.getBytes("UTF-8"));
     }
 
     private ArrayList<String> getResponse(HttpURLConnection connection) throws IOException {
