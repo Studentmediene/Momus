@@ -114,7 +114,7 @@ public class ChimeraExport {
             json.put("lead","");
         }
         //json.put("id", article.getId());
-        json.put("body", htmlToMarkdown(content));
+        json.put("body", content);
         json.put("external_authors", getJournalistsAsString(article));
         //json.put("ldap_authors", journalistsJson(article));
 
