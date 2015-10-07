@@ -21,58 +21,80 @@
 <div class="container">
     <h1>Disposisjon for {{publication.name}}</h1>
 
-    <div class="btn-row">
-        <div class="btn-group">
-            <a class="btn btn-success" ng-click="generateDispBtn()">
-                Generer disposisjon
-            </a>
-            <a class="btn btn-success" ng-click="showHelp()">
-                <span class="fa fa-question"></span>
-            </a>
+    <div class="col-md-12">
+        <div class="btn-row">
+            <div class="btn-group">
+                <a class="btn btn-success" ng-click="generateDispBtn()">
+                    Generer disposisjon
+                </a>
+                <a class="btn btn-success" ng-click="showHelp()">
+                    <span class="fa fa-question"></span>
+                </a>
+            </div>
         </div>
     </div>
 
-    <div class="col-md-9">
+    <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
                 Sider
+
+                <button class="btn btn-default btn-xs pull-right" ng-click="newPage()">
+                    <i class="fa fa-plus"></i>
+                </button>
             </div>
-            <table class="table" ui-tree="treeOptions">
+            <table class="table table-bordered">
                 <thead>
                     <th>#</th>
                     <th>Artikler</th>
+                    <th>Journalister</th>
                     <th>Kommentar</th>
                     <th>Reklame</th>
                 </thead>
-                <tbody ui-tree-nodes ng-model="publication.pages">
-                    <tr ng-repeat="page in publication.pages" ui-tree-node>
-                        <td ui-tree-handle class="pageNr">{{page.page_nr}}</td>
-                        <td ui-tree-nodes ng-model="page.articles">
-                            <span ng-repeat="article in page.articles" ui-tree-node>
-                                {{article.name}}
-                            </span>
+                <tbody>
+                    <tr ng-repeat="page in publication.pages">
+                        <td class="pageNr">{{page.page_nr}}</td>
+
+                        <td ng-show="editPage">
+                            <id-select multiple
+                                       items="publication.articles"
+                                       target="page.articles"
+                                       show="name"
+                                       class="input-sm">
+                            </id-select>
                         </td>
-                        <td>{{page.note}}</td>
-                        <td><input type="checkbox" ng-model="page.ad"></td>
+
+                        <td colspan="{{ editPage ? 1 : 2 }}">
+                            <table class="table table-condensed pageArticleTable">
+                                <tr ng-repeat="article in page.articles">
+                                    <td ng-if="!editPage">
+                                        <a href="#/artikler/{{article.id}}">{{article.name}}</a>
+                                    </td>
+                                    <td><ul><li ng-repeat="person in article.journalists">{{person.full_name}}</li></ul></td>
+                                </tr>
+                            </table>
+                        </td>
+
+                        <td ng-hide="editPage">{{page.note}}</td>
+                        <td ng-show="editPage"><input class="form-control" ng-model="page.note"></td>
+
+                        <td>
+                            <input type="checkbox" class="checkbox" ng-model="page.advertisement" ng-show="editPage">
+                            <span ng-hide="editPage">{{ page.advertisement ? "Ja" : "Nei" }}</span>
+                        </td>
+
+                        <td>
+                            <button ng-click="editPage = true" class="btn btn-warning btn-xs pull-right" ng-hide="editPage">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+
+                            <button ng-click="savePage();editPage = false" class="btn btn-success pull-right" ng-show="editPage">
+                                <i class="fa fa-save"></i>
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
-        </div>
-    </div>
-
-
-    <div class="col-md-3 pull-right">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Artikler i {{publication.name}}
-            </div>
-            <ul class="list-group" ui-tree data-nodrop-enabled="true" data-clone-enabled="true">
-                <div ui-tree-nodes ng-model="publication.articles">
-                    <li ng-repeat="article in publication.articles" ui-tree-node="" class="list-group-item">
-                        {{article.name}}
-                    </li>
-                </div>
-            </ul>
         </div>
     </div>
 </div>

@@ -82,6 +82,24 @@ angular.module('momusApp.controllers')
 
         };
 
+
+        $scope.savePage = function() {
+            PublicationService.updateMetadata($scope.publication);
+        };
+
+        $scope.newPage = function(){
+            var temp_page = {
+                page_nr : $scope.publication.pages.length + 1,
+                note : "",
+                advertisement: false,
+                articles: [],
+                publication: $scope.publication.id
+            };
+            $scope.publication.pages.push(temp_page);
+            PublicationService.updateMetadata($scope.publication);
+        };
+
+        // Drag&drop stuff
         $scope.treeOptions = {
             dropped: function(event){
                 $scope.selectedPage = $scope.publication.pages[event.dest.index];

@@ -387,3 +387,7 @@ a.zeroclipboard-is-hover {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
+
+.pageArticleTable tbody tr:first-child td {
+    border-top:0px;
+}
