@@ -391,3 +391,8 @@ a.zeroclipboard-is-hover {
 .pageArticleTable tbody tr:first-child td {
     border-top:0px;
 }
+
+.pageTable > tbody > tr > td,
+.pageTable > thead > tr > th{
+    border: 1px #aeaeae solid;
+}

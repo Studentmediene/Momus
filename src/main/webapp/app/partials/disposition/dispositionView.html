@@ -43,13 +43,13 @@
                     <i class="fa fa-plus"></i>
                 </button>
             </div>
-            <table class="table table-bordered">
+            <table class="pageTable table table-bordered table-responsive">
                 <thead>
                     <th>#</th>
-                    <th>Artikler</th>
-                    <th>Journalister</th>
+                    <th style="width: 50%">Artikler</th>
                     <th>Kommentar</th>
                     <th>Reklame</th>
+                    <th></th>
                 </thead>
                 <tbody>
                     <tr ng-repeat="page in publication.pages">
@@ -64,19 +64,23 @@
                             </id-select>
                         </td>
 
-                        <td colspan="{{ editPage ? 1 : 2 }}">
-                            <table class="table table-condensed pageArticleTable">
+                        <td style="padding:0;margin:0" ng-hide="editPage">
+                            <table class="table table-condensed pageArticleTable" style="margin:0;padding:0; min-height: 50px">
                                 <tr ng-repeat="article in page.articles">
-                                    <td ng-if="!editPage">
+                                    <td style="width: 30%">
                                         <a href="#/artikler/{{article.id}}">{{article.name}}</a>
                                     </td>
-                                    <td><ul><li ng-repeat="person in article.journalists">{{person.full_name}}</li></ul></td>
+                                    <td style="width: 20%">{{article.section.name}}</td>
+                                    <td style="width:20%"><ul class="list-unstyled"><li class="" ng-repeat="person in article.journalists"><span person-widget="person">{{person.full_name}}</span></li></ul></td>
+                                    <td style="background-color:{{article.status.color}};">{{article.status.name}}</td>
                                 </tr>
                             </table>
                         </td>
 
-                        <td ng-hide="editPage">{{page.note}}</td>
-                        <td ng-show="editPage"><input class="form-control" ng-model="page.note"></td>
+                        <td>
+                            <div ng-hide="editPage">{{page.note}}</div>
+                            <input ng-show="editPage" class="form-control" ng-model="page.note">
+                        </td>
 
                         <td>
                             <input type="checkbox" class="checkbox" ng-model="page.advertisement" ng-show="editPage">
@@ -88,7 +92,7 @@
                                 <i class="fa fa-pencil"></i>
                             </button>
 
-                            <button ng-click="savePage();editPage = false" class="btn btn-success pull-right" ng-show="editPage">
+                            <button ng-click="savePage();editPage = false" class="btn btn-success pull-right btn-xs" ng-show="editPage">
                                 <i class="fa fa-save"></i>
                             </button>
                         </td>
