@@ -50,6 +50,9 @@ angular.module('momusApp.services')
             },
             deletePages: function(id) {
                 return $http.delete('/api/publication/pages/delete/' + id);
+            },
+            generateDisp: function(id) {
+                return $http.get('/api/publication/pages/generate/'+id);
             }
         };
     });

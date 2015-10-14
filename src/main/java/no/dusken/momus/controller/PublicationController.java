@@ -81,4 +81,9 @@ public class PublicationController {
     public @ResponseBody void deletePages(@PathVariable("id") Long id){
         publicationService.deletePagesInPublication(id);
     }
+
+    @RequestMapping(value = "pages/generate/{id}", method = RequestMethod.GET)
+    public @ResponseBody List<Page> generateDisp(@PathVariable("id") Long id){
+        return publicationService.generateDisp(id);
+    }
 }

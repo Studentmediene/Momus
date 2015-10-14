@@ -54,14 +54,10 @@ angular.module('momusApp.controllers')
         };
 
         $scope.generateDisp = function(){
-            if($scope.publication.pages.length > 0){
-                console.log($scope.publication.pages);
-                PublicationService.deletePages($scope.publication.id).success(function(data){
-                    $scope.generatePages();
-                })
-            }else{
-                $scope.generatePages();
-            }
+            PublicationService.generateDisp($scope.publication.id).success(function(data){
+                $scope.publication.pages = data;
+                console.log(data);
+            })
         };
 
         $scope.generatePages = function(){

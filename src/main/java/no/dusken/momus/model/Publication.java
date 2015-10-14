@@ -18,6 +18,7 @@ package no.dusken.momus.model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -36,7 +37,7 @@ public class Publication {
     private Set<Article> articles;
 
     @OneToMany(mappedBy = "publication", fetch = FetchType.LAZY)
-    private Set<Page> pages;
+    private List<Page> pages;
 
     public Publication() {
 
@@ -75,11 +76,11 @@ public class Publication {
         this.articles = articles;
     }
 
-    public Set<Page> getPages() {
+    public List<Page> getPages() {
         return pages;
     }
 
-    public void setPages(Set<Page> pages) {
+    public void setPages(List<Page> pages) {
         this.pages = pages;
     }
 
