@@ -49,6 +49,7 @@
                     <th style="width: 50%">Artikler</th>
                     <th>Kommentar</th>
                     <th>Reklame</th>
+                    <th>Layoutstatus</th>
                     <th></th>
                 </thead>
                 <tbody ui-tree-nodes ng-model="publication.pages">
@@ -87,6 +88,12 @@
                             <span ng-hide="editPage">{{ page.advertisement ? "Ja" : "Nei" }}</span>
                         </td>
 
+                        <td>
+                            <select class="input-sm" ng-model="page.layout_status" ng-show="editPage"
+                                    ng-options="l.name for l in layoutStatuses track by l.id">
+                            </select>
+                            <span ng-hide="editPage">{{page.layout_status.name}}</span>
+                        </td>
                         <td>
                             <button ng-click="editPage = true" class="btn btn-warning btn-xs pull-right" ng-hide="editPage">
                                 <i class="fa fa-pencil"></i>

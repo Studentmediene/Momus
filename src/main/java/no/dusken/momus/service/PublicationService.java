@@ -18,9 +18,11 @@ package no.dusken.momus.service;
 
 
 import no.dusken.momus.model.Article;
+import no.dusken.momus.model.LayoutStatus;
 import no.dusken.momus.model.Page;
 import no.dusken.momus.model.Publication;
 import no.dusken.momus.service.repository.ArticleRepository;
+import no.dusken.momus.service.repository.LayoutStatusRepository;
 import no.dusken.momus.service.repository.PageRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
 import org.slf4j.Logger;
@@ -44,6 +46,9 @@ public class PublicationService {
     @Autowired
     private ArticleRepository articleRepository;
 
+    @Autowired
+    private LayoutStatusRepository layoutStatusRepository;
+
     public Publication savePublication(Publication publication){
         Publication savedPublication = publicationRepository.findOne(publication.getId());
 
@@ -63,6 +68,7 @@ public class PublicationService {
                 savedPage.setNote(p.getNote());
                 savedPage.setPublication(p.getPublication());
                 savedPage.setArticles(p.getArticles());
+                savedPage.setLayoutStatus(p.getLayoutStatus());
                 pageRepository.save(savedPage);
             }
         }
@@ -96,6 +102,7 @@ public class PublicationService {
             pageArticles.add(articles.get(i));
             page.setArticles(pageArticles);
             page.setPublication(publication);
+            page.setLayoutStatus(layoutStatusRepository.findByName("Ukjent"));
             pages.add(page);
         }
 

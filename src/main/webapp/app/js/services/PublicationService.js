@@ -56,6 +56,9 @@ angular.module('momusApp.services')
             },
             generateDisp: function(id) {
                 return $http.get('/api/publication/pages/generate/'+id);
+            },
+            getLayoutStatuses: function(){
+                return $http.get('/api/publication/layoutstatus')
             }
         };
     });

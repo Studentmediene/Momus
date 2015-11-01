@@ -37,6 +37,9 @@ public class Page {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Article> articles;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private LayoutStatus layoutStatus;
+
     public Long getId() {
         return id;
     }
@@ -78,5 +81,13 @@ public class Page {
 
     public void setPublication(Publication publication) {
         this.publication = publication;
+    }
+
+    public LayoutStatus getLayoutStatus() {
+        return layoutStatus;
+    }
+
+    public void setLayoutStatus(LayoutStatus layoutStatus) {
+        this.layoutStatus = layoutStatus;
     }
 }

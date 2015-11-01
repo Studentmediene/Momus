@@ -16,9 +16,11 @@
 
 package no.dusken.momus.controller;
 
+import no.dusken.momus.model.LayoutStatus;
 import no.dusken.momus.model.Page;
 import no.dusken.momus.model.Publication;
 import no.dusken.momus.service.PublicationService;
+import no.dusken.momus.service.repository.LayoutStatusRepository;
 import no.dusken.momus.service.repository.PageRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
 import org.slf4j.Logger;
@@ -47,6 +49,8 @@ public class PublicationController {
     @Autowired
     private PageRepository pageRepository;
 
+    @Autowired
+    private LayoutStatusRepository layoutStatusRepository;
 
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody List<Publication> getAllPublications(){
@@ -90,5 +94,10 @@ public class PublicationController {
     @RequestMapping(value = "pages/generate/{id}", method = RequestMethod.GET)
     public @ResponseBody List<Page> generateDisp(@PathVariable("id") Long id){
         return publicationService.generateDisp(id);
+    }
+
+    @RequestMapping(value = "/layoutstatus", method = RequestMethod.GET)
+    public @ResponseBody List<LayoutStatus> getLayoutStatuses(){
+        return layoutStatusRepository.findAll();
     }
 }

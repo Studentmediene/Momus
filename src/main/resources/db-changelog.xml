@@ -706,7 +706,9 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="note" type="VARCHAR(255)"/>
             <column name="advertisement" type="BOOLEAN"/>
             <column name="publication_id" type="BIGINT"/>
+            <column name="layoutstatus_id" type="BIGINT"/>
         </createTable>
+
         <createTable tableName="page_article">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
@@ -714,6 +716,7 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="articles_id" type="BIGINT"/>
             <column name="page_id" type="BIGINT"/>
         </createTable>
+
         <createTable tableName="publication_page">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
@@ -721,5 +724,28 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="publication_id" type="BIGINT"/>
             <column name="pages_id" type="BIGINT"/>
         </createTable>
+
+        <createTable tableName="layoutstatus">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+
+        <insert tableName="layoutstatus">
+            <column name="name">Ferdig</column>
+        </insert>
+        <insert tableName="layoutstatus">
+            <column name="name">Brekkes</column>
+        </insert>
+        <insert tableName="layoutstatus">
+            <column name="name">Krise</column>
+        </insert>
+        <insert tableName="layoutstatus">
+            <column name="name">Planlagt</column>
+        </insert>
+        <insert tableName="layoutstatus">
+            <column name="name">Ukjent</column>
+        </insert>
     </changeSet>
 </databaseChangeLog>

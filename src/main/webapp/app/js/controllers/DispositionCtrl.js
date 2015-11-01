@@ -18,6 +18,10 @@
 
 angular.module('momusApp.controllers')
     .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal) {
+        PublicationService.getLayoutStatuses().success(function(data){
+            $scope.layoutStatuses = data;
+            console.log($scope.layoutStatuses);
+        });
         $scope.pubId = $routeParams.id;
 
         if($scope.pubId){
@@ -70,7 +74,8 @@ angular.module('momusApp.controllers')
                     note : "",
                     advertisement: false,
                     articles: [$scope.publication.articles[i]],
-                    publication: $scope.publication.id
+                    publication: $scope.publication.id,
+                    layout_status: $scope.getLayoutStatusByName("Ukjent")
                 };
 
                 $scope.publication.pages.push(temp_page);
@@ -81,6 +86,7 @@ angular.module('momusApp.controllers')
 
 
         $scope.savePage = function() {
+            console.log($scope.publication);
             PublicationService.updateMetadata($scope.publication);
         };
 
@@ -90,7 +96,8 @@ angular.module('momusApp.controllers')
                 note : null,
                 advertisement: false,
                 articles: [],
-                publication: $scope.publication.id
+                publication: $scope.publication.id,
+                layout_status: $scope.getLayoutStatusByName("Ukjent")
             };
             //$scope.publication.pages.push(temp_page);
             PublicationService.createPage(temp_page).success(function(data){
@@ -113,5 +120,14 @@ angular.module('momusApp.controllers')
                 $scope.publication.pages[i].page_nr = i+1;
             }
         }
+
+        $scope.getLayoutStatusByName = function(name){
+            for(var i = 0; i < $scope.layoutStatuses.length; i++){
+                if($scope.layoutStatuses[i].name == name){
+                    return $scope.layoutStatuses[i];
+                }
+            }
+            return null;
+        };
 
     });
