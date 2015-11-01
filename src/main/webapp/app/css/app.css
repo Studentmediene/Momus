@@ -197,8 +197,6 @@ td > ul, td > ol {
 .angular-ui-tree-drag .pageNr {
     display: table-cell;
     height: 58px;
-    border: 1px solid #444;
-    width:100%;
 }
 
 /*Disposition, highlight selected Page*/
@@ -396,3 +394,13 @@ a.zeroclipboard-is-hover {
 .pageTable > thead > tr > th{
     border: 1px #aeaeae solid;
 }
+
+.disp-break-word{
+    word-wrap:break-word;
+
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+

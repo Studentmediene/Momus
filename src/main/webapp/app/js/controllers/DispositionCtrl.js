@@ -39,6 +39,7 @@ angular.module('momusApp.controllers')
             });
             PublicationService.getPages(pubId).success(function (data){
                 $scope.publication.pages = data;
+                console.log(data);
             })
         };
 
@@ -86,13 +87,16 @@ angular.module('momusApp.controllers')
         $scope.newPage = function(){
             var temp_page = {
                 page_nr : $scope.publication.pages.length + 1,
-                note : "",
+                note : null,
                 advertisement: false,
                 articles: [],
                 publication: $scope.publication.id
             };
-            $scope.publication.pages.push(temp_page);
-            PublicationService.updateMetadata($scope.publication);
+            //$scope.publication.pages.push(temp_page);
+            PublicationService.createPage(temp_page).success(function(data){
+                $scope.publication.pages.push(data);
+            });
+            //PublicationService.updateMetadata($scope.publication);
         };
 
         // Drag&drop stuff

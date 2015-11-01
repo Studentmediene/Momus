@@ -43,7 +43,7 @@
                     <i class="fa fa-plus"></i>
                 </button>
             </div>
-            <table class="pageTable table table-bordered table-responsive">
+            <table class="pageTable table table-bordered table-responsive" ui-tree="treeOptions">
                 <thead>
                     <th>#</th>
                     <th style="width: 50%">Artikler</th>
@@ -51,9 +51,9 @@
                     <th>Reklame</th>
                     <th></th>
                 </thead>
-                <tbody>
-                    <tr ng-repeat="page in publication.pages">
-                        <td class="pageNr">{{page.page_nr}}</td>
+                <tbody ui-tree-nodes ng-model="publication.pages">
+                    <tr ng-repeat="page in publication.pages" ui-tree-node>
+                        <td style="text-align: center;" class="pageNr" ui-tree-handle>{{page.page_nr}}</td>
 
                         <td ng-show="editPage">
                             <id-select multiple
@@ -67,7 +67,7 @@
                         <td style="padding:0;margin:0" ng-hide="editPage">
                             <table class="table table-condensed pageArticleTable" style="margin:0;padding:0; min-height: 50px">
                                 <tr ng-repeat="article in page.articles">
-                                    <td style="width: 30%">
+                                    <td style="width: 30%;max-width:30px;" class="disp-break-word">
                                         <a href="#/artikler/{{article.id}}">{{article.name}}</a>
                                     </td>
                                     <td style="width: 20%">{{article.section.name}}</td>

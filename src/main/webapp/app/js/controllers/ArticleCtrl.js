@@ -23,6 +23,7 @@ angular.module('momusApp.controllers')
 
         PersonService.getAll().success(function(data) {
            $scope.persons = data;
+            console.log(data);
         });
 
         ArticleService.getArticle($routeParams.id).success(function (data) {

@@ -77,6 +77,11 @@ public class PublicationController {
         return pageRepository.findByPublicationIdOrderByPageNrAsc(id);
     }
 
+    @RequestMapping(value = "pages/", method = RequestMethod.POST)
+    public @ResponseBody Page createPage(@RequestBody Page page){
+        return pageRepository.saveAndFlush(page);
+    }
+
     @RequestMapping(value = "pages/delete/{id}", method = RequestMethod.DELETE)
     public @ResponseBody void deletePages(@PathVariable("id") Long id){
         publicationService.deletePagesInPublication(id);

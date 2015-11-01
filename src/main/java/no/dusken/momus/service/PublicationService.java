@@ -75,7 +75,7 @@ public class PublicationService {
     }
 
     public void deletePagesInPublication(Long id){
-        List<Page> pages = pageRepository.findByPublicationIdOrderByPageNrAsc(id);
+        List<Page> pages = pageRepository.findByPublicationId(id);
         for(Page p: pages){
             pageRepository.delete(p);
         }
