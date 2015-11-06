@@ -58,9 +58,11 @@ angular.module('momusApp.controllers')
         };
 
         $scope.generateDispBtn = function(){
-            //if(confirm("Dette vil overskrive den nåværende disposisjonen")){
+            if($scope.publication.pages.length == 0){
                 $scope.generateDisp();
-            //}
+            } else if(confirm("Dette vil overskrive den nåværende disposisjonen")){
+                $scope.generateDisp();
+            }
         };
 
         $scope.generateDisp = function(){
@@ -91,6 +93,19 @@ angular.module('momusApp.controllers')
 
         $scope.savePage = function() {
             PublicationService.updateMetadata($scope.publication);
+        };
+
+        $scope.deletePage = function(page) {
+            if(confirm("Er du sikker på at du vil slette denne siden?")){
+                PublicationService.deletePage(page.id).success(function(){
+                    PublicationService.getPages($scope.publication.id).success(function(data){
+                        $scope.publication.pages = data;
+                        sortPages();
+                        $scope.savePage();
+                    });
+                });
+
+            }
         };
 
         $scope.newPage = function(){

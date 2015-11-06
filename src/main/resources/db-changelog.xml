@@ -769,6 +769,10 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="review_id" type="BIGINT" defaultValueNumeric="1"/>
         </addColumn>
 
+        <addColumn tableName="page">
+            <column name="web" type="BOOLEAN" />
+        </addColumn>
+
 
         <!-- Inserting the review-statuses   -->
         <insert tableName="articlereview">

@@ -87,8 +87,8 @@ public class PublicationController {
     }
 
     @RequestMapping(value = "pages/delete/{id}", method = RequestMethod.DELETE)
-    public @ResponseBody void deletePages(@PathVariable("id") Long id){
-        publicationService.deletePagesInPublication(id);
+    public @ResponseBody void deletePage(@PathVariable("id") Long id){
+        pageRepository.delete(pageRepository.findOne(id));
     }
 
     @RequestMapping(value = "pages/generate/{id}", method = RequestMethod.GET)

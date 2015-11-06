@@ -69,6 +69,7 @@ public class PublicationService {
                 savedPage.setPublication(p.getPublication());
                 savedPage.setArticles(p.getArticles());
                 savedPage.setLayoutStatus(p.getLayoutStatus());
+                savedPage.setWeb(p.isWeb());
                 pageRepository.save(savedPage);
             }
         }

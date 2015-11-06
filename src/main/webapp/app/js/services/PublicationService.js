@@ -51,7 +51,7 @@ angular.module('momusApp.services')
             createPage: function(page) {
                 return $http.post('/api/publication/pages/', page);
             },
-            deletePages: function(id) {
+            deletePage: function(id) {
                 return $http.delete('/api/publication/pages/delete/' + id);
             },
             generateDisp: function(id) {

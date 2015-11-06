@@ -56,8 +56,9 @@
 
                     </th>
                     <th style="width:10%">Kommentar</th>
-                    <th style="width: 5%">Reklame</th>
                     <th style="width: 10%">Layout</th>
+                    <th style="width: 5%">Reklame</th>
+                    <th style="width: 5%">Nett</th>
                     <th style="width: 3%"></th>
                 </thead>
                 <tbody ng-model="publication.pages" ui-sortable="sortableOptions">
@@ -109,17 +110,23 @@
                             <input ng-show="editPage" class="form-control" ng-model="page.note">
                         </td>
 
+                        <td style="background: {{page.layout_status.color}};">
+                            <select class="input-sm form-control" style="background:rgba(255,255,255,0.5);" ng-model="page.layout_status" ng-show="editPage"
+                                    ng-options="l.name for l in layoutStatuses track by l.id">
+                            </select>
+                            <span ng-hide="editPage">{{page.layout_status.name}}</span>
+                        </td>
+
                         <td>
                             <input type="checkbox" class="checkbox" ng-model="page.advertisement" ng-show="editPage">
                             <span ng-hide="editPage">{{ page.advertisement ? "Ja" : "Nei" }}</span>
                         </td>
 
-                        <td style="background: {{page.layout_status.color}};">
-                            <select class="input-sm" ng-model="page.layout_status" ng-show="editPage"
-                                    ng-options="l.name for l in layoutStatuses track by l.id">
-                            </select>
-                            <span ng-hide="editPage">{{page.layout_status.name}}</span>
+                        <td>
+                            <input type="checkbox" class="checkbox" ng-model="page.web" ng-show="editPage">
+                            <span ng-hide="editPage">{{ page.web ? "Ja" : "Nei" }}</span>
                         </td>
+
                         <td>
                             <button ng-click="editPage = true" class="btn btn-warning btn-xs pull-right" ng-hide="editPage">
                                 <i class="fa fa-pencil"></i>
@@ -127,6 +134,11 @@
 
                             <button ng-click="savePage();editPage = false" class="btn btn-success pull-right btn-xs" ng-show="editPage">
                                 <i class="fa fa-save"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <button ng-click="deletePage(page)" class="btn btn-danger pull-right btn-xs">
+                                <i class="fa fa-trash-o"></i>
                             </button>
                         </td>
                     </tr>
