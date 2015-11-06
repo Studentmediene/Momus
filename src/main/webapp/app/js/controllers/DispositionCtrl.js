@@ -43,8 +43,11 @@ angular.module('momusApp.controllers')
             });
             ArticleService.getReviews().success(function(data){
                 $scope.reviewOptions = data;
-                console.log(data);
             });
+
+            ArticleService.getStatuses().success(function(data){
+                $scope.statusOptions = data;
+            })
         };
 
         $scope.showHelp = function(){

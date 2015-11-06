@@ -404,3 +404,11 @@ a.zeroclipboard-is-hover {
     hyphens: auto;
 }
 
+.photo-status {
+    min-width:15px;
+}
+
+.psempty {
+    background-color:#EEE;
+}
+
