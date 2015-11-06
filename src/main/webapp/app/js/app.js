@@ -33,7 +33,8 @@ angular.module('momusApp', [
         'ui.select2',
         'ui.bootstrap',
         'ui.tree',
-        'ngCookies'
+        'ngCookies',
+        'ui.sortable'
     ]).
     config(['$routeProvider', function ($routeProvider) {
         // Admin interfaces
@@ -82,6 +83,13 @@ angular.module('momusApp', [
             {
                 templateUrl: 'partials/disposition/dispositionView.html',
                 controller: 'DispositionCtrl',
+                title: "Disposisjon"
+            }
+        )
+            .when('/disposition',
+            {
+                templateUrl:'partials/disposition/dispositionView.html',
+                controller:'DispositionCtrl',
                 title: "Disposisjon"
             }
         )

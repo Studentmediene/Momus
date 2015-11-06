@@ -685,4 +685,118 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="owner_id" type="BIGINT"/>
         </createTable>
     </changeSet>
+
+    <changeSet id="20" author="Eivind">
+        <dropTable tableName="disposition_page"/>
+        <dropTable tableName="page_article"/>
+        <dropTable tableName="publication_page"/>
+    </changeSet>
+
+    <changeSet id="21" author="Eivind">
+        <dropTable tableName="disposition"/>
+        <dropTable tableName="page"/>
+    </changeSet>
+
+    <changeSet id="22" author="Eivind">
+        <createTable tableName="page">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="pagenr" type="BIGINT"/>
+            <column name="note" type="VARCHAR(255)"/>
+            <column name="advertisement" type="BOOLEAN"/>
+            <column name="publication_id" type="BIGINT"/>
+            <column name="layoutstatus_id" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="page_article">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="articles_id" type="BIGINT"/>
+            <column name="page_id" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="publication_page">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="publication_id" type="BIGINT"/>
+            <column name="pages_id" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="layoutstatus">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="color" type="VARCHAR(255)"/>
+        </createTable>
+
+        <insert tableName="layoutstatus">
+            <column name="name">Ferdig</column>
+            <column name="color">#9f9</column>
+        </insert>
+        <insert tableName="layoutstatus">
+            <column name="name">Brekkes</column>
+            <column name="color">#99f</column>
+        </insert>
+        <insert tableName="layoutstatus">
+            <column name="name">Krise</column>
+            <column name="color">#f99</column>
+        </insert>
+        <insert tableName="layoutstatus">
+            <column name="name">Planlagt</column>
+            <column name="color">#eee</column>
+        </insert>
+        <insert tableName="layoutstatus">
+            <column name="name">Ukjent</column>
+            <column name="color">#fff</column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="23" author="Christoffer">
+        <!-- Article review options -->
+        <createTable tableName="articlereview">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="name" type="VARCHAR(255)" />
+            <column name="color" type="VARCHAR(255)" />
+        </createTable>
+
+        <addColumn tableName="article">
+            <column name="review_id" type="BIGINT" defaultValueNumeric="1"/>
+        </addColumn>
+
+        <addColumn tableName="page">
+            <column name="web" type="BOOLEAN" />
+        </addColumn>
+
+
+        <!-- Inserting the review-statuses   -->
+        <insert tableName="articlereview">
+            <column name="id">1</column>
+            <column name="name">Ukjent</column>
+            <column name="color">#FFF</column>
+        </insert>
+
+        <insert tableName="articlereview">
+            <column name="id">2</column>
+            <column name="name">Leses ikke</column>
+            <column name="color">#FAA</column>
+        </insert>
+
+        <insert tableName="articlereview">
+            <column name="id">3</column>
+            <column name="name">Skrevet ut</column>
+            <column name="color">#AAF</column>
+        </insert>
+
+        <insert tableName="articlereview">
+            <column name="id">4</column>
+            <column name="name">Lest</column>
+            <column name="color">#AFA</column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

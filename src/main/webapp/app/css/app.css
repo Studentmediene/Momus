@@ -140,7 +140,6 @@ td > ul, td > ol {
 }
 
 .angular-ui-tree-nodes {
-    /*display: block;*/
     position: relative;
     margin: 0px;
     padding: 0px;
@@ -191,11 +190,13 @@ td > ul, td > ol {
 }
 
 .angular-ui-tree-drag tr td {
-    display: none;
+    display: table-cell;
+    position: relative;
 }
 
 .angular-ui-tree-drag .pageNr {
-    display: table-cell;
+    display: table;
+    position: relative;
     height: 58px;
 }
 
@@ -377,3 +378,41 @@ a.zeroclipboard-is-hover {
 .fav {
     line-height:32px;
 }
+
+.angular-ui-tree-placeholder {
+    background: #f0f9ff;
+    border: 2px dashed #bed2db;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.pageArticleTable tbody tr:first-child td {
+    border-top:0px;
+}
+
+.pageTable > tbody > tr > td,
+.pageTable > thead > tr > th{
+    border: 1px #cfcfcf solid;
+}
+
+.disp-break-word{
+    word-wrap:break-word;
+
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
+.helper {
+    background: red;
+}
+.photo-status {
+    min-width:15px;
+}
+
+.psempty {
+    background-color:#EEE;
+}
+
