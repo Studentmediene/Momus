@@ -73,6 +73,14 @@
                                     <td style="width: 20%">{{article.section.name}}</td>
                                     <td style="width:20%"><ul class="list-unstyled"><li class="" ng-repeat="person in article.journalists"><span person-widget="person">{{person.full_name}}</span></li></ul></td>
                                     <td style="background-color:{{article.status.color}};">{{article.status.name}}</td>
+                                    <td>
+                                        <select class="form-control input-sm" ng-model="article.review" ng-change="saveArticle(article)"
+                                                ng-options="s.name for s in reviewOptions track by s.id"></select>
+                                    </td>
+                                    <td ng-click="editPhotoStatus = true" ng-hide="editPhotoStatus">{{ article.photo_status }}</td>
+                                    <td ng-show="editPhotoStatus"><input ng-model="article.photo_status"><button ng-click="saveArticle(article  );editPhotoStatus=false"><i class="fa fa-save"></i></button></td>
+
+                                    <td ng-show="editPage"><input ng-model="article.photo_status"></td>
                                 </tr>
                             </table>
                         </td>

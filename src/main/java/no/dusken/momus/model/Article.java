@@ -53,6 +53,9 @@ public class Article implements Comparator<Article>, Comparable<Article>{
     private ArticleType type;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    private ArticleReview review;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     private Publication publication;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -147,6 +150,10 @@ public class Article implements Comparator<Article>, Comparable<Article>{
     public void setType(ArticleType type) {
         this.type = type;
     }
+
+    public ArticleReview getReview() { return review; }
+
+    public void setReview(ArticleReview review) { this.review = review; }
 
     public Set<Person> getJournalists() {
         return journalists;

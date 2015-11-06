@@ -153,6 +153,8 @@ public class ArticleService {
         existing.setQuoteCheckStatus(article.getQuoteCheckStatus());
         existing.setExternalAuthor(article.getExternalAuthor());
         existing.setExternalPhotographer(article.getExternalPhotographer());
+        existing.setPhotoStatus(article.getPhotoStatus());
+        existing.setReview(article.getReview());
 
         return saveUpdatedArticle(existing);
     }

@@ -40,7 +40,11 @@ angular.module('momusApp.controllers')
             PublicationService.getPages(pubId).success(function (data){
                 $scope.publication.pages = data;
                 console.log(data);
-            })
+            });
+            ArticleService.getReviews().success(function(data){
+                $scope.reviewOptions = data;
+                console.log(data);
+            });
         };
 
         $scope.showHelp = function(){
@@ -97,6 +101,10 @@ angular.module('momusApp.controllers')
                 $scope.publication.pages.push(data);
             });
             //PublicationService.updateMetadata($scope.publication);
+        };
+
+        $scope.saveArticle = function(article){
+            ArticleService.updateMetadata(article);
         };
 
         // Drag&drop stuff
