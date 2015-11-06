@@ -24,6 +24,7 @@ import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.repository.ArticleRevisionRepository;
 import no.dusken.momus.service.repository.ArticleStatusRepository;
 import no.dusken.momus.service.repository.ArticleTypeRepository;
+import no.dusken.momus.service.repository.ArticleReviewRepository;
 import no.dusken.momus.service.repository.SectionRepository;
 import no.dusken.momus.service.search.ArticleSearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,9 @@ public class ArticleController {
 
     @Autowired
     private ArticleRevisionRepository articleRevisionRepository;
+
+    @Autowired
+    private ArticleReviewRepository articleReviewRepository;
 
     @Autowired
     private SectionRepository sectionRepository;
@@ -136,8 +140,12 @@ public class ArticleController {
         return articleService.restoreArticle(article);
     }
 
+    @RequestMapping(value = "/reviews", method = RequestMethod.GET)
+    public @ResponseBody List<ArticleReview> getAllReviewStatuses() { return articleReviewRepository.findAll(); }
+
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody Article createArticle(@RequestBody Article article){
         return articleService.createNewArticle(article);
     }
+
 }

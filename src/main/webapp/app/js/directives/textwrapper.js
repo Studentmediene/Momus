@@ -30,18 +30,24 @@ angular.module('momusApp.directives').
             },
             template: '<span ng-if="showTooltip">\n    <span class="hidden-print" tooltip="{{fullText}}" style="border-bottom: 1px dotted #ccc;">{{shortenedText}}</span>\n    <span class="visible-print">{{fullText}}</span>\n</span>\n<span ng-if="!showTooltip">{{fullText}}</span> ',
             link: function (scope, elm, attrs) {
+                var setText = function(){
+                    var fullText = scope.text || "";
+                    var textLength = fullText.length;
+                    var showTooltip = false;
 
-                var fullText = scope.text || "";
-                var textLength = fullText.length;
-                var showTooltip = false;
+                    if (scope.length < textLength) {
+                        scope.shortenedText = scope.text.substr(0, scope.length - 3) + '...';
+                        showTooltip = true;
+                    }
+                    scope.showTooltip = showTooltip;
+                    scope.fullText = fullText;
+                };
+                setText();
+                scope.$watch('text', function(){
+                    setText();
 
-                if (scope.length < textLength) {
-                    scope.shortenedText = scope.text.substr(0, scope.length - 3) + '...';
-                    showTooltip = true;
-                }
-
-                scope.showTooltip = showTooltip;
-                scope.fullText = fullText;
+                });
             }
         };
+
     });

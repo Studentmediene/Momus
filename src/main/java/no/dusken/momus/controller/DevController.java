@@ -75,12 +75,6 @@ public class DevController {
     private PersonRepository personRepository;
 
     @Autowired
-    private DispositionRepository dispositionRepository;
-
-    @Autowired
-    private PageRepository pageRepository;
-
-    @Autowired
     private ArticleTypeRepository articleTypeRepository;
 
     @Autowired
@@ -380,18 +374,6 @@ public class DevController {
         p4.setReleaseDate(new Date(113, 4, 5));
         p4 = publicationRepository.save(p4);
 
-        Disposition disposition = new Disposition(p1.getId());
-        disposition.setPublication(p1);
-        dispositionRepository.save(disposition);
-
-        Disposition disposition2 = new Disposition(p2.getId());
-        disposition2.setPublication(p2);
-        dispositionRepository.save(disposition2);
-
-        Disposition disposition3 = new Disposition(p3.getId());
-        disposition3.setPublication(p3);
-        dispositionRepository.save(disposition3);
-
 
         Article a1 = new Article();
         a1.setName("Lovlig Norsk");
@@ -540,22 +522,6 @@ public class DevController {
 
 
         return query.getResultList();
-    }
-
-    @RequestMapping("/createDisp")
-    public @ResponseBody String createTestDisp() {
-
-        Disposition disp1 =  dispositionRepository.save(new Disposition(1L));
-        Set<Page> pageSet = new HashSet<>();
-        Page dummyPage1 = pageRepository.save(new Page());
-        dummyPage1.setNote("Page_Disp");
-        dummyPage1.setSection(sectionRepository.findOne(1L));
-        dummyPage1 = pageRepository.save(dummyPage1);
-        pageSet.add(dummyPage1);
-        disp1.setPages(pageSet);
-
-        Disposition save = dispositionRepository.save(disp1);
-        return "ok";
     }
 
     @RequestMapping("/createMetadata")

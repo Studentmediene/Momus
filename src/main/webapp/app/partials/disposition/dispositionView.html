@@ -14,102 +14,140 @@
   ~ limitations under the License.
   -->
 
-<div>
-<h1 style="text-align: center"> Disposition for {{disposition.publication.name}} </h1>
-<div class="form-group">
-    <div class="row">
-        <div class="col-md-6">
-            <button class="btn btn-primary" ng-click="saveArticle()">save me</button>
-            <button class="btn btn-danger" ng-click="removePage(selectedPage)" style="margin: 10px">Delete</button>
-            <button class="btn btn-success" ng-click="addPage(selectedPage)">NewPage</button>
-            <button class="btn btn-warning" ng-click="articleModal(selectedPage)" ng-disabled="!selectedPage">AddArticle</button>
+<div ng-if="!publication">
+    <h1>Ugyldig utgave</h1>
+</div>
+
+<div class="container">
+    <h1>Disposisjon for {{publication.name}}</h1>
+
+    <div class="col-md-12">
+        <div class="btn-row">
+            <div class="btn-group">
+                <a class="btn btn-success" ng-click="generateDispBtn()">
+                    Generer disposisjon
+                </a>
+                <a class="btn btn-success" ng-click="showHelp()">
+                    <span class="fa fa-question"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Sider
+
+                <button class="btn btn-default btn-xs pull-right" ng-click="newPage()">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+            <table class="pageTable table table-bordered table-responsive table-condensed" style="font-size: 85%">
+                <thead>
+                    <th style="width: 2%">#</th>
+                    <th style="width: 70%">
+                        <div style="width: 20%;float: left">Navn</div>
+                        <div style="width: 15%;float: left">Seksjon</div>
+                        <div style="width: 15%;float: left">Journalister</div>
+                        <div style="width: 20%;float: left">Status</div>
+                        <div style="width: 15%;float: left">Korrektur</div>
+                        <div style="width: 15%;float: left">Fotostatus</div>
+
+                    </th>
+                    <th style="width:10%">Kommentar</th>
+                    <th style="width: 10%">Layout</th>
+                    <th style="width: 5%">Reklame</th>
+                    <th style="width: 5%">Nett</th>
+                    <th style="width: 3%"></th>
+                </thead>
+                <tbody ng-model="publication.pages" ui-sortable="sortableOptions">
+                    <tr ng-repeat="page in publication.pages" style="background: white;">
+                        <td style="text-align: center; cursor: move;" class="pageNr handle">{{page.page_nr}}</td>
+                        <td ng-show="editPage"><id-select multiple
+                                       items="publication.articles"
+                                       target="page.articles"
+                                       show="name"
+                                       class=""></id-select>
+                        </td>
+                        <td style="padding:0;margin:0" ng-hide="editPage">
+                            <table class="table pageArticleTable" style="margin:0;padding:0;">
+                                <tr ng-repeat="article in page.articles">
+                                    <td style="width: 20%;max-width:30px;" class="disp-break-word">
+                                        <a href="#/artikler/{{article.id}}">{{article.name}}</a>
+                                    </td>
+                                    <td style="width: 15%">{{article.section.name}}</td>
+                                    <td style="width:15%"><ul class="list-unstyled"><li class="" ng-repeat="person in article.journalists"><span person-widget="person">{{person.full_name}}</span></li></ul></td>
+                                    <td style="width:20%; background-color:{{article.status.color}};">
+                                        <select style="background: rgba(255,255,255,0.5)" ng-model="article.status" ng-change="saveArticle(article)"
+                                                ng-options="s.name for s in statusOptions track by s.id"></select>
+                                    </td>
+                                    <td style="width: 15%; background:{{article.review.color}}">
+                                        <select style="background: rgba(255,255,255,0.5)" ng-model="article.review" ng-change="saveArticle(article)"
+                                                ng-options="s.name for s in reviewOptions track by s.id"></select>
+                                    </td>
+                                    <td ng-click="editPhotoStatus = true" ng-hide="editPhotoStatus" class="photo-status {{article.photo_status.length ? 0: 'psempty'}}">
+                                        <textwrapper length="15" text="article.photo_status"></textwrapper>
+                                    </td>
+                                    <td ng-show="editPhotoStatus">
+                                        <div class="input-group">
+                                            <input class="form-control input-sm" ng-model="article.photo_status">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-sm" ng-click="saveArticle(article  );editPhotoStatus=false">
+                                                    <i class="fa fa-save"></i>
+                                                </button>
+                                            </span>
+
+                                        </div>
+                                    </td>
+                                    <td ng-show="editPage"><input ng-model="article.photo_status"></td>
+                                </tr>
+                            </table>
+                        </td>
+
+                        <td style="width: 20%;">
+                            <div ng-hide="editPage">{{page.note}}</div>
+                            <input ng-show="editPage" class="form-control" ng-model="page.note">
+                        </td>
+
+                        <td style="background: {{page.layout_status.color}};">
+                            <select class="input-sm form-control" style="background:rgba(255,255,255,0.5);" ng-model="page.layout_status" ng-show="editPage"
+                                    ng-options="l.name for l in layoutStatuses track by l.id">
+                            </select>
+                            <span ng-hide="editPage">{{page.layout_status.name}}</span>
+                        </td>
+
+                        <td>
+                            <input type="checkbox" class="checkbox" ng-model="page.advertisement" ng-show="editPage">
+                            <span ng-hide="editPage">{{ page.advertisement ? "Ja" : "Nei" }}</span>
+                        </td>
+
+                        <td>
+                            <input type="checkbox" class="checkbox" ng-model="page.web" ng-show="editPage">
+                            <span ng-hide="editPage">{{ page.web ? "Ja" : "Nei" }}</span>
+                        </td>
+
+                        <td>
+                            <button ng-click="editPage = true" class="btn btn-warning btn-xs pull-right" ng-hide="editPage">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+
+                            <button ng-click="savePage();editPage = false" class="btn btn-success pull-right btn-xs" ng-show="editPage">
+                                <i class="fa fa-save"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <button ng-click="deletePage(page)" class="btn btn-danger pull-right btn-xs">
+                                <i class="fa fa-trash-o"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
-<div class="row">
-    <div ui-tree="treeOptions" class="col-md-12">
-        <table ui-tree-nodes="" ng-model="disposition.pages" class="table-bordered fixed">
-            <!--Top Row, Headers-->
-            <tr>
-                <th ng-repeat="header in ['Side ','Seksjon ','Artikler ','Notater ','Journalister ','Fotografer ','Status ','Fotostatus','Reklame']">{{header}}</th>
-            </tr>
-            <!--For every page in the disp-->
-            <tbody  ui-tree-node ng-repeat="page in disposition.pages" ng-class="{selectedPage: page.page_nr == selectedPage.page_nr}">
-            <!--<tbody ng-repeat="page in disposition.pages">-->
-                <tr ng-repeat="article in page.articles" >
-                    <!--Side-->
-                    <td ui-tree-handle ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center;" class="pageNr">{{page.page_nr}}</td>
-                    <!--Seksjon-->
-                    <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">
-                        <select ng-model="page.section" ng-options="s.name for s in sections track by s.id" style="border: none"></select>
-                    </td>
-                    <!--Artikkel-->
-                    <td class="articleHover" ng-click="articleModal(page, article)" style="text-align: center">{{article.type.name}} : {{article.name}}</td>
-                    <!--Notater-->
-                    <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center"><textarea ng-model="page.note" style="border: none; min-height: 4em; height: 100%;"></textarea></td>
-                    <!--Journalister-->
-                    <td >
-                        <table>
-                            <tr ng-repeat="journalist in article.journalists">
-                                <td >{{journalist.full_name}}</td>
-                            </tr>
-                        </table>
-                    </td>
-                    <!--Fotografer-->
-                    <td>
-                        <table>
-                            <tr ng-repeat="photographer in article.photographers">
-                                <td >{{photographer.full_name}}</td>
-                            </tr>
-                        </table>
-                    </td>
-                    <!--Status-->
-                    <td style="text-align: center">{{article.status.name}}</td>
-                    <!--Fotostatus-->
-                    <td style="text-align: center"><select ng-change="updateArticles()" ng-model="article.photo_status" ng-options="status for status in photostatus" style="border: none"></select></td>
-                    <!--Reklame-->
-                    <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center"><input type="checkbox" ng-model="page.advertisement"></td>
-                </tr>
-                <!--If there are no articles on the page-->
-                <tr ng-if="page.articles == 0">
-                    <!--Side-->
-                    <td ui-tree-handle style="text-align: center" class="pageNr">{{page.page_nr}}</td>
-                    <!--Seksjon-->
-                    <td style="text-align: center">
-                        <!--<select ng-model="page.section" ng-options="s.name for s in sections" style="border: none" ></select>-->
-                        <select ng-model="page.section" ng-options="s.name for s in sections track by s.id" style="border: none" ></select>
-                    </td>
-                    <!--Artikkel-->
-                    <td class="articleHover" ng-click="articleModal(page)" style="text-align: center"></td>
-                    <!--Notater-->
-                    <td rowspan="1" style="text-align: center"><textarea ng-model="page.note" style="border: none; min-height: 4em; height: 100%;"></textarea></td>
-                    <!--Journalister-->
-                    <td ></td>
-                    <!--Fotografer-->
-                    <td></td>
-                    <!--Status-->
-                    <td style="text-align: center"></td>
-                    <!--Fotostatus-->
-                    <td style="text-align: center"></td>
-                    <!--Reklame-->
-                    <td style="text-align: center"><input type="checkbox" ng-model="page.advertisement"></td>
-                </tr>
-            </tbody>
-            <!--Add new Page Row-->
-            <tr style="background-color: #F8F8F8;">
-                <!--Side-->
-                <td ng-click="addLastPage()" style="text-align: center"><span class="glyphicon glyphicon-plus"></span></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td ></td>
-                <td></td>
-                <td ></td>
-                <td ></td>
-                <td ng-click="removeLastPage()" style="text-align: center"><span class="glyphicon glyphicon-minus"></span></td>
-            </tr>
-        </table>
-    </div>
-</div>
 
-</div>
+<ul ui-sortable="sortableOptions" ng-model="items">
+    <li ng-repeat="item in items">{{item}}</li>
+</ul>

@@ -16,13 +16,13 @@
 
 package no.dusken.momus.model;
 
-import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
-public class Publication {
+public class ArticleReview {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,23 +30,14 @@ public class Publication {
 
     private String name;
 
-    @Temporal(TemporalType.DATE)
-    private Date releaseDate;
+    private String color;
 
-    @OneToMany(mappedBy = "publication", fetch = FetchType.LAZY)
-    private Set<Article> articles;
-
-    @OneToMany(mappedBy = "publication", fetch = FetchType.LAZY)
-    private List<Page> pages;
-
-    public Publication() {
-
+    public ArticleReview() {
     }
 
-    public Publication(Long id) {
-        this.id = id;
+    public ArticleReview(String name, String color) {
+        this.name = name;
     }
-
 
     public Long getId() {
         return id;
@@ -60,38 +51,32 @@ public class Publication {
         this.name = name;
     }
 
-    public Date getReleaseDate() {
-        return releaseDate;
+    public String getColor() { return color; }
+
+    public void setColor(String color) { this.color = color; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ArticleReview that = (ArticleReview) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+
+        return true;
     }
 
-    public void setReleaseDate(Date releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public Set<Article> getArticles() {
-        return articles;
-    }
-
-    public void setArticles(Set<Article> articles) {
-        this.articles = articles;
-    }
-
-    public List<Page> getPages() {
-        return pages;
-    }
-
-    public void setPages(List<Page> pages) {
-        this.pages = pages;
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 
     @Override
     public String toString() {
-        return "Publication{" +
+        return "ArticleReview{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", releaseDate=" + releaseDate +
                 '}';
     }
-
-
 }

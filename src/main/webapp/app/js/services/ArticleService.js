@@ -70,6 +70,10 @@ angular.module('momusApp.services')
 
             getSections: function () {
                 return $http.get('/api/article/sections', {cache: true});
+            },
+
+            getReviews: function () {
+                return $http.get('/api/article/reviews', {cache: true});
             }
         };
     });
