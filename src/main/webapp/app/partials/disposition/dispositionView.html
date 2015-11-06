@@ -46,48 +46,65 @@
             <table class="pageTable table table-bordered table-responsive table-condensed" style="font-size: 85%">
                 <thead>
                     <th style="width: 2%">#</th>
-                    <th style="width: 50%">Artikler</th>
-                    <th>Kommentar</th>
+                    <th style="width: 70%">
+                        <div style="width: 20%;float: left">Navn</div>
+                        <div style="width: 15%;float: left">Seksjon</div>
+                        <div style="width: 15%;float: left">Journalister</div>
+                        <div style="width: 20%;float: left">Status</div>
+                        <div style="width: 15%;float: left">Korrektur</div>
+                        <div style="width: 15%;float: left">Fotostatus</div>
+
+                    </th>
+                    <th style="width:10%">Kommentar</th>
                     <th style="width: 5%">Reklame</th>
-                    <th>Layout</th>
+                    <th style="width: 10%">Layout</th>
                     <th style="width: 3%"></th>
                 </thead>
                 <tbody ng-model="publication.pages" ui-sortable="sortableOptions">
                     <tr ng-repeat="page in publication.pages" style="background: white;">
                         <td style="text-align: center; cursor: move;" class="pageNr handle">{{page.page_nr}}</td>
-                        <td ng-show="editPage">
-                            <id-select multiple
+                        <td ng-show="editPage"><id-select multiple
                                        items="publication.articles"
                                        target="page.articles"
                                        show="name"
-                                       class="input-sm">
-                            </id-select>
+                                       class=""></id-select>
                         </td>
                         <td style="padding:0;margin:0" ng-hide="editPage">
                             <table class="table pageArticleTable" style="margin:0;padding:0;">
                                 <tr ng-repeat="article in page.articles">
-                                    <td style="width: 30%;max-width:30px;" class="disp-break-word">
+                                    <td style="width: 20%;max-width:30px;" class="disp-break-word">
                                         <a href="#/artikler/{{article.id}}">{{article.name}}</a>
                                     </td>
-                                    <td style="width: 20%">{{article.section.name}}</td>
-                                    <td style="width:20%"><ul class="list-unstyled"><li class="" ng-repeat="person in article.journalists"><span person-widget="person">{{person.full_name}}</span></li></ul></td>
-                                    <td style="background-color:{{article.status.color}};">
-                                        <select class="form-control input-sm" ng-model="article.status" ng-change="saveArticle(article)"
+                                    <td style="width: 15%">{{article.section.name}}</td>
+                                    <td style="width:15%"><ul class="list-unstyled"><li class="" ng-repeat="person in article.journalists"><span person-widget="person">{{person.full_name}}</span></li></ul></td>
+                                    <td style="width:20%; background-color:{{article.status.color}};">
+                                        <select style="background: rgba(255,255,255,0.5)" ng-model="article.status" ng-change="saveArticle(article)"
                                                 ng-options="s.name for s in statusOptions track by s.id"></select>
                                     </td>
-                                    <td style="background:{{article.review.color}}">
-                                        <select class="form-control input-sm" ng-model="article.review" ng-change="saveArticle(article)"
+                                    <td style="width: 15%; background:{{article.review.color}}">
+                                        <select style="background: rgba(255,255,255,0.5)" ng-model="article.review" ng-change="saveArticle(article)"
                                                 ng-options="s.name for s in reviewOptions track by s.id"></select>
                                     </td>
-                                    <td ng-click="editPhotoStatus = true" ng-hide="editPhotoStatus" class="photo-status {{article.photo_status.length ? 0: 'psempty'}}">{{ article.photo_status }}</td>
-                                    <td ng-show="editPhotoStatus"><input ng-model="article.photo_status"><button ng-click="saveArticle(article  );editPhotoStatus=false"><i class="fa fa-save"></i></button></td>
+                                    <td ng-click="editPhotoStatus = true" ng-hide="editPhotoStatus" class="photo-status {{article.photo_status.length ? 0: 'psempty'}}">
+                                        <textwrapper length="15" text="article.photo_status"></textwrapper>
+                                    </td>
+                                    <td ng-show="editPhotoStatus">
+                                        <div class="input-group">
+                                            <input class="form-control input-sm" ng-model="article.photo_status">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-sm" ng-click="saveArticle(article  );editPhotoStatus=false">
+                                                    <i class="fa fa-save"></i>
+                                                </button>
+                                            </span>
 
+                                        </div>
+                                    </td>
                                     <td ng-show="editPage"><input ng-model="article.photo_status"></td>
                                 </tr>
                             </table>
                         </td>
 
-                        <td>
+                        <td style="width: 20%;">
                             <div ng-hide="editPage">{{page.note}}</div>
                             <input ng-show="editPage" class="form-control" ng-model="page.note">
                         </td>
