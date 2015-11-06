@@ -730,22 +730,28 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
                 <constraints primaryKey="true"/>
             </column>
             <column name="name" type="VARCHAR(255)"/>
+            <column name="color" type="VARCHAR(255)"/>
         </createTable>
 
         <insert tableName="layoutstatus">
             <column name="name">Ferdig</column>
+            <column name="color">#9f9</column>
         </insert>
         <insert tableName="layoutstatus">
             <column name="name">Brekkes</column>
+            <column name="color">#99f</column>
         </insert>
         <insert tableName="layoutstatus">
             <column name="name">Krise</column>
+            <column name="color">#f99</column>
         </insert>
         <insert tableName="layoutstatus">
             <column name="name">Planlagt</column>
+            <column name="color">#eee</column>
         </insert>
         <insert tableName="layoutstatus">
             <column name="name">Ukjent</column>
+            <column name="color">#fff</column>
         </insert>
     </changeSet>
 </databaseChangeLog>

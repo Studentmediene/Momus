@@ -140,7 +140,6 @@ td > ul, td > ol {
 }
 
 .angular-ui-tree-nodes {
-    /*display: block;*/
     position: relative;
     margin: 0px;
     padding: 0px;
@@ -191,11 +190,13 @@ td > ul, td > ol {
 }
 
 .angular-ui-tree-drag tr td {
-    display: none;
+    display: table-cell;
+    position: relative;
 }
 
 .angular-ui-tree-drag .pageNr {
-    display: table-cell;
+    display: table;
+    position: relative;
     height: 58px;
 }
 
@@ -392,7 +393,7 @@ a.zeroclipboard-is-hover {
 
 .pageTable > tbody > tr > td,
 .pageTable > thead > tr > th{
-    border: 1px #aeaeae solid;
+    border: 1px #cfcfcf solid;
 }
 
 .disp-break-word{
@@ -402,5 +403,9 @@ a.zeroclipboard-is-hover {
     -moz-hyphens: auto;
     -ms-hyphens: auto;
     hyphens: auto;
+}
+
+.helper {
+    background: red;
 }
 

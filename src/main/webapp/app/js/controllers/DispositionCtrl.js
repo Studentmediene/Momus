@@ -20,7 +20,6 @@ angular.module('momusApp.controllers')
     .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal) {
         PublicationService.getLayoutStatuses().success(function(data){
             $scope.layoutStatuses = data;
-            console.log($scope.layoutStatuses);
         });
         $scope.pubId = $routeParams.id;
 
@@ -43,7 +42,6 @@ angular.module('momusApp.controllers')
             });
             PublicationService.getPages(pubId).success(function (data){
                 $scope.publication.pages = data;
-                console.log(data);
             })
         };
 
@@ -61,7 +59,6 @@ angular.module('momusApp.controllers')
         $scope.generateDisp = function(){
             PublicationService.generateDisp($scope.publication.id).success(function(data){
                 $scope.publication.pages = data;
-                console.log(data);
             })
         };
 
@@ -86,7 +83,6 @@ angular.module('momusApp.controllers')
 
 
         $scope.savePage = function() {
-            console.log($scope.publication);
             PublicationService.updateMetadata($scope.publication);
         };
 
@@ -129,5 +125,21 @@ angular.module('momusApp.controllers')
             }
             return null;
         };
+
+        $scope.sortableOptions = {
+            helper: function(e, ui) {
+                ui.children().each(function () {
+                    $(this).width($(this).width());
+                });
+                return ui;
+            },
+            axis: 'y',
+            handle: '.handle',
+            stop: function(e, ui){
+                $scope.selectedPage = $scope.publication.pages[ui.item.index()];
+                sortPages();
+                PublicationService.updateMetadata($scope.publication);
+            }
+        }
 
     });

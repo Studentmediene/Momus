@@ -43,19 +43,18 @@
                     <i class="fa fa-plus"></i>
                 </button>
             </div>
-            <table class="pageTable table table-bordered table-responsive" ui-tree="treeOptions">
+            <table class="pageTable table table-bordered table-responsive table-condensed" style="font-size: 85%">
                 <thead>
-                    <th>#</th>
+                    <th style="width: 2%">#</th>
                     <th style="width: 50%">Artikler</th>
                     <th>Kommentar</th>
-                    <th>Reklame</th>
-                    <th>Layoutstatus</th>
-                    <th></th>
+                    <th style="width: 5%">Reklame</th>
+                    <th>Layout</th>
+                    <th style="width: 3%"></th>
                 </thead>
-                <tbody ui-tree-nodes ng-model="publication.pages">
-                    <tr ng-repeat="page in publication.pages" ui-tree-node>
-                        <td style="text-align: center;" class="pageNr" ui-tree-handle>{{page.page_nr}}</td>
-
+                <tbody ng-model="publication.pages" ui-sortable="sortableOptions">
+                    <tr ng-repeat="page in publication.pages" style="background: white;">
+                        <td style="text-align: center; cursor: move;" class="pageNr handle">{{page.page_nr}}</td>
                         <td ng-show="editPage">
                             <id-select multiple
                                        items="publication.articles"
@@ -64,16 +63,15 @@
                                        class="input-sm">
                             </id-select>
                         </td>
-
                         <td style="padding:0;margin:0" ng-hide="editPage">
-                            <table class="table table-condensed pageArticleTable" style="margin:0;padding:0; min-height: 50px">
+                            <table class="table pageArticleTable" style="margin:0;padding:0;">
                                 <tr ng-repeat="article in page.articles">
                                     <td style="width: 30%;max-width:30px;" class="disp-break-word">
                                         <a href="#/artikler/{{article.id}}">{{article.name}}</a>
                                     </td>
                                     <td style="width: 20%">{{article.section.name}}</td>
                                     <td style="width:20%"><ul class="list-unstyled"><li class="" ng-repeat="person in article.journalists"><span person-widget="person">{{person.full_name}}</span></li></ul></td>
-                                    <td style="background-color:{{article.status.color}};">{{article.status.name}}</td>
+                                    <td style="background:{{article.status.color}};">{{article.status.name}}</td>
                                 </tr>
                             </table>
                         </td>
@@ -88,7 +86,7 @@
                             <span ng-hide="editPage">{{ page.advertisement ? "Ja" : "Nei" }}</span>
                         </td>
 
-                        <td>
+                        <td style="background: {{page.layout_status.color}};">
                             <select class="input-sm" ng-model="page.layout_status" ng-show="editPage"
                                     ng-options="l.name for l in layoutStatuses track by l.id">
                             </select>
@@ -109,3 +107,7 @@
         </div>
     </div>
 </div>
+
+<ul ui-sortable="sortableOptions" ng-model="items">
+    <li ng-repeat="item in items">{{item}}</li>
+</ul>
