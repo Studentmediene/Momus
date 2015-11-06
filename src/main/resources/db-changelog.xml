@@ -730,32 +730,37 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
                 <constraints primaryKey="true" />
             </column>
             <column name="name" type="VARCHAR(255)" />
+            <column name="color" type="VARCHAR(255)" />
         </createTable>
 
         <addColumn tableName="article">
-            <column name="review_id" type="BIGINT" defaultValueNumeric="4"/>
+            <column name="review_id" type="BIGINT" defaultValueNumeric="1"/>
         </addColumn>
 
 
         <!-- Inserting the review-statuses   -->
         <insert tableName="articlereview">
             <column name="id">1</column>
-            <column name="name">Leses ikke</column>
+            <column name="name">Ukjent</column>
+            <column name="color">#FFF</column>
         </insert>
 
         <insert tableName="articlereview">
             <column name="id">2</column>
-            <column name="name">Skrevet ut</column>
+            <column name="name">Leses ikke</column>
+            <column name="color">#FAA</column>
         </insert>
 
         <insert tableName="articlereview">
             <column name="id">3</column>
-            <column name="name">Lest</column>
+            <column name="name">Skrevet ut</column>
+            <column name="color">#AAF</column>
         </insert>
 
         <insert tableName="articlereview">
             <column name="id">4</column>
-            <column name="name">Ukjent</column>
+            <column name="name">Lest</column>
+            <column name="color">#AFA</column>
         </insert>
     </changeSet>
 </databaseChangeLog>

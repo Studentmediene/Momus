@@ -76,7 +76,7 @@
                                         <select class="form-control input-sm" ng-model="article.status" ng-change="saveArticle(article)"
                                                 ng-options="s.name for s in statusOptions track by s.id"></select>
                                     </td>
-                                    <td>
+                                    <td style="background:{{article.review.color}}">
                                         <select class="form-control input-sm" ng-model="article.review" ng-change="saveArticle(article)"
                                                 ng-options="s.name for s in reviewOptions track by s.id"></select>
                                     </td>
