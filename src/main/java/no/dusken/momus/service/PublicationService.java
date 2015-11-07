@@ -122,23 +122,25 @@ public class PublicationService {
     private List<Article> addSortField(List<Article> articles){
         Map<String, Integer> sortPattern = new HashMap<String, Integer>();
         sortPattern.put("leder",0);
-        sortPattern.put("nyhetskommentar",1);
-        sortPattern.put("kulturprofil",2);
-        sortPattern.put("sidensist",3);
-        sortPattern.put("forbruker",4);
-        sortPattern.put("nyhetssak",5);
-        sortPattern.put("forskning",6);
-        sortPattern.put("politisk",7);
-        sortPattern.put("internasjonalt",8);
-        sortPattern.put("sport",9);
-        sortPattern.put("debatt",10);
-        sortPattern.put("aktualitet",11);
-        sortPattern.put("portrett",12);
-        sortPattern.put("reportasje",13);
-        sortPattern.put("kultur",14);
-        sortPattern.put("musikk",15);
-        sortPattern.put("anmeldelse",16);
-        sortPattern.put("spit",17);
+        sortPattern.put("nyhetskommentar",10);
+        sortPattern.put("kulturprofil",20);
+        sortPattern.put("sidensist",30);
+        sortPattern.put("forbruker",40);
+        sortPattern.put("nyhetssak",50);
+        sortPattern.put("forskning",60);
+        sortPattern.put("politisk",70);
+        sortPattern.put("internasjonalt",80);
+        sortPattern.put("sport",90);
+        sortPattern.put("debatt",100);
+        sortPattern.put("aktualitet",110);
+        sortPattern.put("portrett",120);
+        sortPattern.put("reportasje",130);
+        sortPattern.put("sidespor", 135);
+        sortPattern.put("kultur",140);
+        sortPattern.put("musikk",150);
+        sortPattern.put("anmeldelse",160);
+        sortPattern.put("spit",170);
+        sortPattern.put("other", 180);
 
         for(Article article : articles){
             String name = article.getName();
@@ -178,21 +180,29 @@ public class PublicationService {
             }else if(section.equals("Sport")){
                 article.setDispsort(sortPattern.get("sport"));
             }else if(section.equals("Reportasje")){
-                if(type.equals("Portrett")){
-                    article.setDispsort(sortPattern.get("portrett"));
-                }else if(type.equals("Sidespor")){
-                    article.setDispsort(sortPattern.get("sidespor"));
-                }else if(type.equals("Aktualitet")) {
-                    article.setDispsort(sortPattern.get("aktualitet"));
-                }else{
-                    article.setDispsort(sortPattern.get("reportasje"));
+                switch (type) {
+                    case "Portrett":
+                        article.setDispsort(sortPattern.get("portrett"));
+                        break;
+                    case "Sidespor":
+                        article.setDispsort(sortPattern.get("sidespor"));
+                        break;
+                    case "Aktualitet":
+                        article.setDispsort(sortPattern.get("aktualitet"));
+                        break;
+                    default:
+                        article.setDispsort(sortPattern.get("reportasje"));
+                        break;
                 }
             }else if(section.equals("Spit")){
                 article.setDispsort(sortPattern.get("spit"));
             }else if(section.equals("Musikk")){
                 article.setDispsort(sortPattern.get("musikk"));
             }else{
-                article.setDispsort(sortPattern.size());
+                article.setDispsort(sortPattern.get("other"));
+            }
+            if(article.getDispsort() == null){
+                article.setDispsort(sortPattern.get("other"));
             }
         }
         return articles;
