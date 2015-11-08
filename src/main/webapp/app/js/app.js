@@ -32,7 +32,6 @@ angular.module('momusApp', [
         'ngRoute',
         'ui.select2',
         'ui.bootstrap',
-        'ui.tree',
         'ngCookies',
         'ui.sortable'
     ]).

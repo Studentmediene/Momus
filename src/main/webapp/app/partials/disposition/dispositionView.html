@@ -14,10 +14,6 @@
   ~ limitations under the License.
   -->
 
-<div ng-if="!publication">
-    <h1>Ugyldig utgave</h1>
-</div>
-
 <div class="container">
     <h1>Disposisjon for {{publication.name}}</h1>
 
@@ -64,11 +60,12 @@
                 <tbody ng-model="publication.pages" ui-sortable="sortableOptions">
                     <tr ng-repeat="page in publication.pages" style="background: white;">
                         <td style="text-align: center; cursor: move;" class="pageNr handle">{{page.page_nr}}</td>
-                        <td ng-show="editPage"><id-select multiple
+                        <td ng-show="editPage">
+                            <id-select multiple
                                        items="publication.articles"
                                        target="page.articles"
-                                       show="name"
-                                       class=""></id-select>
+                                       show="name">
+                            </id-select>
                         </td>
                         <td style="padding:0;margin:0" ng-hide="editPage">
                             <table class="table pageArticleTable" style="margin:0;padding:0;">
@@ -77,7 +74,7 @@
                                         <a href="#/artikler/{{article.id}}">{{article.name}}</a>
                                     </td>
                                     <td style="width: 15%">{{article.section.name}}</td>
-                                    <td style="width:15%"><ul class="list-unstyled"><li class="" ng-repeat="person in article.journalists"><span person-widget="person">{{person.full_name}}</span></li></ul></td>
+                                    <td style="width:15%"><ul class="list-unstyled"><li class="" ng-repeat="person in article.journalists"><span person-widget="person" class="disp-break-word">{{person.full_name}}</span></li></ul></td>
                                     <td style="width:20%; background-color:{{article.status.color}};">
                                         <select style="background: rgba(255,255,255,0.5)" ng-model="article.status" ng-change="saveArticle(article)"
                                                 ng-options="s.name for s in statusOptions track by s.id"></select>
@@ -147,7 +144,3 @@
         </div>
     </div>
 </div>
-
-<ul ui-sortable="sortableOptions" ng-model="items">
-    <li ng-repeat="item in items">{{item}}</li>
-</ul>
