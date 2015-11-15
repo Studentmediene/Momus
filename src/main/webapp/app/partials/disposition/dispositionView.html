@@ -43,6 +43,7 @@
                     <i class="fa fa-plus"></i>
                 </button>
             </div>
+
             <table class="pageTable table table-bordered table-responsive table-condensed" style="font-size: 85%">
                 <thead>
                     <th style="width: 2%">#</th>
@@ -62,6 +63,9 @@
                     <th style="width: 3%"></th>
                 </thead>
                 <tbody ng-model="publication.pages" ui-sortable="sortableOptions">
+                    <tr ng-show="loading > 0" style="text-align: center">
+                        <td colspan="7"><i class="fa fa-spinner fa-spin fa-4x"></i></td>
+                    </tr>
                     <tr ng-repeat="page in publication.pages" style="background: white;">
                         <td style="text-align: center; cursor: move;" class="pageNr handle">{{page.page_nr}}</td>
                         <td ng-show="editPage"><id-select multiple

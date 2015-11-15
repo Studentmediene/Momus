@@ -22,6 +22,7 @@ angular.module('momusApp.controllers')
             $scope.layoutStatuses = data;
         });
         $scope.pubId = $routeParams.id;
+        $scope.loading = 4;
 
         if($scope.pubId){
             PublicationService.getById($scope.pubId).success(function(data) {
@@ -39,16 +40,20 @@ angular.module('momusApp.controllers')
         $scope.getPages = function(pubId){
             ArticleService.search({publication: pubId}).success(function (data) {
                 $scope.publication.articles = data;
+                $scope.loading--;
             });
             PublicationService.getPages(pubId).success(function (data){
                 $scope.publication.pages = data;
+                $scope.loading--;
             });
             ArticleService.getReviews().success(function(data){
                 $scope.reviewOptions = data;
+                $scope.loading--;
             });
 
             ArticleService.getStatuses().success(function(data){
                 $scope.statusOptions = data;
+                $scope.loading--;
             });
         };
 
