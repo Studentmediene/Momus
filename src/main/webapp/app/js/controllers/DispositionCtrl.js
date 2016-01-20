@@ -17,38 +17,46 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal) {
+    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location) {
         PublicationService.getLayoutStatuses().success(function(data){
             $scope.layoutStatuses = data;
+        });
+        ArticleService.getReviews().success(function(data){
+            $scope.reviewOptions = data;
+        });
+
+        ArticleService.getStatuses().success(function(data){
+            $scope.statusOptions = data;
         });
         $scope.pubId = $routeParams.id;
 
         if($scope.pubId){
             PublicationService.getById($scope.pubId).success(function(data) {
+                if(!data){
+                    $location.path("/");
+                    return;
+                }
                 $scope.publication = data;
-
-                $scope.getPages($scope.publication.id);
+                $scope.getPages();
+                $scope.getArticles();
             });
-        } else {
+        } else{
             PublicationService.getAll().success(function(data){
                 $scope.publication = PublicationService.getActive(data);
-                $scope.getPages($scope.publication.id);
+                $scope.getPages();
+                $scope.getArticles();
             });
         }
 
-        $scope.getPages = function(pubId){
-            ArticleService.search({publication: pubId}).success(function (data) {
+        $scope.getArticles = function(){
+            ArticleService.getArticlesInPublication($scope.publication.id).success(function(data){
                 $scope.publication.articles = data;
             });
-            PublicationService.getPages(pubId).success(function (data){
-                $scope.publication.pages = data;
-            });
-            ArticleService.getReviews().success(function(data){
-                $scope.reviewOptions = data;
-            });
+        };
 
-            ArticleService.getStatuses().success(function(data){
-                $scope.statusOptions = data;
+        $scope.getPages = function(){
+            PublicationService.getPages($scope.publication.id).success(function (data){
+                $scope.publication.pages = data;
             });
         };
 
@@ -71,27 +79,7 @@ angular.module('momusApp.controllers')
             })
         };
 
-        $scope.generatePages = function(){
-            $scope.publication.pages = [];
-            for(var i = 0; i < $scope.publication.articles.length; i++){
-
-                var temp_page = {
-                    page_nr : i+1,
-                    note : "",
-                    advertisement: false,
-                    articles: [$scope.publication.articles[i]],
-                    publication: $scope.publication.id,
-                    layout_status: $scope.getLayoutStatusByName("Ukjent")
-                };
-
-                $scope.publication.pages.push(temp_page);
-            }
-            PublicationService.updateMetadata($scope.publication);
-
-        };
-
-
-        $scope.savePage = function() {
+        $scope.savePublication = function() {
             PublicationService.updateMetadata($scope.publication);
         };
 
@@ -101,10 +89,9 @@ angular.module('momusApp.controllers')
                     PublicationService.getPages($scope.publication.id).success(function(data){
                         $scope.publication.pages = data;
                         sortPages();
-                        $scope.savePage();
+                        $scope.savePublication();
                     });
                 });
-
             }
         };
 
@@ -117,24 +104,9 @@ angular.module('momusApp.controllers')
                 publication: $scope.publication.id,
                 layout_status: $scope.getLayoutStatusByName("Ukjent")
             };
-            //$scope.publication.pages.push(temp_page);
             PublicationService.createPage(temp_page).success(function(data){
                 $scope.publication.pages.push(data);
             });
-            //PublicationService.updateMetadata($scope.publication);
-        };
-
-        $scope.saveArticle = function(article){
-            ArticleService.updateMetadata(article);
-        };
-
-        // Drag&drop stuff
-        $scope.treeOptions = {
-            dropped: function(event){
-                $scope.selectedPage = $scope.publication.pages[event.dest.index];
-                sortPages();
-                PublicationService.updateMetadata($scope.publication);
-            }
         };
 
         function sortPages(){
@@ -152,6 +124,10 @@ angular.module('momusApp.controllers')
             return null;
         };
 
+        $scope.saveArticle = function(article){
+            ArticleService.updateMetadata(article);
+        };
+
         $scope.sortableOptions = {
             helper: function(e, ui) {
                 ui.children().each(function () {
@@ -167,5 +143,4 @@ angular.module('momusApp.controllers')
                 PublicationService.updateMetadata($scope.publication);
             }
         }
-
     });
