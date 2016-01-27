@@ -18,20 +18,8 @@
 
 angular.module('momusApp.controllers')
     .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location) {
-        $scope.loading = 4;
-
-        PublicationService.getLayoutStatuses().success(function(data){
-            $scope.layoutStatuses = data;
-        });
-        ArticleService.getReviews().success(function(data){
-            $scope.reviewOptions = data;
-        });
-
-        ArticleService.getStatuses().success(function(data){
-            $scope.statusOptions = data;
-        });
         $scope.pubId = $routeParams.id;
-        $scope.loading = 4;
+        $scope.loading = 5;
 
         if($scope.pubId){
             PublicationService.getById($scope.pubId).success(function(data) {
@@ -41,21 +29,13 @@ angular.module('momusApp.controllers')
                 }
                 $scope.publication = data;
                 $scope.getPages();
-                $scope.getArticles();
             });
         } else{
             PublicationService.getAll().success(function(data){
                 $scope.publication = PublicationService.getActive(data);
                 $scope.getPages();
-                $scope.getArticles();
             });
         }
-
-        $scope.getArticles = function(){
-            ArticleService.getArticlesInPublication($scope.publication.id).success(function(data){
-                $scope.publication.articles = data;
-            });
-        };
 
         $scope.getPages = function(){
             var pubId = $scope.publication.id;
@@ -74,6 +54,11 @@ angular.module('momusApp.controllers')
 
             ArticleService.getStatuses().success(function(data){
                 $scope.statusOptions = data;
+                $scope.loading--;
+            });
+
+            PublicationService.getLayoutStatuses().success(function(data){
+                $scope.layoutStatuses = data;
                 $scope.loading--;
             });
         };
