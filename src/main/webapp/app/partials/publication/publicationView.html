@@ -34,6 +34,7 @@
                         <th>Utgivelsesdato</th>
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -41,7 +42,7 @@
                         <td>{{publication.name}}</td>
                         <td>{{publication.release_date}}</td>
                         <td><a href="#/artikler?publication={{publication.id}}">Se artikler</a></td>
-                        <!--<td><a href="#/disposition/{{publication.id}}">Disposisjon</a></td>-->
+                        <td><a href="#/disposition/{{publication.id}}">Disposisjon</a></td>
                         <td class=""><a class="interact" ng-click="editPublication(publication)">Endre</a></td>
                     </tr>
                     </tbody>
