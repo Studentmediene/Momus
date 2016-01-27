@@ -18,17 +18,8 @@
 
 angular.module('momusApp.controllers')
     .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location) {
-        PublicationService.getLayoutStatuses().success(function(data){
-            $scope.layoutStatuses = data;
-        });
-        ArticleService.getReviews().success(function(data){
-            $scope.reviewOptions = data;
-        });
-
-        ArticleService.getStatuses().success(function(data){
-            $scope.statusOptions = data;
-        });
         $scope.pubId = $routeParams.id;
+        $scope.loading = 5;
 
         if($scope.pubId){
             PublicationService.getById($scope.pubId).success(function(data) {
@@ -38,25 +29,37 @@ angular.module('momusApp.controllers')
                 }
                 $scope.publication = data;
                 $scope.getPages();
-                $scope.getArticles();
             });
         } else{
             PublicationService.getAll().success(function(data){
                 $scope.publication = PublicationService.getActive(data);
                 $scope.getPages();
-                $scope.getArticles();
             });
         }
 
-        $scope.getArticles = function(){
-            ArticleService.getArticlesInPublication($scope.publication.id).success(function(data){
-                $scope.publication.articles = data;
-            });
-        };
-
         $scope.getPages = function(){
-            PublicationService.getPages($scope.publication.id).success(function (data){
+            var pubId = $scope.publication.id;
+            ArticleService.search({publication: pubId}).success(function (data) {
+                $scope.publication.articles = data;
+                $scope.loading--;
+            });
+            PublicationService.getPages(pubId).success(function (data){
                 $scope.publication.pages = data;
+                $scope.loading--;
+            });
+            ArticleService.getReviews().success(function(data){
+                $scope.reviewOptions = data;
+                $scope.loading--;
+            });
+
+            ArticleService.getStatuses().success(function(data){
+                $scope.statusOptions = data;
+                $scope.loading--;
+            });
+
+            PublicationService.getLayoutStatuses().success(function(data){
+                $scope.layoutStatuses = data;
+                $scope.loading--;
             });
         };
 
