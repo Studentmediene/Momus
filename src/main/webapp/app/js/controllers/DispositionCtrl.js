@@ -18,6 +18,8 @@
 
 angular.module('momusApp.controllers')
     .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location) {
+        $scope.loading = 4;
+
         PublicationService.getLayoutStatuses().success(function(data){
             $scope.layoutStatuses = data;
         });
@@ -55,8 +57,23 @@ angular.module('momusApp.controllers')
         };
 
         $scope.getPages = function(){
-            PublicationService.getPages($scope.publication.id).success(function (data){
+            var pubId = $scope.publication.id;
+            ArticleService.search({publication: pubId}).success(function (data) {
+                $scope.publication.articles = data;
+                $scope.loading--;
+            });
+            PublicationService.getPages(pubId).success(function (data){
                 $scope.publication.pages = data;
+                $scope.loading--;
+            });
+            ArticleService.getReviews().success(function(data){
+                $scope.reviewOptions = data;
+                $scope.loading--;
+            });
+
+            ArticleService.getStatuses().success(function(data){
+                $scope.statusOptions = data;
+                $scope.loading--;
             });
         };
 
