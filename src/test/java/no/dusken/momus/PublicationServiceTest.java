@@ -16,9 +16,11 @@
 
 package no.dusken.momus;
 
+import no.dusken.momus.model.Article;
 import no.dusken.momus.model.Page;
 import no.dusken.momus.model.Publication;
 import no.dusken.momus.service.PublicationService;
+import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.PageRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
 import no.dusken.momus.test.AbstractTestRunner;
@@ -27,9 +29,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -44,11 +44,13 @@ public class PublicationServiceTest extends AbstractTestRunner{
     @Autowired
     PageRepository pageRepository;
 
+    @Autowired
+    ArticleRepository articleRepository;
+
     private Publication publication;
 
     private Page page1;
     private Page page2;
-    private Page page3;
 
     @Before
     public void setUp() throws Exception {
@@ -73,12 +75,6 @@ public class PublicationServiceTest extends AbstractTestRunner{
         page2 = pageRepository.save(page2);
         pages.add(page2);
 
-        page3 = new Page(3L);
-        page3.setPageNr(3);
-        page3.setPublication(publication);
-        page3 = pageRepository.save(page3);
-        pages.add(page3);
-
         publication.setPages(pages);
         publication = publicationRepository.save(publication);
     }
@@ -93,7 +89,47 @@ public class PublicationServiceTest extends AbstractTestRunner{
     }
 
     @Test
+    public void testUpdatePublicationPages() throws Exception{
+        Publication pub = new Publication(publication.getId());
+        List<Page> pages = new ArrayList<>();
+        pages.add(page1);
+        pages.add(page2);
+        pub.setPages(pages);
+        pub = publicationRepository.save(pub);
+
+        assertEquals(pub.getPages(),pages);
+    }
+    @Test
     public void testUpdatePageMetadata() throws Exception{
+
         Page page = new Page(page1.getId());
+        page.setNote("vader is lukes father");
+        page.setPageNr(6);
+        page.setWeb(true);
+        page.setAdvertisement(false);
+        page = pageRepository.save(page);
+
+        assertEquals(page.getNote(), "vader is lukes father");
+        assertEquals(page.getPageNr(), 6);
+        assertEquals(page.isWeb(), true);
+        assertEquals(page.isAdvertisement(), false);
+    }
+
+    @Test
+    public void testUpdateArticlesPage() throws Exception{
+        Page page = new Page(page1.getId());
+        Article a = new Article(1L);
+        a = articleRepository.save(a);
+        Set<Article> as = new HashSet<>();
+        as.add(a);
+        page.setArticles(as);
+        page = pageRepository.save(page);
+
+        assertEquals(page.getArticles(),as);
+        as.remove(a);
+        page.setArticles(as);
+        page = pageRepository.save(page);
+
+        assertEquals(page.getArticles(), as);
     }
 }
