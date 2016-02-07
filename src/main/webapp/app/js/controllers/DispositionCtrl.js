@@ -46,6 +46,7 @@ angular.module('momusApp.controllers')
             PublicationService.getPages(pubId).success(function (data){
                 $scope.publication.pages = data;
                 $scope.loading--;
+                console.log($scope.publication);
             });
             ArticleService.getReviews().success(function(data){
                 $scope.reviewOptions = data;
