@@ -330,7 +330,7 @@ a.zeroclipboard-is-hover {
     overflow-x:auto;
 }
 
-.disp-table td table td {
+.disp-table td table td:not(.person-widget-element td){
     max-width:120px;
     width:120px;
     min-width:120px;
