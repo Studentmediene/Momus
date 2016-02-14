@@ -326,13 +326,13 @@ a.zeroclipboard-is-hover {
     background-color:#EEE;
 }
 
-.disp-table-div {
-    overflow-x:auto;
-}
-
-.disp-table td table td:not(.person-widget-element td){
+.disp-table td table td{
     max-width:120px;
     width:120px;
     min-width:120px;
 }
 
+.person-widget-element td {
+    max-width:initial !important;
+    min-width:initial !important;
+}
