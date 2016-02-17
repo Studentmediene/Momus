@@ -113,10 +113,9 @@
                         </td>
 
                         <td style="background: {{page.layout_status.color}};">
-                            <select class="input-sm form-control" style="background:rgba(255,255,255,0.5);" ng-model="page.layout_status" ng-show="editPage"
+                            <select style="background:rgba(255,255,255,0.5);" ng-model="page.layout_status" ng-change="savePublication()"
                                     ng-options="l.name for l in layoutStatuses track by l.id">
                             </select>
-                            <span ng-hide="editPage">{{page.layout_status.name}}</span>
                         </td>
 
                         <td>
