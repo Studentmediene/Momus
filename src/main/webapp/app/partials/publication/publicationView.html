@@ -14,94 +14,96 @@
   ~ limitations under the License.
   -->
 
-<div class="row">
-    <!-- left panel -->
-    <div class="col-sm-6">
-        <div class="panel panel-info">
-            <div class="panel-heading clearfix">
-                <div class="pull-right">
-                    <select id="yeardrop" class="input-sm" ng-model="viewYear">
-                        <option ng-repeat="year in yearsInDropdown">{{year}}</option>
-                    </select>
+<div class="container">
+    <div class="row">
+        <!-- left panel -->
+        <div class="col-sm-6">
+            <div class="panel panel-info">
+                <div class="panel-heading clearfix">
+                    <div class="pull-right">
+                        <select id="yeardrop" class="input-sm" ng-model="viewYear">
+                            <option ng-repeat="year in yearsInDropdown">{{year}}</option>
+                        </select>
+                    </div>
+                    <h3 class="panel-title text-center fav">Utgaver</h3>
                 </div>
-                <h3 class="panel-title text-center fav">Utgaver</h3>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover table-striped">
-                    <thead>
-                    <tr>
-                        <th>Navn</th>
-                        <th>Utgivelsesdato</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="publication in publications | filter:yearFilter | orderBy: '-release_date'">
-                        <td>{{publication.name}}</td>
-                        <td>{{publication.release_date}}</td>
-                        <td><a href="#/artikler?publication={{publication.id}}">Se artikler</a></td>
-                        <td><a href="#/disposition/{{publication.id}}">Disposisjon</a></td>
-                        <td class=""><a class="interact" ng-click="editPublication(publication)">Endre</a></td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                        <tr>
+                            <th>Navn</th>
+                            <th>Utgivelsesdato</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="publication in publications | filter:yearFilter | orderBy: '-release_date'">
+                            <td>{{publication.name}}</td>
+                            <td>{{publication.release_date}}</td>
+                            <td><a href="#/artikler?publication={{publication.id}}">Se artikler</a></td>
+                            <td><a href="#/disposition/{{publication.id}}">Disposisjon</a></td>
+                            <td class=""><a class="interact" ng-click="editPublication(publication)">Endre</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
 
 
-    <!-- right panel, for editing/new -->
-    <div class="col-sm-6">
-        <div class="panel panel-warning">
-            <div class="panel-heading">
-                <h4 class="panel-title text-center">{{editing.id ? 'Rediger ' + editing.name : 'Ny utgave'}}</h4>
-            </div>
+        <!-- right panel, for editing/new -->
+        <div class="col-sm-6">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h4 class="panel-title text-center">{{editing.id ? 'Rediger ' + editing.name : 'Ny utgave'}}</h4>
+                </div>
 
-            <div class="panel-body">
-                <form name="publicationForm" novalidate>
-                    <!-- name input -->
-                    <div class="form-group"
-                         ng-class="{'has-error': publicationForm.name.$invalid && publicationForm.name.$dirty}">
-                        <label for="name">Navn</label>
+                <div class="panel-body">
+                    <form name="publicationForm" novalidate>
+                        <!-- name input -->
+                        <div class="form-group"
+                             ng-class="{'has-error': publicationForm.name.$invalid && publicationForm.name.$dirty}">
+                            <label for="name">Navn</label>
 
-                        <input type="text" class="form-control" id="name" name="name" ng-model="editing.name" required>
-                    </div>
-                    <!-- date input with selector -->
-                    <div class="form-group"
-                         ng-class="{'has-error': publicationForm.date.$invalid && publicationForm.date.$dirty}">
-                        <label for="date">Utgivelsesdato</label>
+                            <input type="text" class="form-control" id="name" name="name" ng-model="editing.name" required>
+                        </div>
+                        <!-- date input with selector -->
+                        <div class="form-group"
+                             ng-class="{'has-error': publicationForm.date.$invalid && publicationForm.date.$dirty}">
+                            <label for="date">Utgivelsesdato</label>
 
-                        <div class="input-group">
-                            <input type="text" id="date" name="date" ng-model="editing.release_date"
-                                   class="form-control" placeholder="ÅÅÅÅ-MM-DD"
-                                   datepicker-popup="yyyy-MM-dd" datepicker-options="dateOptions"
-                                   show-button-bar="false" is-open="opened"
-                                   required>
+                            <div class="input-group">
+                                <input type="text" id="date" name="date" ng-model="editing.release_date"
+                                       class="form-control" placeholder="ÅÅÅÅ-MM-DD"
+                                       datepicker-popup="yyyy-MM-dd" datepicker-options="dateOptions"
+                                       show-button-bar="false" is-open="opened"
+                                       required>
 
                               <span class="input-group-btn">
                               <button class="btn btn-default" ng-click="$event.stopPropagation(); opened = !opened">
                                   <i class="fa fa-calendar"></i></button>
                               </span>
 
+                            </div>
                         </div>
+                    </form>
+
+                    <!-- buttons -->
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary col-xs-4" ng-disabled="publicationForm.$invalid"
+                                ng-click="saveEditedPublication()" button-loader="isSaving">Lagre
+                        </button>
+
+                        <button class="btn btn-default col-xs-4 col-xs-offset-1" ng-show="editing.id"
+                                ng-click="editPublication({})">Avbryt
+                        </button>
                     </div>
-                </form>
 
-                <!-- buttons -->
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary col-xs-4" ng-disabled="publicationForm.$invalid"
-                            ng-click="saveEditedPublication()" button-loader="isSaving">Lagre
-                    </button>
-
-                    <button class="btn btn-default col-xs-4 col-xs-offset-1" ng-show="editing.id"
-                            ng-click="editPublication({})">Avbryt
-                    </button>
                 </div>
 
             </div>
-
         </div>
     </div>
 </div>
