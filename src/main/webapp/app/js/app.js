@@ -92,7 +92,7 @@ angular.module('momusApp', [
             }
         )
 
-            // Sources
+            /* Sources
             .when('/kilder',
             {
                 templateUrl: 'partials/source/search.html',
@@ -120,7 +120,7 @@ angular.module('momusApp', [
                 templateUrl: 'partials/source/edit.html',
                 controller: 'SourceEditCtrl'
             }
-        )
+        )*/
             .when('/info',
             {
                 templateUrl: 'partials/info/infoView.html',
