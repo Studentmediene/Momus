@@ -30,6 +30,7 @@ angular.module('momusApp', [
         'momusApp.services',
         'momusApp.directives',
         'ngRoute',
+        'ui.select',
         'ui.select2',
         'ui.bootstrap',
         'ngCookies',

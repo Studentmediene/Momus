@@ -54,11 +54,15 @@
                     <tr ng-repeat="page in publication.pages" style="background: white;">
                         <td style="text-align: center; cursor: move;" class="pageNr handle">{{page.page_nr}}</td>
                         <td ng-show="editPage">
-                            <id-select multiple
+                            <id-select multiple class="pull-left" style="width: 90%;"
                                        items="publication.articles"
                                        target="page.articles"
                                        show="name">
                             </id-select>
+                            <div class="pull-right">
+                                <button ng-click="createArticle(page)" class="btn btn-success"><i class="fa fa-plus"></i></button>
+                            </div>
+
                         </td>
                         <td style="padding:0;margin:0" ng-hide="editPage">
                             <table class="table pageArticleTable" style="margin:0;padding:0;">

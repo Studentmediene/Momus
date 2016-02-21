@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location) {
+    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal) {
         $scope.pubId = $routeParams.id;
         $scope.loading = 5;
 
@@ -121,6 +121,10 @@ angular.module('momusApp.controllers')
             }
         }
 
+        $scope.savePage = function() {
+            PublicationService.updateMetadata($scope.publication);
+        };
+
         $scope.getLayoutStatusByName = function(name){
             for(var i = 0; i < $scope.layoutStatuses.length; i++){
                 if($scope.layoutStatuses[i].name == name){
@@ -128,6 +132,26 @@ angular.module('momusApp.controllers')
                 }
             }
             return null;
+        };
+
+        $scope.createArticle = function(page){
+            var modal = $modal.open({
+                templateUrl: 'partials/article/createArticleModal.html',
+                controller: 'CreateArticleModalCtrl',
+                resolve: {
+                    pubId: function(){
+                        return $scope.publication.id;
+                    }
+                }
+            });
+            modal.result.then(function(id){
+                ArticleService.getArticle(id).success(function(data){
+                    page.articles.push(data);
+                    $scope.publication.articles.push(data);
+                    $scope.savePage();
+                })
+            })
+
         };
 
         $scope.saveArticle = function(article){
