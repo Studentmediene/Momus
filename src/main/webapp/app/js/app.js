@@ -51,9 +51,7 @@ angular.module('momusApp', [
         )
             .when('/artikler/ny',
             {
-                templateUrl: 'partials/article/createArticle.html',
-                controller: 'CreateArticleCtrl',
-                title: "NyArtikkel"
+                redirectTo: '/artikler'
             }
         )
             .when('/artikler/:id',
