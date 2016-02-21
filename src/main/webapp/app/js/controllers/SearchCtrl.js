@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('SearchCtrl', function ($scope, $http, $location, $q, PersonService, PublicationService, ArticleService) {
+    .controller('SearchCtrl', function ($scope, $http, $location, $q, PersonService, PublicationService, ArticleService, $modal) {
 
         var pageSize = 100;
 
@@ -143,5 +143,16 @@ angular.module('momusApp.controllers')
             }
 
             $scope.$apply();
+        };
+
+        $scope.createArticle = function(){
+            var modal = $modal.open({
+                templateUrl: 'partials/article/createArticleModal.html',
+                controller: 'CreateArticleModalCtrl'
+            });
+            modal.result.then(function(id){
+                console.log('#/artikler/' + id);
+                $location.url('artikler/' + id);
+            })
         }
     });
