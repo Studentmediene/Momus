@@ -20,6 +20,7 @@ angular.module('momusApp.controllers')
     .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal) {
         $scope.pubId = $routeParams.id;
         $scope.loading = 5;
+        $scope.newPageAt = 0;
 
         if($scope.pubId){
             PublicationService.getById($scope.pubId).success(function(data) {
@@ -103,6 +104,7 @@ angular.module('momusApp.controllers')
         };
 
         $scope.newPage = function(){
+            var insertPageAt = $scope.newPageAt;
             var temp_page = {
                 page_nr : $scope.publication.pages.length + 1,
                 note : null,
@@ -112,7 +114,13 @@ angular.module('momusApp.controllers')
                 layout_status: $scope.getLayoutStatusByName("Ukjent")
             };
             PublicationService.createPage(temp_page).success(function(data){
-                $scope.publication.pages.push(data);
+                if(0 <= insertPageAt && insertPageAt <= $scope.publication.pages.length){
+                    $scope.publication.pages.splice(insertPageAt, 0, data);
+                } else {
+                    $scope.publication.pages.push(data);
+                }
+                sortPages();
+                $scope.savePage();
             });
         };
 

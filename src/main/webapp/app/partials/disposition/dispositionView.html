@@ -19,12 +19,19 @@
 
     <div class="col-md-12">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                Sider
-
-                <button class="btn btn-default btn-xs pull-right" ng-click="newPage()">
-                    <i class="fa fa-plus"></i>
-                </button>
+            <div class="panel-heading clearfix">
+                <div class="pull-left"><h5>Sider</h5></div>
+                <div class="pull-right" style="width:200px">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon">Ny side etter side</span>
+                        <input type="number" ng-model="newPageAt" min="0" max="{{publication.pages.length}}" class="form-control">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="newPage()">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
             </div>
             <div class="table-responsive" style="overflow-x:auto;">
                 <table class="pageTable table table-bordered table-responsive table-condensed disp-table" style="font-size: 85%">
