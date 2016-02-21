@@ -145,7 +145,6 @@ angular.module('momusApp.controllers')
                 ArticleService.getArticle(id).success(function(data){
                     page.articles.push(data);
                     $scope.publication.articles.push(data);
-                    console.log(page.articles);
                     $scope.savePage();
                 })
             })
