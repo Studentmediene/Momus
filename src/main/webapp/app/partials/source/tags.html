@@ -14,18 +14,19 @@
   ~ limitations under the License.
   -->
 
-<div class="alert alert-info" xmlns="http://www.w3.org/1999/html">
-    <p>
-        Rediger tags og trykk <i class="fa fa-save fa-sm"></i> for å lagre, <i class="fa fa-times"></i> for å slette.
-    </p>
-</div>
+<div class="container">
+    <div class="alert alert-info" xmlns="http://www.w3.org/1999/html">
+        <p>
+            Rediger tags og trykk <i class="fa fa-save fa-sm"></i> for å lagre, <i class="fa fa-times"></i> for å slette.
+        </p>
+    </div>
 
-<div class="row">
+    <div class="row">
 
-    <div ng-repeat="tag in  tags" class="col-sm-4">
-        <form>
-        <div class="input-group input-group-sm form-group">
-            <input type="text" class="form-control" ng-model="tag.tag"/>
+        <div ng-repeat="tag in  tags" class="col-sm-4">
+            <form>
+                <div class="input-group input-group-sm form-group">
+                    <input type="text" class="form-control" ng-model="tag.tag"/>
             <span class="input-group-btn">
                 <button class="btn btn-primary" button-loader="isSaving[$index]" ng-click="updateTag(tag, $index)" ng-disabled="!isChanged(tag, $index)">
                     <i class="fa fa-save"></i>
@@ -36,7 +37,9 @@
                 </button>
                 <button ng-if="!tag.unused" class="btn btn-danger" ng-click="deleteTag($index)"><i class="fa fa-times"></i></button>
             </span>
+                </div>
+            </form>
         </div>
-        </form>
     </div>
 </div>
+

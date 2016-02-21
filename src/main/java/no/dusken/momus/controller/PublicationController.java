@@ -75,6 +75,7 @@ public class PublicationController {
             Page newPage = new Page();
             newPage.setPageNr(i + 1);
             newPage.setPublication(newPublication);
+            newPage.setLayoutStatus(layoutStatusRepository.findByName("Ukjent"));
             pageRepository.save(newPage);
         }
         logger.info("Created new publication with data: {}", newPublication);
