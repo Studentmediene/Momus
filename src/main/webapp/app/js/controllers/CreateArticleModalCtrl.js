@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('CreateArticleModalCtrl', function($scope, $modalInstance, PublicationService, ArticleService, PersonService, pubId){
+    .controller('CreateArticleModalCtrl', function($scope, $modalInstance, PublicationService, ArticleService, PersonService){
         $scope.article = {
             name: "",
             journalists: null,
@@ -21,7 +21,7 @@ angular.module('momusApp.controllers')
         PublicationService.getAll().success(function (data) {
             $scope.publications = data;
             $scope.article.publication = PublicationService.getActive(data);
-            if(pubId != 'undefined'){
+            if((!typeof pubId === 'undefined')){
                 for(var i = 0; i < $scope.publications.length;i++){
                     if($scope.publications[i].id == pubId){
                         $scope.article.publication = $scope.publications[i];
@@ -64,4 +64,4 @@ angular.module('momusApp.controllers')
         $scope.cancel = function(){
             $modalInstance.dismiss('cancel');
         }
-    });
+    }).value('pubId',null);
