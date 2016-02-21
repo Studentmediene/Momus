@@ -76,6 +76,9 @@ angular.module('momusApp.controllers')
             }
         };
 
+        /*
+        *   Not used at the moment, left here in case it's wanted later
+        */
         $scope.generateDisp = function(){
             PublicationService.generateDisp($scope.publication.id).success(function(data){
                 $scope.publication.pages = data;

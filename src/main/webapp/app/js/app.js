@@ -123,13 +123,20 @@ angular.module('momusApp', [
                 controller: 'SourceEditCtrl'
             }
         )
-            .when('/', {
+            .when('/info',
+            {
+                templateUrl: 'partials/info/infoView.html',
+                controller: 'InfoCtrl',
+                title: 'Info'
+            }
+        )
+            /*.when('/', {
                 templateUrl: 'partials/front/frontPageView.html',
                 controller: 'FrontPageCtrl'
             }
-        )
+        )*/
 
-            .otherwise({redirectTo: '/'});
+            .otherwise({redirectTo: '/disposition'});
 
     }]).
     config(['$httpProvider', function ($httpProvider) {

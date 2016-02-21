@@ -17,18 +17,6 @@
 <div class="container">
     <h1>Disposisjon for {{publication.name}}</h1>
 
-    <div class="col-md-12">
-        <div class="btn-row">
-            <div class="btn-group">
-                <a class="btn btn-success" ng-click="generateDispBtn()">
-                    Generer disposisjon
-                </a>
-                <a class="btn btn-success" ng-click="showHelp()">
-                    <span class="fa fa-question"></span>
-                </a>
-            </div>
-        </div>
-    </div>
 
     <div class="col-md-12">
         <div class="panel panel-default">
@@ -58,10 +46,11 @@
                     <th style="width: 5%">Nett</th>
                     <th style="width: 3%"></th>
                 </thead>
+                <tr ng-show="loading > 0" style="text-align: center">
+                    <td colspan="7"><i class="fa fa-spinner fa-spin fa-4x"></i></td>
+                </tr>
                 <tbody ng-model="publication.pages" ui-sortable="sortableOptions">
-                    <tr ng-show="loading > 0" style="text-align: center">
-                        <td colspan="7"><i class="fa fa-spinner fa-spin fa-4x"></i></td>
-                    </tr>
+
                     <tr ng-repeat="page in publication.pages" style="background: white;">
                         <td style="text-align: center; cursor: move;" class="pageNr handle">{{page.page_nr}}</td>
                         <td ng-show="editPage">
@@ -137,7 +126,7 @@
                                 <i class="fa fa-pencil"></i>
                             </button>
 
-                            <button ng-click="savePage();editPage = false" class="btn btn-success pull-right btn-xs" ng-show="editPage">
+                            <button ng-click="savePublication();editPage = false" class="btn btn-success pull-right btn-xs" ng-show="editPage">
                                 <i class="fa fa-save"></i>
                             </button>
                         </td>
