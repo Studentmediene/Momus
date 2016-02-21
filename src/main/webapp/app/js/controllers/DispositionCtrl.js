@@ -17,11 +17,20 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal) {
+    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $window) {
         $scope.pubId = $routeParams.id;
         $scope.loading = 5;
         $scope.newPageAt = 0;
         $scope.numNewPages = 1;
+
+        angular.element($window).bind("scroll", function() {
+            if(this.pageYOffset >= 100) {
+                angular.element(document.querySelector('#pageAdder')).addClass("attach-top-true");
+            } else {
+                angular.element(document.querySelector('#pageAdder')).removeClass("attach-top-true");
+            }
+            $scope.$apply();
+        });
 
         if($scope.pubId){
             PublicationService.getById($scope.pubId).success(function(data) {
