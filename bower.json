@@ -11,6 +11,7 @@
     "angular-ui-select2": "0.0.5",
     "select2-bootstrap3-css": "https://raw.githubusercontent.com/t0m/select2-bootstrap-css/bootstrap3/select2-bootstrap.css",
     "select2": "3.4.6",
+    "angular-ui-select": "0.14.2",
     "angular-mocks": "1.2.22",
     "angular-ui-bootstrap-bower": "0.10.0",
     "zeroclipboard": "2.1.6",

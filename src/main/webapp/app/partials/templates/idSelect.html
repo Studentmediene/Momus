@@ -13,22 +13,14 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<select multiple
+<ui-select multiple theme="bootstrap"
         ng-if="multiple"
-        ui-select2
         ng-change="changed()"
-        ng-model="$parent.selectedIDs">
-    <option ng-repeat="item in items" value="{{ item.id }}">
-        {{ item[show] }}
-    </option>
-</select>
-<select
-        ng-if="!multiple"
-        ui-select2
-        ng-change="changed()"
-        ng-model="$parent.selectedIDs">
-    <option ng-repeat="item in items" value="{{ item.id }}">
-        {{ item[show] }}
-    </option>
-</select>
+        ng-model="selectedIDs.selected">
+    <ui-select-match><span ng-bind="$item[show]"></span>
+    </ui-select-match>
+
+    <ui-select-choices repeat="item.id as item in items | filter: $select.search">
+        <span ng-bind="item[show]"></span>
+    </ui-select-choices>
+</ui-select>
