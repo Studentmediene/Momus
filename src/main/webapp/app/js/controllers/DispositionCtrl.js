@@ -17,38 +17,51 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal) {
-        PublicationService.getLayoutStatuses().success(function(data){
-            $scope.layoutStatuses = data;
-        });
+    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest) {
         $scope.pubId = $routeParams.id;
+        $scope.loading = 5;
+        $scope.newPageAt = 0;
+        $scope.numNewPages = 1;
 
         if($scope.pubId){
             PublicationService.getById($scope.pubId).success(function(data) {
+                if(!data){
+                    $location.path("/");
+                    return;
+                }
                 $scope.publication = data;
-
-                $scope.getPages($scope.publication.id);
+                $scope.getPages();
             });
-        } else {
+        } else{
             PublicationService.getAll().success(function(data){
                 $scope.publication = PublicationService.getActive(data);
-                $scope.getPages($scope.publication.id);
+                $scope.getPages();
             });
         }
 
-        $scope.getPages = function(pubId){
+        $scope.getPages = function(){
+            var pubId = $scope.publication.id;
             ArticleService.search({publication: pubId}).success(function (data) {
                 $scope.publication.articles = data;
+                $scope.loading--;
             });
             PublicationService.getPages(pubId).success(function (data){
                 $scope.publication.pages = data;
+                $scope.loading--;
             });
             ArticleService.getReviews().success(function(data){
                 $scope.reviewOptions = data;
+                $scope.loading--;
             });
 
             ArticleService.getStatuses().success(function(data){
                 $scope.statusOptions = data;
+                $scope.loading--;
+            });
+
+            PublicationService.getLayoutStatuses().success(function(data){
+                $scope.layoutStatuses = data;
+                $scope.loading--;
             });
         };
 
@@ -65,34 +78,19 @@ angular.module('momusApp.controllers')
             }
         };
 
+        /*
+        *   Not used at the moment, left here in case it's wanted later
+        */
         $scope.generateDisp = function(){
             PublicationService.generateDisp($scope.publication.id).success(function(data){
                 $scope.publication.pages = data;
             })
         };
 
-        $scope.generatePages = function(){
-            $scope.publication.pages = [];
-            for(var i = 0; i < $scope.publication.articles.length; i++){
-
-                var temp_page = {
-                    page_nr : i+1,
-                    note : "",
-                    advertisement: false,
-                    articles: [$scope.publication.articles[i]],
-                    publication: $scope.publication.id,
-                    layout_status: $scope.getLayoutStatusByName("Ukjent")
-                };
-
-                $scope.publication.pages.push(temp_page);
-            }
-            PublicationService.updateMetadata($scope.publication);
-
-        };
-
-
-        $scope.savePage = function() {
-            PublicationService.updateMetadata($scope.publication);
+        $scope.savePublication = function() {
+            PublicationService.updateMetadata($scope.publication).success(function(data){
+                $scope.getPages();
+            });
         };
 
         $scope.deletePage = function(page) {
@@ -101,40 +99,37 @@ angular.module('momusApp.controllers')
                     PublicationService.getPages($scope.publication.id).success(function(data){
                         $scope.publication.pages = data;
                         sortPages();
-                        $scope.savePage();
+                        $scope.savePublication();
                     });
                 });
-
             }
         };
 
         $scope.newPage = function(){
-            var temp_page = {
-                page_nr : $scope.publication.pages.length + 1,
-                note : null,
-                advertisement: false,
-                articles: [],
-                publication: $scope.publication.id,
-                layout_status: $scope.getLayoutStatusByName("Ukjent")
-            };
-            //$scope.publication.pages.push(temp_page);
-            PublicationService.createPage(temp_page).success(function(data){
-                $scope.publication.pages.push(data);
-            });
-            //PublicationService.updateMetadata($scope.publication);
-        };
-
-        $scope.saveArticle = function(article){
-            ArticleService.updateMetadata(article);
-        };
-
-        // Drag&drop stuff
-        $scope.treeOptions = {
-            dropped: function(event){
-                $scope.selectedPage = $scope.publication.pages[event.dest.index];
-                sortPages();
-                PublicationService.updateMetadata($scope.publication);
+            var insertPageAt = $scope.newPageAt;
+            var numNewPages = $scope.numNewPages;
+            if(numNewPages>100){
+                numNewPages = 100;
+            }else if(numNewPages <= 0){
+                numNewPages = 1;
             }
+            for(var i = 0; i < numNewPages; i++) {
+                var temp_page = {
+                    page_nr: $scope.publication.pages.length + 1,
+                    note: null,
+                    advertisement: false,
+                    articles: [],
+                    publication: $scope.publication.id,
+                    layout_status: $scope.getLayoutStatusByName("Ukjent")
+                };
+                    if (0 <= insertPageAt && insertPageAt <= $scope.publication.pages.length) {
+                        $scope.publication.pages.splice(insertPageAt, 0, temp_page);
+                    } else {
+                        $scope.publication.pages.push(data);
+                    }
+                    sortPages();
+            }
+            $scope.savePublication();
         };
 
         function sortPages(){
@@ -143,6 +138,10 @@ angular.module('momusApp.controllers')
             }
         }
 
+        $scope.savePage = function() {
+            PublicationService.updateMetadata($scope.publication);
+        };
+
         $scope.getLayoutStatusByName = function(name){
             for(var i = 0; i < $scope.layoutStatuses.length; i++){
                 if($scope.layoutStatuses[i].name == name){
@@ -150,6 +149,30 @@ angular.module('momusApp.controllers')
                 }
             }
             return null;
+        };
+
+        $scope.createArticle = function(page){
+            var modal = $modal.open({
+                templateUrl: 'partials/article/createArticleModal.html',
+                controller: 'CreateArticleModalCtrl',
+                resolve: {
+                    pubId: function(){
+                        return $scope.publication.id;
+                    }
+                }
+            });
+            modal.result.then(function(id){
+                ArticleService.getArticle(id).success(function(data){
+                    page.articles.push(data);
+                    $scope.publication.articles.push(data);
+                    $scope.savePage();
+                })
+            })
+
+        };
+
+        $scope.saveArticle = function(article){
+            ArticleService.updateMetadata(article);
         };
 
         $scope.sortableOptions = {
@@ -166,6 +189,11 @@ angular.module('momusApp.controllers')
                 sortPages();
                 PublicationService.updateMetadata($scope.publication);
             }
-        }
+        };
 
+        $scope.showHelp = function(){
+            $templateRequest('partials/templates/help/dispHelp.html').then(function(template){
+                MessageModal.info(template);
+            });
+        }
     });

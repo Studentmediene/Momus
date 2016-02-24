@@ -71,6 +71,13 @@ public class PublicationController {
     public @ResponseBody Publication addPublication(@RequestBody Publication publication) {
         Publication newPublication = publicationRepository.save(publication);
         newPublication = publicationRepository.findOne(newPublication.getId());
+        for(int i = 0; i < 64; i++){
+            Page newPage = new Page();
+            newPage.setPageNr(i + 1);
+            newPage.setPublication(newPublication);
+            newPage.setLayoutStatus(layoutStatusRepository.findByName("Ukjent"));
+            pageRepository.save(newPage);
+        }
         logger.info("Created new publication with data: {}", newPublication);
 
         return newPublication;

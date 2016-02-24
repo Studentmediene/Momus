@@ -14,73 +14,75 @@
   ~ limitations under the License.
   -->
 
-<div>
-    <a href="#/kilder/ny" class="btn btn-primary btn-xs" style="margin-bottom: 5px;">
-        <i class="fa fa-plus-circle"></i> Opprett ny kilde
-    </a>
-    <a href="#/kilder/tags" class="btn btn-primary btn-xs pull-right" style="margin-bottom: 5px;">
-        <i class="fa fa-pencil"></i> Rediger tags
-    </a>
-</div>
+<div class="container">
+    <div>
+        <a href="#/kilder/ny" class="btn btn-primary btn-xs" style="margin-bottom: 5px;">
+            <i class="fa fa-plus-circle"></i> Opprett ny kilde
+        </a>
+        <a href="#/kilder/tags" class="btn btn-primary btn-xs pull-right" style="margin-bottom: 5px;">
+            <i class="fa fa-pencil"></i> Rediger tags
+        </a>
+    </div>
 
-<div class="well">
-    <div class="row">
+    <div class="well">
+        <div class="row">
 
-        <div class="col-xs-12 col-sm-4">
-            <label for="searchName">Navn</label>
-            <input class="form-control" id="searchName" ng-model="search.name"
-                   placeholder="Skriv inn navn">
-        </div>
+            <div class="col-xs-12 col-sm-4">
+                <label for="searchName">Navn</label>
+                <input class="form-control" id="searchName" ng-model="search.name"
+                       placeholder="Skriv inn navn">
+            </div>
 
-        <div class="col-xs-12 col-sm-4">
-            <label for="searchText">Fritekst</label>
-            <input id="searchText" class="form-control" ng-model="search.freetext"
-                   placeholder="Fritekst søk">
-        </div>
+            <div class="col-xs-12 col-sm-4">
+                <label for="searchText">Fritekst</label>
+                <input id="searchText" class="form-control" ng-model="search.freetext"
+                       placeholder="Fritekst søk">
+            </div>
 
-        <div class="col-xs-12 col-sm-4">
-            <label>Tags</label>
-            <input type="hidden" placeholder="tags" class="form-control"
-                   ui-select2="select2Options"
-                   ng-model="search.tags">
+            <div class="col-xs-12 col-sm-4">
+                <label>Tags</label>
+                <input type="hidden" placeholder="tags" class="form-control"
+                       ui-select2="select2Options"
+                       ng-model="search.tags">
+            </div>
         </div>
     </div>
-</div>
 
-<div class="table-responsive">
-    <div class="panel panel-default">
+    <div class="table-responsive">
+        <div class="panel panel-default">
 
-        <div class="table-responsive">
-            <table class="table table-hover table-striped">
-                <thead>
-                <tr>
-                    <th>Navn</th>
-                    <th>Beskrivelse</th>
-                    <th>Telefon</th>
-                    <th>E-post</th>
-                    <th></th>
-                </tr>
-                </thead>
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>Navn</th>
+                        <th>Beskrivelse</th>
+                        <th>Telefon</th>
+                        <th>E-post</th>
+                        <th></th>
+                    </tr>
+                    </thead>
 
-                <tbody>
-                <tr  ng-repeat="source in filteredSources = (sources | filter: search.freetext | filter:{name: search.name} | filter: tagFilter | orderBy:'-id')">
-                    <td>{{source.name}}</td>
-                    <td>{{source.description}}</td>
-                    <td>{{source.telephone}}</td>
-                    <td><a href="mailto:{{source.email}}" ng-show="source.email" target="_blank" title="Åpne epost-klient"><i class="fa fa-envelope"></i></a> {{source.email}}</td>
-                    <td style="text-align: right;"><a href="#/kilder/{{source.id}}">Åpne</a></td>
-                </tr>
-                <tr ng-show="filteredSources.length == 0 && hasLoadedSources">
-                    <td colspan="5">
-                        Ingen kilder funnet, juster filteret.
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                    <tbody>
+                    <tr  ng-repeat="source in filteredSources = (sources | filter: search.freetext | filter:{name: search.name} | filter: tagFilter | orderBy:'-id')">
+                        <td>{{source.name}}</td>
+                        <td>{{source.description}}</td>
+                        <td>{{source.telephone}}</td>
+                        <td><a href="mailto:{{source.email}}" ng-show="source.email" target="_blank" title="Åpne epost-klient"><i class="fa fa-envelope"></i></a> {{source.email}}</td>
+                        <td style="text-align: right;"><a href="#/kilder/{{source.id}}">Åpne</a></td>
+                    </tr>
+                    <tr ng-show="filteredSources.length == 0 && hasLoadedSources">
+                        <td colspan="5">
+                            Ingen kilder funnet, juster filteret.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 
-<div ng-show="!hasLoadedSources">
-    <i class="fa fa-spinner fa-spin"></i> Laster inn.
+    <div ng-show="!hasLoadedSources">
+        <i class="fa fa-spinner fa-spin"></i> Laster inn.
+    </div>
 </div>

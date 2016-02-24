@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleRevisionCtrl', function($scope, ArticleService, $routeParams){
+    .controller('ArticleRevisionCtrl', function($scope, ArticleService, $routeParams, MessageModal, $templateRequest){
 
         $scope.diff = "";
         $scope.showDiff = false;
@@ -48,5 +48,12 @@ angular.module('momusApp.controllers')
                 $scope.diff = data;
             });
         };
+
+        $scope.showHelp = function(){
+            $templateRequest('partials/templates/help/revisionHelp.html').then(function(template){
+                MessageModal.info(template);
+            })
+
+        }
 
     });

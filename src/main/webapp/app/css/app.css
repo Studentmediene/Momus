@@ -123,88 +123,6 @@ td > ul, td > ol {
     margin-bottom: 0;
 }
 
-/* Used in disposition to move (drag and drop) pages */
-.angular-ui-tree {
-
-}
-
-.angular-ui-tree-empty {
-    border: 1px dashed #bbb;
-    min-height: 100px;
-    background-color: #e5e5e5;
-    background-image: -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
-    background-image: -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
-    background-image: linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
-    background-size: 60px 60px;
-    background-position: 0 0, 30px 30px;
-}
-
-.angular-ui-tree-nodes {
-    position: relative;
-    margin: 0px;
-    padding: 0px;
-    list-style: none;
-}
-
-.angular-ui-tree-nodes .angular-ui-tree-nodes {
-    padding-left: 20px;
-}
-
-.angular-ui-tree-node, .angular-ui-tree-placeholder {
-    position: relative;
-    margin: 0px;
-    padding: 0px;
-    min-height: 20px;
-    line-height: 20px;
-}
-
-.angular-ui-tree-hidden {
-    display: none;
-}
-
-.angular-ui-tree-placeholder {
-    display: table-row;
-    white-space: nowrap;
-    height: 100px;
-    margin: 5px 0;
-    padding: 0;
-    min-height: 30px;
-}
-
-.angular-ui-tree-handle {
-    cursor: move;
-    text-decoration: none;
-    font-weight: bold;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    min-height: 20px;
-    line-height: 20px;
-}
-
-.angular-ui-tree-drag {
-    position: absolute;
-    pointer-events: none;
-    z-index: 999;
-    opacity: .8;
-}
-
-.angular-ui-tree-drag tr td {
-    display: table-cell;
-    position: relative;
-}
-
-.angular-ui-tree-drag .pageNr {
-    display: table;
-    position: relative;
-    height: 58px;
-}
-
-/*Disposition, highlight selected Page*/
-.selectedPage {
-    background-color: #b9def0;
-}
-
 /* quoteCheck button effects */
 a.zeroclipboard-is-hover {
     background-color: #3071a9;
@@ -379,14 +297,6 @@ a.zeroclipboard-is-hover {
     line-height:32px;
 }
 
-.angular-ui-tree-placeholder {
-    background: #f0f9ff;
-    border: 2px dashed #bed2db;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
 .pageArticleTable tbody tr:first-child td {
     border-top:0px;
 }
@@ -416,3 +326,20 @@ a.zeroclipboard-is-hover {
     background-color:#EEE;
 }
 
+.disp-table td table td{
+    max-width:120px;
+    width:120px;
+    min-width:120px;
+}
+
+.person-widget-element td {
+    max-width:initial !important;
+    min-width:initial !important;
+}
+
+.attach-top-true {
+    position:fixed;
+    top:50px;
+    right:5%;
+    z-index:100;
+}

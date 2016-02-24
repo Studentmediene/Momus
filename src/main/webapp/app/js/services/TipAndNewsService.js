@@ -2,19 +2,11 @@ angular.module('momusApp.services')
     .service('TipAndNewsService', function () {
         var randomTips = [
             // General
-            '<h4>Momus</h4><p>Momus or Momos (μῶμος) was in Greek mythology the personification of satire, mockery, censure; a god of writers and poets; a spirit of evil-spirited blame and unfair criticism. His name is related to μομφή, meaning "blame" or "censure". He is depicted in classical art as lifting a mask from his face.</p>',
             '<h4>Mobil/tablet</h4><p>Momus fungerer bra på mobile enheter.</p>',
             '<h4>Pegadi</h4><p>Pegadi var forløperen til Momus, i bruk i nesten 14 år før serveren ikke orket mer.</p>',
             '<h4>Tilbakemeldinger</h4><p>Tilbakemeldinger om Momus kan sendes til momus@smitit.no</p>',
             '<h4>Flere sider oppe</h4><p>Du kan ha flere faner med Momus oppe samtidig. Artikler kan åpnes i ny fane ved å holde inne CTRL-knappen mens de trykkes på.</p>',
             '<h4>Ulagrede endringer</h4><p>Momus vil tipse om ulagrede endringer om du forsøker å navigere bort fra en side.</p>',
-
-            // Front page
-            '<h4>Tips</h4><p>I denne boksen kommer det nyttig (og unyttig) informasjon og tips til Momus.</p>',
-            '<h4>Notat</h4><p>På forsiden er det en notablokk som kan brukes til private notater.</p>',
-            '<h4>Nyheter</h4><p>På forsiden er det en boks med nyheter om Momus. Der informeres det om oppdateringer og ny funksjonalitet.</p>',
-            '<h4>Mine artikler</h4><p>På forsiden vises de siste artiklene du er delaktig av. Du kan også trykke på "Vis flere" og bli tatt rett til et søk med alle dine artikler.</p>',
-            '<h4>Sist besøkte artikler</h4><p>De siste artiklene som er blitt besøkt vises på forsiden for enkel tilgang.</p>',
 
             // Search
             '<h4>Søk</h4><p>Artikler kan filtreres på fritekst, personer, statuser, redaksjoner og utgaver</p>',
@@ -49,6 +41,10 @@ angular.module('momusApp.services')
 
         // Date: year, month - 1, day
         var news = [{
+            date: new Date(2016, 1, 24),
+            title: "Fjernet forside og forbedret disposisjon",
+            text: "<p>Forsiden og den gamle kilder-funksjonen er nå fjernet, og erstattet av \"info/nyheter\"-siden. Disposisjonen har også fått noen nye felter, og litt ny funksjonalitet, som for eksempel at man nå kan lage nye artikler rett fra disposisjonen.</p>"
+        },{
             date: new Date(2015, 10, 7),
             title: "Disposisjon",
             text: "<p>Første versjon av disposisjonsvisningen er nå ute og klar for å bli testet. Klikk <a href='#/disposition'>her</a> for å se hvordan det ser ut!</p>"
@@ -94,6 +90,7 @@ angular.module('momusApp.services')
             news[i].new = news[i].date >= dateThreshold;
             news[i].show = news[i].new;
         }
+        news[0].show = true;
 
         return {
             getRandomTip: function () {

@@ -14,22 +14,23 @@
   ~ limitations under the License.
   -->
 
-<div class="row">
-    <div class="col-md-8">
-        <div id="last-articles" class="panel panel-info">
-            <div class="panel-heading">
-                <h1 class="panel-title">
-                    <span class="fa fa-file-text-o"></span>
-                    Mine ti siste artikler
-                    <div class="pull-right">
-                        <a href="#/artikler?persons={{user.id}}">Vis flere</a>
-                    </div>
-                </h1>
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div id="last-articles" class="panel panel-info">
+                <div class="panel-heading">
+                    <h1 class="panel-title">
+                        <span class="fa fa-file-text-o"></span>
+                        Mine ti siste artikler
+                        <div class="pull-right">
+                            <a href="#/artikler?persons={{user.id}}">Vis flere</a>
+                        </div>
+                    </h1>
+                </div>
 
-            <div class="table-responsive">
-                <table class="table table-hover table-striped table-condensed" style="font-size: 85%;">
-                    <thead>
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-condensed" style="font-size: 85%;">
+                        <thead>
                         <tr>
                             <th style="width:2%"></th>
                             <th style="width:25%">Navn</th>
@@ -39,8 +40,8 @@
                             <th style="width:13%">Redaksjon</th>
                             <th style="width:15%">Utgave</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
 
                         <tr ng-if="loadingArticles">
                             <td colspan="10" style="text-align: center;">
@@ -55,34 +56,34 @@
                         </tr>
 
                         <tr ng-repeat="article in myArticles | limitTo:10">
-                                <td><i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i></td>
-                                <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
-                                <td>{{article.content_length}}</td>
-                                <td>
-                                    <ul class="list-unstyled">
-                                        <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.full_name}}</span></li>
-                                    </ul>
-                                </td>
-                                <td style="background-color:{{article.status.color}};">{{article.status.name}}</td>
-                                <td>{{article.section.name}}</td>
-                                <td>{{article.publication.name}}</td>
+                            <td><i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i></td>
+                            <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
+                            <td>{{article.content_length}}</td>
+                            <td>
+                                <ul class="list-unstyled">
+                                    <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.full_name}}</span></li>
+                                </ul>
+                            </td>
+                            <td style="background-color:{{article.status.color}};">{{article.status.name}}</td>
+                            <td>{{article.section.name}}</td>
+                            <td>{{article.publication.name}}</td>
                         </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
 
-        </div>
-
-        <div id="last-viewed" class="panel panel-info">
-            <div class="panel-heading" >
-                <h1 class="panel-title">
-                    <i class="fa fa-history"></i> Sist besøkte artikler
-                    </span>
-                </h1>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-striped table-condensed table-responsive" style="font-size:85%">
-                    <thead>
+            <div id="last-viewed" class="panel panel-info">
+                <div class="panel-heading" >
+                    <h1 class="panel-title">
+                        <i class="fa fa-history"></i> Sist besøkte artikler
+                        </span>
+                    </h1>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-condensed table-responsive" style="font-size:85%">
+                        <thead>
                         <tr>
                             <th style="width:2%"></th>
                             <th style="width:25%">Navn</th>
@@ -92,8 +93,8 @@
                             <th style="width:13%">Redaksjon</th>
                             <th style="width:15%">Utgave</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
 
                         <tr ng-if="loadingRecent">
                             <td colspan="10" style="text-align: center;">
@@ -123,163 +124,163 @@
                             </td>
                             <td>{{article.publication.name}}</td>
                         </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="panel panel-info">
-            <div class="panel-heading clearfix">
-                <div class="pull-right">
-                    <select id="favsec" class="form-control input-sm" ng-model="favouriteSection.section" ng-change="updateFavouriteSection()"
-                            ng-options="s.name for s in sections  | filter:{deleted: false} track by s.id">
-                    </select>
+                        </tbody>
+                    </table>
                 </div>
-                <h1 class="panel-title fav">
-                    <i class="fa fa-star"></i> {{favouriteSection.section == null ? "Velg favorittseksjon for å vise de nyeste artiklene derfra" : "Siste artikler fra din favorittseksjon (" + favouriteSection.section.name + ")" }}
-                </h1>
             </div>
-            <div class="table-responsive">
-                <table class="table table-striped table-condensed table-responsive" style="font-size:85%">
-                    <thead>
-                    <tr>
-                        <th style="width:2%"></th>
-                        <th style="width:25%">Navn</th>
-                        <th style="width:5%">Tegn</th>
-                        <th style="width:25%;">Journalister</th>
-                        <th style="width:15%">Status</th>
-                        <th style="width:13%">Redaksjon</th>
-                        <th style="width:15%">Utgave</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    <tr ng-if="loadingRecent">
-                        <td colspan="10" style="text-align: center;">
-                            <i class="fa fa-4x fa-spinner fa-spin"></i>
-                        </td>
-                    </tr>
-
-                    <tr ng-if="favouriteSection.section == null">
-                        <td colspan="10" style="text-align: center;">
-                            Du har ikke satt en favorittseksjon
-                        </td>
-                    </tr>
-                    <tr ng-if="favouriteSection.section != null && favSectionArticles.length == 0">
-                        <td colspan="10" style="text-align: center;">
-                            Det finnes ingen artikler i denne seksjonen
-                        </td>
-                    </tr>
-                    <tr ng-repeat="article in favSectionArticles">
-                        <td><i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i></td>
-                        <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
-                        <td>{{article.content_length}}</td>
-                        <td>
-                            <ul class="list-unstyled">
-                                <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.full_name}}</span></li>
-                            </ul>
-                        </td>
-                        <td style="background-color: {{article.status.color}};">
-                            {{article.status.name}}
-                        </td>
-                        <td>
-                            {{article.section.name}}
-                        </td>
-                        <td>{{article.publication.name}}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div id="note-panel" class="panel panel-warning">
-            <div class="panel-heading">
-                <h1 class="panel-title">
-                    <span class="fa fa-list"></span>
-                    Personlige notater
+            <div class="panel panel-info">
+                <div class="panel-heading clearfix">
                     <div class="pull-right">
-                        <button class="btn btn-default btn-xs"
-                                ng-disabled="note.content == unedited.content"
-                                ng-click="saveNote()"
-                                button-loader="savingNote">
-                            <i class="fa fa-save"></i>
-                            Lagre
-                        </button>
+                        <select id="favsec" class="form-control input-sm" ng-model="favouriteSection.section" ng-change="updateFavouriteSection()"
+                                ng-options="s.name for s in sections  | filter:{deleted: false} track by s.id">
+                        </select>
                     </div>
-                </h1>
-            </div>
-            <div class="panel-body">
-                <div id="note-toolbar" class="editor-toolbar">
-                    <div class="btn-group">
-                        <button class="btn btn-default"
-                                data-wysihtml5-command="bold"
-                                title="Fet tekst (Ctrl+B)">
-                            <i class="fa fa-bold"></i>
-                        </button>
-                        <button class="btn btn-default"
-                                data-wysihtml5-command="italic"
-                                title="Kursiv tekst (Ctrl+I)">
-                            <i class="fa fa-italic"></i>
-                        </button>
-                        <button class="btn btn-default"
-                                data-wysihtml5-command="underline"
-                                title="Understreket tekst (Ctrl+U)">
-                            <i class="fa fa-underline"></i>
-                        </button>
-                        <button class="btn btn-default"
-                                data-wysihtml5-command="strikethrough"
-                                title="Gjennomstreket tekst">
-                            <i class="fa fa-strikethrough"></i>
-                        </button>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn btn-default"
-                                data-wysihtml5-command="insertUnorderedList"
-                                title="Usortert liste">
-                            <i class="fa fa-list-ul"></i>
-                        </button>
-                        <button class="btn btn-default"
-                                data-wysihtml5-command="insertOrderedList"
-                                title="Sortert liste">
-                            <i class="fa fa-list-ol"></i>
-                        </button>
-                    </div>
-                    <!--
-                    <div class="btn-group pull-right">
-                        <button class="btn btn-default"
-                                data-wysihtml5-action="change_view"
-                                title="Se rådata (avansert)">
-                            <i class="fa fa-exchange"></i>
-                        </button>
-                    </div>-->
+                    <h1 class="panel-title fav">
+                        <i class="fa fa-star"></i> {{favouriteSection.section == null ? "Velg favorittseksjon for å vise de nyeste artiklene derfra" : "Siste artikler fra din favorittseksjon (" + favouriteSection.section.name + ")" }}
+                    </h1>
                 </div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-condensed table-responsive" style="font-size:85%">
+                        <thead>
+                        <tr>
+                            <th style="width:2%"></th>
+                            <th style="width:25%">Navn</th>
+                            <th style="width:5%">Tegn</th>
+                            <th style="width:25%;">Journalister</th>
+                            <th style="width:15%">Status</th>
+                            <th style="width:13%">Redaksjon</th>
+                            <th style="width:15%">Utgave</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr ng-if="loadingRecent">
+                            <td colspan="10" style="text-align: center;">
+                                <i class="fa fa-4x fa-spinner fa-spin"></i>
+                            </td>
+                        </tr>
+
+                        <tr ng-if="favouriteSection.section == null">
+                            <td colspan="10" style="text-align: center;">
+                                Du har ikke satt en favorittseksjon
+                            </td>
+                        </tr>
+                        <tr ng-if="favouriteSection.section != null && favSectionArticles.length == 0">
+                            <td colspan="10" style="text-align: center;">
+                                Det finnes ingen artikler i denne seksjonen
+                            </td>
+                        </tr>
+                        <tr ng-repeat="article in favSectionArticles">
+                            <td><i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i></td>
+                            <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
+                            <td>{{article.content_length}}</td>
+                            <td>
+                                <ul class="list-unstyled">
+                                    <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.full_name}}</span></li>
+                                </ul>
+                            </td>
+                            <td style="background-color: {{article.status.color}};">
+                                {{article.status.name}}
+                            </td>
+                            <td>
+                                {{article.section.name}}
+                            </td>
+                            <td>{{article.publication.name}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div id="note-panel" class="panel panel-warning">
+                <div class="panel-heading">
+                    <h1 class="panel-title">
+                        <span class="fa fa-list"></span>
+                        Personlige notater
+                        <div class="pull-right">
+                            <button class="btn btn-default btn-xs"
+                                    ng-disabled="note.content == unedited.content"
+                                    ng-click="saveNote()"
+                                    button-loader="savingNote">
+                                <i class="fa fa-save"></i>
+                                Lagre
+                            </button>
+                        </div>
+                    </h1>
+                </div>
+                <div class="panel-body">
+                    <div id="note-toolbar" class="editor-toolbar">
+                        <div class="btn-group">
+                            <button class="btn btn-default"
+                                    data-wysihtml5-command="bold"
+                                    title="Fet tekst (Ctrl+B)">
+                                <i class="fa fa-bold"></i>
+                            </button>
+                            <button class="btn btn-default"
+                                    data-wysihtml5-command="italic"
+                                    title="Kursiv tekst (Ctrl+I)">
+                                <i class="fa fa-italic"></i>
+                            </button>
+                            <button class="btn btn-default"
+                                    data-wysihtml5-command="underline"
+                                    title="Understreket tekst (Ctrl+U)">
+                                <i class="fa fa-underline"></i>
+                            </button>
+                            <button class="btn btn-default"
+                                    data-wysihtml5-command="strikethrough"
+                                    title="Gjennomstreket tekst">
+                                <i class="fa fa-strikethrough"></i>
+                            </button>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-default"
+                                    data-wysihtml5-command="insertUnorderedList"
+                                    title="Usortert liste">
+                                <i class="fa fa-list-ul"></i>
+                            </button>
+                            <button class="btn btn-default"
+                                    data-wysihtml5-command="insertOrderedList"
+                                    title="Sortert liste">
+                                <i class="fa fa-list-ol"></i>
+                            </button>
+                        </div>
+                        <!--
+                        <div class="btn-group pull-right">
+                            <button class="btn btn-default"
+                                    data-wysihtml5-action="change_view"
+                                    title="Se rådata (avansert)">
+                                <i class="fa fa-exchange"></i>
+                            </button>
+                        </div>-->
+                    </div>
                 <textarea id="note-area"
                           class="form-control note"
                           richeditor="note.content"
                           richeditor-rules="noteRules"
                           richeditor-toolbar="note-toolbar">
                 </textarea>
+                </div>
             </div>
-        </div>
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h1 class="panel-title"><i class="fa fa-question-circle"></i> Tilfeldig tips
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h1 class="panel-title"><i class="fa fa-question-circle"></i> Tilfeldig tips
 
-                    <div class="pull-right">
-                        <button class="btn btn-default btn-xs" ng-click="randomTip()" tooltip="Nytt tips">
-                            <i class="fa fa-refresh"></i>
-                        </button>
-                    </div>
-                </h1>
+                        <div class="pull-right">
+                            <button class="btn btn-default btn-xs" ng-click="randomTip()" tooltip="Nytt tips">
+                                <i class="fa fa-refresh"></i>
+                            </button>
+                        </div>
+                    </h1>
+                </div>
+                <div class="panel-body" ng-bind-html="tip | trustHtml"></div>
             </div>
-            <div class="panel-body" ng-bind-html="tip | trustHtml"></div>
-        </div>
-        <div class="panel panel-info">
-            <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-bullhorn"></i> Nyheter</h1></div>
-            <div class="panel-body" style="height:300px; overflow-y: auto">
-                <table class="table">
-                    <tbody ng-repeat="n in news | orderBy: '-date'">
+            <div class="panel panel-info">
+                <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-bullhorn"></i> Nyheter</h1></div>
+                <div class="panel-body" style="height:300px; overflow-y: auto">
+                    <table class="table">
+                        <tbody ng-repeat="n in news | orderBy: '-date'">
                         <tr ng-class="{danger: n.new, active:!n.new}" class="interact" ng-click="n.show = !n.show">
                             <td ng-show="n.new" style="font-weight: bold; width: 40%">{{n.date | date}}</td>
                             <td ng-show="!n.new" style="width: 40%;">{{n.date | date}}</td>
@@ -296,9 +297,11 @@
                         <tr ng-show="n.show">
                             <td colspan="3" ng-bind-html="n.text | trustHtml"></td>
                         </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
+
 </div>

@@ -14,214 +14,220 @@
   ~ limitations under the License.
   -->
 
-<a href="#/artikler/ny" class="btn btn-primary btn-xs" style="margin-bottom: 5px;">
-    <i class="fa fa-plus-circle"></i> Opprett ny artikkel
-</a>
+<div class="container">
+    <div style="margin-bottom: 5px;">
+        <a ng-click="createArticle()" class="btn btn-primary">
+            <i class="fa fa-plus-circle"></i> Opprett ny artikkel
+        </a>
+        <a ng-click="showHelp()" class="btn btn-success">Hjelp?</a>
+    </div>
 
-<div class="well well-sm" id="articleSearchInterface">
-    <form role="form" ng-submit="searchFunc()">
-        <div class="row">
-            <!-- Free search -->
-            <div class="col-sm-4">
-                <label class="sr-only" for="searchFree">
-                    Fritekst
-                </label>
-                <input class="form-control" id="searchFree" ng-model="search.free"
-                       placeholder="Fritekst">
+    <div class="well well-sm" id="articleSearchInterface">
+        <form role="form" ng-submit="searchFunc()">
+            <div class="row">
+                <!-- Free search -->
+                <div class="col-sm-4">
+                    <label class="sr-only" for="searchFree">
+                        Fritekst
+                    </label>
+                    <input class="form-control" id="searchFree" ng-model="search.free"
+                           placeholder="Fritekst">
+                </div>
+
+                <!-- Status search -->
+                <div class="col-sm-4">
+                    <label class="sr-only" for="searchStatus">
+                        Status
+                    </label>
+                    <select class="form-control" id="searchStatus" ui-select2 ng-model="search.status" placeholder="Status">
+                        <option class="" value="">
+                            Alle statuser
+                        </option>
+                        <option ng-repeat="status in statuses | filter:{deleted: false} | orderBy:'status_order'" value="{{ status.id }}" style="background: #0f0">
+                            {{ status.name }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Section search -->
+                <div class="col-sm-4">
+                    <label class="sr-only" for="searchSection">
+                        Redaksjon
+                    </label>
+                    <select class="form-control" id="searchSection" ui-select2 ng-model="search.section">
+                        <option value="">
+                            Alle redaksjoner
+                        </option>
+                        <option ng-repeat="section in sections | filter:{deleted: false}" value="{{ section.id }}">
+                            {{ section.name }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Publication search -->
+                <div class="col-sm-4">
+                    <label class="sr-only" for="searchPublication">
+                        Utgave
+                    </label>
+                    <select class="form-control" id="searchPublication" ui-select2 ng-model="search.publication">
+                        <option value="">
+                            Alle utgaver
+                        </option>
+                        <option ng-repeat="publication in publications | orderBy: '-release_date'"
+                                value="{{ publication.id }}">
+                            {{ publication.name }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Person search -->
+                <div class="col-sm-4">
+                    <label class="sr-only" for="searchPersons">
+                        Personer
+                    </label>
+                    <select multiple class="form-control" id="searchPersons" ui-select2 ng-model="search.persons"
+                            placeholder="Velg personer">
+                        <option ng-repeat="person in persons" value="{{ person.id }}">
+                            {{ person.full_name }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-sm-4">
+                    <button type="submit" id="searchSubmit" class="btn btn-primary btn-sm form-control">
+                        Søk
+                    </button>
+                </div>
             </div>
+        </form>
+    </div>
 
-            <!-- Status search -->
-            <div class="col-sm-4">
-                <label class="sr-only" for="searchStatus">
-                    Status
-                </label>
-                <select class="form-control" id="searchStatus" ui-select2 ng-model="search.status" placeholder="Status">
-                    <option class="" value="">
-                        Alle statuser
-                    </option>
-                    <option ng-repeat="status in statuses | filter:{deleted: false} | orderBy:'status_order'" value="{{ status.id }}" style="background: #0f0">
-                        {{ status.name }}
-                    </option>
-                </select>
-            </div>
-
-            <!-- Section search -->
-            <div class="col-sm-4">
-                <label class="sr-only" for="searchSection">
-                    Redaksjon
-                </label>
-                <select class="form-control" id="searchSection" ui-select2 ng-model="search.section">
-                    <option value="">
-                        Alle redaksjoner
-                    </option>
-                    <option ng-repeat="section in sections | filter:{deleted: false}" value="{{ section.id }}">
-                        {{ section.name }}
-                    </option>
-                </select>
-            </div>
-
-            <!-- Publication search -->
-            <div class="col-sm-4">
-                <label class="sr-only" for="searchPublication">
-                    Utgave
-                </label>
-                <select class="form-control" id="searchPublication" ui-select2 ng-model="search.publication">
-                    <option value="">
-                        Alle utgaver
-                    </option>
-                    <option ng-repeat="publication in publications | orderBy: '-release_date'"
-                            value="{{ publication.id }}">
-                        {{ publication.name }}
-                    </option>
-                </select>
-            </div>
-
-            <!-- Person search -->
-            <div class="col-sm-4">
-                <label class="sr-only" for="searchPersons">
-                    Personer
-                </label>
-                <select multiple class="form-control" id="searchPersons" ui-select2 ng-model="search.persons"
-                        placeholder="Velg personer">
-                    <option ng-repeat="person in persons" value="{{ person.id }}">
-                        {{ person.full_name }}
-                    </option>
-                </select>
-            </div>
-
-            <div class="col-sm-4">
-                <button type="submit" id="searchSubmit" class="btn btn-primary btn-sm form-control">
-                    Søk
-                </button>
-            </div>
-        </div>
-    </form>
-</div>
-
-<div ng-if="search.archived" class="alert alert-danger">
+    <div ng-if="search.archived" class="alert alert-danger">
         Du søker nå kun i arkiverte artikler
-</div>
-
-<div class="panel panel-default">
-
-    <!-- Results of the search -->
-    <div class="panel-heading">
-        <h3 class="panel-title text-center">
-            Artikler
-            <div class="pull-right">
-                <button class="btn btn-default btn-xs" ng-click="collapse = !collapse">
-                    <span ng-hide="collapse">Vis kommentarer</span>
-                    <span ng-if="collapse">Skjul kommentarer</span>
-                </button>
-            </div>
-        </h3>
     </div>
 
-    <div class="table-responsive" style="overflow-x:visible;">
-        <table class="table table-hover table-striped table-condensed" style="font-size: 85%;">
-            <thead>
-            <tr>
-                <th search-sort-button="name" class="sortBtn">Navn</th>
-                <th search-sort-button="type.name" class="sortBtn">Type</th>
-                <th>Journalister</th>
-                <th>Foto/Illustrasjon</th>
-                <th>Kommentar</th>
-                <th search-sort-button="content_length" class="sortBtn">Tegn</th>
-                <th search-sort-button="status.id" class="sortBtn" colspan="2" style="text-align: center;">Status</th>
-                <th search-sort-button="section.id" class="sortBtn">Redaksjon</th>
-                <th search-sort-button="publication.id" class="sortBtn">Utgave</th>
-            </tr>
-            </thead>
+    <div class="panel panel-default">
 
-            <tbody>
-            <tr ng-if="loading">
-                <td colspan="10" style="text-align: center;">
-                    <i class="fa fa-4x fa-spinner fa-spin"></i>
-                </td>
-            </tr>
-            <tr ng-if="noArticles">
-                <td colspan="10" style="text-align: center;">
-                    Ingen artikler stemmer med søket
-                </td>
-            </tr>
-            <tr ng-repeat="article in data | orderBy:articleSortType:articleSortReverse">
-                <td class="search-article-name break-word">
-                    <i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i>
-                    <a href="#/artikler/{{ article.id }}">
-                        {{ article.name }}
-                    </a>
-                </td>
-                <td>
-                    {{ article.type.name }}
-                </td>
+        <!-- Results of the search -->
+        <div class="panel-heading">
+            <h3 class="panel-title text-center">
+                Artikler
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs" ng-click="collapse = !collapse">
+                        <span ng-hide="collapse">Vis kommentarer</span>
+                        <span ng-if="collapse">Skjul kommentarer</span>
+                    </button>
+                </div>
+            </h3>
+        </div>
 
-                <td>
-                    <ul class="list-unstyled">
-                        <li ng-repeat="person in article.journalists">
-                            <span person-widget="person">{{ person.full_name }}</span>
-                        </li>
-                        <li><i tooltip="Ekstern">{{article.external_author}}</i></li>
-                    </ul>
-                </td>
-                <td>
-                    <ul class="list-unstyled">
+        <div class="table-responsive" style="overflow-x:visible;">
+            <table class="table table-hover table-striped table-condensed" style="font-size: 85%;">
+                <thead>
+                <tr>
+                    <th search-sort-button="name" class="sortBtn">Navn</th>
+                    <th search-sort-button="type.name" class="sortBtn">Type</th>
+                    <th>Journalister</th>
+                    <th>Foto/Illustrasjon</th>
+                    <th>Kommentar</th>
+                    <th search-sort-button="content_length" class="sortBtn">Tegn</th>
+                    <th search-sort-button="status.id" class="sortBtn" colspan="2" style="text-align: center;">Status</th>
+                    <th search-sort-button="section.id" class="sortBtn">Redaksjon</th>
+                    <th search-sort-button="publication.id" class="sortBtn">Utgave</th>
+                </tr>
+                </thead>
 
-                        <li ng-repeat="person in article.photographers">
+                <tbody>
+                <tr ng-if="loading">
+                    <td colspan="10" style="text-align: center;">
+                        <i class="fa fa-4x fa-spinner fa-spin"></i>
+                    </td>
+                </tr>
+                <tr ng-if="noArticles">
+                    <td colspan="10" style="text-align: center;">
+                        Ingen artikler stemmer med søket
+                    </td>
+                </tr>
+                <tr ng-repeat="article in data | orderBy:articleSortType:articleSortReverse">
+                    <td class="search-article-name break-word">
+                        <i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i>
+                        <a href="#/artikler/{{ article.id }}">
+                            {{ article.name }}
+                        </a>
+                    </td>
+                    <td>
+                        {{ article.type.name }}
+                    </td>
 
-                            <i class="fa fa-paint-brush" ng-show="article.use_illustration"> </i>
-                            <i class="fa fa-camera" ng-show="!article.use_illustration"> </i>
-                            <span person-widget="person">{{ person.full_name }}</span>
-                        </li>
-                        <li><i tooltip="Ekstern">{{article.external_photographer}}</i></li>
-                    </ul>
-                </td>
+                    <td>
+                        <ul class="list-unstyled">
+                            <li ng-repeat="person in article.journalists">
+                                <span person-widget="person">{{ person.full_name }}</span>
+                            </li>
+                            <li><i tooltip="Ekstern">{{article.external_author}}</i></li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="list-unstyled">
 
-                <!-- Show only a small part of a long message, with tooltip for the long text -->
-                <td ng-hide="collapse">
-                    <textwrapper length="20" text="article.comment"></textwrapper>
-                </td>
+                            <li ng-repeat="person in article.photographers">
 
-                <td class="col-xs-2" style="white-space: normal !important;" ng-show="collapse">
-                    <textwrapper text="article.comment"></textwrapper>
-                </td>
+                                <i class="fa fa-paint-brush" ng-show="article.use_illustration"> </i>
+                                <i class="fa fa-camera" ng-show="!article.use_illustration"> </i>
+                                <span person-widget="person">{{ person.full_name }}</span>
+                            </li>
+                            <li><i tooltip="Ekstern">{{article.external_photographer}}</i></li>
+                        </ul>
+                    </td>
 
-                <td>{{ article.content_length }}</td>
-                <td style="white-space: nowrap">
-                    <i class="fa fa-user fa-lg" tooltip="{{article.image_text ? 'Bildetekst er satt' : 'Bildetekst er ikke satt'}}"
-                       ng-class="{'text-danger': !article.image_text || article.image_text.length == 0, 'text-success': article.image_text.length > 0}"></i>
+                    <!-- Show only a small part of a long message, with tooltip for the long text -->
+                    <td ng-hide="collapse">
+                        <textwrapper length="20" text="article.comment"></textwrapper>
+                    </td>
 
-                    <i class="fa fa-quote-right fa-lg" tooltip="{{article.quote_check_status ? 'Sitatsjekk er ikke i orden' : 'Sitatetsjekk er i orden'}}"
-                       ng-class="{'text-danger': article.quote_check_status, 'text-success': !article.quote_check_status}"></i>
-                </td>
-                <td class="break-word" style="background-color: {{article.status.color}}; padding: 3px;">
-                    {{ article.status.name }}
-                </td>
-                <td>
-                    {{ article.section.name }}
-                </td>
-                <td>
-                    {{ article.publication.name }}
-                </td>
-            </tr>
-            </tbody>
+                    <td class="col-xs-2" style="white-space: normal !important;" ng-show="collapse">
+                        <textwrapper text="article.comment"></textwrapper>
+                    </td>
 
-        </table>
+                    <td>{{ article.content_length }}</td>
+                    <td style="white-space: nowrap">
+                        <i class="fa fa-user fa-lg" tooltip="{{article.image_text ? 'Bildetekst er satt' : 'Bildetekst er ikke satt'}}"
+                           ng-class="{'text-danger': !article.image_text || article.image_text.length == 0, 'text-success': article.image_text.length > 0}"></i>
+
+                        <i class="fa fa-quote-right fa-lg" tooltip="{{article.quote_check_status ? 'Sitatsjekk er ikke i orden' : 'Sitatetsjekk er i orden'}}"
+                           ng-class="{'text-danger': article.quote_check_status, 'text-success': !article.quote_check_status}"></i>
+                    </td>
+                    <td class="break-word" style="background-color: {{article.status.color}}; padding: 3px;">
+                        {{ article.status.name }}
+                    </td>
+                    <td>
+                        {{ article.section.name }}
+                    </td>
+                    <td>
+                        {{ article.publication.name }}
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+
     </div>
 
-</div>
+    <div class="text-center">
+        <button class="btn btn btn-info"
+                ng-disabled="search.page_number <= 1"
+                ng-click="searchFunc(-1)">
+            <i class="fa fa-angle-left"/>
+        </button>
+        <b style="display: inline-block; width: 30px">
+            {{ search.page_number }}
+        </b>
+        <button class="btn btn btn-info"
+                ng-disabled="!hasNextPage"
+                ng-click="searchFunc(1)">
+            <i class="fa fa-angle-right"/>
+        </button>
+    </div>
 
-<div class="text-center">
-    <button class="btn btn btn-info"
-            ng-disabled="search.page_number <= 1"
-            ng-click="searchFunc(-1)">
-        <i class="fa fa-angle-left"/>
-    </button>
-    <b style="display: inline-block; width: 30px">
-        {{ search.page_number }}
-    </b>
-    <button class="btn btn btn-info"
-            ng-disabled="!hasNextPage"
-            ng-click="searchFunc(1)">
-        <i class="fa fa-angle-right"/>
-    </button>
 </div>

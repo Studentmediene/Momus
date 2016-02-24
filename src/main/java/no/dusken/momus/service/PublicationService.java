@@ -89,6 +89,12 @@ public class PublicationService {
         logger.info("Deleted all the pages from publication with id: " + id);
     }
 
+
+    /*
+    *   Not used at the moment, left here in case it's wanted later
+    *   Generates a disposition from the articles in the publication
+    */
+
     public List<Page> generateDisp(Long id){
         deletePagesInPublication(id);
 
