@@ -41,6 +41,10 @@ angular.module('momusApp.services')
 
         // Date: year, month - 1, day
         var news = [{
+            date: new Date(2016, 1, 24),
+            title: "Fjernet forside og forbedret disposisjon",
+            text: "<p>Forsiden og den gamle kilder-funksjonen er nå fjernet, og erstattet av \"info/nyheter\"-siden. Disposisjonen har også fått noen nye felter, og litt ny funksjonalitet, som for eksempel at man nå kan lage nye artikler rett fra disposisjonen.</p>"
+        },{
             date: new Date(2015, 10, 7),
             title: "Disposisjon",
             text: "<p>Første versjon av disposisjonsvisningen er nå ute og klar for å bli testet. Klikk <a href='#/disposition'>her</a> for å se hvordan det ser ut!</p>"
