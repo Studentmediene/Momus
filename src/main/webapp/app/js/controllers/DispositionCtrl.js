@@ -48,7 +48,6 @@ angular.module('momusApp.controllers')
             PublicationService.getPages(pubId).success(function (data){
                 $scope.publication.pages = data;
                 $scope.loading--;
-                console.log($scope.publication);
             });
             ArticleService.getReviews().success(function(data){
                 $scope.reviewOptions = data;
@@ -89,7 +88,9 @@ angular.module('momusApp.controllers')
         };
 
         $scope.savePublication = function() {
-            PublicationService.updateMetadata($scope.publication);
+            PublicationService.updateMetadata($scope.publication).success(function(data){
+                $scope.getPages();
+            });
         };
 
         $scope.deletePage = function(page) {
