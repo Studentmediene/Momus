@@ -21,14 +21,14 @@
         <div class="panel panel-default">
             <div class="panel-heading clearfix">
                 <div class="pull-left"><h5>Sider</h5></div>
-                <div class="pull-right" style="width:350px" scroll-trigger="attach-top-true">
+                <div class="pull-right" style="width:360px" scroll-trigger="attach-top-true">
                     <div class="input-group input-group-sm">
                         <span class="input-group-addon">Legg til</span>
-                        <input type="number" ng-model="numNewPages" min="0" max="64" class="form-control">
-                        <span class="input-group-addon">nye side(r) etter side</span>
+                        <input type="number" ng-model="numNewPages" class="form-control">
+                        <span class="input-group-addon">ny{{numNewPages > 1 ? "e" : ""}} side{{numNewPages > 1 ? "r" : ""}} etter side</span>
                         <input type="number" ng-model="newPageAt" min="0" max="{{publication.pages.length}}" class="form-control">
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" ng-click="newPage()">
+                            <button class="btn btn-default" type="button" ng-click="newPage()" ng-disabled="numNewPages < 1 || numNewPages > 100">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </span>

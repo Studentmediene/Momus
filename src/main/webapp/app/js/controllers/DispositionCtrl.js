@@ -107,6 +107,11 @@ angular.module('momusApp.controllers')
         $scope.newPage = function(){
             var insertPageAt = $scope.newPageAt;
             var numNewPages = $scope.numNewPages;
+            if(numNewPages>100){
+                numNewPages = 100;
+            }else if(numNewPages <= 0){
+                numNewPages = 1;
+            }
             for(var i = 0; i < numNewPages; i++) {
                 var temp_page = {
                     page_nr: $scope.publication.pages.length + 1,
