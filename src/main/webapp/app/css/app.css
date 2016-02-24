@@ -336,3 +336,10 @@ a.zeroclipboard-is-hover {
     max-width:initial !important;
     min-width:initial !important;
 }
+
+.attach-top-true {
+    position:fixed;
+    top:50px;
+    right:5%;
+    z-index:100;
+}

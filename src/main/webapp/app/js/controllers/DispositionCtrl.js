@@ -20,6 +20,8 @@ angular.module('momusApp.controllers')
     .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal) {
         $scope.pubId = $routeParams.id;
         $scope.loading = 5;
+        $scope.newPageAt = 0;
+        $scope.numNewPages = 1;
 
         if($scope.pubId){
             PublicationService.getById($scope.pubId).success(function(data) {
@@ -103,17 +105,30 @@ angular.module('momusApp.controllers')
         };
 
         $scope.newPage = function(){
-            var temp_page = {
-                page_nr : $scope.publication.pages.length + 1,
-                note : null,
-                advertisement: false,
-                articles: [],
-                publication: $scope.publication.id,
-                layout_status: $scope.getLayoutStatusByName("Ukjent")
-            };
-            PublicationService.createPage(temp_page).success(function(data){
-                $scope.publication.pages.push(data);
-            });
+            var insertPageAt = $scope.newPageAt;
+            var numNewPages = $scope.numNewPages;
+            if(numNewPages>100){
+                numNewPages = 100;
+            }else if(numNewPages <= 0){
+                numNewPages = 1;
+            }
+            for(var i = 0; i < numNewPages; i++) {
+                var temp_page = {
+                    page_nr: $scope.publication.pages.length + 1,
+                    note: null,
+                    advertisement: false,
+                    articles: [],
+                    publication: $scope.publication.id,
+                    layout_status: $scope.getLayoutStatusByName("Ukjent")
+                };
+                    if (0 <= insertPageAt && insertPageAt <= $scope.publication.pages.length) {
+                        $scope.publication.pages.splice(insertPageAt, 0, temp_page);
+                    } else {
+                        $scope.publication.pages.push(data);
+                    }
+                    sortPages();
+            }
+            $scope.savePublication();
         };
 
         function sortPages(){
