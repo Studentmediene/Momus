@@ -25,7 +25,7 @@
                 <div class="pull-right" style="width:360px" scroll-trigger="attach-top-true">
                     <div class="input-group input-group-sm">
                         <span class="input-group-addon">Legg til</span>
-                        <input type="number" ng-model="numNewPages" class="form-control">
+                        <input type="number" ng-model="numNewPages" class="form-control" style="max-width:100px;">
                         <span class="input-group-addon">ny{{numNewPages > 1 ? "e" : ""}} side{{numNewPages > 1 ? "r" : ""}} etter side</span>
                         <input type="number" ng-model="newPageAt" min="0" max="{{publication.pages.length}}" class="form-control">
                         <span class="input-group-btn">
