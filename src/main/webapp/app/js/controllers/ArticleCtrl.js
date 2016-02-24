@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function ($scope, PersonService,$timeout, ArticleService, PublicationService, TitleChanger, noteParserRules, $routeParams, ViewArticleService, MessageModal) {
+    .controller('ArticleCtrl', function ($scope, PersonService,$timeout, ArticleService, PublicationService, TitleChanger, noteParserRules, $routeParams, ViewArticleService, MessageModal, $templateRequest) {
         $scope.metaEditMode = false;
         $scope.noteRules = noteParserRules;
 
@@ -111,12 +111,10 @@ angular.module('momusApp.controllers')
         };
 
         $scope.showHelp = function () {
-            MessageModal.info("<p>Momus tar seg bare av organiseringen av artiklene, selve skrivingen foregår i Google Docs. " +
-            "For at artikkelen skal se riktig ut her og når den blir eksporter til grafikerne er det viktig å formatere den riktig i Google Docs.</p>" +
-            "<p><b>Formatering</b><br>Overskrift 1 = Tittel<br>Overskrift 2 = Ingress<br>Overskrift 3 = Mellomtittel<br>Fet skrift og kursiv virker som vanlig.</p>" +
-            "<p>Bilder, tabeller og lignende kan ikke brukes. Kommentarer og forslagmodus fungerer fint.</p>" +
-            "<p>Momus synkroniseres regelmessig med Google Docs, men det kan være litt forsinkelser. " +
-            "Har det gått mer enn 5 minutter og en endring ikke dukker opp her, legg til noen bokstaver og slett dem igjen i Google Docs for å aktivere en ny synkronisering.</p>");
+            $templateRequest('partials/templates/help/articleHelp.html').then(function(template){
+                MessageModal.info(template);
+            });
+
         };
 
 

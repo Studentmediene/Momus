@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal) {
+    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest) {
         $scope.pubId = $routeParams.id;
         $scope.loading = 5;
 
@@ -173,5 +173,11 @@ angular.module('momusApp.controllers')
                 sortPages();
                 PublicationService.updateMetadata($scope.publication);
             }
+        };
+
+        $scope.showHelp = function(){
+            $templateRequest('partials/templates/help/dispHelp.html').then(function(template){
+                MessageModal.info(template);
+            });
         }
     });

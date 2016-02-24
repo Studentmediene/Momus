@@ -38,6 +38,7 @@
                     </table>
                     <a href="#/artikler/{{article.id}}" class="btn btn-primary">Gå tilbake til artikkelen</a>
                     <a ng-disabled="revisions.length <= 1" class="btn btn-primary" ng-click="showCompare()">Sammenlign</a>
+                    <a ng-click="showHelp()" class="btn btn-success">Hjelp?</a>
                 </div>
             </div>
             <div class="col-md-8" ng-hide="showDiff">

@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('PublicationCtrl', function ($scope, $http, PublicationService) {
+    .controller('PublicationCtrl', function ($scope, $http, PublicationService, $templateRequest, MessageModal) {
 
         var today = new Date();
 
@@ -85,6 +85,12 @@ angular.module('momusApp.controllers')
                     });
             }
         };
+
+        $scope.showHelp = function(){
+            $templateRequest("partials/templates/help/publicationHelp.html").then(function(template){
+                MessageModal.info(template);
+            })
+        }
 
     });
 

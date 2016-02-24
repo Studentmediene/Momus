@@ -15,9 +15,12 @@
   -->
 
 <div class="container">
-    <a ng-click="createArticle()" class="btn btn-primary btn-xs" style="margin-bottom: 5px;">
-        <i class="fa fa-plus-circle"></i> Opprett ny artikkel
-    </a>
+    <div style="margin-bottom: 5px;">
+        <a ng-click="createArticle()" class="btn btn-primary">
+            <i class="fa fa-plus-circle"></i> Opprett ny artikkel
+        </a>
+        <a ng-click="showHelp()" class="btn btn-success">Hjelp?</a>
+    </div>
 
     <div class="well well-sm" id="articleSearchInterface">
         <form role="form" ng-submit="searchFunc()">

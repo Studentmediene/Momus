@@ -83,10 +83,6 @@
                         <span class="fa fa-pencil"></span>
                         Rediger i Google Docs
                     </a>
-
-                    <a ng-click="showHelp()" class="btn btn-success">
-                        <span class="fa fa-question"></span>
-                    </a>
                 </div>
 
                 <a href="#/artikler/revisjon/{{article.id}}" class="btn btn-primary"><i class="fa fa-file-text-o"></i>
@@ -97,25 +93,28 @@
                     InDesign fil
                 </a>
 
-            <span tooltip="Kopier sitatsjekk-tekst">
-                <a zc-btn="quoteCheck" button-loader="copying" loading-text="Kopierer" completed-text="Kopiert"
-                   ng-click=""
-                   class="btn btn-primary"><i class="fa fa-quote-right"></i>
-                    Sitatsjekk
-                </a>
-            </span>
+                <span tooltip="Kopier sitatsjekk-tekst">
+                    <a zc-btn="quoteCheck" button-loader="copying" loading-text="Kopierer" completed-text="Kopiert"
+                       ng-click=""
+                       class="btn btn-primary"><i class="fa fa-quote-right"></i>
+                        Sitatsjekk
+                    </a>
+                </span>
 
-            <span ng-hide="article.archived">
-                <a ng-click="deleteArticle()" class="btn btn-danger"><i class="fa fa-trash-o" ></i>
-                    Arkiver artikkelen
-                </a>
-            </span>
+                <span ng-hide="article.archived">
+                    <a ng-click="deleteArticle()" class="btn btn-danger"><i class="fa fa-trash-o" ></i>
+                        Arkiver artikkelen
+                    </a>
+                </span>
 
-            <span ng-show="article.archived">
-                <a ng-click="restoreArticle()" class="btn btn-success" tooltip="Gjenopprett artikkelen så den vil vises i søk"><i class="fa fa-plus" ></i>
-                    Gjenopprett
+                <span ng-show="article.archived">
+                    <a ng-click="restoreArticle()" class="btn btn-success" tooltip="Gjenopprett artikkelen så den vil vises i søk"><i class="fa fa-plus" ></i>
+                        Gjenopprett
+                    </a>
+                </span>
+                <a ng-click="showHelp()" class="btn btn-success">
+                    Hjelp?
                 </a>
-            </span>
             </div>
         </div>
     </div>

@@ -15,58 +15,59 @@
   -->
 
 
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-info">
+                <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-bullhorn"></i> Nyheter</h1></div>
+                <table class="table">
+                    <tbody ng-repeat="n in news | orderBy: '-date'">
+                    <tr ng-class="{danger: n.new, active:!n.new}" class="interact" ng-click="n.show = !n.show">
+                        <td ng-show="n.new" style="font-weight: bold; width: 40%">{{n.date | date}}</td>
+                        <td ng-show="!n.new" style="width: 40%;">{{n.date | date}}</td>
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="panel panel-info">
-            <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-bullhorn"></i> Nyheter</h1></div>
-            <table class="table">
-                <tbody ng-repeat="n in news | orderBy: '-date'">
-                <tr ng-class="{danger: n.new, active:!n.new}" class="interact" ng-click="n.show = !n.show">
-                    <td ng-show="n.new" style="font-weight: bold; width: 40%">{{n.date | date}}</td>
-                    <td ng-show="!n.new" style="width: 40%;">{{n.date | date}}</td>
-
-                    <td ng-show="n.new" style="font-weight: bold">{{n.title}}</td>
-                    <td ng-show="!n.new">{{n.title}}</td>
+                        <td ng-show="n.new" style="font-weight: bold">{{n.title}}</td>
+                        <td ng-show="!n.new">{{n.title}}</td>
 
 
-                    <td width="5%">
-                        <i ng-show="!n.show" class="fa fa-arrow-circle-down"></i>
-                        <i ng-show="n.show" class="fa fa-arrow-circle-up"></i>
-                    </td>
-                </tr>
-                <tr ng-show="n.show">
-                    <td colspan="3" ng-bind-html="n.text | trustHtml"></td>
-                </tr>
-                </tbody>
-            </table>
+                        <td width="5%">
+                            <i ng-show="!n.show" class="fa fa-arrow-circle-down"></i>
+                            <i ng-show="n.show" class="fa fa-arrow-circle-up"></i>
+                        </td>
+                    </tr>
+                    <tr ng-show="n.show">
+                        <td colspan="3" ng-bind-html="n.text | trustHtml"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h1 class="panel-title"><i class="fa fa-question-circle"></i> Hjelp?
+                    </h1>
+                </div>
+                <div class="panel-body">
+                    Trenger du hjelp med noe i Momus er det <a href="" class="btn btn-success">Hjelp?</a> knapper på de forskjellige sidene som åpner en dialogboks med info om siden.
+                    Finner du det ikke ut da heller, kan du sende en e-post til <a href="mailto: momus@smint.no">momus@smint.no</a>.
+                </div>
+            </div>
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h1 class="panel-title"><i class="fa fa-bug"></i> Bugs? Forslag?
+                    </h1>
+                </div>
+                <div class="panel-body">
+                    Har du funnet en bug, oppdaget noe som er feil/uklart, eller har andre forslag til forbedringer/endringer, send en e-post til <a href="mailto: momus@smint.no">momus@smint.no</a>.
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="panel panel-warning">
-            <div class="panel-heading">
-                <h1 class="panel-title"><i class="fa fa-question-circle"></i> Hjelp?
-                </h1>
-            </div>
-            <div class="panel-body">
-                Trenger du hjelp med noe i Momus er det <a href="" class="btn btn-success">Hjelp?</a> knapper på de forskjellige sidene som åpner en dialogboks med info om siden.
-                Finner du det ikke ut da heller, kan du sende en e-post til <a href="mailto: momus@smint.no">momus@smint.no</a>.
-            </div>
-        </div>
-        <div class="panel panel-danger">
-            <div class="panel-heading">
-                <h1 class="panel-title"><i class="fa fa-bug"></i> Bugs? Forslag?
-                </h1>
-            </div>
-            <div class="panel-body">
-                Har du funnet en bug, oppdaget noe som er feil/uklart, eller har andre forslag til forbedringer/endringer, send en e-post til <a href="mailto: momus@smint.no">momus@smint.no</a>.
-            </div>
-        </div>
-    </div>
+    <p style="text-align: center; font-weight: bold;">
+        Momus or Momos (μῶμος) was in Greek mythology the personification of satire, mockery, censure;<br>
+        a god of writers and poets; a spirit of evil-spirited blame and unfair criticism.<br>
+        His name is related to μομφή, meaning 'blame' or 'censure'.<br>
+        He is depicted in classical art as lifting a mask from his face.<br>
+    </p>
 </div>
-<p style="text-align: center; font-weight: bold;">
-    Momus or Momos (μῶμος) was in Greek mythology the personification of satire, mockery, censure;<br>
-    a god of writers and poets; a spirit of evil-spirited blame and unfair criticism.<br>
-    His name is related to μομφή, meaning 'blame' or 'censure'.<br>
-    He is depicted in classical art as lifting a mask from his face.<br>
-</p>
