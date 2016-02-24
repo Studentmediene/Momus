@@ -15,9 +15,10 @@
   -->
 <div style="margin-left: 3%; margin-right: 3%;">
     <h1>Disposisjon for {{publication.name}}</h1>
-
-
-    <div class="col-md-12">
+    <button ng-click="showHelp()" class="btn btn-success" style="margin-bottom: 10px;">
+        Hjelp?
+    </button>
+    <div>
         <div class="panel panel-default">
             <div class="panel-heading clearfix">
                 <div class="pull-left"><h5>Sider</h5></div>
@@ -146,7 +147,8 @@
                         </td>
                     </tr>
                 </tbody>
-            </table>
+                </table>
+            </div>
         </div>
     </div>
 </div>
