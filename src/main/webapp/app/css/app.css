@@ -318,18 +318,14 @@ a.zeroclipboard-is-hover {
 .helper {
     background: red;
 }
-.photo-status {
-    min-width:15px;
-}
 
 .psempty {
     background-color:#EEE;
 }
 
 .disp-table td table td{
-    max-width:120px;
-    width:120px;
     min-width:120px;
+    max-width: 120px;
 }
 
 .person-widget-element td {
@@ -342,4 +338,32 @@ a.zeroclipboard-is-hover {
     top:50px;
     right:5%;
     z-index:100;
+}
+
+.navn{
+    width: 180px;
+}
+
+.seksjon{
+    width: 150px;
+}
+
+.journ{
+    width: 150px;
+}
+
+.fotograf{
+    width: 150px;
+}
+
+.status{
+    width: 125px;
+}
+
+.korrektur{
+    width: 125px;
+}
+
+.fotostatus{
+    width: 100px;
 }

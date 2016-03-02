@@ -19,7 +19,7 @@
         Hjelp?
     </button>
     <div>
-        <div class="panel panel-default">
+        <div class="panel panel-default" style="width: 1500px;">
             <div class="panel-heading clearfix">
                 <div class="pull-left"><h5>Sider</h5></div>
                 <div class="pull-right" style="width:360px" scroll-trigger="attach-top-true">
@@ -36,31 +36,32 @@
                     </div>
                 </div>
             </div>
-            <div class="table-responsive" style="overflow-x:auto;">
-                <table class="pageTable table table-bordered table-responsive table-condensed disp-table" style="font-size: 85%">
-                    <thead>
-                        <th style="width: 2%">#</th>
-                        <th style="width: 70%">
-                            <div style="width: 118px;float: left">Navn</div>
-                            <div style="width: 15%;float: left">Seksjon</div>
-                            <div style="width: 15%;float: left">Journalister</div>
-                            <div style="width: 15%;float: left">Foto/Illustrasjon</div>
-                            <div style="width: 15%;float: left">Status</div>
-                            <div style="width: 12%;float: left">Korrektur</div>
-                            <div style="width: 10%;float: left">Fotostatus</div>
-
+            <div class="table-responsive" style="overflow-x:auto; width: 1500px">
+                <table class="pageTable table table-bordered table-condensed disp-table" style="font-size: 85%">
+                <thead>
+                <tr>
+                    <th style="width: 20px">#</th>
+                    <th style="width: 1000px">
+                        <div class="navn" style="float: left;">Navn</div>
+                        <div class="seksjon" style="float: left;">Seksjon</div>
+                        <div class="journ" style="float: left;"><i class="fa fa-pencil-square-o"></i></div>
+                        <div class="fotograf" style="float: left;"><i class="fa fa-camera"></i></div>
+                        <div class="status" style="float: left;">Status</div>
+                        <div class="korrektur" style="float: left;">Korrektur</div>
+                        <div class="fotostatus" style="float: left;">Fotostatus</div>
                     </th>
-                    <th style="width:10%">Kommentar</th>
-                    <th style="width: 10%">Layout</th>
-                    <th style="width: 5%">Reklame</th>
-                    <th style="width: 5%">Nett</th>
-                    <th style="width: 3%"></th>
+                    <th>Kommentar</th>
+                    <th>Layout</th>
+                    <th>Reklame</th>
+                    <th>Nett</th>
+                    <th></th>
+                </tr>
+
                 </thead>
                 <tr ng-show="loading > 0" style="text-align: center">
                     <td colspan="7"><i class="fa fa-spinner fa-spin fa-4x"></i></td>
                 </tr>
                 <tbody ng-model="publication.pages" ui-sortable="sortableOptions">
-
                     <tr ng-repeat="page in publication.pages" style="background: white;">
                         <td style="text-align: center; cursor: move;" class="pageNr handle">{{page.page_nr}}</td>
                         <td ng-show="editPage">
@@ -70,31 +71,54 @@
                                        show="name">
                             </id-select>
                             <div class="pull-right">
-                                <button ng-click="createArticle(page)" class="btn btn-success"><i class="fa fa-plus"></i></button>
+                                <button ng-click="createArticle(page)" class="btn btn-success">
+                                    <i class="fa fa-plus"></i>
+                                </button>
                             </div>
-
                         </td>
                         <td style="padding:0;margin:0" ng-hide="editPage">
-                            <table class="table pageArticleTable" style="margin:0;padding:0;">
+                            <table class="table pageArticleTable" style="padding: 0;margin:0;">
                                 <tr ng-repeat="article in page.articles">
-                                    <td style="width: 20%;max-width:30px;" class="disp-break-word">
-                                        <a href="#/artikler/{{article.id}}">{{article.name}}</a>
+                                    <td class="navn" style="word-wrap: break-word; word-break: normal;white-space: normal">
+                                        <a class="break-word" href="#/artikler/{{article.id}}">{{article.name}}</a>
                                     </td>
-                                    <td style="width: 15%">{{article.section.name}}</td>
-                                    <td style="width:15%"><ul class="list-unstyled"><li class="" ng-repeat="person in article.journalists"><span person-widget="person" class="disp-break-word">{{person.full_name}}</span></li></ul></td>
-                                    <td style="width:15%"><ul class="list-unstyled"><li class="" ng-repeat="person in article.photographers"><span person-widget="person" class="disp-break-word">{{person.full_name}}</span></li></ul></td>
-                                    <td style="width:20%; background-color:{{article.status.color}};">
-                                        <select style="background: rgba(255,255,255,0.5)" ng-model="article.status" ng-change="saveArticle(article)"
-                                                ng-options="s.name for s in statusOptions track by s.id"></select>
+                                    <td class="navn">{{article.section.name}}</td>
+                                    <td class="journ">
+                                        <ul class="list-unstyled">
+                                            <li class="" ng-repeat="person in article.journalists">
+                                                <span person-widget="person" class="disp-break-word">
+                                                    {{person.full_name}}
+                                                </span>
+                                            </li>
+                                        </ul>
                                     </td>
-                                    <td style="width: 15%; background:{{article.review.color}}">
-                                        <select style="background: rgba(255,255,255,0.5)" ng-model="article.review" ng-change="saveArticle(article)"
-                                                ng-options="s.name for s in reviewOptions track by s.id"></select>
+                                    <td class="fotograf">
+                                        <ul class="list-unstyled">
+                                            <li class="" ng-repeat="person in article.photographers">
+                                                <span person-widget="person" class="disp-break-word">
+                                                    {{person.full_name}}
+                                                </span>
+                                            </li>
+                                        </ul>
                                     </td>
-                                    <td ng-click="editPhotoStatus = true" ng-hide="editPhotoStatus" class="photo-status {{article.photo_status.length ? 0: 'psempty'}}">
+                                    <td class="status" style="background-color:{{article.status.color}};">
+                                        <select style="background: rgba(255,255,255,0.5)"
+                                                ng-model="article.status"
+                                                ng-change="saveArticle(article)"
+                                                ng-options="s.name for s in statusOptions track by s.id">
+                                        </select>
+                                    </td>
+                                    <td class="korrektur" style="background:{{article.review.color}}">
+                                        <select style="background: rgba(255,255,255,0.5)"
+                                                ng-model="article.review"
+                                                ng-change="saveArticle(article)"
+                                                ng-options="s.name for s in reviewOptions track by s.id">
+                                        </select>
+                                    </td>
+                                    <td ng-click="editPhotoStatus = true" ng-hide="editPhotoStatus" class="fotostatus photo-status {{article.photo_status.length ? 0: 'psempty'}}">
                                         <textwrapper length="15" text="article.photo_status"></textwrapper>
                                     </td>
-                                    <td ng-show="editPhotoStatus">
+                                    <td class="fotostatus" ng-show="editPhotoStatus">
                                         <div class="input-group">
                                             <input class="form-control input-sm" ng-model="article.photo_status">
                                             <span class="input-group-btn">
@@ -102,18 +126,16 @@
                                                     <i class="fa fa-save"></i>
                                                 </button>
                                             </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
 
-                                            </div>
-                                        </td>
-                                        <td ng-show="editPage"><input ng-model="article.photo_status"></td>
-                                    </tr>
-                                </table>
-                            </td>
-
-                            <td style="width: 20%;">
-                                <div ng-hide="editPage">{{page.note}}</div>
-                                <input ng-show="editPage" class="form-control" ng-model="page.note">
-                            </td>
+                        <td>
+                            <div ng-hide="editPage">{{page.note}}</div>
+                            <input ng-show="editPage" class="form-control" ng-model="page.note">
+                        </td>
 
                         <td style="background: {{page.layout_status.color}};">
                             <select style="background:rgba(255,255,255,0.5);" ng-model="page.layout_status" ng-change="savePublication()"
@@ -121,20 +143,20 @@
                             </select>
                         </td>
 
-                            <td>
-                                <input type="checkbox" class="checkbox" ng-model="page.advertisement" ng-show="editPage">
-                                <span ng-hide="editPage">{{ page.advertisement ? "Ja" : "Nei" }}</span>
-                            </td>
+                        <td>
+                            <input type="checkbox" class="checkbox" ng-model="page.advertisement" ng-show="editPage">
+                            <span ng-hide="editPage">{{ page.advertisement ? "Ja" : "Nei" }}</span>
+                        </td>
 
-                            <td>
-                                <input type="checkbox" class="checkbox" ng-model="page.web" ng-show="editPage">
-                                <span ng-hide="editPage">{{ page.web ? "Ja" : "Nei" }}</span>
-                            </td>
+                        <td>
+                            <input type="checkbox" class="checkbox" ng-model="page.web" ng-show="editPage">
+                            <span ng-hide="editPage">{{ page.web ? "Ja" : "Nei" }}</span>
+                        </td>
 
-                            <td>
-                                <button ng-click="editPage = true" class="btn btn-warning btn-xs pull-right" ng-hide="editPage">
-                                    <i class="fa fa-pencil"></i>
-                                </button>
+                        <td>
+                            <button ng-click="editPage = true" class="btn btn-warning btn-xs pull-right" ng-hide="editPage">
+                                <i class="fa fa-pencil"></i>
+                            </button>
 
                             <button ng-click="savePublication();editPage = false" class="btn btn-success pull-right btn-xs" ng-show="editPage">
                                 <i class="fa fa-save"></i>
