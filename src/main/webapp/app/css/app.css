@@ -301,9 +301,15 @@ a.zeroclipboard-is-hover {
     border-top:0px;
 }
 
-.pageTable > tbody > tr > td,
+.pageTable > tbody > tr > td{
+    border: 1px solid #cfcfcf;
+    border-collapse: collapse !important;
+    border-spacing: 0;
+}
 .pageTable > thead > tr > th{
-    border: 1px #cfcfcf solid;
+    border: 1px solid #cfcfcf;
+    border-collapse: collapse !important;
+    border-spacing: 0;
 }
 
 .disp-break-word{
@@ -323,11 +329,6 @@ a.zeroclipboard-is-hover {
     background-color:#EEE;
 }
 
-.disp-table td table td{
-    min-width:120px;
-    max-width: 120px;
-}
-
 .person-widget-element td {
     max-width:initial !important;
     min-width:initial !important;
@@ -336,12 +337,36 @@ a.zeroclipboard-is-hover {
 .attach-top-true {
     position:fixed;
     top:50px;
-    right:5%;
     z-index:100;
 }
 
+.panel-header-attach {
+    position:fixed;
+    width:1500px;
+    top:50px;
+    z-index:100;
+}
+
+.table-header-attach {
+    position:fixed;
+    width:1500px;
+    top:50px;
+    z-index:100;
+    background-color: white;
+}
+
+/* Bredder på kolonner i disposisjonen.. */
+
+.sidetall{
+    width: 30px;
+}
+
+.artikkel{
+    width: 1000px;
+}
+
 .navn{
-    width: 180px;
+    width: 190px;
 }
 
 .seksjon{
@@ -349,7 +374,7 @@ a.zeroclipboard-is-hover {
 }
 
 .journ{
-    width: 150px;
+    width: 170px;
 }
 
 .fotograf{
@@ -357,13 +382,35 @@ a.zeroclipboard-is-hover {
 }
 
 .status{
-    width: 125px;
+    width: 140px;
 }
 
 .korrektur{
-    width: 125px;
+    width: 100px;
 }
 
 .fotostatus{
-    width: 100px;
+    width: 120px;
 }
+
+.kommentar{
+    width: 240px;
+}
+
+.layout{
+    width: 120px;
+}
+
+.reklame{
+    width:50px;
+}
+
+.nett{
+    width:50px;
+}
+
+.knapp{
+    width:40px;
+}
+
+/*Ferdig*/
