@@ -122,13 +122,15 @@
                         </td>
 
                             <td>
-                                <input type="checkbox" class="checkbox" ng-model="page.advertisement" ng-show="editPage">
-                                <span ng-hide="editPage">{{ page.advertisement ? "Ja" : "Nei" }}</span>
+                                <span style="cursor: pointer" ng-click="page.advertisement = !page.advertisement; savePublication();">
+                                    <i class="fa fa-file fa-lg" ng-class="{'text-danger' : !page.advertisement, 'text-success' : page.advertisement }"></i>
+                                </span>
                             </td>
 
                             <td>
-                                <input type="checkbox" class="checkbox" ng-model="page.web" ng-show="editPage">
-                                <span ng-hide="editPage">{{ page.web ? "Ja" : "Nei" }}</span>
+                                <span style="cursor: pointer" ng-click="page.web = !page.web; savePublication();">
+                                    <i class="fa fa-globe fa-lg" ng-class="{'text-danger' : !page.web, 'text-success' : page.web }"></i>
+                                </span>
                             </td>
 
                             <td>
