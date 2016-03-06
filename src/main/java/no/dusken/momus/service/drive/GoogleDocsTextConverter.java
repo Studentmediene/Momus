@@ -19,6 +19,7 @@ package no.dusken.momus.service.drive;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,6 +40,9 @@ public class GoogleDocsTextConverter {
     Pattern classes = Pattern.compile(" class=\".*?\"");
     Pattern spans = Pattern.compile("</?span.*?>");
     Pattern emptyP = Pattern.compile("<p>\\s?</p>");
+
+    ArrayList<Pattern> hTags = initTitles();
+
 
     Pattern inlineComments = Pattern.compile("<sup>.*?</sup>");
     Pattern spaces = Pattern.compile("&nbsp;");
@@ -73,7 +77,7 @@ public class GoogleDocsTextConverter {
         out = removeListAttributes(out);
         out = removeEmptyPTags(out);
         out = unescapeHtml(out);
-
+        out = replaceTitles(out);
 
         return out;
     }
@@ -99,6 +103,13 @@ public class GoogleDocsTextConverter {
         return  in;
     }
 
+    private ArrayList<Pattern> initTitles(){
+        ArrayList<Pattern> hTags = new ArrayList<Pattern>();
+        for(int i=1; i<5; i++){
+            hTags.add(Pattern.compile("<h" + i + " [^>]*>"));
+        }
+        return hTags;
+    }
 
     /**
      * Bold and italics are not marked with tags in GDocs, instead it is applied with CSS.
@@ -151,6 +162,18 @@ public class GoogleDocsTextConverter {
     private String removeSpans(String in) {
         Matcher m = spans.matcher(in);
         return m.replaceAll("");
+    }
+
+    /**
+     * Removing ids from header tags
+     */
+    private String replaceTitles(String in){
+        String out = in;
+        for(int i = 0; i < 4; i++){
+            Matcher m = hTags.get(i).matcher(out);
+            out = m.replaceAll("<h" + (i + 1) + ">");
+        }
+        return out;
     }
 
     /**
