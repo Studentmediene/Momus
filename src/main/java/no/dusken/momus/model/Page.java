@@ -41,6 +41,14 @@ public class Page {
     @ManyToOne(fetch = FetchType.EAGER)
     private LayoutStatus layoutStatus;
 
+    public Page(){
+
+    }
+
+    public Page(Long id){
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
