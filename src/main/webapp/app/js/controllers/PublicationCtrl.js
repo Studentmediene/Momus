@@ -25,6 +25,10 @@ angular.module('momusApp.controllers')
         $scope.publications = [];
         $scope.yearsInDropdown = [];
 
+        $scope.currentPage = 1;
+        $scope.pubsPerPage = 10;
+        $scope.numPubs = 0;
+
         $scope.editing = {};
 
         $scope.dateOptions = {// Needed for the date picker, always start weeks on a monday
@@ -37,12 +41,33 @@ angular.module('momusApp.controllers')
         });
 
         $scope.yearFilter = function (publication) {
-            // todo remove check?
-            return publication.release_date && publication.release_date.indexOf($scope.viewYear) != -1;
+            if($scope.viewYear == "Alle"){
+                return true;
+            }
+            else{
+                return publication.release_date && publication.release_date.indexOf($scope.viewYear) != -1;
+            }
+        };
+
+        $scope.yearChanged = function(){
+            $scope.numPubs = $scope.publications.filter(function(pub){
+                return $scope.yearFilter(pub);
+            }).length;
+        };
+
+        $scope.pageChanged = function(){
+            console.log($scope.currentPage);
         };
 
         calculateYearsInDropdownMenu();
 
+        function calculateYearsInDropdownMenu() {
+            var sinceYearX = 2009;
+
+            for (var i = today.getFullYear(); i > sinceYearX; i--) {
+                $scope.yearsInDropdown.push(i);
+            }
+        }
 
         $scope.editPublication = function (publication) {
             $scope.editing = angular.copy(publication); // always work on a copy
@@ -54,15 +79,6 @@ angular.module('momusApp.controllers')
             }
             $scope.publicationForm.$setPristine();
         };
-
-        function calculateYearsInDropdownMenu() {
-            var sinceYearX = 2009;
-
-            for (var i = today.getFullYear(); i > sinceYearX; i--) {
-                $scope.yearsInDropdown.push(i);
-            }
-        }
-
 
         /**
          * This method saves either a new publication or an already existing publication.
