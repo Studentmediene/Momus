@@ -188,8 +188,7 @@ angular.module('momusApp.controllers')
                 $scope.selectedPage = $scope.publication.pages[ui.item.index()];
                 sortPages();
                 PublicationService.updateMetadata($scope.publication);
-            },
-            scroll: true
+            }
         };
 
         $scope.showHelp = function(){
