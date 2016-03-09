@@ -56,7 +56,6 @@ angular.module('momusApp.controllers')
         };
 
         $scope.pageChanged = function(){
-            console.log($scope.currentPage);
         };
 
         calculateYearsInDropdownMenu();
@@ -88,8 +87,8 @@ angular.module('momusApp.controllers')
             if (!$scope.editing.id) { // no id means it's a new one
                 PublicationService.createNew($scope.editing)
                     .success(function (savedPublication) {
-                        $scope.editing = savedPublication;
                         $scope.publications.push(savedPublication);
+                        $scope.editPublication(savedPublication);
                         $scope.isSaving = false;
                     });
             } else { // it's an old one
