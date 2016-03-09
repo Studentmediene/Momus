@@ -123,13 +123,20 @@
 
                             <td>
                                 <span style="cursor: pointer" ng-click="page.advertisement = !page.advertisement; savePublication();">
-                                    <i class="fa fa-file fa-lg" ng-class="{'text-danger' : !page.advertisement, 'text-success' : page.advertisement }"></i>
+                                    <i class="fa fa-file fa-lg"
+                                       ng-class="{'text-danger' : !page.advertisement, 'text-success' : page.advertisement }"
+                                       tooltip="Siden inneholder {{!page.advertisement ? 'ikke ' : ''}} reklame">
+
+                                    </i>
                                 </span>
                             </td>
 
                             <td>
                                 <span style="cursor: pointer" ng-click="page.web = !page.web; savePublication();">
-                                    <i class="fa fa-globe fa-lg" ng-class="{'text-danger' : !page.web, 'text-success' : page.web }"></i>
+                                    <i class="fa fa-globe fa-lg"
+                                       ng-class="{'text-danger' : !page.web, 'text-success' : page.web }"
+                                       tooltip="Artiklene skal {{!page.web ? 'ikke ' : ''}} på nett">
+                                    </i>
                                 </span>
                             </td>
 
