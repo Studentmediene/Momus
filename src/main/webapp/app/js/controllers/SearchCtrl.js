@@ -35,7 +35,7 @@ angular.module('momusApp.controllers')
         };
 
         $scope.articleSortReverse = false;
-        $scope.articleSortType = "section.id";
+        $scope.articleSortType = "[publication.release_date,section.name]";
         $scope.search = angular.copy($scope.defaultSearch);
 
         // Get stuff from the server
@@ -134,9 +134,9 @@ angular.module('momusApp.controllers')
             });
         }
 
-        $scope.sortSearch = function(type){
+        $scope.sortSearch = function(type, switchDir){
             if($scope.articleSortType != type){
-                $scope.articleSortReverse = false;
+                $scope.articleSortReverse = switchDir;
                 $scope.articleSortType = type;
             } else {
                 $scope.articleSortReverse = !$scope.articleSortReverse;
