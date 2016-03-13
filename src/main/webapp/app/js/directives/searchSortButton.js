@@ -25,9 +25,14 @@ angular.module('momusApp.directives').
             transclude:true,
             link: function(scope, element, attrs){
                 scope.type = attrs.searchSortButton;
+                if('switchSortDirection' in attrs){
+                    scope.switchDir = attrs.switchSortDirection;
+                }else{
+                    scope.switchDir = false;
+                }
 
                 element.on("click", function(){
-                    scope.sortSearch(scope.type);
+                    scope.sortSearch(scope.type, scope.switchDir);
                 });
             }
         };
