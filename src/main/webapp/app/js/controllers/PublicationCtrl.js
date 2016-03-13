@@ -91,7 +91,7 @@ angular.module('momusApp.controllers')
 
         $scope.editPublication = function (publication) {
             $scope.editing = angular.copy(publication); // always work on a copy
-            $scope.editingIndex = $scope.publications.indexOf(publication);
+            $scope.editingId = publication.id;
 
             // clear form errors
             if (!$scope.editing.release_date) {
@@ -106,6 +106,7 @@ angular.module('momusApp.controllers')
         $scope.saveEditedPublication = function () {
             $scope.isSaving = true;
             if (!$scope.editing.id) { // no id means it's a new one
+                console.log("whaat");
                 PublicationService.createNew($scope.editing)
                     .success(function (savedPublication) {
                         $scope.publications.push(savedPublication);
@@ -116,7 +117,12 @@ angular.module('momusApp.controllers')
             } else { // it's an old one
                 PublicationService.updateMetadata($scope.editing)
                     .success(function (savedPublication) {
-                        $scope.publications[$scope.editingIndex] = savedPublication;
+                        for(var i = 0; i < $scope.publications.length;i++){
+                            if($scope.publications[i].id == $scope.editingId){
+                                $scope.publications[i] = savedPublication;
+                                console.log($scope.publications[i])
+                            }
+                        }
                         $scope.editPublication(savedPublication);
                         $scope.isSaving = false;
                         $scope.setPublicationSlice();
