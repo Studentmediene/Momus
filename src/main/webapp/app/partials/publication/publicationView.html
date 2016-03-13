@@ -41,7 +41,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="publication in slicedPublications | filter:yearFilter | orderBy: '-release_date'">
+                        <tr ng-repeat="publication in slicedPublications | orderBy: '-release_date'">
                             <td>{{publication.name}}</td>
                             <td>{{publication.release_date}}</td>
                             <td><a href="#/artikler?publication={{publication.id}}">Se artikler</a></td>
