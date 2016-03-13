@@ -26,8 +26,9 @@ angular.module('momusApp.controllers')
         $scope.yearsInDropdown = [];
 
         $scope.currentPage = 1;
-        $scope.pubsPerPage = 10;
+        $scope.pubsPerPage = 10 ;
         $scope.numPubs = 0;
+        $scope.slicedPublications = [];
 
         $scope.editing = {};
 
@@ -38,6 +39,8 @@ angular.module('momusApp.controllers')
 
         PublicationService.getAll().success(function (data) {
             $scope.publications = data;
+            $scope.yearChanged();
+            $scope.setPublicationSlice();
         });
 
         $scope.yearFilter = function (publication) {
@@ -50,12 +53,31 @@ angular.module('momusApp.controllers')
         };
 
         $scope.yearChanged = function(){
+            $scope.updateNumPubs();
+        };
+
+        $scope.updateNumPubs = function(){
             $scope.numPubs = $scope.publications.filter(function(pub){
                 return $scope.yearFilter(pub);
             }).length;
+            console.log($scope.numPubs);
+            $scope.setPublicationSlice();
         };
 
         $scope.pageChanged = function(){
+            $scope.setPublicationSlice();
+        };
+
+        $scope.needPagination = function(){
+            return $scope.numPubs > $scope.pubsPerPage;
+        };
+
+        $scope.setPublicationSlice = function(){
+            $scope.publications.sort(function(a,b){
+                return a.release_date - b.release_date;
+            });
+            $scope.slicedPublications = $scope.publications.slice((($scope.currentPage-1)*$scope.pubsPerPage), (($scope.currentPage)*$scope.pubsPerPage))
+            console.log($scope.slicedPublications);
         };
 
         calculateYearsInDropdownMenu();
@@ -90,6 +112,7 @@ angular.module('momusApp.controllers')
                         $scope.publications.push(savedPublication);
                         $scope.editPublication(savedPublication);
                         $scope.isSaving = false;
+                        $scope.updateNumPubs();
                     });
             } else { // it's an old one
                 PublicationService.updateMetadata($scope.editing)
@@ -97,6 +120,7 @@ angular.module('momusApp.controllers')
                         $scope.publications[$scope.editingIndex] = savedPublication;
                         $scope.editPublication(savedPublication);
                         $scope.isSaving = false;
+                        $scope.updateNumPubs();
                     });
             }
         };
