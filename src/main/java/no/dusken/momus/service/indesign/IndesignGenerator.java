@@ -54,7 +54,8 @@ public class IndesignGenerator {
         replacements.put("<br></", "</"); // ignore line breaks at end of tags
         replacements.put("<br>", "<0x000A>"); // in-line line-breaks
         replacements.put("–", "<0x2014>"); // m-dash?
-        replacements.put("—", "<0x2014>"); // m-dash
+        //replacements.put("—", "<0x2014>"); // m-dash
+        replacements.put("—", "<0x2013>");
 
         // change paragraphs and stuff to InDesign equivalent
         replacements.put("<h1>", "<ParaStyle:Tittel>");

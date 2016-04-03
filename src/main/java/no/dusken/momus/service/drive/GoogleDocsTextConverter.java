@@ -43,7 +43,7 @@ public class GoogleDocsTextConverter {
 
     ArrayList<Pattern> hTags = initTitles();
 
-
+    Pattern dashes = Pattern.compile("--");
     Pattern inlineComments = Pattern.compile("<sup>.*?</sup>");
     Pattern spaces = Pattern.compile("&nbsp;");
     Pattern comments = Pattern.compile("<div><p>.*?</p></div>");
@@ -78,6 +78,7 @@ public class GoogleDocsTextConverter {
         out = removeEmptyPTags(out);
         out = unescapeHtml(out);
         out = replaceTitles(out);
+        out = replaceDashes(out);
 
         return out;
     }
@@ -223,6 +224,14 @@ public class GoogleDocsTextConverter {
         out = m.replaceAll(" ");
 
         return out;
+    }
+
+    /*
+     * Replaces "--" with an en-dash
+     */
+    private String replaceDashes(String in) {
+        Matcher m = dashes.matcher(in);
+        return m.replaceAll("–");
     }
 
     /**
