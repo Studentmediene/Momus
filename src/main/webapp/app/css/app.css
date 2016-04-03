@@ -414,3 +414,7 @@ a.zeroclipboard-is-hover {
 }
 
 /*Ferdig*/
+
+.ui-select-multiple input.ui-select-search {
+    width: 100% !important;
+}
