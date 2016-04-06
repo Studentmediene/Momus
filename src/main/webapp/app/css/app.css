@@ -418,3 +418,7 @@ a.zeroclipboard-is-hover {
 .ui-select-multiple input.ui-select-search {
     width: 100% !important;
 }
+.disp-helper {
+    margin-left: 3%;
+    border: 1px solid #cfcfcf;
+}
