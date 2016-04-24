@@ -143,13 +143,13 @@
                         </td>
 
                         <td class="layout" style="background: {{page.layout_status.color}};">
-                            <select style="background:rgba(255,255,255,0.5);" ng-model="page.layout_status" ng-change="savePublication()"
+                            <select style="background:rgba(255,255,255,0.5);" ng-model="page.layout_status" ng-change="savePage()"
                                     ng-options="l.name for l in layoutStatuses track by l.id">
                             </select>
                         </td>
 
                         <td class="reklame">
-                            <span style="cursor: pointer" ng-click="page.advertisement = !page.advertisement; savePublication();">
+                            <span style="cursor: pointer" ng-click="page.advertisement = !page.advertisement; savePage();">
                                 <i class="fa fa-file fa-lg"
                                    ng-class="{'text-danger' : !page.advertisement, 'text-success' : page.advertisement }"
                                    tooltip="Siden inneholder {{!page.advertisement ? 'ikke ' : ''}} reklame">
@@ -159,7 +159,7 @@
                         </td>
 
                         <td class="nett">
-                            <span style="cursor: pointer" ng-click="page.web = !page.web; savePublication();">
+                            <span style="cursor: pointer" ng-click="page.web = !page.web; savePage();">
                                 <i class="fa fa-globe fa-lg"
                                    ng-class="{'text-danger' : !page.web, 'text-success' : page.web }"
                                    tooltip="Artiklene skal {{!page.web ? 'ikke ' : ''}} på nett">
@@ -172,7 +172,7 @@
                                 <i class="fa fa-pencil"></i>
                             </button>
 
-                            <button ng-click="savePublication();editPage = false" class="btn btn-success pull-right btn-xs" ng-show="editPage">
+                            <button ng-click="savePage();editPage = false" class="btn btn-success pull-right btn-xs" ng-show="editPage">
                                 <i class="fa fa-save"></i>
                             </button>
                         </td>
