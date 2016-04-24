@@ -32,7 +32,7 @@ angular.module('momusApp.directives')
                 scope.selectedIDs = {selected: []};
                 scope.lookup = {};
 
-                scope.$watch('items', function () {
+                scope.$watch('items.length', function () {
                     if (!scope.items) return;
                     scope.items.forEach(function(item){
                         scope.lookup[item.id] = item;

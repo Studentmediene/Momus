@@ -177,10 +177,10 @@ angular.module('momusApp.controllers')
 
         $scope.sortableOptions = {
             helper: function(e, ui) {
-                ui.children().each(function () {
-                    $(this).width($(this).width());
-                });
-                return ui;
+                var c = ui.clone().appendTo("body");
+                c.width($(this).width());
+                c.addClass("disp-helper");
+                return c;
             },
             axis: 'y',
             handle: '.handle',
