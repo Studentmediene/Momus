@@ -35,12 +35,16 @@ angular.module('momusApp.services')
 
             // Sources
             '<h4>Kilder</h4><p>Legg inn kilder du har vært i kontakt med for at andre lett kan få tak i dem.</p>',
-            '<h4>Kildetagging</h4><p>Kilder kan tagges for lett filtrering.</p>',
+            '<h4>Kildetagging</h4><p>Kilder kan tagges for lett filtrering.</p>'
         ];
 
 
         // Date: year, month - 1, day
         var news = [{
+            date: new Date(2016, 3, 24),
+            title: "Bugfiksing",
+            text: "<p>Har fisket noen bugs, blant annet omhandlet riktig bruk av forskjellige bindestreker i eksporten til InDesign, og noen småting i disposisjonen. Dette blir sannsynligvis siste oppdatering før sommeren.</p>"
+        },{
             date: new Date(2016, 1, 24),
             title: "Fjernet forside og forbedret disposisjon",
             text: "<p>Forsiden og den gamle kilder-funksjonen er nå fjernet, og erstattet av \"info/nyheter\"-siden. Disposisjonen har også fått noen nye felter, og litt ny funksjonalitet, som for eksempel at man nå kan lage nye artikler rett fra disposisjonen.</p>"
@@ -81,7 +85,7 @@ angular.module('momusApp.services')
                 date: new Date(2015, 1, 8),
                 title: "Lansering!",
                 text: "<p>Velkommen til Momus! Vi tar gjerne i mot tilbakemeldinger, send en mail til momus@smitit.no med dine synspunkter.</p>"
-            },
+            }
         ];
 
         var dateThreshold = new Date(new Date().setDate(new Date().getDate() - 14));
