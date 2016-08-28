@@ -113,7 +113,7 @@ angular.module('momusApp.controllers')
         $scope.sendToChimera = function(id) {
             $scope.sending = true;
             ArticleService.toChimera(id).success(function (data) {
-                var url = JSON.parse(data);
+                var url = data;
                 $scope.sending = false;
                 $scope.chimeraModal(url);
             });

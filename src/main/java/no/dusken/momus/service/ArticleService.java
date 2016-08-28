@@ -104,9 +104,6 @@ public class ArticleService {
         article.setLastUpdated(new Date());
         logger.info("Article with id {} updated, data: {}", article.getId(), article.dump());
 
-
-        logger.info("Article \"{}\" (id: {}) updated by user {}", article.getName(), article.getId(), userLoginService.getId());
-
 //        if (article.getStatus().getName().equals("Publisert")) {
             // export
 //        }
