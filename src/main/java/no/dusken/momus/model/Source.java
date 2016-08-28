@@ -20,13 +20,14 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Set;
 
 @Entity
 public class Source {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -36,12 +37,8 @@ public class Source {
 
     private String webPage;
 
-    @Lob
-    @Column(length = 4096)
     private String address;
 
-    @Lob
-    @Column(length = 40960)
     private String note;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -127,5 +124,27 @@ public class Source {
 
     public void setTags(Set<SourceTag> tags) {
         this.tags = tags;
+    }
+
+    @Override
+    public String toString() {
+        return "Source{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    public String dump() {
+        return "Source{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", email='" + email + '\'' +
+                ", webPage='" + webPage + '\'' +
+                ", address='" + address + '\'' +
+                ", note='" + note + '\'' +
+                ", tags=" + (tags == null ? "[]" : Arrays.toString(tags.toArray())) +
+                '}';
     }
 }

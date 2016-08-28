@@ -22,11 +22,43 @@ angular.module('momusApp.services')
             getAll: function () {
                 return $http.get('/api/publication');
             },
+            getById: function(id) {
+                return $http.get('/api/publication/' + id);
+            },
             createNew: function(publication) {
                 return $http.post('/api/publication', publication);
             },
             updateMetadata: function(publication) {
-                return $http.put('/api/publication/metadata/' + publication.id, publication);
+                return $http.put('/api/publication/metadata', publication);
+            },
+            getActive: function(publications) {
+                var today = new Date();
+
+                var active = new Date(publications[0].release_date);
+                var activeIndex = 0;
+                for(var i = 1; i < publications.length;i++){
+                    var date = new Date(publications[i].release_date);
+                    if(date < active && date > today){
+                        active = date;
+                        activeIndex = i;
+                    }
+                }
+                return publications[activeIndex];
+            },
+            getPages: function(id) {
+                return $http.get('/api/publication/pages/'+id);
+            },
+            createPage: function(page) {
+                return $http.post('/api/publication/pages/', page);
+            },
+            deletePage: function(id) {
+                return $http.delete('/api/publication/pages/delete/' + id);
+            },
+            generateDisp: function(id) {
+                return $http.get('/api/publication/pages/generate/'+id);
+            },
+            getLayoutStatuses: function(){
+                return $http.get('/api/publication/layoutstatus')
             }
         };
     });

@@ -22,11 +22,9 @@ import javax.persistence.*;
 public class Note {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
-    @Column(length = 40960)
     private String content;
 
     @OneToOne(fetch = FetchType.LAZY)

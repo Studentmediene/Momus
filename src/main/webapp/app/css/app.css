@@ -38,6 +38,26 @@ textarea.note {
     background-color: #fff95d;;
 }
 
+hr.divider {
+    width:100%;
+    border-color: #bce8f1;
+    border-width: 1px;
+}
+
+div.metaline {
+    margin-top: -10px;
+
+}
+
+label.important-field {
+    font-size: 17px;
+}
+
+.articleContent h2{
+    font-size: 18px;
+    font-weight: bold;
+}
+
 .wysihtml5-command-active {
     background-color: #cccccc;
     background-image: none;
@@ -78,6 +98,12 @@ a:focus {
     margin: 0 5px 10px 0;
 }
 
+.btn-row .btn {
+    margin-bottom: 2px;
+    margin-top: 2px;
+
+}
+
 /* used for ui-bootstrap */
 .nav, .pagination, .carousel, .panel-title a {
     cursor: pointer;
@@ -95,87 +121,6 @@ td.articleHover:hover {
 
 td > ul, td > ol {
     margin-bottom: 0;
-}
-
-/* Used in disposition to move (drag and drop) pages */
-.angular-ui-tree {
-
-}
-
-.angular-ui-tree-empty {
-    border: 1px dashed #bbb;
-    min-height: 100px;
-    background-color: #e5e5e5;
-    background-image: -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
-    background-image: -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
-    background-image: linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
-    background-size: 60px 60px;
-    background-position: 0 0, 30px 30px;
-}
-
-.angular-ui-tree-nodes {
-    /*display: block;*/
-    position: relative;
-    margin: 0px;
-    padding: 0px;
-    list-style: none;
-}
-
-.angular-ui-tree-nodes .angular-ui-tree-nodes {
-    padding-left: 20px;
-}
-
-.angular-ui-tree-node, .angular-ui-tree-placeholder {
-    position: relative;
-    margin: 0px;
-    padding: 0px;
-    min-height: 20px;
-    line-height: 20px;
-}
-
-.angular-ui-tree-hidden {
-    display: none;
-}
-
-.angular-ui-tree-placeholder {
-    display: table-row;
-    white-space: nowrap;
-    height: 100px;
-    margin: 5px 0;
-    padding: 0;
-    min-height: 30px;
-}
-
-.angular-ui-tree-handle {
-    cursor: move;
-    text-decoration: none;
-    font-weight: bold;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    min-height: 20px;
-    line-height: 20px;
-}
-
-.angular-ui-tree-drag {
-    position: absolute;
-    pointer-events: none;
-    z-index: 999;
-    opacity: .8;
-}
-
-.angular-ui-tree-drag tr td {
-    display: none;
-}
-
-.angular-ui-tree-drag .pageNr {
-    display: table-cell;
-    height: 58px;
-}
-
-/*Disposition, highlight selected Page*/
-.selectedPage {
-    background-color: #b9def0;
 }
 
 /* quoteCheck button effects */
@@ -244,4 +189,236 @@ a.zeroclipboard-is-hover {
     margin-bottom: 10px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+}
+
+
+.article-revisions del, .article-revisions .del {
+    background:#ffe6e6;
+}
+.article-revisions ins, .article-revisions .ins {
+    background: #e6ffe6;
+}
+
+/* Person Widget */
+
+.person-widget-wrapper {
+    position:relative;
+}
+
+.person-widget-wrapper {
+    position:relative;
+}
+
+.person-widget-btn {
+    border-bottom: 1px dotted #ccc;
+    cursor: pointer;
+}
+
+.person-widget-btn :hover {
+    border-bottom: 1px dotted #999;
+}
+
+.person-widget-element {
+    position:absolute;
+    background-color: #FFFFFF;
+    border:1px solid #CCC;
+    border-radius:5px;
+    z-index:100;
+    cursor:default;
+    bottom:40%;
+    left:-20%;
+    overflow: visible;
+}
+
+.person-widget-btn {
+    border-bottom: 1px dotted #ccc;
+    cursor: pointer;
+}
+
+.closePw {
+    opacity:0.5;
+    cursor:pointer;
+    padding:0;
+    margin:0;
+}
+
+.closePw:hover {
+    opacity:1;
+}
+
+
+.person-widget-element:after, .person-widget-element:before {
+    top: 100%;
+    left: 20%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+}
+
+
+.person-widget-element:after {
+    border-color: rgba(255, 255, 255, 0);
+    border-top-color: #FFF;
+    border-width: 10px;
+    margin-left: -10px;
+}
+.person-widget-element:before {
+    border-color: rgba(204, 204, 204, 0);
+    border-top-color: #CCC;
+    border-width: 11px;
+    margin-left: -11px;
+}
+
+
+/* Fix table overflow if article name contains a word that is too long */
+@media (max-width: 992px) { /* use the max to specify at each container level */
+    .search-article-name {
+        max-width: 80px; /* adjust to desired wrapping */
+    }
+
+    .break-word {
+        word-wrap: break-word; /* Internet Explorer 5.5+ */
+    }
+}
+
+@media (max-width: 768px){
+    .search-article-name {
+        max-width:none;
+    }
+}
+
+.sortBtn:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.fav {
+    line-height:32px;
+}
+
+.pageArticleTable tbody tr:first-child td {
+    border-top:0px;
+}
+
+.pageTable > tbody > tr > td{
+    border: 1px solid #cfcfcf;
+    border-collapse: collapse !important;
+    border-spacing: 0;
+}
+.pageTable > thead > tr > th{
+    border: 1px solid #cfcfcf;
+    border-collapse: collapse !important;
+    border-spacing: 0;
+}
+
+.disp-break-word{
+    word-wrap:break-word;
+
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
+.helper {
+    background: red;
+}
+
+.psempty {
+    background-color:#EEE;
+}
+
+.person-widget-element td {
+    max-width:initial !important;
+    min-width:initial !important;
+}
+
+.attach-top-true {
+    position:fixed;
+    top:50px;
+    z-index:100;
+}
+
+.panel-header-attach {
+    position:fixed;
+    width:1500px;
+    top:50px;
+    z-index:100;
+}
+
+.table-header-attach {
+    position:fixed;
+    width:1500px;
+    top:50px;
+    z-index:100;
+    background-color: white;
+}
+
+/* Bredder på kolonner i disposisjonen.. */
+
+.sidetall{
+    width: 30px;
+}
+
+.artikkel{
+    width: 1000px;
+}
+
+.navn{
+    width: 190px;
+}
+
+.seksjon{
+    width: 150px;
+}
+
+.journ{
+    width: 170px;
+}
+
+.fotograf{
+    width: 150px;
+}
+
+.status{
+    width: 140px;
+}
+
+.korrektur{
+    width: 100px;
+}
+
+.fotostatus{
+    width: 120px;
+}
+
+.kommentar{
+    width: 240px;
+}
+
+.layout{
+    width: 120px;
+}
+
+.reklame{
+    width:50px;
+}
+
+.nett{
+    width:50px;
+}
+
+.knapp{
+    width:40px;
+}
+
+/*Ferdig*/
+
+.ui-select-multiple input.ui-select-search {
+    width: 100% !important;
+}
+.disp-helper {
+    margin-left: 3%;
+    border: 1px solid #cfcfcf;
 }

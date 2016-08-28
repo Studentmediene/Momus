@@ -1,0 +1,6 @@
+<th>
+   <span ng-transclude></span>
+   <span ng-if="articleSortType == type && ((articleSortReverse && !switchDir) || (!articleSortReverse && switchDir))"><i class="fa fa-arrow-up"></i></span>
+   <span ng-if="articleSortType == type && ((!articleSortReverse && !switchDir) || (articleSortReverse && switchDir))"><i class="fa fa-arrow-down"></i></span>
+
+</th>

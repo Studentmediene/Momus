@@ -25,7 +25,7 @@ import java.util.Set;
 public class Publication {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -33,12 +33,11 @@ public class Publication {
     @Temporal(TemporalType.DATE)
     private Date releaseDate;
 
-    @OneToMany
-    @OrderColumn
-    private List<Page> pages;
-
-    @OneToMany(mappedBy = "publication")
+    @OneToMany(mappedBy = "publication", fetch = FetchType.LAZY)
     private Set<Article> articles;
+
+    @OneToMany(mappedBy = "publication", fetch = FetchType.LAZY)
+    private List<Page> pages;
 
     public Publication() {
 
@@ -69,6 +68,14 @@ public class Publication {
         this.releaseDate = releaseDate;
     }
 
+    public Set<Article> getArticles() {
+        return articles;
+    }
+
+    public void setArticles(Set<Article> articles) {
+        this.articles = articles;
+    }
+
     public List<Page> getPages() {
         return pages;
     }
@@ -77,11 +84,14 @@ public class Publication {
         this.pages = pages;
     }
 
-    public Set<Article> getArticles() {
-        return articles;
+    @Override
+    public String toString() {
+        return "Publication{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", releaseDate=" + releaseDate +
+                '}';
     }
 
-    public void setArticles(Set<Article> articles) {
-        this.articles = articles;
-    }
+
 }

@@ -91,7 +91,9 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article1journalists.add(person1);
         article1journalists.add(person2);
         article1.setJournalists(article1journalists);
+        article1.setPhotographers(new HashSet<Person>());
         article1.setPublication(publication1);
+        articleService.createRawContent(article1);
         article1 = articleRepository.saveAndFlush(article1);
 
 
@@ -106,6 +108,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article2.setJournalists(article2journalists);
         article2.setPhotographers(article2photographers);
         article2.setPublication(publication1);
+        articleService.createRawContent(article2);
         article2 = articleRepository.save(article2);
 
 
@@ -120,6 +123,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article3.setJournalists(article3journalists);
         article3.setPhotographers(article3photographers);
         article3.setPublication(publication1);
+        articleService.createRawContent(article3);
         article3 = articleRepository.save(article3);
 
 
@@ -134,6 +138,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article4.setPhotographers(article4photographers);
         article4.setPublication(publication2);
         article4.setStatus(articleStatus1);
+        articleService.createRawContent(article4);
         article4 = articleRepository.save(article4);
     }
 
@@ -192,17 +197,16 @@ public class ArticleServiceTest extends AbstractTestRunner {
         assertEquals("NEW CONTENT for article 1", updated.getContent());
 
         // Fetch the revision
-        List<ArticleRevision> revisions = articleRevisionRepository.findByArticle(updated);
+        List<ArticleRevision> revisions = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(updated.getId());
         assertEquals(1, revisions.size());
 
         ArticleRevision rev = revisions.get(0);
         assertEquals("NEW CONTENT for article 1", rev.getContent());
-        assertEquals(new Person(1L), rev.getAuthor());
     }
 
     @Test
     public void testEmptyArticleSearchReturnsAll() {
-        ArticleSearchParams params = new ArticleSearchParams("", null, Collections.<Long>emptyList(), null, null);
+        ArticleSearchParams params = new ArticleSearchParams("", null, Collections.<Long>emptyList(), null, null, 20, 1, false);
 
         List<Article> expected = new ArrayList<>();
         expected.add(article1);
@@ -222,7 +226,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForContent() {
-        ArticleSearchParams params = new ArticleSearchParams("søke i dette", null, Collections.<Long>emptyList(), null, null);
+        ArticleSearchParams params = new ArticleSearchParams("søkE dette KÅre", null, Collections.<Long>emptyList(), null, null, 0, 0, false);
 
         List<Article> expected = new ArrayList<>();
         expected.add(article2);
@@ -232,7 +236,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForPublication() {
-        ArticleSearchParams params = new ArticleSearchParams("", null, Collections.<Long>emptyList(), null, article4.getPublication().getId());
+        ArticleSearchParams params = new ArticleSearchParams("", null, Collections.<Long>emptyList(), null, article4.getPublication().getId(), 0, 0, false);
 
         List<Article> expected = new ArrayList<>();
         expected.add(article4);
@@ -244,9 +248,9 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForPerson() {
-        ArticleSearchParams params1 = new ArticleSearchParams("", null, Arrays.asList(2L), null, null);
-        ArticleSearchParams params2 = new ArticleSearchParams(null, null, Arrays.asList(1L,2L), null, null);
-        ArticleSearchParams params3 = new ArticleSearchParams("", null, Arrays.asList(1L,2L,3L), null, null);
+        ArticleSearchParams params1 = new ArticleSearchParams("", null, Arrays.asList(2L), null, null, 20, 1, false);
+        ArticleSearchParams params2 = new ArticleSearchParams(null, null, Arrays.asList(1L,2L), null, null, 20, 1, false);
+        ArticleSearchParams params3 = new ArticleSearchParams("", null, Arrays.asList(1L,2L,3L), null, null, 20, 1, false);
 
         List<Article> expected1 = new ArrayList<>();
         List<Article> expected2 = new ArrayList<>();
@@ -271,8 +275,8 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForBothPersonAndContent() {
-        ArticleSearchParams params = new ArticleSearchParams("its about hard you can GET hit", null, Arrays.asList(1L, 2L), null,null);
-        ArticleSearchParams params2 = new ArticleSearchParams("du", null, Arrays.asList(2L), null, null);
+        ArticleSearchParams params = new ArticleSearchParams("its about hard you can GET hit", null, Arrays.asList(1L, 2L), null,null, 20, 1, false);
+        ArticleSearchParams params2 = new ArticleSearchParams("du", null, Arrays.asList(2L), null, null, 20, 1, false);
 
         List<Article> expected = new ArrayList<>();
         List<Article> expected2 = new ArrayList<>();
@@ -290,7 +294,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForStatus() {
-        ArticleSearchParams params = new ArticleSearchParams("",article4.getStatus().getId(),Collections.<Long>emptyList(),null,null);
+        ArticleSearchParams params = new ArticleSearchParams("",article4.getStatus().getId(),Collections.<Long>emptyList(),null,null, 0, 0, false);
 
         List<Article> expected = new ArrayList<>();
         expected.add(article4);
@@ -302,7 +306,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForContentAndPersonAndStatusAndPublication() {
-        ArticleSearchParams params = new ArticleSearchParams("moving",article4.getStatus().getId(),Arrays.asList(1L, 2L),null,article4.getPublication().getId());
+        ArticleSearchParams params = new ArticleSearchParams("moving",article4.getStatus().getId(),Arrays.asList(1L, 2L),null,article4.getPublication().getId(), 0, 0, false);
 
         List<Article> expected = new ArrayList<>();
         expected.add(article4);

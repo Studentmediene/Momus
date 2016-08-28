@@ -16,12 +16,14 @@
 
 package no.dusken.momus.service;
 
+import com.google.api.services.drive.model.File;
 import no.dusken.momus.authentication.UserLoginService;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleRevision;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.chimera.ChimeraExport;
+import no.dusken.momus.service.drive.GoogleDriveService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
 import no.dusken.momus.service.repository.ArticleRepository;
@@ -55,7 +57,10 @@ public class ArticleService {
     IndesignGenerator indesignGenerator;
 
     @Autowired
-    private UserLoginService userLoginService;
+    UserLoginService userLoginService;
+
+    @Autowired
+    GoogleDriveService googleDriveService;
 
     @Autowired
     ChimeraExport chimeraExport;
@@ -64,20 +69,29 @@ public class ArticleService {
     EntityManager entityManager;
 
 
-
     public Article getArticleById(Long id) {
         Article article = articleRepository.findOne(id);
         if (article == null) {
             logger.warn("Article with id {} not found, tried by user {}", id, userLoginService.getId());
-            throw new RestException("Article "+id+" not found", 404);
+            throw new RestException("Article " + id + " not found", 404);
         }
         return article;
     }
 
 
     public Article createNewArticle(Article article) {
-        Long newID = articleRepository.saveAndFlush(article).getId();
-        return articleRepository.findOne(newID);
+        File document = googleDriveService.createDocument(article.getName());
+
+        if (document == null) {
+            throw new RestException("Couldn't create article, Google Docs failed", 500);
+        }
+
+        article.setGoogleDriveId(document.getId());
+
+        Article newArticle = articleRepository.saveAndFlush(article);
+
+        logger.info("Article with id {} created with data: {}", newArticle.getId(), newArticle.dump());
+        return articleRepository.findOne(newArticle.getId());
     }
 
     public String getChimeraExport(Long id) {
@@ -88,6 +102,7 @@ public class ArticleService {
 
     public Article saveUpdatedArticle(Article article) {
         article.setLastUpdated(new Date());
+        logger.info("Article with id {} updated, data: {}", article.getId(), article.dump());
 
 
         logger.info("Article \"{}\" (id: {}) updated by user {}", article.getName(), article.getId(), userLoginService.getId());
@@ -101,24 +116,46 @@ public class ArticleService {
 
     public Article saveNewContent(Article article) {
         Article existing = articleRepository.findOne(article.getId());
-        String content = article.getContent();
+        String newContent = article.getContent();
+        String oldContent = existing.getContent();
 
-        ArticleRevision revision = new ArticleRevision();
-        revision.setContent(content);
-        revision.setArticle(existing);
-        revision.setAuthor(new Person(userLoginService.getId()));
-        revision.setSavedDate(new Date());
-        revision.setStatus(existing.getStatus());
-        revision = articleRevisionRepository.save(revision);
+        if (newContent.equals(oldContent)) {
+            // Inserting comments in the Google Docs triggers a change, but the content we see is the same.
+            // So it would look weird having multiple revisions without any changes.
+            logger.info("No changes made to content of article with id {}, not updating it", article.getId());
+            return existing;
+        }
 
-        logger.info("Saved new revision for article(id:{}) with id: {}, content:\n{}", article.getId(), revision.getId(), content);
+        existing.setContent(newContent);
+        createRawContent(existing);
 
-        existing.setContent(content);
+        createNewRevision(existing, false);
+
+        return saveUpdatedArticle(existing);
+    }
+
+    public Article archiveArticle(Article article){
+        Article existing = getArticleById(article.getId());
+        existing.setArchived(true);
+
+        logger.info("Setting article with id {} to archived", article.getId());
+        return saveUpdatedArticle(existing);
+    }
+
+    public Article restoreArticle(Article article){
+        Article existing = getArticleById(article.getId());
+        existing.setArchived(false);
+
+        logger.info("Setting article with id {} to no longer archived", article.getId());
         return saveUpdatedArticle(existing);
     }
 
     public Article saveMetadata(Article article) {
         Article existing = articleRepository.findOne(article.getId());
+
+        if (!article.getStatus().equals(existing.getStatus())) {
+            createNewRevision(article, true);
+        }
 
         existing.setName(article.getName());
         existing.setJournalists(article.getJournalists());
@@ -128,6 +165,14 @@ public class ArticleService {
         existing.setType(article.getType());
         existing.setStatus(article.getStatus());
         existing.setSection(article.getSection());
+        existing.setUseIllustration(article.getUseIllustration());
+        existing.setImageText(article.getImageText());
+        createRawContent(existing);
+        existing.setQuoteCheckStatus(article.getQuoteCheckStatus());
+        existing.setExternalAuthor(article.getExternalAuthor());
+        existing.setExternalPhotographer(article.getExternalPhotographer());
+        existing.setPhotoStatus(article.getPhotoStatus());
+        existing.setReview(article.getReview());
 
         return saveUpdatedArticle(existing);
     }
@@ -154,8 +199,8 @@ public class ArticleService {
             query.setParameter(e.getKey(), e.getValue());
         }
 
-        query.setMaxResults(201);
-        // TODO add paging of results?
+        query.setMaxResults(params.getPageSize() + 1); // One extra, so searchpage can see if there is "more pages"
+        query.setFirstResult(params.getStartOfPage());
 
         List<Article> resultList = query.getResultList();
 
@@ -176,6 +221,92 @@ public class ArticleService {
 
     public ArticleRepository getArticleRepository() {
         return articleRepository;
+    }
+
+
+    private void createNewRevision(Article article, boolean changedStatus) {
+        ArticleRevision revision = getExistingRevision(article, changedStatus);
+
+
+        revision.setStatusChanged(changedStatus);
+        revision.setContent(article.getContent());
+        revision.setArticle(article);
+        revision.setStatus(article.getStatus());
+
+        revision = articleRevisionRepository.save(revision);
+        logger.info("Saved revision for article(id:{}) with id: {}", article.getId(), revision.getId());
+    }
+
+    /**
+     * Returns a reusable revision if one is found, or a new one otherwise.
+     * This is to not get too man small revision.
+     * If the revision is for a status change, a new one is returned anyway
+     * A reusable revision is one that wasn't for a status change and not too old
+     */
+    private ArticleRevision getExistingRevision(Article article, boolean changedStatus) {
+        ArticleRevision newRevision = new ArticleRevision();
+        newRevision.setSavedDate(new Date());
+
+        if (changedStatus) {
+            return newRevision;
+        }
+
+        List<ArticleRevision> revisions = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(article.getId());
+
+        if (revisions.size() == 0) {
+            return newRevision;
+        }
+
+        ArticleRevision existing = revisions.get(0);
+        long timeDiff = new Date().getTime() - existing.getSavedDate().getTime();
+
+        if (timeDiff < 3 * 60 * 1000 && !existing.isStatusChanged()) {
+            logger.info("Reusing revision {} for article {}", existing.getId(), article.getId());
+            return existing;
+        } else {
+            return newRevision;
+        }
+    }
+
+    public void createRawContent(Article article){
+        StringBuilder raw = new StringBuilder();
+
+        String content = stripOffHtml(article.getContent());
+
+        int contentLength = content.length();
+
+        raw.append(content).append(" ")
+                .append(article.getName()).append(" ")
+                .append(article.getSection() != null ? article.getSection().getName() : "").append(" ")
+                .append(article.getStatus() != null ? article.getStatus().getName() : "").append(" ")
+                .append(article.getType() != null ? article.getType().getName() : "").append(" ")
+                .append(article.getComment()).append(" ");
+
+        for(Person journalist : article.getJournalists()){
+            raw.append(journalist.getFullName()).append(" ");
+        }
+        for(Person photo : article.getPhotographers()){
+            raw.append(photo.getFullName()).append(" ");
+        }
+
+
+        String rawContent = raw.toString().toLowerCase();
+        logger.debug("Raw content {}, length of content: {}", rawContent, contentLength);
+
+        article.setRawcontent(rawContent);
+        article.setContentLength(contentLength);
+    }
+
+    private String stripOffHtml(String html){
+        String[] tags = {"<h1>","<h2>","<h3>","<h4>","<h5>","<p>","<i>","<b>", "<blockquote>","<br>","<ul>","<ol>","<li>"};
+        for (String tag : tags) {
+            html = html.replaceAll(tag," ").replaceAll(tag.substring(0,1)+"/"+tag.substring(1,tag.length()),"");
+        }
+
+        // Remove consecutive spaces
+        html = html.replaceAll("\\s+", " ");
+
+        return html;
     }
 
 }

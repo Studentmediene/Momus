@@ -30,6 +30,7 @@
     <context:property-placeholder location="classpath*:local.properties" order="1" ignore-unresolvable="true" />
 
 
+
     <!-- ############################
             SECURITY
          ############################ -->
@@ -81,7 +82,18 @@
         </bean>
     </mvc:interceptors>
 
-    <!-- In which packages to look for services etc. -->
+
+    <!-- Tell how liquibase should update/generate the database schema -->
+    <!-- This needs to be up here, so the changes are made before other code runs -->
+    <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
+        <property name="dataSource" ref="dataSource" />
+        <property name="changeLog" value="classpath:db-changelog.xml" />
+        <property name="contexts" value="${liquibase.contexts}" />
+    </bean>
+
+
+
+    <!-- In which packages to look for ou services, controllers etc. -->
     <context:component-scan base-package="no.dusken.momus" />
 
     <!-- Enable @Autowired etc. -->
@@ -111,6 +123,7 @@
         <property name="testOnBorrow" value="false" />
         <property name="testWhileIdle" value="true" />
         <property name="timeBetweenEvictionRunsMillis" value="1800000" />
+        <property name="defaultAutoCommit" value="false" />
     </bean>
 
     <!-- Use the DB inside JPA managers -->
@@ -139,6 +152,8 @@
             />
 
     <ldap:ldap-template id="ldapTemplate"/>
+
+
 
     <!-- Define our exceptionHandler as the resolver for our program -->
     <bean id="exceptionResolver" class="no.dusken.momus.exceptions.ExceptionHandler" />

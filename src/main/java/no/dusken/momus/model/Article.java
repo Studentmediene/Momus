@@ -16,35 +16,32 @@
 
 package no.dusken.momus.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
-public class Article {
+@JsonIgnoreProperties(value = { "dispsort" })
+public class Article implements Comparator<Article>, Comparable<Article>{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
 
-    @Lob
-    @Column(length = 40960)
     private String content;
 
-    @Lob
-    @Column(length = 40960)
     private String note;
 
-    @Column(length = 1024)
     private String comment;
-
-    @Transient
-    private int contentLength;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Section section;
@@ -54,6 +51,9 @@ public class Article {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private ArticleType type;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private ArticleReview review;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Publication publication;
@@ -73,16 +73,27 @@ public class Article {
 
     private String photoStatus;
 
+    private String googleDriveId;
 
-    /**
-     * This is done after load instead of in a getter, since
-     * it may happen that the content is set to empty to save bandwith/hide it, but
-     * the length of it is still needed.
-     */
-    /*@PostLoad
-    private void calculateContentLength() {
-        contentLength = content.length();
-    }*/
+    private String rawcontent;
+
+    private int contentLength;
+
+    /** If the article is assigned illustrator(s), not photographer(s) */
+    private boolean useIllustration;
+
+    private String imageText;
+    private boolean quoteCheckStatus;
+
+    private String externalAuthor;
+    private String externalPhotographer;
+
+    private boolean archived;
+
+    @JsonIgnore
+    @Transient
+    private Integer dispsort;
+
 
     public Article() {
 
@@ -140,6 +151,10 @@ public class Article {
         this.type = type;
     }
 
+    public ArticleReview getReview() { return review; }
+
+    public void setReview(ArticleReview review) { this.review = review; }
+
     public Set<Person> getJournalists() {
         return journalists;
     }
@@ -190,5 +205,129 @@ public class Article {
 
     public void setSection(Section section) {
         this.section = section;
+    }
+
+    public String getGoogleDriveId() {
+        return googleDriveId;
+    }
+
+    public void setGoogleDriveId(String googleDriveId) {
+        this.googleDriveId = googleDriveId;
+    }
+
+    public boolean getQuoteCheckStatus(){ return quoteCheckStatus; }
+
+    public void setQuoteCheckStatus( boolean quoteCheckStatus ) { this.quoteCheckStatus = quoteCheckStatus; }
+
+    public boolean getArchived(){ return archived; }
+
+    public void setArchived(Boolean archived) { this.archived = archived; }
+
+    public Integer getDispsort() {
+        return dispsort;
+    }
+
+    public void setDispsort(Integer dispsort) {
+        this.dispsort = dispsort;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Article article = (Article) o;
+
+        if (!id.equals(article.id)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    public String getRawcontent() { return rawcontent; }
+
+    public void setRawcontent(String rawContent) { this.rawcontent = rawContent; }
+
+    public void setContentLength(int contentLength) {
+        this.contentLength = contentLength;
+    }
+
+    public boolean getUseIllustration() {
+        return useIllustration;
+    }
+
+    public void setUseIllustration(boolean useIllustration) {
+        this.useIllustration = useIllustration;
+    }
+
+    public String getImageText() {
+        return imageText;
+    }
+
+    public void setImageText(String imageText) {
+        this.imageText = imageText;
+    }
+
+    public String getExternalAuthor() {
+        return externalAuthor;
+    }
+
+    public void setExternalAuthor(String externalAuthor) {
+        this.externalAuthor = externalAuthor;
+    }
+
+    public String getExternalPhotographer() {
+        return externalPhotographer;
+    }
+
+    public void setExternalPhotographer(String externalPhotographer) {
+        this.externalPhotographer = externalPhotographer;
+    }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    public String dump() {
+        return "Article{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", content='" + content + '\'' +
+                ", note='" + note + '\'' +
+                ", comment='" + comment + '\'' +
+                ", section=" + section +
+                ", status=" + status +
+                ", type=" + type +
+                ", publication=" + publication +
+                ", journalists=" + (journalists == null ? "[]" : Arrays.toString(journalists.toArray())) +
+                ", photographers=" + (photographers == null ? "[]" : Arrays.toString(photographers.toArray())) +
+                ", lastUpdated=" + lastUpdated +
+                ", photoStatus='" + photoStatus + '\'' +
+                ", googleDriveId='" + googleDriveId + '\'' +
+//                ", rawcontent='" + rawcontent + '\'' + // ignored
+                ", contentLength=" + contentLength +
+                ", useIllustration=" + useIllustration +
+                ", imageText='" + imageText + '\'' +
+                ", quoteCheckStatus=" + quoteCheckStatus +
+                ", externalAuthor='" + externalAuthor + '\'' +
+                ", externalPhotographer='" + externalPhotographer + '\'' +
+                ", archived=" + archived +
+                '}';
+    }
+
+    public int compareTo(Article a){
+        return this.dispsort.compareTo(a.getDispsort());
+    }
+
+    public int compare(Article a1, Article a2){
+        return Integer.compare(a1.getDispsort(),a2.getDispsort());
     }
 }

@@ -17,13 +17,18 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('PublicationCtrl', function ($scope, $http, PublicationService) {
+    .controller('PublicationCtrl', function ($scope, $http, PublicationService, $templateRequest, MessageModal) {
 
         var today = new Date();
 
         $scope.viewYear = today.getFullYear();
         $scope.publications = [];
         $scope.yearsInDropdown = [];
+
+        $scope.currentPage = 1;
+        $scope.pubsPerPage = 10 ;
+        $scope.numPubs = 0;
+        $scope.slicedPublications = [];
 
         $scope.editing = {};
 
@@ -34,31 +39,47 @@ angular.module('momusApp.controllers')
 
         PublicationService.getAll().success(function (data) {
             $scope.publications = data;
+            $scope.yearChanged();
         });
 
         $scope.yearFilter = function (publication) {
-            // todo remove check?
-            return publication.release_date && publication.release_date.indexOf($scope.viewYear) != -1;
+            if($scope.viewYear == "Alle"){
+                return true;
+            }
+            else{
+                return publication.release_date && publication.release_date.indexOf($scope.viewYear) != -1;
+            }
         };
 
-        $scope.yearSelected = function(year) {
-            $scope.viewYear = year;
-            $scope.editing = {};
+        $scope.yearChanged = function(){
+            $scope.setPublicationSlice();
+        };
+
+        $scope.pageChanged = function(){
+            $scope.setPublicationSlice();
+        };
+
+        $scope.needPagination = function(){
+            return $scope.numPubs > $scope.pubsPerPage;
+        };
+
+        $scope.setPublicationSlice = function(){
+            $scope.publications.sort(function(a,b){
+                return new Date(b.release_date) - new Date(a.release_date);
+            });
+
+            //Filter for year
+            $scope.slicedPublications = $scope.publications.filter(function(pub){
+                return $scope.yearFilter(pub);
+            });
+            $scope.numPubs = $scope.slicedPublications.length;
+
+            //Filter for page
+            $scope.slicedPublications = $scope.slicedPublications.slice((($scope.currentPage-1)*$scope.pubsPerPage), (($scope.currentPage)*$scope.pubsPerPage));
+
         };
 
         calculateYearsInDropdownMenu();
-
-
-        $scope.editPublication = function (publication) {
-            $scope.editing = angular.copy(publication); // always work on a copy
-            $scope.editingIndex = $scope.publications.indexOf(publication);
-
-            // clear form errors
-            if (!$scope.editing.release_date) {
-                $scope.editing.release_date = '';
-            }
-            $scope.publicationForm.$setPristine();
-        };
 
         function calculateYearsInDropdownMenu() {
             var sinceYearX = 2009;
@@ -68,6 +89,16 @@ angular.module('momusApp.controllers')
             }
         }
 
+        $scope.editPublication = function (publication) {
+            $scope.editing = angular.copy(publication); // always work on a copy
+            $scope.editingId = publication.id;
+
+            // clear form errors
+            if (!$scope.editing.release_date) {
+                $scope.editing.release_date = '';
+            }
+            $scope.publicationForm.$setPristine();
+        };
 
         /**
          * This method saves either a new publication or an already existing publication.
@@ -77,20 +108,31 @@ angular.module('momusApp.controllers')
             if (!$scope.editing.id) { // no id means it's a new one
                 PublicationService.createNew($scope.editing)
                     .success(function (savedPublication) {
-                        $scope.editing = savedPublication;
                         $scope.publications.push(savedPublication);
+                        $scope.editPublication(savedPublication);
                         $scope.isSaving = false;
+                        $scope.setPublicationSlice();
                     });
             } else { // it's an old one
                 PublicationService.updateMetadata($scope.editing)
                     .success(function (savedPublication) {
-                        $scope.publications[$scope.editingIndex] = savedPublication;
+                        for(var i = 0; i < $scope.publications.length;i++){
+                            if($scope.publications[i].id == $scope.editingId){
+                                $scope.publications[i] = savedPublication;
+                            }
+                        }
                         $scope.editPublication(savedPublication);
                         $scope.isSaving = false;
+                        $scope.setPublicationSlice();
                     });
             }
         };
 
+        $scope.showHelp = function(){
+            $templateRequest("partials/templates/help/publicationHelp.html").then(function(template){
+                MessageModal.info(template);
+            })
+        }
 
     });
 

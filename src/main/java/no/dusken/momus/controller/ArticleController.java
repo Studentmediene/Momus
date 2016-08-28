@@ -16,12 +16,15 @@
 
 package no.dusken.momus.controller;
 
+import no.dusken.momus.diff.DiffMatchPatch;
+import no.dusken.momus.diff.DiffUtil;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.ArticleService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.repository.ArticleRevisionRepository;
 import no.dusken.momus.service.repository.ArticleStatusRepository;
 import no.dusken.momus.service.repository.ArticleTypeRepository;
+import no.dusken.momus.service.repository.ArticleReviewRepository;
 import no.dusken.momus.service.repository.SectionRepository;
 import no.dusken.momus.service.search.ArticleSearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -48,12 +52,25 @@ public class ArticleController {
     private ArticleRevisionRepository articleRevisionRepository;
 
     @Autowired
+    private ArticleReviewRepository articleReviewRepository;
+
+    @Autowired
     private SectionRepository sectionRepository;
+
+    @Autowired
+    private DiffUtil diffUtil;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody Article getArticleByID(@PathVariable("id") Long id) {
         return articleService.getArticleById(id);
     }
+
+
+    @RequestMapping(value = "/multiple", method = RequestMethod.POST)
+    public @ResponseBody List<Article> getArticleByID(@RequestBody List<Long> ids) {
+        return articleService.getArticleRepository().findAll(ids);
+    }
+
 
     @RequestMapping(value = "/publication/{id}", method = RequestMethod.GET)
     public @ResponseBody List<Article> getAllArticlesByPublicationID(@PathVariable("id") Long id) {
@@ -66,14 +83,20 @@ public class ArticleController {
         IndesignExport indesignExport = articleService.exportArticle(id);
 
         response.addHeader("Content-Disposition", "attachment; filename=\"" + indesignExport.getName() + ".txt\"");
-        response.addHeader("Content-Type", "text/plain");
+        response.addHeader("Content-Type", "text/plain;charset=UTF-16LE"); // Encoding InDesign likes
 
         return indesignExport.getContent();
     }
 
     @RequestMapping(value = "/{id}/revisions", method = RequestMethod.GET)
     public @ResponseBody List<ArticleRevision> getArticleRevisions(@PathVariable("id") Long id) {
-        return articleRevisionRepository.findByArticle_Id(id);
+        return articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(id);
+    }
+
+    @RequestMapping(value = "/{articleId}/revisions/{revId1}/{revId2}", method = RequestMethod.GET)
+    public @ResponseBody
+    LinkedList<DiffMatchPatch.Diff> getRevisionsDiffs(@PathVariable("articleId") Long articleId, @PathVariable("revId1") Long revId1, @PathVariable("revId2") Long revId2) {
+        return diffUtil.getDiffList(articleId, revId1, revId2);
     }
 
     @RequestMapping(value = "/types", method = RequestMethod.GET)
@@ -91,19 +114,9 @@ public class ArticleController {
     }
 
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public @ResponseBody Article saveArticleContents(@RequestBody Article article){
-        return articleService.saveUpdatedArticle(article);
-    }
-
     @RequestMapping(value = "/metadata", method = RequestMethod.PUT)
     public @ResponseBody Article updateArticleMetadata(@RequestBody Article article){
         return articleService.saveMetadata(article);
-    }
-
-    @RequestMapping(value = "/content", method = RequestMethod.PUT)
-    public @ResponseBody Article updateArticleContentText(@RequestBody Article article){
-        return articleService.saveNewContent(article);
     }
 
     @RequestMapping(value = "/note", method = RequestMethod.PUT)
@@ -121,6 +134,19 @@ public class ArticleController {
     public @ResponseBody String getChimeraExport(@PathVariable("id") Long id) {
         return articleService.getChimeraExport(id);
     }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public @ResponseBody Article deleteArticle(@RequestBody Article article) {
+        return articleService.archiveArticle(article);
+    }
+
+    @RequestMapping(value = "/restore", method = RequestMethod.POST)
+    public @ResponseBody Article restoreArticle(@RequestBody Article article) {
+        return articleService.restoreArticle(article);
+    }
+
+    @RequestMapping(value = "/reviews", method = RequestMethod.GET)
+    public @ResponseBody List<ArticleReview> getAllReviewStatuses() { return articleReviewRepository.findAll(); }
 
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody Article createArticle(@RequestBody Article article){

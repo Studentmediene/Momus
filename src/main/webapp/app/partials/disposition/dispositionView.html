@@ -13,103 +13,178 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+<div style="margin-left: 3%; margin-right: 3%;">
+    <h1>Disposisjon for {{publication.name}}</h1>
+    <button ng-click="showHelp()" class="btn btn-success" style="margin-bottom: 10px;">
+        Hjelp?
+    </button>
+    <div>
+        <div class="panel panel-default" style="width: 1502px;">
+            <div class="panel-heading clearfix">
+                <div class="pull-left"><h5>Sider</h5></div>
+                <div class="pull-right" style="width:360px" scroll-trigger="attach-top-true">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon">Legg til</span>
+                        <input type="number" ng-model="numNewPages" class="form-control" style="max-width:100px;">
+                        <span class="input-group-addon">ny{{numNewPages > 1 ? "e" : ""}} side{{numNewPages > 1 ? "r" : ""}} etter side</span>
+                        <input type="number" ng-model="newPageAt" min="0" max="{{publication.pages.length}}" class="form-control">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="newPage()" ng-disabled="numNewPages < 1 || numNewPages > 100">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive" style="overflow-x:auto; width: 1500px">
+                <table class="pageTable table table-bordered table-condensed" style="font-size: 85%">
+                <thead>
+                <tr>
+                    <th class="sidetall">#</th>
+                    <th class="artikkel">
+                        <table>
+                            <tr>
+                                <td class="navn">&nbsp;Navn</td>
+                                <td class="seksjon">&nbsp;Seksjon</td>
+                                <td class="journ">&nbsp;Journalister</td>
+                                <td class="fotograf">&nbsp;Fotografer</td>
+                                <td class="status">&nbsp;Status</td>
+                                <td class="korrektur">&nbsp;Korrektur</td>
+                                <td class="fotostatus">&nbsp;Fotostatus</td>
+                            </tr>
+                        </table>
+                    </th>
+                    <th class="kommentar">Kommentar</th>
+                    <th class="layout">Layout</th>
+                    <th class="reklame">Reklame</th>
+                    <th class="nett">Nett</th>
+                    <th class="knapp"></th>
+                    <th class="knapp"></th>
+                </tr>
 
-<div>
-<h1 style="text-align: center"> Disposition for {{disposition.publication.name}} </h1>
-<div class="form-group">
-    <div class="row">
-        <div class="col-md-6">
-            <button class="btn btn-primary" ng-click="saveArticle()">save me</button>
-            <button class="btn btn-danger" ng-click="removePage(selectedPage)" style="margin: 10px">Delete</button>
-            <button class="btn btn-success" ng-click="addPage(selectedPage)">NewPage</button>
-            <button class="btn btn-warning" ng-click="articleModal(selectedPage)" ng-disabled="!selectedPage">AddArticle</button>
+                </thead>
+                <tr ng-show="loading > 0" style="text-align: center">
+                    <td colspan="7"><i class="fa fa-spinner fa-spin fa-4x"></i></td>
+                </tr>
+                <tbody ng-model="publication.pages" ui-sortable="sortableOptions">
+                    <tr ng-repeat="page in publication.pages" style="background: white;">
+                        <td style="text-align: center; cursor: move;" class="handle sidetall">{{page.page_nr}}</td>
+                        <td class="artikkel" ng-show="editPage">
+                            <id-select multiple class="pull-left" style="width: 90%;"
+                                       items="publication.articles"
+                                       target="page.articles"
+                                       show="name">
+                            </id-select>
+                            <div class="pull-right">
+                                <button ng-click="createArticle(page)" class="btn btn-success">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td class="artikkel" style="padding:0;margin:0" ng-hide="editPage">
+                            <table class="table pageArticleTable" style="padding: 0;margin:0;">
+                                <tr ng-repeat="article in page.articles">
+                                    <td class="navn" style="word-wrap: break-word; word-break: normal;white-space: normal">
+                                        <a href="#/artikler/{{article.id}}">{{article.name}}</a>
+                                    </td>
+                                    <td class="seksjon">{{article.section.name}}</td>
+                                    <td class="journ">
+                                        <ul class="list-unstyled">
+                                            <li class="" ng-repeat="person in article.journalists">
+                                                <span person-widget="person" class="disp-break-word">
+                                                    {{person.full_name}}
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td class="fotograf">
+                                        <ul class="list-unstyled">
+                                            <li class="" ng-repeat="person in article.photographers">
+                                                <span person-widget="person" class="disp-break-word">
+                                                    {{person.full_name}}
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td class="status" style="background-color:{{article.status.color}};">
+                                        <select style="background: rgba(255,255,255,0.5)"
+                                                ng-model="article.status"
+                                                ng-change="saveArticle(article)"
+                                                ng-options="s.name for s in statusOptions track by s.id">
+                                        </select>
+                                    </td>
+                                    <td class="korrektur" style="background:{{article.review.color}}">
+                                        <select style="background: rgba(255,255,255,0.5)"
+                                                ng-model="article.review"
+                                                ng-change="saveArticle(article)"
+                                                ng-options="s.name for s in reviewOptions track by s.id">
+                                        </select>
+                                    </td>
+                                    <td ng-click="editPhotoStatus = true" ng-hide="editPhotoStatus" class="fotostatus {{article.photo_status.length ? 0: 'psempty'}}">
+                                        <textwrapper length="15" text="article.photo_status"></textwrapper>
+                                    </td>
+                                    <td class="fotostatus" ng-show="editPhotoStatus">
+                                        <div class="input-group">
+                                            <input class="form-control input-sm" ng-model="article.photo_status">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-sm" ng-click="saveArticle(article  );editPhotoStatus=false">
+                                                    <i class="fa fa-save"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+
+                        <td class="kommentar">
+                            <div ng-hide="editPage">{{page.note}}</div>
+                            <input ng-show="editPage" class="form-control" ng-model="page.note">
+                        </td>
+
+                        <td class="layout" style="background: {{page.layout_status.color}};">
+                            <select style="background:rgba(255,255,255,0.5);" ng-model="page.layout_status" ng-change="savePage()"
+                                    ng-options="l.name for l in layoutStatuses track by l.id">
+                            </select>
+                        </td>
+
+                        <td class="reklame">
+                            <span style="cursor: pointer" ng-click="page.advertisement = !page.advertisement; savePage();">
+                                <i class="fa fa-file fa-lg"
+                                   ng-class="{'text-danger' : !page.advertisement, 'text-success' : page.advertisement }"
+                                   tooltip="Siden inneholder {{!page.advertisement ? 'ikke ' : ''}} reklame">
+
+                                </i>
+                            </span>
+                        </td>
+
+                        <td class="nett">
+                            <span style="cursor: pointer" ng-click="page.web = !page.web; savePage();">
+                                <i class="fa fa-globe fa-lg"
+                                   ng-class="{'text-danger' : !page.web, 'text-success' : page.web }"
+                                   tooltip="Artiklene skal {{!page.web ? 'ikke ' : ''}} på nett">
+                                </i>
+                            </span>
+                        </td>
+
+                        <td class="knapp">
+                            <button ng-click="editPage = true" class="btn btn-warning btn-xs pull-right" ng-hide="editPage">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+
+                            <button ng-click="savePage();editPage = false" class="btn btn-success pull-right btn-xs" ng-show="editPage">
+                                <i class="fa fa-save"></i>
+                            </button>
+                        </td>
+                        <td class="knapp">
+                            <button ng-click="deletePage(page)" class="btn btn-danger pull-right btn-xs">
+                                <i class="fa fa-trash-o"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div ui-tree="treeOptions" class="col-md-12">
-        <table ui-tree-nodes="" ng-model="disposition.pages" class="table-bordered fixed">
-            <!--Top Row, Headers-->
-            <tr>
-                <th ng-repeat="header in ['Side ','Seksjon ','Artikler ','Notater ','Journalister ','Fotografer ','Status ','Fotostatus','Reklame']">{{header}}</th>
-            </tr>
-            <!--For every page in the disp-->
-            <tbody  ui-tree-node ng-repeat="page in disposition.pages" ng-class="{selectedPage: page.page_nr == selectedPage.page_nr}">
-            <!--<tbody ng-repeat="page in disposition.pages">-->
-                <tr ng-repeat="article in page.articles" >
-                    <!--Side-->
-                    <td ui-tree-handle ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center;" class="pageNr">{{page.page_nr}}</td>
-                    <!--Seksjon-->
-                    <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center">
-                        <select ng-model="page.section" ng-options="s.name for s in sections track by s.id" style="border: none"></select>
-                    </td>
-                    <!--Artikkel-->
-                    <td class="articleHover" ng-click="articleModal(page, article)" style="text-align: center">{{article.type.name}} : {{article.name}}</td>
-                    <!--Notater-->
-                    <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center"><textarea ng-model="page.note" style="border: none; min-height: 4em; height: 100%;"></textarea></td>
-                    <!--Journalister-->
-                    <td >
-                        <table>
-                            <tr ng-repeat="journalist in article.journalists">
-                                <td >{{journalist.full_name}}</td>
-                            </tr>
-                        </table>
-                    </td>
-                    <!--Fotografer-->
-                    <td>
-                        <table>
-                            <tr ng-repeat="photographer in article.photographers">
-                                <td >{{photographer.full_name}}</td>
-                            </tr>
-                        </table>
-                    </td>
-                    <!--Status-->
-                    <td style="text-align: center">{{article.status.name}}</td>
-                    <!--Fotostatus-->
-                    <td style="text-align: center"><select ng-change="updateArticles()" ng-model="article.photo_status" ng-options="status for status in photostatus" style="border: none"></select></td>
-                    <!--Reklame-->
-                    <td ng-if="$first" rowspan="{{page.articles.length}}" style="text-align: center"><input type="checkbox" ng-model="page.advertisement"></td>
-                </tr>
-                <!--If there are no articles on the page-->
-                <tr ng-if="page.articles == 0">
-                    <!--Side-->
-                    <td ui-tree-handle style="text-align: center" class="pageNr">{{page.page_nr}}</td>
-                    <!--Seksjon-->
-                    <td style="text-align: center">
-                        <!--<select ng-model="page.section" ng-options="s.name for s in sections" style="border: none" ></select>-->
-                        <select ng-model="page.section" ng-options="s.name for s in sections track by s.id" style="border: none" ></select>
-                    </td>
-                    <!--Artikkel-->
-                    <td class="articleHover" ng-click="articleModal(page)" style="text-align: center"></td>
-                    <!--Notater-->
-                    <td rowspan="1" style="text-align: center"><textarea ng-model="page.note" style="border: none; min-height: 4em; height: 100%;"></textarea></td>
-                    <!--Journalister-->
-                    <td ></td>
-                    <!--Fotografer-->
-                    <td></td>
-                    <!--Status-->
-                    <td style="text-align: center"></td>
-                    <!--Fotostatus-->
-                    <td style="text-align: center"></td>
-                    <!--Reklame-->
-                    <td style="text-align: center"><input type="checkbox" ng-model="page.advertisement"></td>
-                </tr>
-            </tbody>
-            <!--Add new Page Row-->
-            <tr style="background-color: #F8F8F8;">
-                <!--Side-->
-                <td ng-click="addLastPage()" style="text-align: center"><span class="glyphicon glyphicon-plus"></span></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td ></td>
-                <td></td>
-                <td ></td>
-                <td ></td>
-                <td ng-click="removeLastPage()" style="text-align: center"><span class="glyphicon glyphicon-minus"></span></td>
-            </tr>
-        </table>
-    </div>
-</div>
-
 </div>

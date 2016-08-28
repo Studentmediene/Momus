@@ -30,9 +30,11 @@ angular.module('momusApp', [
         'momusApp.services',
         'momusApp.directives',
         'ngRoute',
+        'ui.select',
         'ui.select2',
         'ui.bootstrap',
-        'ui.tree'
+        'ngCookies',
+        'ui.sortable'
     ]).
     config(['$routeProvider', function ($routeProvider) {
         // Admin interfaces
@@ -49,9 +51,7 @@ angular.module('momusApp', [
         )
             .when('/artikler/ny',
             {
-                templateUrl: 'partials/article/createArticle.html',
-                controller: 'CreateArticleCtrl',
-                title: "NyArtikkel"
+                redirectTo: '/artikler'
             }
         )
             .when('/artikler/:id',
@@ -84,8 +84,15 @@ angular.module('momusApp', [
                 title: "Disposisjon"
             }
         )
+            .when('/disposition',
+            {
+                templateUrl:'partials/disposition/dispositionView.html',
+                controller:'DispositionCtrl',
+                title: "Disposisjon"
+            }
+        )
 
-            // Sources
+            /* Sources
             .when('/kilder',
             {
                 templateUrl: 'partials/source/search.html',
@@ -113,14 +120,21 @@ angular.module('momusApp', [
                 templateUrl: 'partials/source/edit.html',
                 controller: 'SourceEditCtrl'
             }
+        )*/
+            .when('/info',
+            {
+                templateUrl: 'partials/info/infoView.html',
+                controller: 'InfoCtrl',
+                title: 'Info'
+            }
         )
-            .when('/', {
+            /*.when('/', {
                 templateUrl: 'partials/front/frontPageView.html',
                 controller: 'FrontPageCtrl'
             }
-        )
+        )*/
 
-            .otherwise({redirectTo: '/'});
+            .otherwise({redirectTo: '/disposition'});
 
     }]).
     config(['$httpProvider', function ($httpProvider) {

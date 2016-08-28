@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-package no.dusken.momus.model;
+angular.module('momusApp.services')
+    .service('FavouriteSectionService', function($http){
+        return {
+            getFavouriteSection: function(){
+                return $http.get('/api/favsection');
+            },
 
-import java.util.Set;
-
-public class Updates<T> {
-    private T object;
-    private Set<String> updatedFields;
-
-
-    public T getObject() {
-        return object;
-    }
-
-    public Set<String> getUpdatedFields() {
-        return updatedFields;
-    }
-}
+            updateFavouriteSection: function(favSection){
+                return $http.put('/api/favsection', favSection);
+            }
+        }
+    });

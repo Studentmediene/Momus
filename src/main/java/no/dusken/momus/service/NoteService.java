@@ -19,11 +19,15 @@ package no.dusken.momus.service;
 import no.dusken.momus.authentication.UserLoginService;
 import no.dusken.momus.model.Note;
 import no.dusken.momus.service.repository.NoteRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class NoteService {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     NoteRepository noteRepository;
@@ -33,22 +37,27 @@ public class NoteService {
 
 
     public Note getNoteForLoggedInUser() {
-        Note note = noteRepository.findByOwner_Id(userLoginService.getId());
+        Long userId = userLoginService.getId();
+        Note note = noteRepository.findByOwner_Id(userId);
         if (note == null) {
             note = new Note();
             note.setContent("Her kan du skrive personlige notater.");
+            logger.debug("No note found for user {}, returning a dummy", userId);
         }
         return note;
     }
 
 
     public Note saveNoteForLoggedInUser(Note note) {
-        Note existing = noteRepository.findByOwner_Id(userLoginService.getId());
+        Long userId = userLoginService.getId();
+        Note existing = noteRepository.findByOwner_Id(userId);
         if (existing == null) {
             existing = note;
             note.setOwner(userLoginService.getLoggedInUser());
+            logger.info("Creating new note for userid {} with content: ", userId, note.getContent());
         } else {
             existing.setContent(note.getContent());
+            logger.info("Updating note for userid {} with content: ", userId, note.getContent());
         }
 
         return noteRepository.saveAndFlush(existing);

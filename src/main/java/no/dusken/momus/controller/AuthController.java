@@ -44,6 +44,7 @@ public class AuthController {
 
     @RequestMapping("/logout")
     public @ResponseBody void logout() {
+        logger.info("User with id {} is logging out", userLoginService.getId());
         userLoginService.logout();
     }
 

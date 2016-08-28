@@ -24,21 +24,30 @@ import java.util.Set;
 public class Page {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private int pageNr;
     private String note;
     private boolean advertisement;
+    private boolean web;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Publication publication;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @OrderColumn
-    private List<Article> articles;
+    private Set<Article> articles;
 
-    @ManyToOne
-    private Section section;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private LayoutStatus layoutStatus;
 
+    public Page(){
 
+    }
+
+    public Page(Long id){
+        this.id = id;
+    }
 
     public Long getId() {
         return id;
@@ -67,19 +76,30 @@ public class Page {
         return this.advertisement;
     }
 
-    public List<Article> getArticles() {
+    public void setWeb(boolean web) {this.web = web;}
+    public boolean isWeb() { return this.web; }
+
+    public Set<Article> getArticles() {
         return articles;
     }
 
-    public void setArticles(List<Article> articles) {
+    public void setArticles(Set<Article> articles) {
         this.articles = articles;
     }
 
-    public Section getSection() {
-        return section;
+    public Publication getPublication() {
+        return publication;
     }
 
-    public void setSection(Section section) {
-        this.section = section;
+    public void setPublication(Publication publication) {
+        this.publication = publication;
+    }
+
+    public LayoutStatus getLayoutStatus() {
+        return layoutStatus;
+    }
+
+    public void setLayoutStatus(LayoutStatus layoutStatus) {
+        this.layoutStatus = layoutStatus;
     }
 }

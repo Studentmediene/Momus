@@ -17,217 +17,183 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('DispositionCtrl', function ($scope, $http, $routeParams, $modal, ArticleService) {
-        var pages;
+    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest) {
+        $scope.pubId = $routeParams.id;
+        $scope.loading = 5;
+        $scope.newPageAt = 0;
+        $scope.numNewPages = 1;
 
-        ArticleService.search({
-                publication: $routeParams.id
-            }).success(function (data) {
-            $scope.articles = data;
-            console.log(data + "Articles hentet");
+        if($scope.pubId){
+            PublicationService.getById($scope.pubId).success(function(data) {
+                if(!data){
+                    $location.path("/");
+                    return;
+                }
+                $scope.publication = data;
+                $scope.getPages();
+            });
+        } else{
+            PublicationService.getAll().success(function(data){
+                $scope.publication = PublicationService.getActive(data);
+                $scope.getPages();
+            });
+        }
 
-            //Get Disposition
-            $http.get('/api/disp/' + $routeParams.id).success(setDisposition);
+        $scope.getPages = function(){
+            var pubId = $scope.publication.id;
+            ArticleService.search({publication: pubId}).success(function (data) {
+                $scope.publication.articles = data;
+                $scope.loading--;
+            });
+            PublicationService.getPages(pubId).success(function (data){
+                $scope.publication.pages = data;
+                $scope.loading--;
+            });
+            ArticleService.getReviews().success(function(data){
+                $scope.reviewOptions = data;
+                $scope.loading--;
+            });
 
-        });
+            ArticleService.getStatuses().success(function(data){
+                $scope.statusOptions = data;
+                $scope.loading--;
+            });
 
-        /** Checks every article in the disposition and replaces them with
-        articles from the database list.
-        This makes all articles the same Objects **/
-        function setDisposition(data) {
-            var art = $scope.articles;
-            if (!data.pages) {
-                data.pages = [];
+            PublicationService.getLayoutStatuses().success(function(data){
+                $scope.layoutStatuses = data;
+                $scope.loading--;
+            });
+        };
+
+        $scope.showHelp = function(){
+            MessageModal.info("<p>Genererer en disposisjon etter beste evne. Bruker artiklene i den gjeldende utgaven til å " +
+                "generere en standarddisposisjon");
+        };
+
+        $scope.generateDispBtn = function(){
+            if($scope.publication.pages.length == 0){
+                $scope.generateDisp();
+            } else if(confirm("Dette vil overskrive den nåværende disposisjonen")){
+                $scope.generateDisp();
             }
-            data.pages.forEach(function (page) {
-                page.articles = page.articles.map(function (article) {
-                    for ( var i = 0; i < art.length; i++){
-                        if ( article.id === art[i].id ){
-                            return art[i];
-                        }
-                    }
-                    return null;
+        };
+
+        /*
+        *   Not used at the moment, left here in case it's wanted later
+        */
+        $scope.generateDisp = function(){
+            PublicationService.generateDisp($scope.publication.id).success(function(data){
+                $scope.publication.pages = data;
+            })
+        };
+
+        $scope.savePublication = function() {
+            PublicationService.updateMetadata($scope.publication).success(function(data){
+                $scope.getPages();
+            });
+        };
+
+        $scope.deletePage = function(page) {
+            if(confirm("Er du sikker på at du vil slette denne siden?")){
+                PublicationService.deletePage(page.id).success(function(){
+                    PublicationService.getPages($scope.publication.id).success(function(data){
+                        $scope.publication.pages = data;
+                        sortPages();
+                        $scope.savePublication();
+                    });
                 });
-            });
-
-            data.pages.sort( function ( a, b ) {
-                return a.page_nr - b.page_nr;
-            });
-            console.log("disp data: " + data);
-            $scope.disposition = data;
-            pages = $scope.disposition.pages;
-            if ($scope.selectedPage){
-                $scope.selectedPage = pages[$scope.selectedPage.page_nr-1];
             }
-        }
+        };
 
-        // Get sections from database
-        $http.get('/api/disp/section').success(function (data) {
-            $scope.sections = data;
-        });
-
-        //Update the entire disposition
-        $scope.saveArticle = saveArticle;
-        function saveArticle() {
-            $http.put('/api/disp/' + $routeParams.id, $scope.disposition).success(setDisposition);
-        }
+        $scope.newPage = function(){
+            var insertPageAt = $scope.newPageAt;
+            var numNewPages = $scope.numNewPages;
+            if(numNewPages>100){
+                numNewPages = 100;
+            }else if(numNewPages <= 0){
+                numNewPages = 1;
+            }
+            for(var i = 0; i < numNewPages; i++) {
+                var temp_page = {
+                    page_nr: $scope.publication.pages.length + 1,
+                    note: null,
+                    advertisement: false,
+                    articles: [],
+                    publication: $scope.publication.id,
+                    layout_status: $scope.getLayoutStatusByName("Ukjent")
+                };
+                    if (0 <= insertPageAt && insertPageAt <= $scope.publication.pages.length) {
+                        $scope.publication.pages.splice(insertPageAt, 0, temp_page);
+                    } else {
+                        $scope.publication.pages.push(data);
+                    }
+                    sortPages();
+            }
+            $scope.savePublication();
+        };
 
         function sortPages(){
-            for ( var i = 0; i < pages.length; i++ ) {
-                pages[i].page_nr = i+1;
+            for ( var i = 0; i < $scope.publication.pages.length; i++ ) {
+                $scope.publication.pages[i].page_nr = i+1;
             }
         }
 
-        // Adds a page to the end of the array
-        $scope.addLastPage = function () {
-            var newPage = {
-                page_nr: pages.length ? pages.length + 1 : 1,
-                section: $scope.sections[0],
-                note: "",
-                articles: []
-            };
-            pages.push(newPage);
-//            saveArticle(); //Saving only through the saveMe button
+        $scope.savePage = function() {
+            PublicationService.updateMetadata($scope.publication);
         };
 
-        //Adds a page in front of a specific page
-        $scope.addPage = function(page){
-            var pageIndex = pages.indexOf(page);
-            var newPage = {
-                page_nr: pageIndex +1,
-                section: $scope.sections[0],
-                note: "",
-                articles: []
-            };
-            pages.splice(pageIndex,0,newPage);
-            pageIndex = pages.indexOf(page);
-            sortPages();
-//            saveArticle(); //Saving only through the saveMe button
-        };
-
-        //Removes the last page in the array
-        $scope.removeLastPage = function () {
-            if (!pages || pages.length < 1) {
-                return;
-            }
-            for ( var i = 0; i < pages.length; i++) {
-                if (pages[i].page_nr == pages.length) {
-                    pages.splice(i, 1);
-//                        saveArticle();
-                    return;
+        $scope.getLayoutStatusByName = function(name){
+            for(var i = 0; i < $scope.layoutStatuses.length; i++){
+                if($scope.layoutStatuses[i].name == name){
+                    return $scope.layoutStatuses[i];
                 }
             }
+            return null;
         };
 
-        //Removes the selected page from array
-        $scope.removePage = function (page) {
-            var k = -1;
-
-            for (var i = 0; i < pages.length; i++){
-                if( pages[i].page_nr == page.page_nr){
-                    k = i;
-                }
-            }
-            if( k < 0){
-                return;
-            }
-            // If the page is empty (no article), remove it. else ask for permission
-            if (pages[k].articles.length === 0 || confirm("Slette denne siden?")) {
-                pages.splice(k,1);
-
-                for (var j = 0; j < pages.length; j++){
-                    if( pages[j].page_nr > page.page_nr){
-                        pages[j].page_nr -= 1;
-                    }
-                }
-//                saveArticle();
-            }
-            $scope.selectedPage = pages[k];
-        };
-
-        // Types of Photo statuses available
-        $scope.photostatus = [
-            "Uferdig","Planlagt","Tatt"
-        ];
-
-        // When a node is dropped we update the page number, (page number = index+1)
-        $scope.treeOptions = {
-            dropped: function(event) {
-                $scope.selectedPage = pages[event.dest.index];
-                sortPages();
-            }
-        };
-
-        // Article modal (Pop up):
-        $scope.articleModal = function (page , article) {
-
-            var modalInstance = $modal.open({
-                templateUrl: 'partials/disposition/articleModal.html',
-                controller: ModalInstanceCtrl,
+        $scope.createArticle = function(page){
+            var modal = $modal.open({
+                templateUrl: 'partials/article/createArticleModal.html',
+                controller: 'CreateArticleModalCtrl',
                 resolve: {
-                    articles: function () {
-                        return $scope.articles;
-                    },
-                    page: function () {
-                        return page;
-                    },
-                    article: function () {
-                        return article;
+                    pubId: function(){
+                        return $scope.publication.id;
                     }
                 }
             });
+            modal.result.then(function(id){
+                ArticleService.getArticle(id).success(function(data){
+                    page.articles.push(data);
+                    $scope.publication.articles.push(data);
+                    $scope.savePage();
+                })
+            })
+
         };
 
-        var ModalInstanceCtrl = function ($scope, $modalInstance, articles, page, article) {
-
-            $scope.selectedArticles = { };
-            $scope.page = page;
-            $scope.articles = articles;
-            $scope.article = article;
-
-            if (articles.length !== 0) {
-                $scope.selectedArticles.addArticleModel = articles[0];
-            }
-            // if the page.articles is not empty, set a default value for the model
-            if ($scope.page.articles.length !== 0) {
-                if ($scope.article){
-                    $scope.selectedArticles.delArticleModel = $scope.article;
-                }
-                else{
-                    $scope.selectedArticles.delArticleModel = $scope.page.articles[0];
-                }
-            }
-
-            $scope.addArticle = function (articleModel) {
-                if (!articleModel) {
-                    return;
-                }
-                var pageAricles = $scope.page.articles;
-                for (var i = 0; i < pageAricles.length; i++) {
-                    if (pageAricles[i].id == articleModel.id) {
-                        return;
-                    }
-                }
-                $scope.page.articles.push(articleModel);
-                //To make adding the first article look good: puts a default
-                $scope.selectedArticles.delArticleModel = articleModel;
-            };
-
-            $scope.removeArticle = function (articleModel) {
-                if (articleModel) {
-                    var pageAricles = $scope.page.articles;
-                    for (var i = 0; i < pageAricles.length; i++) {
-                        if (pageAricles[i].id == articleModel.id) {
-                            $scope.page.articles.splice(i, 1);
-                            //To make removal look good: re-checking list to put a new default
-                            if ($scope.page.articles.length > 0) {
-                                console.log("Noe", $scope.page.articles[0]);
-                                $scope.selectedArticles.delArticleModel = $scope.page.articles[0];
-                            }
-                            return;
-                        }
-                    }
-                }
-            };
+        $scope.saveArticle = function(article){
+            ArticleService.updateMetadata(article);
         };
+
+        $scope.sortableOptions = {
+            helper: function(e, ui) {
+                var c = ui.clone().appendTo("body");
+                c.width($(this).width());
+                c.addClass("disp-helper");
+                return c;
+            },
+            axis: 'y',
+            handle: '.handle',
+            stop: function(e, ui){
+                $scope.selectedPage = $scope.publication.pages[ui.item.index()];
+                sortPages();
+                PublicationService.updateMetadata($scope.publication);
+            }
+        };
+
+        $scope.showHelp = function(){
+            $templateRequest('partials/templates/help/dispHelp.html').then(function(template){
+                MessageModal.info(template);
+            });
+        }
     });

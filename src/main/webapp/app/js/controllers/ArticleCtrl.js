@@ -17,10 +17,9 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function ($scope, PersonService,$timeout, ArticleService, PublicationService, TitleChanger, noteParserRules, articleParserRules, $routeParams, $modal) {
+    .controller('ArticleCtrl', function ($scope, PersonService,$timeout, ArticleService, PublicationService, TitleChanger, noteParserRules, $routeParams, ViewArticleService, MessageModal, $templateRequest, $modal) {
         $scope.metaEditMode = false;
         $scope.noteRules = noteParserRules;
-        $scope.articleRules = articleParserRules;
 
         PersonService.getAll().success(function(data) {
            $scope.persons = data;
@@ -29,8 +28,8 @@ angular.module('momusApp.controllers')
         ArticleService.getArticle($routeParams.id).success(function (data) {
             $scope.article = data;
             $scope.unedited = angular.copy(data);
-
             TitleChanger.setTitle($scope.article.name);
+            ViewArticleService.viewArticle($routeParams.id);
         });
 
         ArticleService.getTypes().success(function (data) {
@@ -45,6 +44,9 @@ angular.module('momusApp.controllers')
             $scope.sections = data;
         });
 
+
+        $scope.photoTypes = [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}];
+        $scope.quoteCheckTypes = [{value: false, name: 'I orden'}, {value: true, name: 'Trenger sitatsjekk'}];
 
 
         /* content panel */
@@ -132,6 +134,14 @@ angular.module('momusApp.controllers')
             $scope.url = url;
         };
 
+        $scope.showHelp = function () {
+            $templateRequest('partials/templates/help/articleHelp.html').then(function(template){
+                MessageModal.info(template);
+            });
+
+        };
+
+
         $scope.$on('$locationChangeStart', function(event){
             if(promptCondition()){
                 if(!confirm("Er du sikker på at du vil forlate siden? Det finnes ulagrede endringer.")){
@@ -154,6 +164,18 @@ angular.module('momusApp.controllers')
             return $scope.unedited.content != $scope.article.content || $scope.metaEditMode === true || $scope.unedited.note != $scope.article.note;
         }
 
+        $scope.deleteArticle = function(){
+            if(confirm("Er du sikker på at du vil slette artikkelen?")){
+                ArticleService.deleteArticle($scope.article);
+                $scope.article.archived = true;
+            }
+        };
+
+        $scope.restoreArticle = function(){
+            ArticleService.restoreArticle($scope.article);
+            $scope.article.archived = false;
+        };
+
 
 
         $scope.quoteCheck = function(zc){
@@ -166,7 +188,7 @@ angular.module('momusApp.controllers')
 
             var qcArticle = $scope.article.content;
             var qcAuthor = "";
-            var qcRed = "<br />Studentavisa Under Dusken <br /> Ansvarlig redaktør Fornavn Etternavn - mail@mail.com";
+            var qcRed = "<br />Studentavisa Under Dusken <br /> Ansvarlig redaktør " + "Syn" + "ne Ha" + "mmervik " + "synn" + "ehammer" + "vik@gmail.com";
 
             if($scope.article.journalists.length){
                 for(var i = 0; i < $scope.article.journalists.length;i++) {

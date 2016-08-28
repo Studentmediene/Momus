@@ -1,0 +1,802 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!--
+  ~ Copyright 2014 Studentmediene i Trondheim AS
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+
+    <!-- The initial changeset, containing the full database layout at release -->
+    <changeSet id="1412787818529-1" author="Mats (generated)">
+        <createTable tableName="article">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="comment" type="TEXT"/>
+            <column name="content" type="TEXT"/>
+            <column name="lastupdated" type="datetime"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="note" type="TEXT"/>
+            <column name="photostatus" type="VARCHAR(255)"/>
+            <column name="publication_id" type="BIGINT"/>
+            <column name="section_id" type="BIGINT"/>
+            <column name="status_id" type="BIGINT"/>
+            <column name="type_id" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="article_journalist">
+            <column name="article_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="journalists_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="article_photographer">
+            <column name="article_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="photographers_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="articlerevision">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="content" type="TEXT"/>
+            <column name="saveddate" type="datetime"/>
+            <column name="article_id" type="BIGINT"/>
+            <column name="status_id" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="articlestatus">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="color" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+
+        <createTable tableName="articletype">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+
+        <createTable tableName="disposition">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="publication_id" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="disposition_page">
+            <column name="disposition_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pages_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="note">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="content" type="TEXT"/>
+            <column name="owner_id" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="page">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="advertisement" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="note" type="VARCHAR(255)"/>
+            <column name="pagenr" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="section_id" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="page_article">
+            <column name="page_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="articles_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="articles_order" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="person">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="firstname" type="VARCHAR(255)"/>
+            <column name="fullname" type="VARCHAR(255)"/>
+            <column name="phonenumber" type="VARCHAR(255)"/>
+            <column name="username" type="VARCHAR(255)"/>
+        </createTable>
+
+        <createTable tableName="publication">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="releasedate" type="date"/>
+        </createTable>
+
+        <createTable tableName="publication_page">
+            <column name="publication_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pages_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pages_order" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="section">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+
+        <createTable tableName="source">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="address" type="TEXT"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="note" type="TEXT"/>
+            <column name="telephone" type="VARCHAR(255)"/>
+            <column name="webpage" type="VARCHAR(255)"/>
+        </createTable>
+
+        <createTable tableName="source_sourcetag">
+            <column name="source_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tags_tag" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="sourcetag">
+            <column name="tag" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="article_id, journalists_id"  tableName="article_journalist"/>
+
+        <addPrimaryKey columnNames="article_id, photographers_id"  tableName="article_photographer"/>
+
+        <addPrimaryKey columnNames="id" tableName="disposition"/>
+
+        <addPrimaryKey columnNames="disposition_id, pages_id" tableName="disposition_page"/>
+
+        <addPrimaryKey columnNames="page_id, articles_order" tableName="page_article"/>
+
+        <addPrimaryKey columnNames="id" tableName="person"/>
+
+        <addPrimaryKey columnNames="publication_id, pages_order" tableName="publication_page"/>
+
+        <addPrimaryKey columnNames="source_id, tags_tag" tableName="source_sourcetag"/>
+
+        <addPrimaryKey columnNames="tag" tableName="sourcetag"/>
+
+        <addUniqueConstraint columnNames="pages_id" constraintName="pages_id_unique" deferrable="false" disabled="false" initiallyDeferred="false" tableName="disposition_page"/>
+
+        <addForeignKeyConstraint baseColumnNames="owner_id" baseTableName="note" constraintName="FK_note_person" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="person"/>
+
+        <addForeignKeyConstraint baseColumnNames="section_id" baseTableName="page" constraintName="FK_page_section" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="section"/>
+
+        <addForeignKeyConstraint baseColumnNames="status_id" baseTableName="article" constraintName="FK_article_articlestatus" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="articlestatus"/>
+
+        <addForeignKeyConstraint baseColumnNames="publication_id" baseTableName="article" constraintName="FK_article_publication" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="publication"/>
+
+        <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="article" constraintName="FK_article_articletype" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="articletype"/>
+
+        <addForeignKeyConstraint baseColumnNames="section_id" baseTableName="article" constraintName="FK_article_section" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="section"/>
+
+        <addForeignKeyConstraint baseColumnNames="photographers_id" baseTableName="article_photographer" constraintName="FK_article_photographer_person" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="person"/>
+
+        <addForeignKeyConstraint baseColumnNames="article_id" baseTableName="article_photographer" constraintName="FK_article_photographer_article" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="article"/>
+
+        <addForeignKeyConstraint baseColumnNames="page_id" baseTableName="page_article" constraintName="FK_page_article_page" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="page"/>
+
+        <addForeignKeyConstraint baseColumnNames="articles_id" baseTableName="page_article" constraintName="FK_page_article_article" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="article"/>
+
+        <addForeignKeyConstraint baseColumnNames="pages_id" baseTableName="publication_page" constraintName="FK_publication_page_page" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="page"/>
+
+        <addForeignKeyConstraint baseColumnNames="publication_id" baseTableName="publication_page" constraintName="FK_publication_page_publication" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="publication"/>
+
+        <addForeignKeyConstraint baseColumnNames="disposition_id" baseTableName="disposition_page" constraintName="FK_disposition_page_disposition" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="disposition"/>
+
+        <addForeignKeyConstraint baseColumnNames="pages_id" baseTableName="disposition_page" constraintName="FK_disposition_page_page" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="page"/>
+
+        <addForeignKeyConstraint baseColumnNames="publication_id" baseTableName="disposition" constraintName="FK_disposition_publication" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="publication"/>
+
+        <addForeignKeyConstraint baseColumnNames="status_id" baseTableName="articlerevision" constraintName="FK_articlerevision_articlestatus" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="articlestatus"/>
+
+        <addForeignKeyConstraint baseColumnNames="article_id" baseTableName="articlerevision" constraintName="FK_articlerevision_article" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="article"/>
+
+        <addForeignKeyConstraint baseColumnNames="article_id" baseTableName="article_journalist" constraintName="FK_article_journalist_article" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="article"/>
+
+        <addForeignKeyConstraint baseColumnNames="journalists_id" baseTableName="article_journalist" constraintName="FK_article_journalist_person" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="person"/>
+
+        <addForeignKeyConstraint baseColumnNames="tags_tag" baseTableName="source_sourcetag" constraintName="FK_source_sourcetag_sourcetag" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="tag" referencedTableName="sourcetag"/>
+
+        <addForeignKeyConstraint baseColumnNames="source_id" baseTableName="source_sourcetag" constraintName="FK_source_sourcetag_source" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="source"/>
+    </changeSet>
+
+
+    <!-- Adding some article metadata -->
+    <changeSet id="2" author="Mats" context="live,dev">
+        <!-- sections -->
+        <insert tableName="section"><column name="id">1</column><column name="name">Musikk</column></insert>
+        <insert tableName="section"><column name="id">2</column><column name="name">Debatt</column></insert>
+        <insert tableName="section"><column name="id">3</column><column name="name">Nyhet</column></insert>
+        <insert tableName="section"><column name="id">4</column><column name="name">Sport</column></insert>
+        <insert tableName="section"><column name="id">5</column><column name="name">Forbruker</column></insert>
+        <insert tableName="section"><column name="id">6</column><column name="name">Reportasje</column></insert>
+        <insert tableName="section"><column name="id">7</column><column name="name">Spit</column></insert>
+        <insert tableName="section"><column name="id">8</column><column name="name">Kultur</column></insert>
+        <insert tableName="section"><column name="id">9</column><column name="name">Annet</column></insert>
+
+        <!-- article types -->
+        <insert tableName="articletype"><column name="id">1</column><column name="name">Anmeldelse</column></insert>
+        <insert tableName="articletype"><column name="id">2</column><column name="name">Nyhetsartikkel</column></insert>
+        <insert tableName="articletype"><column name="id">3</column><column name="name">Kulturartikkel</column></insert>
+        <insert tableName="articletype"><column name="id">4</column><column name="name">Kulturtegn</column></insert>
+        <insert tableName="articletype"><column name="id">5</column><column name="name">Reportasje</column></insert>
+        <insert tableName="articletype"><column name="id">6</column><column name="name">Kommentar</column></insert>
+        <insert tableName="articletype"><column name="id">7</column><column name="name">Debatt</column></insert>
+
+        <!-- statuses -->
+        <insert tableName="articlestatus"><column name="id">1</column><column name="color">#fff</column><column name="name">Ukjent</column></insert>
+        <insert tableName="articlestatus"><column name="id">2</column><column name="color">#eee</column><column name="name">Planlagt</column></insert>
+        <insert tableName="articlestatus"><column name="id">3</column><column name="color">#aaf</column><column name="name">Skrives</column></insert>
+        <insert tableName="articlestatus"><column name="id">4</column><column name="color">#faa</column><column name="name">Deskes</column></insert>
+        <insert tableName="articlestatus"><column name="id">5</column><column name="color">#afa</column><column name="name">Til godkjenning</column></insert>
+        <insert tableName="articlestatus"><column name="id">6</column><column name="color">#0f0</column><column name="name">Publisert</column></insert>
+    </changeSet>
+
+
+
+    <!-- Create some dummy data for DEV ONLY -->
+    <changeSet id="3" author="Mats" context="dev">
+        <!-- First some persons. These will be overridden by LDAP sync data shortly, but are needed here or the database gets angry -->
+        <insert tableName="person"><column name="id">1006</column></insert>
+        <insert tableName="person"><column name="id">1003</column></insert>
+        <insert tableName="person"><column name="id">2411</column></insert>
+
+
+        <!-- Some Publications -->
+        <insert tableName="publication"><column name="id">1</column><column name="name">UD14-2013</column><column name="releasedate" valueDate="2013-09-02"/></insert>
+        <insert tableName="publication"><column name="id">2</column><column name="name">UD15-2013</column><column name="releasedate" valueDate="2013-10-18"/></insert>
+        <insert tableName="publication"><column name="id">3</column><column name="name">UD16-2013</column><column name="releasedate" valueDate="2013-12-17"/></insert>
+        <insert tableName="publication"><column name="id">4</column><column name="name">UD11-2014</column><column name="releasedate" valueDate="2014-08-01"/></insert>
+        <insert tableName="publication"><column name="id">5</column><column name="name">UD12-2014</column><column name="releasedate" valueDate="2014-10-05"/></insert>
+        <insert tableName="publication"><column name="id">6</column><column name="name">UD13-2014</column><column name="releasedate" valueDate="2014-11-22"/></insert>
+        <insert tableName="publication"><column name="id">7</column><column name="name">UD14-2014</column><column name="releasedate" valueDate="2014-12-05"/></insert>
+        <insert tableName="publication"><column name="id">8</column><column name="name">UD15-2014</column><column name="releasedate" valueDate="2014-12-21"/></insert>
+
+        <!-- Some dispositions -->
+        <!-- TODO -->
+
+        <!-- Some articles -->
+        <insert tableName="article">
+            <column name="id">1</column><column name="name">Siden Sist</column><column name="comment"></column><column name="lastupdated"></column>
+            <column name="publication_id">8</column><column name="section_id">3</column><column name="status_id">2</column><column name="type_id">2</column>
+            <column name="content"><![CDATA[]]></column>
+            <column name="note"><![CDATA[<p>Hva har skjedd siden sist a?</p>]]></column>
+        </insert>
+        <insert tableName="article">
+            <column name="id">2</column><column name="name">Lovlig Norsk</column><column name="comment">Må ikke deskes før lørdag</column><column name="lastupdated"></column>
+            <column name="publication_id">8</column><column name="section_id">6</column><column name="status_id">5</column><column name="type_id">5</column>
+            <column name="content"><![CDATA[<h1>Lovlig Norsk</h1><h4>I 2011 ble tidligere NTNU-student Maria Amelie tvangsreturnert etter åtte års ulovlig opphold i Norge. I går var hun tilbake på Studentersamfundet for å fortelle om boka Takk.</h4><p>Maria Amelie engasjerte tusenvis av nordmenn og skapte stor debatt da Utlendingsnemnda i januar 2011 vedtok at Amelie ikke hadde rett til å
+bli i Norge. Hun måtte returnere til Russland – til tross for at hun
+snakket norsk, hadde et norsk nettverk, mastergrad fra NTNU og var selve
+ kroneksempelet på vellykket integrering. I Russland hadde hun kanskje
+ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet. Et sted hun trolig har vært mye, gjennom verv i ISFiT, UKA og Kulturutvalget. Hennes første bok, titulert&nbsp;<i>Ulovlig norsk</i>, bidro til både æresmedlemsskap på Samfundet og tvangsdeportering til «hjemlandet». I går leste hun fra&nbsp;<i>Takk</i>. Den handler om oppholdet på Trandum asylfengsel, et sted som selveste FNs torturkomite har rettet sterk kritikk mot.</p><blockquote>«Vi skal kroppsvisitere deg», sa en av politikvinnene. «Du må ta av deg alt du har på deg», sa hun mens hun dro på seg tynne plasthansker. «Absolutt alt?» spurte jeg. «Ja», svarte hun. Hjertet mitt slo fortere. Jeg nølte, men bet tennene sammen og begynte å ta av meg kardigan, skjørt, topp, behå, sko, strømpebukser, truse, sokker. (…) «Dette er rutinene våre, vi gjør det med alle, selv om det kan føles litt ubehagelig». «Jeg skrev ikke boken for å ha det behagelig», sa jeg mens jeg tok av meg trusene.</blockquote><p>– Jeg måtte forsøke å dele meg i to: kroppen, og tankene. Jeg tenkte på eldre damer og små barn som måtte gjennom samme undersøkelse. Og jeg var veldig glad foreldrene mine slapp dette, sier hun.</p><p>Amelies foreldre reiste tilbake til Russland i 2011. Begge to hadde i lang tid vært syke.</p><p>– De ønsket begge å arbeide for å bidra i samfunnet. Men det kunne de ikke uten oppholdstillatelse. Nå har de endelige fått profesjonell hjelp av psykolog, og helsa har blitt bedre.</p><h3>Helt usynlig</h3><p>Som papirløs har du ingen rettigheter: Ikke studielån fra Lånekassen, ikke fastlege. Det er ingen statistikk som fanger deg opp. Dette ble særlig klart for Maria Amelie etter en sykdomsperiode hvor hun ikke torde å oppsøke lege.</p><p>– Jeg tenkte: Hva om jeg hadde en kjempesmittsom sykdom? Hva om jeg ble gravid? Hva om jeg ble vitne til en kriminell hendelse?</p><p>Da hun i september 2011 ga ut boken Ulovlig norsk som blant annet er basert på hennes egne dagboknotater, følte hun for første gang på lenge at «nå finnes jeg».</p><p>Trandum asylfengsel Konsekvensen av «å finnes» ble Trandum asylfengsel, et sted like ved Gardemoen for midlertidig oppbevaring av asylsøkere. Både Maria og mange organisasjoner har kritisert Trandum for brudd på menneskerettighetene. Blant det som er blitt kritisert er stedets strenge sikkerhetsprosedyrer og minimale aktivitetstilbud.</p><p>– Trandum har betydd mye for meg. På godt og vondt. Mest på vondt.</p><p><i>Takk</i>&nbsp;handler mye om tida på Trandum. Herfra ser man ironisk nok kun fly som forlater Norge, og ingen som lander, forteller Maria.</p><p>– Å være asylsøker betyr “ingen ende på reisen”. Jeg visste aldri hvor lenge jeg måtte vente på Trandum. Andre kriminelle får vite hvor lenge de skal sitte fengslet, og i det ligger det litt verdighet. Den verdigheten fikk ikke jeg, sier hun.</p><h3>Regelendring</h3><p>Som en følge av den voldsomme støtten fra både offentligheten og politikere endret regjeringen regelverket i Utlendingsloven. Etter april 2011 kunne personer med relevant fagutdanning og jobbtilbud komme tilbake til Norge som arbeidsinnvandrere, etter avslag på søknad om asyl.</p><br>]]></column>
+            <column name="note"><![CDATA[<p>notater er <b>bra</b></p>]]></column>
+        </insert>
+        <insert tableName="article">
+            <column name="id">3</column><column name="name">Mora mi</column><column name="comment">Venter på sitatsjekk</column><column name="lastupdated"></column>
+            <column name="publication_id">7</column><column name="section_id">3</column><column name="status_id">4</column><column name="type_id">1</column>
+            <column name="content"><![CDATA[<h1>Lovlig Norsk</h1><h4>I 2011 ble tidligere NTNU-student Maria Amelie tvangsreturnert etter åtte års ulovlig opphold i Norge. I går var hun tilbake på Studentersamfundet for å fortelle om boka Takk.</h4><p>Maria Amelie engasjerte tusenvis av nordmenn og skapte stor debatt da Utlendingsnemnda i januar 2011 vedtok at Amelie ikke hadde rett til å
+bli i Norge. Hun måtte returnere til Russland – til tross for at hun
+snakket norsk, hadde et norsk nettverk, mastergrad fra NTNU og var selve
+ kroneksempelet på vellykket integrering. I Russland hadde hun kanskje
+ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet. Et sted hun trolig har vært mye, gjennom verv i ISFiT, UKA og Kulturutvalget. Hennes første bok, titulert&nbsp;<i>Ulovlig norsk</i>, bidro til både æresmedlemsskap på Samfundet og tvangsdeportering til «hjemlandet». I går leste hun fra&nbsp;<i>Takk</i>. Den handler om oppholdet på Trandum asylfengsel, et sted som selveste FNs torturkomite har rettet sterk kritikk mot.</p><blockquote>«Vi skal kroppsvisitere deg», sa en av politikvinnene. «Du må ta av deg alt du har på deg», sa hun mens hun dro på seg tynne plasthansker. «Absolutt alt?» spurte jeg. «Ja», svarte hun. Hjertet mitt slo fortere. Jeg nølte, men bet tennene sammen og begynte å ta av meg kardigan, skjørt, topp, behå, sko, strømpebukser, truse, sokker. (…) «Dette er rutinene våre, vi gjør det med alle, selv om det kan føles litt ubehagelig». «Jeg skrev ikke boken for å ha det behagelig», sa jeg mens jeg tok av meg trusene.</blockquote><p>– Jeg måtte forsøke å dele meg i to: kroppen, og tankene. Jeg tenkte på eldre damer og små barn som måtte gjennom samme undersøkelse. Og jeg var veldig glad foreldrene mine slapp dette, sier hun.</p><p>Amelies foreldre reiste tilbake til Russland i 2011. Begge to hadde i lang tid vært syke.</p><p>– De ønsket begge å arbeide for å bidra i samfunnet. Men det kunne de ikke uten oppholdstillatelse. Nå har de endelige fått profesjonell hjelp av psykolog, og helsa har blitt bedre.</p><h3>Helt usynlig</h3><p>Som papirløs har du ingen rettigheter: Ikke studielån fra Lånekassen, ikke fastlege. Det er ingen statistikk som fanger deg opp. Dette ble særlig klart for Maria Amelie etter en sykdomsperiode hvor hun ikke torde å oppsøke lege.</p><p>– Jeg tenkte: Hva om jeg hadde en kjempesmittsom sykdom? Hva om jeg ble gravid? Hva om jeg ble vitne til en kriminell hendelse?</p><p>Da hun i september 2011 ga ut boken Ulovlig norsk som blant annet er basert på hennes egne dagboknotater, følte hun for første gang på lenge at «nå finnes jeg».</p><p>Trandum asylfengsel Konsekvensen av «å finnes» ble Trandum asylfengsel, et sted like ved Gardemoen for midlertidig oppbevaring av asylsøkere. Både Maria og mange organisasjoner har kritisert Trandum for brudd på menneskerettighetene. Blant det som er blitt kritisert er stedets strenge sikkerhetsprosedyrer og minimale aktivitetstilbud.</p><p>– Trandum har betydd mye for meg. På godt og vondt. Mest på vondt.</p><p><i>Takk</i>&nbsp;handler mye om tida på Trandum. Herfra ser man ironisk nok kun fly som forlater Norge, og ingen som lander, forteller Maria.</p><p>– Å være asylsøker betyr “ingen ende på reisen”. Jeg visste aldri hvor lenge jeg måtte vente på Trandum. Andre kriminelle får vite hvor lenge de skal sitte fengslet, og i det ligger det litt verdighet. Den verdigheten fikk ikke jeg, sier hun.</p><h3>Regelendring</h3><p>Som en følge av den voldsomme støtten fra både offentligheten og politikere endret regjeringen regelverket i Utlendingsloven. Etter april 2011 kunne personer med relevant fagutdanning og jobbtilbud komme tilbake til Norge som arbeidsinnvandrere, etter avslag på søknad om asyl.</p><br>]]></column>
+            <column name="note"></column>
+        </insert>
+        <insert tableName="article">
+            <column name="id">4</column><column name="name">Mats er deilig</column><column name="comment">Alle er enige</column><column name="lastupdated"></column>
+            <column name="publication_id">8</column><column name="section_id">1</column><column name="status_id">3</column><column name="type_id">4</column>
+            <column name="content"><![CDATA[<h1>Lalalala</h1>]]></column>
+            <column name="note"><![CDATA[<p><b>Whoho!</b></p>]]></column>
+        </insert>
+
+        <!-- Some people connected to articles -->
+        <insert tableName="article_journalist"><column name="article_id">1</column><column name="journalists_id">1006</column></insert>
+        <insert tableName="article_journalist"><column name="article_id">2</column><column name="journalists_id">1006</column></insert>
+        <insert tableName="article_photographer"><column name="article_id">2</column><column name="photographers_id">1003</column></insert>
+        <insert tableName="article_journalist"><column name="article_id">3</column><column name="journalists_id">2411</column></insert>
+        <insert tableName="article_photographer"><column name="article_id">3</column><column name="photographers_id">1006</column></insert>
+
+        <!-- And some revisions -->
+
+        <!-- Some sources with tags, and some unused tags -->
+        <insert tableName="sourcetag"><column name="tag">ap</column></insert>
+        <insert tableName="sourcetag"><column name="tag">dekan</column></insert>
+        <insert tableName="sourcetag"><column name="tag">frp</column></insert>
+        <insert tableName="sourcetag"><column name="tag">hf</column></insert>
+        <insert tableName="sourcetag"><column name="tag">ikm</column></insert>
+        <insert tableName="sourcetag"><column name="tag">ime</column></insert>
+        <insert tableName="sourcetag"><column name="tag">nato</column></insert>
+        <insert tableName="sourcetag"><column name="tag">ntnu</column></insert>
+        <insert tableName="sourcetag"><column name="tag">politiker</column></insert>
+        <insert tableName="sourcetag"><column name="tag">rektor</column></insert>
+        <insert tableName="sourcetag"><column name="tag">student</column></insert>
+        <insert tableName="sourcetag"><column name="tag">studenttinget</column></insert>
+        <insert tableName="sourcetag"><column name="tag">kul type</column></insert>
+
+        <insert tableName="source">
+            <column name="id">1</column>
+            <column name="name">Jens Stolfjell</column>
+            <column name="description">Tidligere statsminister</column>
+            <column name="telephone">12345678</column>
+            <column name="email">jens@jensemann.com</column>
+            <column name="webpage">jensemann.com</column>
+            <column name="address">Natobygningen\n123</column>
+            <column name="note">Var der før, er der nå</column>
+        </insert>
+        <insert tableName="source">
+            <column name="id">2</column>
+            <column name="name">Siv Jansrud</column>
+            <column name="description">Politiker frp</column>
+            <column name="telephone">666666</column>
+            <column name="email">siv@sivsiv.com</column>
+            <column name="webpage"></column>
+            <column name="address">Stooortinget</column>
+            <column name="note">Mornaaa Jeeeens</column>
+        </insert>
+        <insert tableName="source">
+            <column name="id">3</column>
+            <column name="name">Gunnar Bovim</column>
+            <column name="description">Rektor for NTNU</column>
+            <column name="telephone">13371337</column>
+            <column name="email">thaboss@ntnu.no</column>
+            <column name="webpage">ntnu.edu</column>
+            <column name="address">Galtvort</column>
+            <column name="note"></column>
+        </insert>
+        <insert tableName="source">
+            <column name="id">4</column>
+            <column name="name">Anne Mols Myr</column>
+            <column name="description">leder Institutt for kunst- og medievitenskap</column>
+            <column name="telephone"></column>
+            <column name="email"></column>
+            <column name="webpage"></column>
+            <column name="address"></column>
+            <column name="note"></column>
+        </insert>
+        <insert tableName="source">
+            <column name="id">5</column>
+            <column name="name">Kathrine Ssssr</column>
+            <column name="description">dekan Det humanistiske fakultet</column>
+            <column name="telephone"></column>
+            <column name="email"></column>
+            <column name="webpage"></column>
+            <column name="address"></column>
+            <column name="note"></column>
+        </insert>
+        <insert tableName="source">
+            <column name="id">6</column>
+            <column name="name">Elena Etternavn</column>
+            <column name="description">leder studenttinget</column>
+            <column name="telephone"></column>
+            <column name="email">naiv@over9000.com</column>
+            <column name="webpage"></column>
+            <column name="address"></column>
+            <column name="note"></column>
+        </insert>
+        <insert tableName="source">
+            <column name="id">7</column>
+            <column name="name">Marta Mellomnavn Etternavn</column>
+            <column name="description">IMEs rep Studenttinget</column>
+            <column name="telephone">12344321</column>
+            <column name="email"></column>
+            <column name="webpage"></column>
+            <column name="address"></column>
+            <column name="note"></column>
+        </insert>
+
+        <insert tableName="source_sourcetag"><column name="source_id">1</column><column name="tags_tag">ap</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">1</column><column name="tags_tag">nato</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">1</column><column name="tags_tag">politiker</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">2</column><column name="tags_tag">politiker</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">2</column><column name="tags_tag">frp</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">3</column><column name="tags_tag">rektor</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">3</column><column name="tags_tag">ntnu</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">4</column><column name="tags_tag">ntnu</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">4</column><column name="tags_tag">ikm</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">5</column><column name="tags_tag">dekan</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">5</column><column name="tags_tag">hf</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">5</column><column name="tags_tag">ntnu</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">6</column><column name="tags_tag">ntnu</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">6</column><column name="tags_tag">politiker</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">6</column><column name="tags_tag">student</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">7</column><column name="tags_tag">studenttinget</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">7</column><column name="tags_tag">ntnu</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">7</column><column name="tags_tag">student</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">7</column><column name="tags_tag">politiker</column></insert>
+        <insert tableName="source_sourcetag"><column name="source_id">7</column><column name="tags_tag">ime</column></insert>
+
+
+
+        <!-- Some private notes -->
+        <insert tableName="note">
+            <column name="id">1</column>
+            <column name="content"><![CDATA[<p><b>Whoho!</b><br>Et notat</p><p>for meg!</p>]]></column>
+            <column name="owner_id">1003</column>
+        </insert>
+        <insert tableName="note">
+            <column name="id">2</column>
+            <column name="content"><![CDATA[<p>Mitt notat...</p>]]></column>
+            <column name="owner_id">1006</column>
+        </insert>
+
+    </changeSet>
+
+
+    <!-- Add support for Google Drive -->
+    <changeSet id="4" author="Mats">
+        <addColumn tableName="article">
+            <column name="googledriveid" type="VARCHAR(255)" />
+        </addColumn>
+    </changeSet>
+
+    <!-- Adding KeyValue for storing of simple data that doesn't fit anywhere else -->
+    <changeSet id="5" author="Mats">
+        <createTable tableName="keyvalue">
+            <column name="k" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="val" type="VARCHAR(255)" />
+        </createTable>
+
+        <addPrimaryKey columnNames="k" tableName="keyvalue"/>
+    </changeSet>
+
+    <!-- Add order fields for article status and types -->
+    <changeSet id="6" author="Christoffer">
+        <addColumn tableName="articlestatus">
+            <column name="statusorder" type="BIGINT" />
+        </addColumn>
+        <addColumn tableName="articletype">
+            <column name="typeorder" type="BIGINT" />
+        </addColumn>
+
+        <update tableName="articlestatus"><column name="statusorder">100</column><where>id=1</where></update>
+        <update tableName="articlestatus"><column name="statusorder">200</column><where>id=2</where></update>
+        <update tableName="articlestatus"><column name="statusorder">300</column><where>id=3</where></update>
+        <update tableName="articlestatus"><column name="statusorder">400</column><where>id=4</where></update>
+        <update tableName="articlestatus"><column name="statusorder">500</column><where>id=5</where></update>
+        <update tableName="articlestatus"><column name="statusorder">600</column><where>id=6</where></update>
+
+        <update tableName="articletype"><column name="typeorder">100</column><where>id=1</where></update>
+        <update tableName="articletype"><column name="typeorder">200</column><where>id=2</where></update>
+        <update tableName="articletype"><column name="typeorder">300</column><where>id=3</where></update>
+        <update tableName="articletype"><column name="typeorder">400</column><where>id=4</where></update>
+        <update tableName="articletype"><column name="typeorder">500</column><where>id=5</where></update>
+        <update tableName="articletype"><column name="typeorder">600</column><where>id=6</where></update>
+        <update tableName="articletype"><column name="typeorder">700</column><where>id=7</where></update>
+
+    </changeSet>
+
+
+
+    <!-- Add support for "raw content" for better free text search -->
+    <changeSet id="4" author="EivindAndMats">
+        <addColumn tableName="article">
+            <column name="rawcontent" type="TEXT" />
+        </addColumn>
+    </changeSet>
+
+    <!-- Update dev-data with raw content -->
+    <changeSet id="5" author="EivindAndMats" context="dev">
+        <update tableName="article"><column name="rawcontent" value="siden sist nyhet planlagt nyhetsartikkel null sharon nymo" /><where>id=1</where></update>
+        <update tableName="article"><column name="rawcontent">lovlig norsk i 2011 ble tidligere ntnu student maria amelie tvangsreturnert etter åtte års ulovlig opphold i norge i går var hun tilbake på studentersamfundet for å fortelle om boka takk maria amelie engasjerte tusenvis av nordmenn og skapte stor debatt da utlendingsnemnda i januar 2011 vedtok at amelie ikke hadde rett til å bli i norge hun måtte returnere til russland til tross for at hun snakket norsk hadde et norsk nettverk mastergrad fra ntnu og var selve kroneksempelet på vellykket integrering i russland hadde hun kanskje ingen tilbake på samfundet men nå er hun tilbake på samfundet et sted hun trolig har vært mye gjennom verv i isfit uka og kulturutvalget hennes første bok titulert nbsp ulovlig norsk bidro til både æresmedlemsskap på samfundet og tvangsdeportering til hjemlandet i går leste hun fra nbsp takk den handler om oppholdet på trandum asylfengsel et sted som selveste fns torturkomite har rettet sterk kritikk mot vi skal kroppsvisitere deg sa en av politikvinnene du må ta av deg alt du har på deg sa hun mens hun dro på seg tynne plasthansker absolutt alt spurte jeg ja svarte hun hjertet mitt slo fortere jeg nølte men bet tennene sammen og begynte å ta av meg kardigan skjørt topp behå sko strømpebukser truse sokker dette er rutinene våre vi gjør det med alle selv om det kan føles litt ubehagelig jeg skrev ikke boken for å ha det behagelig sa jeg mens jeg tok av meg trusene jeg måtte forsøke å dele meg i to kroppen og tankene jeg tenkte på eldre damer og små barn som måtte gjennom samme undersøkelse og jeg var veldig glad foreldrene mine slapp dette sier hun amelies foreldre reiste tilbake til russland i 2011 begge to hadde i lang tid vært syke de ønsket begge å arbeide for å bidra i samfunnet men det kunne de ikke uten oppholdstillatelse nå har de endelige fått profesjonell hjelp av psykolog og helsa har blitt bedre helt usynlig som papirløs har du ingen rettigheter ikke studielån fra lånekassen ikke fastlege det er ingen statistikk som fanger deg opp dette ble særlig klart for maria amelie etter en sykdomsperiode hvor hun ikke torde å oppsøke lege jeg tenkte hva om jeg hadde en kjempesmittsom sykdom hva om jeg ble gravid hva om jeg ble vitne til en kriminell hendelse da hun i september 2011 ga ut boken ulovlig norsk som blant annet er basert på hennes egne dagboknotater følte hun for første gang på lenge at nå finnes jeg trandum asylfengsel konsekvensen av å finnes ble trandum asylfengsel et sted like ved gardemoen for midlertidig oppbevaring av asylsøkere både maria og mange organisasjoner har kritisert trandum for brudd på menneskerettighetene blant det som er blitt kritisert er stedets strenge sikkerhetsprosedyrer og minimale aktivitetstilbud trandum har betydd mye for meg på godt og vondt mest på vondt takk nbsp handler mye om tida på trandum herfra ser man ironisk nok kun fly som forlater norge og ingen som lander forteller maria å være asylsøker betyr ingen ende på reisen jeg visste aldri hvor lenge jeg måtte vente på trandum andre kriminelle får vite hvor lenge de skal sitte fengslet og i det ligger det litt verdighet den verdigheten fikk ikke jeg sier hun regelendring som en følge av den voldsomme støtten fra både offentligheten og politikere endret regjeringen regelverket i utlendingsloven etter april 2011 kunne personer med relevant fagutdanning og jobbtilbud komme tilbake til norge som arbeidsinnvandrere etter avslag på søknad om asyl  lovlig norsk reportasje deskes reportasje må ikke deskes før lørdag sharon nymo birgith rolandsen</column><where>id=2</where></update>
+        <update tableName="article"><column name="rawcontent">lovlig norsk i 2011 ble tidligere ntnu student maria amelie tvangsreturnert etter åtte års ulovlig opphold i norge i går var hun tilbake på studentersamfundet for å fortelle om boka takk maria amelie engasjerte tusenvis av nordmenn og skapte stor debatt da utlendingsnemnda i januar 2011 vedtok at amelie ikke hadde rett til å bli i norge hun måtte returnere til russland til tross for at hun snakket norsk hadde et norsk nettverk mastergrad fra ntnu og var selve kroneksempelet på vellykket integrering i russland hadde hun kanskje ingen tilbake på samfundet men nå er hun tilbake på samfundet et sted hun trolig har vært mye gjennom verv i isfit uka og kulturutvalget hennes første bok titulert nbsp ulovlig norsk bidro til både æresmedlemsskap på samfundet og tvangsdeportering til hjemlandet i går leste hun fra nbsp takk den handler om oppholdet på trandum asylfengsel et sted som selveste fns torturkomite har rettet sterk kritikk mot vi skal kroppsvisitere deg sa en av politikvinnene du må ta av deg alt du har på deg sa hun mens hun dro på seg tynne plasthansker absolutt alt spurte jeg ja svarte hun hjertet mitt slo fortere jeg nølte men bet tennene sammen og begynte å ta av meg kardigan skjørt topp behå sko strømpebukser truse sokker dette er rutinene våre vi gjør det med alle selv om det kan føles litt ubehagelig jeg skrev ikke boken for å ha det behagelig sa jeg mens jeg tok av meg trusene jeg måtte forsøke å dele meg i to kroppen og tankene jeg tenkte på eldre damer og små barn som måtte gjennom samme undersøkelse og jeg var veldig glad foreldrene mine slapp dette sier hun amelies foreldre reiste tilbake til russland i 2011 begge to hadde i lang tid vært syke de ønsket begge å arbeide for å bidra i samfunnet men det kunne de ikke uten oppholdstillatelse nå har de endelige fått profesjonell hjelp av psykolog og helsa har blitt bedre helt usynlig som papirløs har du ingen rettigheter ikke studielån fra lånekassen ikke fastlege det er ingen statistikk som fanger deg opp dette ble særlig klart for maria amelie etter en sykdomsperiode hvor hun ikke torde å oppsøke lege jeg tenkte hva om jeg hadde en kjempesmittsom sykdom hva om jeg ble gravid hva om jeg ble vitne til en kriminell hendelse da hun i september 2011 ga ut boken ulovlig norsk som blant annet er basert på hennes egne dagboknotater følte hun for første gang på lenge at nå finnes jeg trandum asylfengsel konsekvensen av å finnes ble trandum asylfengsel et sted like ved gardemoen for midlertidig oppbevaring av asylsøkere både maria og mange organisasjoner har kritisert trandum for brudd på menneskerettighetene blant det som er blitt kritisert er stedets strenge sikkerhetsprosedyrer og minimale aktivitetstilbud trandum har betydd mye for meg på godt og vondt mest på vondt takk nbsp handler mye om tida på trandum herfra ser man ironisk nok kun fly som forlater norge og ingen som lander forteller maria å være asylsøker betyr ingen ende på reisen jeg visste aldri hvor lenge jeg måtte vente på trandum andre kriminelle får vite hvor lenge de skal sitte fengslet og i det ligger det litt verdighet den verdigheten fikk ikke jeg sier hun regelendring som en følge av den voldsomme støtten fra både offentligheten og politikere endret regjeringen regelverket i utlendingsloven etter april 2011 kunne personer med relevant fagutdanning og jobbtilbud komme tilbake til norge som arbeidsinnvandrere etter avslag på søknad om asyl  lovlig norsk reportasje deskes reportasje må ikke deskes før lørdag sharon nymo birgith rolandsen</column><where>id=3</where></update>
+        <update tableName="article"><column name="rawcontent">lalalala mats er deilig anmeldelse skrives kulturtegn alle er enige</column><where>id=4</where></update>
+    </changeSet>
+
+
+    <!-- Adding new field to a revision, that states if that revision is
+    saved to mark a status change, or because the text was updated -->
+    <changeSet id="6" author="Mats">
+        <addColumn tableName="articlerevision">
+            <column name="statuschanged" type="BOOLEAN" />
+        </addColumn>
+    </changeSet>
+
+    <!-- Storing the length of the article -->
+    <changeSet id="7" author="Mats">
+        <addColumn tableName="article">
+            <column name="contentlength" type="BIGINT" defaultValueNumeric="0" />
+        </addColumn>
+    </changeSet>
+
+    <!-- Update dev-data with lengths -->
+    <changeSet id="8" author="Mats" context="dev">
+        <update tableName="article"><column name="contentlength">28</column><where>id=1</where></update>
+        <update tableName="article"><column name="contentlength">3688</column><where>id=2</where></update>
+        <update tableName="article"><column name="contentlength">3688</column><where>id=3</where></update>
+        <update tableName="article"><column name="contentlength">8</column><where>id=4</where></update>
+    </changeSet>
+
+
+
+
+
+    <!-- Save if the article should have illustration instead of photo -->
+    <changeSet id="9" author="Mats">
+        <addColumn tableName="article">
+            <column name="useillustration" type="BOOLEAN" defaultValueBoolean="false" />
+        </addColumn>
+    </changeSet>
+
+
+
+
+    <!-- Image texts -->
+    <changeSet id="10" author="Mats">
+        <addColumn tableName="article">
+            <column name="imagetext" type="TEXT" />
+        </addColumn>
+    </changeSet>
+
+
+
+    <!-- Dev only: Google Drive ID's -->
+    <changeSet id="11" author="Mats" context="dev">
+        <update tableName="article"><column name="googledriveid">1ruyVYOp2GdUCVEJ0v8qs9hfj7XFepCCViUHjTxadL5Y</column><where>id=1</where></update>
+        <update tableName="article"><column name="googledriveid">1Fq5PFGf9FDnYR-2-F9slDGfmPCvT_eIyhENuN_gStNw</column><where>id=2</where></update>
+        <update tableName="article"><column name="googledriveid">1b0_RpgHHYg3-B9pFdBqqumeZVW-RpUDQAEu7M42Nzoc</column><where>id=3</where></update>
+        <update tableName="article"><column name="googledriveid">14ZIZ_q3m0aEUMLn-zOrGzWhW6g42sfIU3tMy3don76E</column><where>id=4</where></update>
+    </changeSet>
+
+
+    <!-- We can't delete statuses etc. because articles may be linked to them, so we add a field
+        and hide it instead -->
+    <changeSet id="12" author="Mats">
+        <addColumn tableName="articlestatus">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false" />
+        </addColumn>
+        <addColumn tableName="articletype">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false" />
+        </addColumn>
+        <addColumn tableName="section">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false" />
+        </addColumn>
+    </changeSet>
+
+    <!-- Add and change some statuses etc. -->
+    <changeSet id="13" author="Mats">
+        <!-- new status -->
+        <insert tableName="articlestatus">
+            <column name="id">7</column>
+            <column name="color">#009F00</column>
+            <column name="name">Til korrektur</column>
+            <column name="statusorder">700</column>
+        </insert>
+
+        <!-- "delete" by hiding it -->
+        <update tableName="section">
+            <column name="deleted" valueBoolean="true" />
+            <where>id=5</where>
+        </update>
+
+        <insert tableName="articletype"><column name="id">8</column><column name="name">Forbruker</column><column name="typeorder">800</column></insert>
+        <insert tableName="articletype"><column name="id">9</column><column name="name">Forskning</column><column name="typeorder">900</column></insert>
+        <insert tableName="articletype"><column name="id">10</column><column name="name">Aktualitet</column><column name="typeorder">1000</column></insert>
+        <insert tableName="articletype"><column name="id">11</column><column name="name">Smårep</column><column name="typeorder">1100</column></insert>
+        <insert tableName="articletype"><column name="id">12</column><column name="name">Portrett</column><column name="typeorder">1200</column></insert>
+        <insert tableName="articletype"><column name="id">13</column><column name="name">Sidespor</column><column name="typeorder">1300</column></insert>
+        <insert tableName="articletype"><column name="id">14</column><column name="name">Småspalter</column><column name="typeorder">1400</column></insert>
+    </changeSet>
+
+    <!-- Add field for "sitatsjekk" -->
+    <changeSet id="14" author="Christoffer">
+        <addColumn tableName="article">
+            <column name="quotecheckstatus" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
+
+
+    <!-- Add fields for external authors/photographers -->
+    <changeSet id="15" author="Mats">
+        <addColumn tableName="article">
+            <column name="externalauthor" type="VARCHAR(255)" />
+        </addColumn>
+        <addColumn tableName="article">
+            <column name="externalphotographer" type="VARCHAR(255)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="16" author="Christoffer">
+        <addColumn tableName="article">
+            <column name="archived" type="BOOLEAN" defaultValueBoolean="false" />
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="17" author="Eivind">
+        <createTable tableName="favouriteSection">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="section_id" type="BIGINT"/>
+            <column name="owner_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="18" author="Eivind">
+        <dropTable tableName="favouriteSection"/>
+    </changeSet>
+    <changeSet id="19" author="Eivind">
+        <createTable tableName="favouritesection">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="section_id" type="BIGINT"/>
+            <column name="owner_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20" author="Eivind">
+        <dropTable tableName="disposition_page"/>
+        <dropTable tableName="page_article"/>
+        <dropTable tableName="publication_page"/>
+    </changeSet>
+
+    <changeSet id="21" author="Eivind">
+        <dropTable tableName="disposition"/>
+        <dropTable tableName="page"/>
+    </changeSet>
+
+    <changeSet id="22" author="Eivind">
+        <createTable tableName="page">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="pagenr" type="BIGINT"/>
+            <column name="note" type="VARCHAR(255)"/>
+            <column name="advertisement" type="BOOLEAN"/>
+            <column name="publication_id" type="BIGINT"/>
+            <column name="layoutstatus_id" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="page_article">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="articles_id" type="BIGINT"/>
+            <column name="page_id" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="publication_page">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="publication_id" type="BIGINT"/>
+            <column name="pages_id" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="layoutstatus">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="color" type="VARCHAR(255)"/>
+        </createTable>
+
+        <insert tableName="layoutstatus">
+            <column name="name">Ferdig</column>
+            <column name="color">#9f9</column>
+        </insert>
+        <insert tableName="layoutstatus">
+            <column name="name">Brekkes</column>
+            <column name="color">#99f</column>
+        </insert>
+        <insert tableName="layoutstatus">
+            <column name="name">Krise</column>
+            <column name="color">#f99</column>
+        </insert>
+        <insert tableName="layoutstatus">
+            <column name="name">Planlagt</column>
+            <column name="color">#eee</column>
+        </insert>
+        <insert tableName="layoutstatus">
+            <column name="name">Ukjent</column>
+            <column name="color">#fff</column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="23" author="Christoffer">
+        <!-- Article review options -->
+        <createTable tableName="articlereview">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="name" type="VARCHAR(255)" />
+            <column name="color" type="VARCHAR(255)" />
+        </createTable>
+
+        <addColumn tableName="article">
+            <column name="review_id" type="BIGINT" defaultValueNumeric="1"/>
+        </addColumn>
+
+        <addColumn tableName="page">
+            <column name="web" type="BOOLEAN" />
+        </addColumn>
+
+
+        <!-- Inserting the review-statuses   -->
+        <insert tableName="articlereview">
+            <column name="id">1</column>
+            <column name="name">Ukjent</column>
+            <column name="color">#FFF</column>
+        </insert>
+
+        <insert tableName="articlereview">
+            <column name="id">2</column>
+            <column name="name">Leses ikke</column>
+            <column name="color">#FAA</column>
+        </insert>
+
+        <insert tableName="articlereview">
+            <column name="id">3</column>
+            <column name="name">Skrevet ut</column>
+            <column name="color">#AAF</column>
+        </insert>
+
+        <insert tableName="articlereview">
+            <column name="id">4</column>
+            <column name="name">Lest</column>
+            <column name="color">#AFA</column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

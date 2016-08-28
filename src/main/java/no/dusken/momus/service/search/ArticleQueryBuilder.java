@@ -33,7 +33,7 @@ public class ArticleQueryBuilder {
     private Map<String, Object> queryParams = new HashMap<>();
 
     private final String baseQuery = "select a from Article a left join fetch a.status left join fetch a.publication";
-    private final String baseOrder = " order by a.publication.releaseDate DESC";
+    private final String baseOrder = "order by a.publication.releaseDate DESC";
 
     public ArticleQueryBuilder(ArticleSearchParams search) {
         this.search = search;
@@ -44,8 +44,12 @@ public class ArticleQueryBuilder {
         List<String> conditions = new ArrayList<>();
 
         if (search.getFree() != null && search.getFree().length() > 0) {
-            conditions.add("a.content like :free");
-            queryParams.put("free", "%" + search.getFree() + "%");
+            String[] words = search.getFree().split(" ");
+
+            for (int i = 0; i < words.length; i++) {
+                conditions.add("a.rawcontent like :free"+i);
+                queryParams.put("free"+i, "%" + words[i].toLowerCase() + "%");
+            }
         }
         if (search.getStatus() != null) {
             conditions.add("a.status.id = :statusid");
@@ -70,6 +74,9 @@ public class ArticleQueryBuilder {
             queryParams.put("pubid", search.getPublication());
         }
 
+        conditions.add("a.archived = :arch");
+        queryParams.put("arch", search.getArchived());
+
         String allConditions = StringUtils.collectionToDelimitedString(conditions, " AND ");
 
         if (allConditions.equals("")) {
@@ -78,7 +85,7 @@ public class ArticleQueryBuilder {
             fullQuery = baseQuery + " WHERE " + allConditions;
         }
 
-        fullQuery += baseOrder;
+        fullQuery += " " + baseOrder;
 
         logger.debug("Search query: {}", fullQuery);
 

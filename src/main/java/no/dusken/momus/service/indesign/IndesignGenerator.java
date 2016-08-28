@@ -22,8 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 /**
@@ -54,21 +53,18 @@ public class IndesignGenerator {
 
         replacements.put("<br></", "</"); // ignore line breaks at end of tags
         replacements.put("<br>", "<0x000A>"); // in-line line-breaks
-        replacements.put("–", "<0x2014>"); // m-dash?
+        replacements.put("–", "<0x2013>"); // m-dash?
         replacements.put("—", "<0x2014>"); // m-dash
 
         // change paragraphs and stuff to InDesign equivalent
         replacements.put("<h1>", "<ParaStyle:Tittel>");
         replacements.put("</h1>", "\r\n");
 
-        replacements.put("<h2>", "<ParaStyle:Stikktittel>");
+        replacements.put("<h2>", "<ParaStyle:Ingress>");
         replacements.put("</h2>", "\r\n");
 
         replacements.put("<h3>", "<ParaStyle:Mellomtittel>");
         replacements.put("</h3>", "\r\n");
-
-        replacements.put("<h4>", "<ParaStyle:Ingress>");
-        replacements.put("</h4>", "\r\n");
 
         replacements.put("<p>", "<ParaStyle:Brødtekst>");
         replacements.put("</p>", "\r\n");
@@ -78,6 +74,9 @@ public class IndesignGenerator {
 
         replacements.put("<i>", "<cTypeface:Italic>");
         replacements.put("</i>", "<cTypeface:>");
+
+        replacements.put("<b>", "<cTypeface:Bold>");
+        replacements.put("</b>", "<cTypeface:>");
 
         /*
             Converts:
@@ -105,6 +104,7 @@ public class IndesignGenerator {
         appendHeaders(sb);
         appendByLines(sb, article);
         appendContent(sb, article);
+        apppendImageText(sb, article);
 
         String text = sb.toString();
 
@@ -128,33 +128,42 @@ public class IndesignGenerator {
     }
 
     private void appendHeaders(StringBuilder sb) {
-        sb.append("<ANSI-WIN>\r\n<Version:7.5>\r\n");
+        sb.append("<UNICODE-WIN>\r\n<Version:7.5>\r\n");
     }
-
 
     private void appendByLines(StringBuilder sb, Article article) {
-        for (Person person : article.getJournalists()) {
-            sb.append("<ParaStyle:Byline>")
-                    .append("Tekst: ")
-                    .append(person.getFirstName())
-                    .append(" ")
-                    .append(person.getFullName())
-                    .append(" ")
-                    .append(person.getEmail())
-                    .append("\r\n");
+        appendByLine(sb, article.getJournalists(), article.getExternalAuthor(), "Tekst");
+
+        String type = article.getUseIllustration() ? "Illustrasjon" : "Foto";
+        appendByLine(sb, article.getPhotographers(), article.getExternalPhotographer(), type);
+
+    }
+
+    private void appendByLine(StringBuilder sb, Set<Person> persons, String external, String type) {
+        List<String> names = new ArrayList<>();
+
+        for (Person person : persons) {
+            names.add(person.getFullName());
         }
 
-        for (Person person : article.getPhotographers()) {
-            sb.append("<ParaStyle:Byline>")
-                    .append("Foto: ")
-                    .append(person.getFirstName())
-                    .append(" ")
-                    .append(person.getFullName())
-                    .append(" ")
-                    .append(person.getEmail())
-                    .append("\r\n");
+        if (external != null && !external.isEmpty()) {
+            names.add(external);
+        }
+
+        if (names.size() > 0) {
+            sb.append("<ParaStyle:Byline>").append(type).append(": ");
+
+            String delim = "";
+
+            for (String name : names) {
+                sb.append(delim).append(name);
+                delim = ", ";
+            }
+
+            sb.append("\r\n");
         }
     }
+
 
     private void appendContent(StringBuilder sb, Article article) {
         String text = article.getContent();
@@ -164,5 +173,17 @@ public class IndesignGenerator {
         }
 
         sb.append(text);
+    }
+
+    private void apppendImageText(StringBuilder sb, Article article) {
+        String text = article.getImageText();
+
+        if (text == null || text.isEmpty()) {
+            return;
+        }
+
+        text = text.replaceAll("\n", "<0x000A>");
+
+        sb.append("<ParaStyle:Bildetekster>").append(text).append("\r\n");
     }
 }

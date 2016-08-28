@@ -23,24 +23,21 @@ import java.util.Date;
 public class ArticleRevision {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Article article;
 
-    @Lob
-    @Column(length = 40960)
     private String content;
 
     @ManyToOne
     private ArticleStatus status;
 
-    @ManyToOne
-    private Person author;
-
     @Temporal(TemporalType.TIMESTAMP)
     private Date savedDate;
+
+    private boolean statusChanged;
 
 
 
@@ -80,11 +77,11 @@ public class ArticleRevision {
         this.savedDate = savedDate;
     }
 
-    public Person getAuthor() {
-        return author;
+    public boolean isStatusChanged() {
+        return statusChanged;
     }
 
-    public void setAuthor(Person author) {
-        this.author = author;
+    public void setStatusChanged(boolean statusChanged) {
+        this.statusChanged = statusChanged;
     }
 }

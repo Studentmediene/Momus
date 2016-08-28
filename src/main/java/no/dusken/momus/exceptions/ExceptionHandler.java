@@ -56,6 +56,6 @@ public class ExceptionHandler implements HandlerExceptionResolver {
     }
 
     private void logException(Exception e) {
-        logger.warn("Exceptionhandler caught:", e);
+        logger.error("Exceptionhandler caught:", e);
     }
 }
