@@ -56,7 +56,6 @@ public class ChimeraExportTest extends AbstractTestRunner{
         journ.add(p1);
         journ.add(p2);
         article.setJournalists(journ);
-        System.out.println(article.getJournalists().size());
-        assertEquals("{\"headline\":\"Tittel\",\"lead\":\"Dette er en ingress\",\"id\":0,\"body\":\"\\nDette er et avsnitt\\n\",\"external_authors\":\"Eivind Grimstad, Ola Nordmann\",\"ldap_authors\":[{\"id\":0,\"name\":\"Eivind Grimstad\"},{\"id\":1,\"name\":\"Ola Nordmann\"}]}", chimeraExport.articleToJson(article));
+        assertEquals("{\"headline\":\"Tittel\",\"lead\":\"Dette er en ingress\",\"body\":\"<p>Dette er et avsnitt</p>\",\"external_authors\":\"Eivind Grimstad, Ola Nordmann\"}", chimeraExport.articleToJson(article));
     }
 }
