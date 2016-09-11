@@ -20,11 +20,9 @@ import no.dusken.momus.model.LandingPage;
 import no.dusken.momus.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+public interface LandingPageRepository extends JpaRepository<LandingPage, Long> {
 
-public interface PersonRepository extends JpaRepository<Person, Long> {
+    public LandingPage findByOwner(Person person);
 
-    public Person findByUsername(String username);
-
-    public List<Person> findByActiveTrue();
+    public LandingPage findByOwner_Id(Long id);
 }

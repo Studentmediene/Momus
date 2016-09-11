@@ -24,6 +24,13 @@ angular.module('momusApp.services')
             },
             getAll: function () {
                 return $http.get('/api/person/', {cache: true});
+            },
+            getLandingPage: function () {
+                return $http.get('/api/person/landing', {cache: true});
+            },
+            updateLandingPage: function(landing) {
+                return $http.get('/api/person/landing/' + landing);
+
             }
         };
     });

@@ -40,7 +40,6 @@ angular.module('momusApp', [
         // Admin interfaces
         $routeProvider
 
-
             .when('/artikler',
             {
                 templateUrl: 'partials/search/searchView.html',
@@ -141,9 +140,16 @@ angular.module('momusApp', [
         $httpProvider.interceptors.push('HttpInterceptor');
     }]).
 
-    run(['$location', '$rootScope', 'TitleChanger', function ($location, $rootScope, TitleChanger) {
+    run(['$location', '$rootScope', 'TitleChanger', 'PersonService', '$route', function ($location, $rootScope, TitleChanger, PersonService, $route) {
         // Whenever there is a route change, we try to update the url with the title set in the rootprovider above
         // if there is no title, we clear it
+        var route = "disposition";
+        PersonService.getLandingPage().success(function(data){
+            if(data != null){
+                route = data.page;
+            }
+            $route.routes[null] = {redirectTo: '/' + route};
+        });
         $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
             if (current.$$route && current.$$route.title) {
                 TitleChanger.setTitle(current.$$route.title);
@@ -151,5 +157,22 @@ angular.module('momusApp', [
                 TitleChanger.setTitle("");
             }
         });
+        $rootScope.$on('loginComplete', function(){
+            PersonService.getLandingPage().success(function(data){
+                $route.routes[null] = {redirectTo: '/' + data.page};
+                $location.path('/');
+            });
+        });
+        $rootScope.$on('updatedLanding', function(data, arg) {
+            console.log(arg);
+            $route.routes[null] = angular.extend(
+                {
+                    redirectTo: '/' + arg.page,
+                    reloadOnSearch: true,
+                    caseInsensitiveMath: false
+                });
+            console.log($route.routes);
+        })
+
     }]);
 
