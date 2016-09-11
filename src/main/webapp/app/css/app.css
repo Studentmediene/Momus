@@ -391,6 +391,7 @@ a.zeroclipboard-is-hover {
 
 .fotostatus{
     width: 120px;
+    cursor:pointer;
 }
 
 .kommentar{
