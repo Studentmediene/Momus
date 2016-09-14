@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService) {
+    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, PublicationService) {
         $scope.noteRules = noteParserRules;
 
         $scope.recentArticles = ViewArticleService.getRecentViews();
@@ -28,6 +28,14 @@ angular.module('momusApp.controllers')
                 $scope.recentArticleInfo = data;
             });
         }
+
+        PublicationService.getAll().success(function(data){
+            $scope.publication = PublicationService.getActive(data);
+            PublicationService.getStatusCounts($scope.publication.id).success(function(data){
+                $scope.publication.statusCounts = data;
+                console.log($scope.publication);
+            });
+        });
 
         $scope.orderRecentArticles = function(item){
             return $scope.recentArticles.indexOf(item.id.toString());
@@ -48,6 +56,19 @@ angular.module('momusApp.controllers')
 
         ArticleService.getSections().success(function (data) {
             $scope.sections = data;
+        });
+
+        ArticleService.getStatuses().success(function (data){
+            $scope.statuses = data;
+            console.log(data);
+            $scope.statusLabels = [];
+            $scope.statusChartColors = [];
+            for(var i = 0; i < $scope.statuses.length; i++){
+                $scope.statusLabels.push($scope.statuses[i].name);
+                $scope.statusChartColors.push($scope.statuses[i].color);
+            }
+            //$scope.statusChartColors = ["#ffffff", "#eeeeee", "#aafaaf", "#faafaa", "#afaafa", "#0f00f0", "#009F00"];
+            console.log($scope.statusChartColors);
         });
 
         FavouriteSectionService.getFavouriteSection().success(function(data){

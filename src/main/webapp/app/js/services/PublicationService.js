@@ -59,6 +59,9 @@ angular.module('momusApp.services')
             },
             getLayoutStatuses: function(){
                 return $http.get('/api/publication/layoutstatus')
+            },
+            getStatusCounts: function(id){
+                return $http.get('/api/article/statuscount/' + id)
             }
         };
     });

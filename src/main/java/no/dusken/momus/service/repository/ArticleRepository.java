@@ -17,6 +17,7 @@
 package no.dusken.momus.service.repository;
 
 import no.dusken.momus.model.Article;
+import no.dusken.momus.model.ArticleStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -26,4 +27,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     public List<Article> findByPublicationId(Long id);
 
     public List<Article> findByGoogleDriveIdIn(Iterable<String> ids);
+
+    public int countByStatusIdAndPublicationId(Long articleStatus, Long id);
 }
