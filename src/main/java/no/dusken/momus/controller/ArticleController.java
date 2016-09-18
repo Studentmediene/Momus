@@ -155,6 +155,21 @@ public class ArticleController {
         return list;
     }
 
+    @RequestMapping(value = "/reviewstatuscount/{pubId}/{statId}", method = RequestMethod.GET)
+    public @ResponseBody int getReviewStatusCount(@PathVariable("statId") Long as, @PathVariable("pubId") Long pi){
+        return articleService.getArticleRepository().countByReviewIdAndPublicationId(as, pi);
+    }
+
+    @RequestMapping(value = "/reviewstatuscount/{pubId}", method = RequestMethod.GET)
+    public @ResponseBody List<Integer> getReviewStatusCountsByPubId(@PathVariable("pubId") Long pi){
+        List<ArticleReview> statuses = this.getAllReviewStatuses();
+        List<Integer> list = new ArrayList<Integer>();
+        for(int i = 1; i <= statuses.size(); i++){
+            list.add(this.getReviewStatusCount(Long.valueOf(i), pi));
+        }
+        return list;
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody Article createArticle(@RequestBody Article article){
         return articleService.createNewArticle(article);

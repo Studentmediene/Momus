@@ -62,6 +62,12 @@ angular.module('momusApp.services')
             },
             getStatusCounts: function(id){
                 return $http.get('/api/article/statuscount/' + id)
+            },
+            getLayoutStatusCounts: function(id){
+                return $http.get('/api/publication/statuscount/' + id)
+            },
+            getReviewStatusCounts: function(id){
+                return $http.get('/api/article/reviewstatuscount/' + id)
             }
         };
     });

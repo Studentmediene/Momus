@@ -29,4 +29,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     public List<Article> findByGoogleDriveIdIn(Iterable<String> ids);
 
     public int countByStatusIdAndPublicationId(Long articleStatus, Long id);
+
+    public int countByReviewIdAndPublicationId(Long articleStatus, Long id);
+
 }

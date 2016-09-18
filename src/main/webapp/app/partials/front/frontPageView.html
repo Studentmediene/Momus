@@ -17,8 +17,8 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <h3>Status {{publication.name}}</h3>
             <div class="col-md-4">
-                <h3>Status {{publication.name}}</h3>
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         Status sak
@@ -27,6 +27,34 @@
 
                         <canvas class="chart chart-pie"
                                 chart-data="publication.statusCounts" chart-labels="statusLabels" chart-colors="statusChartColors">
+                        </canvas>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Layout-status
+                    </div>
+                    <div class="panel-body">
+
+                        <canvas class="chart chart-pie"
+                                chart-data="publication.layoutStatusCounts" chart-labels="layoutStatusLabels" chart-colors="layoutStatusChartColors">
+                        </canvas>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Korrekturstatus
+                    </div>
+                    <div class="panel-body">
+
+                        <canvas class="chart chart-pie"
+                                chart-data="publication.reviewStatusCounts" chart-labels="reviewLabels" chart-colors="reviewChartColors">
                         </canvas>
 
                     </div>

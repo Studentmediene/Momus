@@ -33,7 +33,13 @@ angular.module('momusApp.controllers')
             $scope.publication = PublicationService.getActive(data);
             PublicationService.getStatusCounts($scope.publication.id).success(function(data){
                 $scope.publication.statusCounts = data;
-                console.log($scope.publication);
+            });
+            PublicationService.getLayoutStatusCounts($scope.publication.id).success(function(data){
+                $scope.publication.layoutStatusCounts = data;
+                console.log(data);
+            });
+            PublicationService.getReviewStatusCounts($scope.publication.id).success(function(data){
+                $scope.publication.reviewStatusCounts = data;
             });
         });
 
@@ -60,15 +66,33 @@ angular.module('momusApp.controllers')
 
         ArticleService.getStatuses().success(function (data){
             $scope.statuses = data;
-            console.log(data);
             $scope.statusLabels = [];
             $scope.statusChartColors = [];
             for(var i = 0; i < $scope.statuses.length; i++){
                 $scope.statusLabels.push($scope.statuses[i].name);
                 $scope.statusChartColors.push($scope.statuses[i].color);
             }
-            //$scope.statusChartColors = ["#ffffff", "#eeeeee", "#aafaaf", "#faafaa", "#afaafa", "#0f00f0", "#009F00"];
-            console.log($scope.statusChartColors);
+        });
+
+        ArticleService.getReviews().success(function (data){
+            $scope.reviews = data;
+            $scope.reviewLabels = [];
+            $scope.reviewChartColors = [];
+            for(var i = 0; i < $scope.reviews.length; i++){
+                $scope.reviewLabels.push($scope.reviews[i].name);
+                $scope.reviewChartColors.push($scope.reviews[i].color);
+            }
+        });
+
+        PublicationService.getLayoutStatuses().success(function(data){
+            $scope.layoutStatuses = data;
+            $scope.layoutStatusLabels = [];
+            $scope.layoutStatusChartColors = [];
+            for(var i = 0; i < $scope.layoutStatuses.length; i++){
+                $scope.layoutStatusLabels.push($scope.layoutStatuses[i].name);
+                $scope.layoutStatusChartColors.push($scope.layoutStatuses[i].color);
+            }
+            console.log(data);
         });
 
         FavouriteSectionService.getFavouriteSection().success(function(data){

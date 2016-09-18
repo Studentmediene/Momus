@@ -31,4 +31,7 @@ public interface PageRepository extends JpaRepository<Page, Long> {
 
     public void deleteByPublicationId(Long id);
 
+    public int countByLayoutStatusIdAndPublicationId(Long status, Long id);
+
+
 }
