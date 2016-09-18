@@ -23,6 +23,8 @@ angular.module('momusApp.controllers')
         $scope.newPageAt = 0;
         $scope.numNewPages = 1;
 
+        $scope.psEmpty = "[rediger]";
+
         if($scope.pubId){
             PublicationService.getById($scope.pubId).success(function(data) {
                 if(!data){

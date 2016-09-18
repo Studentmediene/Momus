@@ -120,14 +120,17 @@
                                                 ng-options="s.name for s in reviewOptions track by s.id">
                                         </select>
                                     </td>
-                                    <td ng-click="editPhotoStatus = true" ng-hide="editPhotoStatus" class="fotostatus {{article.photo_status.length ? 0: 'psempty'}}">
+                                    <td ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && article.photo_status != ''" class="fotostatus">
                                         <textwrapper length="15" text="article.photo_status"></textwrapper>
                                     </td>
+                                    <td ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && article.photo_status == ''" class="fotostatus">
+                                        <textwrapper length="15" text="psEmpty"></textwrapper>
+                                    </td>
                                     <td class="fotostatus" ng-show="editPhotoStatus">
-                                        <div class="input-group">
-                                            <input class="form-control input-sm" ng-model="article.photo_status">
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-sm" ng-click="saveArticle(article  );editPhotoStatus=false">
+                                        <div class="input-group" style="position: absolute; box-shadow: #000000">
+                                            <textarea class="form-control input-sm" ng-model="article.photo_status" style="width: 200px; resize: vertical"></textarea>
+                                            <span class="">
+                                                <button class="btn btn-sm" ng-click="saveArticle(article);editPhotoStatus=false">
                                                     <i class="fa fa-save"></i>
                                                 </button>
                                             </span>
