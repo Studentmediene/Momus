@@ -23,8 +23,6 @@ angular.module('momusApp.controllers')
         $scope.newPageAt = 0;
         $scope.numNewPages = 1;
 
-        console.log($route.routes);
-
         if($scope.pubId){
             PublicationService.getById($scope.pubId).success(function(data) {
                 if(!data){

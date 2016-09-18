@@ -76,14 +76,14 @@ angular.module('momusApp', [
         )
 
             //Disposition
-            .when('/disposition/:id',
+            .when('/disposisjon/:id',
             {
                 templateUrl: 'partials/disposition/dispositionView.html',
                 controller: 'DispositionCtrl',
                 title: "Disposisjon"
             }
         )
-            .when('/disposition',
+            .when('/disposisjon',
             {
                 templateUrl:'partials/disposition/dispositionView.html',
                 controller:'DispositionCtrl',
@@ -133,23 +133,16 @@ angular.module('momusApp', [
             }
         )*/
 
-            .otherwise({redirectTo: '/disposition'});
+            .otherwise({redirectTo: '/disposisjon'});
 
     }]).
     config(['$httpProvider', function ($httpProvider) {
         $httpProvider.interceptors.push('HttpInterceptor');
     }]).
 
-    run(['$location', '$rootScope', 'TitleChanger', 'PersonService', '$route', function ($location, $rootScope, TitleChanger, PersonService, $route) {
+    run(['$location', '$rootScope', 'TitleChanger', 'LandingChanger', '$route', function ($location, $rootScope, TitleChanger, LandingChanger, $route) {
         // Whenever there is a route change, we try to update the url with the title set in the rootprovider above
         // if there is no title, we clear it
-        var route = "disposition";
-        PersonService.getLandingPage().success(function(data){
-            if(data != null){
-                route = data.page;
-            }
-            $route.routes[null] = {redirectTo: '/' + route};
-        });
         $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
             if (current.$$route && current.$$route.title) {
                 TitleChanger.setTitle(current.$$route.title);
@@ -157,22 +150,10 @@ angular.module('momusApp', [
                 TitleChanger.setTitle("");
             }
         });
+        LandingChanger.setLanding();
         $rootScope.$on('loginComplete', function(){
-            PersonService.getLandingPage().success(function(data){
-                $route.routes[null] = {redirectTo: '/' + data.page};
-                $location.path('/');
-            });
+            LandingChanger.setLanding();
         });
-        $rootScope.$on('updatedLanding', function(data, arg) {
-            console.log(arg);
-            $route.routes[null] = angular.extend(
-                {
-                    redirectTo: '/' + arg.page,
-                    reloadOnSearch: true,
-                    caseInsensitiveMath: false
-                });
-            console.log($route.routes);
-        })
 
     }]);
 

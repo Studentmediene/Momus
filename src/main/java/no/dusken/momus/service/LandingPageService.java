@@ -33,7 +33,6 @@ public class LandingPageService {
     private LandingPageRepository landingPageRepository;
 
     public LandingPage saveLandingPage(String landingPage){
-        System.out.println(landingPage);
         Person user = userLoginService.getLoggedInUser();
 
         LandingPage existing = landingPageRepository.findByOwner(user);
