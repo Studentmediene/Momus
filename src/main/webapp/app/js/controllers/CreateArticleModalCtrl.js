@@ -27,6 +27,7 @@ angular.module('momusApp.controllers')
             type: null,
             status: null,
             section: null,
+            review: null,
             content: "",
             use_illustration: false,
             external_author: '',
@@ -59,6 +60,10 @@ angular.module('momusApp.controllers')
         ArticleService.getSections().success(function (data) {
             $scope.sections = data;
             $scope.article.section = data[0];
+        });
+
+        ArticleService.getReviews().success(function (data){
+            $scope.article.review = data[0];
         });
 
         PersonService.getAll().success(function (data) {
