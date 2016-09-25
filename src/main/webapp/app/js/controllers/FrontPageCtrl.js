@@ -36,7 +36,6 @@ angular.module('momusApp.controllers')
             });
             PublicationService.getLayoutStatusCounts($scope.publication.id).success(function(data){
                 $scope.publication.layoutStatusCounts = data;
-                console.log(data);
             });
             PublicationService.getReviewStatusCounts($scope.publication.id).success(function(data){
                 $scope.publication.reviewStatusCounts = data;
@@ -92,7 +91,6 @@ angular.module('momusApp.controllers')
                 $scope.layoutStatusLabels.push($scope.layoutStatuses[i].name);
                 $scope.layoutStatusChartColors.push($scope.layoutStatuses[i].color);
             }
-            console.log(data);
         });
 
         FavouriteSectionService.getFavouriteSection().success(function(data){
@@ -135,6 +133,14 @@ angular.module('momusApp.controllers')
                 }
             });
         });
+
+        $scope.isEmptyArray = function(array){
+            if(array == undefined || array == null || array == "" || array == []) {
+                return true;
+            } else {
+                return Math.max(...array) > 0;
+            }
+        };
 
         $scope.$on('$locationChangeStart', function (event) {
             if (promptCondition()) {

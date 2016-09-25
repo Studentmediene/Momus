@@ -24,12 +24,19 @@
                         Status sak
                     </div>
                     <div class="panel-body">
-
-                        <canvas class="chart chart-pie"
+                        <canvas ng-show="isEmptyArray(publication.statusCounts)" class="chart chart-pie"
                                 chart-data="publication.statusCounts" chart-labels="statusLabels" chart-colors="statusChartColors">
                         </canvas>
 
+                        <p ng-hide="isEmptyArray(publication.statusCounts)">{{publication.name}} har ingen saker enda!</p>
+
                     </div>
+                    <table ng-show="isEmptyArray(publication.statusCounts)" class="table">
+                        <tr ng-repeat="status in publication.statusCounts track by $index" ng-if="status > 0">
+                            <td>{{statusLabels[$index]}}</td>
+                            <td>{{status}}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
             <div class="col-md-4">
@@ -39,11 +46,20 @@
                     </div>
                     <div class="panel-body">
 
-                        <canvas class="chart chart-pie"
+                        <canvas ng-show="isEmptyArray(publication.layoutStatusCounts)" class="chart chart-pie"
                                 chart-data="publication.layoutStatusCounts" chart-labels="layoutStatusLabels" chart-colors="layoutStatusChartColors">
                         </canvas>
 
+                        <p ng-hide="isEmptyArray(publication.layoutStatusCounts)">{{publication.name}} har ingen sider enda!</p>
+
+
                     </div>
+                    <table ng-show="isEmptyArray(publication.layoutStatusCounts)" class="table">
+                        <tr ng-repeat="status in publication.layoutStatusCounts track by $index" ng-if="status > 0">
+                            <td>{{layoutStatusLabels[$index]}}</td>
+                            <td>{{status}}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
             <div class="col-md-4">
@@ -53,11 +69,19 @@
                     </div>
                     <div class="panel-body">
 
-                        <canvas class="chart chart-pie"
+                        <canvas ng-show="isEmptyArray(publication.reviewStatusCounts)" class="chart chart-pie"
                                 chart-data="publication.reviewStatusCounts" chart-labels="reviewLabels" chart-colors="reviewChartColors">
                         </canvas>
 
+                        <p ng-hide="isEmptyArray(publication.reviewStatusCounts)">{{publication.name}} har ingen saker enda!</p>
+
                     </div>
+                    <table ng-show="isEmptyArray(publication.reviewStatusCounts)" class="table">
+                        <tr ng-repeat="status in publication.reviewStatusCounts track by $index" ng-if="status > 0">
+                            <td>{{reviewLabels[$index]}}</td>
+                            <td>{{status}}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
