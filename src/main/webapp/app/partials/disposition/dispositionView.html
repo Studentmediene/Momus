@@ -19,7 +19,7 @@
         Hjelp?
     </button>
     <div>
-        <div class="panel panel-default" style="width: 1502px;">
+        <div class="panel panel-default">
             <div class="panel-heading clearfix">
                 <div class="pull-left"><h5>Sider</h5></div>
                 <div class="pull-right" style="width:360px" scroll-trigger="attach-top-true">
@@ -36,7 +36,7 @@
                     </div>
                 </div>
             </div>
-            <div class="table-responsive" style="overflow-x:auto; width: 1500px;max-width: 1500px;min-width: 1500px;">
+            <div class="table-responsive disposition" style="overflow-x:auto;">
                 <table class="pageTable table table-bordered table-condensed" style="font-size: 85%">
                 <thead>
                 <tr>
@@ -44,7 +44,7 @@
                     <th class="artikkel">
                         <table>
                             <tr>
-                                <td class="navn">&nbsp;Navn</td>
+                                <td class="navn_header">&nbsp;Navn</td>
                                 <td class="seksjon">&nbsp;Seksjon</td>
                                 <td class="journ">&nbsp;Journalister</td>
                                 <td class="fotograf">&nbsp;Fotografer</td>
@@ -56,8 +56,8 @@
                     </th>
                     <th class="kommentar">Kommentar</th>
                     <th class="layout">Layout</th>
-                    <th class="reklame">Ads</th>
-                    <th class="nett">Nett</th>
+                    <th class="knapp">Ads</th>
+                    <th class="knapp">Nett</th>
                     <th class="knapp"></th>
                     <th class="knapp"></th>
                 </tr>
@@ -84,7 +84,7 @@
                         <td class="artikkel" style="padding:0;margin:0" ng-hide="editPage">
                             <table class="table pageArticleTable" style="padding: 0;margin:0;">
                                 <tr ng-repeat="article in page.articles">
-                                    <td class="navn" style="word-wrap: break-word; word-break: normal;white-space: normal">
+                                    <td class="navn break-word" style="word-wrap: break-word; word-break: normal;white-space: normal">
                                         <a href="#/artikler/{{article.id}}">{{article.name}}</a>
                                     </td>
                                     <td class="seksjon">{{article.section.name}}</td>
@@ -148,7 +148,7 @@
                             </select>
                         </td>
 
-                        <td class="reklame">
+                        <td class="knapp">
                             <span style="cursor: pointer" ng-click="page.advertisement = !page.advertisement; savePage();">
                                 <i class="fa fa-file fa-lg"
                                    ng-class="{'text-danger' : !page.advertisement, 'text-success' : page.advertisement }"
@@ -158,7 +158,7 @@
                             </span>
                         </td>
 
-                        <td class="nett">
+                        <td class="knapp">
                             <span style="cursor: pointer" ng-click="page.web = !page.web; savePage();">
                                 <i class="fa fa-globe fa-lg"
                                    ng-class="{'text-danger' : !page.web, 'text-success' : page.web }"

@@ -357,88 +357,110 @@ a.zeroclipboard-is-hover {
 
 /* Bredder på kolonner i disposisjonen.. BEWARE UGLY CODE */
 
+.disposition{
+    --disp_width: 100%;
+    width: var(--disp_width);
+    max-width: var(--disp_width);
+    min-width: var(--disp_width);
+}
+
 .sidetall{
-    width: 30px;
-    min-width: 30px;
-    max-width: 30px;
+    /*30px*/
+    --sidetall_width: 2%;
+    width: var(--sidetall_width);
+    min-width: var(--sidetall_width);
+    max-width: var(--sidetall_width);
 }
 
 .artikkel{
-    width: 1000px;
-    min-width: 1000px;
-    max-width: 1000px;
+    /*1000px*/
+    --artikkel_width: 65%;
+    width: var(--artikkel_width);
+    min-width: var(--artikkel_width);
+    max-width: var(--artikkel_width);
+}
+.navn{
+    /*220px*/
+    --navn_width: 22%;
+    width: var(--navn_width);
+    min-width: var(--navn_width);
+    max-width: var(--navn_width);
 }
 
-.navn{
-    width: 220px;
-    min-width: 220px;
-    max-width: 220px;
+.navn_header{
+    min-width: -webkit-calc(var(--artikkel_width)*var(--navn_width));
+    max-width: -webkit-calc(var(--artikkel_width)*var(--navn_width));
 }
 
 .seksjon{
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
+    /*100px*/
+    --seksjon_width: 10%;
+    width: var(--seksjon_width);
+    min-width: var(--seksjon_width);
+    max-width: var(--seksjon_width);
 }
 
 .journ{
-    width: 170px;
-    min-width: 170px;
-    max-width: 170px;
+    /* 170px*/
+    --journ_width:17%;
+    width: var(--journ_width);
+    min-width: var(--journ_width);
+    max-width: var(--journ_width);
 }
 
 .fotograf{
-    width: 170px;
-    min-width: 170px;
-    max-width: 170px;
+    /*170px*/
+    --fotograf_width:17%;
+    width: var(--fotograf_width);
+    min-width: var(--fotograf_width);
+    max-width: var(--fotograf_width);
 }
 
 .status{
-    width: 120px;
-    min-width: 120px;
-    max-width: 120px;
+    /*120px*/
+    --status_width:12%;
+    width: var(--status_width);
+    min-width: var(--status_width);
+    max-width: var(--status_width);
 }
 
 .korrektur{
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
+    /*100px*/
+    --korrektur_width: 10%;
+    width: var(--korrektur_width);
+    min-width: var(--korrektur_width);
+    max-width: var(--korrektur_width);
 }
 
 .fotostatus{
-    width: 120px;
-    max-width: 120px;
-    min-width: 120px;
+    /*120px*/
+    --fotostatus_width:12%;
+    width: var(--fotostatus_width);
+    max-width: var(--fotostatus_width);
+    min-width: var(--fotostatus_width);
 }
 
 .kommentar{
-    width: 220px;
-    min-width: 220px;
-    max-width: 220px;
+    /*220px*/
+    --kommentar_width: 15%;
+    width: var(--kommentar_width);
+    max-width: var(--kommentar_width);
 }
 
 .layout{
-    width: 90px;
-    min-width: 90px;
-    max-width: 90px;
-}
-
-.reklame{
-    width:40px;
-    min-width: 40px;
-    max-width: 40px;
-}
-
-.nett{
-    width:40px;
-    min-width: 40px;
-    max-width: 40px;
+    /*90px*/
+    --layout_width:6%;
+    width: var(--layout_width);
+    min-width: var(--layout_width);
+    max-width: var(--layout_width);
 }
 
 .knapp{
-    width:40px;
-    min-width: 40px;
-    max-width: 40px;
+    /*40px*/
+    --knapp_width:3%;
+    width:var(--knapp_width);
+    min-width: var(--knapp_width);
+    max-width: var(--knapp_width);
 }
 
 /*Ferdig*/
