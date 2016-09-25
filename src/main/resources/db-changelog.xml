@@ -829,11 +829,11 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         <update tableName="articlereview"><column name="color">#aaaaff</column><where>id=3</where></update>
         <update tableName="articlereview"><column name="color">#aaffaa</column><where>id=4</where></update>
 
-        <update tableName="layoutstatus"><column name="color">#99ff99</column><where>id=1</where></update>
-        <update tableName="layoutstatus"><column name="color">#9999ff</column><where>id=2</where></update>
-        <update tableName="layoutstatus"><column name="color">#ff9999</column><where>id=3</where></update>
-        <update tableName="layoutstatus"><column name="color">#eeeeee</column><where>id=4</where></update>
-        <update tableName="layoutstatus"><column name="color">#ffffff</column><where>id=5</where></update>
+        <update tableName="layoutstatus"><column name="color">#99ff99</column><where>id=0</where></update>
+        <update tableName="layoutstatus"><column name="color">#9999ff</column><where>id=1</where></update>
+        <update tableName="layoutstatus"><column name="color">#ff9999</column><where>id=2</where></update>
+        <update tableName="layoutstatus"><column name="color">#eeeeee</column><where>id=3</where></update>
+        <update tableName="layoutstatus"><column name="color">#ffffff</column><where>id=4</where></update>
 
     </changeSet>
 </databaseChangeLog>
