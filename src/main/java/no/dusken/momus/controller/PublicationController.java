@@ -16,6 +16,7 @@
 
 package no.dusken.momus.controller;
 
+import no.dusken.momus.model.ArticleStatus;
 import no.dusken.momus.model.LayoutStatus;
 import no.dusken.momus.model.Page;
 import no.dusken.momus.model.Publication;
@@ -107,4 +108,20 @@ public class PublicationController {
     public @ResponseBody List<LayoutStatus> getLayoutStatuses(){
         return layoutStatusRepository.findAll();
     }
+
+    @RequestMapping(value = "/statuscount/{pubId}/{statId}", method = RequestMethod.GET)
+    public @ResponseBody int getStatusCount(@PathVariable("statId") Long as, @PathVariable("pubId") Long pi){
+        return pageRepository.countByLayoutStatusIdAndPublicationId(as, pi);
+    }
+
+    @RequestMapping(value = "/statuscount/{pubId}", method = RequestMethod.GET)
+    public @ResponseBody List<Integer> getStatusCountsByPubId(@PathVariable("pubId") Long pi){
+        List<LayoutStatus> statuses = this.getLayoutStatuses();
+        List<Integer> list = new ArrayList<Integer>();
+        for(int i = 0; i < statuses.size(); i++){
+            list.add(this.getStatusCount(Long.valueOf(i), pi));
+        }
+        return list;
+    }
+
 }

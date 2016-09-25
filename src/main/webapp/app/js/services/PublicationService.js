@@ -60,6 +60,15 @@ angular.module('momusApp.services')
             getLayoutStatuses: function(){
                 return $http.get('/api/publication/layoutstatus')
             },
+            getStatusCounts: function(id){
+                return $http.get('/api/article/statuscount/' + id)
+            },
+            getLayoutStatusCounts: function(id){
+                return $http.get('/api/publication/statuscount/' + id)
+            },
+            getReviewStatusCounts: function(id){
+                return $http.get('/api/article/reviewstatuscount/' + id)
+            },
             linkPagesToArticles: function(pages, articles){
                 for(var i = 0; i < pages.length; i++){
                     var page = pages[i];

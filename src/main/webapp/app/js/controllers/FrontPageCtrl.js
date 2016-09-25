@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService) {
+    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, PublicationService) {
         $scope.noteRules = noteParserRules;
 
         $scope.recentArticles = ViewArticleService.getRecentViews();
@@ -28,6 +28,20 @@ angular.module('momusApp.controllers')
                 $scope.recentArticleInfo = data;
             });
         }
+
+        PublicationService.getAll().success(function(data){
+            $scope.publication = PublicationService.getActive(data);
+            PublicationService.getStatusCounts($scope.publication.id).success(function(data){
+                $scope.publication.statusCounts = data;
+            });
+            PublicationService.getLayoutStatusCounts($scope.publication.id).success(function(data){
+                $scope.publication.layoutStatusCounts = data;
+                console.log(data);
+            });
+            PublicationService.getReviewStatusCounts($scope.publication.id).success(function(data){
+                $scope.publication.reviewStatusCounts = data;
+            });
+        });
 
         $scope.orderRecentArticles = function(item){
             return $scope.recentArticles.indexOf(item.id.toString());
@@ -48,6 +62,37 @@ angular.module('momusApp.controllers')
 
         ArticleService.getSections().success(function (data) {
             $scope.sections = data;
+        });
+
+        ArticleService.getStatuses().success(function (data){
+            $scope.statuses = data;
+            $scope.statusLabels = [];
+            $scope.statusChartColors = [];
+            for(var i = 0; i < $scope.statuses.length; i++){
+                $scope.statusLabels.push($scope.statuses[i].name);
+                $scope.statusChartColors.push($scope.statuses[i].color);
+            }
+        });
+
+        ArticleService.getReviews().success(function (data){
+            $scope.reviews = data;
+            $scope.reviewLabels = [];
+            $scope.reviewChartColors = [];
+            for(var i = 0; i < $scope.reviews.length; i++){
+                $scope.reviewLabels.push($scope.reviews[i].name);
+                $scope.reviewChartColors.push($scope.reviews[i].color);
+            }
+        });
+
+        PublicationService.getLayoutStatuses().success(function(data){
+            $scope.layoutStatuses = data;
+            $scope.layoutStatusLabels = [];
+            $scope.layoutStatusChartColors = [];
+            for(var i = 0; i < $scope.layoutStatuses.length; i++){
+                $scope.layoutStatusLabels.push($scope.layoutStatuses[i].name);
+                $scope.layoutStatusChartColors.push($scope.layoutStatuses[i].color);
+            }
+            console.log(data);
         });
 
         FavouriteSectionService.getFavouriteSection().success(function(data){
