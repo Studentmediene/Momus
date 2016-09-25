@@ -815,14 +815,34 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="color">#AFA</column>
         </insert>
     </changeSet>
+    <changeSet id="24" author="Christoffer">
+
+        <update tableName="articlestatus"><column name="color">#ffffff</column><where>id=1</where></update>
+        <update tableName="articlestatus"><column name="color">#eeeeee</column><where>id=2</where></update>
+        <update tableName="articlestatus"><column name="color">#aaaaff</column><where>id=3</where></update>
+        <update tableName="articlestatus"><column name="color">#ffaaaa</column><where>id=4</where></update>
+        <update tableName="articlestatus"><column name="color">#aaffaa</column><where>id=5</where></update>
+        <update tableName="articlestatus"><column name="color">#00ff00</column><where>id=6</where></update>
+
+        <update tableName="articlereview"><column name="color">#ffffff</column><where>id=1</where></update>
+        <update tableName="articlereview"><column name="color">#ffaaaa</column><where>id=2</where></update>
+        <update tableName="articlereview"><column name="color">#aaaaff</column><where>id=3</where></update>
+        <update tableName="articlereview"><column name="color">#aaffaa</column><where>id=4</where></update>
+
+        <update tableName="layoutstatus"><column name="color">#99ff99</column><where>id=0</where></update>
+        <update tableName="layoutstatus"><column name="color">#9999ff</column><where>id=1</where></update>
+        <update tableName="layoutstatus"><column name="color">#ff9999</column><where>id=2</where></update>
+        <update tableName="layoutstatus"><column name="color">#eeeeee</column><where>id=3</where></update>
+        <update tableName="layoutstatus"><column name="color">#ffffff</column><where>id=4</where></update>
+
+    </changeSet>
 
     <changeSet id="25" author="Eivind">
-        <createTable tableName="landingpage">
-            <column autoIncrement="true" name="id" type="BIGINT">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="page" type="VARCHAR(255)"/>
-            <column name="owner_id" type="BIGINT"/>
-        </createTable>
-    </changeSet>
+    <createTable tableName="landingpage">
+        <column autoIncrement="true" name="id" type="BIGINT">
+            <constraints primaryKey="true"/>
+        </column>
+        <column name="page" type="VARCHAR(255)"/>
+        <column name="owner_id" type="BIGINT"/>
+    </createTable>
 </databaseChangeLog>

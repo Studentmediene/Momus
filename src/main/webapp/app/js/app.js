@@ -34,7 +34,8 @@ angular.module('momusApp', [
         'ui.select2',
         'ui.bootstrap',
         'ngCookies',
-        'ui.sortable'
+        'ui.sortable',
+        'chart.js'
     ]).
     config(['$routeProvider', function ($routeProvider) {
         // Admin interfaces
@@ -127,11 +128,11 @@ angular.module('momusApp', [
                 title: 'Info'
             }
         )
-            /*.when('/', {
+            .when('/front', {
                 templateUrl: 'partials/front/frontPageView.html',
                 controller: 'FrontPageCtrl'
             }
-        )*/
+        )
 
             .otherwise({redirectTo: '/disposisjon'});
 

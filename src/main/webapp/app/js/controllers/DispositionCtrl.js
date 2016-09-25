@@ -44,11 +44,13 @@ angular.module('momusApp.controllers')
             ArticleService.search({publication: pubId}).success(function (data) {
                 $scope.publication.articles = data;
                 $scope.loading--;
+                PublicationService.getPages(pubId).success(function (data){
+                    $scope.publication.pages = data;
+                    PublicationService.linkPagesToArticles($scope.publication.pages, $scope.publication.articles);
+                    $scope.loading--;
+                });
             });
-            PublicationService.getPages(pubId).success(function (data){
-                $scope.publication.pages = data;
-                $scope.loading--;
-            });
+
             ArticleService.getReviews().success(function(data){
                 $scope.reviewOptions = data;
                 $scope.loading--;

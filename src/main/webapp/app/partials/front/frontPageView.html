@@ -16,7 +16,52 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
+            <h3>Status {{publication.name}}</h3>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Status sak
+                    </div>
+                    <div class="panel-body">
+
+                        <canvas class="chart chart-pie"
+                                chart-data="publication.statusCounts" chart-labels="statusLabels" chart-colors="statusChartColors">
+                        </canvas>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Layout-status
+                    </div>
+                    <div class="panel-body">
+
+                        <canvas class="chart chart-pie"
+                                chart-data="publication.layoutStatusCounts" chart-labels="layoutStatusLabels" chart-colors="layoutStatusChartColors">
+                        </canvas>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Korrekturstatus
+                    </div>
+                    <div class="panel-body">
+
+                        <canvas class="chart chart-pie"
+                                chart-data="publication.reviewStatusCounts" chart-labels="reviewLabels" chart-colors="reviewChartColors">
+                        </canvas>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
             <div id="last-articles" class="panel panel-info">
                 <div class="panel-heading">
                     <h1 class="panel-title">
@@ -193,115 +238,6 @@
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div id="note-panel" class="panel panel-warning">
-                <div class="panel-heading">
-                    <h1 class="panel-title">
-                        <span class="fa fa-list"></span>
-                        Personlige notater
-                        <div class="pull-right">
-                            <button class="btn btn-default btn-xs"
-                                    ng-disabled="note.content == unedited.content"
-                                    ng-click="saveNote()"
-                                    button-loader="savingNote">
-                                <i class="fa fa-save"></i>
-                                Lagre
-                            </button>
-                        </div>
-                    </h1>
-                </div>
-                <div class="panel-body">
-                    <div id="note-toolbar" class="editor-toolbar">
-                        <div class="btn-group">
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="bold"
-                                    title="Fet tekst (Ctrl+B)">
-                                <i class="fa fa-bold"></i>
-                            </button>
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="italic"
-                                    title="Kursiv tekst (Ctrl+I)">
-                                <i class="fa fa-italic"></i>
-                            </button>
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="underline"
-                                    title="Understreket tekst (Ctrl+U)">
-                                <i class="fa fa-underline"></i>
-                            </button>
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="strikethrough"
-                                    title="Gjennomstreket tekst">
-                                <i class="fa fa-strikethrough"></i>
-                            </button>
-                        </div>
-                        <div class="btn-group">
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="insertUnorderedList"
-                                    title="Usortert liste">
-                                <i class="fa fa-list-ul"></i>
-                            </button>
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="insertOrderedList"
-                                    title="Sortert liste">
-                                <i class="fa fa-list-ol"></i>
-                            </button>
-                        </div>
-                        <!--
-                        <div class="btn-group pull-right">
-                            <button class="btn btn-default"
-                                    data-wysihtml5-action="change_view"
-                                    title="Se rådata (avansert)">
-                                <i class="fa fa-exchange"></i>
-                            </button>
-                        </div>-->
-                    </div>
-                <textarea id="note-area"
-                          class="form-control note"
-                          richeditor="note.content"
-                          richeditor-rules="noteRules"
-                          richeditor-toolbar="note-toolbar">
-                </textarea>
-                </div>
-            </div>
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h1 class="panel-title"><i class="fa fa-question-circle"></i> Tilfeldig tips
-
-                        <div class="pull-right">
-                            <button class="btn btn-default btn-xs" ng-click="randomTip()" tooltip="Nytt tips">
-                                <i class="fa fa-refresh"></i>
-                            </button>
-                        </div>
-                    </h1>
-                </div>
-                <div class="panel-body" ng-bind-html="tip | trustHtml"></div>
-            </div>
-            <div class="panel panel-info">
-                <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-bullhorn"></i> Nyheter</h1></div>
-                <div class="panel-body" style="height:300px; overflow-y: auto">
-                    <table class="table">
-                        <tbody ng-repeat="n in news | orderBy: '-date'">
-                        <tr ng-class="{danger: n.new, active:!n.new}" class="interact" ng-click="n.show = !n.show">
-                            <td ng-show="n.new" style="font-weight: bold; width: 40%">{{n.date | date}}</td>
-                            <td ng-show="!n.new" style="width: 40%;">{{n.date | date}}</td>
-
-                            <td ng-show="n.new" style="font-weight: bold">{{n.title}}</td>
-                            <td ng-show="!n.new">{{n.title}}</td>
-
-
-                            <td width="5%">
-                                <i ng-show="!n.show" class="fa fa-arrow-circle-down"></i>
-                                <i ng-show="n.show" class="fa fa-arrow-circle-up"></i>
-                            </td>
-                        </tr>
-                        <tr ng-show="n.show">
-                            <td colspan="3" ng-bind-html="n.text | trustHtml"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
     </div>
 
 </div>
