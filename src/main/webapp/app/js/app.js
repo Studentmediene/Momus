@@ -41,7 +41,6 @@ angular.module('momusApp', [
         // Admin interfaces
         $routeProvider
 
-
             .when('/artikler',
             {
                 templateUrl: 'partials/search/searchView.html',
@@ -78,14 +77,14 @@ angular.module('momusApp', [
         )
 
             //Disposition
-            .when('/disposition/:id',
+            .when('/disposisjon/:id',
             {
                 templateUrl: 'partials/disposition/dispositionView.html',
                 controller: 'DispositionCtrl',
                 title: "Disposisjon"
             }
         )
-            .when('/disposition',
+            .when('/disposisjon',
             {
                 templateUrl:'partials/disposition/dispositionView.html',
                 controller:'DispositionCtrl',
@@ -135,14 +134,14 @@ angular.module('momusApp', [
             }
         )
 
-            .otherwise({redirectTo: '/disposition'});
+            .otherwise({redirectTo: '/disposisjon'});
 
     }]).
     config(['$httpProvider', function ($httpProvider) {
         $httpProvider.interceptors.push('HttpInterceptor');
     }]).
 
-    run(['$location', '$rootScope', 'TitleChanger', function ($location, $rootScope, TitleChanger) {
+    run(['$location', '$rootScope', 'TitleChanger', 'LandingChanger', '$route', function ($location, $rootScope, TitleChanger, LandingChanger, $route) {
         // Whenever there is a route change, we try to update the url with the title set in the rootprovider above
         // if there is no title, we clear it
         $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
@@ -152,5 +151,10 @@ angular.module('momusApp', [
                 TitleChanger.setTitle("");
             }
         });
+        LandingChanger.setLanding();
+        $rootScope.$on('loginComplete', function(){
+            LandingChanger.setLanding();
+        });
+
     }]);
 

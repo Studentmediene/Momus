@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('InfoCtrl', function($scope, TipAndNewsService){
+    .controller('InfoCtrl', function($scope, TipAndNewsService, PersonService, LandingChanger, $route){
         $scope.randomTip = function() {
             $scope.tip = TipAndNewsService.getRandomTip();
         };
@@ -25,4 +25,28 @@ angular.module('momusApp.controllers')
         $scope.randomTip();
 
         $scope.news = TipAndNewsService.getNews();
+
+        $scope.getLanding = function() {
+            PersonService.getLandingPage().success(function(data){
+                if(data != null) {
+                    $scope.landing = data.page;
+                }else{
+                    $scope.landing = '';
+                }
+            })
+        };
+
+        $scope.getLanding();
+
+        $scope.landings = LandingChanger.getTopLevelRoutes();
+        $scope.savingLanding = false;
+
+        $scope.updateLanding = function(){
+            $scope.savingLanding = true;
+            PersonService.updateLandingPage($scope.landing).success(function(data){
+                $scope.landing = data.page;
+                LandingChanger.setLanding();
+                $scope.savingLanding = false;
+            });
+        }
     });

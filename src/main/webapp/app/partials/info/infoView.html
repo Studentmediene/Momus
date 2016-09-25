@@ -62,6 +62,20 @@
                     Har du funnet en bug, oppdaget noe som er feil/uklart, eller har andre forslag til forbedringer/endringer, send en e-post til <a href="mailto: momus@smint.no">momus@smint.no</a>.
                 </div>
             </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h1 class="panel-title"><i class="fa fa-cog"></i> Innstillinger</h1>
+                </div>
+                <div class="panel-body">
+                    <p>
+                        <b style="border-bottom: dotted 1px" tooltip="Siden du blir sendt til når du logger inn">Startside</b>:
+                    </p>
+                    <select class="form-control input-sm" ng-model="landing" ng-change="updateLanding()"
+                            ng-options="l for l in landings track by l">
+                    </select>
+                </div>
+            </div>
+
         </div>
     </div>
     <p style="text-align: center; font-weight: bold;">

@@ -836,4 +836,13 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         <update tableName="layoutstatus"><column name="color">#ffffff</column><where>id=4</where></update>
 
     </changeSet>
+
+    <changeSet id="25" author="Eivind">
+    <createTable tableName="landingpage">
+        <column autoIncrement="true" name="id" type="BIGINT">
+            <constraints primaryKey="true"/>
+        </column>
+        <column name="page" type="VARCHAR(255)"/>
+        <column name="owner_id" type="BIGINT"/>
+    </createTable>
 </databaseChangeLog>

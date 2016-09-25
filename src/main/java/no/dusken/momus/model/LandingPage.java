@@ -14,17 +14,38 @@
  * limitations under the License.
  */
 
-package no.dusken.momus.service.repository;
+package no.dusken.momus.model;
 
-import no.dusken.momus.model.LandingPage;
-import no.dusken.momus.model.Person;
-import org.springframework.data.jpa.repository.JpaRepository;
+import javax.persistence.*;
 
-import java.util.List;
+@Entity
+public class LandingPage {
 
-public interface PersonRepository extends JpaRepository<Person, Long> {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public Person findByUsername(String username);
+    private String page;
 
-    public List<Person> findByActiveTrue();
+    @OneToOne(fetch = FetchType.LAZY)
+    private Person owner;
+
+    public Long getId(){
+        return id;
+    }
+    public String getPage() {
+        return page;
+    }
+
+    public void setPage(String page) {
+        this.page = page;
+    }
+
+    public Person getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Person owner) {
+        this.owner = owner;
+    }
 }
