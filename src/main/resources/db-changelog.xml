@@ -838,11 +838,12 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
     </changeSet>
 
     <changeSet id="25" author="Eivind">
-    <createTable tableName="landingpage">
-        <column autoIncrement="true" name="id" type="BIGINT">
-            <constraints primaryKey="true"/>
-        </column>
-        <column name="page" type="VARCHAR(255)"/>
-        <column name="owner_id" type="BIGINT"/>
-    </createTable>
+        <createTable tableName="landingpage">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="page" type="VARCHAR(255)"/>
+            <column name="owner_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
