@@ -816,7 +816,7 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         </insert>
     </changeSet>
 
-    <changeSet id="24" author="Eivind">
+    <changeSet id="25" author="Eivind">
         <createTable tableName="landingpage">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
