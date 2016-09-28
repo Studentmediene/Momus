@@ -142,6 +142,10 @@ angular.module('momusApp.controllers')
             }
         };
 
+        $scope.countTotals = function(array){
+            return array.reduce(function(x,y){return x+y},0);
+        };
+
         $scope.$on('$locationChangeStart', function (event) {
             if (promptCondition()) {
                 if (!confirm("Er du sikker på at du vil forlate siden? Det finnes ulagrede endringer.")) {
