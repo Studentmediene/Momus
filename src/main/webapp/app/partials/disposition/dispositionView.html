@@ -120,11 +120,11 @@
                                                 ng-options="s.name for s in reviewOptions track by s.id">
                                         </select>
                                     </td>
-                                    <td ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && article.photo_status != ''" class="fotostatus">
+                                    <td ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && article.photo_status != '' && article.photo_status != undefined" class="fotostatus">
                                         <textwrapper length="15" text="article.photo_status"></textwrapper>
                                     </td>
-                                    <td ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && article.photo_status == ''" class="fotostatus">
-                                        <textwrapper length="15" text="psEmpty"></textwrapper>
+                                    <td ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && (article.photo_status == '' || article.photo_status == undefined)" class="fotostatus editPSPlaceholder">
+                                        [Rediger]
                                     </td>
                                     <td class="fotostatus" ng-show="editPhotoStatus">
                                         <div class="input-group" style="position: absolute; box-shadow: #000000">

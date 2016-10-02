@@ -423,3 +423,11 @@ a.zeroclipboard-is-hover {
     margin-left: 3%;
     border: 1px solid #cfcfcf;
 }
+
+.editPSPlaceholder {
+    color:#999;
+}
+
+.editPSPlaceholder:hover{
+    color:#000;
+}
