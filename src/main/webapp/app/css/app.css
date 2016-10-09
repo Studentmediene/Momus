@@ -40,8 +40,7 @@ textarea.note {
 
 hr.divider {
     width:100%;
-    border-color: #bce8f1;
-    border-width: 1px;
+    border: 1px #bce8f1;
 }
 
 div.metaline {
@@ -355,109 +354,46 @@ a.zeroclipboard-is-hover {
     background-color: white;
 }
 
-/* Bredder på kolonner i disposisjonen.. BEWARE UGLY CODE */
-
-.disposition{
-    --disp_width: 100%;
-    width: var(--disp_width);
-    max-width: var(--disp_width);
-    min-width: var(--disp_width);
+/* Style for the columns with static widths */
+:root{
+    --pagenum_width: 20px;
+    --section_width: 100px;
+    --status_width:120px;
+    --review_width: 100px;
+    --layout_width:80px;
+    --knapp_width:30px;
 }
 
-.sidetall{
-    /*30px*/
-    --sidetall_width: 2%;
-    width: var(--sidetall_width);
-    min-width: var(--sidetall_width);
-    max-width: var(--sidetall_width);
+.pagenum{
+    width: var(--pagenum_width);
+    min-width: var(--pagenum_width);
+    max-width: var(--pagenum_width);
 }
 
-.artikkel{
-    /*1000px*/
-    --artikkel_width: 65%;
-    width: var(--artikkel_width);
-    min-width: var(--artikkel_width);
-    max-width: var(--artikkel_width);
+.section{
+    width: var(--section_width);
+    min-width: var(--section_width);
+    max-width: var(--section_width);
 }
-.navn{
-    /*220px*/
-    --navn_width: 22%;
-    width: var(--navn_width);
-    min-width: var(--navn_width);
-    max-width: var(--navn_width);
-}
-
-.navn_header{
-    min-width: -webkit-calc(var(--artikkel_width)*var(--navn_width));
-    max-width: -webkit-calc(var(--artikkel_width)*var(--navn_width));
-}
-
-.seksjon{
-    /*100px*/
-    --seksjon_width: 10%;
-    width: var(--seksjon_width);
-    min-width: var(--seksjon_width);
-    max-width: var(--seksjon_width);
-}
-
-.journ{
-    /* 170px*/
-    --journ_width:17%;
-    width: var(--journ_width);
-    min-width: var(--journ_width);
-    max-width: var(--journ_width);
-}
-
-.fotograf{
-    /*170px*/
-    --fotograf_width:17%;
-    width: var(--fotograf_width);
-    min-width: var(--fotograf_width);
-    max-width: var(--fotograf_width);
-}
-
 .status{
-    /*120px*/
-    --status_width:12%;
     width: var(--status_width);
     min-width: var(--status_width);
     max-width: var(--status_width);
 }
 
-.korrektur{
-    /*100px*/
-    --korrektur_width: 10%;
-    width: var(--korrektur_width);
-    min-width: var(--korrektur_width);
-    max-width: var(--korrektur_width);
-}
-
-.fotostatus{
-    /*120px*/
-    --fotostatus_width:12%;
-    width: var(--fotostatus_width);
-    max-width: var(--fotostatus_width);
-    min-width: var(--fotostatus_width);
-}
-
-.kommentar{
-    /*220px*/
-    --kommentar_width: 15%;
-    width: var(--kommentar_width);
-    max-width: var(--kommentar_width);
+.review{
+    width: var(--review_width);
+    min-width: var(--review_width);
+    max-width: var(--review_width);
 }
 
 .layout{
-    /*90px*/
-    --layout_width:6%;
     width: var(--layout_width);
     min-width: var(--layout_width);
     max-width: var(--layout_width);
 }
 
-.knapp{
-    /*40px*/
-    --knapp_width:3%;
+.button{
     width:var(--knapp_width);
     min-width: var(--knapp_width);
     max-width: var(--knapp_width);
@@ -469,6 +405,10 @@ a.zeroclipboard-is-hover {
     width: 100% !important;
 }
 .disp-helper {
-    margin-left: 3%;
     border: 1px solid #cfcfcf;
+    opacity: 0.8;
+}
+
+.disp-placeholder {
+    background-color: #99ff99;
 }

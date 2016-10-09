@@ -17,11 +17,12 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest) {
+    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest, $window) {
         $scope.pubId = $routeParams.id;
         $scope.loading = 5;
         $scope.newPageAt = 0;
         $scope.numNewPages = 1;
+        $scope.editPhotoStatus = false;
 
         if($scope.pubId){
             PublicationService.getById($scope.pubId).success(function(data) {
@@ -179,8 +180,7 @@ angular.module('momusApp.controllers')
 
         $scope.sortableOptions = {
             helper: function(e, ui) {
-                var c = ui.clone().appendTo("body");
-                c.width($(this).width());
+                var c = ui.clone();
                 c.addClass("disp-helper");
                 return c;
             },
@@ -190,12 +190,47 @@ angular.module('momusApp.controllers')
                 $scope.selectedPage = $scope.publication.pages[ui.item.index()];
                 sortPages();
                 PublicationService.updateMetadata($scope.publication);
-            }
+            },
+            placeholder: "disp-placeholder"
         };
 
         $scope.showHelp = function(){
             $templateRequest('partials/templates/help/dispHelp.html').then(function(template){
                 MessageModal.info(template);
             });
-        }
+        };
+
+        $scope.responsiveCSS = {
+            comment: {minWidth: '100px'},
+            name: {minWidth: '100px'},
+            journalist: {minWidth: '60px'},
+            photographer: {minWidth: '60px'},
+            pstatus: {minWidth: '90px'}
+        };
+
+        $scope.updateDispSize = function(){
+            var constantArticleSize = 320;
+            var constantDispSize = constantArticleSize + 230;
+            var dispWidth = angular.element(document.getElementById("disposition")).context.clientWidth;
+            var widthLeft = dispWidth - constantDispSize; //Must be divided between name, journalists, photographers, photostatus and comment
+            var shareParts = {
+                name: 0.25,
+                journalist: 0.2,
+                photographer: 0.2,
+                pstatus: 0.15,
+                comment: 0.2
+            };
+            for(var k in shareParts){
+                var width = Math.floor(shareParts[k]*widthLeft);
+                var minWidth = parseInt($scope.responsiveCSS[k]['minWidth']);
+                if(width <= minWidth){
+                    width = minWidth;
+                }
+                $scope.responsiveCSS[k] = {minWidth: $scope.responsiveCSS[k]['minWidth'], maxWidth: width + 'px', width: width + 'px'}
+            }
+        };
+
+        angular.element($window).bind('resize', $scope.updateDispSize);
+
+        $scope.updateDispSize();
     });
