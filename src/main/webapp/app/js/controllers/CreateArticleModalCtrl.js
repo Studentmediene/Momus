@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('CreateArticleModalCtrl', function($scope, $modalInstance, PublicationService, ArticleService, PersonService){
+    .controller('CreateArticleModalCtrl', function($scope, $modalInstance, PublicationService, ArticleService, PersonService, $q){
         $scope.article = {
             name: "",
             journalists: null,
@@ -35,9 +35,9 @@ angular.module('momusApp.controllers')
             quote_check_status: false
         };
 
-        PublicationService.getAll().success(function (data) {
-            $scope.publications = data;
-            $scope.article.publication = PublicationService.getActive(data);
+        $q.all([PublicationService.getAll(), PublicationService.getActive()]).then(function (data) {
+            $scope.publications = data[0].data;
+            $scope.article.publication = data[1].data;
             if((!typeof pubId === 'undefined')){
                 for(var i = 0; i < $scope.publications.length;i++){
                     if($scope.publications[i].id == pubId){

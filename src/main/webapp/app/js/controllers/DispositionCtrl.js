@@ -33,8 +33,8 @@ angular.module('momusApp.controllers')
                 $scope.getPages();
             });
         } else{
-            PublicationService.getAll().success(function(data){
-                $scope.publication = PublicationService.getActive(data);
+            PublicationService.getActive().success(function(data){
+                $scope.publication = data;
                 $scope.getPages();
             });
         }

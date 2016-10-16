@@ -29,8 +29,8 @@ angular.module('momusApp.controllers')
             });
         }
 
-        PublicationService.getAll().success(function(data){
-            $scope.publication = PublicationService.getActive(data);
+        PublicationService.getActive().success(function(data){
+            $scope.publication = data;
             PublicationService.getStatusCounts($scope.publication.id).success(function(data){
                 $scope.publication.statusCounts = data;
             });

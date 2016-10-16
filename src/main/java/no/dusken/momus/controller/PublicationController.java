@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -61,6 +62,11 @@ public class PublicationController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody Publication getPublicationById(@PathVariable("id") Long id){
         return publicationRepository.findOne(id);
+    }
+
+    @RequestMapping(value = "/active", method = RequestMethod.GET)
+    public @ResponseBody Publication getActivePublication(){
+        return publicationService.getActivePublication(new Date());
     }
 
     @RequestMapping(value = "/metadata", method = RequestMethod.PUT)
@@ -101,7 +107,7 @@ public class PublicationController {
 
     @RequestMapping(value = "pages/generate/{id}", method = RequestMethod.GET)
     public @ResponseBody List<Page> generateDisp(@PathVariable("id") Long id){
-        return publicationService.generateDisp(id);
+        return publicationService.generateDisp(publicationRepository.findOne(id));
     }
 
     @RequestMapping(value = "/layoutstatus", method = RequestMethod.GET)
