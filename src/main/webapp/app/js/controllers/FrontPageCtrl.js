@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, PublicationService) {
+    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, PublicationService, $location, $document) {
         $scope.noteRules = noteParserRules;
 
         $scope.recentArticles = ViewArticleService.getRecentViews();
@@ -138,12 +138,30 @@ angular.module('momusApp.controllers')
             if(array == undefined || array == null || array == "" || array == []) {
                 return true;
             } else {
-                return Math.max(...array) > 0;
+                return Math.max(...array) <= 0;
             }
         };
 
         $scope.countTotals = function(array){
-            return array.reduce(function(x,y){return x+y},0);
+            if(!$scope.isEmptyArray(array)){
+                return array.reduce(function(x,y){return x+y},0);
+            }
+            return 0;
+        };
+
+        $scope.clickArticleStatus = function(selected){
+            $location.url('artikler?publication=' + $scope.publication.id + '&status=' + ($scope.statuses[selected].id));
+            $scope.$apply();
+        };
+
+        $scope.clickReviewStatus = function(selected){
+            $location.url('artikler?publication=' + $scope.publication.id + '&status=' + ($scope.statuses[selected].id));
+            $scope.$apply();
+        };
+
+        $scope.clickLayoutStatus = function(selected){
+            $location.url('disposisjon');
+            $scope.$apply();
         };
 
         $scope.$on('$locationChangeStart', function (event) {

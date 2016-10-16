@@ -18,290 +18,297 @@
     <div class="row">
         <div class="col-md-12">
             <h3>Status {{publication.name}}</h3>
-            <div class="col-md-4">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        Status sak
-                    </div>
-                    <div class="panel-body">
-                        <canvas ng-show="isEmptyArray(publication.statusCounts)" class="chart chart-pie"
-                                chart-data="publication.statusCounts" chart-labels="statusLabels" chart-colors="statusChartColors">
-                        </canvas>
-
-                        <p ng-hide="isEmptyArray(publication.statusCounts)">{{publication.name}} har ingen saker enda!</p>
-
-                    </div>
-                    <table ng-show="isEmptyArray(publication.statusCounts)" class="table">
-                        <tr>
-                            <td>Totalt</td>
-                            <td>{{countTotals(publication.statusCounts)}}</td>
-                        </tr>
-                    </table>
+        </div>
+    </div>
+    <!--Cake diagrams-->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Status artikler
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        Layout-status
-                    </div>
-                    <div class="panel-body">
+                <div class="panel-body">
+                    <status-chart ng-hide="isEmptyArray(publication.statusCounts)"
+                                  data="publication.statusCounts"
+                                  labels="statusLabels"
+                                  colors="statusChartColors"
+                                  status-click="clickArticleStatus(selected)">
+                    </status-chart>
 
-                        <canvas ng-show="isEmptyArray(publication.layoutStatusCounts)" class="chart chart-pie"
-                                chart-data="publication.layoutStatusCounts" chart-labels="layoutStatusLabels" chart-colors="layoutStatusChartColors">
-                        </canvas>
-
-                        <p ng-hide="isEmptyArray(publication.layoutStatusCounts)">{{publication.name}} har ingen sider enda!</p>
-
-
-                    </div>
-                    <table ng-show="isEmptyArray(publication.layoutStatusCounts)" class="table">
-                        <tr>
-                            <td>Totalt</td>
-                            <td>{{countTotals(publication.layoutStatusCounts)}}</td>
-                        </tr>
-                    </table>
+                    <p ng-show="isEmptyArray(publication.statusCounts)">{{publication.name}} har ingen saker enda!</p>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        Korrekturstatus
-                    </div>
-                    <div class="panel-body">
-
-                        <canvas ng-show="isEmptyArray(publication.reviewStatusCounts)" class="chart chart-pie"
-                                chart-data="publication.reviewStatusCounts" chart-labels="reviewLabels" chart-colors="reviewChartColors">
-                        </canvas>
-
-                        <p ng-hide="isEmptyArray(publication.reviewStatusCounts)">{{publication.name}} har ingen saker enda!</p>
-
-                    </div>
-                    <table ng-show="isEmptyArray(publication.reviewStatusCounts)" class="table">
-                        <tr>
-                            <td>Totalt</td>
-                            <td>{{countTotals(publication.reviewStatusCounts)}}</td>
-                        </tr>
-                    </table>
-                </div>
+                <table ng-hide="isEmptyArray(publication.statusCounts)" class="table">
+                    <tr>
+                        <td>Totalt</td>
+                        <td>{{countTotals(publication.statusCounts)}}</td>
+                    </tr>
+                </table>
             </div>
         </div>
-        <div class="col-md-12">
-            <div class="col-md-8">
-                <div id="last-articles" class="panel panel-info">
-                    <div class="panel-heading">
-                        <h1 class="panel-title">
-                            <span class="fa fa-file-text-o"></span>
-                            Mine ti siste artikler
-                            <div class="pull-right">
-                                <a href="#/artikler?persons={{user.id}}">Vis flere</a>
-                            </div>
-                        </h1>
-                    </div>
+        <div class="col-md-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Status korrektur
+                </div>
+                <div class="panel-body">
+                    <status-chart ng-hide="isEmptyArray(publication.reviewStatusCounts)"
+                            data="publication.reviewStatusCounts"
+                            labels="reviewLabels"
+                            colors="reviewChartColors"
+                            status-click="clickReviewStatus(selected)">
+                    </status-chart>
 
-                    <div class="table-responsive">
-                        <table class="table table-hover table-striped table-condensed" style="font-size: 85%;">
-                            <thead>
-                            <tr>
-                                <th style="width:2%"></th>
-                                <th style="width:25%">Navn</th>
-                                <th style="width:5%">Tegn</th>
-                                <th style="width:25%">Journalister</th>
-                                <th style="width:15%">Status</th>
-                                <th style="width:13%">Redaksjon</th>
-                                <th style="width:15%">Utgave</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            <tr ng-if="loadingArticles">
-                                <td colspan="10" style="text-align: center;">
-                                    <i class="fa fa-4x fa-spinner fa-spin"></i>
-                                </td>
-                            </tr>
-
-                            <tr ng-if="noArticles">
-                                <td colspan="10" style="text-align: center;">
-                                    Du har ikke skrevet noen artikler enda
-                                </td>
-                            </tr>
-
-                            <tr ng-repeat="article in myArticles | limitTo:10">
-                                <td><i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i></td>
-                                <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
-                                <td>{{article.content_length}}</td>
-                                <td>
-                                    <ul class="list-unstyled">
-                                        <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.full_name}}</span></li>
-                                    </ul>
-                                </td>
-                                <td style="background-color:{{article.status.color}};">{{article.status.name}}</td>
-                                <td>{{article.section.name}}</td>
-                                <td>{{article.publication.name}}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <p ng-show="isEmptyArray(publication.reviewStatusCounts)">{{publication.name}} har ingen saker enda!</p>
 
                 </div>
-
-                <div id="last-viewed" class="panel panel-info">
-                    <div class="panel-heading" >
-                        <h1 class="panel-title">
-                            <i class="fa fa-history"></i> Sist besøkte artikler
-                            </span>
-                        </h1>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-striped table-condensed table-responsive" style="font-size:85%">
-                            <thead>
-                            <tr>
-                                <th style="width:2%"></th>
-                                <th style="width:25%">Navn</th>
-                                <th style="width:5%">Tegn</th>
-                                <th style="width:25%;">Journalister</th>
-                                <th style="width:15%">Status</th>
-                                <th style="width:13%">Redaksjon</th>
-                                <th style="width:15%">Utgave</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            <tr ng-if="loadingRecent">
-                                <td colspan="10" style="text-align: center;">
-                                    <i class="fa fa-4x fa-spinner fa-spin"></i>
-                                </td>
-                            </tr>
-
-                            <tr ng-if="!recentArticles">
-                                <td colspan="10" style="text-align: center;">
-                                    Du har ikke sett på noen artikler enda
-                                </td>
-                            </tr>
-                            <tr ng-repeat="article in recentArticleInfo | orderBy: orderRecentArticles : true">
-                                <td><i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i></td>
-                                <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
-                                <td>{{article.content_length}}</td>
-                                <td>
-                                    <ul class="list-unstyled">
-                                        <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.full_name}}</span></li>
-                                    </ul>
-                                </td>
-                                <td style="background-color: {{article.status.color}};">
-                                    {{article.status.name}}
-                                </td>
-                                <td>
-                                    {{article.section.name}}
-                                </td>
-                                <td>{{article.publication.name}}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="panel panel-info">
-                    <div class="panel-heading clearfix">
-                        <div class="pull-right">
-                            <select id="favsec" class="form-control input-sm" ng-model="favouriteSection.section" ng-change="updateFavouriteSection()"
-                                    ng-options="s.name for s in sections  | filter:{deleted: false} track by s.id">
-                            </select>
-                        </div>
-                        <h1 class="panel-title fav">
-                            <i class="fa fa-star"></i> {{favouriteSection.section == null ? "Velg favorittseksjon for å vise de nyeste artiklene derfra" : "Siste artikler fra din favorittseksjon (" + favouriteSection.section.name + ")" }}
-                        </h1>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-striped table-condensed table-responsive" style="font-size:85%">
-                            <thead>
-                            <tr>
-                                <th style="width:2%"></th>
-                                <th style="width:25%">Navn</th>
-                                <th style="width:5%">Tegn</th>
-                                <th style="width:25%;">Journalister</th>
-                                <th style="width:15%">Status</th>
-                                <th style="width:13%">Redaksjon</th>
-                                <th style="width:15%">Utgave</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            <tr ng-if="loadingRecent">
-                                <td colspan="10" style="text-align: center;">
-                                    <i class="fa fa-4x fa-spinner fa-spin"></i>
-                                </td>
-                            </tr>
-
-                            <tr ng-if="favouriteSection.section == null">
-                                <td colspan="10" style="text-align: center;">
-                                    Du har ikke satt en favorittseksjon
-                                </td>
-                            </tr>
-                            <tr ng-if="favouriteSection.section != null && favSectionArticles.length == 0">
-                                <td colspan="10" style="text-align: center;">
-                                    Det finnes ingen artikler i denne seksjonen
-                                </td>
-                            </tr>
-                            <tr ng-repeat="article in favSectionArticles">
-                                <td><i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i></td>
-                                <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
-                                <td>{{article.content_length}}</td>
-                                <td>
-                                    <ul class="list-unstyled">
-                                        <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.full_name}}</span></li>
-                                    </ul>
-                                </td>
-                                <td style="background-color: {{article.status.color}};">
-                                    {{article.status.name}}
-                                </td>
-                                <td>
-                                    {{article.section.name}}
-                                </td>
-                                <td>{{article.publication.name}}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <table ng-hide="isEmptyArray(publication.reviewStatusCounts)" class="table">
+                    <tr>
+                        <td>Totalt</td>
+                        <td>{{countTotals(publication.reviewStatusCounts)}}</td>
+                    </tr>
+                </table>
             </div>
-            <div class="col-md-4">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h1 class="panel-title"><i class="fa fa-question-circle"></i> Tilfeldig tips
-
-                            <div class="pull-right">
-                                <button class="btn btn-default btn-xs" ng-click="randomTip()" tooltip="Nytt tips">
-                                    <i class="fa fa-refresh"></i>
-                                </button>
-                            </div>
-                        </h1>
-                    </div>
-                    <div class="panel-body" ng-bind-html="tip | trustHtml"></div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Status layout
                 </div>
-                <div class="panel panel-info">
-                    <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-bullhorn"></i> Nyheter</h1></div>
-                    <div class="panel-body" style="height:300px; overflow-y: auto">
-                        <table class="table">
-                            <tbody ng-repeat="n in news | orderBy: '-date'">
-                            <tr ng-class="{danger: n.new, active:!n.new}" class="interact" ng-click="n.show = !n.show">
-                                <td ng-show="n.new" style="font-weight: bold; width: 40%">{{n.date | date}}</td>
-                                <td ng-show="!n.new" style="width: 40%;">{{n.date | date}}</td>
+                <div class="panel-body">
+                    <status-chart ng-hide="isEmptyArray(publication.statusCounts)"
+                                  data="publication.layoutStatusCounts"
+                                  labels="layoutStatusLabels"
+                                  colors="layoutStatusChartColors"
+                                  status-click="clickLayoutStatus(selected)">
+                    </status-chart>
+                    <p ng-show="isEmptyArray(publication.layoutStatusCounts)">{{publication.name}} har ingen sider enda!</p>
 
-                                <td ng-show="n.new" style="font-weight: bold">{{n.title}}</td>
-                                <td ng-show="!n.new">{{n.title}}</td>
-
-
-                                <td width="5%">
-                                    <i ng-show="!n.show" class="fa fa-arrow-circle-down"></i>
-                                    <i ng-show="n.show" class="fa fa-arrow-circle-up"></i>
-                                </td>
-                            </tr>
-                            <tr ng-show="n.show">
-                                <td colspan="3" ng-bind-html="n.text | trustHtml"></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                </div>
+                <table ng-hide="isEmptyArray(publication.layoutStatusCounts)" class="table">
+                    <tr>
+                        <td>Totalt</td>
+                        <td>{{countTotals(publication.layoutStatusCounts)}}</td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div id="last-articles" class="panel panel-info">
+                <div class="panel-heading">
+                    <h1 class="panel-title">
+                        <span class="fa fa-file-text-o"></span>
+                        Mine ti siste artikler
+                        <div class="pull-right">
+                            <a href="#/artikler?persons={{user.id}}">Vis flere</a>
+                        </div>
+                    </h1>
+                </div>
 
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-condensed" style="font-size: 85%;">
+                        <thead>
+                        <tr>
+                            <th style="width:2%"></th>
+                            <th style="width:25%">Navn</th>
+                            <th style="width:5%">Tegn</th>
+                            <th style="width:25%">Journalister</th>
+                            <th style="width:15%">Status</th>
+                            <th style="width:13%">Redaksjon</th>
+                            <th style="width:15%">Utgave</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr ng-if="loadingArticles">
+                            <td colspan="10" style="text-align: center;">
+                                <i class="fa fa-4x fa-spinner fa-spin"></i>
+                            </td>
+                        </tr>
+
+                        <tr ng-if="noArticles">
+                            <td colspan="10" style="text-align: center;">
+                                Du har ikke skrevet noen artikler enda
+                            </td>
+                        </tr>
+
+                        <tr ng-repeat="article in myArticles | limitTo:10">
+                            <td><i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i></td>
+                            <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
+                            <td>{{article.content_length}}</td>
+                            <td>
+                                <ul class="list-unstyled">
+                                    <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.full_name}}</span></li>
+                                </ul>
+                            </td>
+                            <td style="background-color:{{article.status.color}};">{{article.status.name}}</td>
+                            <td>{{article.section.name}}</td>
+                            <td>{{article.publication.name}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div id="last-viewed" class="panel panel-info">
+                <div class="panel-heading" >
+                    <h1 class="panel-title">
+                        <i class="fa fa-history"></i> Sist besøkte artikler
+                        </span>
+                    </h1>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-condensed table-responsive" style="font-size:85%">
+                        <thead>
+                        <tr>
+                            <th style="width:2%"></th>
+                            <th style="width:25%">Navn</th>
+                            <th style="width:5%">Tegn</th>
+                            <th style="width:25%;">Journalister</th>
+                            <th style="width:15%">Status</th>
+                            <th style="width:13%">Redaksjon</th>
+                            <th style="width:15%">Utgave</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr ng-if="loadingRecent">
+                            <td colspan="10" style="text-align: center;">
+                                <i class="fa fa-4x fa-spinner fa-spin"></i>
+                            </td>
+                        </tr>
+
+                        <tr ng-if="!recentArticles">
+                            <td colspan="10" style="text-align: center;">
+                                Du har ikke sett på noen artikler enda
+                            </td>
+                        </tr>
+                        <tr ng-repeat="article in recentArticleInfo | orderBy: orderRecentArticles : true">
+                            <td><i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i></td>
+                            <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
+                            <td>{{article.content_length}}</td>
+                            <td>
+                                <ul class="list-unstyled">
+                                    <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.full_name}}</span></li>
+                                </ul>
+                            </td>
+                            <td style="background-color: {{article.status.color}};">
+                                {{article.status.name}}
+                            </td>
+                            <td>
+                                {{article.section.name}}
+                            </td>
+                            <td>{{article.publication.name}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading clearfix">
+                    <div class="pull-right">
+                        <select id="favsec" class="form-control input-sm" ng-model="favouriteSection.section" ng-change="updateFavouriteSection()"
+                                ng-options="s.name for s in sections  | filter:{deleted: false} track by s.id">
+                        </select>
+                    </div>
+                    <h1 class="panel-title fav">
+                        <i class="fa fa-star"></i> {{favouriteSection.section == null ? "Velg favorittseksjon for å vise de nyeste artiklene derfra" : "Siste artikler fra din favorittseksjon (" + favouriteSection.section.name + ")" }}
+                    </h1>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-condensed table-responsive" style="font-size:85%">
+                        <thead>
+                        <tr>
+                            <th style="width:2%"></th>
+                            <th style="width:25%">Navn</th>
+                            <th style="width:5%">Tegn</th>
+                            <th style="width:25%;">Journalister</th>
+                            <th style="width:15%">Status</th>
+                            <th style="width:13%">Redaksjon</th>
+                            <th style="width:15%">Utgave</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr ng-if="loadingRecent">
+                            <td colspan="10" style="text-align: center;">
+                                <i class="fa fa-4x fa-spinner fa-spin"></i>
+                            </td>
+                        </tr>
+
+                        <tr ng-if="favouriteSection.section == null">
+                            <td colspan="10" style="text-align: center;">
+                                Du har ikke satt en favorittseksjon
+                            </td>
+                        </tr>
+                        <tr ng-if="favouriteSection.section != null && favSectionArticles.length == 0">
+                            <td colspan="10" style="text-align: center;">
+                                Det finnes ingen artikler i denne seksjonen
+                            </td>
+                        </tr>
+                        <tr ng-repeat="article in favSectionArticles">
+                            <td><i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i></td>
+                            <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
+                            <td>{{article.content_length}}</td>
+                            <td>
+                                <ul class="list-unstyled">
+                                    <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.full_name}}</span></li>
+                                </ul>
+                            </td>
+                            <td style="background-color: {{article.status.color}};">
+                                {{article.status.name}}
+                            </td>
+                            <td>
+                                {{article.section.name}}
+                            </td>
+                            <td>{{article.publication.name}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h1 class="panel-title"><i class="fa fa-question-circle"></i> Tilfeldig tips
+
+                        <div class="pull-right">
+                            <button class="btn btn-default btn-xs" ng-click="randomTip()" tooltip="Nytt tips">
+                                <i class="fa fa-refresh"></i>
+                            </button>
+                        </div>
+                    </h1>
+                </div>
+                <div class="panel-body" ng-bind-html="tip | trustHtml"></div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-bullhorn"></i> Nyheter</h1></div>
+                <div class="panel-body" style="height:300px; overflow-y: auto">
+                    <table class="table">
+                        <tbody ng-repeat="n in news | orderBy: '-date'">
+                        <tr ng-class="{danger: n.new, active:!n.new}" class="interact" ng-click="n.show = !n.show">
+                            <td ng-show="n.new" style="font-weight: bold; width: 40%">{{n.date | date}}</td>
+                            <td ng-show="!n.new" style="width: 40%;">{{n.date | date}}</td>
+
+                            <td ng-show="n.new" style="font-weight: bold">{{n.title}}</td>
+                            <td ng-show="!n.new">{{n.title}}</td>
+
+
+                            <td width="5%">
+                                <i ng-show="!n.show" class="fa fa-arrow-circle-down"></i>
+                                <i ng-show="n.show" class="fa fa-arrow-circle-up"></i>
+                            </td>
+                        </tr>
+                        <tr ng-show="n.show">
+                            <td colspan="3" ng-bind-html="n.text | trustHtml"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+    </div>
+    </div>
 </div>
