@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, PublicationService) {
+    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, PublicationService, $location, $document) {
         $scope.noteRules = noteParserRules;
 
         $scope.recentArticles = ViewArticleService.getRecentViews();
@@ -29,14 +29,13 @@ angular.module('momusApp.controllers')
             });
         }
 
-        PublicationService.getAll().success(function(data){
-            $scope.publication = PublicationService.getActive(data);
+        PublicationService.getActive().success(function(data){
+            $scope.publication = data;
             PublicationService.getStatusCounts($scope.publication.id).success(function(data){
                 $scope.publication.statusCounts = data;
             });
             PublicationService.getLayoutStatusCounts($scope.publication.id).success(function(data){
                 $scope.publication.layoutStatusCounts = data;
-                console.log(data);
             });
             PublicationService.getReviewStatusCounts($scope.publication.id).success(function(data){
                 $scope.publication.reviewStatusCounts = data;
@@ -92,7 +91,6 @@ angular.module('momusApp.controllers')
                 $scope.layoutStatusLabels.push($scope.layoutStatuses[i].name);
                 $scope.layoutStatusChartColors.push($scope.layoutStatuses[i].color);
             }
-            console.log(data);
         });
 
         FavouriteSectionService.getFavouriteSection().success(function(data){
@@ -135,6 +133,36 @@ angular.module('momusApp.controllers')
                 }
             });
         });
+
+        $scope.isEmptyArray = function(array){
+            if(array == undefined || array == null || array == "" || array == []) {
+                return true;
+            } else {
+                return Math.max(...array) <= 0;
+            }
+        };
+
+        $scope.countTotals = function(array){
+            if(!$scope.isEmptyArray(array)){
+                return array.reduce(function(x,y){return x+y},0);
+            }
+            return 0;
+        };
+
+        $scope.clickArticleStatus = function(selected){
+            $location.url('artikler?publication=' + $scope.publication.id + '&status=' + ($scope.statuses[selected].id));
+            $scope.$apply();
+        };
+
+        $scope.clickReviewStatus = function(selected){
+            $location.url('artikler?publication=' + $scope.publication.id + '&status=' + ($scope.statuses[selected].id));
+            $scope.$apply();
+        };
+
+        $scope.clickLayoutStatus = function(selected){
+            $location.url('disposisjon');
+            $scope.$apply();
+        };
 
         $scope.$on('$locationChangeStart', function (event) {
             if (promptCondition()) {

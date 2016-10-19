@@ -18,50 +18,83 @@
     <div class="row">
         <div class="col-md-12">
             <h3>Status {{publication.name}}</h3>
-            <div class="col-md-4">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        Status sak
-                    </div>
-                    <div class="panel-body">
-
-                        <canvas class="chart chart-pie"
-                                chart-data="publication.statusCounts" chart-labels="statusLabels" chart-colors="statusChartColors">
-                        </canvas>
-
-                    </div>
+        </div>
+    </div>
+    <!--Cake diagrams-->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Status artikler
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        Layout-status
-                    </div>
-                    <div class="panel-body">
+                <div class="panel-body">
+                    <status-chart ng-hide="isEmptyArray(publication.statusCounts)"
+                                  data="publication.statusCounts"
+                                  labels="statusLabels"
+                                  colors="statusChartColors"
+                                  status-click="clickArticleStatus(selected)">
+                    </status-chart>
 
-                        <canvas class="chart chart-pie"
-                                chart-data="publication.layoutStatusCounts" chart-labels="layoutStatusLabels" chart-colors="layoutStatusChartColors">
-                        </canvas>
-
-                    </div>
+                    <p ng-show="isEmptyArray(publication.statusCounts)">{{publication.name}} har ingen saker enda!</p>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        Korrekturstatus
-                    </div>
-                    <div class="panel-body">
-
-                        <canvas class="chart chart-pie"
-                                chart-data="publication.reviewStatusCounts" chart-labels="reviewLabels" chart-colors="reviewChartColors">
-                        </canvas>
-
-                    </div>
-                </div>
+                <table ng-hide="isEmptyArray(publication.statusCounts)" class="table">
+                    <tr>
+                        <td>Totalt</td>
+                        <td>{{countTotals(publication.statusCounts)}}</td>
+                    </tr>
+                </table>
             </div>
         </div>
-        <div class="col-md-12">
+        <div class="col-md-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Status korrektur
+                </div>
+                <div class="panel-body">
+                    <status-chart ng-hide="isEmptyArray(publication.reviewStatusCounts)"
+                            data="publication.reviewStatusCounts"
+                            labels="reviewLabels"
+                            colors="reviewChartColors"
+                            status-click="clickReviewStatus(selected)">
+                    </status-chart>
+
+                    <p ng-show="isEmptyArray(publication.reviewStatusCounts)">{{publication.name}} har ingen saker enda!</p>
+
+                </div>
+                <table ng-hide="isEmptyArray(publication.reviewStatusCounts)" class="table">
+                    <tr>
+                        <td>Totalt</td>
+                        <td>{{countTotals(publication.reviewStatusCounts)}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Status layout
+                </div>
+                <div class="panel-body">
+                    <status-chart ng-hide="isEmptyArray(publication.statusCounts)"
+                                  data="publication.layoutStatusCounts"
+                                  labels="layoutStatusLabels"
+                                  colors="layoutStatusChartColors"
+                                  status-click="clickLayoutStatus(selected)">
+                    </status-chart>
+                    <p ng-show="isEmptyArray(publication.layoutStatusCounts)">{{publication.name}} har ingen sider enda!</p>
+
+                </div>
+                <table ng-hide="isEmptyArray(publication.layoutStatusCounts)" class="table">
+                    <tr>
+                        <td>Totalt</td>
+                        <td>{{countTotals(publication.layoutStatusCounts)}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
             <div id="last-articles" class="panel panel-info">
                 <div class="panel-heading">
                     <h1 class="panel-title">
@@ -237,7 +270,45 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h1 class="panel-title"><i class="fa fa-question-circle"></i> Tilfeldig tips
 
+                        <div class="pull-right">
+                            <button class="btn btn-default btn-xs" ng-click="randomTip()" tooltip="Nytt tips">
+                                <i class="fa fa-refresh"></i>
+                            </button>
+                        </div>
+                    </h1>
+                </div>
+                <div class="panel-body" ng-bind-html="tip | trustHtml"></div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-bullhorn"></i> Nyheter</h1></div>
+                <div class="panel-body" style="height:300px; overflow-y: auto">
+                    <table class="table">
+                        <tbody ng-repeat="n in news | orderBy: '-date'">
+                        <tr ng-class="{danger: n.new, active:!n.new}" class="interact" ng-click="n.show = !n.show">
+                            <td ng-show="n.new" style="font-weight: bold; width: 40%">{{n.date | date}}</td>
+                            <td ng-show="!n.new" style="width: 40%;">{{n.date | date}}</td>
+
+                            <td ng-show="n.new" style="font-weight: bold">{{n.title}}</td>
+                            <td ng-show="!n.new">{{n.title}}</td>
+
+
+                            <td width="5%">
+                                <i ng-show="!n.show" class="fa fa-arrow-circle-down"></i>
+                                <i ng-show="n.show" class="fa fa-arrow-circle-up"></i>
+                            </td>
+                        </tr>
+                        <tr ng-show="n.show">
+                            <td colspan="3" ng-bind-html="n.text | trustHtml"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </div>
     </div>
-
+    </div>
 </div>
