@@ -21,6 +21,7 @@
     "karma-phantomjs-launcher": "~0.1.2",
     "requirejs": "~2.1.11",
     "karma-requirejs": "~0.2.1",
-    "karma-script-launcher": "~0.1.0"
+    "karma-script-launcher": "~0.1.0",
+    "bower-npm-resolver": "0.7.0"
   }
 }
