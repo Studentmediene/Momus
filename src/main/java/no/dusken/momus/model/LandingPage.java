@@ -14,24 +14,38 @@
  * limitations under the License.
  */
 
-package no.dusken.momus.service.repository;
+package no.dusken.momus.model;
 
-import no.dusken.momus.model.Page;
-import org.springframework.data.jpa.repository.JpaRepository;
+import javax.persistence.*;
 
-import java.util.List;
-import java.util.Set;
+@Entity
+public class LandingPage {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-public interface PageRepository extends JpaRepository<Page, Long> {
+    private String page;
 
-    public List<Page> findByPublicationId(Long id);
+    @OneToOne(fetch = FetchType.LAZY)
+    private Person owner;
 
-    public List<Page> findByPublicationIdOrderByPageNrAsc(Long id);
+    public Long getId(){
+        return id;
+    }
+    public String getPage() {
+        return page;
+    }
 
-    public void deleteByPublicationId(Long id);
+    public void setPage(String page) {
+        this.page = page;
+    }
 
-    public int countByLayoutStatusIdAndPublicationId(Long status, Long id);
+    public Person getOwner() {
+        return owner;
+    }
 
-
+    public void setOwner(Person owner) {
+        this.owner = owner;
+    }
 }

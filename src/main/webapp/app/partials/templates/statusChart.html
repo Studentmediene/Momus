@@ -14,8 +14,16 @@
   ~ limitations under the License.
   -->
 
-<p><b>Søk</b>
-    <br>
-    Her kan du søke på alle artikler i Momus-databasen. Som standard bruker den bare den nyeste utgaven, men
-    du kan søke på tidligere også. Trykk på de forskjellige kolonnene for å velge sortering av søkeresultater.
-</p>
+<div>
+    <div>
+        <canvas class="chart chart-pie"
+                ng-style="chartStyle"
+                chart-data="data"
+                chart-labels="labels"
+                chart-colors="colors"
+                chart-options="chartOptions">
+        </canvas>
+    </div>
+</div>
+
+

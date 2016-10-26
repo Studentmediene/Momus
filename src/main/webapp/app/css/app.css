@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Studentmediene i Trondheim AS
+ * Copyright 2016 Studentmediene i Trondheim AS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,8 +40,7 @@ textarea.note {
 
 hr.divider {
     width:100%;
-    border-color: #bce8f1;
-    border-width: 1px;
+    border: 1px #bce8f1;
 }
 
 div.metaline {
@@ -298,16 +297,20 @@ a.zeroclipboard-is-hover {
 }
 
 .pageArticleTable tbody tr:first-child td {
-    border-top:0px;
+    border-top:0px #e6e6e6;
+}
+
+.pageArticleTable{
+    border-bottom: solid 1px #e6e6e6;
 }
 
 .pageTable > tbody > tr > td{
-    border: 1px solid #cfcfcf;
+    border: 1px solid #cccccc;
     border-collapse: collapse !important;
     border-spacing: 0;
 }
 .pageTable > thead > tr > th{
-    border: 1px solid #cfcfcf;
+    border: 1px solid #cccccc;
     border-collapse: collapse !important;
     border-spacing: 0;
 }
@@ -355,62 +358,49 @@ a.zeroclipboard-is-hover {
     background-color: white;
 }
 
-/* Bredder på kolonner i disposisjonen.. */
-
-.sidetall{
-    width: 30px;
+/* Style for the columns with static widths */
+:root{
+    --pagenum_width: 20px;
+    --section_width: 100px;
+    --status_width:120px;
+    --review_width: 100px;
+    --layout_width:80px;
+    --knapp_width:30px;
 }
 
-.artikkel{
-    width: 1000px;
+.pagenum{
+    width: var(--pagenum_width);
+    min-width: var(--pagenum_width);
+    max-width: var(--pagenum_width);
 }
 
-.navn{
-    width: 190px;
+.section{
+    width: var(--section_width);
+    min-width: var(--section_width);
+    max-width: var(--section_width);
 }
-
-.seksjon{
-    width: 150px;
-}
-
-.journ{
-    width: 170px;
-}
-
-.fotograf{
-    width: 150px;
-}
-
 .status{
-    width: 140px;
+    width: var(--status_width);
+    min-width: var(--status_width);
+    max-width: var(--status_width);
 }
 
-.korrektur{
-    width: 100px;
-}
-
-.fotostatus{
-    width: 120px;
-}
-
-.kommentar{
-    width: 240px;
+.review{
+    width: var(--review_width);
+    min-width: var(--review_width);
+    max-width: var(--review_width);
 }
 
 .layout{
-    width: 120px;
+    width: var(--layout_width);
+    min-width: var(--layout_width);
+    max-width: var(--layout_width);
 }
 
-.reklame{
-    width:50px;
-}
-
-.nett{
-    width:50px;
-}
-
-.knapp{
-    width:40px;
+.button{
+    width:var(--knapp_width);
+    min-width: var(--knapp_width);
+    max-width: var(--knapp_width);
 }
 
 /*Ferdig*/
@@ -421,4 +411,24 @@ a.zeroclipboard-is-hover {
 .disp-helper {
     margin-left: 3%;
     border: 1px solid #cfcfcf;
+    opacity: 0.8;
+}
+
+.disp-placeholder {
+    background-color: #99ff99;
+}
+
+@media (max-width: 990px) {
+    #disposition{
+        overflow-x: scroll;
+    }
+}
+
+.editPSPlaceholder {
+    color:#999;
+}
+
+.editPSPlaceholder:hover{
+    color:#000;
+    cursor: pointer;
 }

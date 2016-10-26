@@ -16,22 +16,13 @@
 
 package no.dusken.momus.service.repository;
 
-import no.dusken.momus.model.Page;
+import no.dusken.momus.model.LandingPage;
+import no.dusken.momus.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-import java.util.Set;
+public interface LandingPageRepository extends JpaRepository<LandingPage, Long> {
 
+    public LandingPage findByOwner(Person person);
 
-public interface PageRepository extends JpaRepository<Page, Long> {
-
-    public List<Page> findByPublicationId(Long id);
-
-    public List<Page> findByPublicationIdOrderByPageNrAsc(Long id);
-
-    public void deleteByPublicationId(Long id);
-
-    public int countByLayoutStatusIdAndPublicationId(Long status, Long id);
-
-
+    public LandingPage findByOwner_Id(Long id);
 }

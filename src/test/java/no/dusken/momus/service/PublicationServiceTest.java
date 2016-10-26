@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Studentmediene i Trondheim AS
+ * Copyright 2016 Studentmediene i Trondheim AS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package no.dusken.momus;
+package no.dusken.momus.service;
 
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.Page;
@@ -49,6 +49,7 @@ public class PublicationServiceTest extends AbstractTestRunner{
 
     private Publication publication;
 
+
     private Page page1;
     private Page page2;
 
@@ -56,8 +57,8 @@ public class PublicationServiceTest extends AbstractTestRunner{
     public void setUp() throws Exception {
 
         publication = new Publication(1L);
-        publication.setName("testpub");
-        publication.setReleaseDate(new Date(8999));
+        publication.setName("old");
+        publication.setReleaseDate(new Date(1000));
         publication = publicationRepository.save(publication);
         List<Page> pages = new ArrayList<>();
 
@@ -77,6 +78,7 @@ public class PublicationServiceTest extends AbstractTestRunner{
 
         publication.setPages(pages);
         publication = publicationRepository.save(publication);
+
     }
 
     @Test
@@ -86,6 +88,25 @@ public class PublicationServiceTest extends AbstractTestRunner{
         pub = publicationRepository.save(pub);
 
         assertEquals("justanupdatedpubname",pub.getName());
+    }
+
+    @Test
+    public void testGetActivePublication() throws Exception{
+        Date today = new Date();
+        Publication pub1 = new Publication();
+        pub1.setReleaseDate(new Date(today.getTime()-10000)); //Old
+        publicationRepository.save(pub1);
+
+        Publication pub2 = new Publication();
+        pub2.setReleaseDate(new Date(today.getTime()+100000)); //New
+        publicationRepository.save(pub2);
+
+        Publication pub3 = new Publication();
+        pub3.setReleaseDate(new Date(today.getTime()+200000)); //Newer
+        publicationRepository.save(pub2);
+
+        assertEquals(publicationService.getActivePublication(today),pub2);
+
     }
 
     @Test

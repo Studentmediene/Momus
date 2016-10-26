@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Studentmediene i Trondheim AS
+ * Copyright 2016 Studentmediene i Trondheim AS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,16 +90,17 @@ public class PublicationService {
     }
 
 
-    /*
-    *   Not used at the moment, left here in case it's wanted later
-    *   Generates a disposition from the articles in the publication
-    */
+    /**
+     * Generates a disposition from the articles in the publication. Not used at the moment
+     * @param publication The publication to generate disp for
+     * @return The generated pages
+     *
+     *
+     */
+    public List<Page> generateDisp(Publication publication){
+        deletePagesInPublication(publication.getId());
 
-    public List<Page> generateDisp(Long id){
-        deletePagesInPublication(id);
-
-        Publication publication = publicationRepository.findOne(id);
-        List<Article> articles = sortArticles(articleRepository.findByPublicationId(id));
+        List<Article> articles = sortArticles(articleRepository.findByPublicationId(publication.getId()));
 
         List<Page> pages = new ArrayList<>();
         for(int i = 0; i < articles.size();i++){
@@ -117,6 +118,23 @@ public class PublicationService {
         Publication savedPublication = savePublication(publication);
 
         return pageRepository.findByPublicationId(savedPublication.getId());
+    }
+
+    /**
+     *
+     * @return Returns the oldest publication that has not been released yet at the time of the date parameter
+     */
+    public Publication getActivePublication(Date date){
+        List<Publication> publications = publicationRepository.findAllByOrderByReleaseDateDesc();
+        Publication active = publications.get(0);
+        for(Publication p : publications.subList(1,publications.size()-1)){
+            if(p.getReleaseDate().before(date)){
+                return active;
+            }else{
+                active = p;
+            }
+        }
+        return active;
     }
 
     private List<Article> sortArticles(List<Article> articles){

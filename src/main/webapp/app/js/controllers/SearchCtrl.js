@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Studentmediene i Trondheim AS
+ * Copyright 2016 Studentmediene i Trondheim AS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 
 angular.module('momusApp.controllers')
     .controller('SearchCtrl', function ($scope, $http, $location, $q, PersonService, PublicationService, ArticleService, $modal, MessageModal, $templateRequest) {
-
         var pageSize = 100;
 
         $scope.data = [];

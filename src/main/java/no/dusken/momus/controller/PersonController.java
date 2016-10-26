@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Studentmediene i Trondheim AS
+ * Copyright 2016 Studentmediene i Trondheim AS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,18 @@
 
 package no.dusken.momus.controller;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import no.dusken.momus.authentication.UserLoginService;
+import no.dusken.momus.model.LandingPage;
 import no.dusken.momus.model.Person;
+import no.dusken.momus.service.repository.LandingPageRepository;
 import no.dusken.momus.service.repository.PersonRepository;
+import no.dusken.momus.service.LandingPageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,6 +39,12 @@ public class PersonController {
     @Autowired
     private PersonRepository personRepository;
 
+    @Autowired
+    private LandingPageRepository landingPageRepository;
+
+
+    @Autowired
+    private LandingPageService landingPageService;
 
     @Autowired
     private UserLoginService userLoginService;
@@ -55,5 +63,15 @@ public class PersonController {
     @RequestMapping("/me")
     public @ResponseBody Person getCurrentUser() {
         return personRepository.findOne(userLoginService.getId());
+    }
+
+    @RequestMapping(value="/landing", method = RequestMethod.GET)
+    public @ResponseBody LandingPage getLandingPage() {
+        return landingPageRepository.findByOwner_Id(userLoginService.getId());
+    }
+
+    @RequestMapping(value="/landing/{landing}", method = RequestMethod.GET)
+    public @ResponseBody LandingPage saveLandingPage(@PathVariable("landing") String landing){
+        return landingPageService.saveLandingPage(landing);
     }
 }

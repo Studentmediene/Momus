@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Studentmediene i Trondheim AS
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 angular.module('momusApp.services')
     .service('TipAndNewsService', function () {
         var randomTips = [
@@ -41,6 +57,10 @@ angular.module('momusApp.services')
 
         // Date: year, month - 1, day
         var news = [{
+            date: new Date(2016, 9, 26),
+            title: "Return of the Front Page",
+            text: "<p>Forsiden er tilbake! Den viser mye av det samme som før, men også noen kakediagram for nåværende status av den gjeldende utgaven. Det går også an å velge hvilken side man vil bruke som forside ved å gå inn på <a href='#/info'>Info/nyheter-siden.</a> Disposisjonen har også fått et lite ansiktsløft.</p>"
+        },{
             date: new Date(2016, 3, 24),
             title: "Bugfiksing",
             text: "<p>Har fisket noen bugs, blant annet omhandlet riktig bruk av forskjellige bindestreker i eksporten til InDesign, og noen småting i disposisjonen. Dette blir sannsynligvis siste oppdatering før sommeren.</p>"

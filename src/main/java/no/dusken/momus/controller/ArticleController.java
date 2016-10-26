@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Studentmediene i Trondheim AS
+ * Copyright 2016 Studentmediene i Trondheim AS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,17 +21,14 @@ import no.dusken.momus.diff.DiffUtil;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.ArticleService;
 import no.dusken.momus.service.indesign.IndesignExport;
-import no.dusken.momus.service.repository.ArticleRevisionRepository;
-import no.dusken.momus.service.repository.ArticleStatusRepository;
-import no.dusken.momus.service.repository.ArticleTypeRepository;
-import no.dusken.momus.service.repository.ArticleReviewRepository;
-import no.dusken.momus.service.repository.SectionRepository;
+import no.dusken.momus.service.repository.*;
 import no.dusken.momus.service.search.ArticleSearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -142,6 +139,36 @@ public class ArticleController {
 
     @RequestMapping(value = "/reviews", method = RequestMethod.GET)
     public @ResponseBody List<ArticleReview> getAllReviewStatuses() { return articleReviewRepository.findAll(); }
+
+    @RequestMapping(value = "/statuscount/{pubId}/{statId}", method = RequestMethod.GET)
+    public @ResponseBody int getStatusCount(@PathVariable("statId") Long as, @PathVariable("pubId") Long pi){
+        return articleService.getArticleRepository().countByStatusIdAndPublicationId(as, pi);
+    }
+
+    @RequestMapping(value = "/statuscount/{pubId}", method = RequestMethod.GET)
+    public @ResponseBody List<Integer> getStatusCountsByPubId(@PathVariable("pubId") Long pi){
+        List<ArticleStatus> statuses = this.getAllArticleStatuses();
+        List<Integer> list = new ArrayList<Integer>();
+        for(int i = 1; i <= statuses.size(); i++){
+            list.add(this.getStatusCount(Long.valueOf(i), pi));
+        }
+        return list;
+    }
+
+    @RequestMapping(value = "/reviewstatuscount/{pubId}/{statId}", method = RequestMethod.GET)
+    public @ResponseBody int getReviewStatusCount(@PathVariable("statId") Long as, @PathVariable("pubId") Long pi){
+        return articleService.getArticleRepository().countByReviewIdAndPublicationId(as, pi);
+    }
+
+    @RequestMapping(value = "/reviewstatuscount/{pubId}", method = RequestMethod.GET)
+    public @ResponseBody List<Integer> getReviewStatusCountsByPubId(@PathVariable("pubId") Long pi){
+        List<ArticleReview> statuses = this.getAllReviewStatuses();
+        List<Integer> list = new ArrayList<Integer>();
+        for(int i = 1; i <= statuses.size(); i++){
+            list.add(this.getReviewStatusCount(Long.valueOf(i), pi));
+        }
+        return list;
+    }
 
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody Article createArticle(@RequestBody Article article){

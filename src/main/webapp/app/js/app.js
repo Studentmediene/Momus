@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Studentmediene i Trondheim AS
+ * Copyright 2016 Studentmediene i Trondheim AS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,12 +34,12 @@ angular.module('momusApp', [
         'ui.select2',
         'ui.bootstrap',
         'ngCookies',
-        'ui.sortable'
+        'ui.sortable',
+        'chart.js'
     ]).
     config(['$routeProvider', function ($routeProvider) {
         // Admin interfaces
         $routeProvider
-
 
             .when('/artikler',
             {
@@ -77,14 +77,14 @@ angular.module('momusApp', [
         )
 
             //Disposition
-            .when('/disposition/:id',
+            .when('/disposisjon/:id',
             {
                 templateUrl: 'partials/disposition/dispositionView.html',
                 controller: 'DispositionCtrl',
                 title: "Disposisjon"
             }
         )
-            .when('/disposition',
+            .when('/disposisjon',
             {
                 templateUrl:'partials/disposition/dispositionView.html',
                 controller:'DispositionCtrl',
@@ -128,20 +128,23 @@ angular.module('momusApp', [
                 title: 'Info'
             }
         )
-            /*.when('/', {
+            .when('/front', {
                 templateUrl: 'partials/front/frontPageView.html',
                 controller: 'FrontPageCtrl'
             }
-        )*/
+        )
 
-            .otherwise({redirectTo: '/disposition'});
+            .otherwise({redirectTo: '/disposisjon'});
 
     }]).
     config(['$httpProvider', function ($httpProvider) {
         $httpProvider.interceptors.push('HttpInterceptor');
     }]).
+    config(function(ChartJsProvider){
+        ChartJsProvider.setOptions({ responsive: false });
+    }).
 
-    run(['$location', '$rootScope', 'TitleChanger', function ($location, $rootScope, TitleChanger) {
+    run(['$location', '$rootScope', 'TitleChanger', 'LandingChanger', '$route', function ($location, $rootScope, TitleChanger, LandingChanger, $route) {
         // Whenever there is a route change, we try to update the url with the title set in the rootprovider above
         // if there is no title, we clear it
         $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
@@ -151,5 +154,11 @@ angular.module('momusApp', [
                 TitleChanger.setTitle("");
             }
         });
+        LandingChanger.setLanding();
+        $rootScope.$on('loginComplete', function(){
+            LandingChanger.setLanding();
+        });
+
     }]);
+
 

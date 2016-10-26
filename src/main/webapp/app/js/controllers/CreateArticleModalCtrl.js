@@ -1,7 +1,23 @@
+/*
+ * Copyright 2016 Studentmediene i Trondheim AS
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('CreateArticleModalCtrl', function($scope, $modalInstance, PublicationService, ArticleService, PersonService){
+    .controller('CreateArticleModalCtrl', function($scope, $modalInstance, PublicationService, ArticleService, PersonService, $q){
         $scope.article = {
             name: "",
             journalists: null,
@@ -11,6 +27,7 @@ angular.module('momusApp.controllers')
             type: null,
             status: null,
             section: null,
+            review: null,
             content: "",
             use_illustration: false,
             external_author: '',
@@ -18,9 +35,9 @@ angular.module('momusApp.controllers')
             quote_check_status: false
         };
 
-        PublicationService.getAll().success(function (data) {
-            $scope.publications = data;
-            $scope.article.publication = PublicationService.getActive(data);
+        $q.all([PublicationService.getAll(), PublicationService.getActive()]).then(function (data) {
+            $scope.publications = data[0].data;
+            $scope.article.publication = data[1].data;
             if((!typeof pubId === 'undefined')){
                 for(var i = 0; i < $scope.publications.length;i++){
                     if($scope.publications[i].id == pubId){
@@ -43,6 +60,10 @@ angular.module('momusApp.controllers')
         ArticleService.getSections().success(function (data) {
             $scope.sections = data;
             $scope.article.section = data[0];
+        });
+
+        ArticleService.getReviews().success(function (data){
+            $scope.article.review = data[0];
         });
 
         PersonService.getAll().success(function (data) {

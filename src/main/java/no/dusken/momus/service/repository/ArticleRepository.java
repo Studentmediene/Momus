@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Studentmediene i Trondheim AS
+ * Copyright 2016 Studentmediene i Trondheim AS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package no.dusken.momus.service.repository;
 
 import no.dusken.momus.model.Article;
+import no.dusken.momus.model.ArticleStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -26,4 +27,9 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     public List<Article> findByPublicationId(Long id);
 
     public List<Article> findByGoogleDriveIdIn(Iterable<String> ids);
+
+    public int countByStatusIdAndPublicationId(Long articleStatus, Long id);
+
+    public int countByReviewIdAndPublicationId(Long articleStatus, Long id);
+
 }

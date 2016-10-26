@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Studentmediene i Trondheim AS
+ * Copyright 2016 Studentmediene i Trondheim AS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,19 +31,8 @@ angular.module('momusApp.services')
             updateMetadata: function(publication) {
                 return $http.put('/api/publication/metadata', publication);
             },
-            getActive: function(publications) {
-                var today = new Date();
-
-                var active = new Date(publications[0].release_date);
-                var activeIndex = 0;
-                for(var i = 1; i < publications.length;i++){
-                    var date = new Date(publications[i].release_date);
-                    if(date < active && date > today){
-                        active = date;
-                        activeIndex = i;
-                    }
-                }
-                return publications[activeIndex];
+            getActive: function() {
+                return $http.get('/api/publication/active');
             },
             getPages: function(id) {
                 return $http.get('/api/publication/pages/'+id);
@@ -59,6 +48,29 @@ angular.module('momusApp.services')
             },
             getLayoutStatuses: function(){
                 return $http.get('/api/publication/layoutstatus')
+            },
+            getStatusCounts: function(id){
+                return $http.get('/api/article/statuscount/' + id)
+            },
+            getLayoutStatusCounts: function(id){
+                return $http.get('/api/publication/statuscount/' + id)
+            },
+            getReviewStatusCounts: function(id){
+                return $http.get('/api/article/reviewstatuscount/' + id)
+            },
+            linkPagesToArticles: function(pages, articles){
+                for(var i = 0; i < pages.length; i++){
+                    var page = pages[i];
+                    for(var j = 0; j < page.articles.length; j++){
+                        var article = page.articles[j];
+                        for(var k = 0; k < articles.length; k++){
+                            if(articles[k].id == article.id){
+                                pages[i].articles[j] = articles[k];
+                                break;
+                            }
+                        }
+                    }
+                }
             }
         };
     });

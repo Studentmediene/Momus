@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Studentmediene i Trondheim AS
+ * Copyright 2016 Studentmediene i Trondheim AS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package no.dusken.momus.controller;
 
+import no.dusken.momus.model.ArticleStatus;
 import no.dusken.momus.model.LayoutStatus;
 import no.dusken.momus.model.Page;
 import no.dusken.momus.model.Publication;
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -60,6 +62,11 @@ public class PublicationController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody Publication getPublicationById(@PathVariable("id") Long id){
         return publicationRepository.findOne(id);
+    }
+
+    @RequestMapping(value = "/active", method = RequestMethod.GET)
+    public @ResponseBody Publication getActivePublication(){
+        return publicationService.getActivePublication(new Date());
     }
 
     @RequestMapping(value = "/metadata", method = RequestMethod.PUT)
@@ -100,11 +107,27 @@ public class PublicationController {
 
     @RequestMapping(value = "pages/generate/{id}", method = RequestMethod.GET)
     public @ResponseBody List<Page> generateDisp(@PathVariable("id") Long id){
-        return publicationService.generateDisp(id);
+        return publicationService.generateDisp(publicationRepository.findOne(id));
     }
 
     @RequestMapping(value = "/layoutstatus", method = RequestMethod.GET)
     public @ResponseBody List<LayoutStatus> getLayoutStatuses(){
         return layoutStatusRepository.findAll();
     }
+
+    @RequestMapping(value = "/statuscount/{pubId}/{statId}", method = RequestMethod.GET)
+    public @ResponseBody int getStatusCount(@PathVariable("statId") Long as, @PathVariable("pubId") Long pi){
+        return pageRepository.countByLayoutStatusIdAndPublicationId(as, pi);
+    }
+
+    @RequestMapping(value = "/statuscount/{pubId}", method = RequestMethod.GET)
+    public @ResponseBody List<Integer> getStatusCountsByPubId(@PathVariable("pubId") Long pi){
+        List<LayoutStatus> statuses = this.getLayoutStatuses();
+        List<Integer> list = new ArrayList<Integer>();
+        for(int i = 0; i < statuses.size(); i++){
+            list.add(this.getStatusCount(Long.valueOf(i), pi));
+        }
+        return list;
+    }
+
 }
