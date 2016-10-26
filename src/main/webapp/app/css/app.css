@@ -40,8 +40,7 @@ textarea.note {
 
 hr.divider {
     width:100%;
-    border-color: #bce8f1;
-    border-width: 1px;
+    border: 1px #bce8f1;
 }
 
 div.metaline {
@@ -298,16 +297,20 @@ a.zeroclipboard-is-hover {
 }
 
 .pageArticleTable tbody tr:first-child td {
-    border-top:0px;
+    border-top:0px #e6e6e6;
+}
+
+.pageArticleTable{
+    border-bottom: solid 1px #e6e6e6;
 }
 
 .pageTable > tbody > tr > td{
-    border: 1px solid #cfcfcf;
+    border: 1px solid #cccccc;
     border-collapse: collapse !important;
     border-spacing: 0;
 }
 .pageTable > thead > tr > th{
-    border: 1px solid #cfcfcf;
+    border: 1px solid #cccccc;
     border-collapse: collapse !important;
     border-spacing: 0;
 }
@@ -355,91 +358,49 @@ a.zeroclipboard-is-hover {
     background-color: white;
 }
 
-/* Bredder på kolonner i disposisjonen.. BEWARE UGLY CODE */
-
-.sidetall{
-    width: 30px;
-    min-width: 30px;
-    max-width: 30px;
+/* Style for the columns with static widths */
+:root{
+    --pagenum_width: 20px;
+    --section_width: 100px;
+    --status_width:120px;
+    --review_width: 100px;
+    --layout_width:80px;
+    --knapp_width:30px;
 }
 
-.artikkel{
-    width: 1000px;
-    min-width: 1000px;
-    max-width: 1000px;
+.pagenum{
+    width: var(--pagenum_width);
+    min-width: var(--pagenum_width);
+    max-width: var(--pagenum_width);
 }
 
-.navn{
-    width: 220px;
-    min-width: 220px;
-    max-width: 220px;
+.section{
+    width: var(--section_width);
+    min-width: var(--section_width);
+    max-width: var(--section_width);
 }
-
-.seksjon{
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
-}
-
-.journ{
-    width: 170px;
-    min-width: 170px;
-    max-width: 170px;
-}
-
-.fotograf{
-    width: 170px;
-    min-width: 170px;
-    max-width: 170px;
-}
-
 .status{
-    width: 120px;
-    min-width: 120px;
-    max-width: 120px;
+    width: var(--status_width);
+    min-width: var(--status_width);
+    max-width: var(--status_width);
 }
 
-.korrektur{
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
-}
-
-.fotostatus{
-    width: 120px;
-    max-width: 120px;
-    min-width: 120px;
-    cursor:pointer;
-}
-
-.kommentar{
-    width: 220px;
-    min-width: 220px;
-    max-width: 220px;
+.review{
+    width: var(--review_width);
+    min-width: var(--review_width);
+    max-width: var(--review_width);
 }
 
 .layout{
-    width: 90px;
-    min-width: 90px;
-    max-width: 90px;
+    width: var(--layout_width);
+    min-width: var(--layout_width);
+    max-width: var(--layout_width);
 }
 
-.reklame{
-    width:40px;
-    min-width: 40px;
-    max-width: 40px;
-}
-
-.nett{
-    width:40px;
-    min-width: 40px;
-    max-width: 40px;
-}
-
-.knapp{
-    width:40px;
-    min-width: 40px;
-    max-width: 40px;
+.button{
+    width:var(--knapp_width);
+    min-width: var(--knapp_width);
+    max-width: var(--knapp_width);
 }
 
 /*Ferdig*/
@@ -450,6 +411,17 @@ a.zeroclipboard-is-hover {
 .disp-helper {
     margin-left: 3%;
     border: 1px solid #cfcfcf;
+    opacity: 0.8;
+}
+
+.disp-placeholder {
+    background-color: #99ff99;
+}
+
+@media (max-width: 990px) {
+    #disposition{
+        overflow-x: scroll;
+    }
 }
 
 .editPSPlaceholder {
