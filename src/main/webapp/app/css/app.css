@@ -417,8 +417,8 @@ a.zeroclipboard-is-hover {
     background-color: #99ff99;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 990px) {
     #disposition{
-
+        overflow-x: scroll;
     }
 }

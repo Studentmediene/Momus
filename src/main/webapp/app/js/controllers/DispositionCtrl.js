@@ -213,6 +213,11 @@ angular.module('momusApp.controllers')
             var constantDispSize = constantArticleSize + 190;
             var dispWidth = angular.element(document.getElementById("disposition")).context.clientWidth;
 
+            //Don't resize if disp is too small
+            if(dispWidth < 990){
+                return;
+            }
+
             //Must divide rest of width between journalists, photographers, photostatus and comment. leaving some wiggle room
             var widthLeft = dispWidth - constantDispSize - 10;
             var shareParts = {
