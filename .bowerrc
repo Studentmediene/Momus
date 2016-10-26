@@ -1,3 +1,6 @@
 {
-    "directory": "src/main/webapp/app/libs"
+    "directory": "src/main/webapp/app/libs",
+    "resolvers": [
+        "bower-npm-resolver"
+    ]
 }
