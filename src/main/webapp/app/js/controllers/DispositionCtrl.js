@@ -210,9 +210,11 @@ angular.module('momusApp.controllers')
 
         $scope.updateDispSize = function(){
             var constantArticleSize = 320;
-            var constantDispSize = constantArticleSize + 230;
+            var constantDispSize = constantArticleSize + 190;
             var dispWidth = angular.element(document.getElementById("disposition")).context.clientWidth;
-            var widthLeft = dispWidth - constantDispSize; //Must be divided between name, journalists, photographers, photostatus and comment
+
+            //Must divide rest of width between journalists, photographers, photostatus and comment. leaving some wiggle room
+            var widthLeft = dispWidth - constantDispSize - 10;
             var shareParts = {
                 name: 0.25,
                 journalist: 0.2,
@@ -222,15 +224,14 @@ angular.module('momusApp.controllers')
             };
             for(var k in shareParts){
                 var width = Math.floor(shareParts[k]*widthLeft);
-                var minWidth = parseInt($scope.responsiveCSS[k]['minWidth']);
-                if(width <= minWidth){
-                    width = minWidth;
-                }
-                $scope.responsiveCSS[k] = {minWidth: $scope.responsiveCSS[k]['minWidth'], maxWidth: width + 'px', width: width + 'px'}
+                $scope.responsiveCSS[k] = {minWidth: width + 'px', maxWidth: width + 'px', width: width + 'px'}
             }
         };
 
-        angular.element($window).bind('resize', $scope.updateDispSize);
+        angular.element($window).bind('resize', function(){
+            $scope.updateDispSize();
+            $scope.$apply();
+        });
 
         $scope.updateDispSize();
     });
