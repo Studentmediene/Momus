@@ -84,10 +84,10 @@
                         <td class="artikkel" style="padding:0;margin:0" ng-hide="editPage">
                             <table class="table pageArticleTable" style="padding: 0;margin:0;">
                                 <tr ng-repeat="article in page.articles">
-                                    <td class="navn" style="word-wrap: break-word; word-break: normal;white-space: normal">
+                                    <td class="navn" style="word-wrap: break-word; word-break: normal;white-space: normal;">
                                         <a href="#/artikler/{{article.id}}">{{article.name}}</a>
                                     </td>
-                                    <td class="seksjon">{{article.section.name}}</td>
+                                    <td class="seksjon" style="background:{{article.section.color}}">{{article.section.name}}</td>
                                     <td class="journ">
                                         <ul class="list-unstyled">
                                             <li class="" ng-repeat="person in article.journalists">

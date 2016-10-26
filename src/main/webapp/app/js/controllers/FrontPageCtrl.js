@@ -61,6 +61,7 @@ angular.module('momusApp.controllers')
 
         ArticleService.getSections().success(function (data) {
             $scope.sections = data;
+            console.log(data);
         });
 
         ArticleService.getStatuses().success(function (data){

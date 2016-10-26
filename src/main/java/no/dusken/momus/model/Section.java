@@ -30,6 +30,7 @@ public class Section {
     private Long id;
 
     private String name;
+    private String color;
     private boolean deleted;
 
     public Section(){}
@@ -41,6 +42,10 @@ public class Section {
     public Long getId() { return id; }
 
     public String getName() { return name; }
+
+    public String getColor() {return color;}
+
+    public void setColor(String color) {this.color = color;}
 
     public boolean isDeleted() {
         return deleted;
