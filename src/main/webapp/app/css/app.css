@@ -409,6 +409,7 @@ a.zeroclipboard-is-hover {
     width: 120px;
     max-width: 120px;
     min-width: 120px;
+    cursor:pointer;
 }
 
 .kommentar{
@@ -449,4 +450,12 @@ a.zeroclipboard-is-hover {
 .disp-helper {
     margin-left: 3%;
     border: 1px solid #cfcfcf;
+}
+
+.editPSPlaceholder {
+    color:#999;
+}
+
+.editPSPlaceholder:hover{
+    color:#000;
 }
