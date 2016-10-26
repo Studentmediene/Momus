@@ -31,7 +31,10 @@ angular.module('momusApp.directives')
                 scope.chartStyle = {cursor: "default"};
                 scope.chartOptions = {
                     onClick: function(e,d) {
-                        scope.statusClick({selected:d[0]._index});
+                        if(d.length > 0){
+                            scope.statusClick({selected:d[0]._index});
+                        }
+
                     },
                     hover:{
                         onHover: function(data){

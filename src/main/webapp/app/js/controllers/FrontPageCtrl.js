@@ -61,7 +61,6 @@ angular.module('momusApp.controllers')
 
         ArticleService.getSections().success(function (data) {
             $scope.sections = data;
-            console.log(data);
         });
 
         ArticleService.getStatuses().success(function (data){
@@ -139,7 +138,13 @@ angular.module('momusApp.controllers')
             if(array == undefined || array == null || array == "" || array == []) {
                 return true;
             } else {
-                return Math.max(...array) <= 0;
+                var maxFound = 0;
+                for(var i = 0; i < array.length;i++){
+                    if(array[i] > maxFound){
+                        maxFound = array[i];
+                    }
+                }
+                return maxFound <= 0;
             }
         };
 
