@@ -852,13 +852,13 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="color" type="VARCHAR(255)" />
         </addColumn>
 
-        <update tableName="section"><column name="color">#D490CF</column><where>id=1</where></update>
-        <update tableName="section"><column name="color">#75D1FF</column><where>id=2</where></update>
+        <update tableName="section"><column name="color">#FFB3FF</column><where>id=1</where></update>
+        <update tableName="section"><column name="color">#1AB2FF</column><where>id=2</where></update>
         <update tableName="section"><column name="color">#ABE3FF</column><where>id=3</where></update>
         <update tableName="section"><column name="color">#FFE96B</column><where>id=4</where></update>
         <update tableName="section"><column name="color">#98D98B</column><where>id=5</where></update>
-        <update tableName="section"><column name="color">#B78BD9</column><where>id=6</where></update>
-        <update tableName="section"><column name="color">#B990D4</column><where>id=7</where></update>
+        <update tableName="section"><column name="color">#B990D4</column><where>id=6</where></update>
+        <update tableName="section"><column name="color">#FF4D4D</column><where>id=7</where></update>
         <update tableName="section"><column name="color">#FF7345</column><where>id=8</where></update>
         <update tableName="section"><column name="color">#CCCCCC</column><where>id=9</where></update>
 
