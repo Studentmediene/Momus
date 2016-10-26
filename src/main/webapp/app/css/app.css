@@ -430,4 +430,5 @@ a.zeroclipboard-is-hover {
 
 .editPSPlaceholder:hover{
     color:#000;
+    cursor: pointer;
 }
