@@ -219,7 +219,7 @@ angular.module('momusApp.controllers')
             }
 
             //Must divide rest of width between journalists, photographers, photostatus and comment. leaving some wiggle room
-            var widthLeft = dispWidth - constantDispSize - 10;
+            var widthLeft = dispWidth - constantDispSize;
             var shareParts = {
                 name: 0.25,
                 journalist: 0.2,
