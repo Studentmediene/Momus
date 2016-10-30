@@ -300,16 +300,7 @@ a.zeroclipboard-is-hover {
     border-top:0px #e6e6e6;
 }
 
-.pageArticleTable{
-    border-bottom: solid 1px #e6e6e6;
-}
-
-.pageTable > tbody > tr > td{
-    border: 1px solid #cccccc;
-    border-collapse: collapse !important;
-    border-spacing: 0;
-}
-.pageTable > thead > tr > th{
+.pageTable > tbody > tr > td, .pageTable > thead > td > th{
     border: 1px solid #cccccc;
     border-collapse: collapse !important;
     border-spacing: 0;

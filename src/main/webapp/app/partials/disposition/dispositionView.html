@@ -130,13 +130,13 @@
                                     </select>
                                 </td>
                                 <!--Photostatus-->
-                                <td ng-style="responsiveCSS['pstatus']" ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && article.photo_status != '' && article.photo_status != undefined" class="fotostatus">
+                                <td class="fotostatus" ng-style="responsiveCSS['pstatus']" ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && article.photo_status != '' && article.photo_status != undefined">
                                     <textwrapper length="15" text="article.photo_status"></textwrapper>
                                 </td>
-                                <td ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && (article.photo_status == '' || article.photo_status == undefined)" class="fotostatus editPSPlaceholder">
+                                <td ng-style="responsiveCSS['pstatus']" class="fotostatus editPSPlaceholder" ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && (article.photo_status == '' || article.photo_status == undefined)">
                                     [Rediger]
                                 </td>
-                                <td class="fotostatus" ng-show="editPhotoStatus">
+                                <td ng-style="responsiveCSS['pstatus']" class="fotostatus" ng-show="editPhotoStatus">
                                     <div class="input-group" style="position: absolute; box-shadow: #000000">
                                         <textarea class="form-control input-sm" ng-model="article.photo_status" style="width: 200px; resize: vertical"></textarea>
                                         <span class="">
