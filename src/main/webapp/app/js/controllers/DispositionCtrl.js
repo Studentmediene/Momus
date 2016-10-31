@@ -214,7 +214,7 @@ angular.module('momusApp.controllers')
             var dispWidth = angular.element(document.getElementById("disposition")).context.clientWidth;
 
             //Don't resize if disp is too small
-            if(dispWidth < 750){
+            if(dispWidth < 800){
                 return;
             }
 

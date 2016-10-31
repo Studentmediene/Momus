@@ -306,6 +306,13 @@ a.zeroclipboard-is-hover {
     border-spacing: 0;
 }
 
+@media (min-width: 990px) {
+    .pageArticleTable, .pageTable{
+        table-layout: fixed;
+    }
+
+}
+
 .disp-break-word{
     word-wrap:break-word;
 

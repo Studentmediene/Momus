@@ -32,14 +32,15 @@
                             <span class="input-group-addon">ny{{numNewPages > 1 ? "e" : ""}} side{{numNewPages > 1 ? "r" : ""}} etter side</span>
                             <input type="number" ng-model="newPageAt" min="0" max="{{publication.pages.length}}" class="form-control">
                             <span class="input-group-btn">
-                        <button class="btn btn-success" type="button" ng-click="newPage()" ng-disabled="numNewPages < 1 || numNewPages > 100">
-                            <i class="fa fa-plus"></i>
-                        </button>
-                    </span>
+                                <button class="btn btn-success" type="button" ng-click="newPage()" ng-disabled="numNewPages < 1 || numNewPages > 100">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </span>
                         </div>
                     </div>
             </div>
-            <table class="pageTable table table-responsive table-bordered table-condensed" style="font-size: 85%;overflow-x:auto; table-layout: fixed">
+
+            <table class="pageTable table table-responsive table-bordered table-condensed" style="font-size: 85%; overflow-x: auto;">
                 <thead>
                 <tr>
                     <th class="pagenum">#</th>
@@ -85,7 +86,7 @@
                     </td>
                     <!--Articles (view mode)-->
                     <td style="padding:0;margin:0;" ng-hide="editPage">
-                        <table class="table pageArticleTable" style="padding: 0;margin:0; table-layout: fixed">
+                        <table class="table pageArticleTable" style="padding: 0;margin:0;">
                             <tr ng-repeat="article in page.articles">
                                 <!--Name-->
                                 <td ng-style="responsiveCSS['name']" style="word-wrap: break-word;">
