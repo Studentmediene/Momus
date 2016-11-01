@@ -39,24 +39,24 @@
                         </div>
                     </div>
             </div>
-            <table class="pageTable table table-responsive table-bordered table-condensed" style="font-size: 85%; overflow-x: auto;">
+            <table class="pageTable table table-responsive table-bordered table-condensed" style="font-size: 85%; overflow-x: auto;" ng-style="dispTableLayout">
                 <thead>
                 <tr>
                     <th class="pagenum">#</th>
                     <th>
                         <table>
                             <tr>
-                                <td ng-style="responsiveCSS['name']">Navn</td>
+                                <td ng-style="responsiveColumns['name']">Navn</td>
                                 <td class="section">Seksjon</td>
-                                <td ng-style="responsiveCSS['journalist']">Journalister</td>
-                                <td ng-style="responsiveCSS['photographer']">Fotografer</td>
+                                <td ng-style="responsiveColumns['journalist']">Journalister</td>
+                                <td ng-style="responsiveColumns['photographer']">Fotografer</td>
                                 <td class="status">Status</td>
                                 <td class="review">Korrektur</td>
-                                <td ng-style="responsiveCSS['pstatus']">Fotostatus</td>
+                                <td ng-style="responsiveColumns['pstatus']">Fotostatus</td>
                             </tr>
                         </table>
                     </th>
-                    <th ng-style="responsiveCSS['comment']">Kommentar</th>
+                    <th ng-style="responsiveColumns['comment']">Kommentar</th>
                     <th class="layout">Layout</th>
                     <th class="button">Ads</th>
                     <th class="button"></th>
@@ -85,16 +85,16 @@
                     </td>
                     <!--Articles (view mode)-->
                     <td style="padding:0;margin:0;" ng-hide="editPage">
-                        <table class="table pageArticleTable" style="padding: 0;margin:0;">
+                        <table class="table pageArticleTable" style="padding: 0;margin:0;" ng-style="dispTableLayout">
                             <tr ng-repeat="article in page.articles">
                                 <!--Name-->
-                                <td ng-style="responsiveCSS['name']" style="word-wrap: break-word;">
+                                <td ng-style="responsiveColumns['name']" style="word-wrap: break-word;">
                                     <a href="#/artikler/{{article.id}}">{{article.name}}</a>
                                 </td>
                                 <!--Section-->
                                 <td class="section" style="background: {{article.section.color}}">{{article.section.name}}</td>
                                 <!--Journalists-->
-                                <td ng-style="responsiveCSS['journalist']" style="word-wrap: break-word;">
+                                <td ng-style="responsiveColumns['journalist']" style="word-wrap: break-word;">
                                     <ul class="list-unstyled">
                                         <li class="" ng-repeat="person in article.journalists">
                                             <span person-widget="person" class="disp-break-word">
@@ -104,7 +104,7 @@
                                     </ul>
                                 </td>
                                 <!--Photographers-->
-                                <td ng-style="responsiveCSS['photographer']" style="word-wrap: break-word;">
+                                <td ng-style="responsiveColumns['photographer']" style="word-wrap: break-word;">
                                     <ul class="list-unstyled">
                                         <li class="" ng-repeat="person in article.photographers">
                                             <span person-widget="person" class="disp-break-word">
@@ -130,13 +130,13 @@
                                     </select>
                                 </td>
                                 <!--Photostatus-->
-                                <td class="fotostatus" ng-style="responsiveCSS['pstatus']" ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && article.photo_status != '' && article.photo_status != undefined">
+                                <td class="fotostatus" ng-style="responsiveColumns['pstatus']" ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && article.photo_status != '' && article.photo_status != undefined">
                                     <textwrapper length="15" text="article.photo_status"></textwrapper>
                                 </td>
-                                <td ng-style="responsiveCSS['pstatus']" class="fotostatus editPSPlaceholder" ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && (article.photo_status == '' || article.photo_status == undefined)">
+                                <td ng-style="responsiveColumns['pstatus']" class="fotostatus editPSPlaceholder" ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && (article.photo_status == '' || article.photo_status == undefined)">
                                     [Rediger]
                                 </td>
-                                <td ng-style="responsiveCSS['pstatus']" class="fotostatus" ng-show="editPhotoStatus">
+                                <td ng-style="responsiveColumns['pstatus']" class="fotostatus" ng-show="editPhotoStatus">
                                     <div class="input-group" style="position: absolute; box-shadow: #000000">
                                         <textarea class="form-control input-sm" ng-model="article.photo_status" style="width: 200px; resize: vertical"></textarea>
                                         <span class="">
@@ -150,7 +150,7 @@
                         </table>
                     </td>
                     <!--Comment-->
-                    <td ng-style="responsiveCSS['comment']">
+                    <td ng-style="responsiveColumns['comment']">
                         <div ng-hide="editPage" style="word-wrap: break-word;">{{page.note}}</div>
                         <textarea ng-show="editPage" style="position: absolute; width: 200px; resize: vertical; max-height:200px; height: 80px;" ng-model="page.note"></textarea>
                     </td>
