@@ -200,11 +200,13 @@ angular.module('momusApp.controllers')
             });
         };
 
+        // Widths of columns in the disp. Uses ngStyle to sync widths across pages (which are separate tables)
+        // The widths that are here will be used when the app is loaded on a screen so small the disp gets a scroll bar
         $scope.responsiveCSS = {
             comment: {minWidth: '100px'},
             name: {minWidth: '100px'},
-            journalist: {minWidth: '60px'},
-            photographer: {minWidth: '60px'},
+            journalist: {minWidth: '80px'},
+            photographer: {minWidth: '80px'},
             pstatus: {minWidth: '90px'}
         };
 
@@ -213,12 +215,7 @@ angular.module('momusApp.controllers')
             var constantDispSize = constantArticleSize + 190;
             var dispWidth = angular.element(document.getElementById("disposition")).context.clientWidth;
 
-            //Don't resize if disp is too small
-            if(dispWidth < 800){
-                return;
-            }
-
-            //Must divide rest of width between journalists, photographers, photostatus and comment. leaving some wiggle room
+            //Must divide rest of width between journalists, photographers, photo status and comment.
             var widthLeft = dispWidth - constantDispSize;
             var shareParts = {
                 name: 0.25,
@@ -227,9 +224,16 @@ angular.module('momusApp.controllers')
                 pstatus: 0.15,
                 comment: 0.2
             };
+
             for(var k in shareParts){
-                var width = Math.floor(shareParts[k]*widthLeft);
-                $scope.responsiveCSS[k] = {minWidth: width + 'px', maxWidth: width + 'px', width: width + 'px'}
+                var width;
+                if(dispWidth > 800){
+                    width = Math.floor(shareParts[k]*widthLeft);
+                }else{ //Use min width and scroll if screen is too small.
+                    width = parseInt($scope.responsiveCSS[k].minWidth);
+                }
+
+                $scope.responsiveCSS[k] = {minWidth: width + 'px', maxWidth: width + 'px', width: width + 'px'};
             }
         };
 

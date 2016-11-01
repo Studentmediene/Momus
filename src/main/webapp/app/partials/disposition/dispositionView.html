@@ -39,7 +39,6 @@
                         </div>
                     </div>
             </div>
-
             <table class="pageTable table table-responsive table-bordered table-condensed" style="font-size: 85%; overflow-x: auto;">
                 <thead>
                 <tr>
@@ -70,11 +69,11 @@
                 <tbody ng-model="publication.pages" ui-sortable="sortableOptions">
                 <tr ng-repeat="page in publication.pages" style="background: white;">
                     <!--Page number-->
-                    <td style="text-align: center; cursor: move;" class="handle sidetall">{{page.page_nr}}</td>
+                    <td style="text-align: center; cursor: move;" class="handle pagenum">{{page.page_nr}}</td>
                     <!--Articles (edit mode)-->
                     <td ng-show="editPage">
                         <id-select multiple class="pull-left" style="width: 90%;"
-                   j                items="publication.articles"
+                                   items="publication.articles"
                                    target="page.articles"
                                    show="name">
                         </id-select>
