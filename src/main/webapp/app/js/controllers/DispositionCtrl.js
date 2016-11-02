@@ -24,6 +24,22 @@ angular.module('momusApp.controllers')
         $scope.numNewPages = 1;
         $scope.editPhotoStatus = false;
 
+        // Widths of columns in the disp. Uses ngStyle to sync widths across pages (which are separate tables)
+        // The widths that are here will be used when the app is loaded on a screen so small the disp gets a scroll bar
+        $scope.responsiveColumns = {
+            comment: {minWidth: '100px'},
+            name: {minWidth: '100px'},
+            journalist: {minWidth: '80px'},
+            photographer: {minWidth: '80px'},
+            pstatus: {minWidth: '90px'}
+        };
+
+        //ngStyle for disp table layout.
+        //Should be auto when screen is smaller than 992 px and fixed when above
+        $scope.dispTableLayout = {
+            tableLayout: "auto"
+        };
+
         if($scope.pubId){
             PublicationService.getById($scope.pubId).success(function(data) {
                 if(!data){
@@ -68,19 +84,6 @@ angular.module('momusApp.controllers')
             });
         };
 
-        $scope.showHelp = function(){
-            MessageModal.info("<p>Genererer en disposisjon etter beste evne. Bruker artiklene i den gjeldende utgaven til å " +
-                "generere en standarddisposisjon");
-        };
-
-        $scope.generateDispBtn = function(){
-            if($scope.publication.pages.length == 0){
-                $scope.generateDisp();
-            } else if(confirm("Dette vil overskrive den nåværende disposisjonen")){
-                $scope.generateDisp();
-            }
-        };
-
         /*
         *   Not used at the moment, left here in case it's wanted later
         */
@@ -94,18 +97,6 @@ angular.module('momusApp.controllers')
             PublicationService.updateMetadata($scope.publication).success(function(data){
                 $scope.getPages();
             });
-        };
-
-        $scope.deletePage = function(page) {
-            if(confirm("Er du sikker på at du vil slette denne siden?")){
-                PublicationService.deletePage(page.id).success(function(){
-                    PublicationService.getPages($scope.publication.id).success(function(data){
-                        $scope.publication.pages = data;
-                        sortPages();
-                        $scope.savePublication();
-                    });
-                });
-            }
         };
 
         $scope.newPage = function(){
@@ -145,6 +136,19 @@ angular.module('momusApp.controllers')
             PublicationService.updateMetadata($scope.publication);
         };
 
+        $scope.deletePage = function(page) {
+            if(confirm("Er du sikker på at du vil slette denne siden?")){
+                PublicationService.deletePage(page.id).success(function(){
+                    PublicationService.getPages($scope.publication.id).success(function(data){
+                        $scope.publication.pages = data;
+                        sortPages();
+                        $scope.savePublication();
+                    });
+                });
+            }
+        };
+
+        //TODO put this in a service
         $scope.getLayoutStatusByName = function(name){
             for(var i = 0; i < $scope.layoutStatuses.length; i++){
                 if($scope.layoutStatuses[i].name == name){
@@ -182,6 +186,8 @@ angular.module('momusApp.controllers')
             helper: function(e, ui) {
                 var c = ui.clone();
                 c.addClass("disp-helper");
+                $scope.dispTableLayout.tableLayout = "auto"; //To not break the table
+                $scope.$apply(); //Apply since this is jQuery stuff
                 return c;
             },
             axis: 'y',
@@ -190,6 +196,7 @@ angular.module('momusApp.controllers')
                 $scope.selectedPage = $scope.publication.pages[ui.item.index()];
                 sortPages();
                 PublicationService.updateMetadata($scope.publication);
+                $scope.updateDispSize(); //In order to put the tableLayout back to the correct value
             },
             placeholder: "disp-placeholder"
         };
@@ -200,25 +207,12 @@ angular.module('momusApp.controllers')
             });
         };
 
-        $scope.responsiveCSS = {
-            comment: {minWidth: '100px'},
-            name: {minWidth: '100px'},
-            journalist: {minWidth: '60px'},
-            photographer: {minWidth: '60px'},
-            pstatus: {minWidth: '90px'}
-        };
-
         $scope.updateDispSize = function(){
             var constantArticleSize = 320;
             var constantDispSize = constantArticleSize + 190;
             var dispWidth = angular.element(document.getElementById("disposition")).context.clientWidth;
 
-            //Don't resize if disp is too small
-            if(dispWidth < 750){
-                return;
-            }
-
-            //Must divide rest of width between journalists, photographers, photostatus and comment. leaving some wiggle room
+            //Must divide rest of width between journalists, photographers, photo status and comment.
             var widthLeft = dispWidth - constantDispSize;
             var shareParts = {
                 name: 0.25,
@@ -227,9 +221,18 @@ angular.module('momusApp.controllers')
                 pstatus: 0.15,
                 comment: 0.2
             };
+
             for(var k in shareParts){
-                var width = Math.floor(shareParts[k]*widthLeft);
-                $scope.responsiveCSS[k] = {minWidth: width + 'px', maxWidth: width + 'px', width: width + 'px'}
+                var width;
+                if($window.innerWidth > 992){
+                    width = Math.floor(shareParts[k]*widthLeft);
+                    $scope.dispTableLayout.tableLayout = "fixed";
+                }else{ //Use min width and scroll if screen is too small.
+                    width = parseInt($scope.responsiveColumns[k].minWidth);
+                    $scope.dispTableLayout.tableLayout = "auto";
+                }
+
+                $scope.responsiveColumns[k] = {minWidth: width + 'px', maxWidth: width + 'px', width: width + 'px'};
             }
         };
 
