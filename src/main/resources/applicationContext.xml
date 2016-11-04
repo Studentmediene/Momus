@@ -42,6 +42,7 @@
         <!-- Default rules for patterns. More fine-grained can (and should) be specified in the controllers -->
         <security:intercept-url pattern="/api/auth/**" access="permitAll" />
         <security:intercept-url pattern="/api/dev/**" access="${devmode}" /> <!-- Some utility stuff when developing -->
+        <security:intercept-url pattern="/api/public/**" access="@apiAccess.authorizeRequest(request)" />
         <security:intercept-url pattern="/**" access="isFullyAuthenticated()" />
 
     </security:http>
