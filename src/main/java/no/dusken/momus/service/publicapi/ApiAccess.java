@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Service("apiAccess")
 public class ApiAccess {
@@ -49,6 +50,11 @@ public class ApiAccess {
 
     public boolean authorizeRequest(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
+
+        //Allow preflight request to pass through
+        if(Objects.equals(request.getMethod(), "OPTIONS")){
+            return true;
+        }
 
         logger.info("New API request with authHeader '{}' for URL {} from {}", authHeader, request.getRequestURL(), request.getRemoteAddr());
 
