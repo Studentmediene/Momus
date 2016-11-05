@@ -89,6 +89,15 @@ public class PublicationService {
         logger.info("Deleted all the pages from publication with id: " + id);
     }
 
+    public List<Integer> getLayoutStatusCountByPublication(Long id){
+        List<LayoutStatus> statuses = layoutStatusRepository.findAll();
+        List<Integer> list = new ArrayList<Integer>();
+        for(int i = 0; i < statuses.size(); i++){
+            list.add(pageRepository.countByLayoutStatusIdAndPublicationId((long) i, id));
+        }
+        return list;
+    }
+
 
     /**
      * Generates a disposition from the articles in the publication. Not used at the moment

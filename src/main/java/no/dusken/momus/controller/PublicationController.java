@@ -116,18 +116,13 @@ public class PublicationController {
     }
 
     @RequestMapping(value = "/statuscount/{pubId}/{statId}", method = RequestMethod.GET)
-    public @ResponseBody int getStatusCount(@PathVariable("statId") Long as, @PathVariable("pubId") Long pi){
+    public @ResponseBody int getLayoutStatusCount(@PathVariable("statId") Long as, @PathVariable("pubId") Long pi){
         return pageRepository.countByLayoutStatusIdAndPublicationId(as, pi);
     }
 
     @RequestMapping(value = "/statuscount/{pubId}", method = RequestMethod.GET)
-    public @ResponseBody List<Integer> getStatusCountsByPubId(@PathVariable("pubId") Long pi){
-        List<LayoutStatus> statuses = this.getLayoutStatuses();
-        List<Integer> list = new ArrayList<Integer>();
-        for(int i = 0; i < statuses.size(); i++){
-            list.add(this.getStatusCount(Long.valueOf(i), pi));
-        }
-        return list;
+    public @ResponseBody List<Integer> getLayoutStatusCountsByPubId(@PathVariable("pubId") Long pi){
+        return publicationService.getLayoutStatusCountByPublication(pi);
     }
 
 }

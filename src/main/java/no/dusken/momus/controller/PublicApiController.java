@@ -16,17 +16,55 @@
 
 package no.dusken.momus.controller;
 
+import no.dusken.momus.model.Article;
+import no.dusken.momus.model.Publication;
+import no.dusken.momus.service.PublicationService;
+import no.dusken.momus.service.repository.ArticleRepository;
+import no.dusken.momus.service.repository.PublicationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("/public")
 public class PublicApiController {
 
+    @Autowired
+    ArticleRepository articleRepository;
+
+    @Autowired
+    PublicationRepository publicationRepository;
+
+    @Autowired
+    PublicationService publicationService;
+
     @RequestMapping("/test")
     public @ResponseBody String testMe() {
         return "You have access!";
     }
+
+    @RequestMapping("/articles")
+    public @ResponseBody List<Article> getAllArticles() {
+        return articleRepository.findAll();
+    }
+
+    @RequestMapping("/publications")
+    public @ResponseBody List<Publication> getAllPublications(){
+        return publicationRepository.findAllByOrderByReleaseDateDesc();
+    }
+
+    @RequestMapping("/publications/active")
+    public @ResponseBody Publication getActivePublication(){
+        return publicationService.getActivePublication(new Date());
+    }
+
+
+
+
+
 
 }
