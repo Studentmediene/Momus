@@ -67,7 +67,7 @@
                     <td colspan="7"><i class="fa fa-spinner fa-spin fa-4x"></i></td>
                 </tr>
                 <tbody ng-model="publication.pages" ui-sortable="sortableOptions">
-                <tr ng-repeat="page in publication.pages" style="background: white;">
+                <tr ng-repeat="page in publication.pages" style="background: white;" ui-sortable-selectable>
                     <!--Page number-->
                     <td style="text-align: center; cursor: move;" class="handle pagenum">{{page.page_nr}}</td>
                     <!--Articles (edit mode)-->

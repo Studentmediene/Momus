@@ -16,7 +16,9 @@
     "angular-ui-bootstrap-bower": "0.14.3",
     "zeroclipboard": "2.1.6",
     "angular-cookies": "1.2.22",
-    "angular-ui-sortable": "0.13.4"
+    "angular-ui-sortable": "0.13.4",
+    "angular-ui-sortable-multiselection": "0.7.0"
+
   },
   "resolutions": {
     "angular": "1.3.20"

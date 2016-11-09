@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest, $route, $window) {
+    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest, $route, $window,uiSortableMultiSelectionMethods) {
         $scope.pubId = $routeParams.id;
         $scope.loading = 5;
         $scope.newPageAt = 0;
@@ -182,14 +182,15 @@ angular.module('momusApp.controllers')
             ArticleService.updateMetadata(article);
         };
 
-        $scope.sortableOptions = {
-            helper: function(e, ui) {
-                var c = ui.clone();
-                c.addClass("disp-helper");
-                $scope.dispTableLayout.tableLayout = "auto"; //To not break the table
-                $scope.$apply(); //Apply since this is jQuery stuff
-                return c;
-            },
+        $scope.sortableOptions = uiSortableMultiSelectionMethods.extendOptions({
+            //helper: function(e, ui) {
+            //    var c = ui.clone();
+            //    c.addClass("disp-helper");
+            //    $scope.dispTableLayout.tableLayout = "auto"; //To not break the table
+            //    $scope.$apply(); //Apply since this is jQuery stuff
+            //    return c;
+            //},
+            helper: uiSortableMultiSelectionMethods.helper,
             axis: 'y',
             handle: '.handle',
             stop: function(e, ui){
@@ -198,8 +199,9 @@ angular.module('momusApp.controllers')
                 PublicationService.updateMetadata($scope.publication);
                 $scope.updateDispSize(); //In order to put the tableLayout back to the correct value
             },
-            placeholder: "disp-placeholder"
-        };
+            placeholder: "disp-placeholder",
+            'ui-selection-count':true
+        });
 
         $scope.showHelp = function(){
             $templateRequest('partials/templates/help/dispHelp.html').then(function(template){
