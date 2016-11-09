@@ -16,17 +16,13 @@
 
 package no.dusken.momus.controller;
 
-import no.dusken.momus.model.Article;
-import no.dusken.momus.model.Publication;
+import no.dusken.momus.model.*;
+import no.dusken.momus.service.ArticleService;
 import no.dusken.momus.service.PublicationService;
-import no.dusken.momus.service.repository.ArticleRepository;
-import no.dusken.momus.service.repository.PublicationRepository;
+import no.dusken.momus.service.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -37,7 +33,16 @@ import java.util.List;
 public class PublicApiController {
 
     @Autowired
+    ArticleService articleService;
+
+    @Autowired
     ArticleRepository articleRepository;
+
+    @Autowired
+    ArticleStatusRepository articleStatusRepository;
+
+    @Autowired
+    ArticleReviewRepository articleReviewRepository;
 
     @Autowired
     PublicationRepository publicationRepository;
@@ -45,29 +50,81 @@ public class PublicApiController {
     @Autowired
     PublicationService publicationService;
 
+    @Autowired
+    SectionRepository sectionRepository;
+
+    @Autowired
+    LayoutStatusRepository layoutStatusRepository;
+
     @RequestMapping("/test")
     public @ResponseBody String testMe() {
         return "You have access!";
     }
 
-    @RequestMapping("/articles")
+    @RequestMapping("/article")
     public @ResponseBody List<Article> getAllArticles() {
         return articleRepository.findAll();
     }
 
-    @RequestMapping("/publications")
+    @RequestMapping(value = "/article/statuses", method = RequestMethod.GET)
+    public @ResponseBody List<ArticleStatus> getArticleStatuses(){
+        return articleStatusRepository.findAll();
+    }
+
+    @RequestMapping(value = "/article/statuscounts/{pubId}", method = RequestMethod.GET)
+    public @ResponseBody List<Integer> getStatusCountsByPubId(@PathVariable("pubId") Long pi){
+        return articleService.getStatusCountsByPubId(pi);
+    }
+
+    @RequestMapping(value = "/article/reviewstatuscounts/{pubId}", method = RequestMethod.GET)
+    public @ResponseBody List<Integer> getReviewStatusCountsByPubId(@PathVariable("pubId") Long pi){
+        return articleService.getReviewStatusCountsByPubId(pi);
+    }
+
+    @RequestMapping(value = "/article/reviewstatuses", method = RequestMethod.GET)
+    public @ResponseBody List<ArticleReview> getArticleReviewStatuses(){
+        return articleReviewRepository.findAll();
+    }
+
+
+    @RequestMapping(value = "/publication", method = RequestMethod.GET)
     public @ResponseBody List<Publication> getAllPublications(){
         return publicationRepository.findAllByOrderByReleaseDateDesc();
     }
 
-    @RequestMapping("/publications/active")
+    @RequestMapping(value = "/publication/{pubId}/articles", method = RequestMethod.GET)
+    public @ResponseBody List<Article> getArticlesInPublication(@PathVariable("pubId") Long pi){
+        return articleRepository.findByPublicationId(pi);
+    }
+
+    @RequestMapping(value = "/publication/active", method = RequestMethod.GET)
     public @ResponseBody Publication getActivePublication(){
         return publicationService.getActivePublication(new Date());
     }
 
+    @RequestMapping(value = "/publication/previous", method= RequestMethod.GET)
+    public @ResponseBody Publication getPreviousPublication(){
+        return publicationService.getPreviousPublication(new Date());
+    }
 
+    @RequestMapping(value = "/publication/active/articles", method = RequestMethod.GET)
+    public @ResponseBody List<Article> getArticlesInActivePublication(){
+        return articleRepository.findByPublicationId(publicationService.getActivePublication(new Date()).getId());
+    }
 
+    @RequestMapping(value = "/publication/layoutstatuscounts/{pubId}", method = RequestMethod.GET)
+    public @ResponseBody List<Integer> getLayoutStatusCountsByPubId(@PathVariable("pubId") Long pi){
+        return publicationService.getLayoutStatusCountByPublication(pi);
+    }
 
+    @RequestMapping(value = "/publication/layoutstatuses", method = RequestMethod.GET)
+    public @ResponseBody List<LayoutStatus> getLayoutStatuses(){
+        return layoutStatusRepository.findAll();
+    }
 
+    @RequestMapping(value = "/section", method = RequestMethod.GET)
+    public @ResponseBody List<Section> getAllSections(){
+        return sectionRepository.findAll();
+    }
 
 }

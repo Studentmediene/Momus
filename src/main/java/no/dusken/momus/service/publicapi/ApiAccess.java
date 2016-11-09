@@ -51,7 +51,7 @@ public class ApiAccess {
     public boolean authorizeRequest(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
 
-        //Allow preflight request to pass through
+        //Allow pre flight request to pass through
         if(Objects.equals(request.getMethod(), "OPTIONS")){
             return true;
         }

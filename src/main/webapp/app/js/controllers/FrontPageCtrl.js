@@ -191,19 +191,4 @@ angular.module('momusApp.controllers')
         function promptCondition() {
             return $scope.unedited.content != $scope.note.content;
         }
-
-        var httpTest = function(){
-            $.ajax({
-                type: "GET",
-                url: "http://localhost:8080/api/public/articles",
-                crossDomain: true,
-                beforeSend: function(xhr){
-                    xhr.setRequestHeader("Authorization", "Basic " + btoa("test:testesen"))
-                },
-                success: function(data, status){
-                    console.log(data);
-                }
-            })
-        };
-        httpTest();
     });

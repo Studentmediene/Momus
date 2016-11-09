@@ -77,14 +77,6 @@ angular.module('momusApp.services')
 
             getReviews: function () {
                 return $http.get('/api/article/reviews', {cache: true});
-            },
-
-            getPublicArticles: function() {
-                return $http({
-                    method: 'GET',
-                    url: 'http://localhost:8080/api/public/articles',
-                    headers: {"Authorization": "Basic " + btoa("test:testesen") }
-                    });
             }
         };
     });

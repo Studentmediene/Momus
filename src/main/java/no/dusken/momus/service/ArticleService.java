@@ -19,14 +19,11 @@ package no.dusken.momus.service;
 import com.google.api.services.drive.model.File;
 import no.dusken.momus.authentication.UserLoginService;
 import no.dusken.momus.exceptions.RestException;
-import no.dusken.momus.model.Article;
-import no.dusken.momus.model.ArticleRevision;
-import no.dusken.momus.model.Person;
+import no.dusken.momus.model.*;
 import no.dusken.momus.service.drive.GoogleDriveService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
-import no.dusken.momus.service.repository.ArticleRepository;
-import no.dusken.momus.service.repository.ArticleRevisionRepository;
+import no.dusken.momus.service.repository.*;
 import no.dusken.momus.service.search.ArticleQueryBuilder;
 import no.dusken.momus.service.search.ArticleSearchParams;
 import org.slf4j.Logger;
@@ -37,6 +34,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +49,12 @@ public class ArticleService {
 
     @Autowired
     ArticleRevisionRepository articleRevisionRepository;
+
+    @Autowired
+    ArticleReviewRepository articleReviewRepository;
+
+    @Autowired
+    ArticleStatusRepository articleStatusRepository;
 
     @Autowired
     IndesignGenerator indesignGenerator;
@@ -199,6 +203,24 @@ public class ArticleService {
     public IndesignExport exportArticle(Long id) {
         Article article = getArticleById(id);
         return indesignGenerator.generateFromArticle(article);
+    }
+
+    public List<Integer> getStatusCountsByPubId(Long pubId){
+        List<ArticleStatus> statuses = articleStatusRepository.findAll();
+        List<Integer> list = new ArrayList<Integer>();
+        for(long i = 1; i <= statuses.size(); i++){
+            list.add(articleRepository.countByStatusIdAndPublicationId(i, pubId));
+        }
+        return list;
+    }
+
+    public List<Integer> getReviewStatusCountsByPubId(Long pubId){
+        List<ArticleReview> statuses = articleReviewRepository.findAll();
+        List<Integer> list = new ArrayList<Integer>();
+        for(long i = 1; i <= statuses.size(); i++){
+            list.add(articleRepository.countByReviewIdAndPublicationId(i, pubId));
+        }
+        return list;
     }
 
     public ArticleRepository getArticleRepository() {

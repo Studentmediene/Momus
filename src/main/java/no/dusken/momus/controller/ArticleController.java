@@ -105,11 +105,11 @@ public class ArticleController {
     public @ResponseBody List<ArticleStatus> getAllArticleStatuses(){
         return articleStatusRepository.findAll();
     }
+
     @RequestMapping(value = "/sections", method = RequestMethod.GET)
     public @ResponseBody List<Section> getAllSections(){
         return sectionRepository.findAll();
     }
-
 
     @RequestMapping(value = "/metadata", method = RequestMethod.PUT)
     public @ResponseBody Article updateArticleMetadata(@RequestBody Article article){
@@ -120,7 +120,6 @@ public class ArticleController {
     public @ResponseBody Article updateArticleNote(@RequestBody Article article){
         return articleService.saveNote(article);
     }
-
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public @ResponseBody List<Article> getSearchData(@RequestBody ArticleSearchParams search) {
@@ -147,12 +146,7 @@ public class ArticleController {
 
     @RequestMapping(value = "/statuscount/{pubId}", method = RequestMethod.GET)
     public @ResponseBody List<Integer> getStatusCountsByPubId(@PathVariable("pubId") Long pi){
-        List<ArticleStatus> statuses = this.getAllArticleStatuses();
-        List<Integer> list = new ArrayList<Integer>();
-        for(int i = 1; i <= statuses.size(); i++){
-            list.add(this.getStatusCount(Long.valueOf(i), pi));
-        }
-        return list;
+        return articleService.getStatusCountsByPubId(pi);
     }
 
     @RequestMapping(value = "/reviewstatuscount/{pubId}/{statId}", method = RequestMethod.GET)
@@ -162,12 +156,7 @@ public class ArticleController {
 
     @RequestMapping(value = "/reviewstatuscount/{pubId}", method = RequestMethod.GET)
     public @ResponseBody List<Integer> getReviewStatusCountsByPubId(@PathVariable("pubId") Long pi){
-        List<ArticleReview> statuses = this.getAllReviewStatuses();
-        List<Integer> list = new ArrayList<Integer>();
-        for(int i = 1; i <= statuses.size(); i++){
-            list.add(this.getReviewStatusCount(Long.valueOf(i), pi));
-        }
-        return list;
+        return articleService.getReviewStatusCountsByPubId(pi);
     }
 
     @RequestMapping(method = RequestMethod.POST)

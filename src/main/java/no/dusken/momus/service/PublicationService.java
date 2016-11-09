@@ -146,6 +146,20 @@ public class PublicationService {
         return active;
     }
 
+    /**
+     *
+     * @return Returns the last publication that was released at the time of the date parameter
+     */
+    public Publication getPreviousPublication(Date date){
+        List<Publication> publications = publicationRepository.findAllByOrderByReleaseDateDesc();
+        for(Publication p : publications){
+            if(p.getReleaseDate().before(date)){
+                return p;
+            }
+        }
+        return publications.get(-1);
+    }
+
     private List<Article> sortArticles(List<Article> articles){
         articles = addSortField(articles);
         Collections.sort(articles);
