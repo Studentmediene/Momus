@@ -52,9 +52,9 @@ public class IndesignGenerator {
         replacements.put("\n", "");
 
         replacements.put("<br></", "</"); // ignore line breaks at end of tags
-        replacements.put("<br>", "<0x000A>"); // in-line line-breaks
-        replacements.put("–", "<0x2013>"); // m-dash?
-        replacements.put("—", "<0x2014>"); // m-dash
+        replacements.put("<br>", "\\u000A"); // in-line line-breaks
+        replacements.put("–", "\u2013"); // m-dash?
+        replacements.put("—", "\u2014"); // m-dash
 
         // change paragraphs and stuff to InDesign equivalent
         replacements.put("<h1>", "<ParaStyle:Tittel>");
@@ -182,7 +182,7 @@ public class IndesignGenerator {
             return;
         }
 
-        text = text.replaceAll("\n", "<0x000A>");
+        text = text.replaceAll("\n", "\\u000A");
 
         sb.append("<ParaStyle:Bildetekster>").append(text).append("\r\n");
     }
