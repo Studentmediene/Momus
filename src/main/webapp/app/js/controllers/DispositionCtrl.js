@@ -191,6 +191,10 @@ angular.module('momusApp.controllers')
             //    return c;
             //},
             helper: uiSortableMultiSelectionMethods.helper,
+            start: function(e, ui) {
+                $scope.dispTableLayout.tableLayout = "auto"; //To not break the table
+                $scope.$apply(); //Apply since this is jQuery stuff
+            },
             axis: 'y',
             handle: '.handle',
             stop: function(e, ui){
@@ -199,8 +203,7 @@ angular.module('momusApp.controllers')
                 PublicationService.updateMetadata($scope.publication);
                 $scope.updateDispSize(); //In order to put the tableLayout back to the correct value
             },
-            placeholder: "disp-placeholder",
-            'ui-selection-count':true
+            placeholder: "disp-placeholder"
         });
 
         $scope.showHelp = function(){

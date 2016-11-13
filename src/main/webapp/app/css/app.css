@@ -432,3 +432,7 @@ a.zeroclipboard-is-hover {
     cursor: pointer;
 }
 
+/* Styling for selected elements in disp */
+.ui-sortable-selected {
+    border-left:3px solid #F00;
+}
