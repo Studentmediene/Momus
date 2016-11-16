@@ -436,3 +436,7 @@ a.zeroclipboard-is-hover {
 .ui-sortable-selected {
     border-left:3px solid #F00;
 }
+
+.ui-sortable-helper {
+    opacity:0.9;
+}

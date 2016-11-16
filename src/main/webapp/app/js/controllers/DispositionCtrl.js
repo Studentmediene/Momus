@@ -183,17 +183,16 @@ angular.module('momusApp.controllers')
         };
 
         $scope.sortableOptions = uiSortableMultiSelectionMethods.extendOptions({
-            //helper: function(e, ui) {
-            //    var c = ui.clone();
-            //    c.addClass("disp-helper");
-            //    $scope.dispTableLayout.tableLayout = "auto"; //To not break the table
-            //    $scope.$apply(); //Apply since this is jQuery stuff
-            //    return c;
-            //},
             helper: uiSortableMultiSelectionMethods.helper,
             start: function(e, ui) {
                 $scope.dispTableLayout.tableLayout = "auto"; //To not break the table
                 $scope.$apply(); //Apply since this is jQuery stuff
+                var totalHeight = 0;
+                for(var i = 0; i< ui.helper[0].children.length;i++){
+                    var child = ui.helper[0].children[i];
+                    totalHeight += parseInt($window.getComputedStyle(child)['height'].replace("px", ""));
+                }
+                ui.placeholder[0].style.height = totalHeight +"px";
             },
             axis: 'y',
             handle: '.handle',
