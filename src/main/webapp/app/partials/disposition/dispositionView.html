@@ -89,7 +89,7 @@
                             <tr ng-repeat="article in page.articles">
                                 <!--Name-->
                                 <td ng-style="responsiveColumns['name']" style="word-wrap: break-word;">
-                                    <a href="#/artikler/{{article.id}}">{{article.name}}</a>
+                                    <a href="#/artikler/{{article.id}}">{{article.name}}</a> <span tooltip="Antall tegn">({{article.content_length}})</span>
                                 </td>
                                 <!--Section-->
                                 <td class="section" style="background: {{article.section.color}}">{{article.section.name}}</td>
