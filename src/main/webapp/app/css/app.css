@@ -306,6 +306,10 @@ a.zeroclipboard-is-hover {
     border-spacing: 0;
 }
 
+.pageTable > tbody > tr:not(:last-child) > td{
+    border-bottom:1px solid #aaa !important;
+}
+
 @media (min-width: 992px) {
     .pageArticleTable, .pageTable{
         table-layout: fixed;
