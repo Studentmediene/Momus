@@ -61,6 +61,7 @@
                     <th class="button">Ads</th>
                     <th class="button"></th>
                     <th class="button"></th>
+                    <th class="button"></th>
                 </tr>
                 </thead>
                 <tr ng-show="loading > 0" style="text-align: center">
@@ -166,6 +167,14 @@
                             <i class="fa fa-file fa-lg"
                                ng-class="{'text-danger' : !page.advertisement, 'text-success' : page.advertisement }"
                                tooltip="Siden inneholder {{!page.advertisement ? 'ikke ' : ''}} reklame">
+                            </i>
+                            </span>
+                    </td>
+                    <td class="button">
+                        <span style="cursor: pointer" ng-click="page.done = !page.done; savePage();">
+                            <i class="fa fa-check fa-lg"
+                               ng-class="{'text-danger' : !page.done, 'text-success' : page.done }"
+                               tooltip="Siden inneholder {{!page.done ? 'ikke ' : ''}} reklame">
                             </i>
                             </span>
                     </td>

@@ -863,4 +863,10 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         <update tableName="section"><column name="color">#CCCCCC</column><where>id=9</where></update>
 
     </changeSet>
+
+    <changeSet id="27" author="Eivind">
+        <addColumn tableName="page">
+            <column name="done" type="BOOLEAN"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
