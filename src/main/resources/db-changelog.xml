@@ -863,4 +863,12 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         <update tableName="section"><column name="color">#CCCCCC</column><where>id=9</where></update>
 
     </changeSet>
+
+    <changeSet id="27" author="Christoffer">
+        <update tableName="section">
+            <column name="name">Forskning og forbruker</column>
+            <column name="deleted" valueBoolean="false" />
+            <where>id=5</where>
+        </update>
+    </changeSet>
 </databaseChangeLog>
