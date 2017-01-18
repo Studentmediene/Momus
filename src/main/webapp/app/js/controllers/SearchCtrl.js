@@ -44,10 +44,11 @@ angular.module('momusApp.controllers')
             if (updateSearchParametersFromUrl()) { // If the URL contained a search
                 search();
             } else if ($scope.publications.length > 0) { // default search on the newest publication
-                $scope.search.publication = PublicationService.getActive($scope.publications).id;
-                $location.search('publication', $scope.search.publication).replace();
-
-                search();
+                PublicationService.getActive().success(function(data){
+                    $scope.search.publication = data.id;
+                    $location.search('publication', $scope.search.publication).replace();
+                    search();
+                });
             }
         });
 
