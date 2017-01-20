@@ -95,6 +95,8 @@
     <!--</div>-->
     <div class="row">
         <div class="col-md-8">
+
+            <!--Table: Last articles assigned to user-->
             <div id="last-articles" class="panel panel-info">
                 <div class="panel-heading">
                     <h1 class="panel-title">
@@ -143,7 +145,7 @@
                                 </ul>
                             </td>
                             <td style="background-color:{{article.status.color}};">{{article.status.name}}</td>
-                            <td>{{article.section.name}}</td>
+                            <td style="background: {{article.section.color}}">{{article.section.name}}</td>
                             <td>{{article.publication.name}}</td>
                         </tr>
                         </tbody>
@@ -152,6 +154,7 @@
 
             </div>
 
+            <!--Table: Last viewed articles-->
             <div id="last-viewed" class="panel panel-info">
                 <div class="panel-heading" >
                     <h1 class="panel-title">
@@ -194,18 +197,16 @@
                                     <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.full_name}}</span></li>
                                 </ul>
                             </td>
-                            <td style="background-color: {{article.status.color}};">
-                                {{article.status.name}}
-                            </td>
-                            <td>
-                                {{article.section.name}}
-                            </td>
+                            <td style="background-color: {{article.status.color}};">{{article.status.name}}</td>
+                            <td style="background: {{article.section.color}}">{{article.section.name}}</td>
                             <td>{{article.publication.name}}</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+
+            <!--Table: Last articles from favorite section-->
             <div class="panel panel-info">
                 <div class="panel-heading clearfix">
                     <div class="pull-right">
@@ -226,13 +227,13 @@
                             <th style="width:5%">Tegn</th>
                             <th style="width:25%;">Journalister</th>
                             <th style="width:15%">Status</th>
-                            <th style="width:13%">Redaksjon</th>
+                            <th style="width:13%">Type</th>
                             <th style="width:15%">Utgave</th>
                         </tr>
                         </thead>
                         <tbody>
 
-                        <tr ng-if="loadingRecent">
+                        <tr ng-if="loadingFavorites">
                             <td colspan="10" style="text-align: center;">
                                 <i class="fa fa-4x fa-spinner fa-spin"></i>
                             </td>
@@ -257,12 +258,8 @@
                                     <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.full_name}}</span></li>
                                 </ul>
                             </td>
-                            <td style="background-color: {{article.status.color}};">
-                                {{article.status.name}}
-                            </td>
-                            <td>
-                                {{article.section.name}}
-                            </td>
+                            <td style="background-color: {{article.status.color}};">{{article.status.name}}</td>
+                            <td>{{article.type.name}}</td>
                             <td>{{article.publication.name}}</td>
                         </tr>
                         </tbody>
@@ -271,6 +268,8 @@
             </div>
         </div>
         <div class="col-md-4">
+
+            <!--Tips-->
             <div class="panel panel-info">
                 <div class="panel-heading">
                     <h1 class="panel-title"><i class="fa fa-question-circle"></i> Tilfeldig tips
@@ -284,6 +283,8 @@
                 </div>
                 <div class="panel-body" ng-bind-html="tip | trustHtml"></div>
             </div>
+
+            <!--News-->
             <div class="panel panel-info">
                 <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-bullhorn"></i> Nyheter</h1></div>
                 <div class="panel-body" style="height:300px; overflow-y: auto">
@@ -308,7 +309,7 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
         </div>
-    </div>
     </div>
 </div>

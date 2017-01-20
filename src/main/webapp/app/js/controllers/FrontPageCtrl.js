@@ -93,6 +93,7 @@ angular.module('momusApp.controllers')
             }
         });
 
+        $scope.loadingFavorites = true;
         FavouriteSectionService.getFavouriteSection().success(function(data){
             $scope.favouriteSection = data;
             searchForArticlesFromFavoriteSection();
@@ -109,6 +110,7 @@ angular.module('momusApp.controllers')
             if($scope.favouriteSection.section != null){
                 ArticleService.search({section: $scope.favouriteSection.section.id, page_size: 9}).success(function(articles){
                     $scope.favSectionArticles = articles;
+                    $scope.loadingFavorites = false;
                 });
             }
         };
