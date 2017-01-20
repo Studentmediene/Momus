@@ -127,8 +127,18 @@ a.zeroclipboard-is-hover {
     background-color: #3071a9;
 }
 
-/* Login form */
+/* Front page table column widths */
 
+.front-column-trash { width: 2%;  }
+.front-column-name {  width: 25%;  }
+.front-column-symbols {  width: 5%;  }
+.front-column-journalists {  width: 25%;  }
+.front-column-status {  width: 15%;  }
+.front-column-section {  width: 13%;  }
+.front-column-publication {  width: 15%;  }
+
+
+/* Login form */
 
 #loginForm {
     position: fixed;

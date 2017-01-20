@@ -136,6 +136,7 @@ angular.module('momusApp.controllers')
             });
         });
 
+        //TODO: Refactor when we get back to the cake diagrams
         $scope.isEmptyArray = function(array){
             if(array == undefined || array == null || array == "" || array == []) {
                 return true;

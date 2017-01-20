@@ -112,13 +112,13 @@
                     <table class="table table-hover table-striped table-condensed" style="font-size: 85%;">
                         <thead>
                         <tr>
-                            <th style="width:2%"></th>
-                            <th style="width:25%">Navn</th>
-                            <th style="width:5%">Tegn</th>
-                            <th style="width:25%">Journalister</th>
-                            <th style="width:15%">Status</th>
-                            <th style="width:13%">Redaksjon</th>
-                            <th style="width:15%">Utgave</th>
+                            <th class="front-column-trash"></th>
+                            <th class="front-column-name">Navn</th>
+                            <th class="front-column-symbols">Tegn</th>
+                            <th class="front-column-journalists">Journalister</th>
+                            <th class="front-column-status">Status</th>
+                            <th class="front-column-section">Redaksjon</th>
+                            <th class="front-column-publication">Utgave</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -136,7 +136,7 @@
                         </tr>
 
                         <tr ng-repeat="article in myArticles | limitTo:10">
-                            <td><i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i></td>
+                            <td></td>
                             <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
                             <td>{{article.content_length}}</td>
                             <td>
@@ -166,13 +166,13 @@
                     <table class="table table-striped table-condensed table-responsive" style="font-size:85%">
                         <thead>
                         <tr>
-                            <th style="width:2%"></th>
-                            <th style="width:25%">Navn</th>
-                            <th style="width:5%">Tegn</th>
-                            <th style="width:25%;">Journalister</th>
-                            <th style="width:15%">Status</th>
-                            <th style="width:13%">Redaksjon</th>
-                            <th style="width:15%">Utgave</th>
+                            <th class="front-column-trash"></th>
+                            <th class="front-column-name">Navn</th>
+                            <th class="front-column-symbols">Tegn</th>
+                            <th class="front-column-journalists">Journalister</th>
+                            <th class="front-column-status">Status</th>
+                            <th class="front-column-section">Redaksjon</th>
+                            <th class="front-column-publication">Utgave</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -222,13 +222,13 @@
                     <table class="table table-striped table-condensed table-responsive" style="font-size:85%">
                         <thead>
                         <tr>
-                            <th style="width:2%"></th>
-                            <th style="width:25%">Navn</th>
-                            <th style="width:5%">Tegn</th>
-                            <th style="width:25%;">Journalister</th>
-                            <th style="width:15%">Status</th>
-                            <th style="width:13%">Type</th>
-                            <th style="width:15%">Utgave</th>
+                            <th class="front-column-trash"></th>
+                            <th class="front-column-name">Navn</th>
+                            <th class="front-column-symbols">Tegn</th>
+                            <th class="front-column-journalists">Journalister</th>
+                            <th class="front-column-status">Status</th>
+                            <th class="front-column-section">Type</th>
+                            <th class="front-column-publication">Utgave</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -250,7 +250,7 @@
                             </td>
                         </tr>
                         <tr ng-repeat="article in favSectionArticles">
-                            <td><i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i></td>
+                            <td></td>
                             <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
                             <td>{{article.content_length}}</td>
                             <td>
