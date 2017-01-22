@@ -25,6 +25,7 @@ angular.module('momusApp.controllers')
         $scope.defaultSearch = {
             free: '',
             status: '',
+            review: '',
             persons: [],
             section: '',
             publication: '',
