@@ -60,6 +60,10 @@ angular.module('momusApp.controllers')
             $scope.statuses = data;
         });
 
+        ArticleService.getReviews().success(function (data) {
+            $scope.reviews = data;
+        });
+
 
         $scope.$on('$routeUpdate', function () { // when going back/forward
             updateSearchParametersFromUrl();

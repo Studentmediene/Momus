@@ -52,6 +52,9 @@ public class ArticleServiceTest extends AbstractTestRunner {
     ArticleRevisionRepository articleRevisionRepository;
 
     @Autowired
+    ArticleReviewRepository articleReviewRepository;
+
+    @Autowired
     ArticleService articleService;
 
     private Article article1;
@@ -81,6 +84,10 @@ public class ArticleServiceTest extends AbstractTestRunner {
         ArticleStatus articleStatus1 = new ArticleStatus();
         articleStatus1.setName("Skrives");
         articleStatusRepository.save(articleStatus1);
+
+        ArticleReview articleReview1 = new ArticleReview();
+        articleReview1.setName("Ukjent");
+        articleReviewRepository.save(articleReview1);
 
         // TODO: add section as well
 
@@ -140,6 +147,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article4.setStatus(articleStatus1);
         articleService.createRawContent(article4);
         article4 = articleRepository.save(article4);
+        article4.setReview(articleReview1);
     }
 
 
@@ -295,6 +303,18 @@ public class ArticleServiceTest extends AbstractTestRunner {
     @Test
     public void testSearchingForStatus() {
         ArticleSearchParams params = new ArticleSearchParams("",article4.getStatus().getId(),Collections.<Long>emptyList(),null,null,null, 0, 0, false);
+
+        List<Article> expected = new ArrayList<>();
+        expected.add(article4);
+
+        List<Article> articles = articleService.searchForArticles(params);
+
+        assertEquals(expected, articles);
+    }
+
+    @Test
+    public void testSearchingForReview() {
+        ArticleSearchParams params = new ArticleSearchParams("",null,Collections.<Long>emptyList(),article4.getReview().getId(),null,null, 0, 0, false);
 
         List<Article> expected = new ArrayList<>();
         expected.add(article4);

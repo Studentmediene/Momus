@@ -137,6 +137,21 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
     }
 
     @Test
+    public void testReviewQuery() {
+        ArticleSearchParams params = new ArticleSearchParams("", null, emptyList, 1L,null, null, 0, 0, false);
+
+        ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
+
+        String expectedQuery = builder.getBaseQuery() + " where a.review.id = :reviewid and a.archived = :arch " + builder.getBaseOrder();
+        Map<String, Object> expectedMap = new HashMap<>();
+        expectedMap.put("reviewid", 1L);
+        expectedMap.put("arch", false);
+
+        assertEquals(expectedQuery.toLowerCase(), builder.getFullQuery().toLowerCase());
+        assertEquals(expectedMap, builder.getQueryParams());
+    }
+
+    @Test
     public void testCombinedQuery() {
         ArticleSearchParams params = new ArticleSearchParams("kombinert test", 1L, Arrays.asList(594L, 1337L),null, 31337L, 2L, 0, 0, true);
 
