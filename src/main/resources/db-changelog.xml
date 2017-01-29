@@ -864,7 +864,13 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
 
     </changeSet>
 
-    <changeSet id="27" author="Christoffer">
+    <changeSet id="27" author="Eivind">
+        <addColumn tableName="page">
+            <column name="done" type="BOOLEAN"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="28" author="Christoffer">
         <update tableName="section">
             <column name="name">Forskning og forbruker</column>
             <column name="deleted" valueBoolean="false" />

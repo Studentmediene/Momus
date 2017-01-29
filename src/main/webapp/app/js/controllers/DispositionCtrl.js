@@ -24,6 +24,8 @@ angular.module('momusApp.controllers')
         $scope.numNewPages = 1;
         $scope.editPhotoStatus = false;
 
+        $scope.pageDoneColor = "#DDFFCB";
+
         // Widths of columns in the disp. Uses ngStyle to sync widths across pages (which are separate tables)
         // The widths that are here will be used when the app is loaded on a screen so small the disp gets a scroll bar
         $scope.responsiveColumns = {
@@ -213,7 +215,7 @@ angular.module('momusApp.controllers')
 
         $scope.updateDispSize = function(){
             var constantArticleSize = 320;
-            var constantDispSize = constantArticleSize + 190;
+            var constantDispSize = constantArticleSize + 220;
             var dispWidth = angular.element(document.getElementById("disposition")).context.clientWidth;
 
             //Must divide rest of width between journalists, photographers, photo status and comment.

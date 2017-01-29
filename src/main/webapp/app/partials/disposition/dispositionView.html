@@ -61,13 +61,14 @@
                     <th class="button">Ads</th>
                     <th class="button"></th>
                     <th class="button"></th>
+                    <th class="button"></th>
                 </tr>
                 </thead>
                 <tr ng-show="loading > 0" style="text-align: center">
                     <td colspan="7"><i class="fa fa-spinner fa-spin fa-4x"></i></td>
                 </tr>
                 <tbody ng-model="publication.pages" ui-sortable="sortableOptions">
-                <tr ng-repeat="page in publication.pages" style="background: white;" ui-sortable-selectable>
+                <tr ng-repeat="page in publication.pages" style="{{'background: ' + (page.done ? pageDoneColor : '#FFF')}}" ui-sortable-selectable>
                     <!--Page number-->
                     <td style="text-align: center; cursor: move;" class="handle pagenum">{{page.page_nr}}</td>
                     <!--Articles (edit mode)-->
@@ -86,7 +87,7 @@
                     <!--Articles (view mode)-->
                     <td style="padding:0;margin:0;" ng-hide="editPage">
                         <table class="table pageArticleTable" style="padding: 0;margin:0;" ng-style="dispTableLayout">
-                            <tr ng-repeat="article in page.articles">
+                            <tr ng-repeat="article in page.articles" style="{{'background-color:' + (page.done ? pageDoneColor : '#FFF')}}">
                                 <!--Name-->
                                 <td ng-style="responsiveColumns['name']" style="word-wrap: break-word;">
                                     <a href="#/artikler/{{article.id}}">{{article.name}}</a> <span tooltip="Antall tegn">({{article.content_length}})</span>
@@ -183,6 +184,15 @@
                             <i class="fa fa-file fa-lg"
                                ng-class="{'text-danger' : !page.advertisement, 'text-success' : page.advertisement }"
                                tooltip="Siden inneholder {{!page.advertisement ? 'ikke ' : ''}} reklame">
+                            </i>
+                            </span>
+                    </td>
+                    <!--Done-->
+                    <td class="button">
+                        <span style="cursor: pointer" ng-click="page.done = !page.done; savePage();">
+                            <i class="fa fa-check fa-lg"
+                               ng-class="{'text-danger' : !page.done, 'text-success' : page.done }"
+                               tooltip="Siden er {{!page.done ? 'ikke ' : ''}} helt ferdig">
                             </i>
                             </span>
                     </td>
