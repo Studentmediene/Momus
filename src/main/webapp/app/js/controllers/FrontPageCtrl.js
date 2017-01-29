@@ -17,8 +17,33 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, PublicationService, $location, $document) {
-        $scope.noteRules = noteParserRules;
+    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, PublicationService, $location) {
+
+        $scope.randomTip = function() {
+            $scope.tip = TipAndNewsService.getRandomTip();
+        };
+
+        $scope.randomTip();
+
+        $scope.news = TipAndNewsService.getNews();
+
+
+        // Latest user articles
+
+        $scope.loadingArticles = true;
+        PersonService.getCurrentUser().success(function(user){
+            $scope.user = user;
+            ArticleService.search({persons: [user.id], page_size: 9}).success(function (articles) {
+                $scope.loadingArticles = false;
+                $scope.myArticles = articles;
+                if($scope.myArticles.length <= 0 ){
+                    $scope.noArticles = true;
+                }
+            });
+        });
+
+
+        // Recently viewed articles
 
         $scope.recentArticles = ViewArticleService.getRecentViews();
         if($scope.recentArticles){
@@ -28,6 +53,61 @@ angular.module('momusApp.controllers')
                 $scope.recentArticleInfo = data;
             });
         }
+
+        $scope.orderRecentArticles = function(item){
+            return $scope.recentArticles.indexOf(item.id.toString());
+        };
+
+
+        // Favorite section
+
+        $scope.loadingFavorites = true;
+        FavouriteSectionService.getFavouriteSection().success(function(data){
+            $scope.favouriteSection = data;
+            searchForArticlesFromFavoriteSection();
+        });
+
+        var searchForArticlesFromFavoriteSection = function(){
+            if($scope.favouriteSection.section != null){
+                ArticleService.search({section: $scope.favouriteSection.section.id, page_size: 9}).success(function(articles){
+                    $scope.favSectionArticles = articles;
+                    $scope.loadingFavorites = false;
+                });
+            }
+        };
+
+        $scope.updateFavouriteSection = function(){
+            FavouriteSectionService.updateFavouriteSection($scope.favouriteSection).success(function (data){
+                $scope.favouriteSection = data;
+                searchForArticlesFromFavoriteSection();
+            });
+        };
+
+        ArticleService.getSections().success(function (data) {
+            $scope.sections = data;
+        });
+
+
+        // Note
+
+        $scope.noteRules = noteParserRules;
+
+        NoteService.getNote().success(function (data) {
+            $scope.note = data;
+            $scope.unedited = angular.copy(data);
+        });
+
+        $scope.saveNote = function () {
+            $scope.savingNote = true;
+            NoteService.updateNote($scope.note).success(function (data) {
+                $scope.note = data;
+                $scope.unedited = angular.copy(data);
+                $scope.savingNote = false;
+            });
+        };
+
+
+        // Cake diagrams TODO (Could some of this be put into a service?)
 
         PublicationService.getActive().success(function(data){
             $scope.publication = data;
@@ -40,27 +120,6 @@ angular.module('momusApp.controllers')
             PublicationService.getReviewStatusCounts($scope.publication.id).success(function(data){
                 $scope.publication.reviewStatusCounts = data;
             });
-        });
-
-        $scope.orderRecentArticles = function(item){
-            return $scope.recentArticles.indexOf(item.id.toString());
-        };
-
-        $scope.randomTip = function() {
-            $scope.tip = TipAndNewsService.getRandomTip();
-        };
-
-        $scope.randomTip();
-
-        $scope.news = TipAndNewsService.getNews();
-
-        NoteService.getNote().success(function (data) {
-            $scope.note = data;
-            $scope.unedited = angular.copy(data);
-        });
-
-        ArticleService.getSections().success(function (data) {
-            $scope.sections = data;
         });
 
         ArticleService.getStatuses().success(function (data){
@@ -93,47 +152,7 @@ angular.module('momusApp.controllers')
             }
         });
 
-        FavouriteSectionService.getFavouriteSection().success(function(data){
-            $scope.favouriteSection = data;
-            searchForArticlesFromFavoriteSection();
-        });
-
-        $scope.updateFavouriteSection = function(){
-            FavouriteSectionService.updateFavouriteSection($scope.favouriteSection).success(function (data){
-                $scope.favouriteSection = data;
-                searchForArticlesFromFavoriteSection();
-            });
-        };
-
-        var searchForArticlesFromFavoriteSection = function(){
-            if($scope.favouriteSection.section != null){
-                ArticleService.search({section: $scope.favouriteSection.section.id, page_size: 9}).success(function(articles){
-                    $scope.favSectionArticles = articles;
-                });
-            }
-        };
-
-        $scope.saveNote = function () {
-            $scope.savingNote = true;
-            NoteService.updateNote($scope.note).success(function (data) {
-                $scope.note = data;
-                $scope.unedited = angular.copy(data);
-                $scope.savingNote = false;
-            });
-        };
-
-        $scope.loadingArticles = true;
-        PersonService.getCurrentUser().success(function(user){
-            $scope.user = user;
-            ArticleService.search({persons: [user.id], page_size: 9}).success(function (articles) {
-                $scope.loadingArticles = false;
-                $scope.myArticles = articles;
-                if($scope.myArticles.length <= 0 ){
-                    $scope.noArticles = true;
-                }
-            });
-        });
-
+        //TODO: Refactor when we get back to the cake diagrams
         $scope.isEmptyArray = function(array){
             if(array == undefined || array == null || array == "" || array == []) {
                 return true;
@@ -170,6 +189,7 @@ angular.module('momusApp.controllers')
             $scope.$apply();
         };
 
+
         $scope.$on('$locationChangeStart', function (event) {
             if (promptCondition()) {
                 if (!confirm("Er du sikker på at du vil forlate siden? Det finnes ulagrede endringer.")) {
@@ -184,11 +204,11 @@ angular.module('momusApp.controllers')
             }
         };
 
-        $scope.$on('$destroy', function() {
-            window.onbeforeunload = undefined;
-        });
-
         function promptCondition() {
             return $scope.unedited.content != $scope.note.content;
         }
+
+        $scope.$on('$destroy', function() {
+            window.onbeforeunload = undefined;
+        });
     });

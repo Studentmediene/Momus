@@ -53,10 +53,10 @@
                                 <td class="status">Status</td>
                                 <td class="review">Korrektur</td>
                                 <td ng-style="responsiveColumns['pstatus']">Fotostatus</td>
+                                <td ng-style="responsiveColumns['comment']">Kommentar</td>
                             </tr>
                         </table>
                     </th>
-                    <th ng-style="responsiveColumns['comment']">Kommentar</th>
                     <th class="layout">Layout</th>
                     <th class="button">Ads</th>
                     <th class="button"></th>
@@ -131,13 +131,13 @@
                                     </select>
                                 </td>
                                 <!--Photostatus-->
-                                <td class="fotostatus" ng-style="responsiveColumns['pstatus']" ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && article.photo_status != '' && article.photo_status != undefined">
+                                <td ng-style="responsiveColumns['pstatus']" ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && article.photo_status != '' && article.photo_status != undefined">
                                     <textwrapper length="15" text="article.photo_status"></textwrapper>
                                 </td>
-                                <td ng-style="responsiveColumns['pstatus']" class="fotostatus editPSPlaceholder" ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && (article.photo_status == '' || article.photo_status == undefined)">
+                                <td ng-style="responsiveColumns['pstatus']" class="editPSPlaceholder" ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && (article.photo_status == '' || article.photo_status == undefined)">
                                     [Rediger]
                                 </td>
-                                <td ng-style="responsiveColumns['pstatus']" class="fotostatus" ng-show="editPhotoStatus">
+                                <td ng-style="responsiveColumns['pstatus']" ng-show="editPhotoStatus">
                                     <div class="input-group" style="position: absolute; box-shadow: #000000">
                                         <textarea class="form-control input-sm" ng-model="article.photo_status" style="width: 200px; resize: vertical"></textarea>
                                         <span class="">
@@ -147,14 +147,31 @@
                                             </span>
                                     </div>
                                 </td>
+                                <td ng-style="responsiveColumns['comment']" ng-click="editComment = true" ng-show="!editComment && article.comment != '' && article.comment != undefined">
+                                    <textwrapper length="15" text="article.comment"></textwrapper>
+                                </td>
+                                <td ng-style="responsiveColumns['comment']" class="editPSPlaceholder" ng-click="editComment = true" ng-show="!editComment && (article.comment == '' || article.comment == undefined)">
+                                    [Rediger]
+                                </td>
+                                <td ng-style="responsiveColumns['comment']" ng-show="editComment">
+                                    <div class="input-group" style="position: absolute; box-shadow: #000000">
+                                        <textarea class="form-control input-sm" ng-model="article.comment" style="width: 200px; resize: vertical"></textarea>
+                                        <span class="">
+                                                <button class="btn btn-sm" ng-click="saveArticle(article);editComment=false">
+                                                    <i class="fa fa-save"></i>
+                                                </button>
+                                            </span>
+                                    </div>
+                                </td>
                             </tr>
                         </table>
                     </td>
-                    <!--Comment-->
+                    <!--Comment
                     <td ng-style="responsiveColumns['comment']">
                         <div ng-hide="editPage" style="word-wrap: break-word;">{{page.note}}</div>
                         <textarea ng-show="editPage" style="position: absolute; width: 200px; resize: vertical; max-height:200px; height: 80px;" ng-model="page.note"></textarea>
                     </td>
+                    -->
                     <!--Layout status-->
                     <td class="layout" style="{{'background:' + page.layout_status.color}}">
                         <select style="background:rgba(255,255,255,0.5);" ng-model="page.layout_status" ng-change="savePage()"

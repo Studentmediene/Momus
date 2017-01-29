@@ -869,4 +869,12 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="done" type="BOOLEAN"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="28" author="Christoffer">
+        <update tableName="section">
+            <column name="name">Forskning og forbruker</column>
+            <column name="deleted" valueBoolean="false" />
+            <where>id=5</where>
+        </update>
+    </changeSet>
 </databaseChangeLog>

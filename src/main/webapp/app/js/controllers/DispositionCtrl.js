@@ -64,7 +64,6 @@ angular.module('momusApp.controllers')
                 $scope.publication.articles = data;
                 $scope.loading--;
                 PublicationService.getPages(pubId).success(function (data){
-                    console.log(data);
                     $scope.publication.pages = data;
                     PublicationService.linkPagesToArticles($scope.publication.pages, $scope.publication.articles);
                     $scope.loading--;
