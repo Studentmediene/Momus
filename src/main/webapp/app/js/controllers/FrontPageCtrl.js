@@ -73,6 +73,8 @@ angular.module('momusApp.controllers')
                     $scope.favSectionArticles = articles;
                     $scope.loadingFavorites = false;
                 });
+            }else{
+                $scope.loadingFavorites = false;
             }
         };
 
