@@ -877,4 +877,12 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <where>id=5</where>
         </update>
     </changeSet>
+    <changeSet id="29" author="Eivind">
+        <dropColumn tableName="page" columnName="done"/>
+    </changeSet>
+    <changeSet id="30" author="Eivind">
+        <addColumn tableName="page">
+            <column name="done" type="BOOLEAN" valueBoolean="false" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
