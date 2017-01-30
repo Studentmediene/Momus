@@ -206,6 +206,21 @@
                         </div>
                         <div class="form-group metaline">
                             <label class="col-sm-4 control-label important-field">
+                                Korrektur
+                            </label>
+
+                            <div class="col-sm-8" ng-hide="metaEditMode">
+                                <p class="form-control-static">
+                                    {{ article.review.name }}
+                                </p>
+                            </div>
+                            <div class="col-sm-8" ng-show="metaEditMode">
+                                <select class="form-control input-sm" ng-model="metaEditing.review"
+                                        ng-options="s.name for s in reviewOptions track by s.id "></select>
+                            </div>
+                        </div>
+                        <div class="form-group metaline">
+                            <label class="col-sm-4 control-label important-field">
                                 Sitatsjekk
                             </label>
 
