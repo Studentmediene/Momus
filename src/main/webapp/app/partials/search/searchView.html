@@ -26,7 +26,7 @@
         <form role="form" ng-submit="searchFunc()">
             <div class="row">
                 <!-- Free search -->
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <label class="sr-only" for="searchFree">
                         Fritekst
                     </label>
@@ -35,7 +35,7 @@
                 </div>
 
                 <!-- Status search -->
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <label class="sr-only" for="searchStatus">
                         Status
                     </label>
@@ -50,7 +50,7 @@
                 </div>
 
                 <!-- Section search -->
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <label class="sr-only" for="searchSection">
                         Redaksjon
                     </label>
@@ -64,8 +64,23 @@
                     </select>
                 </div>
 
+                <!-- Review search -->
+                <div class="col-sm-3">
+                    <label class="sr-only" for="searchReview">
+                        Korrektur
+                    </label>
+                    <select class="form-control" id="searchReview" ui-select2 ng-model="search.review">
+                        <option value="">
+                            Alle korrekturstatuser
+                        </option>
+                        <option ng-repeat="review in reviews" value="{{ review.id }}">
+                            {{ review.name }}
+                        </option>
+                    </select>
+                </div>
+
                 <!-- Publication search -->
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <label class="sr-only" for="searchPublication">
                         Utgave
                     </label>
@@ -81,7 +96,7 @@
                 </div>
 
                 <!-- Person search -->
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <label class="sr-only" for="searchPersons">
                         Personer
                     </label>
@@ -93,7 +108,9 @@
                     </select>
                 </div>
 
-                <div class="col-sm-4">
+                <div class="col-sm-3"></div>
+
+                <div class="col-sm-3">
                     <button type="submit" id="searchSubmit" class="btn btn-primary btn-sm form-control">
                         Søk
                     </button>

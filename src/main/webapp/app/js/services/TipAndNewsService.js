@@ -57,6 +57,10 @@ angular.module('momusApp.services')
 
         // Date: year, month - 1, day
         var news = [{
+            date: new Date(2017, 0, 30),
+            title: "Fikser og forbedringer",
+            text: "<p>I denne oppdateringen er det gjort små forbedringer mange steder. Disposisjonen viser nå artikkelkommentarer. Noen gamle bugs har blitt fikset."
+        },{
             date: new Date(2016, 9, 26),
             title: "Return of the Front Page",
             text: "<p>Forsiden er tilbake! Den viser mye av det samme som før, men også noen kakediagram for nåværende status av den gjeldende utgaven. Det går også an å velge hvilken side man vil bruke som forside ved å gå inn på <a href='#/info'>Info/nyheter-siden.</a> Disposisjonen har også fått et lite ansiktsløft.</p>"

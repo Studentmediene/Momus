@@ -24,6 +24,7 @@ public class ArticleSearchParams {
     private String free;
     private Long status;
     private List<Long> persons;
+    private Long review;
     private Long section;
     private Long publication;
 
@@ -36,10 +37,11 @@ public class ArticleSearchParams {
         // empty
     }
 
-    public ArticleSearchParams(String free, Long status, List<Long> persons, Long section, Long publication, int pageSize, int pageNumber, boolean archived) {
+    public ArticleSearchParams(String free, Long status, List<Long> persons, Long review, Long section, Long publication, int pageSize, int pageNumber, boolean archived) {
         this.free = free;
         this.status = status;
         this.persons = persons;
+        this.review = review;
         this.section = section;
         this.publication = publication;
 
@@ -72,6 +74,7 @@ public class ArticleSearchParams {
         return status;
     }
 
+    public Long getReview() {return review;}
 
     public Long getSection() {
         return section;
@@ -84,6 +87,7 @@ public class ArticleSearchParams {
         return "ArticleSearchParams{" +
                 "free='" + free + '\'' +
                 ", status='" + status + '\'' +
+                ", review='" + review + '\'' +
                 ", persons=" + persons +
                 ", section='" + section + '\'' +
                 ", publication='" + publication + '\'' +

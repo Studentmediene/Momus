@@ -17,12 +17,14 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest, $route, $window) {
+    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest, $route, $window,uiSortableMultiSelectionMethods) {
         $scope.pubId = $routeParams.id;
         $scope.loading = 5;
         $scope.newPageAt = 0;
         $scope.numNewPages = 1;
         $scope.editPhotoStatus = false;
+
+        $scope.pageDoneColor = "#DDFFCB";
 
         // Widths of columns in the disp. Uses ngStyle to sync widths across pages (which are separate tables)
         // The widths that are here will be used when the app is loaded on a screen so small the disp gets a scroll bar
@@ -182,13 +184,17 @@ angular.module('momusApp.controllers')
             ArticleService.updateMetadata(article);
         };
 
-        $scope.sortableOptions = {
-            helper: function(e, ui) {
-                var c = ui.clone();
-                c.addClass("disp-helper");
+        $scope.sortableOptions = uiSortableMultiSelectionMethods.extendOptions({
+            helper: uiSortableMultiSelectionMethods.helper,
+            start: function(e, ui) {
                 $scope.dispTableLayout.tableLayout = "auto"; //To not break the table
                 $scope.$apply(); //Apply since this is jQuery stuff
-                return c;
+                var totalHeight = 0;
+                for(var i = 0; i< ui.helper[0].children.length;i++){
+                    var child = ui.helper[0].children[i];
+                    totalHeight += parseInt($window.getComputedStyle(child)['height'].replace("px", ""));
+                }
+                ui.placeholder[0].style.height = totalHeight +"px";
             },
             axis: 'y',
             handle: '.handle',
@@ -199,7 +205,7 @@ angular.module('momusApp.controllers')
                 $scope.updateDispSize(); //In order to put the tableLayout back to the correct value
             },
             placeholder: "disp-placeholder"
-        };
+        });
 
         $scope.showHelp = function(){
             $templateRequest('partials/templates/help/dispHelp.html').then(function(template){
@@ -209,7 +215,7 @@ angular.module('momusApp.controllers')
 
         $scope.updateDispSize = function(){
             var constantArticleSize = 320;
-            var constantDispSize = constantArticleSize + 190;
+            var constantDispSize = constantArticleSize + 220;
             var dispWidth = angular.element(document.getElementById("disposition")).context.clientWidth;
 
             //Must divide rest of width between journalists, photographers, photo status and comment.

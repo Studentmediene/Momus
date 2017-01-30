@@ -31,6 +31,7 @@ public class Page {
     private String note;
     private boolean advertisement;
     private boolean web;
+    private boolean done;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Publication publication;
@@ -78,6 +79,14 @@ public class Page {
 
     public void setWeb(boolean web) {this.web = web;}
     public boolean isWeb() { return this.web; }
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
+    }
 
     public Set<Article> getArticles() {
         return articles;
