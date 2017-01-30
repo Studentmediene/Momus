@@ -25,6 +25,7 @@ angular.module('momusApp.controllers')
         $scope.defaultSearch = {
             free: '',
             status: '',
+            review: '',
             persons: [],
             section: '',
             publication: '',
@@ -58,6 +59,10 @@ angular.module('momusApp.controllers')
 
         ArticleService.getStatuses().success(function (data) {
             $scope.statuses = data;
+        });
+
+        ArticleService.getReviews().success(function (data) {
+            $scope.reviews = data;
         });
 
 

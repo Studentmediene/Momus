@@ -40,6 +40,11 @@ angular.module('momusApp.controllers')
             $scope.statuses = data;
         });
 
+        ArticleService.getReviews().success(function(data){
+            $scope.reviewOptions = data;
+            $scope.loading--;
+        });
+
         ArticleService.getSections().success(function (data) {
             $scope.sections = data;
         });

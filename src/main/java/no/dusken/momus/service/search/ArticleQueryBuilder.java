@@ -73,6 +73,10 @@ public class ArticleQueryBuilder {
             conditions.add("a.publication.id = :pubid");
             queryParams.put("pubid", search.getPublication());
         }
+        if (search.getReview() != null) {
+            conditions.add("a.review.id = :reviewid");
+            queryParams.put("reviewid", search.getReview());
+        }
 
         conditions.add("a.archived = :arch");
         queryParams.put("arch", search.getArchived());
