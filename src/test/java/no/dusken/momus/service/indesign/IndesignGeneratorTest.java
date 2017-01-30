@@ -74,7 +74,7 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
                 "<ParaStyle:Ingress>Ingress\r\n" +
                 "<ParaStyle:Mellomtittel>En mellomtittel\r\n" +
                 "<ParaStyle:Brødtekst>Et avsnitt\r\n" +
-                "<ParaStyle:Brødtekst>Enda et avsnitt og dette avsnittet har<0x000A>linjeskift midt inni!\r\n" +
+                "<ParaStyle:Brødtekst>Enda et avsnitt og dette avsnittet har\\u000Alinjeskift midt inni!\r\n" +
                 "<ParaStyle:Mellomtittel>En mellomtittel\r\n" +
                 "<ParaStyle:Brødtekst>Med et nytt avsnitt\r\n" +
                 "<bnListType:Bullet>Med en punktliste\r\n" +
@@ -138,7 +138,7 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
                 "<ParaStyle:Byline>Foto: Einar Einarsen\r\n" +
                 "<ParaStyle:Tittel>Min kule tittel!\r\n" +
                 "<ParaStyle:Brødtekst>Ingen bildetekst her, plz!\r\n" +
-                "<ParaStyle:Bildetekster>Bilde 1 er tatt av Kåre, viser John.<0x000A>Bilde med grønn fyr viser en grønn fyr.\r\n";
+                "<ParaStyle:Bildetekster>Bilde 1 er tatt av Kåre, viser John.\\u000ABilde med grønn fyr viser en grønn fyr.\r\n";
 
         IndesignExport result = indesignGenerator.generateFromArticle(article);
 

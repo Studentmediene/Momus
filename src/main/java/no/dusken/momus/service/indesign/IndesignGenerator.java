@@ -182,7 +182,7 @@ public class IndesignGenerator {
             return;
         }
 
-        text = text.replaceAll("\n", "\\u000A");
+        text = text.replaceAll("\n", "\\\\u000A");
 
         sb.append("<ParaStyle:Bildetekster>").append(text).append("\r\n");
     }
