@@ -52,7 +52,7 @@ public class IndesignGenerator {
         replacements.put("\n", "");
 
         replacements.put("<br></", "</"); // ignore line breaks at end of tags
-        replacements.put("<br>", "\\u000A"); // in-line line-breaks
+        replacements.put("<br>", "\r\n"); // in-line line-breaks
         replacements.put("–", "\u2013"); // m-dash?
         replacements.put("—", "\u2014"); // m-dash
 
@@ -182,7 +182,7 @@ public class IndesignGenerator {
             return;
         }
 
-        text = text.replaceAll("\n", "\\\\u000A");
+        text = text.replaceAll("\n", "\r\n");
 
         sb.append("<ParaStyle:Bildetekster>").append(text).append("\r\n");
     }
