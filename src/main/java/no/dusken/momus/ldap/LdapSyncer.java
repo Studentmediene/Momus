@@ -22,17 +22,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.ldap.control.PagedResultsDirContextProcessor;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.support.DefaultTlsDirContextAuthenticationStrategy;
+import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
+import javax.naming.directory.SearchControls;
+import javax.naming.ldap.LdapContext;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class LdapSyncer {
@@ -41,6 +48,9 @@ public class LdapSyncer {
 
     @Autowired
     LdapTemplate ldapTemplate;
+
+    @Autowired
+    LdapContextSource contextSource;
 
     @Autowired
     PersonRepository personRepository;
@@ -54,6 +64,15 @@ public class LdapSyncer {
      */
     @PostConstruct
     public void startUp() {
+        DefaultTlsDirContextAuthenticationStrategy tls = new DefaultTlsDirContextAuthenticationStrategy();
+        tls.setHostnameVerifier(new HostnameVerifier() {
+            @Override
+            public boolean verify(String s, SSLSession sslSession) {
+                return true;
+            }
+        });
+        contextSource.setAuthenticationStrategy(tls);
+
         sync();
     }
 
@@ -73,6 +92,7 @@ public class LdapSyncer {
 
         List<Person> allPersons = getAllPersonsFromLdap();
         personRepository.save(allPersons);
+        personRepository.flush();
 
 
         long end = System.currentTimeMillis();
@@ -81,41 +101,77 @@ public class LdapSyncer {
     }
 
     private List<Person> getAllPersonsFromLdap() {
-        final int[] activeCount = {0};
+        int pageSize = 1000;
 
-        List<Person> persons = ldapTemplate.search("ou=Users", "(objectClass=person)", new AttributesMapper<Person>() {
-            @Override
-            public Person mapFromAttributes(Attributes attributes) throws NamingException {
-                Long id = Long.valueOf((String) attributes.get("uidNumber").get());
-                String firstName = attributes.get("givenName") != null ? (String) attributes.get("givenName").get() : "";
-                String fullName = attributes.get("cn") != null ? (String) attributes.get("cn").get() : "";
-                String userName = attributes.get("uid") != null ? (String) attributes.get("uid").get() : "";
-                String email = attributes.get("mail") != null ? (String) attributes.get("mail").get() : "";
-                String telephoneNumber = attributes.get("telephoneNumber") != null ? (String) attributes.get("telephoneNumber").get() : "";
-                boolean isActive = false;
+        // Get all active persons, with base ou=Brukere
+        List<Person> activePersons = searchForPersons("ou=Brukere", "(objectClass=person)", pageSize);
 
-                Attribute memberOf1 = attributes.get("memberOf");
-                if (memberOf1 != null) {
-                    NamingEnumeration<?> memberOf = memberOf1.getAll();
-                    while (memberOf.hasMore()) {
-                        String group = (String) memberOf.next();
-                        if (group.equalsIgnoreCase("cn=Active,ou=Sections,ou=Org,ou=Groups,dc=studentmediene,dc=no")) {
-                            isActive = true;
-                            activeCount[0]++;
-                            break;
-                        }
-                    }
+        //Get all inactive persons, with base ou=DeepDarkVoidOfHell. funny huh
+        List<Person> inactivePersons = searchForPersons("ou=DeepDarkVoidOfHell", "(objectClass=person)", pageSize);
 
+        logger.info("Number of users from LDAP: {}", activePersons.size()+inactivePersons.size());
+        logger.info("Number of active: {}", activePersons.size());
+
+        activePersons.addAll(inactivePersons);
+
+        logger.info("Number adding: {}", activePersons.size());
+
+        return activePersons;
+    }
+
+    private List<Person> searchForPersons(String base, String filter, int pageSize){
+        PagedResultsDirContextProcessor processor = new PagedResultsDirContextProcessor(pageSize, null);
+        List<Person> persons = new ArrayList<>();
+        do{
+            List<Person> result = ldapTemplate.search(base, filter, null, new AttributesMapper<Person>() {
+                @Override
+                public Person mapFromAttributes(Attributes attributes) throws NamingException {
+                    return LdapSyncer.this.mapFromAttributes(attributes);
                 }
-
-
-                return new Person(id, userName, firstName, fullName, email, telephoneNumber, isActive);
-            }
-        });
-        logger.info("Number of users from LDAP: {}", persons.size());
-        logger.info("Number of active: {}", activeCount[0]);
+            }, processor);
+            persons.addAll(result);
+            processor = new PagedResultsDirContextProcessor(pageSize, processor.getCookie());
+        }while (processor.getCookie().getCookie() != null);
 
         return persons;
+    }
+
+    private Person mapFromAttributes(Attributes attributes) throws NamingException {
+        String firstName = attributes.get("givenName") != null ? (String) attributes.get("givenName").get() : "";
+        String lastName = attributes.get("sn") != null ? (String) attributes.get("sn").get() : "";
+        String fullName = firstName + " " + lastName;
+        String userName = attributes.get("sAMAccountName") != null ? (String) attributes.get("sAMAccountName").get() : "";
+        String email = attributes.get("mail") != null ? (String) attributes.get("mail").get() : "";
+        String telephoneNumber = attributes.get("telephoneNumber") != null ? (String) attributes.get("telephoneNumber").get() : "";
+
+        Long id = findId(userName);
+
+        System.out.println(userName);
+
+        return new Person(id, userName, firstName, fullName, email, telephoneNumber, true);
+    }
+
+    /**
+     * This method allocates a ID to the given username if it hasn't one already
+     * @param userName The username gotten from ldap
+     * @return The id granted to the username
+     */
+    private Long findId(String userName){
+        Person person = personRepository.findByUsername(userName);
+        if(person == null){ // New person
+            Person other;
+            Long id = personRepository.findFirstByOrderByIdDesc().get(0).getId();
+            System.out.println(id);
+            do {
+                id++;
+                other = personRepository.findOne(id);
+            }while (other != null);
+            logger.info("Found id for {}: {}", userName, id);
+
+            return id;
+        }
+
+        return person.getId();
     }
 
 }

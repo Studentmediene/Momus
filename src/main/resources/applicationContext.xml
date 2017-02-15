@@ -144,14 +144,18 @@
 
 
     <!-- LDAP -->
-    <ldap:context-source
-            url="${ldap.url}"
-            base="${ldap.base}"
-            username="${ldap.username}"
-            password="${ldap.password}"
-            />
 
-    <ldap:ldap-template id="ldapTemplate"/>
+    <bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource">
+        <property name="url" value="${ldap.url}"/>
+        <property name="base" value="${ldap.base}"/>
+        <property name="userDn" value="${ldap.username}"/>
+        <property name="password" value="${ldap.password}"/>
+        <property name="pooled" value="false"/>
+    </bean>
+
+    <bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
+        <property name="contextSource" ref="contextSource"/>
+    </bean>
 
 
 

@@ -885,4 +885,40 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="done" type="BOOLEAN" valueBoolean="false" defaultValueBoolean="false"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="31" author="Eivind">
+        <createTable tableName="usernamemap">
+            <column name="username" type="VARCHAR(255)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+    <!--Update some dev data to reflect database migration as we are no longer using a staging server but the real thing-->
+    <changeSet id="32" author="Eivind" context="dev">
+        <delete tableName="article_journalist"/>
+        <delete tableName="article_photographer"/>
+        <delete tableName="note"/>
+
+        <insert tableName="person"><column name="id">11713</column></insert>
+        <insert tableName="person"><column name="id">11716</column></insert>
+
+        <delete tableName="person">
+            <where>id=1006</where>
+        </delete>
+        <delete tableName="person">
+            <where>id=1003</where>
+        </delete>
+        <delete tableName="person">
+            <where>id=2411</where>
+        </delete>
+
+        <insert tableName="article_journalist"><column name="article_id">1</column><column name="journalists_id">11713</column></insert>
+        <insert tableName="article_journalist"><column name="article_id">2</column><column name="journalists_id">11713</column></insert>
+        <insert tableName="article_photographer"><column name="article_id">2</column><column name="photographers_id">11716</column></insert>
+        <insert tableName="article_journalist"><column name="article_id">3</column><column name="journalists_id">11716</column></insert>
+        <insert tableName="article_photographer"><column name="article_id">3</column><column name="photographers_id">11713</column></insert>
+
+    </changeSet>
 </databaseChangeLog>
