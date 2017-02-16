@@ -175,9 +175,15 @@ public class LdapSyncer {
      * @return The id granted to the username
      */
     private Long findId(Long id, String userName){
+
+        // Use id from ldap if one was found
+        if(id != -1){
+            return id;
+        }
+
         Person person = personRepository.findByUsername(userName);
         if(person == null){ // New person
-            id = id == -1 ? lastId : id;
+            id = lastId;
             while(personRepository.findOne(id) != null){
                 id++;
             }
