@@ -46,6 +46,10 @@ public class LdapSyncer {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
+    private final int PAGE_SIZE = 1000;
+
+    private Long lastId;
+
     @Autowired
     LdapTemplate ldapTemplate;
 
@@ -90,9 +94,7 @@ public class LdapSyncer {
 
         long start = System.currentTimeMillis();
 
-        List<Person> allPersons = getAllPersonsFromLdap();
-        personRepository.save(allPersons);
-        personRepository.flush();
+        syncAllPersonsFromLdap();
 
 
         long end = System.currentTimeMillis();
@@ -100,33 +102,48 @@ public class LdapSyncer {
         logger.info("Done syncing from LDAP, it took {}ms", timeUsed);
     }
 
-    private List<Person> getAllPersonsFromLdap() {
-        int pageSize = 1000;
+    /**
+     * Syncs the person database with LDAP
+     */
+    private void syncAllPersonsFromLdap() {
+
+        lastId = 0L; // Contains the last granted id, for faster look-up for next free id
 
         // Get all active persons, with base ou=Brukere
-        List<Person> activePersons = searchForPersons("ou=Brukere", "(objectClass=person)", pageSize);
+        List<Person> activePersons = searchForPersons("ou=Brukere", "(objectClass=person)", PAGE_SIZE, true);
 
         //Get all inactive persons, with base ou=DeepDarkVoidOfHell. funny huh
-        List<Person> inactivePersons = searchForPersons("ou=DeepDarkVoidOfHell", "(objectClass=person)", pageSize);
+        //List<Person> inactivePersons = searchForPersons("ou=DeepDarkVoidOfHell", "(objectClass=person)", PAGE_SIZE, false);
 
-        logger.info("Number of users from LDAP: {}", activePersons.size()+inactivePersons.size());
+        logger.info("Number of users from LDAP: {}", activePersons.size());
         logger.info("Number of active: {}", activePersons.size());
-
-        activePersons.addAll(inactivePersons);
-
-        logger.info("Number adding: {}", activePersons.size());
-
-        return activePersons;
     }
 
-    private List<Person> searchForPersons(String base, String filter, int pageSize){
+    /**
+     *
+     * @param base The base for the ldap search
+     * @param filter Ldap search filter
+     * @param pageSize The page size of each search. Must use since ad only allows 1000 results at a time
+     * @param active Whether or not the user should be flagged as active
+     * @return A list of the found persons
+     */
+    private List<Person> searchForPersons(String base, String filter, int pageSize, final boolean active){
+        // For pagination
         PagedResultsDirContextProcessor processor = new PagedResultsDirContextProcessor(pageSize, null);
+
+        // For searching through subgroups
+        SearchControls ctrl = new SearchControls();
+        ctrl.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
         List<Person> persons = new ArrayList<>();
+
         do{
-            List<Person> result = ldapTemplate.search(base, filter, null, new AttributesMapper<Person>() {
+            List<Person> result = ldapTemplate.search(base, filter, ctrl, new AttributesMapper<Person>() {
                 @Override
                 public Person mapFromAttributes(Attributes attributes) throws NamingException {
-                    return LdapSyncer.this.mapFromAttributes(attributes);
+                    Person person = LdapSyncer.this.mapFromAttributes(attributes, active);
+                    personRepository.saveAndFlush(person); //Must save to db per person because of how we give ids
+                    return person;
                 }
             }, processor);
             persons.addAll(result);
@@ -136,7 +153,7 @@ public class LdapSyncer {
         return persons;
     }
 
-    private Person mapFromAttributes(Attributes attributes) throws NamingException {
+    private Person mapFromAttributes(Attributes attributes, boolean active) throws NamingException {
         String firstName = attributes.get("givenName") != null ? (String) attributes.get("givenName").get() : "";
         String lastName = attributes.get("sn") != null ? (String) attributes.get("sn").get() : "";
         String fullName = firstName + " " + lastName;
@@ -144,29 +161,27 @@ public class LdapSyncer {
         String email = attributes.get("mail") != null ? (String) attributes.get("mail").get() : "";
         String telephoneNumber = attributes.get("telephoneNumber") != null ? (String) attributes.get("telephoneNumber").get() : "";
 
-        Long id = findId(userName);
+        Long id = attributes.get("uidNumber") != null ? Long.valueOf((String) attributes.get("uidNumber").get()) : -1L;
 
-        System.out.println(userName);
+        id = findId(id, userName);
 
-        return new Person(id, userName, firstName, fullName, email, telephoneNumber, true);
+        return new Person(id, userName, firstName, fullName, email, telephoneNumber, active);
     }
 
     /**
-     * This method allocates a ID to the given username if it hasn't one already
-     * @param userName The username gotten from ldap
+     * This method allocates an ID to the given username if it hasn't one already
+     * @param id The id from ldap (should be -1 if none was found)
+     * @param userName The username from ldap
      * @return The id granted to the username
      */
-    private Long findId(String userName){
+    private Long findId(Long id, String userName){
         Person person = personRepository.findByUsername(userName);
         if(person == null){ // New person
-            Person other;
-            Long id = personRepository.findFirstByOrderByIdDesc().get(0).getId();
-            System.out.println(id);
-            do {
+            id = id == -1 ? lastId : id;
+            while(personRepository.findOne(id) != null){
                 id++;
-                other = personRepository.findOne(id);
-            }while (other != null);
-            logger.info("Found id for {}: {}", userName, id);
+            }
+            lastId = id;
 
             return id;
         }
