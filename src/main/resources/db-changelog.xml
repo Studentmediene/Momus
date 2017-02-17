@@ -904,21 +904,18 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         <insert tableName="person"><column name="id">11713</column></insert>
         <insert tableName="person"><column name="id">11716</column></insert>
 
-        <delete tableName="person">
-            <where>id=1006</where>
-        </delete>
-        <delete tableName="person">
-            <where>id=1003</where>
-        </delete>
-        <delete tableName="person">
-            <where>id=2411</where>
-        </delete>
-
         <insert tableName="article_journalist"><column name="article_id">1</column><column name="journalists_id">11713</column></insert>
         <insert tableName="article_journalist"><column name="article_id">2</column><column name="journalists_id">11713</column></insert>
         <insert tableName="article_photographer"><column name="article_id">2</column><column name="photographers_id">11716</column></insert>
         <insert tableName="article_journalist"><column name="article_id">3</column><column name="journalists_id">11716</column></insert>
         <insert tableName="article_photographer"><column name="article_id">3</column><column name="photographers_id">11713</column></insert>
 
+    </changeSet>
+
+    <!--Set all existing users to inactive so old ldap users are set as such (migrated users are updated anyways)-->
+    <changeSet id="33" author="Eivind">
+        <update tableName="person">
+            <column name="active">false</column>
+        </update>
     </changeSet>
 </databaseChangeLog>
