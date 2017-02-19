@@ -897,8 +897,18 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
 
     <!--Update some dev data to reflect database migration as we are no longer using a staging server but the real thing-->
     <changeSet id="32" author="Eivind" context="dev">
-        <delete tableName="article_journalist"/>
-        <delete tableName="article_photographer"/>
+        <delete tableName="article_journalist">
+            <where>journalists_id=1006</where>
+        </delete>
+        <delete tableName="article_journalist">
+            <where>journalists_id=2411</where>
+        </delete>
+        <delete tableName="article_photographer">
+            <where>photographers_id=1003</where>
+        </delete>
+        <delete tableName="article_photographer">
+            <where>photographers_id=1006</where>
+        </delete>
         <delete tableName="note"/>
 
         <insert tableName="person"><column name="id">11713</column></insert>
