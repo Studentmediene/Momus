@@ -34,33 +34,24 @@ public class UserLoginServiceImpl implements UserLoginService {
     @Autowired
     private PersonRepository personRepository;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
     @Override
     public Long getId() {
-        return getLoggedInUserDetails().getId();
+        return 11713L;
     }
 
     @Override
     public String getUsername() {
-        return getLoggedInUserDetails().getUsername();
+        return "eivigri";
     }
 
     @Override
     public boolean login(LdapUserPwd token) {
-        Authentication authentication = authenticationManager.authenticate(new Token(token));
-        boolean isAuthenticated = isAuthenticated(authentication);
-        if (isAuthenticated) {
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        }
-
-        return isAuthenticated;
+        return true;
     }
 
     @Override
     public void logout() {
-        SecurityContextHolder.getContext().setAuthentication(null);
+
     }
 
     @Override
@@ -69,15 +60,11 @@ public class UserLoginServiceImpl implements UserLoginService {
     }
 
     public AuthUserDetails getLoggedInUserDetails() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (isAuthenticated(authentication)) {
-            return (AuthUserDetails) authentication.getPrincipal();
-        }
         return null;
     }
 
     private boolean isAuthenticated(Authentication authentication) {
-        return authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
+        return true;
     }
 
 }

@@ -37,26 +37,26 @@
 
     <!-- Entry point is what Spring should do when not authorized, we use our simple
      one instead of the default (the default implementation asks for username&password, while we use token) -->
-    <security:http entry-point-ref="tokenEntryPoint" use-expressions="true">
+    <!--<security:http entry-point-ref="tokenEntryPoint" use-expressions="true">-->
 
-        <!-- Default rules for patterns. More fine-grained can (and should) be specified in the controllers -->
-        <security:intercept-url pattern="/api/auth/**" access="permitAll" />
-        <security:intercept-url pattern="/api/dev/**" access="${devmode}" /> <!-- Some utility stuff when developing -->
-        <security:intercept-url pattern="/**" access="isFullyAuthenticated()" />
+        <!--&lt;!&ndash; Default rules for patterns. More fine-grained can (and should) be specified in the controllers &ndash;&gt;-->
+        <!--<security:intercept-url pattern="/api/auth/**" access="permitAll" />-->
+        <!--<security:intercept-url pattern="/api/dev/**" access="${devmode}" /> &lt;!&ndash; Some utility stuff when developing &ndash;&gt;-->
+        <!--<security:intercept-url pattern="/**" access="isFullyAuthenticated()" />-->
 
-    </security:http>
+    <!--</security:http>-->
 
-    <!-- Activate @PreAuthorize annotation for more fine-grained method access -->
-    <security:global-method-security pre-post-annotations="enabled">
-    </security:global-method-security>
+    <!--&lt;!&ndash; Activate @PreAuthorize annotation for more fine-grained method access &ndash;&gt;-->
+    <!--<security:global-method-security pre-post-annotations="enabled">-->
+    <!--</security:global-method-security>-->
 
-    <!-- Add our token stuff to the manager -->
-    <security:authentication-manager alias="authenticationManager">
-        <security:authentication-provider ref="tokenAuthenticationProvider" />
-    </security:authentication-manager>
+    <!--&lt;!&ndash; Add our token stuff to the manager &ndash;&gt;-->
+    <!--<security:authentication-manager alias="authenticationManager">-->
+        <!--<security:authentication-provider ref="tokenAuthenticationProvider" />-->
+    <!--</security:authentication-manager>-->
 
-    <!-- Instantiation of our auth classes -->
-    <bean id="tokenEntryPoint" class="no.dusken.momus.authentication.TokenEntryPoint"/>
+    <!--&lt;!&ndash; Instantiation of our auth classes &ndash;&gt;-->
+    <!--<bean id="tokenEntryPoint" class="no.dusken.momus.authentication.TokenEntryPoint"/>-->
 
 
     <!-- ############################
@@ -94,7 +94,9 @@
 
 
     <!-- In which packages to look for ou services, controllers etc. -->
-    <context:component-scan base-package="no.dusken.momus" />
+    <context:component-scan base-package="no.dusken.momus">
+        <!--<context:exclude-filter type="regex" expression="no\.dusken\.momus\.authentication\..*"/>-->
+    </context:component-scan>
 
     <!-- Enable @Autowired etc. -->
     <context:annotation-config />
