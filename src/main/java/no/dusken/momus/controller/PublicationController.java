@@ -31,10 +31,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequestMapping("/publication")
@@ -121,13 +118,13 @@ public class PublicationController {
     }
 
     @RequestMapping(value = "/statuscount/{pubId}", method = RequestMethod.GET)
-    public @ResponseBody List<Integer> getStatusCountsByPubId(@PathVariable("pubId") Long pi){
+    public @ResponseBody Map<Long,Integer> getStatusCountsByPubId(@PathVariable("pubId") Long pi){
         List<LayoutStatus> statuses = this.getLayoutStatuses();
-        List<Integer> list = new ArrayList<Integer>();
+        Map map = new HashMap<Long, Integer>();
         for(int i = 0; i < statuses.size(); i++){
-            list.add(this.getStatusCount(Long.valueOf(i), pi));
+            map.put(statuses.get(i).getId(),this.getStatusCount(statuses.get(i).getId(), pi));
         }
-        return list;
+        return map;
     }
 
 }
