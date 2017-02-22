@@ -14,20 +14,20 @@
 
     <!-- Secured pages with SAML as entry point -->
     <security:http entry-point-ref="samlEntryPoint" use-expressions="false">
-        <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
         <security:custom-filter before="FIRST" ref="metadataGeneratorFilter"/>
+        <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
         <security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
     </security:http>
 
     <!-- Filters for processing of SAML messages -->
     <bean id="samlFilter" class="org.springframework.security.web.FilterChainProxy">
         <security:filter-chain-map request-matcher="ant">
-            <!--<security:filter-chain pattern="/saml/login/**" filters="samlEntryPoint"/>-->
+            <security:filter-chain pattern="/saml/login/**" filters="samlEntryPoint"/>
             <!--<security:filter-chain pattern="/saml/logout/**" filters="samlLogoutFilter"/>-->
             <security:filter-chain pattern="/saml/metadata/**" filters="metadataDisplayFilter"/>
-            <!--<security:filter-chain pattern="/saml/SSO/**" filters="samlWebSSOProcessingFilter"/>-->
+            <security:filter-chain pattern="/saml/SSO/**" filters="samlWebSSOProcessingFilter"/>
             <!--<security:filter-chain pattern="/saml/SSOHoK/**" filters="samlWebSSOHoKProcessingFilter"/>-->
-            <!--<security:filter-chain pattern="/saml/SingleLogout/**" filters="samlLogoutProcessingFilter"/>-->
+            <security:filter-chain pattern="/saml/SingleLogout/**" filters="samlLogoutProcessingFilter"/>
         </security:filter-chain-map>
     </bean>
 
@@ -82,6 +82,8 @@
                         <property name="idpDiscoveryEnabled" value="false"/>
                     </bean>
                 </property>
+                <property name="entityBaseURL" value="http://localhost:8080"/>
+                <property name="bindingsSSO"><list><value>redirect</value></list></property>
             </bean>
         </constructor-arg>
     </bean>
