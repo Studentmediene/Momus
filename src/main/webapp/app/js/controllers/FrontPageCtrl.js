@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, PublicationService, $location) {
+    .controller('FrontPageCtrl', function ($scope, $q, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, PublicationService, $location) {
 
         $scope.randomTip = function() {
             $scope.tip = TipAndNewsService.getRandomTip();
@@ -113,46 +113,48 @@ angular.module('momusApp.controllers')
 
         PublicationService.getActive().success(function(data){
             $scope.publication = data;
-            PublicationService.getStatusCounts($scope.publication.id).success(function(data){
-                $scope.publication.statusCounts = data;
+
+            $q.all([ PublicationService.getStatusCounts($scope.publication.id),ArticleService.getStatuses()]).then(function(data){
+                $scope.statusCounts = data[0].data;
+                $scope.statuses = data[1].data;
+                var statusArrays = graphInfoToArray($scope.statusCounts, $scope.statuses);
+                $scope.statusLabels = statusArrays[0];
+                $scope.statusChartColors = statusArrays[1];
+                $scope.publication.statusCounts = statusArrays[2];
             });
-            PublicationService.getLayoutStatusCounts($scope.publication.id).success(function(data){
-                $scope.publication.layoutStatusCounts = data;
+
+            $q.all([ PublicationService.getLayoutStatusCounts($scope.publication.id),PublicationService.getLayoutStatuses()]).then(function(data){
+                $scope.layoutStatusCounts = data[0].data;
+                $scope.layoutStatuses = data[1].data;
+                var statusArrays = graphInfoToArray($scope.layoutStatusCounts, $scope.layoutStatuses);
+                $scope.layoutStatusLabels = statusArrays[0];
+                $scope.layoutStatusChartColors = statusArrays[1];
+                $scope.publication.layoutStatusCounts = statusArrays[2];
             });
-            PublicationService.getReviewStatusCounts($scope.publication.id).success(function(data){
-                $scope.publication.reviewStatusCounts = data;
+
+            $q.all([ PublicationService.getReviewStatusCounts($scope.publication.id),ArticleService.getReviews()]).then(function(data){
+                $scope.reviewStatusCounts = data[0].data;
+                $scope.reviewStatuses = data[1].data;
+                var statusArrays = graphInfoToArray($scope.reviewStatusCounts, $scope.reviewStatuses);
+                $scope.reviewStatusLabels = statusArrays[0];
+                $scope.reviewStatusChartColors = statusArrays[1];
+                $scope.publication.reviewStatusCounts = statusArrays[2];
+                console.log(statusArrays);
             });
         });
 
-        ArticleService.getStatuses().success(function (data){
-            $scope.statuses = data;
-            $scope.statusLabels = [];
-            $scope.statusChartColors = [];
-            for(var i = 0; i < $scope.statuses.length; i++){
-                $scope.statusLabels.push($scope.statuses[i].name);
-                $scope.statusChartColors.push($scope.statuses[i].color);
+        function graphInfoToArray(counts, statuses){
+            var temp_counts = [];
+            var temp_labels = [];
+            var temp_colors = [];
+            for(var i = 0; i < statuses.length; i++){
+                temp_labels.push(statuses[i].name);
+                temp_colors.push(statuses[i].color);
+                temp_counts.push(counts[statuses[i].id]);
             }
-        });
+            return [temp_labels, temp_colors, temp_counts];
 
-        ArticleService.getReviews().success(function (data){
-            $scope.reviews = data;
-            $scope.reviewLabels = [];
-            $scope.reviewChartColors = [];
-            for(var i = 0; i < $scope.reviews.length; i++){
-                $scope.reviewLabels.push($scope.reviews[i].name);
-                $scope.reviewChartColors.push($scope.reviews[i].color);
-            }
-        });
-
-        PublicationService.getLayoutStatuses().success(function(data){
-            $scope.layoutStatuses = data;
-            $scope.layoutStatusLabels = [];
-            $scope.layoutStatusChartColors = [];
-            for(var i = 0; i < $scope.layoutStatuses.length; i++){
-                $scope.layoutStatusLabels.push($scope.layoutStatuses[i].name);
-                $scope.layoutStatusChartColors.push($scope.layoutStatuses[i].color);
-            }
-        });
+        }
 
         //TODO: Refactor when we get back to the cake diagrams
         $scope.isEmptyArray = function(array){
@@ -160,8 +162,8 @@ angular.module('momusApp.controllers')
                 return true;
             } else {
                 var maxFound = 0;
-                for(var i = 0; i < array.length;i++){
-                    if(array[i] > maxFound){
+                for(var i = 0; i < Object.keys(array).length;i++){
+                    if(array[Object.keys(array)[i]] > maxFound){
                         maxFound = array[i];
                     }
                 }
