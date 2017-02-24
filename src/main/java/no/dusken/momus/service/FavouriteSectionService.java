@@ -16,8 +16,10 @@
 
 package no.dusken.momus.service;
 
+import no.dusken.momus.authentication.SamlUserDetailsService;
 import no.dusken.momus.authentication.UserLoginService;
 import no.dusken.momus.model.FavouriteSection;
+import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.FavouriteSectionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,23 +35,25 @@ public class FavouriteSectionService {
     FavouriteSectionRepository favouriteSectionRepository;
 
     @Autowired
-    private UserLoginService userLoginService;
+    SamlUserDetailsService userDetailsService;
+
 
     public FavouriteSection getFavouriteSectionForLoggedInUser(){
-        Long userId = userLoginService.getId();
-        FavouriteSection favouriteSection = favouriteSectionRepository.findByOwner_Id(userId);
+        Person p = userDetailsService.getLoggedInPerson();
+        FavouriteSection favouriteSection = favouriteSectionRepository.findByOwner_Id(p.getId());
 
         return favouriteSection;
     }
 
     public FavouriteSection saveFavouriteSectionForLoggedInUser(FavouriteSection favouriteSection){
-        Long userId = userLoginService.getId();
+        Person p = userDetailsService.getLoggedInPerson();
+        Long userId = p.getId();
         FavouriteSection existing = favouriteSectionRepository.findByOwner_Id(userId);
         if(existing == null){
             existing = favouriteSection;
-            existing.setOwner(userLoginService.getLoggedInUser());
+            existing.setOwner(p);
         }
-        existing.setOwner(userLoginService.getLoggedInUser());
+        existing.setOwner(p);
         existing.setSection(favouriteSection.getSection());
         logger.debug(existing.getId() + " " + existing.getSection());
 

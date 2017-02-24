@@ -139,6 +139,7 @@ angular.module('momusApp', [
     }]).
     config(['$httpProvider', function ($httpProvider) {
         $httpProvider.interceptors.push('HttpInterceptor');
+        $httpProvider.defaults.withCredentials = true;
     }]).
     /*config(function(ChartJsProvider){
         ChartJsProvider.setOptions({ responsive: false });

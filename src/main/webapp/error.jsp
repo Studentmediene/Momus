@@ -13,20 +13,11 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   --%>
-
-<%--
-  Created by IntelliJ IDEA.
-  User: egrimstad
-  Date: 19.02.17
-  Time: 21:03
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-</head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
 <body>
-ERROR
+<div>
+    Det skjedde noe feil! Prøv igjen, og hvis det fortsetter send e-post til <a href="mailto:momus@smitit.no">momus@smitit.no</a>
+</div>
 </body>
 </html>

@@ -19,55 +19,31 @@ package no.dusken.momus.authentication;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.saml.SAMLCredential;
+import org.springframework.security.saml.SAMLLogoutFilter;
+import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 import org.springframework.stereotype.Service;
 
-/**
- * Service for authentication and retrieval of logged in user to be used by other objects.
- */
 @Service
-public class UserLoginServiceImpl implements UserLoginService {
+public class SamlUserDetailsService implements SAMLUserDetailsService {
 
     @Autowired
-    private PersonRepository personRepository;
+    PersonRepository personRepository;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    SAMLLogoutFilter samlLogoutFilter;
 
     @Override
-    public Long getId() {
-        return 11713L;
+    public Object loadUserBySAML(SAMLCredential samlCredential) throws UsernameNotFoundException {
+        return personRepository.findByUsername(samlCredential.getAttributeAsString("sAMAccountName"));
     }
 
-    @Override
-    public String getUsername() {
-        return "eivigri";
+    public Person getLoggedInPerson(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return (Person) loadUserBySAML((SAMLCredential) auth.getCredentials());
     }
-
-    @Override
-    public boolean login(LdapUserPwd token) {
-        return true;
-    }
-
-    @Override
-    public void logout() {
-
-    }
-
-    @Override
-    public Person getLoggedInUser() {
-        return personRepository.findOne(getId());
-    }
-
-    public AuthUserDetails getLoggedInUserDetails() {
-        return null;
-    }
-
-    private boolean isAuthenticated(Authentication authentication) {
-        return true;
-    }
-
 }
