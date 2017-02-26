@@ -19,31 +19,26 @@ package no.dusken.momus.authentication;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.saml.SAMLCredential;
-import org.springframework.security.saml.SAMLLogoutFilter;
 import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
-import org.springframework.stereotype.Service;
 
-@Service
-public class SamlUserDetailsService implements SAMLUserDetailsService {
+/**
+ * A mock of the service that works when testing (since there is no "logged in user" then)
+ * Always returns id 1 as the logged in user
+ */
+public class UserDetailsServiceMock implements UserDetailsService {
 
     @Autowired
-    PersonRepository personRepository;
-
-    @Autowired
-    SAMLLogoutFilter samlLogoutFilter;
+    private PersonRepository personRepository;
 
     @Override
     public Object loadUserBySAML(SAMLCredential samlCredential) throws UsernameNotFoundException {
-        return personRepository.findByUsername(samlCredential.getAttributeAsString("sAMAccountName"));
+        return null;
     }
 
-    public Person getLoggedInPerson(){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return (Person) loadUserBySAML((SAMLCredential) auth.getCredentials());
+    @Override
+    public Person getLoggedInPerson() {
+        return personRepository.findOne(1L);
     }
 }

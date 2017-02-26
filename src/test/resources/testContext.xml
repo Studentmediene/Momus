@@ -22,9 +22,10 @@
 
     <!-- Load standard applicationContext -->
     <import resource="classpath:applicationContext.xml" />
+    <import resource="classpath:securityContext.xml" />
 
     <!-- Swap the userLoginService to a dummy one -->
-    <bean id="userLoginService" class="no.dusken.momus.authentication.UserLoginServiceMock" />
+    <bean id="userDetailsService" class="no.dusken.momus.authentication.UserDetailsServiceMock" />
 
 
     <!-- Override values in momus.properties with values from test.properties -->

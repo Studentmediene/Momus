@@ -17,7 +17,8 @@
 package no.dusken.momus.service;
 
 import com.google.api.services.drive.model.File;
-import no.dusken.momus.authentication.UserLoginService;
+import no.dusken.momus.authentication.UserDetailsService;
+import no.dusken.momus.authentication.UserDetailsServiceImpl;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleRevision;
@@ -47,28 +48,28 @@ public class ArticleService {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    ArticleRepository articleRepository;
+    private ArticleRepository articleRepository;
 
     @Autowired
-    ArticleRevisionRepository articleRevisionRepository;
+    private ArticleRevisionRepository articleRevisionRepository;
 
     @Autowired
-    IndesignGenerator indesignGenerator;
+    private IndesignGenerator indesignGenerator;
 
     @Autowired
-    UserLoginService userLoginService;
+    private UserDetailsService userDetailsService;
 
     @Autowired
-    GoogleDriveService googleDriveService;
+    private GoogleDriveService googleDriveService;
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
 
     public Article getArticleById(Long id) {
         Article article = articleRepository.findOne(id);
         if (article == null) {
-            logger.warn("Article with id {} not found, tried by user {}", id, userLoginService.getId());
+            logger.warn("Article with id {} not found, tried by user {}", id, userDetailsService.getLoggedInPerson().getId());
             throw new RestException("Article " + id + " not found", 404);
         }
         return article;

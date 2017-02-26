@@ -16,16 +16,13 @@
 
 package no.dusken.momus.controller;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import no.dusken.momus.authentication.SamlUserDetailsService;
-import no.dusken.momus.authentication.UserLoginService;
+import no.dusken.momus.authentication.UserDetailsServiceImpl;
 import no.dusken.momus.model.LandingPage;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.LandingPageRepository;
 import no.dusken.momus.service.repository.PersonRepository;
 import no.dusken.momus.service.LandingPageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +45,7 @@ public class PersonController {
     private LandingPageService landingPageService;
 
     @Autowired
-    private SamlUserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody List<Person> getAllPersons() {
