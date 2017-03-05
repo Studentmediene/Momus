@@ -19,7 +19,7 @@
 angular.module('momusApp.services')
     .service('PersonService', function ($http) {
         function personExistsInArray(array, person){
-            for(let i = 0; i < array.length; i++){
+            for(var i = 0; i < array.length; i++){
                 if(array[i].id == person.id){
                     return true;
                 }
@@ -41,7 +41,7 @@ angular.module('momusApp.services')
 
             },
             addPersonsToArray: function(array, persons){
-                for(let i = 0; i < persons.length;i++){
+                for(var i = 0; i < persons.length;i++){
                     if(!personExistsInArray(array, persons[i])){
                         array.push(persons[i]);
                     }
