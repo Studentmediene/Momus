@@ -141,9 +141,6 @@ angular.module('momusApp', [
     config(['$httpProvider', function ($httpProvider) {
         $httpProvider.interceptors.push('HttpInterceptor');
     }]).
-    config(function(ChartJsProvider){
-        ChartJsProvider.setOptions({ responsive: false });
-    }).
 
     run(['$location', '$rootScope', 'TitleChanger', 'LandingChanger', '$route', function ($location, $rootScope, TitleChanger, LandingChanger, $route) {
         // Whenever there is a route change, we try to update the url with the title set in the rootprovider above

@@ -28,13 +28,8 @@
                     Status artikler
                 </div>
                 <div class="panel-body">
-                    <status-chart ng-hide="isEmptyArray(publication.statusCounts)"
-                                  data="publication.statusCounts"
-                                  labels="statusLabels"
-                                  colors="statusChartColors"
-                                  status-click="clickArticleStatus(selected)">
-                    </status-chart>
-
+                    <canvas class="chart chart-pie" data="publication.statusCounts"
+                            labels="statusLabels" legend="false" colours="statusChartColors"></canvas>
                     <p ng-show="isEmptyArray(publication.statusCounts)">{{publication.name}} har ingen saker enda!</p>
                 </div>
                 <table ng-hide="isEmptyArray(publication.statusCounts)" class="table">
@@ -51,12 +46,8 @@
                     Status korrektur
                 </div>
                 <div class="panel-body">
-                    <status-chart ng-hide="isEmptyArray(publication.reviewStatusCounts)"
-                            data="publication.reviewStatusCounts"
-                            labels="reviewStatusLabels"
-                            colors="reviewChartColors"
-                            status-click="clickReviewStatus(selected)">
-                    </status-chart>
+                    <canvas class="chart chart-pie" data="publication.reviewStatusCounts"
+                            labels="reviewStatusLabels" legend="false" colours="reviewStatusChartColors"></canvas>
 
                     <p ng-show="isEmptyArray(publication.reviewStatusCounts)">{{publication.name}} har ingen saker enda!</p>
 
@@ -75,12 +66,8 @@
                     Status layout
                 </div>
                 <div class="panel-body">
-                    <status-chart ng-hide="isEmptyArray(publication.statusCounts)"
-                                  data="publication.layoutStatusCounts"
-                                  labels="layoutStatusLabels"
-                                  colors="layoutStatusChartColors"
-                                  status-click="clickLayoutStatus(selected)">
-                    </status-chart>
+                    <canvas class="chart chart-pie" data="publication.layoutStatusCounts"
+                            labels="layoutStatusLabels" legend="false" colours="layoutStatusChartColors"></canvas>
                     <p ng-show="isEmptyArray(publication.layoutStatusCounts)">{{publication.name}} har ingen sider enda!</p>
 
                 </div>
