@@ -75,7 +75,6 @@ public class ArticleService {
         return article;
     }
 
-
     public Article createNewArticle(Article article) {
         File document = googleDriveService.createDocument(article.getName());
 
