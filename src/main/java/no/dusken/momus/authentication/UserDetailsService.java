@@ -17,36 +17,9 @@
 package no.dusken.momus.authentication;
 
 import no.dusken.momus.model.Person;
+import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 
-/**
- * A mock of the service that works when testing (since there is no "logged in user" then)
- * Always returns id 1 as the logged in user
- */
-public class UserLoginServiceMock implements UserLoginService {
+public interface UserDetailsService extends SAMLUserDetailsService{
 
-
-    @Override
-    public Long getId() {
-        return 1L;
-    }
-
-    @Override
-    public String getUsername() {
-        return null;
-    }
-
-    @Override
-    public boolean login(LdapUserPwd token) {
-        return false;
-    }
-
-    @Override
-    public void logout() {
-        // nothing
-    }
-
-    @Override
-    public Person getLoggedInUser() {
-        return null;
-    }
+    Person getLoggedInPerson();
 }

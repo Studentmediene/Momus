@@ -138,69 +138,6 @@ a.zeroclipboard-is-hover {
 .front-column-publication {  width: 15%;  }
 
 
-/* Login form */
-
-#loginForm {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: 1040; /* above the navbar */
-
-    padding-top: 40px;
-    padding-bottom: 40px;
-    background-color: #eee;
-}
-
-#loginForm .inner {
-    background-color: #eee;
-    height: 100%;
-    overflow: auto;
-}
-
-.form-signin {
-    max-width: 330px;
-    padding: 15px;
-    margin: 0 auto;
-}
-
-.form-signin .form-signin-heading,
-.form-signin .checkbox {
-    margin-bottom: 10px;
-}
-
-.form-signin .checkbox {
-    font-weight: normal;
-}
-
-.form-signin .form-control {
-    position: relative;
-    font-size: 16px;
-    height: auto;
-    padding: 10px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-.form-signin .form-control:focus {
-    z-index: 2;
-}
-
-.form-signin input[type="text"] {
-    margin-bottom: -1px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-}
-
-.form-signin input[type="password"] {
-    margin-bottom: 10px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-}
-
-
 .article-revisions del, .article-revisions .del {
     background:#ffe6e6;
 }

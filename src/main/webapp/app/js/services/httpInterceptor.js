@@ -62,13 +62,6 @@ angular.module('momusApp.services').
             );
         }
 
-
-        function requestLogin() {
-            hasRequestedLogin = true;
-
-            $rootScope.$broadcast('showLogin');
-        }
-
         $rootScope.$on('loginComplete', function() {
             hasRequestedLogin = false;
             resendAllInBuffer();
@@ -81,20 +74,9 @@ angular.module('momusApp.services').
                     return $q.reject(response);
                 }
 
-
                 // is the problem we're not logged in?
                 if (response.status === 401) {
-
-                    // show login form if we haven't already
-                    if (!hasRequestedLogin) {
-                        requestLogin();
-                    }
-
-                    // add the request to the buffer to be sent later
-                    var deferred = $q.defer();
-                    addToBuffer(response.config, deferred);
-                    return deferred.promise;
-
+                    return $q.reject(response);
                 } else {
                     // show an error message
                     var errorMessage = '';

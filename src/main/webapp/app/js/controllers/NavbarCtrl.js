@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('NavbarCtrl', function ($scope, $location, PersonService, $http, MessageModal, $rootScope) {
+    .controller('NavbarCtrl', function ($scope, $location, PersonService, $http, MessageModal, $rootScope, $window) {
         PersonService.getCurrentUser().success(function(user) {
             $scope.user = user;
         });
@@ -39,11 +39,7 @@ angular.module('momusApp.controllers')
         };
 
         $scope.logout = function() {
-            $http.get('/api/auth/logout').success(function (data) {
-                MessageModal.info('Du har blitt logget ut', function() {
-                    $rootScope.$broadcast('showLogin');
-                });
-            });
+            $window.location.href = "/saml/logout";
         };
     });
 

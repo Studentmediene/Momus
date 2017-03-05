@@ -16,7 +16,8 @@
 
 package no.dusken.momus.service;
 
-import no.dusken.momus.authentication.UserLoginService;
+import no.dusken.momus.authentication.UserDetailsService;
+import no.dusken.momus.authentication.UserDetailsServiceImpl;
 import no.dusken.momus.model.Note;
 import no.dusken.momus.service.repository.NoteRepository;
 import org.slf4j.Logger;
@@ -30,14 +31,14 @@ public class NoteService {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    NoteRepository noteRepository;
+    private NoteRepository noteRepository;
 
     @Autowired
-    private UserLoginService userLoginService;
+    private UserDetailsService userDetailsService;
 
 
     public Note getNoteForLoggedInUser() {
-        Long userId = userLoginService.getId();
+        Long userId = userDetailsService.getLoggedInPerson().getId();
         Note note = noteRepository.findByOwner_Id(userId);
         if (note == null) {
             note = new Note();
@@ -49,11 +50,11 @@ public class NoteService {
 
 
     public Note saveNoteForLoggedInUser(Note note) {
-        Long userId = userLoginService.getId();
+        Long userId = userDetailsService.getLoggedInPerson().getId();
         Note existing = noteRepository.findByOwner_Id(userId);
         if (existing == null) {
             existing = note;
-            note.setOwner(userLoginService.getLoggedInUser());
+            note.setOwner(userDetailsService.getLoggedInPerson());
             logger.info("Creating new note for userid {} with content: ", userId, note.getContent());
         } else {
             existing.setContent(note.getContent());

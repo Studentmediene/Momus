@@ -39,12 +39,12 @@
     </filter>
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
-        <servlet-name>momusapi</servlet-name>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:applicationContext.xml</param-value>
+        <param-value>classpath:applicationContext.xml, classpath:securityContext.xml</param-value>
     </context-param>
 
     <session-config>
