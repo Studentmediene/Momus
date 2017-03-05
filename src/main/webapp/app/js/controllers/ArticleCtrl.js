@@ -17,19 +17,21 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function ($scope, PersonService,$timeout, ArticleService, PublicationService, TitleChanger, noteParserRules, $routeParams, ViewArticleService, MessageModal, $templateRequest) {
+    .controller('ArticleCtrl', function ($scope, PersonService,$timeout, ArticleService, PublicationService, TitleChanger, noteParserRules, $routeParams, ViewArticleService, MessageModal, $templateRequest, $q) {
         $scope.metaEditMode = false;
         $scope.noteRules = noteParserRules;
 
-        PersonService.getAll().success(function(data) {
-           $scope.persons = data;
-        });
+        $q.all([PersonService.getAll(), ArticleService.getArticle($routeParams.id)]).then(function(data){
+            $scope.persons = data[0].data;
 
-        ArticleService.getArticle($routeParams.id).success(function (data) {
-            $scope.article = data;
-            $scope.unedited = angular.copy(data);
+            $scope.article = data[1].data;
+            $scope.unedited = angular.copy(data[1].data);
             TitleChanger.setTitle($scope.article.name);
             ViewArticleService.viewArticle($routeParams.id);
+
+            // Add people already in article to persons in case they have become inactive since they wrote the article
+            PersonService.addPersonsToArray($scope.persons, $scope.article.journalists);
+            PersonService.addPersonsToArray($scope.persons, $scope.article.photographers);
         });
 
         ArticleService.getTypes().success(function (data) {
