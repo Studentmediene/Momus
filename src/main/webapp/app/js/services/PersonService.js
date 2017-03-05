@@ -18,14 +18,14 @@
 
 angular.module('momusApp.services')
     .service('PersonService', function ($http) {
-        let personExistsInArray = function(array, person){
-            array.forEach(function(e){
-                if(e.id == person.id){
+        function personExistsInArray(array, person){
+            for(let i = 0; i < array.length; i++){
+                if(array[i].id == person.id){
                     return true;
                 }
-            });
+            }
             return false;
-        };
+        }
         return {
             getCurrentUser: function () {
                 return $http.get('/api/person/me', {cache: true});
@@ -41,10 +41,11 @@ angular.module('momusApp.services')
 
             },
             addPersonsToArray: function(array, persons){
-                persons.forEach(function(person){
-                    if(!personExistsInArray(array, person))
-                        array.push(person);
-                });
+                for(let i = 0; i < persons.length;i++){
+                    if(!personExistsInArray(array, persons[i])){
+                        array.push(persons[i]);
+                    }
+                }
             }
         };
     });
