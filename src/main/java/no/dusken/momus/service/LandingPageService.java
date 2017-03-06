@@ -16,7 +16,8 @@
 
 package no.dusken.momus.service;
 
-import no.dusken.momus.authentication.UserLoginService;
+import no.dusken.momus.authentication.UserDetailsService;
+import no.dusken.momus.authentication.UserDetailsServiceImpl;
 import no.dusken.momus.model.LandingPage;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.LandingPageRepository;
@@ -27,13 +28,13 @@ import org.springframework.stereotype.Service;
 public class LandingPageService {
 
     @Autowired
-    private UserLoginService userLoginService;
+    private UserDetailsService userDetailsService;
 
     @Autowired
     private LandingPageRepository landingPageRepository;
 
     public LandingPage saveLandingPage(String landingPage){
-        Person user = userLoginService.getLoggedInUser();
+        Person user = userDetailsService.getLoggedInPerson();
 
         LandingPage existing = landingPageRepository.findByOwner(user);
 

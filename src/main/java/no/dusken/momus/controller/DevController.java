@@ -24,10 +24,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.About;
 import com.google.api.services.drive.model.FileList;
-import no.dusken.momus.authentication.AuthUserDetails;
-import no.dusken.momus.authentication.LdapUserPwd;
-import no.dusken.momus.authentication.Token;
-import no.dusken.momus.authentication.UserLoginService;
+import no.dusken.momus.authentication.*;
 import no.dusken.momus.ldap.LdapSyncer;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.*;
@@ -36,10 +33,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -63,7 +58,7 @@ public class DevController {
 
 
     @Autowired
-    private UserLoginService userLoginService;
+    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
     private SectionRepository sectionRepository;
@@ -89,18 +84,21 @@ public class DevController {
     /**
      * Bypass login and logs you in as the user with the provided id
      */
+    /*
     @RequestMapping("/login/{id}")
     public @ResponseBody void login(@PathVariable("id") Long id) {
         AuthUserDetails user = new AuthUserDetails(personRepository.findOne(id));
         Token token = new Token(null, user);
         SecurityContextHolder.getContext().setAuthentication(token);
     }
+    */
 
 
+    /*
     @RequestMapping("/login/test")
     public @ResponseBody void logintest() {
         userLoginService.login(new LdapUserPwd("sharon.nymo", "vague tacky drop"));
-    }
+    }*/
 
 
     @RequestMapping("/ldaptest")

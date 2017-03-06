@@ -27,4 +27,6 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     public Person findByUsername(String username);
 
     public List<Person> findByActiveTrue();
+
+    public List<Person> findFirstByOrderByIdDesc();
 }

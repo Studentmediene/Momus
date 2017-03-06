@@ -18,6 +18,14 @@
 
 angular.module('momusApp.services')
     .service('PersonService', function ($http) {
+        function personExistsInArray(array, person){
+            for(var i = 0; i < array.length; i++){
+                if(array[i].id == person.id){
+                    return true;
+                }
+            }
+            return false;
+        }
         return {
             getCurrentUser: function () {
                 return $http.get('/api/person/me', {cache: true});
@@ -31,6 +39,13 @@ angular.module('momusApp.services')
             updateLandingPage: function(landing) {
                 return $http.get('/api/person/landing/' + landing);
 
+            },
+            addPersonsToArray: function(array, persons){
+                for(var i = 0; i < persons.length;i++){
+                    if(!personExistsInArray(array, persons[i])){
+                        array.push(persons[i]);
+                    }
+                }
             }
         };
     });
