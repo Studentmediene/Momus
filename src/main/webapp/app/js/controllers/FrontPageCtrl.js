@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope, $q, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, PublicationService, $location) {
+    .controller('FrontPageCtrl', function ($scope, $q, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, PublicationService, $location, $filter) {
 
         $scope.randomTip = function() {
             $scope.tip = TipAndNewsService.getRandomTip();
@@ -115,33 +115,31 @@ angular.module('momusApp.controllers')
             $scope.publication = data;
 
             $q.all([ PublicationService.getStatusCounts($scope.publication.id),ArticleService.getStatuses()]).then(function(data){
-                $scope.statusCounts = data[0].data;
                 $scope.statuses = data[1].data;
-                var statusArrays = graphInfoToArray($scope.statusCounts, $scope.statuses);
-                $scope.statusLabels = statusArrays[0];
-                $scope.statusChartColors = statusArrays[1];
-                $scope.publication.statusCounts = statusArrays[2];
+                $scope.statuscounts = getStatusArrays(data);
             });
 
             $q.all([ PublicationService.getLayoutStatusCounts($scope.publication.id),PublicationService.getLayoutStatuses()]).then(function(data){
-                $scope.layoutStatusCounts = data[0].data;
                 $scope.layoutStatuses = data[1].data;
-                var statusArrays = graphInfoToArray($scope.layoutStatusCounts, $scope.layoutStatuses);
-                $scope.layoutStatusLabels = statusArrays[0];
-                $scope.layoutStatusChartColors = statusArrays[1];
-                $scope.publication.layoutStatusCounts = statusArrays[2];
+                $scope.layoutcounts = getStatusArrays(data);
             });
 
             $q.all([ PublicationService.getReviewStatusCounts($scope.publication.id),ArticleService.getReviews()]).then(function(data){
-                $scope.reviewStatusCounts = data[0].data;
                 $scope.reviewStatuses = data[1].data;
-                var statusArrays = graphInfoToArray($scope.reviewStatusCounts, $scope.reviewStatuses);
-                $scope.reviewStatusLabels = statusArrays[0];
-                $scope.reviewStatusChartColors = statusArrays[1];
-                $scope.publication.reviewStatusCounts = statusArrays[2];
-                console.log(statusArrays);
+                $scope.reviewcounts = getStatusArrays(data);
             });
         });
+
+        function getStatusArrays(data){
+            var statusCounts = data[0].data;
+            var statuses = data[1].data;
+            var statusArrays = graphInfoToArray(statusCounts, statuses);
+            var temp_obj = {};
+            temp_obj.labels = statusArrays[0];
+            temp_obj.colors = statusArrays[1];
+            temp_obj.counts = statusArrays[2];
+            return temp_obj;
+        }
 
         function graphInfoToArray(counts, statuses){
             var temp_counts = [];
@@ -179,12 +177,18 @@ angular.module('momusApp.controllers')
         };
 
         $scope.clickArticleStatus = function(selected){
-            $location.url('artikler?publication=' + $scope.publication.id + '&status=' + ($scope.statuses[selected].id));
+            var id = $filter("filter")($scope.statuses,{name:selected})[0].id;
+            if(id == undefined) {
+                $location.url('artikler');
+            } else{
+                $location.url('artikler?publication=' + $scope.publication.id + '&status=' + id);
+            }
             $scope.$apply();
         };
 
         $scope.clickReviewStatus = function(selected){
-            $location.url('artikler?publication=' + $scope.publication.id + '&status=' + ($scope.statuses[selected].id));
+            var id = $filter("filter")($scope.reviewStatuses,{name:selected})[0].id;
+            $location.url('artikler?publication=' + $scope.publication.id + '&review=' + id);
             $scope.$apply();
         };
 

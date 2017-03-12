@@ -24,28 +24,22 @@ angular.module('momusApp.directives')
             scope: {
                 data: '=',
                 labels: '=',
-                colors: '=',
+                colours: '=',
                 statusClick: '&'
             },
             link: function(scope, element, attrs) {
                 scope.chartStyle = {cursor: "default"};
-                scope.chartOptions = {
-                    onClick: function(e,d) {
-                        if(d.length > 0){
-                            scope.statusClick({selected:d[0]._index});
-                        }
-
-                    },
-                    hover:{
-                        onHover: function(data){
-                            if(data.length>0){
-                                scope.chartStyle.cursor = "pointer";
-                            }else{
-                                scope.chartStyle.cursor = "default";
-                            }
-                            scope.$apply();
-                        }
+                scope.onClick =  function(e,d) {
+                    scope.statusClick({selected:e[0].label});
+                };
+                scope.onHover = function(data){
+                    if(data.length>0){
+                        scope.chartStyle.cursor = "pointer";
+                    }else{
+                        scope.chartStyle.cursor = "default";
                     }
+                    scope.$apply();
+
                 };
             }
         };
