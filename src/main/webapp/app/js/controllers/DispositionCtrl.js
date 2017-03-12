@@ -151,6 +151,11 @@ angular.module('momusApp.controllers')
             }
         };
 
+        // Colorize page based on its status (css style)
+        $scope.pageColor = function(page){
+            return 'background: ' + (page.done ? $scope.pageDoneColor : (page.advertisement ? $scope.pageAdColor : '#FFF'));
+        };
+
         //TODO put this in a service
         $scope.getLayoutStatusByName = function(name){
             for(var i = 0; i < $scope.layoutStatuses.length; i++){
