@@ -31,6 +31,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -62,6 +63,15 @@ public class PublicationController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody Publication getPublicationById(@PathVariable("id") Long id){
         return publicationRepository.findOne(id);
+    }
+
+    @RequestMapping(value = "/{id}/colophon", method = RequestMethod.GET)
+    public @ResponseBody String getColophon(@PathVariable("id") Long id, HttpServletResponse response){
+
+        response.addHeader("Content-Disposition", "attachment; filename=\"Kolofon_" + publicationRepository.findOne(id).getName() + ".txt\"");
+        response.addHeader("Content-Type", "text/plain;charset=UTF-16LE");
+
+        return publicationService.generateColophon(id);
     }
 
     @RequestMapping(value = "/active", method = RequestMethod.GET)
