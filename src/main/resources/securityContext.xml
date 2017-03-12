@@ -76,6 +76,8 @@
                             <value type="int">5000</value>
                         </constructor-arg>
                         <property name="parserPool" ref="parserPool"/>
+                        <property name="minRefreshDelay" value="120000"/>
+                        <property name="maxRefreshDelay" value="300000"/>
                     </bean>
                 </constructor-arg>
                 <constructor-arg>
@@ -207,7 +209,9 @@
     </bean>
 
     <!-- SAML 2.0 WebSSO Assertion Consumer -->
-    <bean id="webSSOprofileConsumer" class="org.springframework.security.saml.websso.WebSSOProfileConsumerImpl"/>
+    <bean id="webSSOprofileConsumer" class="org.springframework.security.saml.websso.WebSSOProfileConsumerImpl">
+        <property name="responseSkew" value="120"/>
+    </bean>
 
     <!-- SAML 2.0 Holder-of-Key WebSSO Assertion Consumer -->
     <bean id="hokWebSSOprofileConsumer" class="org.springframework.security.saml.websso.WebSSOProfileConsumerHoKImpl"/>
@@ -222,7 +226,9 @@
     <bean id="ecpprofile" class="org.springframework.security.saml.websso.WebSSOProfileECPImpl"/>
 
     <!-- SAML 2.0 Logout Profile -->
-    <bean id="logoutprofile" class="org.springframework.security.saml.websso.SingleLogoutProfileImpl"/>
+    <bean id="logoutprofile" class="org.springframework.security.saml.websso.SingleLogoutProfileImpl">
+        <property name="responseSkew" value="120"/>
+    </bean>
 
     <!-- Bindings, encoders and decoders used for creating and parsing messages -->
     <bean id="postBinding" class="org.springframework.security.saml.processor.HTTPPostBinding">
