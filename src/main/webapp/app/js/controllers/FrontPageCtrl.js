@@ -115,43 +115,26 @@ angular.module('momusApp.controllers')
             $scope.publication = data;
 
             $q.all([ PublicationService.getStatusCounts($scope.publication.id),ArticleService.getStatuses()]).then(function(data){
-                $scope.statuses = data[1].data;
-                $scope.statuscounts = getStatusArrays(data);
+                $scope.articlestatus = getStatusArrays(data[0].data, data[1].data);
             });
 
             $q.all([ PublicationService.getLayoutStatusCounts($scope.publication.id),PublicationService.getLayoutStatuses()]).then(function(data){
-                $scope.layoutStatuses = data[1].data;
-                $scope.layoutcounts = getStatusArrays(data);
+                $scope.layoutstatus = getStatusArrays(data[0].data, data[1].data);
             });
 
             $q.all([ PublicationService.getReviewStatusCounts($scope.publication.id),ArticleService.getReviews()]).then(function(data){
-                $scope.reviewStatuses = data[1].data;
-                $scope.reviewcounts = getStatusArrays(data);
+                $scope.reviewstatus = getStatusArrays(data[0].data, data[1].data);
             });
         });
 
-        function getStatusArrays(data){
-            var statusCounts = data[0].data;
-            var statuses = data[1].data;
-            var statusArrays = graphInfoToArray(statusCounts, statuses);
-            var temp_obj = {};
-            temp_obj.labels = statusArrays[0];
-            temp_obj.colors = statusArrays[1];
-            temp_obj.counts = statusArrays[2];
-            return temp_obj;
-        }
-
-        function graphInfoToArray(counts, statuses){
-            var temp_counts = [];
-            var temp_labels = [];
-            var temp_colors = [];
+        function getStatusArrays(counts, statuses){
+            var status = {statuses: statuses, labels: [], colors: [], counts: []};
             for(var i = 0; i < statuses.length; i++){
-                temp_labels.push(statuses[i].name);
-                temp_colors.push(statuses[i].color);
-                temp_counts.push(counts[statuses[i].id]);
+                status.labels.push(statuses[i].name);
+                status.colors.push(statuses[i].color);
+                status.counts.push(counts[statuses[i].id]);
             }
-            return [temp_labels, temp_colors, temp_counts];
-
+            return status;
         }
 
         //TODO: Refactor when we get back to the cake diagrams
@@ -177,7 +160,7 @@ angular.module('momusApp.controllers')
         };
 
         $scope.clickArticleStatus = function(selected){
-            var id = $filter("filter")($scope.statuses,{name:selected})[0].id;
+            var id = $filter("filter")($scope.articlestatus.statuses,{name:selected})[0].id;
             if(id == undefined) {
                 $location.url('artikler');
             } else{
@@ -187,7 +170,7 @@ angular.module('momusApp.controllers')
         };
 
         $scope.clickReviewStatus = function(selected){
-            var id = $filter("filter")($scope.reviewStatuses,{name:selected})[0].id;
+            var id = $filter("filter")($scope.layoutstatus.statuses,{name:selected})[0].id;
             $location.url('artikler?publication=' + $scope.publication.id + '&review=' + id);
             $scope.$apply();
         };

@@ -151,9 +151,9 @@ public class ArticleController {
     @RequestMapping(value = "/statuscount/{pubId}", method = RequestMethod.GET)
     public @ResponseBody Map<Long,Integer> getStatusCountsByPubId(@PathVariable("pubId") Long pi){
         List<ArticleStatus> statuses = this.getAllArticleStatuses();
-        Map map = new HashMap<Long, Integer>();
-        for(int i = 0; i < statuses.size(); i++){
-            map.put(statuses.get(i).getId(),this.getStatusCount(statuses.get(i).getId(), pi));
+        Map<Long, Integer> map = new HashMap<>();
+        for (ArticleStatus status : statuses) {
+            map.put(status.getId(), this.getStatusCount(status.getId(), pi));
         }
         return map;
     }
@@ -166,9 +166,9 @@ public class ArticleController {
     @RequestMapping(value = "/reviewstatuscount/{pubId}", method = RequestMethod.GET)
     public @ResponseBody Map<Long,Integer> getReviewStatusCountsByPubId(@PathVariable("pubId") Long pi){
         List<ArticleReview> statuses = this.getAllReviewStatuses();
-        Map map = new HashMap<Long, Integer>();
-        for(int i = 0; i < statuses.size(); i++){
-            map.put(statuses.get(i).getId(),this.getReviewStatusCount(statuses.get(i).getId(), pi));
+        Map<Long, Integer> map = new HashMap<>();
+        for (ArticleReview status : statuses) {
+            map.put(status.getId(), this.getReviewStatusCount(status.getId(), pi));
         }
         return map;
     }

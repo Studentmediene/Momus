@@ -32,6 +32,9 @@ angular.module('momusApp.directives')
                 scope.onClick =  function(e,d) {
                     scope.statusClick({selected:e[0].label});
                 };
+                scope.options = {
+                    animation: false
+                };
                 scope.onHover = function(data){
                     if(data.length>0){
                         scope.chartStyle.cursor = "pointer";
