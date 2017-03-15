@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, PublicationService, $location) {
+    .controller('FrontPageCtrl', function ($scope, $q, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, PublicationService, $location, $filter) {
 
         $scope.randomTip = function() {
             $scope.tip = TipAndNewsService.getRandomTip();
@@ -113,46 +113,29 @@ angular.module('momusApp.controllers')
 
         PublicationService.getActive().success(function(data){
             $scope.publication = data;
-            PublicationService.getStatusCounts($scope.publication.id).success(function(data){
-                $scope.publication.statusCounts = data;
+
+            $q.all([ PublicationService.getStatusCounts($scope.publication.id),ArticleService.getStatuses()]).then(function(data){
+                $scope.articlestatus = getStatusArrays(data[0].data, data[1].data);
             });
-            PublicationService.getLayoutStatusCounts($scope.publication.id).success(function(data){
-                $scope.publication.layoutStatusCounts = data;
+
+            $q.all([ PublicationService.getLayoutStatusCounts($scope.publication.id),PublicationService.getLayoutStatuses()]).then(function(data){
+                $scope.layoutstatus = getStatusArrays(data[0].data, data[1].data);
             });
-            PublicationService.getReviewStatusCounts($scope.publication.id).success(function(data){
-                $scope.publication.reviewStatusCounts = data;
+
+            $q.all([ PublicationService.getReviewStatusCounts($scope.publication.id),ArticleService.getReviews()]).then(function(data){
+                $scope.reviewstatus = getStatusArrays(data[0].data, data[1].data);
             });
         });
 
-        ArticleService.getStatuses().success(function (data){
-            $scope.statuses = data;
-            $scope.statusLabels = [];
-            $scope.statusChartColors = [];
-            for(var i = 0; i < $scope.statuses.length; i++){
-                $scope.statusLabels.push($scope.statuses[i].name);
-                $scope.statusChartColors.push($scope.statuses[i].color);
+        function getStatusArrays(counts, statuses){
+            var status = {statuses: statuses, labels: [], colors: [], counts: []};
+            for(var i = 0; i < statuses.length; i++){
+                status.labels.push(statuses[i].name);
+                status.colors.push(statuses[i].color);
+                status.counts.push(counts[statuses[i].id]);
             }
-        });
-
-        ArticleService.getReviews().success(function (data){
-            $scope.reviews = data;
-            $scope.reviewLabels = [];
-            $scope.reviewChartColors = [];
-            for(var i = 0; i < $scope.reviews.length; i++){
-                $scope.reviewLabels.push($scope.reviews[i].name);
-                $scope.reviewChartColors.push($scope.reviews[i].color);
-            }
-        });
-
-        PublicationService.getLayoutStatuses().success(function(data){
-            $scope.layoutStatuses = data;
-            $scope.layoutStatusLabels = [];
-            $scope.layoutStatusChartColors = [];
-            for(var i = 0; i < $scope.layoutStatuses.length; i++){
-                $scope.layoutStatusLabels.push($scope.layoutStatuses[i].name);
-                $scope.layoutStatusChartColors.push($scope.layoutStatuses[i].color);
-            }
-        });
+            return status;
+        }
 
         //TODO: Refactor when we get back to the cake diagrams
         $scope.isEmptyArray = function(array){
@@ -160,8 +143,8 @@ angular.module('momusApp.controllers')
                 return true;
             } else {
                 var maxFound = 0;
-                for(var i = 0; i < array.length;i++){
-                    if(array[i] > maxFound){
+                for(var i = 0; i < Object.keys(array).length;i++){
+                    if(array[Object.keys(array)[i]] > maxFound){
                         maxFound = array[i];
                     }
                 }
@@ -177,12 +160,18 @@ angular.module('momusApp.controllers')
         };
 
         $scope.clickArticleStatus = function(selected){
-            $location.url('artikler?publication=' + $scope.publication.id + '&status=' + ($scope.statuses[selected].id));
+            var id = $filter("filter")($scope.articlestatus.statuses,{name:selected})[0].id;
+            if(id == undefined) {
+                $location.url('artikler');
+            } else{
+                $location.url('artikler?publication=' + $scope.publication.id + '&status=' + id);
+            }
             $scope.$apply();
         };
 
         $scope.clickReviewStatus = function(selected){
-            $location.url('artikler?publication=' + $scope.publication.id + '&status=' + ($scope.statuses[selected].id));
+            var id = $filter("filter")($scope.layoutstatus.statuses,{name:selected})[0].id;
+            $location.url('artikler?publication=' + $scope.publication.id + '&review=' + id);
             $scope.$apply();
         };
 

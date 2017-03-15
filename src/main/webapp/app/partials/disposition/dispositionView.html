@@ -71,7 +71,7 @@
                     <td colspan="7"><i class="fa fa-spinner fa-spin fa-4x"></i></td>
                 </tr>
                 <tbody ng-model="publication.pages" ui-sortable="sortableOptions">
-                <tr ng-repeat="page in publication.pages" style="{{'background: ' + (page.done ? pageDoneColor : '#FFF')}}" ui-sortable-selectable>
+                <tr ng-repeat="page in publication.pages" style="{{pageColor(page)}}" ui-sortable-selectable>
                     <!--Page number-->
                     <td style="text-align: center; cursor: move;" class="handle pagenum">{{page.page_nr}}</td>
                     <!--Articles (edit mode)-->
@@ -90,7 +90,7 @@
                     <!--Articles (view mode)-->
                     <td style="padding:0;margin:0;" ng-hide="editPage">
                         <table class="table pageArticleTable" style="padding: 0;margin:0;" ng-style="dispTableLayout">
-                            <tr ng-repeat="article in page.articles" style="{{'background-color:' + (page.done ? pageDoneColor : '#FFF')}}">
+                            <tr ng-repeat="article in page.articles" style="{{pageColor(page)}}">
                                 <!--Name-->
                                 <td ng-style="responsiveColumns['name']" style="word-wrap: break-word;">
                                     <a href="#/artikler/{{article.id}}">{{article.name}}</a> <span tooltip="Antall tegn">({{article.content_length}})</span>
