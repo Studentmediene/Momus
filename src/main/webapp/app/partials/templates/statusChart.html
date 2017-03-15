@@ -13,17 +13,17 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
 <div>
-    <div>
-        <canvas class="chart chart-pie"
-                ng-style="chartStyle"
-                chart-data="data"
-                chart-labels="labels"
-                chart-colors="colors"
-                chart-options="chartOptions">
-        </canvas>
-    </div>
+    <canvas class="chart chart-pie"
+            ng-style="chartStyle"
+            data="data"
+            labels="labels"
+            colours="colours"
+            click="onClick"
+            hover="onHover"
+            options="options">
+    </canvas>
 </div>
+
 
 
