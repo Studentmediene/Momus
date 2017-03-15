@@ -146,12 +146,12 @@ public class PublicationService {
             colophonBuilder.append(p.getFullName()).append("\r\n");
         }
 
-        colophonBuilder.append("Fotografer:\r\n");
+        colophonBuilder.append("\r\nFotografer:\r\n");
         for(Person p : photographers){
             colophonBuilder.append(p.getFullName()).append("\r\n");
         }
 
-        colophonBuilder.append("Illustratører:\r\n");
+        colophonBuilder.append("\r\nIllustratører:\r\n");
         for(Person p : illustrators){
             colophonBuilder.append(p.getFullName()).append("\r\n");
         }
