@@ -213,6 +213,10 @@ angular.module('momusApp.controllers')
             placeholder: "disp-placeholder"
         });
 
+        $scope.generateColophon = function(){
+            PublicationService.getColophon($scope.publication.id);
+        };
+
         $scope.showHelp = function(){
             $templateRequest('partials/templates/help/dispHelp.html').then(function(template){
                 MessageModal.info(template);
