@@ -63,6 +63,7 @@ angular.module('momusApp.controllers')
             var pubId = $scope.publication.id;
             ArticleService.search({publication: pubId}).success(function (data) {
                 $scope.publication.articles = data;
+                console.log(data);
                 $scope.loading--;
                 PublicationService.getPages(pubId).success(function (data){
                     $scope.publication.pages = data;
