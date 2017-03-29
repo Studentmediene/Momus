@@ -210,7 +210,7 @@
 
     <!-- SAML 2.0 WebSSO Assertion Consumer -->
     <bean id="webSSOprofileConsumer" class="org.springframework.security.saml.websso.WebSSOProfileConsumerImpl">
-        <property name="responseSkew" value="120"/>
+        <property name="responseSkew" value="600"/>
     </bean>
 
     <!-- SAML 2.0 Holder-of-Key WebSSO Assertion Consumer -->
@@ -227,7 +227,7 @@
 
     <!-- SAML 2.0 Logout Profile -->
     <bean id="logoutprofile" class="org.springframework.security.saml.websso.SingleLogoutProfileImpl">
-        <property name="responseSkew" value="120"/>
+        <property name="responseSkew" value="600"/>
     </bean>
 
     <!-- Bindings, encoders and decoders used for creating and parsing messages -->
