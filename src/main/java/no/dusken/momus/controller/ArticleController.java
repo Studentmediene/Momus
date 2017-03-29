@@ -29,8 +29,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 @Controller
 @RequestMapping("/article")
@@ -146,13 +149,13 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "/statuscount/{pubId}", method = RequestMethod.GET)
-    public @ResponseBody List<Integer> getStatusCountsByPubId(@PathVariable("pubId") Long pi){
+    public @ResponseBody Map<Long,Integer> getStatusCountsByPubId(@PathVariable("pubId") Long pi){
         List<ArticleStatus> statuses = this.getAllArticleStatuses();
-        List<Integer> list = new ArrayList<Integer>();
-        for(int i = 1; i <= statuses.size(); i++){
-            list.add(this.getStatusCount(Long.valueOf(i), pi));
+        Map<Long, Integer> map = new HashMap<>();
+        for (ArticleStatus status : statuses) {
+            map.put(status.getId(), this.getStatusCount(status.getId(), pi));
         }
-        return list;
+        return map;
     }
 
     @RequestMapping(value = "/reviewstatuscount/{pubId}/{statId}", method = RequestMethod.GET)
@@ -161,13 +164,13 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "/reviewstatuscount/{pubId}", method = RequestMethod.GET)
-    public @ResponseBody List<Integer> getReviewStatusCountsByPubId(@PathVariable("pubId") Long pi){
+    public @ResponseBody Map<Long,Integer> getReviewStatusCountsByPubId(@PathVariable("pubId") Long pi){
         List<ArticleReview> statuses = this.getAllReviewStatuses();
-        List<Integer> list = new ArrayList<Integer>();
-        for(int i = 1; i <= statuses.size(); i++){
-            list.add(this.getReviewStatusCount(Long.valueOf(i), pi));
+        Map<Long, Integer> map = new HashMap<>();
+        for (ArticleReview status : statuses) {
+            map.put(status.getId(), this.getReviewStatusCount(status.getId(), pi));
         }
-        return list;
+        return map;
     }
 
     @RequestMapping(method = RequestMethod.POST)

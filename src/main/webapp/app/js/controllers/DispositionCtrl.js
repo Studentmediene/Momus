@@ -25,6 +25,7 @@ angular.module('momusApp.controllers')
         $scope.editPhotoStatus = false;
 
         $scope.pageDoneColor = "#DDFFCB";
+        $scope.pageAdColor = "#f8f8f8";
 
         // Widths of columns in the disp. Uses ngStyle to sync widths across pages (which are separate tables)
         // The widths that are here will be used when the app is loaded on a screen so small the disp gets a scroll bar
@@ -150,6 +151,11 @@ angular.module('momusApp.controllers')
             }
         };
 
+        // Colorize page based on its status (css style)
+        $scope.pageColor = function(page){
+            return 'background: ' + (page.done ? $scope.pageDoneColor : (page.advertisement ? $scope.pageAdColor : '#FFF'));
+        };
+
         //TODO put this in a service
         $scope.getLayoutStatusByName = function(name){
             for(var i = 0; i < $scope.layoutStatuses.length; i++){
@@ -206,6 +212,10 @@ angular.module('momusApp.controllers')
             },
             placeholder: "disp-placeholder"
         });
+
+        $scope.generateColophon = function(){
+            PublicationService.getColophon($scope.publication.id);
+        };
 
         $scope.showHelp = function(){
             $templateRequest('partials/templates/help/dispHelp.html').then(function(template){

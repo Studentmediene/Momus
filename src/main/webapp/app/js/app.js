@@ -35,7 +35,8 @@ angular.module('momusApp', [
         'ui.bootstrap',
         'ngCookies',
         'ui.sortable',
-        'ui.sortable.multiselection'
+        'ui.sortable.multiselection',
+        'chart.js'
     ]).
     config(['$routeProvider', function ($routeProvider) {
         // Admin interfaces
@@ -141,9 +142,6 @@ angular.module('momusApp', [
         $httpProvider.interceptors.push('HttpInterceptor');
         $httpProvider.defaults.withCredentials = true;
     }]).
-    /*config(function(ChartJsProvider){
-        ChartJsProvider.setOptions({ responsive: false });
-    }).*/
 
     run(['$location', '$rootScope', 'TitleChanger', 'LandingChanger', '$route', function ($location, $rootScope, TitleChanger, LandingChanger, $route) {
         // Whenever there is a route change, we try to update the url with the title set in the rootprovider above

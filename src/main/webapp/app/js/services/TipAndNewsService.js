@@ -57,6 +57,10 @@ angular.module('momusApp.services')
 
         // Date: year, month - 1, day
         var news = [{
+            date: new Date(2017, 2, 29),
+            title: "Kaker, kakerlakker og kolofoner",
+            text: "<p>I denne oppdateringen er det fikset en del bugs og lagt til små forbedringer. Blant annet er det gjort tydeligere når en side inneholder reklame og det er mulig å generere kolofon fra disposisjonen. Det er også lagt til kakediagrammer på forsiden som viser status til den siste utgaven.</p>"
+        },{
             date: new Date(2017, 2, 6),
             title: "Nytt brukersystem og innlogging",
             text: "<p>Nå har endelig Momus gått over til det nye brukersystemet! Samtidig har vi lagt inn felles innlogging i alle SMs interne tjenester, slik at du bare trenger å logge inn en gang for alle tjenestene.</p>"

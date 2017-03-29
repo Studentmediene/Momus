@@ -20,79 +20,88 @@
             <h3>Status {{publication.name}}</h3>
         </div>
     </div>
-    <!--Cake diagrams-->
-    <!--<div class="row">-->
-        <!--<div class="col-md-4">-->
-            <!--<div class="panel panel-info">-->
-                <!--<div class="panel-heading">-->
-                    <!--Status artikler-->
-                <!--</div>-->
-                <!--<div class="panel-body">-->
-                    <!--<status-chart ng-hide="isEmptyArray(publication.statusCounts)"-->
-                                  <!--data="publication.statusCounts"-->
-                                  <!--labels="statusLabels"-->
-                                  <!--colors="statusChartColors"-->
-                                  <!--status-click="clickArticleStatus(selected)">-->
-                    <!--</status-chart>-->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Status artikler
+                </div>
+                <div class="panel-body">
+                    <div ng-if="!isEmptyArray(articlestatus.counts)">
+                        <status-chart ng-hide="isEmptyArray(articlestatus.counts)"
+                                data="articlestatus.counts"
+                                labels="articlestatus.labels"
+                                colours="articlestatus.colors"
+                                status-click="clickArticleStatus(selected)">
+                        </status-chart>
+                    </div>
 
-                    <!--<p ng-show="isEmptyArray(publication.statusCounts)">{{publication.name}} har ingen saker enda!</p>-->
-                <!--</div>-->
-                <!--<table ng-hide="isEmptyArray(publication.statusCounts)" class="table">-->
-                    <!--<tr>-->
-                        <!--<td>Totalt</td>-->
-                        <!--<td>{{countTotals(publication.statusCounts)}}</td>-->
-                    <!--</tr>-->
-                <!--</table>-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div class="col-md-4">-->
-            <!--<div class="panel panel-info">-->
-                <!--<div class="panel-heading">-->
-                    <!--Status korrektur-->
-                <!--</div>-->
-                <!--<div class="panel-body">-->
-                    <!--<status-chart ng-hide="isEmptyArray(publication.reviewStatusCounts)"-->
-                            <!--data="publication.reviewStatusCounts"-->
-                            <!--labels="reviewLabels"-->
-                            <!--colors="reviewChartColors"-->
-                            <!--status-click="clickReviewStatus(selected)">-->
-                    <!--</status-chart>-->
+                    <p ng-show="isEmptyArray(articlestatus.counts)">{{publication.name}} har ingen saker enda!</p>
+                </div>
+                <table ng-hide="isEmptyArray(articlestatus.counts)" class="table">
+                    <tr>
+                        <td>Totalt</td>
+                        <td>{{countTotals(articlestatus.counts)}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Status korrektur
+                </div>
+                <div class="panel-body">
+                    <div ng-if="!isEmptyArray(reviewstatus.counts)">
+                        <div>
+                            <status-chart
+                                    data="reviewstatus.counts"
+                                    labels="reviewstatus.labels"
+                                    colours="reviewstatus.colors"
+                                    status-click="clickReviewStatus(selected)">
+                            </status-chart>
+                        </div>
+                    </div>
 
-                    <!--<p ng-show="isEmptyArray(publication.reviewStatusCounts)">{{publication.name}} har ingen saker enda!</p>-->
+                    <p ng-show="isEmptyArray(reviewstatus.counts)">{{publication.name}} har ingen saker enda!</p>
 
-                <!--</div>-->
-                <!--<table ng-hide="isEmptyArray(publication.reviewStatusCounts)" class="table">-->
-                    <!--<tr>-->
-                        <!--<td>Totalt</td>-->
-                        <!--<td>{{countTotals(publication.reviewStatusCounts)}}</td>-->
-                    <!--</tr>-->
-                <!--</table>-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div class="col-md-4">-->
-            <!--<div class="panel panel-info">-->
-                <!--<div class="panel-heading">-->
-                    <!--Status layout-->
-                <!--</div>-->
-                <!--<div class="panel-body">-->
-                    <!--<status-chart ng-hide="isEmptyArray(publication.statusCounts)"-->
-                                  <!--data="publication.layoutStatusCounts"-->
-                                  <!--labels="layoutStatusLabels"-->
-                                  <!--colors="layoutStatusChartColors"-->
-                                  <!--status-click="clickLayoutStatus(selected)">-->
-                    <!--</status-chart>-->
-                    <!--<p ng-show="isEmptyArray(publication.layoutStatusCounts)">{{publication.name}} har ingen sider enda!</p>-->
+                </div>
+                <table ng-hide="isEmptyArray(reviewstatus.counts)" class="table">
+                    <tr>
+                        <td>Totalt</td>
+                        <td>{{countTotals(reviewstatus.counts)}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Status layout
+                </div>
+                <div class="panel-body">
+                    <div ng-if="!isEmptyArray(layoutstatus.counts)">
+                        <div>
+                            <status-chart
+                                          data="layoutstatus.counts"
+                                          labels="layoutstatus.labels"
+                                          colours="layoutstatus.colors"
+                                          status-click="clickLayoutStatus(selected)">
+                            </status-chart>
+                        </div>
+                    </div>
+                    <p ng-show="isEmptyArray(layoutstatus.counts)">{{publication.name}} har ingen sider enda!</p>
 
-                <!--</div>-->
-                <!--<table ng-hide="isEmptyArray(publication.layoutStatusCounts)" class="table">-->
-                    <!--<tr>-->
-                        <!--<td>Totalt</td>-->
-                        <!--<td>{{countTotals(publication.layoutStatusCounts)}}</td>-->
-                    <!--</tr>-->
-                <!--</table>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
+                </div>
+                <table ng-hide="isEmptyArray(layoutstatus.counts)" class="table">
+                    <tr>
+                        <td>Totalt</td>
+                        <td>{{countTotals(layoutstatus.counts)}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-8">
 

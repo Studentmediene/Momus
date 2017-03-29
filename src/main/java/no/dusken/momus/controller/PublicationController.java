@@ -31,10 +31,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 @Service
 @RequestMapping("/publication")
@@ -62,6 +60,15 @@ public class PublicationController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody Publication getPublicationById(@PathVariable("id") Long id){
         return publicationRepository.findOne(id);
+    }
+
+    @RequestMapping(value = "/{id}/colophon", method = RequestMethod.GET)
+    public @ResponseBody String getColophon(@PathVariable("id") Long id, HttpServletResponse response){
+
+        response.addHeader("Content-Disposition", "attachment; filename=\"Kolofon_" + publicationRepository.findOne(id).getName() + ".txt\"");
+        response.addHeader("Content-Type", "text/plain;charset=UTF-16LE");
+
+        return publicationService.generateColophon(id);
     }
 
     @RequestMapping(value = "/active", method = RequestMethod.GET)
@@ -121,13 +128,13 @@ public class PublicationController {
     }
 
     @RequestMapping(value = "/statuscount/{pubId}", method = RequestMethod.GET)
-    public @ResponseBody List<Integer> getStatusCountsByPubId(@PathVariable("pubId") Long pi){
+    public @ResponseBody Map<Long,Integer> getStatusCountsByPubId(@PathVariable("pubId") Long pi){
         List<LayoutStatus> statuses = this.getLayoutStatuses();
-        List<Integer> list = new ArrayList<Integer>();
-        for(int i = 0; i < statuses.size(); i++){
-            list.add(this.getStatusCount(Long.valueOf(i), pi));
+        Map<Long, Integer> map = new HashMap<>();
+        for (LayoutStatus status : statuses) {
+            map.put(status.getId(), this.getStatusCount(status.getId(), pi));
         }
-        return list;
+        return map;
     }
 
 }
