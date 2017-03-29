@@ -67,11 +67,11 @@
                     <th class="button"></th>
                 </tr>
                 </thead>
-                <tr ng-show="loading > 0" style="text-align: center">
+                <tr ng-show="vm.loading" style="text-align: center">
                     <td colspan="7"><i class="fa fa-spinner fa-spin fa-4x"></i></td>
                 </tr>
                 <tbody ng-model="publication.pages" ui-sortable="sortableOptions">
-                <tr ng-repeat="page in publication.pages" style="{{pageColor(page)}}" ui-sortable-selectable>
+                <tr ng-repeat="page in vm.publication.pages" style="{{pageColor(page)}}" ui-sortable-selectable>
                     <!--Page number-->
                     <td style="text-align: center; cursor: move;" class="handle pagenum">{{page.page_nr}}</td>
                     <!--Articles (edit mode)-->
@@ -128,7 +128,7 @@
                                     <select style="background: rgba(255,255,255,0.5)"
                                             ng-model="article.status"
                                             ng-change="saveArticle(article)"
-                                            ng-options="s.name for s in statusOptions track by s.id">
+                                            ng-options="s.name for s in vm.articleStatuses track by s.id">
                                     </select>
                                 </td>
                                 <!--Review-->
@@ -136,7 +136,7 @@
                                     <select style="background: rgba(255,255,255,0.5)"
                                             ng-model="article.review"
                                             ng-change="saveArticle(article)"
-                                            ng-options="s.name for s in reviewOptions track by s.id">
+                                            ng-options="s.name for s in vm.reviewStatuses track by s.id">
                                     </select>
                                 </td>
                                 <!--Photostatus-->
@@ -184,7 +184,7 @@
                     <!--Layout status-->
                     <td class="layout" style="{{'background:' + page.layout_status.color}}">
                         <select style="background:rgba(255,255,255,0.5);" ng-model="page.layout_status" ng-change="savePage()"
-                                ng-options="l.name for l in layoutStatuses track by l.id">
+                                ng-options="l.name for l in vm.layoutStatuses track by l.id">
                         </select>
                     </td>
                     <!--Ad-->

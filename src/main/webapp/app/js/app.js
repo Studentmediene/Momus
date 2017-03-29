@@ -82,14 +82,16 @@ angular.module('momusApp', [
             {
                 templateUrl: 'partials/disposition/dispositionView.html',
                 controller: 'DispositionCtrl',
-                title: "Disposisjon"
+                title: "Disposisjon",
+                controllerAs: "vm"
             }
         )
             .when('/disposisjon',
             {
                 templateUrl:'partials/disposition/dispositionView.html',
                 controller:'DispositionCtrl',
-                title: "Disposisjon"
+                title: "Disposisjon",
+                controllerAs: "vm"
             }
         )
 

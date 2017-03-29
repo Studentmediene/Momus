@@ -17,12 +17,10 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest, $route, $window,uiSortableMultiSelectionMethods) {
+    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest, $route, $window,uiSortableMultiSelectionMethods, $q) {
+        var vm = this;
         $scope.pubId = $routeParams.id;
         $scope.loading = 5;
-        $scope.newPageAt = 0;
-        $scope.numNewPages = 1;
-        $scope.editPhotoStatus = false;
 
         $scope.pageDoneColor = "#DDFFCB";
         $scope.pageAdColor = "#f8f8f8";
@@ -43,49 +41,50 @@ angular.module('momusApp.controllers')
             tableLayout: "auto"
         };
 
-        if($scope.pubId){
-            PublicationService.getById($scope.pubId).success(function(data) {
-                if(!data){
-                    $location.path("/");
-                    return;
-                }
-                $scope.publication = data;
-                $scope.getPages();
-            });
-        } else{
-            PublicationService.getActive().success(function(data){
-                $scope.publication = data;
-                $scope.getPages();
+        function getPublication(pubid){
+            if(pubid){
+                return PublicationService.getById(pubid).success(function(data){
+                    return data;
+                });
+            }else{
+                return PublicationService.getActive().then(function(data){
+                    return data.data;
+                });
+            }
+        }
+
+        function getPages(pubid){
+            return getPublication(pubid).then(function(publication) {
+                return ArticleService.search({publication: pubid}).then(function(data){
+                    publication.articles = data.data;
+                    return PublicationService.getPages(pubid).then(function(data){
+                        publication.pages = data.data;
+                        return publication;
+                    })
+                })
+            })
+        }
+
+        function getDisposition(){
+            vm.loading = true;
+            var pubid = $routeParams.id;
+            return getPages(pubid).then(function(publication){
+                console.log(publication.articles);
+                PublicationService.linkPagesToArticles(vm.publication.pages, vm.publication.articles);
+                vm.loading = false;
             });
         }
 
-        $scope.getPages = function(){
-            var pubId = $scope.publication.id;
-            ArticleService.search({publication: pubId}).success(function (data) {
-                $scope.publication.articles = data;
-                $scope.loading--;
-                PublicationService.getPages(pubId).success(function (data){
-                    $scope.publication.pages = data;
-                    PublicationService.linkPagesToArticles($scope.publication.pages, $scope.publication.articles);
-                    $scope.loading--;
-                });
+        function getStatuses(){
+            return $q.all([ArticleService.getReviews(), ArticleService.getStatuses(), PublicationService.getLayoutStatuses()]).then(function(data){
+                vm.reviewStatuses = data[0].data;
+                vm.articleStatuses = data[1].data;
+                vm.layoutStatuses = data[2].data;
             });
+        }
 
-            ArticleService.getReviews().success(function(data){
-                $scope.reviewOptions = data;
-                $scope.loading--;
-            });
-
-            ArticleService.getStatuses().success(function(data){
-                $scope.statusOptions = data;
-                $scope.loading--;
-            });
-
-            PublicationService.getLayoutStatuses().success(function(data){
-                $scope.layoutStatuses = data;
-                $scope.loading--;
-            });
-        };
+        getStatuses();
+        getDisposition();
 
         /*
         *   Not used at the moment, left here in case it's wanted later
