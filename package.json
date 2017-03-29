@@ -1,6 +1,6 @@
 {
   "name": "Momus",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-contrib-copy": "~0.4.1",
