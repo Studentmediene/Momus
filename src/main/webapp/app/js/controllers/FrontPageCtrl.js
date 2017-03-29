@@ -170,7 +170,7 @@ angular.module('momusApp.controllers')
         };
 
         $scope.clickReviewStatus = function(selected){
-            var id = $filter("filter")($scope.layoutstatus.statuses,{name:selected})[0].id;
+            var id = $filter("filter")($scope.reviewstatus.statuses,{name:selected})[0].id;
             $location.url('artikler?publication=' + $scope.publication.id + '&review=' + id);
             $scope.$apply();
         };
