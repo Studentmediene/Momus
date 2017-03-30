@@ -37,8 +37,15 @@ angular.module('momusApp.services')
             getPages: function(id) {
                 return $http.get('/api/publication/pages/'+id);
             },
-            createPage: function(page) {
-                return $http.post('/api/publication/pages/', page);
+            createPage: function(publication, pagenr, layout_status) {
+                return {
+                    page_nr: pagenr,
+                    note: "",
+                    advertisement: false,
+                    articles: [],
+                    publication: publication.id,
+                    layout_status: layout_status
+                };
             },
             deletePage: function(id) {
                 return $http.delete('/api/publication/pages/delete/' + id);

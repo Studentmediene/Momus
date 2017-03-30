@@ -17,7 +17,7 @@
     <div class="row">
         <h1>Disposisjon for {{vm.publication.name}}</h1>
         <div style="margin-bottom: 10px;">
-            <button ng-click="showHelp()" class="btn btn-success">
+            <button ng-click="vm.showHelp()" class="btn btn-success">
                 Hjelp?
             </button>
             <a href="/api/publication/{{vm.publication.id}}/colophon"><button class="btn btn-primary">
@@ -41,14 +41,14 @@
                     <th>
                         <table>
                             <tr>
-                                <td ng-style="responsiveColumns['name']">Navn</td>
+                                <td ng-style="vm.responsiveColumns['name']">Navn</td>
                                 <td class="section">Seksjon</td>
-                                <td ng-style="responsiveColumns['journalist']">Journalister</td>
-                                <td ng-style="responsiveColumns['photographer']">Fotografer</td>
+                                <td ng-style="vm.responsiveColumns['journalist']">Journalister</td>
+                                <td ng-style="vm.responsiveColumns['photographer']">Fotografer</td>
                                 <td class="status">Status</td>
                                 <td class="review">Korrektur</td>
-                                <td ng-style="responsiveColumns['pstatus']">Fotostatus</td>
-                                <td ng-style="responsiveColumns['comment']">Kommentar</td>
+                                <td ng-style="vm.responsiveColumns['pstatus']">Fotostatus</td>
+                                <td ng-style="vm.responsiveColumns['comment']">Kommentar</td>
                             </tr>
                         </table>
                     </th>
@@ -59,11 +59,13 @@
                     <th class="button"></th>
                 </tr>
                 </thead>
+                <!-- Loading spinner -->
                 <tr ng-show="vm.loading" style="text-align: center">
                     <td colspan="7"><i class="fa fa-spinner fa-spin fa-4x"></i></td>
                 </tr>
-                <tbody ng-model="vm.publication.pages" ui-sortable="sortableOptions">
-                <tr ng-repeat="page in vm.publication.pages | orderBy: page.page_nr" style="{{pageColor(page)}}" ui-sortable-selectable>
+
+                <tbody ng-model="vm.publication.pages" ui-sortable="vm.sortableOptions">
+                <tr ng-repeat="page in vm.publication.pages" style="{{'background: ' + vm.pageColor(page)}}" ui-sortable-selectable>
                     <!--Page number-->
                     <td class="handle pagenum">{{page.page_nr}}</td>
                     <!--Articles (edit mode)-->
@@ -74,7 +76,7 @@
                                    show="name">
                         </id-select>
                         <div class="pull-right">
-                            <button ng-click="createArticle(page)" class="btn btn-success" tooltip="Lag ny artikkel">
+                            <button ng-click="vm.createArticle(page)" class="btn btn-success" tooltip="Lag ny artikkel">
                                 <i class="fa fa-plus"></i> <i class="fa fa-file-text"></i>
                             </button>
                         </div>
@@ -82,15 +84,15 @@
                     <!--Articles (view mode)-->
                     <td style="padding:0;margin:0;" ng-hide="editPage">
                         <table class="table pageArticleTable" style="padding: 0;margin:0;" ng-style="dispTableLayout">
-                            <tr ng-repeat="article in page.articles" style="{{pageColor(page)}}">
+                            <tr ng-repeat="article in page.articles" style="{{'background: ' + vm.pageColor(page)}}">
                                 <!--Name-->
-                                <td ng-style="responsiveColumns['name']" style="word-wrap: break-word;">
+                                <td ng-style="vm.responsiveColumns['name']" style="word-wrap: break-word;">
                                     <a href="#/artikler/{{article.id}}">{{article.name}}</a> <span tooltip="Antall tegn">({{article.content_length}})</span>
                                 </td>
                                 <!--Section-->
                                 <td class="section" style="background: {{article.section.color}}">{{article.section.name}}</td>
                                 <!--Journalists-->
-                                <td ng-style="responsiveColumns['journalist']" style="word-wrap: break-word;">
+                                <td ng-style="vm.responsiveColumns['journalist']" style="word-wrap: break-word;">
                                     <ul class="list-unstyled">
                                         <li class="" ng-repeat="person in article.journalists">
                                             <span person-widget="person" class="disp-break-word">
@@ -103,7 +105,7 @@
                                     </ul>
                                 </td>
                                 <!--Photographers-->
-                                <td ng-style="responsiveColumns['photographer']" style="word-wrap: break-word;">
+                                <td ng-style="vm.responsiveColumns['photographer']" style="word-wrap: break-word;">
                                     <ul class="list-unstyled">
                                         <li class="" ng-repeat="person in article.photographers">
                                             <span person-widget="person" class="disp-break-word">
@@ -119,7 +121,7 @@
                                 <td class="status" style="{{'background-color:' + article.status.color}}">
                                     <select style="background: rgba(255,255,255,0.5)"
                                             ng-model="article.status"
-                                            ng-change="saveArticle(article)"
+                                            ng-change="vm.saveArticle(article)"
                                             ng-options="s.name for s in vm.articleStatuses track by s.id">
                                     </select>
                                 </td>
@@ -127,38 +129,38 @@
                                 <td class="review" style="{{'background:' + article.review.color}}">
                                     <select style="background: rgba(255,255,255,0.5)"
                                             ng-model="article.review"
-                                            ng-change="saveArticle(article)"
+                                            ng-change="vm.saveArticle(article)"
                                             ng-options="s.name for s in vm.reviewStatuses track by s.id">
                                     </select>
                                 </td>
                                 <!--Photostatus-->
-                                <td ng-style="responsiveColumns['pstatus']" ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && article.photo_status != '' && article.photo_status != undefined">
+                                <td ng-style="vm.responsiveColumns['pstatus']" ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && article.photo_status != '' && article.photo_status != undefined">
                                     <textwrapper length="15" text="article.photo_status"></textwrapper>
                                 </td>
-                                <td ng-style="responsiveColumns['pstatus']" class="editPSPlaceholder" ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && (article.photo_status == '' || article.photo_status == undefined)">
+                                <td ng-style="vm.responsiveColumns['pstatus']" class="editPSPlaceholder" ng-click="editPhotoStatus = true" ng-show="!editPhotoStatus && (article.photo_status == '' || article.photo_status == undefined)">
                                     [Rediger]
                                 </td>
-                                <td ng-style="responsiveColumns['pstatus']" ng-show="editPhotoStatus">
+                                <td ng-style="vm.responsiveColumns['pstatus']" ng-show="editPhotoStatus">
                                     <div class="input-group" style="position: absolute; box-shadow: #000000">
                                         <textarea class="form-control input-sm" ng-model="article.photo_status" style="width: 200px; resize: vertical"></textarea>
                                         <span class="">
-                                                <button class="btn btn-sm" ng-click="saveArticle(article);editPhotoStatus=false">
+                                                <button class="btn btn-sm" ng-click="vm.saveArticle(article);editPhotoStatus=false">
                                                     <i class="fa fa-save"></i>
                                                 </button>
                                             </span>
                                     </div>
                                 </td>
-                                <td ng-style="responsiveColumns['comment']" ng-click="editComment = true" ng-show="!editComment && article.comment != '' && article.comment != undefined">
+                                <td ng-style="vm.responsiveColumns['comment']" ng-click="editComment = true" ng-show="!editComment && article.comment != '' && article.comment != undefined">
                                     <textwrapper length="15" text="article.comment"></textwrapper>
                                 </td>
-                                <td ng-style="responsiveColumns['comment']" class="editPSPlaceholder" ng-click="editComment = true" ng-show="!editComment && (article.comment == '' || article.comment == undefined)">
+                                <td ng-style="vm.responsiveColumns['comment']" class="editPSPlaceholder" ng-click="editComment = true" ng-show="!editComment && (article.comment == '' || article.comment == undefined)">
                                     [Rediger]
                                 </td>
-                                <td ng-style="responsiveColumns['comment']" ng-show="editComment">
+                                <td ng-style="vm.responsiveColumns['comment']" ng-show="editComment">
                                     <div class="input-group" style="position: absolute; box-shadow: #000000">
                                         <textarea class="form-control input-sm" ng-model="article.comment" style="width: 200px; resize: vertical"></textarea>
                                         <span class="">
-                                                <button class="btn btn-sm" ng-click="saveArticle(article);editComment=false">
+                                                <button class="btn btn-sm" ng-click="vm.saveArticle(article);editComment=false">
                                                     <i class="fa fa-save"></i>
                                                 </button>
                                             </span>
@@ -169,7 +171,7 @@
                     </td>
                     <!--Layout status-->
                     <td class="layout" style="{{'background:' + page.layout_status.color}}">
-                        <select style="background:rgba(255,255,255,0.5);" ng-model="page.layout_status" ng-change="savePage()"
+                        <select style="background:rgba(255,255,255,0.5);" ng-model="page.layout_status" ng-change="vm.savePage()"
                                 ng-options="l.name for l in vm.layoutStatuses track by l.id">
                         </select>
                     </td>
@@ -184,7 +186,7 @@
                     </td>
                     <!--Done-->
                     <td class="button">
-                        <span style="cursor: pointer" ng-click="page.done = !page.done; savePage();">
+                        <span style="cursor: pointer" ng-click="page.done = !page.done; vm.savePage();">
                             <i class="fa fa-check fa-lg"
                                ng-class="{'text-danger' : !page.done, 'text-success' : page.done }"
                                tooltip="Siden er {{!page.done ? 'ikke ' : ''}} helt ferdig">
@@ -196,13 +198,13 @@
                         <button ng-click="editPage = true" class="btn btn-warning btn-xs pull-right" ng-hide="editPage">
                             <i class="fa fa-pencil"></i>
                         </button>
-                        <button ng-click="savePage();editPage = false" class="btn btn-success pull-right btn-xs" ng-show="editPage">
+                        <button ng-click="vm.savePage();editPage = false" class="btn btn-success pull-right btn-xs" ng-show="editPage">
                             <i class="fa fa-save"></i>
                         </button>
                     </td>
                     <!--Delete-->
                     <td class="button">
-                        <button ng-click="deletePage(page)" class="btn btn-danger pull-right btn-xs">
+                        <button ng-click="vm.deletePage(page)" class="btn btn-danger pull-right btn-xs">
                             <i class="fa fa-trash-o"></i>
                         </button>
                     </td>

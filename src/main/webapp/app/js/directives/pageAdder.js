@@ -9,10 +9,7 @@ angular.module('momusApp.directives').
                 maxPagePos: '='
             },
             link: function(scope, element, attrs){
-                console.log(scope.maxNumPages);
-                scope.pageValid = pageValid;
-
-                function pageValid(){
+                scope.pageValid = function() {
                     return scope.pageForm.num.$valid && scope.pageForm.at.$valid;
                 }
             }

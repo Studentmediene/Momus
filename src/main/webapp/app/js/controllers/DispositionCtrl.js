@@ -20,36 +20,50 @@ angular.module('momusApp.controllers')
     .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest, $route, $window,uiSortableMultiSelectionMethods, $q) {
         var vm = this;
         vm.maxNewPages = 100;
-        vm.testing = testing;
 
-        $scope.pageDoneColor = "#DDFFCB";
-        $scope.pageAdColor = "#f8f8f8";
+        // Get all data
+        getStatuses();
+        getDisposition();
 
-        // Widths of columns in the disp. Uses ngStyle to sync widths across pages (which are separate tables)
-        // The widths that are here will be used when the app is loaded on a screen so small the disp gets a scroll bar
-        $scope.responsiveColumns = {
-            comment: {minWidth: '100px'},
+        ///////////////////////////////
+        // Data service declarations //
+        ///////////////////////////////
+        vm.newPage = newPage;
+        vm.savePage = savePage;
+        vm.deletePage = deletePage;
+
+        vm.createArticle = createArticle;
+        vm.saveArticle = saveArticle;
+
+        vm.showHelp = showHelp;
+
+
+        ////////////////////////
+        // Style declarations //
+        ////////////////////////
+        var pageDoneColor = "#DDFFCB";
+        var pageAdColor = "#f8f8f8";
+        vm.pageColor = function(page) { return (page.done ? pageDoneColor : (page.advertisement ? pageAdColor : '#FFF'))};
+
+        // Widths of columns in the disp. Used to sync widths across pages (which are separate tables)
+        vm.responsiveColumns = {
             name: {minWidth: '100px'},
             journalist: {minWidth: '80px'},
             photographer: {minWidth: '80px'},
-            pstatus: {minWidth: '90px'}
+            pstatus: {minWidth: '90px'},
+            comment: {minWidth: '100px'}
         };
         vm.dispSortableStyle = {}; // Used to prevent the disposition from breaking while moving pages
 
-        function testing(){
-            console.log("submitted");
-        }
 
-        function getPublication(pubid){
-            if(pubid){
-                return PublicationService.getById(pubid).success(function(data){
-                    return data;
-                });
-            }else{
-                return PublicationService.getActive().then(function(data){
-                    return data.data;
-                });
-            }
+        function getDisposition(){
+            vm.loading = true;
+            var pubid = $routeParams.id;
+            return getPages(pubid).then(function(publication){
+                PublicationService.linkPagesToArticles(publication.pages, publication.articles);
+                vm.publication = publication;
+                vm.loading = false;
+            });
         }
 
         function getPages(pubid){
@@ -65,14 +79,16 @@ angular.module('momusApp.controllers')
             })
         }
 
-        function getDisposition(){
-            vm.loading = true;
-            var pubid = $routeParams.id;
-            return getPages(pubid).then(function(publication){
-                PublicationService.linkPagesToArticles(publication.pages, publication.articles);
-                vm.publication = publication;
-                vm.loading = false;
-            });
+        function getPublication(pubid){
+            if(pubid){
+                return PublicationService.getById(pubid).success(function(data){
+                    return data;
+                });
+            }else{
+                return PublicationService.getActive().then(function(data){
+                    return data.data;
+                });
+            }
         }
 
         function getStatuses(){
@@ -83,109 +99,85 @@ angular.module('momusApp.controllers')
             });
         }
 
-        getStatuses();
-        getDisposition();
-
-        $scope.savePublication = function() {
-            PublicationService.updateMetadata($scope.publication).success(function(data){
-                $scope.getPages();
-            });
-        };
-
-        $scope.newPage = function(){
-            var insertPageAt = vm.newPageAt;
-            var numNewPages = vm.numNewPages;
-            if(numNewPages>100){
-                numNewPages = 100;
-            }else if(numNewPages <= 0){
-                numNewPages = 1;
-            }
-            // Backend?
+        function newPage(newPageAt, numNewPages){
             for(var i = 0; i < numNewPages; i++) {
-                var page = {
-                    page_nr: $scope.publication.pages.length + 1,
-                    note: "",
-                    advertisement: false,
-                    articles: [],
-                    publication: $scope.publication.id,
-                    layout_status: $scope.getLayoutStatusByName("Ukjent")
-                };
-                    if (0 <= insertPageAt && insertPageAt <= $scope.publication.pages.length) {
-                        $scope.publication.pages.splice(insertPageAt, 0, page);
-                    } else {
-                        $scope.publication.pages.push(data);
-                    }
-                    sortPages();
+                var page = PublicationService.createPage(vm.publication, vm.publication.pages.length+1, getLayoutStatusByName("Ukjent"));
+                vm.publication.pages.splice(newPageAt, 0, page);
             }
-            $scope.savePublication();
-        };
+            updatePageNrs();
+            savePublication();
+        }
 
-        function sortPages(){
+        function savePage() {
+            PublicationService.updateMetadata(vm.publication);
+        }
+
+        function deletePage(page) {
+            if(confirm("Er du sikker på at du vil slette denne siden?")){
+                PublicationService.deletePage(page.id).success(function(){
+                    var i = vm.publication.pages.indexOf(page);
+                    vm.publication.pages.splice(i, 1);
+                    updatePageNrs();
+                });
+            }
+        }
+
+        function updatePageNrs(){
             for ( var i = 0; i < vm.publication.pages.length; i++ ) {
                 vm.publication.pages[i].page_nr = i+1;
             }
         }
 
-        $scope.savePage = function() {
-            PublicationService.updateMetadata($scope.publication);
-        };
+        function savePublication() {
+            PublicationService.updateMetadata(vm.publication);
+        }
 
-        $scope.deletePage = function(page) {
-            if(confirm("Er du sikker på at du vil slette denne siden?")){
-                PublicationService.deletePage(page.id).success(function(){
-                    PublicationService.getPages($scope.publication.id).success(function(data){
-                        $scope.publication.pages = data;
-                        sortPages();
-                        $scope.savePublication();
-                    });
-                });
-            }
-        };
-
-        // Colorize page based on its status (css style)
-        $scope.pageColor = function(page){
-            return 'background: ' + (page.done ? $scope.pageDoneColor : (page.advertisement ? $scope.pageAdColor : '#FFF'));
-        };
-
-        //TODO put this in a service
-        $scope.getLayoutStatusByName = function(name){
-            for(var i = 0; i < $scope.layoutStatuses.length; i++){
-                if($scope.layoutStatuses[i].name == name){
-                    return $scope.layoutStatuses[i];
-                }
-            }
-            return null;
-        };
-
-        $scope.createArticle = function(page){
+        function createArticle(page){
             var modal = $modal.open({
                 templateUrl: 'partials/article/createArticleModal.html',
                 controller: 'CreateArticleModalCtrl',
                 resolve: {
                     pubId: function(){
-                        return $scope.publication.id;
+                        return vm.publication.id;
                     }
                 }
             });
             modal.result.then(function(id){
                 ArticleService.getArticle(id).success(function(data){
                     page.articles.push(data);
-                    $scope.publication.articles.push(data);
-                    $scope.savePage();
+                    vm.publication.articles.push(data);
+                    savePage();
                 })
             })
+        }
 
-        };
-
-        $scope.saveArticle = function(article){
+        function saveArticle(article){
             ArticleService.updateMetadata(article);
-        };
+        }
 
-        $scope.sortableOptions = uiSortableMultiSelectionMethods.extendOptions({
+        function showHelp(){
+            $templateRequest('partials/templates/help/dispHelp.html').then(function(template){
+                MessageModal.info(template);
+            });
+        }
+
+        //TODO put this in a service
+        function getLayoutStatusByName(name){
+            for(var i = 0; i < vm.layoutStatuses.length; i++){
+                if(vm.layoutStatuses[i].name == name){
+                    return vm.layoutStatuses[i];
+                }
+            }
+            return null;
+        }
+
+        vm.sortableOptions = uiSortableMultiSelectionMethods.extendOptions({
             helper: uiSortableMultiSelectionMethods.helper,
             start: function(e, ui) {
                 vm.dispSortableStyle.tableLayout = "auto"; //To not break the table
                 $scope.$apply(); //Apply since this is jQuery stuff
+
+                //Calculate height of placeholder
                 var totalHeight = 0;
                 for(var i = 0; i< ui.helper[0].children.length;i++){
                     var child = ui.helper[0].children[i];
@@ -196,25 +188,14 @@ angular.module('momusApp.controllers')
             axis: 'y',
             handle: '.handle',
             stop: function(e, ui){
-                $scope.selectedPage = vm.publication.pages[ui.item.index()];
-                //PublicationService.updateMetadata($scope.publication);
                 vm.dispSortableStyle.tableLayout = "";
-                $scope.updateDispSize(); //In order to put the tableLayout back to the correct value
+                updatePageNrs();
+                PublicationService.updateMetadata(vm.publication);
             },
             placeholder: "disp-placeholder"
         });
 
-        $scope.generateColophon = function(){
-            PublicationService.getColophon($scope.publication.id);
-        };
-
-        $scope.showHelp = function(){
-            $templateRequest('partials/templates/help/dispHelp.html').then(function(template){
-                MessageModal.info(template);
-            });
-        };
-
-        $scope.updateDispSize = function(){
+        function updateDispSize(){
             var constantArticleSize = 320;
             var constantDispSize = constantArticleSize + 220;
             var dispWidth = angular.element(document.getElementById("disposition")).context.clientWidth;
@@ -233,17 +214,20 @@ angular.module('momusApp.controllers')
                 if($window.innerWidth > 992){
                     width = Math.floor(shareParts[k]*widthLeft);
                 }else{ //Use min width and scroll if screen is too small.
-                    width = parseInt($scope.responsiveColumns[k].minWidth);
+                    width = parseInt(vm.responsiveColumns[k].minWidth);
                 }
 
-                $scope.responsiveColumns[k] = {minWidth: width + 'px', maxWidth: width + 'px', width: width + 'px'};
+                vm.responsiveColumns[k] = {minWidth: width + 'px', maxWidth: width + 'px', width: width + 'px'};
             }
-        };
+        }
 
+        // To recalculate disp table when resizing the screen
         angular.element($window).bind('resize', function(){
-            $scope.updateDispSize();
+            updateDispSize();
             $scope.$apply();
         });
 
-        $scope.updateDispSize();
+        $scope.$on('$destroy', function(){
+            angular.element($window).unbind('resize');
+        });
     });
