@@ -19,8 +19,8 @@
 angular.module('momusApp.controllers')
     .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest, $route, $window,uiSortableMultiSelectionMethods, $q) {
         var vm = this;
-        $scope.pubId = $routeParams.id;
-        $scope.loading = 5;
+        vm.maxNewPages = 100;
+        vm.testing = testing;
 
         $scope.pageDoneColor = "#DDFFCB";
         $scope.pageAdColor = "#f8f8f8";
@@ -34,12 +34,11 @@ angular.module('momusApp.controllers')
             photographer: {minWidth: '80px'},
             pstatus: {minWidth: '90px'}
         };
+        vm.dispSortableStyle = {}; // Used to prevent the disposition from breaking while moving pages
 
-        //ngStyle for disp table layout.
-        //Should be auto when screen is smaller than 992 px and fixed when above
-        $scope.dispTableLayout = {
-            tableLayout: "auto"
-        };
+        function testing(){
+            console.log("submitted");
+        }
 
         function getPublication(pubid){
             if(pubid){
@@ -55,6 +54,7 @@ angular.module('momusApp.controllers')
 
         function getPages(pubid){
             return getPublication(pubid).then(function(publication) {
+                pubid = publication.id;
                 return ArticleService.search({publication: pubid}).then(function(data){
                     publication.articles = data.data;
                     return PublicationService.getPages(pubid).then(function(data){
@@ -69,8 +69,8 @@ angular.module('momusApp.controllers')
             vm.loading = true;
             var pubid = $routeParams.id;
             return getPages(pubid).then(function(publication){
-                console.log(publication.articles);
-                PublicationService.linkPagesToArticles(vm.publication.pages, vm.publication.articles);
+                PublicationService.linkPagesToArticles(publication.pages, publication.articles);
+                vm.publication = publication;
                 vm.loading = false;
             });
         }
@@ -86,15 +86,6 @@ angular.module('momusApp.controllers')
         getStatuses();
         getDisposition();
 
-        /*
-        *   Not used at the moment, left here in case it's wanted later
-        */
-        $scope.generateDisp = function(){
-            PublicationService.generateDisp($scope.publication.id).success(function(data){
-                $scope.publication.pages = data;
-            })
-        };
-
         $scope.savePublication = function() {
             PublicationService.updateMetadata($scope.publication).success(function(data){
                 $scope.getPages();
@@ -102,24 +93,25 @@ angular.module('momusApp.controllers')
         };
 
         $scope.newPage = function(){
-            var insertPageAt = $scope.newPageAt;
-            var numNewPages = $scope.numNewPages;
+            var insertPageAt = vm.newPageAt;
+            var numNewPages = vm.numNewPages;
             if(numNewPages>100){
                 numNewPages = 100;
             }else if(numNewPages <= 0){
                 numNewPages = 1;
             }
+            // Backend?
             for(var i = 0; i < numNewPages; i++) {
-                var temp_page = {
+                var page = {
                     page_nr: $scope.publication.pages.length + 1,
-                    note: null,
+                    note: "",
                     advertisement: false,
                     articles: [],
                     publication: $scope.publication.id,
                     layout_status: $scope.getLayoutStatusByName("Ukjent")
                 };
                     if (0 <= insertPageAt && insertPageAt <= $scope.publication.pages.length) {
-                        $scope.publication.pages.splice(insertPageAt, 0, temp_page);
+                        $scope.publication.pages.splice(insertPageAt, 0, page);
                     } else {
                         $scope.publication.pages.push(data);
                     }
@@ -129,8 +121,8 @@ angular.module('momusApp.controllers')
         };
 
         function sortPages(){
-            for ( var i = 0; i < $scope.publication.pages.length; i++ ) {
-                $scope.publication.pages[i].page_nr = i+1;
+            for ( var i = 0; i < vm.publication.pages.length; i++ ) {
+                vm.publication.pages[i].page_nr = i+1;
             }
         }
 
@@ -192,7 +184,7 @@ angular.module('momusApp.controllers')
         $scope.sortableOptions = uiSortableMultiSelectionMethods.extendOptions({
             helper: uiSortableMultiSelectionMethods.helper,
             start: function(e, ui) {
-                $scope.dispTableLayout.tableLayout = "auto"; //To not break the table
+                vm.dispSortableStyle.tableLayout = "auto"; //To not break the table
                 $scope.$apply(); //Apply since this is jQuery stuff
                 var totalHeight = 0;
                 for(var i = 0; i< ui.helper[0].children.length;i++){
@@ -204,9 +196,9 @@ angular.module('momusApp.controllers')
             axis: 'y',
             handle: '.handle',
             stop: function(e, ui){
-                $scope.selectedPage = $scope.publication.pages[ui.item.index()];
-                sortPages();
-                PublicationService.updateMetadata($scope.publication);
+                $scope.selectedPage = vm.publication.pages[ui.item.index()];
+                //PublicationService.updateMetadata($scope.publication);
+                vm.dispSortableStyle.tableLayout = "";
                 $scope.updateDispSize(); //In order to put the tableLayout back to the correct value
             },
             placeholder: "disp-placeholder"
@@ -226,7 +218,6 @@ angular.module('momusApp.controllers')
             var constantArticleSize = 320;
             var constantDispSize = constantArticleSize + 220;
             var dispWidth = angular.element(document.getElementById("disposition")).context.clientWidth;
-
             //Must divide rest of width between journalists, photographers, photo status and comment.
             var widthLeft = dispWidth - constantDispSize;
             var shareParts = {
@@ -241,10 +232,8 @@ angular.module('momusApp.controllers')
                 var width;
                 if($window.innerWidth > 992){
                     width = Math.floor(shareParts[k]*widthLeft);
-                    $scope.dispTableLayout.tableLayout = "fixed";
                 }else{ //Use min width and scroll if screen is too small.
                     width = parseInt($scope.responsiveColumns[k].minWidth);
-                    $scope.dispTableLayout.tableLayout = "auto";
                 }
 
                 $scope.responsiveColumns[k] = {minWidth: width + 'px', maxWidth: width + 'px', width: width + 'px'};

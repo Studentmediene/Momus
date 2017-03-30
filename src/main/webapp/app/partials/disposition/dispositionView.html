@@ -15,34 +15,26 @@
   -->
 <div class="container">
     <div class="row">
-        <h1>Disposisjon for {{publication.name}}</h1>
-        <button ng-click="showHelp()" class="btn btn-success" style="margin-bottom: 10px;">
-            Hjelp?
-        </button>
-        <a href="/api/publication/{{publication.id}}/colophon"><button class="btn btn-primary" style="margin-bottom: 10px;">
-            <i class="fa fa-file-text-o"/> Generer kolofon
-        </button></a>
+        <h1>Disposisjon for {{vm.publication.name}}</h1>
+        <div style="margin-bottom: 10px;">
+            <button ng-click="showHelp()" class="btn btn-success">
+                Hjelp?
+            </button>
+            <a href="/api/publication/{{vm.publication.id}}/colophon"><button class="btn btn-primary">
+                <i class="fa fa-file-text-o"/> Generer kolofon
+            </button></a>
+        </div>
     </div>
 
     <div class="row">
         <div id="disposition" class="panel panel-default">
             <div class="panel-heading clearfix">
                     <div class="pull-left"><h5>Sider</h5></div>
-                    <div class="pull-right" style="width:360px" scroll-trigger="attach-top-true">
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-addon">Legg til</span>
-                            <input type="number" ng-model="numNewPages" class="form-control" style="max-width:100px;">
-                            <span class="input-group-addon">ny{{numNewPages > 1 ? "e" : ""}} side{{numNewPages > 1 ? "r" : ""}} etter side</span>
-                            <input type="number" ng-model="newPageAt" min="0" max="{{publication.pages.length}}" class="form-control">
-                            <span class="input-group-btn">
-                                <button class="btn btn-success" type="button" ng-click="newPage()" ng-disabled="numNewPages < 1 || numNewPages > 100">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </span>
-                        </div>
+                    <div class="pull-right" scroll-trigger="attach-top-true">
+                        <page-adder max-num-pages="vm.maxNewPages" max-page-pos="vm.publication.pages.length" submit="vm.testing()"></page-adder>
                     </div>
             </div>
-            <table class="pageTable table table-responsive table-bordered table-condensed" style="font-size: 85%; overflow-x: auto;" ng-style="dispTableLayout">
+            <table class="table table-responsive table-bordered table-condensed disposition-table" ng-style="vm.dispSortableStyle">
                 <thead>
                 <tr>
                     <th class="pagenum">#</th>
@@ -70,10 +62,10 @@
                 <tr ng-show="vm.loading" style="text-align: center">
                     <td colspan="7"><i class="fa fa-spinner fa-spin fa-4x"></i></td>
                 </tr>
-                <tbody ng-model="publication.pages" ui-sortable="sortableOptions">
-                <tr ng-repeat="page in vm.publication.pages" style="{{pageColor(page)}}" ui-sortable-selectable>
+                <tbody ng-model="vm.publication.pages" ui-sortable="sortableOptions">
+                <tr ng-repeat="page in vm.publication.pages | orderBy: page.page_nr" style="{{pageColor(page)}}" ui-sortable-selectable>
                     <!--Page number-->
-                    <td style="text-align: center; cursor: move;" class="handle pagenum">{{page.page_nr}}</td>
+                    <td class="handle pagenum">{{page.page_nr}}</td>
                     <!--Articles (edit mode)-->
                     <td ng-show="editPage">
                         <id-select multiple class="pull-left" style="width: 90%;"
@@ -175,12 +167,6 @@
                             </tr>
                         </table>
                     </td>
-                    <!--Comment
-                    <td ng-style="responsiveColumns['comment']">
-                        <div ng-hide="editPage" style="word-wrap: break-word;">{{page.note}}</div>
-                        <textarea ng-show="editPage" style="position: absolute; width: 200px; resize: vertical; max-height:200px; height: 80px;" ng-model="page.note"></textarea>
-                    </td>
-                    -->
                     <!--Layout status-->
                     <td class="layout" style="{{'background:' + page.layout_status.color}}">
                         <select style="background:rgba(255,255,255,0.5);" ng-model="page.layout_status" ng-change="savePage()"

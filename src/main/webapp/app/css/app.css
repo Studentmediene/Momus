@@ -243,27 +243,6 @@ a.zeroclipboard-is-hover {
     line-height:32px;
 }
 
-.pageArticleTable tbody tr:first-child td {
-    border-top:0px #e6e6e6;
-}
-
-.pageTable > tbody > tr > td, .pageTable > thead > td > th{
-    border: 1px solid #cccccc;
-    border-collapse: collapse !important;
-    border-spacing: 0;
-}
-
-.pageTable > tbody > tr:not(:last-child) > td{
-    border-bottom:1px solid #aaa !important;
-}
-
-@media (min-width: 992px) {
-    .pageArticleTable, .pageTable{
-        table-layout: fixed;
-    }
-
-}
-
 .disp-break-word{
     word-wrap:break-word;
 
@@ -305,82 +284,6 @@ a.zeroclipboard-is-hover {
     top:50px;
     z-index:100;
     background-color: white;
-}
-
-/* Style for the columns with static widths */
-/*
- * This is a cool way of doing it, but it breaks in older browsers
-:root{
-    --pagenum_width: 20px;
-    --section_width: 100px;
-    --status_width:120px;
-    --review_width: 100px;
-    --layout_width:80px;
-    --knapp_width:30px;
-}*/
-
-.pagenum{
-    width: 20px;
-    min-width: 20px;
-    max-width: 20px;
-}
-
-.section{
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
-}
-.status{
-    width: 120px;
-    min-width: 120px;
-    max-width: 120px;
-}
-
-.review{
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
-}
-
-.layout{
-    width: 80px;
-    min-width: 80px;
-    max-width: 80px;
-}
-
-.button{
-    width:30px;
-    min-width: 30px;
-    max-width: 30px;
-}
-
-/*Ferdig*/
-
-.ui-select-multiple input.ui-select-search {
-    width: 100% !important;
-}
-.disp-helper {
-    border: 1px solid #cfcfcf;
-    opacity: 0.8;
-}
-
-.disp-placeholder {
-    background-color: #99ff99;
-}
-
-@media (max-width: 992px) {
-    #disposition{
-        overflow-x: scroll;
-    }
-}
-
-.editPSPlaceholder {
-    color:#999;
-}
-
-.editPSPlaceholder:hover{
-    color:#000;
-    cursor: pointer;
 }
 
 /* Styling for selected elements in disp */

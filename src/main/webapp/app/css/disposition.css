@@ -1,0 +1,97 @@
+/*CSS that concerns the disposition */
+
+.ui-select-multiple input.ui-select-search {
+    width: 100% !important;
+}
+.disp-helper {
+    border: 1px solid #cfcfcf;
+    opacity: 0.8;
+}
+
+.disp-placeholder {
+    background-color: #99ff99;
+}
+
+#disposition{
+    font-size: 85%;
+}
+/* Scroll on disposition on small screens */
+@media (max-width: 992px) {
+    #disposition{
+        overflow-x: scroll;
+    }
+}
+
+@media (max-width: 992px) {
+    .disposition-table{
+        table-layout: auto;
+    }
+}
+@media (min-width: 992px){
+    .pageArticleTable, .disposition-table{
+        table-layout: fixed;
+    }
+}
+
+.pageArticleTable tbody tr:first-child td {
+    border-top:0px #e6e6e6;
+}
+
+.disposition-table > tbody > tr > td, .disposition-table > thead > td > th{
+    border: 1px solid #cccccc;
+    border-collapse: collapse !important;
+    border-spacing: 0;
+}
+
+.disposition-table > tbody > tr:not(:last-child) > td{
+    border-bottom:1px solid #aaa !important;
+}
+
+.edit-ps-placeholder {
+    color:#999;
+}
+
+.edit-ps-placeholder:hover{
+    color:#000;
+    cursor: pointer;
+}
+
+.handle{
+    text-align: center;
+    cursor: move;
+}
+
+.pagenum{
+    width: 20px;
+    min-width: 20px;
+    max-width: 20px;
+}
+
+.section{
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
+}
+.status{
+    width: 120px;
+    min-width: 120px;
+    max-width: 120px;
+}
+
+.review{
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
+}
+
+.layout{
+    width: 80px;
+    min-width: 80px;
+    max-width: 80px;
+}
+
+.button{
+    width:30px;
+    min-width: 30px;
+    max-width: 30px;
+}
