@@ -54,16 +54,16 @@ angular.module('momusApp.services')
                 return $http.get('/api/publication/pages/generate/'+id);
             },
             getLayoutStatuses: function(){
-                return $http.get('/api/publication/layoutstatus')
+                return $http.get('/api/publication/layoutstatus');
             },
             getStatusCounts: function(id){
-                return $http.get('/api/article/statuscount/' + id)
+                return $http.get('/api/article/statuscount/' + id);
             },
             getLayoutStatusCounts: function(id){
-                return $http.get('/api/publication/statuscount/' + id)
+                return $http.get('/api/publication/statuscount/' + id);
             },
             getReviewStatusCounts: function(id){
-                return $http.get('/api/article/reviewstatuscount/' + id)
+                return $http.get('/api/article/reviewstatuscount/' + id);
             },
             linkPagesToArticles: function(pages, articles){
                 for(var i = 0; i < pages.length; i++){
@@ -71,7 +71,7 @@ angular.module('momusApp.services')
                     for(var j = 0; j < page.articles.length; j++){
                         var article = page.articles[j];
                         for(var k = 0; k < articles.length; k++){
-                            if(articles[k].id == article.id){
+                            if(articles[k].id === article.id){
                                 pages[i].articles[j] = articles[k];
                                 break;
                             }

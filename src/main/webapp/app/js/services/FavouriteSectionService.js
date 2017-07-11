@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+'use strict';
+
 angular.module('momusApp.services')
     .service('FavouriteSectionService', function($http){
         return {
@@ -24,5 +26,5 @@ angular.module('momusApp.services')
             updateFavouriteSection: function(favSection){
                 return $http.put('/api/favsection', favSection);
             }
-        }
+        };
     });

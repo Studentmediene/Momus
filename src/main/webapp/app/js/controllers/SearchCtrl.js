@@ -157,12 +157,12 @@ angular.module('momusApp.controllers')
             });
             modal.result.then(function(id){
                 $location.url('artikler/' + id);
-            })
+            });
         };
 
         $scope.showHelp = function(){
             $templateRequest("partials/templates/help/searchHelp.html").then(function(template){
                 MessageModal.info(template);
-            })
-        }
+            });
+        };
     });

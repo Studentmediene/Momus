@@ -28,12 +28,12 @@ angular.module('momusApp.controllers')
 
         $scope.getLanding = function() {
             PersonService.getLandingPage().success(function(data){
-                if(data != null) {
+                if(data) {
                     $scope.landing = data.page;
                 }else{
                     $scope.landing = '';
                 }
-            })
+            });
         };
 
         $scope.getLanding();
@@ -48,5 +48,5 @@ angular.module('momusApp.controllers')
                 LandingChanger.setLanding();
                 $scope.savingLanding = false;
             });
-        }
+        };
     });

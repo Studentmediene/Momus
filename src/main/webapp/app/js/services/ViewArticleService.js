@@ -48,5 +48,5 @@ angular.module('momusApp.services')
             getRecentViews : function(){
                 return $cookieStore.get("recentlyViewed");
             }
-        }
+        };
     });
