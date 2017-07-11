@@ -25,11 +25,9 @@ angular.module('momusApp.directives').
                 var zc = new ZeroClipboard(element);
                 zc.on('copy',function(){
                     // call the correct function on the parent scope
-                    scope[attrs['zcBtn']](zc);
+                    scope[attrs.zcBtn](zc);
                 });
-
-
             }
-        }
+        };
     }
 );

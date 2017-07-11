@@ -22,7 +22,7 @@ angular.module('momusApp.services')
             setLanding: function(){
                 var currentRoute = $location.path(); //Get the current route, to redirect after getting landing
                 PersonService.getLandingPage().success(function(data){
-                    if(data == null || data == ""){
+                    if(data === null || data === ""){
                         return;
                     }
                     var landing = data.page;
@@ -39,12 +39,12 @@ angular.module('momusApp.services')
             getTopLevelRoutes: function() {
                 var routes = [];
                 for (var route in $route.routes) {
-                    if (route.substring(0, 1) != "/") {
-                        continue
+                    if (route.substring(0, 1) !== "/") {
+                        continue;
                     }
                     route = route.substr(1);
                     route = route.split("/");
-                    if (route.length == 1) {
+                    if (route.length === 1) {
                         routes.push(route[0]);
                     }
                 }

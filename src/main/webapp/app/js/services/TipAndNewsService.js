@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+'use strict';
+
 angular.module('momusApp.services')
     .service('TipAndNewsService', function () {
         var randomTips = [

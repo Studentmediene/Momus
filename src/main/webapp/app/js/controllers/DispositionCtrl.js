@@ -93,7 +93,7 @@ angular.module('momusApp.controllers')
         $scope.generateDisp = function(){
             PublicationService.generateDisp($scope.publication.id).success(function(data){
                 $scope.publication.pages = data;
-            })
+            });
         };
 
         $scope.savePublication = function() {
@@ -122,7 +122,7 @@ angular.module('momusApp.controllers')
                     if (0 <= insertPageAt && insertPageAt <= $scope.publication.pages.length) {
                         $scope.publication.pages.splice(insertPageAt, 0, temp_page);
                     } else {
-                        $scope.publication.pages.push(data);
+                        $scope.publication.pages.push(temp_page);
                     }
                     sortPages();
             }
@@ -181,8 +181,8 @@ angular.module('momusApp.controllers')
                     page.articles.push(data);
                     $scope.publication.articles.push(data);
                     $scope.savePage();
-                })
-            })
+                });
+            });
 
         };
 
@@ -198,7 +198,7 @@ angular.module('momusApp.controllers')
                 var totalHeight = 0;
                 for(var i = 0; i< ui.helper[0].children.length;i++){
                     var child = ui.helper[0].children[i];
-                    totalHeight += parseInt($window.getComputedStyle(child)['height'].replace("px", ""));
+                    totalHeight += parseInt($window.getComputedStyle(child).height.replace("px", ""));
                 }
                 ui.placeholder[0].style.height = totalHeight +"px";
             },

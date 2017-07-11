@@ -43,5 +43,5 @@ angular.module('momusApp.services')
             }
 
             return $sce.trustAsHtml(html);
-        }
+        };
     }]);

@@ -1,0 +1,15 @@
+{
+  "globalstrict": true,
+  "globals": {
+    "alert": true,
+    "confirm": true,
+    "window": true,
+    "angular": true,
+    "module": true,
+    "console": true,
+    "document": true,
+    "wysihtml5": true,
+    "ZeroClipboard": true,
+    "require": true
+  }
+}
