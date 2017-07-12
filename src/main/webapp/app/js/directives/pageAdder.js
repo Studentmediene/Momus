@@ -14,6 +14,10 @@ angular.module('momusApp.directives').
                 scope.pageValid = function() {
                     return scope.pageForm.num.$valid && scope.pageForm.at.$valid;
                 };
+
+                scope.click = function() {
+                    scope.submit({newPageAt: scope.newPageAt, numNewPages: scope.numNewPages});
+                };
             }
         };
 });
