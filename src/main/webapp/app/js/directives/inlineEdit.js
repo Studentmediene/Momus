@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
+// Directive that can be used for inline editing for a field
+
 'use strict';
 
-// This directive sets the initial value of an ng-model to value in the initial attribute
 angular.module('momusApp.directives').
-    directive('initial', function(){
+    directive( 'inlineEdit', function() {
         return {
-            restrict: 'A',
-            controller: [
-                '$scope', '$attrs', '$parse',
-                function($scope, $attrs, $parse){
-                    var val = $attrs.initial;
-                    if($attrs.type === "number"){
-                        val = parseInt(val);
-                    }
-                    $parse($attrs.ngModel).assign($scope, val);
-                }
-            ]
+            restrict: 'E',
+            templateUrl: 'partials/templates/inlineEdit.html',
+            scope:{
+                text: '=',
+                save: '&',
+                cancel: '&'
+            }
         };
 });

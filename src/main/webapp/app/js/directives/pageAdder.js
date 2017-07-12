@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('momusApp.directives').
     directive('pageAdder', function(){
         return {
@@ -11,7 +13,7 @@ angular.module('momusApp.directives').
             link: function(scope, element, attrs){
                 scope.pageValid = function() {
                     return scope.pageForm.num.$valid && scope.pageForm.at.$valid;
-                }
+                };
             }
-        }
+        };
 });

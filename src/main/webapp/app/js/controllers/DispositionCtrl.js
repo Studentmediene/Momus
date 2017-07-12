@@ -19,11 +19,11 @@
 angular.module('momusApp.controllers')
     .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest, $route, $window,uiSortableMultiSelectionMethods, $q) {
         var vm = this;
-        vm.maxNewPages = 100;
 
-        // Get all data
-        getStatuses();
-        getDisposition();
+        ///////////////////////////////
+        //      State variables      //
+        ///////////////////////////////
+        vm.maxNewPages = 100;
 
         ///////////////////////////////
         // Data service declarations //
@@ -37,13 +37,14 @@ angular.module('momusApp.controllers')
 
         vm.showHelp = showHelp;
 
-
         ////////////////////////
         // Style declarations //
         ////////////////////////
         var pageDoneColor = "#DDFFCB";
         var pageAdColor = "#f8f8f8";
-        vm.pageColor = function(page) { return (page.done ? pageDoneColor : (page.advertisement ? pageAdColor : '#FFF'))};
+        vm.pageColor = function(page) {
+            return (page.done ? pageDoneColor : (page.advertisement ? pageAdColor : '#FFF'));
+        };
 
         // Widths of columns in the disp. Used to sync widths across pages (which are separate tables)
         vm.responsiveColumns = {
@@ -54,6 +55,10 @@ angular.module('momusApp.controllers')
             comment: {minWidth: '100px'}
         };
         vm.dispSortableStyle = {}; // Used to prevent the disposition from breaking while moving pages
+
+        // Get all data
+        getStatuses();
+        getDisposition();
 
 
         function getDisposition(){
@@ -67,27 +72,25 @@ angular.module('momusApp.controllers')
         }
 
         function getPages(pubid){
-            return getPublication(pubid).then(function(publication) {
+            var publication;
+            return getPublication(pubid).then(function(data) {
+                publication = data.data;
                 pubid = publication.id;
                 return ArticleService.search({publication: pubid}).then(function(data){
                     publication.articles = data.data;
                     return PublicationService.getPages(pubid).then(function(data){
                         publication.pages = data.data;
                         return publication;
-                    })
-                })
-            })
+                    });
+                });
+            });
         }
 
         function getPublication(pubid){
             if(pubid){
-                return PublicationService.getById(pubid).success(function(data){
-                    return data;
-                });
+                return PublicationService.getById(pubid);
             }else{
-                return PublicationService.getActive().then(function(data){
-                    return data.data;
-                });
+                return PublicationService.getActive();
             }
         }
 
@@ -147,8 +150,8 @@ angular.module('momusApp.controllers')
                     page.articles.push(data);
                     vm.publication.articles.push(data);
                     savePage();
-                })
-            })
+                });
+            });
         }
 
         function saveArticle(article){
@@ -164,7 +167,7 @@ angular.module('momusApp.controllers')
         //TODO put this in a service
         function getLayoutStatusByName(name){
             for(var i = 0; i < vm.layoutStatuses.length; i++){
-                if(vm.layoutStatuses[i].name == name){
+                if(vm.layoutStatuses[i].name === name){
                     return vm.layoutStatuses[i];
                 }
             }
@@ -181,7 +184,7 @@ angular.module('momusApp.controllers')
                 var totalHeight = 0;
                 for(var i = 0; i< ui.helper[0].children.length;i++){
                     var child = ui.helper[0].children[i];
-                    totalHeight += parseInt($window.getComputedStyle(child)['height'].replace("px", ""));
+                    totalHeight += parseInt($window.getComputedStyle(child).height.replace("px", ""));
                 }
                 ui.placeholder[0].style.height = totalHeight +"px";
             },
@@ -221,6 +224,7 @@ angular.module('momusApp.controllers')
             }
         }
 
+        updateDispSize();
         // To recalculate disp table when resizing the screen
         angular.element($window).bind('resize', function(){
             updateDispSize();

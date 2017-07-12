@@ -243,23 +243,6 @@ a.zeroclipboard-is-hover {
     line-height:32px;
 }
 
-.disp-break-word{
-    word-wrap:break-word;
-
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    hyphens: auto;
-}
-
-.helper {
-    background: red;
-}
-
-.psempty {
-    background-color:#EEE;
-}
-
 .person-widget-element td {
     max-width:initial !important;
     min-width:initial !important;
@@ -284,13 +267,4 @@ a.zeroclipboard-is-hover {
     top:50px;
     z-index:100;
     background-color: white;
-}
-
-/* Styling for selected elements in disp */
-.ui-sortable-selected {
-    border-left:3px solid #F00;
-}
-
-.ui-sortable-helper {
-    opacity:0.9;
 }
