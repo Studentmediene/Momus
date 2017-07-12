@@ -16,10 +16,12 @@
 
 package no.dusken.momus.controller;
 
-import no.dusken.momus.model.ArticleStatus;
+import no.dusken.momus.exceptions.RestException;
+import no.dusken.momus.model.Article;
 import no.dusken.momus.model.LayoutStatus;
 import no.dusken.momus.model.Page;
 import no.dusken.momus.model.Publication;
+import no.dusken.momus.service.ArticleService;
 import no.dusken.momus.service.PublicationService;
 import no.dusken.momus.service.repository.LayoutStatusRepository;
 import no.dusken.momus.service.repository.PageRepository;
@@ -35,7 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @Service
-@RequestMapping("/publication")
+@RequestMapping("/publications")
 public class PublicationController {
 
     Logger logger = LoggerFactory.getLogger(getClass());
@@ -44,7 +46,7 @@ public class PublicationController {
     private PublicationService publicationService;
 
     @Autowired
-    private PublicationRepository publicationRepository;
+    private ArticleService articleService;
 
     @Autowired
     private PageRepository pageRepository;
@@ -54,21 +56,28 @@ public class PublicationController {
 
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody List<Publication> getAllPublications(){
-        return publicationRepository.findAll(new Sort(new Sort.Order(Sort.Direction.DESC, "releaseDate")));
+        return publicationService.getPublicationRepository().findAll(new Sort(new Sort.Order(Sort.Direction.DESC, "releaseDate")));
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public @ResponseBody Publication addPublication(@RequestBody Publication publication) {
+        if(publication.getId() != null && publicationService.getPublicationRepository().findOne(publication.getId()) != null){
+            throw new RestException("Publication with given id already created. Did you mean to PUT?", HttpServletResponse.SC_BAD_REQUEST);
+        }
+        return publicationService.addPublication(publication);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    public @ResponseBody Publication savePublication(@RequestBody Publication publication) {
+        if(publicationService.getPublicationRepository().findOne(publication.getId()) == null){
+            throw new RestException("Publication with given id not found", HttpServletResponse.SC_BAD_REQUEST);
+        }
+        return publicationService.savePublication(publication);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody Publication getPublicationById(@PathVariable("id") Long id){
-        return publicationRepository.findOne(id);
-    }
-
-    @RequestMapping(value = "/{id}/colophon", method = RequestMethod.GET)
-    public @ResponseBody String getColophon(@PathVariable("id") Long id, HttpServletResponse response){
-
-        response.addHeader("Content-Disposition", "attachment; filename=\"Kolofon_" + publicationRepository.findOne(id).getName() + ".txt\"");
-        response.addHeader("Content-Type", "text/plain;charset=UTF-16LE");
-
-        return publicationService.generateColophon(id);
+        return publicationService.getPublicationRepository().findOne(id);
     }
 
     @RequestMapping(value = "/active", method = RequestMethod.GET)
@@ -76,65 +85,66 @@ public class PublicationController {
         return publicationService.getActivePublication(new Date());
     }
 
-    @RequestMapping(value = "/metadata", method = RequestMethod.PUT)
-    public @ResponseBody Publication savePublication(@RequestBody Publication publication) {
-        return publicationService.savePublication(publication);
-    }
-
-    @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody Publication addPublication(@RequestBody Publication publication) {
-        Publication newPublication = publicationRepository.save(publication);
-        newPublication = publicationRepository.findOne(newPublication.getId());
-        for(int i = 0; i < 64; i++){
-            Page newPage = new Page();
-            newPage.setPageNr(i + 1);
-            newPage.setPublication(newPublication);
-            newPage.setLayoutStatus(layoutStatusRepository.findByName("Ukjent"));
-            pageRepository.save(newPage);
-        }
-        logger.info("Created new publication with data: {}", newPublication);
-
-        return newPublication;
-    }
-
-    @RequestMapping(value = "/pages/{id}", method = RequestMethod.GET)
-    public @ResponseBody List<Page> getPagesByPublication(@PathVariable("id") Long id) {
-        return pageRepository.findByPublicationIdOrderByPageNrAsc(id);
-    }
-
-    @RequestMapping(value = "pages/", method = RequestMethod.POST)
-    public @ResponseBody Page createPage(@RequestBody Page page){
-        return pageRepository.saveAndFlush(page);
-    }
-
-    @RequestMapping(value = "pages/delete/{id}", method = RequestMethod.DELETE)
-    public @ResponseBody void deletePage(@PathVariable("id") Long id){
-        pageRepository.delete(pageRepository.findOne(id));
-    }
-
-    @RequestMapping(value = "pages/generate/{id}", method = RequestMethod.GET)
-    public @ResponseBody List<Page> generateDisp(@PathVariable("id") Long id){
-        return publicationService.generateDisp(publicationRepository.findOne(id));
-    }
-
-    @RequestMapping(value = "/layoutstatus", method = RequestMethod.GET)
+    @RequestMapping(value = "/layoutstatuses", method = RequestMethod.GET)
     public @ResponseBody List<LayoutStatus> getLayoutStatuses(){
         return layoutStatusRepository.findAll();
     }
 
-    @RequestMapping(value = "/statuscount/{pubId}/{statId}", method = RequestMethod.GET)
-    public @ResponseBody int getStatusCount(@PathVariable("statId") Long as, @PathVariable("pubId") Long pi){
-        return pageRepository.countByLayoutStatusIdAndPublicationId(as, pi);
+    @RequestMapping(value = "/{id}/colophon", method = RequestMethod.GET)
+    public @ResponseBody String getColophon(@PathVariable("id") Long id, HttpServletResponse response){
+
+        response.addHeader("Content-Disposition", "attachment; filename=\"Kolofon_" + publicationService.getPublicationRepository().findOne(id).getName() + ".txt\"");
+        response.addHeader("Content-Type", "text/plain;charset=UTF-16LE");
+
+        return publicationService.generateColophon(id);
     }
 
-    @RequestMapping(value = "/statuscount/{pubId}", method = RequestMethod.GET)
-    public @ResponseBody Map<Long,Integer> getStatusCountsByPubId(@PathVariable("pubId") Long pi){
+    @RequestMapping(value = "{id}/pages", method = RequestMethod.GET)
+    public @ResponseBody List<Page> getPagesByPublication(@PathVariable("id") Long id) {
+        return pageRepository.findByPublicationIdOrderByPageNrAsc(id);
+    }
+
+    @RequestMapping(value = "{id}/pages", method = RequestMethod.POST)
+    public @ResponseBody Page addPage(@PathVariable("id") Long id, @RequestBody Page page){
+        return pageRepository.saveAndFlush(page);
+    }
+
+    @RequestMapping(value = "{id}/pages", method = RequestMethod.PUT)
+    public @ResponseBody Page savePage(@RequestBody Page page){
+        if(pageRepository.findOne(page.getId()) == null){
+            throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
+        }
+        return pageRepository.saveAndFlush(page);
+    }
+
+    @RequestMapping(value = "{pubid}/pages/{id}", method = RequestMethod.DELETE)
+    public @ResponseBody void deletePage(@PathVariable("id") Long pubid, @PathVariable("id") Long id){
+        pageRepository.delete(pageRepository.findOne(id));
+    }
+
+    @RequestMapping(value = "{id}/pages/generate", method = RequestMethod.GET)
+    public @ResponseBody List<Page> generateDisp(@PathVariable("id") Long id){
+        return publicationService.generateDisp(publicationService.getPublicationRepository().findOne(id));
+    }
+
+    @RequestMapping(value = "{id}/pages/layoutstatuscounts", method = RequestMethod.GET)
+    public @ResponseBody Map<Long,Integer> getStatusCountsByPubId(@PathVariable("id") Long id){
         List<LayoutStatus> statuses = this.getLayoutStatuses();
         Map<Long, Integer> map = new HashMap<>();
         for (LayoutStatus status : statuses) {
-            map.put(status.getId(), this.getStatusCount(status.getId(), pi));
+            map.put(status.getId(), this.getStatusCount(status.getName(), id));
         }
         return map;
     }
 
+    @RequestMapping(value = "{id}/pages/layoutstatuscounts/{status}", method = RequestMethod.GET)
+    public @ResponseBody int getStatusCount(@PathVariable("status") String status, @PathVariable("id") Long id){
+        Long statusId = layoutStatusRepository.findByName(status).getId();
+        return pageRepository.countByLayoutStatusIdAndPublicationId(statusId, id);
+    }
+
+    @RequestMapping(value = "{id}/articles", method = RequestMethod.GET)
+    public @ResponseBody List<Article> getArticlesInPublication(@PathVariable("id") Long id){
+        return articleService.getArticleRepository().findByPublicationId(id);
+    }
 }

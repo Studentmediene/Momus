@@ -46,6 +46,22 @@ public class PublicationService {
     @Autowired
     private LayoutStatusRepository layoutStatusRepository;
 
+    public Publication addPublication(Publication publication){
+        Publication newPublication = publicationRepository.save(publication);
+        newPublication = publicationRepository.findOne(newPublication.getId());
+        int numPages = 64;
+        for(int i = 0; i < numPages; i++){
+            Page newPage = new Page();
+            newPage.setPageNr(i + 1);
+            newPage.setPublication(newPublication);
+            newPage.setLayoutStatus(layoutStatusRepository.findByName("Ukjent"));
+            pageRepository.save(newPage);
+        }
+        logger.info("Created new publication with data: {}", newPublication);
+
+        return newPublication;
+    }
+
     public Publication savePublication(Publication publication){
         Publication savedPublication = publicationRepository.findOne(publication.getId());
 
@@ -268,5 +284,9 @@ public class PublicationService {
             }
         }
         return articles;
+    }
+
+    public PublicationRepository getPublicationRepository() {
+        return publicationRepository;
     }
 }

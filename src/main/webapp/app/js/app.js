@@ -30,6 +30,7 @@ angular.module('momusApp', [
         'momusApp.services',
         'momusApp.directives',
         'ngRoute',
+        'ngResource',
         'ui.select',
         'ui.select2',
         'ui.bootstrap',

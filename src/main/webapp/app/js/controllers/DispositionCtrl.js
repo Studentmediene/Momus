@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest, $route, $window,uiSortableMultiSelectionMethods, $q) {
+    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest, $route, $window,uiSortableMultiSelectionMethods, $q, Publication, Page) {
         var vm = this;
 
         ///////////////////////////////
@@ -117,7 +117,7 @@ angular.module('momusApp.controllers')
 
         function deletePage(page) {
             if(confirm("Er du sikker på at du vil slette denne siden?")){
-                PublicationService.deletePage(page.id).success(function(){
+                PublicationService.deletePage(vm.publication.id, page.id).success(function(){
                     var i = vm.publication.pages.indexOf(page);
                     vm.publication.pages.splice(i, 1);
                     updatePageNrs();

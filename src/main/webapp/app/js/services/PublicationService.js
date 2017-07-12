@@ -20,25 +20,25 @@ angular.module('momusApp.services')
     .service('PublicationService', function ($http) {
         return {
             getAll: function () {
-                return $http.get('/api/publication');
+                return $http.get('/api/publications');
             },
             getById: function(id) {
-                return $http.get('/api/publication/' + id);
+                return $http.get('/api/publications/' + id);
             },
             createNew: function(publication) {
-                return $http.post('/api/publication', publication);
+                return $http.post('/api/publications', publication);
             },
             updateMetadata: function(publication) {
-                return $http.put('/api/publication/metadata', publication);
+                return $http.put('/api/publications/' + publication.id, publication);
             },
             getActive: function() {
-                return $http.get('/api/publication/active');
+                return $http.get('/api/publications/active');
             },
             getPages: function(id) {
-                return $http.get('/api/publication/pages/'+id);
+                return $http.get('/api/publications/' + id + '/pages');
             },
             createPage: function(publication, pagenr, layout_status) {
-                return {
+                var page = {
                     page_nr: pagenr,
                     note: "",
                     advertisement: false,
@@ -46,21 +46,13 @@ angular.module('momusApp.services')
                     publication: publication.id,
                     layout_status: layout_status
                 };
+                return $http.post('/api/publications/' + publication.id + '/pages', page);
             },
-            deletePage: function(id) {
-                return $http.delete('/api/publication/pages/delete/' + id);
-            },
-            generateDisp: function(id) {
-                return $http.get('/api/publication/pages/generate/'+id);
-            },
-            getLayoutStatuses: function(){
-                return $http.get('/api/publication/layoutstatus');
+            deletePage: function(pubid, id) {
+                return $http.delete('/api/publications/'  + pubid + '/pages/' + id);
             },
             getStatusCounts: function(id){
                 return $http.get('/api/article/statuscount/' + id);
-            },
-            getLayoutStatusCounts: function(id){
-                return $http.get('/api/publication/statuscount/' + id);
             },
             getReviewStatusCounts: function(id){
                 return $http.get('/api/article/reviewstatuscount/' + id);
