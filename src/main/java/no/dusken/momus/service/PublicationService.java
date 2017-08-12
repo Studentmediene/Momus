@@ -97,9 +97,7 @@ public class PublicationService {
 
     public void deletePagesInPublication(Long id){
         List<Page> pages = pageRepository.findByPublicationId(id);
-        for(Page p: pages){
-            pageRepository.delete(p);
-        }
+        pageRepository.delete(pages);
         logger.info("Deleted all the pages from publication with id: " + id);
     }
 
@@ -284,6 +282,45 @@ public class PublicationService {
             }
         }
         return articles;
+    }
+
+    public Page addPage(Page page){
+        List<Page> pages = pageRepository.findByPublicationIdOrderByPageNrAsc(page.getPublication().getId());
+        Collections.sort(pages);
+
+        for(int i = page.getPageNr()-1; i < pages.size(); i++) {
+            pages.get(i).setPageNr(i+2);
+        }
+
+        pageRepository.save(pages);
+
+        return pageRepository.saveAndFlush(page);
+    }
+
+    public Page savePage(Page page){
+        List<Page> pages = pageRepository.findByPublicationIdOrderByPageNrAsc(page.getPublication().getId());
+        pages.remove(page); // Make sure we don't change the page of the one to be saved
+        Collections.sort(pages);
+
+        for(int i = page.getPageNr()-1; i < pages.size(); i++){
+            pages.get(i).setPageNr(i+2);
+        }
+
+        pageRepository.save(pages);
+
+        return pageRepository.saveAndFlush(page);
+    }
+
+    public void deletePage(Page page){
+        List<Page> pages = pageRepository.findByPublicationIdOrderByPageNrAsc(page.getPublication().getId());
+        Collections.sort(pages);
+
+        for(int i = page.getPageNr()-1; i < pages.size(); i++) {
+            pages.get(i).setPageNr(i);
+        }
+
+        pageRepository.save(pages);
+        pageRepository.delete(page);
     }
 
     public PublicationRepository getPublicationRepository() {

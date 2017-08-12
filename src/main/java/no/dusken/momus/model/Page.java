@@ -17,11 +17,12 @@
 package no.dusken.momus.model;
 
 import javax.persistence.*;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-public class Page {
+public class Page implements Comparable<Page>, Comparator<Page>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -110,5 +111,20 @@ public class Page {
 
     public void setLayoutStatus(LayoutStatus layoutStatus) {
         this.layoutStatus = layoutStatus;
+    }
+
+    @Override
+    public String toString() {
+        return publication.getId() + " page: " + pageNr;
+    }
+
+    @Override
+    public int compareTo(Page page) {
+        return pageNr - page.getPageNr();
+    }
+
+    @Override
+    public int compare(Page page, Page t1) {
+        return page.compareTo(t1);
     }
 }
