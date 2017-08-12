@@ -105,16 +105,16 @@ public class PublicationController {
     }
 
     @RequestMapping(value = "{id}/pages", method = RequestMethod.POST)
-    public @ResponseBody Page addPage(@PathVariable("id") Long id, @RequestBody Page page){
-        return publicationService.addPage(page);
+    public @ResponseBody Page savePage(@PathVariable("id") Long id, @RequestBody Page page){
+        return publicationService.savePage(page);
     }
 
     @RequestMapping(value = "{id}/pages", method = RequestMethod.PUT)
-    public @ResponseBody Page savePage(@RequestBody Page page){
+    public @ResponseBody Page updatePage(@RequestBody Page page){
         if(pageRepository.findOne(page.getId()) == null){
             throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
         }
-        return publicationService.savePage(page);
+        return publicationService.updatePage(page);
     }
 
     @RequestMapping(value = "{pubid}/pages/{id}", method = RequestMethod.DELETE)

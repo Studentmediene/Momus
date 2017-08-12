@@ -284,7 +284,7 @@ public class PublicationService {
         return articles;
     }
 
-    public Page addPage(Page page){
+    public Page savePage(Page page){
         List<Page> pages = pageRepository.findByPublicationIdOrderByPageNrAsc(page.getPublication().getId());
         Collections.sort(pages);
 
@@ -297,7 +297,7 @@ public class PublicationService {
         return pageRepository.saveAndFlush(page);
     }
 
-    public Page savePage(Page page){
+    public Page updatePage(Page page){
         List<Page> pages = pageRepository.findByPublicationIdOrderByPageNrAsc(page.getPublication().getId());
         pages.remove(page); // Make sure we don't change the page of the one to be saved
         Collections.sort(pages);
