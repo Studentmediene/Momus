@@ -16,9 +16,10 @@
 
 package no.dusken.momus.model;
 
+import javax.annotation.Nullable;
 import javax.persistence.*;
+
 import java.util.Comparator;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -35,6 +36,7 @@ public class Page implements Comparable<Page>, Comparator<Page>{
     private boolean done;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false, updatable = false) // Should not be able to change the publication of a page
     private Publication publication;
 
     @ManyToMany(fetch = FetchType.EAGER)

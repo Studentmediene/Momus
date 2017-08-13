@@ -60,19 +60,19 @@ public class PublicationController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody Publication addPublication(@RequestBody Publication publication) {
+    public @ResponseBody Publication savePublication(@RequestBody Publication publication) {
         if(publication.getId() != null && publicationService.getPublicationRepository().findOne(publication.getId()) != null){
             throw new RestException("Publication with given id already created. Did you mean to PUT?", HttpServletResponse.SC_BAD_REQUEST);
         }
-        return publicationService.addPublication(publication);
+        return publicationService.savePublication(publication);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public @ResponseBody Publication savePublication(@RequestBody Publication publication) {
+    public @ResponseBody Publication updatePublication(@RequestBody Publication publication) {
         if(publicationService.getPublicationRepository().findOne(publication.getId()) == null){
             throw new RestException("Publication with given id not found", HttpServletResponse.SC_BAD_REQUEST);
         }
-        return publicationService.savePublication(publication);
+        return publicationService.updatePublication(publication);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -124,11 +124,6 @@ public class PublicationController {
             throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
         }
         publicationService.deletePage(page);
-    }
-
-    @RequestMapping(value = "{id}/pages/generate", method = RequestMethod.GET)
-    public @ResponseBody List<Page> generateDisp(@PathVariable("id") Long id){
-        return publicationService.generateDisp(publicationService.getPublicationRepository().findOne(id));
     }
 
     @RequestMapping(value = "{id}/pages/layoutstatuscounts", method = RequestMethod.GET)

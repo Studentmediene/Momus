@@ -76,13 +76,11 @@ public class PublicationServiceTest extends AbstractTestRunner{
         page1 = new Page();
         page1.setPageNr(1);
         page1.setPublication(publication1);
-
         page2 = new Page();
         page2.setPageNr(2);
         page2.setPublication(publication1);
-
         page3 = new Page();
-        page3.setPageNr(3);
+        page3.setPageNr(3);        
         page3.setPublication(publication1);
         
         page1 = pageRepository.save(page1);
@@ -93,7 +91,7 @@ public class PublicationServiceTest extends AbstractTestRunner{
     @Test
     public void testUpdatePublicationMetadata() throws Exception{
         publication1.setName("justanupdatedpubname");
-        publication1 = publicationRepository.save(publication1);
+        publication1 = publicationService.updatePublication(publication1);
 
         assertEquals("justanupdatedpubname",publication1.getName());
     }
@@ -113,28 +111,11 @@ public class PublicationServiceTest extends AbstractTestRunner{
     }
 
     @Test
-    public void testUpdatePublicationPages() throws Exception{        
-        List<Page> pages = new ArrayList<>();
-        pages.add(page1);
-        pages.add(page2);
-        publication1.setPages(pages);
-        publication1 = publicationRepository.save(publication1);
-
-        assertEquals(pages, publication1.getPages());
-    }
-
-    @Test
-    public void testAddPage() throws Exception{
-        List<Page> pages = new ArrayList<>();
-        pages.add(page1);
-        pages.add(page2);
-        publication1.setPages(pages);
-        publication1 = publicationRepository.save(publication1);
-
+    public void testSavePage() throws Exception{
         Page newPage = new Page();
         newPage.setPublication(publication1);
         newPage.setPageNr(2);
-        newPage = publicationService.addPage(newPage);
+        newPage = publicationService.savePage(newPage);
 
         assertEquals(1, pageRepository.findOne(page1.getId()).getPageNr());
         assertEquals(2, pageRepository.findOne(newPage.getId()).getPageNr());
@@ -143,16 +124,9 @@ public class PublicationServiceTest extends AbstractTestRunner{
     }
 
     @Test
-    public void testSavePage() throws Exception{
-        List<Page> pages = new ArrayList<>();
-        pages.add(page1);
-        pages.add(page2);
-        pages.add(page3);
-        publication1.setPages(pages);
-        publication1 = publicationRepository.save(publication1);
-
+    public void testUpdatePage() throws Exception{
         page3.setPageNr(2);
-        publicationService.savePage(page3);
+        publicationService.updatePage(page3);
 
         assertEquals(1, pageRepository.findOne(page1.getId()).getPageNr());
         assertEquals(2, pageRepository.findOne(page3.getId()).getPageNr());
@@ -161,13 +135,6 @@ public class PublicationServiceTest extends AbstractTestRunner{
 
     @Test
     public void testDeletePage() throws Exception{
-        List<Page> pages = new ArrayList<>();
-        pages.add(page1);
-        pages.add(page2);
-        pages.add(page3);
-        publication1.setPages(pages);
-        publication1 = publicationRepository.save(publication1);
-
         publicationService.deletePage(page2);
 
         assertEquals(1, pageRepository.findOne(page1.getId()).getPageNr());
@@ -179,7 +146,7 @@ public class PublicationServiceTest extends AbstractTestRunner{
         page1.setNote("vader is lukes father");
         page1.setWeb(true);
         page1.setAdvertisement(false);
-        page1 = publicationService.savePage(page1);
+        page1 = publicationService.updatePage(page1);
 
         assertEquals("vader is lukes father", page1.getNote());
         assertEquals(true, page1.isWeb());
@@ -193,13 +160,13 @@ public class PublicationServiceTest extends AbstractTestRunner{
         Set<Article> articles = new HashSet<>();
         articles.add(a);
         page1.setArticles(articles);
-        page1 = pageRepository.save(page1);
+        page1 = publicationService.updatePage(page1);
 
         assertEquals(page1.getArticles(),articles);
 
         articles.remove(a);
         page1.setArticles(articles);
-        page1 = pageRepository.save(page1);
+        page1 = publicationService.updatePage(page1);
 
         assertEquals(articles, page1.getArticles());
     }
