@@ -52,8 +52,7 @@ angular.module('momusApp.controllers')
         $scope.showHelp = function(){
             $templateRequest('partials/templates/help/revisionHelp.html').then(function(template){
                 MessageModal.info(template);
-            })
-
-        }
+            });
+        };
 
     });

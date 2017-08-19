@@ -930,4 +930,167 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="active">false</column>
         </update>
     </changeSet>
+
+    <!--Some more development data-->
+    <changeSet id="34" author="Eivind" context="dev">
+        <insert tableName="publication">
+            <column name="id">10</column>
+            <column name="name">UD#23_2017</column>
+            <column name="releasedate" valueDate="2017-04-23"/>
+        </insert>
+        <insert tableName="article">
+            <column name="id">6</column><column name="name">Lorem ipsum</column><column name="comment"></column><column name="lastupdated"></column>
+            <column name="publication_id">10</column><column name="section_id">1</column><column name="status_id">2</column><column name="type_id">2</column>
+            <column name="content"><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed massa mauris, tempor vel velit quis, lobortis accumsan justo. Proin laoreet viverra quam sit amet condimentum. Sed sit amet libero metus. Praesent molestie neque vel lectus feugiat rutrum. Aenean feugiat, diam sed tempus pretium, sem nisl porttitor magna, maximus pellentesque lacus lacus a quam. Etiam vestibulum urna nec luctus faucibus. Maecenas sagittis tristique velit, sed volutpat enim ultrices quis. In aliquet, magna mattis eleifend pretium, ipsum magna pulvinar nunc, at fringilla purus risus nec nulla. Fusce at velit faucibus, pretium lacus vitae, scelerisque ante. Donec vulputate nulla nec ipsum rutrum, eget blandit dui sagittis. Nulla sodales neque ac nibh vehicula, ultricies fringilla dui commodo. Proin eros mauris, commodo ac dapibus ornare, rutrum sed lorem. Sed in dignissim nunc. Cras a enim tempor, euismod nulla sit amet, imperdiet est. Quisque sed lacinia augue. Pellentesque sit amet sem eu nulla rutrum volutpat at dignissim tortor.</p><p>Phasellus eget pellentesque dui. Curabitur bibendum nisl ex, eu facilisis mi convallis tincidunt. Proin sed fermentum neque, et feugiat diam. Nullam ornare magna sodales, pharetra orci nec, laoreet leo. Aliquam consectetur commodo aliquet. Aliquam posuere lacus eu dui dictum maximus. Fusce posuere ipsum vitae dui efficitur, sed posuere metus sodales. Duis sed faucibus metus. Pellentesque sit amet felis eget urna dapibus ornare id vel ex. Mauris aliquam nunc ac ullamcorper tristique. Sed augue sem, sodales eu congue ut, laoreet at mi. Mauris volutpat eget diam et vulputate.</p>]]></column>
+            <column name="note"><![CDATA[<p>Dolor sit?</p>]]></column>
+        </insert>
+        <insert tableName="article">
+            <column name="id">7</column><column name="name">Bacon ipsum</column><column name="comment"></column><column name="lastupdated"></column>
+            <column name="publication_id">10</column><column name="section_id">2</column><column name="status_id">1</column><column name="type_id">4</column>
+            <column name="content"><![CDATA[Bacon ipsum dolor amet short loin pancetta ribeye t-bone swine bresaola shoulder cupim chicken meatball. Pork sausage bresaola tongue chicken. Shoulder beef ribs ball tip, bacon swine ground round turducken corned beef ribeye porchetta tail pork loin. Pork belly sausage frankfurter tenderloin.]]></column>
+            <column name="note"><![CDATA[<p>Yep</p>]]></column>
+        </insert>
+        <insert tableName="article">
+            <column name="id">8</column><column name="name">Testetesten</column><column name="comment">Ikke ferdig</column><column name="lastupdated"></column>
+            <column name="publication_id">10</column><column name="section_id">5</column><column name="status_id">4</column><column name="type_id">5</column>
+            <column name="content"><![CDATA[<p>asdjklaskfjsdf</p>]]></column>
+            <column name="note"><![CDATA[<p>Yep</p>]]></column>
+        </insert>
+        <insert tableName="article">
+            <column name="id">9</column><column name="name">Eivind er tøff</column><column name="comment">Alle synes det</column><column name="lastupdated"></column>
+            <column name="publication_id">10</column><column name="section_id">3</column><column name="status_id">5</column><column name="type_id">4</column>
+            <column name="content"><![CDATA[<p>Blablalalalala</p>]]></column>
+            <column name="note"><![CDATA[<p>Dette er et notat</p>]]></column>
+        </insert>
+        <insert tableName="article">
+            <column name="id">10</column><column name="name">Christoffer og</column><column name="comment">Alle synes det</column><column name="lastupdated"></column>
+            <column name="publication_id">10</column><column name="section_id">3</column><column name="status_id">5</column><column name="type_id">4</column>
+            <column name="content"><![CDATA[<p>Blablalalalala</p>]]></column>
+            <column name="note"><![CDATA[<p>Jajaja</p>]]></column>
+        </insert>
+        <insert tableName="article">
+            <column name="id">11</column><column name="name">Artikkelen</column><column name="comment">Meh</column><column name="lastupdated"></column>
+            <column name="publication_id">10</column><column name="section_id">3</column><column name="status_id">5</column><column name="type_id">6</column>
+            <column name="content"><![CDATA[<p>Blablalalalala</p>]]></column>
+            <column name="note"><![CDATA[<p>Jajaja</p>]]></column>
+        </insert>
+
+        <insert tableName="article_journalist"><column name="article_id">9</column><column name="journalists_id">11713</column></insert>
+        <insert tableName="article_journalist"><column name="article_id">9</column><column name="journalists_id">11716</column></insert>
+        <insert tableName="article_photographer"><column name="article_id">9</column><column name="photographers_id">11713</column></insert>
+        <insert tableName="article_journalist"><column name="article_id">8</column><column name="journalists_id">11713</column></insert>
+        <insert tableName="article_photographer"><column name="article_id">3</column><column name="photographers_id">11716</column></insert>
+
+        <insert tableName="page">
+            <column name="id">1</column>
+            <column name="pagenr">1</column>
+            <column name="publication_id">10</column>
+            <column name="note">Ikke ferdig i det hele tatt</column>
+            <column name="done" valueBoolean="false"/>
+            <column name="advertisement" valueBoolean="false"/>
+            <column name="web" valueBoolean="false"/>
+            <column name="layoutstatus_id">1</column>
+        </insert>
+        <insert tableName="page">
+            <column name="id">2</column>
+            <column name="pagenr">2</column>
+            <column name="publication_id">10</column>
+            <column name="note"></column>
+            <column name="done" valueBoolean="false"/>
+            <column name="advertisement" valueBoolean="false"/>
+            <column name="web" valueBoolean="false"/>
+            <column name="layoutstatus_id">3</column>
+        </insert>
+        <insert tableName="page">
+            <column name="id">3</column>
+            <column name="pagenr">3</column>
+            <column name="publication_id">10</column>
+            <column name="note"></column>
+            <column name="done" valueBoolean="false"/>
+            <column name="advertisement" valueBoolean="false"/>
+            <column name="web" valueBoolean="false"/>
+            <column name="layoutstatus_id">1</column>
+        </insert>
+        <insert tableName="page">
+            <column name="id">4</column>
+            <column name="pagenr">4</column>
+            <column name="publication_id">10</column>
+            <column name="note">Ferdig!</column>
+            <column name="advertisement" valueBoolean="false"/>
+            <column name="done" valueBoolean="true"/>
+            <column name="web" valueBoolean="false"/>
+            <column name="layoutstatus_id">1</column>
+        </insert>
+        <insert tableName="page">
+            <column name="id">5</column>
+            <column name="pagenr">5</column>
+            <column name="publication_id">10</column>
+            <column name="note">Ferdig!</column>
+            <column name="advertisement" valueBoolean="true"/>
+            <column name="done" valueBoolean="false"/>
+            <column name="web" valueBoolean="false"/>
+            <column name="layoutstatus_id">1</column>
+        </insert>
+        <insert tableName="page">
+            <column name="id">6</column>
+            <column name="pagenr">6</column>
+            <column name="publication_id">10</column>
+            <column name="advertisement" valueBoolean="true"/>
+            <column name="done" valueBoolean="false"/>
+            <column name="web" valueBoolean="false"/>
+            <column name="layoutstatus_id">3</column>
+        </insert>
+        <insert tableName="page">
+            <column name="id">7</column>
+            <column name="pagenr">7</column>
+            <column name="publication_id">10</column>
+            <column name="note">Dette blir vanskelig</column>
+            <column name="advertisement" valueBoolean="false"/>
+            <column name="done" valueBoolean="true"/>
+            <column name="web" valueBoolean="false"/>
+            <column name="layoutstatus_id">2</column>
+        </insert>
+        <insert tableName="page">
+            <column name="id">8</column>
+            <column name="pagenr">8</column>
+            <column name="publication_id">10</column>
+            <column name="advertisement" valueBoolean="true"/>
+            <column name="done" valueBoolean="false"/>
+            <column name="web" valueBoolean="false"/>
+            <column name="layoutstatus_id">1</column>
+        </insert>
+
+        <insert tableName="page_article">
+            <column name="page_id">1</column>
+            <column name="articles_id">9</column>
+        </insert>
+        <insert tableName="page_article">
+            <column name="page_id">2</column>
+            <column name="articles_id">9</column>
+        </insert>
+        <insert tableName="page_article">
+            <column name="page_id">3</column>
+            <column name="articles_id">7</column>
+        </insert>
+        <insert tableName="page_article">
+            <column name="page_id">4</column>
+            <column name="articles_id">6</column>
+        </insert>
+        <insert tableName="page_article">
+            <column name="page_id">4</column>
+            <column name="articles_id">10</column>
+        </insert>
+        <insert tableName="page_article">
+            <column name="page_id">5</column>
+            <column name="articles_id">8</column>
+        </insert>
+        <insert tableName="page_article">
+            <column name="page_id">7</column>
+            <column name="articles_id">11</column>
+        </insert>
+        <insert tableName="page_article">
+            <column name="page_id">8</column>
+            <column name="articles_id">11</column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

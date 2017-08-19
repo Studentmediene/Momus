@@ -56,15 +56,7 @@ module.exports = function (grunt) {
         },
         jshint: {
             options: {
-                globals: {
-                    alert: true,
-                    confirm: true,
-                    window: true,
-                    angular: true,
-                    module: true,
-                    console: true
-                },
-                globalstrict: true
+                jshintrc: '.jshintrc'
             },
             all: [
                 app + '/js/**/*.js'

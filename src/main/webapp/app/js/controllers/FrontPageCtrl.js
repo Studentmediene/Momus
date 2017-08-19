@@ -68,7 +68,7 @@ angular.module('momusApp.controllers')
         });
 
         var searchForArticlesFromFavoriteSection = function(){
-            if($scope.favouriteSection.section != null){
+            if($scope.favouriteSection.section){
                 ArticleService.search({section: $scope.favouriteSection.section.id, page_size: 9}).success(function(articles){
                     $scope.favSectionArticles = articles;
                     $scope.loadingFavorites = false;
@@ -139,7 +139,7 @@ angular.module('momusApp.controllers')
 
         //TODO: Refactor when we get back to the cake diagrams
         $scope.isEmptyArray = function(array){
-            if(array == undefined || array == null || array == "" || array == []) {
+            if(array === undefined || array === null || array === "" || array === []) {
                 return true;
             } else {
                 var maxFound = 0;
@@ -154,14 +154,14 @@ angular.module('momusApp.controllers')
 
         $scope.countTotals = function(array){
             if(!$scope.isEmptyArray(array)){
-                return array.reduce(function(x,y){return x+y},0);
+                return array.reduce(function(x,y){return x+y;}, 0);
             }
             return 0;
         };
 
         $scope.clickArticleStatus = function(selected){
             var id = $filter("filter")($scope.articlestatus.statuses,{name:selected})[0].id;
-            if(id == undefined) {
+            if(id === undefined) {
                 $location.url('artikler');
             } else{
                 $location.url('artikler?publication=' + $scope.publication.id + '&status=' + id);

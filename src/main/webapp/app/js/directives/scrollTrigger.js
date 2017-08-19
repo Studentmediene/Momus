@@ -24,14 +24,14 @@ directive('scrollTrigger', function($rootScope, $window) {
                 var top = element.offset().top - element.height() - element.outerHeight();
                 angular.element($window).bind("scroll", function() {
                     if(this.pageYOffset >= top) {
-                        element.addClass(attrs['scrollTrigger']);
+                        element.addClass(attrs.scrollTrigger);
                     } else {
-                        element.removeClass(attrs['scrollTrigger']);
+                        element.removeClass(attrs.scrollTrigger);
                     }
                 });
 
 
             }
-        }
+        };
     }
 );
