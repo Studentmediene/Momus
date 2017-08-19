@@ -158,7 +158,7 @@ public class LdapSyncer {
         String lastName = attributes.get("sn") != null ? (String) attributes.get("sn").get() : "";
         String fullName = firstName + " " + lastName;
         String userName = attributes.get("sAMAccountName") != null ? (String) attributes.get("sAMAccountName").get() : "";
-        String email = attributes.get("mail") != null ? (String) attributes.get("mail").get() : "";
+        String email = attributes.get("otherMailbox") != null ? (String) attributes.get("otherMailbox").get() : "";
         String telephoneNumber = attributes.get("telephoneNumber") != null ? (String) attributes.get("telephoneNumber").get() : "";
 
         Long id = attributes.get("uidNumber") != null ? Long.valueOf((String) attributes.get("uidNumber").get()) : -1L;
