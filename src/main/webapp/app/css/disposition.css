@@ -31,7 +31,7 @@
 }
 
 .disposition-table > div > .d-table-row > .d-table-cell:not(.article-cell) {
-    padding: 5px;
+    padding: 3px;
 }
 
 /* Should not draw border on first child as it is drawn by the outer table */

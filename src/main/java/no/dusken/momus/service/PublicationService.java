@@ -139,7 +139,7 @@ public class PublicationService {
         return pageRepository.saveAndFlush(page);
     }
 
-    public Page updatePage(Page page){
+    public List<Page> updatePage(Page page){
         List<Page> pages = pageRepository.findByPublicationIdOrderByPageNrAsc(page.getPublication().getId());
         pages.remove(page); // Make sure we don't change the page of the one to be saved
         Collections.sort(pages);
@@ -150,7 +150,9 @@ public class PublicationService {
 
         pageRepository.save(pages);
 
-        return pageRepository.saveAndFlush(page);
+        pageRepository.saveAndFlush(page);
+
+        return pageRepository.findByPublicationIdOrderByPageNrAsc(page.getPublication().getId());
     }
 
     public void deletePage(Page page){
@@ -167,5 +169,9 @@ public class PublicationService {
 
     public PublicationRepository getPublicationRepository() {
         return publicationRepository;
+    }
+
+    public PageRepository getPageRepository() {
+        return pageRepository;
     }
 }

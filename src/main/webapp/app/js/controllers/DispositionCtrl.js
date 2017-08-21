@@ -20,16 +20,10 @@ angular.module('momusApp.controllers')
     .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest, $route, $window,uiSortableMultiSelectionMethods, $q, Publication, Page) {
         var vm = this;
 
-        ///////////////////////////////
-        //      State variables      //
-        ///////////////////////////////
         vm.maxNewPages = 100;
 
-        ///////////////////////////////
-        // Data service declarations //
-        ///////////////////////////////
         vm.newPage = newPage;
-        vm.savePage = savePage;
+        vm.updatePage = updatePage;
         vm.deletePage = deletePage;
 
         vm.createArticle = createArticle;
@@ -37,9 +31,7 @@ angular.module('momusApp.controllers')
 
         vm.showHelp = showHelp;
 
-        ////////////////////////
-        // Style declarations //
-        ////////////////////////
+        // Style
         var pageDoneColor = "#DDFFCB";
         var pageAdColor = "#f8f8f8";
         vm.pageColor = function(page) {
@@ -60,74 +52,62 @@ angular.module('momusApp.controllers')
         getStatuses();
         getDisposition();
 
-
         function getDisposition(){
             vm.loading = true;
             var pubid = $routeParams.id;
-            return getPages(pubid).then(function(publication){
-                PublicationService.linkPagesToArticles(publication.pages, publication.articles);
-                vm.publication = publication;
-                vm.loading = false;
-            });
-        }
-
-        function getPages(pubid){
-            var publication;
-            return getPublication(pubid).then(function(data) {
-                publication = data.data;
-                pubid = publication.id;
-                return ArticleService.search({publication: pubid}).then(function(data){
-                    publication.articles = data.data;
-                    return PublicationService.getPages(pubid).then(function(data){
-                        publication.pages = data.data;
-                        return publication;
+            getPublication($routeParams.id, function(publication){
+                getPages(publication.id, function(pages){
+                    publication.pages = pages;
+                    ArticleService.search({publication: publication.id}).then(function(data){
+                        vm.articles = data.data;
+                        PublicationService.linkPagesToArticles(publication.pages, vm.articles);
+                        vm.publication = publication;
+                        vm.loading = false;
                     });
                 });
             });
         }
 
-        function getPublication(pubid){
+        function getPages(pubid, callback){
+            var pages = Page.query({pubid: pubid}, function(){ callback(pages);});
+        }
+
+        function getPublication(pubid, callback){
+            var publication;
             if(pubid){
-                return PublicationService.getById(pubid);
+                publication = Publication.get({id: pubid}, function(){ callback(publication);});
             }else{
-                return PublicationService.getActive();
+                publication = Publication.active(callback, function(){ callback(publication);});
             }
         }
 
         function getStatuses(){
-            return $q.all([ArticleService.getReviews(), ArticleService.getStatuses(), PublicationService.getLayoutStatuses()]).then(function(data){
+            $q.all([ArticleService.getReviews(), ArticleService.getStatuses()]).then(function(data){
                 vm.reviewStatuses = data[0].data;
                 vm.articleStatuses = data[1].data;
-                vm.layoutStatuses = data[2].data;
             });
+            vm.layoutStatuses = Publication.layoutStatuses();
         }
 
         function newPage(newPageAt, numNewPages){
             for(var i = 0; i < numNewPages; i++) {
-                var page = PublicationService.createPage(vm.publication, vm.publication.pages.length+1, getLayoutStatusByName("Ukjent"));
-                vm.publication.pages.splice(newPageAt, 0, page);
-            }
-            updatePageNrs();
-            savePublication();
-        }
-
-        function savePage() {
-            PublicationService.updateMetadata(vm.publication);
-        }
-
-        function deletePage(page) {
-            if(confirm("Er du sikker på at du vil slette denne siden?")){
-                PublicationService.deletePage(vm.publication.id, page.id).success(function(){
-                    var i = vm.publication.pages.indexOf(page);
-                    vm.publication.pages.splice(i, 1);
-                    updatePageNrs();
+                var page = {pageNr: newPageAt + i + 1, publicationid: vm.publication.id, layoutStatus: getLayoutStatusByName("Ukjent")};
+                var addedPage = Page.save({pubid: vm.publication.id}, page, function() {
+                    vm.publication.pages.splice(newPageAt, 0, addedPage);
                 });
             }
         }
 
-        function updatePageNrs(){
-            for ( var i = 0; i < vm.publication.pages.length; i++ ) {
-                vm.publication.pages[i].page_nr = i+1;
+        function updatePage(page) {
+            var pages = Page.update({pubid: vm.publication.id}, page, function() {
+                vm.publication.pages = pages;
+            });
+        }
+
+        function deletePage(page) {
+            if(confirm("Er du sikker på at du vil slette denne siden?")){
+                vm.publication.pages.splice(vm.publication.pages.indexOf(page), 1);
+                page.$delete({pubid: vm.publication.id, pageid: page.id});
             }
         }
 
@@ -149,7 +129,7 @@ angular.module('momusApp.controllers')
                 ArticleService.getArticle(id).success(function(data){
                     page.articles.push(data);
                     vm.publication.articles.push(data);
-                    savePage();
+                    updatePage(page);
                 });
             });
         }
@@ -192,8 +172,10 @@ angular.module('momusApp.controllers')
             handle: '.handle',
             stop: function(e, ui){
                 vm.dispSortableStyle.tableLayout = "";
-                updatePageNrs();
-                PublicationService.updateMetadata(vm.publication);
+                var placed = ui.item.sortableMultiSelect.selectedModels;
+                var newPosition = vm.publication.pages.indexOf(placed[0]);
+                placed[0].page_nr = newPosition + 1
+                updatePage(placed[0]);
             },
             placeholder: "disp-placeholder"
         });

@@ -129,4 +129,16 @@ public class Page implements Comparable<Page>, Comparator<Page>{
     public int compare(Page page, Page t1) {
         return page.compareTo(t1);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Page page = (Page) o;
+
+        if (!id.equals(page.id)) return false;
+
+        return true;
+    }
 }

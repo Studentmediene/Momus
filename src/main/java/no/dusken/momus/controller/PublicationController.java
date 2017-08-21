@@ -39,7 +39,6 @@ import java.util.*;
 @Service
 @RequestMapping("/publications")
 public class PublicationController {
-
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -47,9 +46,6 @@ public class PublicationController {
 
     @Autowired
     private ArticleService articleService;
-
-    @Autowired
-    private PageRepository pageRepository;
 
     @Autowired
     private LayoutStatusRepository layoutStatusRepository;
@@ -85,11 +81,6 @@ public class PublicationController {
         return publicationService.getActivePublication(new Date());
     }
 
-    @RequestMapping(value = "/layoutstatuses", method = RequestMethod.GET)
-    public @ResponseBody List<LayoutStatus> getLayoutStatuses(){
-        return layoutStatusRepository.findAll();
-    }
-
     @RequestMapping(value = "/{id}/colophon", method = RequestMethod.GET)
     public @ResponseBody String getColophon(@PathVariable("id") Long id, HttpServletResponse response){
 
@@ -99,9 +90,14 @@ public class PublicationController {
         return publicationService.generateColophon(id);
     }
 
+    @RequestMapping(value = "/layoutstatuses", method = RequestMethod.GET)
+    public @ResponseBody List<LayoutStatus> getLayoutStatuses(){
+        return layoutStatusRepository.findAll();
+    }
+
     @RequestMapping(value = "{id}/pages", method = RequestMethod.GET)
     public @ResponseBody List<Page> getPagesByPublication(@PathVariable("id") Long id) {
-        return pageRepository.findByPublicationIdOrderByPageNrAsc(id);
+        return publicationService.getPageRepository().findByPublicationIdOrderByPageNrAsc(id);
     }
 
     @RequestMapping(value = "{id}/pages", method = RequestMethod.POST)
@@ -110,16 +106,16 @@ public class PublicationController {
     }
 
     @RequestMapping(value = "{id}/pages", method = RequestMethod.PUT)
-    public @ResponseBody Page updatePage(@RequestBody Page page){
-        if(pageRepository.findOne(page.getId()) == null){
+    public @ResponseBody List<Page> updatePage(@RequestBody Page page){
+        if(publicationService.getPageRepository().findOne(page.getId()) == null){
             throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
         }
         return publicationService.updatePage(page);
     }
 
-    @RequestMapping(value = "{pubid}/pages/{id}", method = RequestMethod.DELETE)
-    public @ResponseBody void deletePage(@PathVariable("id") Long pubid, @PathVariable("id") Long id){
-        Page page = pageRepository.findOne(id);
+    @RequestMapping(value = "{pubid}/pages/{pageid}", method = RequestMethod.DELETE)
+    public @ResponseBody void deletePage(@PathVariable("pubid") Long pubid, @PathVariable("pageid") Long pageid){
+        Page page = publicationService.getPageRepository().findOne(pageid);
         if(page == null){
             throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
         }
@@ -139,7 +135,7 @@ public class PublicationController {
     @RequestMapping(value = "{id}/pages/layoutstatuscounts/{status}", method = RequestMethod.GET)
     public @ResponseBody int getStatusCount(@PathVariable("status") String status, @PathVariable("id") Long id){
         Long statusId = layoutStatusRepository.findByName(status).getId();
-        return pageRepository.countByLayoutStatusIdAndPublicationId(statusId, id);
+        return publicationService.getPageRepository().countByLayoutStatusIdAndPublicationId(statusId, id);
     }
 
     @RequestMapping(value = "{id}/articles", method = RequestMethod.GET)

@@ -19,38 +19,6 @@
 angular.module('momusApp.services')
     .service('PublicationService', function ($http) {
         return {
-            getAll: function () {
-                return $http.get('/api/publications');
-            },
-            getById: function(id) {
-                return $http.get('/api/publications/' + id);
-            },
-            createNew: function(publication) {
-                return $http.post('/api/publications', publication);
-            },
-            updateMetadata: function(publication) {
-                return $http.put('/api/publications/' + publication.id, publication);
-            },
-            getActive: function() {
-                return $http.get('/api/publications/active');
-            },
-            getPages: function(id) {
-                return $http.get('/api/publications/' + id + '/pages');
-            },
-            createPage: function(publication, pagenr, layout_status) {
-                var page = {
-                    page_nr: pagenr,
-                    note: "",
-                    advertisement: false,
-                    articles: [],
-                    publication: publication.id,
-                    layout_status: layout_status
-                };
-                return $http.post('/api/publications/' + publication.id + '/pages', page);
-            },
-            deletePage: function(pubid, id) {
-                return $http.delete('/api/publications/'  + pubid + '/pages/' + id);
-            },
             getStatusCounts: function(id){
                 return $http.get('/api/article/statuscount/' + id);
             },
@@ -72,4 +40,23 @@ angular.module('momusApp.services')
                 }
             }
         };
+    })
+    .factory('Publication', function($resource) {
+        var baseUrl = '/api/publications';
+
+        return $resource(baseUrl + '/:id', null,
+            {
+                active: { method: 'GET', url: baseUrl + '/active'},
+                update: { method: 'PUT'},
+                layoutStatuses: { method: 'GET', url: baseUrl + '/layoutstatuses', isArray: true}
+            });
+    })
+    .factory('Page', function($resource) {
+        var baseUrl = '/api/publications/:pubid/pages';
+
+        return $resource(baseUrl + '/:pageid', null,
+            {
+                update: { method: 'PUT', isArray: true},
+                layoutStatusCounts: { method: 'GET', url: baseUrl + '/layoutstatuscounts'}
+            });
     });
