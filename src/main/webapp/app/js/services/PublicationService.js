@@ -24,20 +24,6 @@ angular.module('momusApp.services')
             },
             getReviewStatusCounts: function(id){
                 return $http.get('/api/article/reviewstatuscount/' + id);
-            },
-            linkPagesToArticles: function(pages, articles){
-                for(var i = 0; i < pages.length; i++){
-                    var page = pages[i];
-                    for(var j = 0; j < page.articles.length; j++){
-                        var article = page.articles[j];
-                        for(var k = 0; k < articles.length; k++){
-                            if(articles[k].id === article.id){
-                                pages[i].articles[j] = articles[k];
-                                break;
-                            }
-                        }
-                    }
-                }
             }
         };
     })

@@ -60,7 +60,6 @@ angular.module('momusApp.controllers')
                     publication.pages = pages;
                     ArticleService.search({publication: publication.id}).then(function(data){
                         vm.articles = data.data;
-                        PublicationService.linkPagesToArticles(publication.pages, vm.articles);
                         vm.publication = publication;
                         vm.loading = false;
                     });
@@ -109,10 +108,6 @@ angular.module('momusApp.controllers')
                 vm.publication.pages.splice(vm.publication.pages.indexOf(page), 1);
                 page.$delete({pubid: vm.publication.id, pageid: page.id});
             }
-        }
-
-        function savePublication() {
-            PublicationService.updateMetadata(vm.publication);
         }
 
         function createArticle(page){
