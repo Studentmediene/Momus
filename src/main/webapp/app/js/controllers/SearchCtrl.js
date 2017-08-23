@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('SearchCtrl', function ($scope, $http, $location, $q, PersonService, PublicationService, ArticleService, $modal, MessageModal, $templateRequest) {
+    .controller('SearchCtrl', function ($scope, $location, $q, PersonService, PublicationService, Publication, ArticleService, $modal, MessageModal, $templateRequest) {
         var pageSize = 100;
 
         $scope.data = [];
@@ -39,14 +39,14 @@ angular.module('momusApp.controllers')
         $scope.search = angular.copy($scope.defaultSearch);
 
         // Get stuff from the server
-        $q.all([PersonService.getAll(), PublicationService.getAll()]).then(function (data) {
+        $q.all([PersonService.getAll(), Publication.query()]).then(function (data) {
             $scope.persons = data[0].data;
-            $scope.publications = data[1].data;
+            $scope.publications = data[1];
             if (updateSearchParametersFromUrl()) { // If the URL contained a search
                 search();
             } else if ($scope.publications.length > 0) { // default search on the newest publication
-                PublicationService.getActive().success(function(data){
-                    $scope.search.publication = data.id;
+                var active = Publication.active({}, function(){
+                    $scope.search.publication = active.id;
                     $location.search('publication', $scope.search.publication).replace();
                     search();
                 });
