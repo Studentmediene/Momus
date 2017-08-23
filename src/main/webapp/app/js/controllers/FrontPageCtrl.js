@@ -115,14 +115,17 @@ angular.module('momusApp.controllers')
             $scope.publication = data;
 
             $q.all([ PublicationService.getStatusCounts($scope.publication.id),ArticleService.getStatuses()]).then(function(data){
+                console.log(data[1]);
                 $scope.articlestatus = getStatusArrays(data[0].data, data[1].data);
             });
 
             $q.all([ PublicationService.getLayoutStatusCounts($scope.publication.id),PublicationService.getLayoutStatuses()]).then(function(data){
+                console.log(data[1]);
                 $scope.layoutstatus = getStatusArrays(data[0].data, data[1].data);
             });
 
             $q.all([ PublicationService.getReviewStatusCounts($scope.publication.id),ArticleService.getReviews()]).then(function(data){
+                console.log(data[1]);
                 $scope.reviewstatus = getStatusArrays(data[0].data, data[1].data);
             });
         });
@@ -134,6 +137,7 @@ angular.module('momusApp.controllers')
                 status.colors.push(statuses[i].color);
                 status.counts.push(counts[statuses[i].id]);
             }
+            status.colors = fixShortColorCodes(status.colors);
             return status;
         }
 
@@ -197,6 +201,15 @@ angular.module('momusApp.controllers')
 
         function promptCondition() {
             return $scope.unedited.content != $scope.note.content;
+        }
+
+        function fixShortColorCodes(colors){
+            for(var i = 0; i < colors.length; i++){
+                var color = colors[i];
+                if(color.length <= 4){
+                    color = "#" + color.split("#")[1].split("").map(function(x){return x+x}).join("");
+                }
+            }
         }
 
         $scope.$on('$destroy', function() {
