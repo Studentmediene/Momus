@@ -63,7 +63,7 @@
     width: 100% !important;
 }
 
-.ui-sortable-selected {
+.ui-sortable-selected .handle {
     border-left:3px solid #F00;
 }
 

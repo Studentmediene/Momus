@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest, $route, $window,uiSortableMultiSelectionMethods, $q, Publication, Page) {
+    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest, $route, $window, uiSortableMultiSelectionMethods, $q, Publication, Page) {
         var vm = this;
 
         vm.maxNewPages = 100;
@@ -103,6 +103,12 @@ angular.module('momusApp.controllers')
             });
         }
 
+        function updatePages(pages) {
+            var pages = Page.updateMultiple({pubid: vm.publication.id}, pages, function() {
+                vm.publication.pages = pages;
+            });
+        }
+
         function deletePage(page) {
             if(confirm("Er du sikker på at du vil slette denne siden?")){
                 vm.publication.pages.splice(vm.publication.pages.indexOf(page), 1);
@@ -169,8 +175,10 @@ angular.module('momusApp.controllers')
                 vm.dispSortableStyle.tableLayout = "";
                 var placed = ui.item.sortableMultiSelect.selectedModels;
                 var newPosition = vm.publication.pages.indexOf(placed[0]);
-                placed[0].page_nr = newPosition + 1
-                updatePage(placed[0]);
+                placed.forEach(function(page, i) {
+                    page.page_nr = newPosition + i + 1
+                })
+                updatePages(placed);
             },
             placeholder: "disp-placeholder"
         });

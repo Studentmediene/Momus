@@ -111,6 +111,17 @@ public class PublicationController {
         return publicationService.updatePage(page);
     }
 
+    @RequestMapping(value = "{id}/pages/list", method = RequestMethod.PUT)
+    public @ResponseBody List<Page> updateMultiplePages(@PathVariable("id") Long id, @RequestBody List<Page> pages){
+        for(Page page : pages) {
+            if(publicationService.getPageRepository().findOne(page.getId()) == null){
+                throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
+            }
+            publicationService.updatePage(page);
+        }
+        return publicationService.getPageRepository().findByPublicationIdOrderByPageNrAsc(id);
+    }
+
     @RequestMapping(value = "{pubid}/pages/{pageid}", method = RequestMethod.DELETE)
     public @ResponseBody void deletePage(@PathVariable("pubid") Long pubid, @PathVariable("pageid") Long pageid){
         Page page = publicationService.getPageRepository().findOne(pageid);

@@ -43,6 +43,7 @@ angular.module('momusApp.services')
         return $resource(baseUrl + '/:pageid', null,
             {
                 update: { method: 'PUT', isArray: true},
+                updateMultiple: { method: 'PUT', isArray: true, url: baseUrl + '/list'},
                 layoutStatusCounts: { method: 'GET', url: baseUrl + '/layoutstatuscounts'}
             });
     });
