@@ -76,7 +76,7 @@ angular.module('momusApp.controllers')
             if(pubid){
                 publication = Publication.get({id: pubid}, function(){ callback(publication);});
             }else{
-                publication = Publication.active(callback, function(){ callback(publication);});
+                publication = Publication.active({}, function(){ callback(publication);});
             }
         }
 

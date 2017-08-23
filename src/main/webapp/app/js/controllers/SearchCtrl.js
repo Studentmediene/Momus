@@ -39,7 +39,7 @@ angular.module('momusApp.controllers')
         $scope.search = angular.copy($scope.defaultSearch);
 
         // Get stuff from the server
-        $q.all([PersonService.getAll(), Publication.query()]).then(function (data) {
+        $q.all([PersonService.getAll(), Publication.query().$promise]).then(function (data) {
             $scope.persons = data[0].data;
             $scope.publications = data[1];
             if (updateSearchParametersFromUrl()) { // If the URL contained a search

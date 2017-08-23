@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope, $q, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, PublicationService, $location, $filter) {
+    .controller('FrontPageCtrl', function ($scope, $q, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, Publication, Page, PublicationService, $location, $filter) {
 
         $scope.randomTip = function() {
             $scope.tip = TipAndNewsService.getRandomTip();
@@ -111,15 +111,13 @@ angular.module('momusApp.controllers')
 
         // Cake diagrams TODO (Could some of this be put into a service?)
 
-        PublicationService.getActive().success(function(data){
-            $scope.publication = data;
-
+        $scope.publication = Publication.active({}, function() {            
             $q.all([ PublicationService.getStatusCounts($scope.publication.id),ArticleService.getStatuses()]).then(function(data){
                 $scope.articlestatus = getStatusArrays(data[0].data, data[1].data);
             });
 
-            $q.all([ PublicationService.getLayoutStatusCounts($scope.publication.id),PublicationService.getLayoutStatuses()]).then(function(data){
-                $scope.layoutstatus = getStatusArrays(data[0].data, data[1].data);
+            $q.all([Page.layoutStatusCounts({pubid: $scope.publication.id}).$promise,Publication.layoutStatuses().$promise]).then(function(data){
+                $scope.layoutstatus = getStatusArrays(data[0], data[1]);
             });
 
             $q.all([ PublicationService.getReviewStatusCounts($scope.publication.id),ArticleService.getReviews()]).then(function(data){
