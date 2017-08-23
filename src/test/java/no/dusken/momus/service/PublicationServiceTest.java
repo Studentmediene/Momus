@@ -30,6 +30,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import liquibase.change.core.UpdateDataChange;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
@@ -146,11 +149,13 @@ public class PublicationServiceTest extends AbstractTestRunner{
         page1.setNote("vader is lukes father");
         page1.setWeb(true);
         page1.setAdvertisement(false);
-        page1 = publicationService.updatePage(page1);
+        publicationService.updatePage(page1);
 
-        assertEquals("vader is lukes father", page1.getNote());
-        assertEquals(true, page1.isWeb());
-        assertEquals(false, page1.isAdvertisement());
+        Page updated = publicationService.getPageRepository().findOne(page1.getId());
+
+        assertEquals("vader is lukes father", updated.getNote());
+        assertEquals(true, updated.isWeb());
+        assertEquals(false, updated.isAdvertisement());
     }
 
     @Test
@@ -160,14 +165,18 @@ public class PublicationServiceTest extends AbstractTestRunner{
         Set<Article> articles = new HashSet<>();
         articles.add(a);
         page1.setArticles(articles);
-        page1 = publicationService.updatePage(page1);
+        publicationService.updatePage(page1);
 
-        assertEquals(page1.getArticles(),articles);
+        Page updated = publicationService.getPageRepository().findOne(page1.getId());
+
+        assertEquals(updated.getArticles(),articles);
 
         articles.remove(a);
         page1.setArticles(articles);
-        page1 = publicationService.updatePage(page1);
+        publicationService.updatePage(page1);
 
-        assertEquals(articles, page1.getArticles());
+        updated = publicationService.getPageRepository().findOne(page1.getId());        
+
+        assertEquals(articles, updated.getArticles());
     }
 }

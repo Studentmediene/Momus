@@ -144,9 +144,11 @@ public class PublicationService {
         pages.remove(page); // Make sure we don't change the page of the one to be saved
         Collections.sort(pages);
 
-        for(int i = page.getPageNr()-1; i < pages.size(); i++){
+
+        for(int i = 0; i <  page.getPageNr()-1; i++)
+            pages.get(i).setPageNr(i+1);
+        for(int i = page.getPageNr()-1; i < pages.size(); i++)
             pages.get(i).setPageNr(i+2);
-        }
 
         pageRepository.save(pages);
 
