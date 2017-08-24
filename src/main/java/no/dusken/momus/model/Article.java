@@ -75,6 +75,7 @@ public class Article implements Comparator<Article>, Comparable<Article>{
 
     private String googleDriveId;
 
+    @JsonIgnore
     private String rawcontent;
 
     private int contentLength;
