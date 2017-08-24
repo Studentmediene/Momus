@@ -5,6 +5,9 @@
 .idea/
 atlassian-ide-plugin.xml
 npm-debug.log
+.classpath
+.project
+org.eclipse*
 
 log/
 database/
