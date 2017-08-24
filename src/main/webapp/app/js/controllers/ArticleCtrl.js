@@ -21,10 +21,13 @@ angular.module('momusApp.controllers')
         $scope.metaEditMode = false;
         $scope.noteRules = noteParserRules;
 
-        $q.all([PersonService.getAll(), ArticleService.getArticle($routeParams.id)]).then(function(data){
+        $q.all([PersonService.getAll(), ArticleService.getArticle($routeParams.id), ArticleService.getContent($routeParams.id)]).then(function(data){
             $scope.persons = data[0].data;
 
             $scope.article = data[1].data;
+
+            $scope.articleContent = data[2].data;
+
             $scope.unedited = angular.copy(data[1].data);
             TitleChanger.setTitle($scope.article.name);
             ViewArticleService.viewArticle($routeParams.id);
@@ -60,8 +63,8 @@ angular.module('momusApp.controllers')
         $scope.saveContent = function () {
             $scope.savingContent = true;
             ArticleService.updateContent($scope.article).success(function (data) {
-                $scope.article.content = data.content;
-                $scope.unedited.content = data.content;
+                //$scope.article.content = data.content;
+                //$scope.unedited.content = data.content;
                 $scope.savingContent = false;
 
             });
@@ -90,7 +93,7 @@ angular.module('momusApp.controllers')
         $scope.saveMeta = function() {
             $scope.savingMeta = true;
             ArticleService.updateMetadata($scope.metaEditing).success(function(data) {
-                data.content = $scope.article.content;
+                //data.content = $scope.article.content;
                 data.note = $scope.article.note;
                 $scope.article = data;
                 $scope.unedited = angular.copy(data);
@@ -144,7 +147,7 @@ angular.module('momusApp.controllers')
         });
 
         function promptCondition() {
-            return $scope.unedited.content != $scope.article.content || $scope.metaEditMode === true || $scope.unedited.note != $scope.article.note;
+            return $scope.metaEditMode === true || $scope.unedited.note != $scope.article.note;
         }
 
         $scope.deleteArticle = function(){
@@ -169,7 +172,7 @@ angular.module('momusApp.controllers')
                 "Endring av avgitte uttalelser bør begrenses til korrigering av faktiske feil " +
                 "(jf. Vær Varsom-plakatens §3.8).<br /><br />";
 
-            var qcArticle = $scope.article.content;
+            var qcArticle = $scope.articleContent;
             var qcAuthor = "";
             var qcRed = "<br />Studentavisa Under Dusken <br /> Ansvarlig redaktør " + "Syn" + "ne Ha" + "mmervik " + "synn" + "ehammer" + "vik@gmail.com";
 

@@ -95,6 +95,16 @@ public class ArticleController {
         return articleService.updateArticleNote(article);
     }
 
+    @RequestMapping(value = "{id}/content", method = RequestMethod.GET)
+    public @ResponseBody String getArticleContent(@PathVariable("id") Long id) {
+        Article article = articleService.getArticleRepository().findOne(id);
+        if (article == null) {
+            logger.warn("Article with id {} not found, tried by user {}", id, userDetailsService.getLoggedInPerson().getId());
+            throw new RestException("Article " + id + " not found", HttpServletResponse.SC_NOT_FOUND);
+        }
+        return article.getContent();
+    }
+
     @RequestMapping(value = "{id}/archived", method = RequestMethod.PATCH)
     public @ResponseBody Article setArchived(@PathVariable("id") Long id, Boolean archived) {
         Article article = articleService.getArticleRepository().findOne(id);        

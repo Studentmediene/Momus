@@ -37,6 +37,7 @@ public class Article implements Comparator<Article>, Comparable<Article>{
 
     private String name;
 
+    @JsonIgnore
     private String content;
 
     private String note;
