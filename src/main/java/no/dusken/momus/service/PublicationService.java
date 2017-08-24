@@ -145,7 +145,7 @@ public class PublicationService {
         Collections.sort(pages);
 
 
-        for(int i = 0; i <  page.getPageNr()-1; i++)
+        for(int i = 0; i < page.getPageNr()-1; i++)
             pages.get(i).setPageNr(i+1);
         for(int i = page.getPageNr()-1; i < pages.size(); i++)
             pages.get(i).setPageNr(i+2);
@@ -155,6 +155,26 @@ public class PublicationService {
         pageRepository.saveAndFlush(page);
 
         return pageRepository.findByPublicationIdOrderByPageNrAsc(page.getPublication().getId());
+    }
+
+    /**
+     * Updates pages that are following each other. Undefined behavior if there are gaps!
+     */
+    public List<Page> updateTrailingPages(List<Page> pages) {
+        Publication publication = pages.get(0).getPublication();
+        List<Page> otherPages = pageRepository.findByPublicationIdOrderByPageNrAsc(publication.getId());
+        otherPages.removeAll(pages);
+        Collections.sort(otherPages);
+
+        for(int i = 0; i < pages.get(0).getPageNr()-1;i++)
+            otherPages.get(i).setPageNr(i+1);
+        for(int i = pages.get(0).getPageNr()-1; i < otherPages.size(); i++)
+            otherPages.get(i).setPageNr(i+1+pages.size());
+
+        pageRepository.save(otherPages);
+        pageRepository.save(pages);
+
+        return pageRepository.findByPublicationIdOrderByPageNrAsc(publication.getId());        
     }
 
     public void deletePage(Page page){

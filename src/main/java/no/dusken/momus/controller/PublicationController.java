@@ -113,13 +113,19 @@ public class PublicationController {
 
     @RequestMapping(value = "{id}/pages/list", method = RequestMethod.PUT)
     public @ResponseBody List<Page> updateMultiplePages(@PathVariable("id") Long id, @RequestBody List<Page> pages){
-        for(Page page : pages) {
+
+        // Check that all pages exist and that the pages are following each other
+        int startingPageNr = pages.get(0).getPageNr();
+        for(int i = 0; i < pages.size(); i++) {
+            Page page = pages.get(i);
             if(publicationService.getPageRepository().findOne(page.getId()) == null){
                 throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
+            }else if(page.getPageNr() != startingPageNr + i) {
+                throw new RestException("Pages not following each other", HttpServletResponse.SC_BAD_REQUEST);
             }
-            publicationService.updatePage(page);
         }
-        return publicationService.getPageRepository().findByPublicationIdOrderByPageNrAsc(id);
+
+        return publicationService.updateTrailingPages(pages);
     }
 
     @RequestMapping(value = "{pubid}/pages/{pageid}", method = RequestMethod.DELETE)
