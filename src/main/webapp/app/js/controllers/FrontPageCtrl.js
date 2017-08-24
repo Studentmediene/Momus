@@ -115,17 +115,14 @@ angular.module('momusApp.controllers')
             $scope.publication = data;
 
             $q.all([ PublicationService.getStatusCounts($scope.publication.id),ArticleService.getStatuses()]).then(function(data){
-                console.log(data[1]);
                 $scope.articlestatus = getStatusArrays(data[0].data, data[1].data);
             });
 
             $q.all([ PublicationService.getLayoutStatusCounts($scope.publication.id),PublicationService.getLayoutStatuses()]).then(function(data){
-                console.log(data[1]);
                 $scope.layoutstatus = getStatusArrays(data[0].data, data[1].data);
             });
 
             $q.all([ PublicationService.getReviewStatusCounts($scope.publication.id),ArticleService.getReviews()]).then(function(data){
-                console.log(data[1]);
                 $scope.reviewstatus = getStatusArrays(data[0].data, data[1].data);
             });
         });
