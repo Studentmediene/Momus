@@ -35,9 +35,6 @@ angular.module('momusApp.services')
             getDiffs: function (articleId, revId1, revId2) {
                 return $http.get('/api/article/' + articleId + '/revisions/' + revId1 + '/' + revId2);
             },
-            getArticlesInPublication: function(id){
-                return $http.get('/api/article/publication/' + id);
-            },
 
             // Editing stuff
             updateMetadata: function (article) {

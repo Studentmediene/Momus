@@ -72,12 +72,6 @@ public class ArticleController {
     }
 
 
-    @RequestMapping(value = "/publication/{id}", method = RequestMethod.GET)
-    public @ResponseBody List<Article> getAllArticlesByPublicationID(@PathVariable("id") Long id) {
-        return articleService.getArticleRepository().findByPublicationId(id);
-    }
-
-
     @RequestMapping(value = "/{id}/export", method = RequestMethod.GET)
     public @ResponseBody String getIndesignExport(@PathVariable("id") Long id, HttpServletResponse response) {
         IndesignExport indesignExport = articleService.exportArticle(id);
