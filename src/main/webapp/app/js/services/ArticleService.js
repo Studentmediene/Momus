@@ -24,7 +24,7 @@ angular.module('momusApp.services')
                 return $http.get('/api/article/' + id);
             },
             getMultiple: function(ids) {
-                return $http.post('/api/article/multiple', ids);
+                return $http.get('/api/article/multiple', ids);
             },
             search: function (searchObject) {
                 return $http.post('/api/article/search', searchObject);
@@ -38,24 +38,24 @@ angular.module('momusApp.services')
 
             // Editing stuff
             updateMetadata: function (article) {
-                return $http.put('/api/article/metadata', article);
+                return $http.patch('/api/article/metadata', article);
             },
 
             updateContent: function (article) {
-                return $http.put('/api/article/content', article);
+                return $http.patch('/api/article/content', article);
             },
 
             updateNote: function (article) {
-                return $http.put('/api/article/note', article);
+                return $http.patch('/api/article/note', article);
             },
             createNewArticle: function (article) {
                 return $http.post('/api/article', article);
             },
             deleteArticle: function(article){
-                return $http.post('/api/article/delete', article);
+                return $http.patch('/api/article/' + article.id + '/archived?archived=true');
             },
             restoreArticle: function(article){
-                return $http.post('/api/article/restore', article);
+                return $http.patch('/api/article/' + article.id + '/archived?archived=false');
             },
 
 

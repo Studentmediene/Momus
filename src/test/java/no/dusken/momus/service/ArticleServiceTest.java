@@ -182,7 +182,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article.setType(articleType1);
         article.setPublication(publication1);
 
-        article = articleService.saveMetadata(article);
+        article = articleService.updateArticle(article);
 
         assertEquals("Updated name", article.getName());
         assertEquals(0, article.getJournalists().size());
@@ -200,7 +200,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         Article article = new Article(article1.getId());
         article.setContent("NEW CONTENT for article 1");
 
-        Article updated = articleService.saveNewContent(article);
+        Article updated = articleService.updateArticleContent(article);
 
         assertEquals("NEW CONTENT for article 1", updated.getContent());
 
