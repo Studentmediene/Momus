@@ -108,9 +108,6 @@ public class ArticleService {
         }
 
         existing.setContent(newContent);
-        String rawContent = createRawContent(article);
-        existing.setContentLength(rawContent.length());
-        existing.setRawcontent(rawContent + " " + createRawMetadata(article));
 
         createNewRevision(existing, false);
 
@@ -138,10 +135,6 @@ public class ArticleService {
         existing.setExternalPhotographer(article.getExternalPhotographer());
         existing.setPhotoStatus(article.getPhotoStatus());
         existing.setReview(article.getReview());
-
-        String rawContent = createRawContent(article);
-        existing.setContentLength(rawContent.length());
-        existing.setRawcontent(rawContent + " " + createRawMetadata(article));
 
         return updateArticle(existing);
     }
@@ -242,11 +235,11 @@ public class ArticleService {
         }
     }
 
-    public String createRawContent(Article article){
-        return stripOffHtml(article.getContent()).toLowerCase();
+    public static String createRawContent(Article article){
+        return ArticleService.stripOffHtml(article.getContent()).toLowerCase();
     }
 
-    public String createRawMetadata(Article article) {
+    public static String createRawMetadata(Article article) {
         StringBuilder metadata = new StringBuilder();
         metadata.append(article.getName()).append(" ")
             .append(article.getSection() != null ? article.getSection().getName() : "").append(" ")
@@ -263,7 +256,7 @@ public class ArticleService {
         return metadata.toString().toLowerCase();
     }
 
-    private String stripOffHtml(String html){
+    private static String stripOffHtml(String html){
         String[] tags = {"<h1>","<h2>","<h3>","<h4>","<h5>","<p>","<i>","<b>", "<blockquote>","<br>","<ul>","<ol>","<li>"};
         for (String tag : tags) {
             html = html.replaceAll(tag," ").replaceAll(tag.substring(0,1)+"/"+tag.substring(1,tag.length()),"");
