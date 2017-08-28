@@ -32,7 +32,7 @@ public class ArticleQueryBuilder {
     private String fullQuery;
     private Map<String, Object> queryParams = new HashMap<>();
 
-    private final String baseQuery = "select a from Article a left join fetch a.status left join fetch a.publication";
+    private final String baseQuery = "select a from Article a left join fetch a.status status left join fetch a.publication left join fetch a.section left join fetch a.type";
     private final String baseOrder = "order by a.publication.releaseDate DESC";
 
     public ArticleQueryBuilder(ArticleSearchParams search) {
@@ -47,8 +47,18 @@ public class ArticleQueryBuilder {
             String[] words = search.getFree().split(" ");
 
             for (int i = 0; i < words.length; i++) {
-                conditions.add("a.rawcontent like :free"+i);
+                List<String> freeConditions = new ArrayList<>();
+
+                freeConditions.add("a.rawcontent like :free"+i);
+                freeConditions.add("(a.publication is null or LOWER(a.publication.name) like :free"+i+")");
+                freeConditions.add("LOWER(status.name) like :free"+i+")");
+                //freeConditions.add("(a.section is null or LOWER(a.section.name) like :free"+i+")");
+                //freeConditions.add("LOWER(a.comment) like :free"+i);
+                //freeConditions.add("(a.type is null or LOWER(a.type.name) like :free"+i+")");
+
+                freeConditions.add("exists (select p from Person p where p member of a.journalists and LOWER(p.fullName) LIKE :free"+i+")");
                 queryParams.put("free"+i, "%" + words[i].toLowerCase() + "%");
+                conditions.add("("+StringUtils.collectionToDelimitedString(freeConditions, " OR ")+")");
             }
         }
         if (search.getStatus() != null) {

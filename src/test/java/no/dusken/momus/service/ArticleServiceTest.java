@@ -100,7 +100,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article1.setJournalists(article1journalists);
         article1.setPhotographers(new HashSet<Person>());
         article1.setPublication(publication1);
-        articleService.createRawContent(article1);
+        article1.setArchived(false);
         article1 = articleRepository.saveAndFlush(article1);
 
 
@@ -115,7 +115,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article2.setJournalists(article2journalists);
         article2.setPhotographers(article2photographers);
         article2.setPublication(publication1);
-        articleService.createRawContent(article2);
+        article2.setArchived(false);
         article2 = articleRepository.save(article2);
 
 
@@ -130,7 +130,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article3.setJournalists(article3journalists);
         article3.setPhotographers(article3photographers);
         article3.setPublication(publication1);
-        articleService.createRawContent(article3);
+        article3.setArchived(false);
         article3 = articleRepository.save(article3);
 
 
@@ -145,7 +145,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article4.setPhotographers(article4photographers);
         article4.setPublication(publication2);
         article4.setStatus(articleStatus1);
-        articleService.createRawContent(article4);
+        article4.setArchived(false);
         article4 = articleRepository.save(article4);
         article4.setReview(articleReview1);
     }
@@ -160,7 +160,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
 
     @Test
-    public void testSaveArticleMetadata() throws Exception {
+    public void testUpdateArticleMetadata() throws Exception {
         Article article = new Article(article1.getId());
         ArticleStatus articleStatus1 = articleStatusRepository.save(new ArticleStatus("Desk", ""));
         ArticleType articleType1 = articleTypeRepository.save(new ArticleType("KulturRaport", ""));
@@ -182,7 +182,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article.setType(articleType1);
         article.setPublication(publication1);
 
-        article = articleService.updateArticle(article);
+        article = articleService.updateArticleMetadata(article);
 
         assertEquals("Updated name", article.getName());
         assertEquals(0, article.getJournalists().size());
@@ -196,7 +196,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
     }
 
     @Test
-    public void testSaveArticleContentsGeneratesARevision() throws Exception {
+    public void testUpdateArticleContentsGeneratesARevision() throws Exception {
         Article article = new Article(article1.getId());
         article.setContent("NEW CONTENT for article 1");
 
@@ -224,6 +224,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
 
         List<Article> articles = articleService.searchForArticles(params);
+
         assertEquals(expected, articles);
 
         // just a check to see if the joins actually work, so that relations are populated
@@ -234,11 +235,11 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForContent() {
-        ArticleSearchParams params = new ArticleSearchParams("søkE dette KÅre", null, Collections.<Long>emptyList(),null, null, null, 0, 0, false);
+        ArticleSearchParams params = new ArticleSearchParams("kåre", null, Collections.<Long>emptyList(),null, null, null, 100, 1, false);
 
         List<Article> expected = new ArrayList<>();
         expected.add(article2);
-
+     
         assertEquals(expected, articleService.searchForArticles(params));
     }
 
