@@ -56,10 +56,11 @@ public class ArticleQueryBuilder {
                 List<String> freeConditions = new ArrayList<>();
 
                 freeConditions.add("a.rawcontent like :free"+i);
+                freeConditions.add("LOWER(a.comment) like :free"+i);
+                freeConditions.add("LOWER(a.name) like :free"+i);                
                 freeConditions.add("(publication is not null and LOWER(publication.name) like :free"+i+")");
                 freeConditions.add("(status is not null and LOWER(status.name) like :free"+i+")");
                 freeConditions.add("(section is not null and LOWER(section.name) like :free"+i+")");
-                freeConditions.add("LOWER(a.comment) like :free"+i);
                 freeConditions.add("(type is not null and LOWER(type.name) like :free"+i+")");
                 freeConditions.add("(review is not null and LOWER(review.name) like :free"+i+")");
 
