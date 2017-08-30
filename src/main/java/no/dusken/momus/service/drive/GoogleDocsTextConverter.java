@@ -32,8 +32,8 @@ public class GoogleDocsTextConverter {
 
     Pattern body = Pattern.compile("<body.*?>(.*)</body>");
     Pattern css = Pattern.compile("<style type=\"text/css\">(.*)</style>");
-    Pattern italicStyleName = Pattern.compile("\\.([^{]*?)\\{font-style:italic\\}");
-    Pattern boldStyleName = Pattern.compile("\\.([^{]*?)\\{font-weight:bold\\}");
+    Pattern italicStyleName = Pattern.compile("\\.([A-Za-z][^{]*?)\\{[^}]*font-style:italic[^}]*\\}");
+    Pattern boldStyleName = Pattern.compile("\\.([A-Za-z][^{]*?)\\{[^}]*font-weight:700[^}]*\\}");
 
 
     Pattern aTags = Pattern.compile("<a[^>]*?></a>");
@@ -124,23 +124,29 @@ public class GoogleDocsTextConverter {
         Matcher italicsMatcher = italicStyleName.matcher(css);
         Matcher boldMatcher = boldStyleName.matcher(css);
 
-        if (italicsMatcher.find()) {
-            String italicSelectorName = italicsMatcher.group(1);
+        System.out.println(body);
 
-            Pattern italicClasses = Pattern.compile("<span class=\"" + italicSelectorName + "\">(.*?)</span>");
+        int start = 0;
+        while (italicsMatcher.find(start)) {
+            String italicSelectorName = italicsMatcher.group(1);
+            Pattern italicClasses = Pattern.compile("<span class=\"[^\"]*" + italicSelectorName + "[^\"]*\">(.*?)</span>");
             Matcher spanMatcherItalics = italicClasses.matcher(body);
 
             body = spanMatcherItalics.replaceAll("<i>$1</i>"); // $1 means what is matched inside the parentheses in the pattern
+            start = italicsMatcher.start() + 1;
         }
 
+        System.out.println(body);
 
-        if (boldMatcher.find()) {
+        start = 0;
+        while (boldMatcher.find(start)) {
             String boldSelectorName = boldMatcher.group(1);
-
-            Pattern boldClasses = Pattern.compile("<span class=\"" + boldSelectorName + "\">(.*?)</span>");
+            System.out.println(boldSelectorName);
+            Pattern boldClasses = Pattern.compile("<span class=\"[^\"]*" + boldSelectorName + "[^\"]*\">(.*?)</span>");
             Matcher spanMatcherBold = boldClasses.matcher(body);
 
             body = spanMatcherBold.replaceAll("<b>$1</b>");
+            start = boldMatcher.start() + 1;
         }
 
 
