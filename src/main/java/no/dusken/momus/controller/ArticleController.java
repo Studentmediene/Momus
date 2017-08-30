@@ -90,11 +90,6 @@ public class ArticleController {
         return articleService.updateArticleMetadata(article);
     }
 
-    @RequestMapping(value = "/note", method = RequestMethod.PATCH)
-    public @ResponseBody Article updateArticleNote(@RequestBody Article article){
-        return articleService.updateArticleNote(article);
-    }
-
     @RequestMapping(value = "{id}/content", method = RequestMethod.GET)
     public @ResponseBody String getArticleContent(@PathVariable("id") Long id) {
         Article article = articleService.getArticleRepository().findOne(id);
@@ -105,14 +100,24 @@ public class ArticleController {
         return article.getContent();
     }
 
-    @RequestMapping(value = "{id}/archived", method = RequestMethod.PATCH)
-    public @ResponseBody Article setArchived(@PathVariable("id") Long id, Boolean archived) {
+    @RequestMapping(value = "{id}/note", method = RequestMethod.PATCH)
+    public @ResponseBody Article updateArticleNote(@PathVariable("id") Long id, @RequestBody String note){
         Article article = articleService.getArticleRepository().findOne(id);        
         if (article == null) {
             logger.warn("Article with id {} not found, tried by user {}", id, userDetailsService.getLoggedInPerson().getId());
             throw new RestException("Article " + id + " not found", HttpServletResponse.SC_NOT_FOUND);
         }
-        return articleService.setArchived(article, archived);
+        return articleService.updateNote(article, note);
+    }
+
+    @RequestMapping(value = "{id}/archived", method = RequestMethod.PATCH)
+    public @ResponseBody Article updateArchived(@PathVariable("id") Long id, Boolean archived) {
+        Article article = articleService.getArticleRepository().findOne(id);        
+        if (article == null) {
+            logger.warn("Article with id {} not found, tried by user {}", id, userDetailsService.getLoggedInPerson().getId());
+            throw new RestException("Article " + id + " not found", HttpServletResponse.SC_NOT_FOUND);
+        }
+        return articleService.updateArchived(article, archived);
     }
 
     @RequestMapping(value = "/multiple", method = RequestMethod.GET)

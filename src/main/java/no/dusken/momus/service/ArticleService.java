@@ -139,15 +139,12 @@ public class ArticleService {
         return updateArticle(existing);
     }
 
-    public Article updateArticleNote(Article article) {
-        Article existing = articleRepository.findOne(article.getId());
-
-        existing.setNote(article.getNote());
-
-        return updateArticle(existing);
+    public Article updateNote(Article article, String note) {
+        article.setNote(note);
+        return updateArticle(article);
     }
 
-    public Article setArchived(Article article, Boolean archived) {
+    public Article updateArchived(Article article, Boolean archived) {
         article.setArchived(archived);
         return updateArticle(article);
     }
