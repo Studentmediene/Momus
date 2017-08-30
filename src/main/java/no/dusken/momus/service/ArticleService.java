@@ -235,23 +235,6 @@ public class ArticleService {
         return ArticleService.stripOffHtml(article.getContent()).toLowerCase();
     }
 
-    public static String createRawMetadata(Article article) {
-        StringBuilder metadata = new StringBuilder();
-        metadata.append(article.getName()).append(" ")
-            .append(article.getSection() != null ? article.getSection().getName() : "").append(" ")
-            .append(article.getStatus() != null ? article.getStatus().getName() : "").append(" ")
-            .append(article.getType() != null ? article.getType().getName() : "").append(" ")
-            .append(article.getComment()).append(" ");
-
-        for(Person journalist : article.getJournalists()){
-            metadata.append(journalist.getFullName()).append(" ");
-        }
-        for(Person photo : article.getPhotographers()){
-            metadata.append(photo.getFullName()).append(" ");
-        }
-        return metadata.toString().toLowerCase();
-    }
-
     private static String stripOffHtml(String html){
         String[] tags = {"<h1>","<h2>","<h3>","<h4>","<h5>","<p>","<i>","<b>", "<blockquote>","<br>","<ul>","<ol>","<li>"};
         for (String tag : tags) {
