@@ -152,7 +152,6 @@ public class ArticleService {
     public List<Article> searchForArticles(ArticleSearchParams params) {
         long start = System.currentTimeMillis();
 
-
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
         String queryText = builder.getFullQuery();
         Map<String, Object> queryParams = builder.getQueryParams();

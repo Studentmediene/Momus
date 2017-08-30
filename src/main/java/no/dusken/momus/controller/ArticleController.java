@@ -130,7 +130,7 @@ public class ArticleController {
         return articleService.searchForArticles(search);
     }
 
-    @RequestMapping(value = "/{id}/export", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/indesignfile", method = RequestMethod.GET)
     public @ResponseBody String getIndesignExport(@PathVariable("id") Long id, HttpServletResponse response) {
         IndesignExport indesignExport = articleService.exportArticle(id);
 
