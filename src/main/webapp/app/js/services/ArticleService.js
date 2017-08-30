@@ -44,10 +44,6 @@ angular.module('momusApp.services')
                 return $http.patch('/api/article/metadata', article);
             },
 
-            updateContent: function (article) {
-                return $http.patch('/api/article/content', article);
-            },
-
             updateNote: function (article) {
                 return $http.patch('/api/article/note', article);
             },

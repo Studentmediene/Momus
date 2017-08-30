@@ -58,19 +58,6 @@ angular.module('momusApp.controllers')
         $scope.photoTypes = [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}];
         $scope.quoteCheckTypes = [{value: false, name: 'I orden'}, {value: true, name: 'Trenger sitatsjekk'}];
 
-
-        /* content panel */
-        $scope.saveContent = function () {
-            $scope.savingContent = true;
-            ArticleService.updateContent($scope.article).success(function (data) {
-                //$scope.article.content = data.content;
-                //$scope.unedited.content = data.content;
-                $scope.savingContent = false;
-
-            });
-
-        };
-
         /* note panel */
         $scope.saveNote = function () {
             $scope.savingNote = true;
