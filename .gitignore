@@ -8,6 +8,7 @@ npm-debug.log
 .classpath
 .project
 org.eclipse*
+.vscode/
 
 log/
 database/
