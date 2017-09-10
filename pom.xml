@@ -28,7 +28,7 @@
     <!-- Some boilerplate info -->
     <name>Momus</name>
     <description>A web client for journalists</description>
-    <url>https://momus.dusken.no</url>
+    <url>https://momus.smint.no</url>
     <inceptionYear>2013</inceptionYear>
     <organization>
         <name>Studentmediene i Trondheim AS</name>
@@ -36,7 +36,7 @@
     </organization>
     <issueManagement>
         <system>JIRA</system>
-        <url>https://http://jira.studentmediene.no</url>
+        <url>https://http://jira.smint.no</url>
     </issueManagement>
     <licenses>
         <license>
@@ -48,8 +48,33 @@
     <!-- Properties here -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>4.0.3.RELEASE</spring.version>
-        <spring.security.version>3.2.3.RELEASE</spring.security.version>
+
+        <java.version>1.8</java.version>
+        <spring.version>4.3.10.RELEASE</spring.version>
+        <spring-security.version>4.2.3.RELEASE</spring-security.version>
+        <spring-data-jpa.version>1.11.6.RELEASE</spring-data-jpa.version>
+        <spring-security-saml2.version>1.0.2.RELEASE</spring-security-saml2.version>
+        <spring-ldap.version>2.0.2.RELEASE</spring-ldap.version>
+        <hibernate.version>5.2.10.Final</hibernate.version>
+        <jackson-datatype-hibernate5.version>2.9.0</jackson-datatype-hibernate5.version>
+        <commons-dbcp2.version>2.1.1</commons-dbcp2.version>
+        <liquibase.version>3.5.3</liquibase.version>
+        <google-drive.version>v2-rev277-1.22.0</google-drive.version>
+        <commons-lang3.version>3.6</commons-lang3.version>
+        <javax-servlet.version>3.1.0</javax-servlet.version>
+        <jetty.version>9.4.6.v20170531</jetty.version>
+        <maven-war-plugin.version>3.1.0</maven-war-plugin.version>
+        
+        <junit.version>4.12</junit.version>
+        <logback-classic.version>1.2.3</logback-classic.version>
+        <janino.version>3.0.7</janino.version>
+
+        <hsqldb.version>2.4.0</hsqldb.version>
+        <mysql.version>6.0.6</mysql.version>
+        <postgresql.version>42.1.4</postgresql.version>
+
+        <maven-compiler-plugin.version>3.6.2</maven-compiler-plugin.version>
+
     </properties>
 
 
@@ -78,44 +103,48 @@
             <version>${spring.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-websocket</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
-            <version>1.6.2.RELEASE</version>
+            <version>${spring-data-jpa.version}</version>
         </dependency>
-
         <!-- Security (authentication and authorization) -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>${spring.security.version}</version>
+            <version>${spring-security.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-            <version>${spring.security.version}</version>
+            <version>${spring-security.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
-            <version>${spring.security.version}</version>
+            <version>${spring-security.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security.extensions</groupId>
             <artifactId>spring-security-saml2-core</artifactId>
-            <version>1.0.2.RELEASE</version>
+            <version>${spring-security-saml2.version}</version>
         </dependency>
         <!-- Spring LDAP -->
         <dependency>
             <groupId>org.springframework.ldap</groupId>
             <artifactId>spring-ldap-core</artifactId>
-            <version>2.0.2.RELEASE</version>
+            <version>${spring-ldap.version}</version>
         </dependency>
 
         <!-- Testing -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.9</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -129,60 +158,60 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.1.2</version>
+            <version>${logback-classic.version}</version>
         </dependency>
 
         <dependency><!-- Needed for if-else in Logback's xml file -->
             <groupId>org.codehaus.janino</groupId>
             <artifactId>janino</artifactId>
-            <version>2.6.1</version>
+            <version>${janino.version}</version>
         </dependency>
 
         <!-- JSON mapper -->
         <dependency><!-- This is Jackson JSON mapper with some modifications to work with Hibernate -->
             <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-hibernate4</artifactId>
-            <version>2.1.2</version>
-        </dependency>
-
-        <!-- JDBC connector / JPA stuff -->
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-            <version>1.4</version>
+            <artifactId>jackson-datatype-hibernate5</artifactId>
+            <version>${jackson-datatype-hibernate5.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>4.1.9.Final</version>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+
+        <!-- JDBC connector / JPA stuff -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+            <version>${commons-dbcp2.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
-            <version>3.2.2</version>
+            <version>${liquibase.version}</version>
         </dependency>
 
         <!-- Various DB drivers -->
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <version>2.2.9</version>
+            <version>${hsqldb.version}</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.23</version>
+            <version>${mysql.version}</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>9.4-1200-jdbc41</version>
+            <version>${postgresql.version}</version>
             <scope>runtime</scope>
             <exclusions>
                 <exclusion>
@@ -197,20 +226,20 @@
         <dependency>
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-drive</artifactId>
-            <version>v2-rev151-1.19.0</version>
+            <version>${google-drive.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.3.2</version>
+            <version>${commons-lang3.version}</version>
         </dependency>
 
         <!-- Only for the redirect in index.jsp ... -->
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax-servlet.version}</version>
         </dependency>
     </dependencies>
 
@@ -220,35 +249,33 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
-                <version>3.0</version>
+                <version>${maven-compiler-plugin.version}</version>
             </plugin>
             <!-- Lets us run and test the project easily in a server -->
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>8.1.9.v20130131</version>
+                <version>${jetty.version}</version>
                 <configuration>
-                    <connectors>
-                        <!-- Using BIO because of file locking on Windows -->
-                        <!--<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">-->
-                        <connector implementation="org.eclipse.jetty.server.bio.SocketConnector">
-                            <port>8080</port>
-                        </connector>
-                    </connectors>
+                    <contextXml>src/main/resources/jetty-context.xml</contextXml>
+                    <webAppSourceDirectory>src/main/webapp</webAppSourceDirectory>
                 </configuration>
             </plugin>
             <!-- Control how the application is built -->
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.4</version>
+                <version>${maven-war-plugin.version}</version>
                 <configuration>
                     <!-- Only keep the WEB-INF folder in the war -->
                     <warSourceIncludes>
                         WEB-INF/**
                     </warSourceIncludes>
+
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
 
                     <!-- include the content of the dist folder built by grunt -->
                     <webResources>
@@ -262,4 +289,3 @@
     </build>
 
 </project>
-
