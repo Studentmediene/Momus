@@ -20,10 +20,12 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import no.dusken.momus.config.TestConfig;
+
 /**
  * Values needed for most of the test cases
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:testContext.xml")
+@ContextConfiguration(classes = TestConfig.class)
 public abstract class AbstractTestRunner {
 }
