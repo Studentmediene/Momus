@@ -18,30 +18,32 @@ package no.dusken.momus.service.search;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import no.dusken.momus.service.repository.PersonRepository;
+import no.dusken.momus.service.search.ArticleQuery;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class ArticleQueryBuilder {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private ArticleSearchParams search;
-    private String fullQuery;
-    private Map<String, Object> queryParams = new HashMap<>();
+    private static final String baseQuery = "select a from Article a left join fetch a.status left join fetch a.publication";
+    private static final String baseOrder = "order by a.publication.releaseDate DESC";
 
-    private final String baseQuery = "select a from Article a left join fetch a.status left join fetch a.publication";
-    private final String baseOrder = "order by a.publication.releaseDate DESC";
+    @Autowired
+    private PersonRepository personRepository;
 
-    public ArticleQueryBuilder(ArticleSearchParams search) {
-        this.search = search;
-        buildQuery();
-    }
-
-    private void buildQuery() {
+    public ArticleQuery buildQuery(ArticleSearchParams search) {
         List<String> conditions = new ArrayList<>();
+        String fullQuery = "";
+        Map<String, Object> queryParams = new HashMap<>();
 
         if (search.getFree() != null && search.getFree().length() > 0) {
             String[] words = search.getFree().split(" ");
@@ -61,7 +63,7 @@ public class ArticleQueryBuilder {
             for (Long person : search.getPersons()) {
                 conditions.add("( :personid" + personCount + " member of a.journalists or " +
                         ":personid" + personCount + " member of a.photographers )");
-                queryParams.put("personid" + personCount++, person);
+                queryParams.put("personid" + personCount++, personRepository.findOne(person));
             }
         }
         if (search.getSection() != null) {
@@ -93,21 +95,6 @@ public class ArticleQueryBuilder {
 
         logger.debug("Search query: {}", fullQuery);
 
-    }
-
-    public String getBaseQuery() {
-        return baseQuery;
-    }
-
-    public String getBaseOrder() {
-        return baseOrder;
-    }
-
-    public String getFullQuery() {
-        return fullQuery;
-    }
-
-    public Map<String, Object> getQueryParams() {
-        return queryParams;
+        return new ArticleQuery(fullQuery, queryParams);
     }
 }

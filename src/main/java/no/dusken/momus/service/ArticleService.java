@@ -28,6 +28,7 @@ import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
 import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.ArticleRevisionRepository;
+import no.dusken.momus.service.search.ArticleQuery;
 import no.dusken.momus.service.search.ArticleQueryBuilder;
 import no.dusken.momus.service.search.ArticleSearchParams;
 import org.slf4j.Logger;
@@ -61,6 +62,9 @@ public class ArticleService {
 
     @Autowired
     private GoogleDriveService googleDriveService;
+
+    @Autowired
+    private ArticleQueryBuilder articleQueryBuilder;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -170,14 +174,11 @@ public class ArticleService {
     public List<Article> searchForArticles(ArticleSearchParams params) {
         long start = System.currentTimeMillis();
 
+        ArticleQuery articleQuery = articleQueryBuilder.buildQuery(params);
 
-        ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
-        String queryText = builder.getFullQuery();
-        Map<String, Object> queryParams = builder.getQueryParams();
+        TypedQuery<Article> query = entityManager.createQuery(articleQuery.getQuery(), Article.class);
 
-        TypedQuery<Article> query = entityManager.createQuery(queryText, Article.class);
-
-        for (Map.Entry<String, Object> e : queryParams.entrySet()) {
+        for (Map.Entry<String, Object> e : articleQuery.getParams().entrySet()) {
             query.setParameter(e.getKey(), e.getValue());
         }
 
