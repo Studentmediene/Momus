@@ -19,9 +19,10 @@ package no.dusken.momus.service.repository;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
-
+import org.springframework.stereotype.Repository;
 import java.util.List;
 
+@Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     public List<Article> findByPublicationId(Long id);

@@ -21,7 +21,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface SourceTagRepository extends JpaRepository<SourceTag, String> {
 
     @Query("select st from SourceTag st where st.tag not in (select distinct sst.tag from Source s join s.tags sst)")
