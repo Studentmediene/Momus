@@ -22,6 +22,9 @@ import no.dusken.momus.service.search.ArticleSearchParams;
 import no.dusken.momus.test.AbstractTestRunner;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,28 +36,28 @@ import static org.junit.Assert.assertTrue;
 @Transactional
 public class ArticleServiceTest extends AbstractTestRunner {
 
-    @Autowired
+    @Mock
     PersonRepository personRepository;
 
-    @Autowired
+    @Mock
     ArticleRepository articleRepository;
 
-    @Autowired
+    @Mock
     PublicationRepository publicationRepository;
 
-    @Autowired
+    @Mock
     ArticleStatusRepository articleStatusRepository;
 
-    @Autowired
+    @Mock
     ArticleTypeRepository articleTypeRepository;
 
-    @Autowired
+    @Mock
     ArticleRevisionRepository articleRevisionRepository;
 
-    @Autowired
+    @Mock
     ArticleReviewRepository articleReviewRepository;
 
-    @Autowired
+    @InjectMocks
     ArticleService articleService;
 
     private Article article1;
@@ -65,29 +68,22 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Before
     public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+        
         Person person1 = new Person(1L, "mts", "Mats", "Matsessen", "", "", true);
         Person person2 = new Person(2L, "aaa", "Kåre", "Kåressen", "", "", true);
         Person person3 = new Person(3L, "bbb", "Flaks", "Flaksesen", "", "", true);
-
-        person1 = personRepository.save(person1);
-        person2 = personRepository.save(person2);
-        person3 = personRepository.save(person3);
 
         Publication publication1 = new Publication(1L);
         publication1.setName("Pub1");
         Publication publication2 = new Publication(2L);
         publication2.setName("Pub2");
 
-        publication1 = publicationRepository.save(publication1);
-        publication2 = publicationRepository.save(publication2);
-
         ArticleStatus articleStatus1 = new ArticleStatus();
         articleStatus1.setName("Skrives");
-        articleStatusRepository.save(articleStatus1);
 
         ArticleReview articleReview1 = new ArticleReview();
         articleReview1.setName("Ukjent");
-        articleReviewRepository.save(articleReview1);
 
         // TODO: add section as well
 
@@ -101,9 +97,6 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article1.setPhotographers(new HashSet<Person>());
         article1.setPublication(publication1);
         articleService.createRawContent(article1);
-        article1 = articleRepository.saveAndFlush(article1);
-
-
 
         article2 = new Article();
         article2.setName("Artikkel 2");
@@ -116,9 +109,6 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article2.setPhotographers(article2photographers);
         article2.setPublication(publication1);
         articleService.createRawContent(article2);
-        article2 = articleRepository.save(article2);
-
-
 
         article3 = new Article();
         article3.setName("Artikkel 3");
@@ -131,8 +121,6 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article3.setPhotographers(article3photographers);
         article3.setPublication(publication1);
         articleService.createRawContent(article3);
-        article3 = articleRepository.save(article3);
-
 
         article4 = new Article();
         article4.setName("Artikkel 4");
@@ -146,18 +134,13 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article4.setPublication(publication2);
         article4.setStatus(articleStatus1);
         articleService.createRawContent(article4);
-        article4 = articleRepository.save(article4);
         article4.setReview(articleReview1);
     }
-
-
 
     @Test
     public void testSaveArticleUpdates() throws Exception {
         // Todo: Mock user and date
     }
-
-
 
     @Test
     public void testSaveArticleMetadata() throws Exception {

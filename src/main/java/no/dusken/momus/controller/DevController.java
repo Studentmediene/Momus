@@ -54,12 +54,7 @@ import java.io.File;
 @Controller
 @RequestMapping("/dev")
 public class DevController {
-
     private Logger logger = LoggerFactory.getLogger(getClass());
-
-
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
     private SectionRepository sectionRepository;
