@@ -50,13 +50,13 @@ angular.module('momusApp.services')
                 return $http.get('/api/publication/layoutstatus');
             },
             getStatusCounts: function(id){
-                return $http.get('/api/article/statuscount/' + id);
+                return $http.get('/api/article/statuscount?publicationId=' + id);
             },
             getLayoutStatusCounts: function(id){
                 return $http.get('/api/publication/statuscount/' + id);
             },
             getReviewStatusCounts: function(id){
-                return $http.get('/api/article/reviewstatuscount/' + id);
+                return $http.get('/api/article/reviewstatuscount?publicationId=' + id);
             },
             linkPagesToArticles: function(pages, articles){
                 for(var i = 0; i < pages.length; i++){

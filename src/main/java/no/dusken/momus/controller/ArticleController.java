@@ -168,8 +168,8 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "/reviews", method = RequestMethod.GET)
-    public @ResponseBody List<ArticleReview> getAllReviewStatuses() { 
-        return articleReviewRepository.findAll(); 
+    public @ResponseBody List<ArticleReview> getAllReviewStatuses() {
+        return articleReviewRepository.findAll();
     }
 
     @RequestMapping(value = "/statuscount", method = RequestMethod.GET)
