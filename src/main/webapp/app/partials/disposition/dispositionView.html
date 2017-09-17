@@ -30,6 +30,9 @@
         <div id="disposition" class="panel panel-default">
             <div class="panel-heading clearfix">
                     <div class="pull-left"><h5>Sider</h5></div>
+					<div ng-show="vm.loading" class="pull-left col-md-offset-5">
+						<i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
+					</div>
                     <div class="pull-right" scroll-trigger="attach-top-true">
                         <page-adder max-num-pages="vm.maxNewPages" max-page-pos="vm.publication.pages.length" submit="vm.newPage(newPageAt, numNewPages);"></page-adder>
                     </div>
@@ -58,11 +61,6 @@
                         <div class="d-table-header button"></div>
                         <div class="d-table-header button"></div>
                     </div>
-                </div>
-
-                <!-- Loading spinner -->
-                <div class="d-table-row" ng-show="vm.loading" style="display: inline-block; width: 100%; text-align: center;">
-                    <i class="fa fa-spinner fa-spin fa-4x"></i>
                 </div>
 
                 <div ng-model="vm.publication.pages" ui-sortable="vm.sortableOptions">

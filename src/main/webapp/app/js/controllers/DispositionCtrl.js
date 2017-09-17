@@ -106,6 +106,7 @@ angular.module('momusApp.controllers')
         function updatePages(pages) {
             var pages = Page.updateMultiple({pubid: vm.publication.id}, pages, function() {
                 vm.publication.pages = pages;
+                vm.loading = false;
             });
         }
 
@@ -177,7 +178,8 @@ angular.module('momusApp.controllers')
                 var newPosition = vm.publication.pages.indexOf(placed[0]);
                 placed.forEach(function(page, i) {
                     page.page_nr = newPosition + i + 1
-                })
+                });
+                vm.loading = true;
                 updatePages(placed);
             },
             placeholder: "disp-placeholder"
