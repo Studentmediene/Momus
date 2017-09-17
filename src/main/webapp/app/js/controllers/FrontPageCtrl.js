@@ -135,7 +135,7 @@ angular.module('momusApp.controllers')
                 status.counts.push(counts[statuses[i].id]);
             }
             status.colors = fixShortColorCodes(status.colors);
-            console.log(status.colors);
+
             return status;
         }
 
