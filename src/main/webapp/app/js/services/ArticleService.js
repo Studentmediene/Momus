@@ -27,7 +27,15 @@ angular.module('momusApp.services')
                 return $http.get('/api/article/' + id + '/content');
             },
             getMultiple: function(ids) {
-                return $http.get('/api/article/multiple', ids);
+				var urlParams = "?";
+				for (var i in ids){
+					if(i == 0){
+						urlParams += "id="+ids[i];
+					} else {
+						urlParams += "&id="+ids[i];
+					}
+				}
+                return $http.get('/api/article/multiple' + urlParams, ids);
             },
             search: function (searchObject) {
                 return $http.post('/api/article/search', searchObject);

@@ -121,7 +121,7 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "/multiple", method = RequestMethod.GET)
-    public @ResponseBody List<Article> getArticlesByID(@RequestBody List<Long> ids) {
+    public @ResponseBody List<Article> getArticlesByID(@RequestParam(value="id") List<Long> ids) {
         return articleService.getArticleRepository().findAll(ids);
     }
 
