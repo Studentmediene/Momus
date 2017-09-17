@@ -135,6 +135,7 @@ angular.module('momusApp.controllers')
                 status.counts.push(counts[statuses[i].id]);
             }
             status.colors = fixShortColorCodes(status.colors);
+            console.log(status.colors);
             return status;
         }
 
@@ -201,12 +202,13 @@ angular.module('momusApp.controllers')
         }
 
         function fixShortColorCodes(colors){
-            for(var i = 0; i < colors.length; i++){
-                var color = colors[i];
+            return colors.map(function(color) {
                 if(color.length <= 4){
-                    color = "#" + color.split("#")[1].split("").map(function(x){return x+x}).join("");
+                    return "#" + color.split("#")[1].split("").map(function(x){return x+x}).join("");
+                }else{
+                    return color;
                 }
-            }
+            });
         }
 
         $scope.$on('$destroy', function() {
