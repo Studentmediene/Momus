@@ -17,15 +17,15 @@
 package no.dusken.momus.test;
 
 import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import no.dusken.momus.config.TestConfig;
 
 /**
  * Values needed for most of the test cases
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 public abstract class AbstractTestRunner {
 }

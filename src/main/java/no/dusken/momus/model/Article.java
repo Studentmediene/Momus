@@ -21,6 +21,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import no.dusken.momus.service.ArticleService;
+
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -37,6 +39,7 @@ public class Article implements Comparator<Article>, Comparable<Article>{
 
     private String name;
 
+    @JsonIgnore
     private String content;
 
     private String note;
@@ -75,6 +78,7 @@ public class Article implements Comparator<Article>, Comparable<Article>{
 
     private String googleDriveId;
 
+    @JsonIgnore
     private String rawcontent;
 
     private int contentLength;
@@ -121,6 +125,9 @@ public class Article implements Comparator<Article>, Comparable<Article>{
 
     public void setContent(String content) {
         this.content = content;
+        String rawContent = ArticleService.createRawContent(this);
+        this.setRawcontent(rawContent);
+        this.setContentLength(rawContent.length());
     }
 
     public String getPhotoStatus() {

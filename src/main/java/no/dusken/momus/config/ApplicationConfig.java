@@ -102,7 +102,6 @@ class ApplicationConfig extends WebMvcConfigurerAdapter {
         JpaTransactionManager transactionManager = new JpaTransactionManager(entityManagerFactory);
         transactionManager.setDataSource(dataSource());
         return transactionManager;
-
     }
 
     @Bean

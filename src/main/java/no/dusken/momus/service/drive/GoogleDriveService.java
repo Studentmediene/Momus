@@ -179,7 +179,7 @@ public class GoogleDriveService {
         List<Article> articles = articleRepository.findByGoogleDriveIdIn(modifiedFileIds);
         for (Article article : articles) {
             updateContentFromDrive(article);
-            articleService.saveNewContent(article);
+            articleService.updateArticleContent(article);
         }
 
         logger.debug("Done syncing, updated {} articles", articles.size());
