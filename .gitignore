@@ -9,6 +9,8 @@ npm-debug.log
 .project
 org.eclipse*
 .vscode/
+*.swo
+*.swp
 
 log/
 database/

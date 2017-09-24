@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @Controller
@@ -121,7 +122,10 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "/multiple", method = RequestMethod.GET)
-    public @ResponseBody List<Article> getArticlesByID(@RequestBody List<Long> ids) {
+    public @ResponseBody List<Article> getArticlesByID(@RequestParam(value="id") List<Long> ids) {
+        if(ids == null) {
+            return new ArrayList<>();
+        }
         return articleService.getArticleRepository().findAll(ids);
     }
 
@@ -168,8 +172,8 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "/reviews", method = RequestMethod.GET)
-    public @ResponseBody List<ArticleReview> getAllReviewStatuses() { 
-        return articleReviewRepository.findAll(); 
+    public @ResponseBody List<ArticleReview> getAllReviewStatuses() {
+        return articleReviewRepository.findAll();
     }
 
     @RequestMapping(value = "/statuscount", method = RequestMethod.GET)
