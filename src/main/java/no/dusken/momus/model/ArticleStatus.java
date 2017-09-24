@@ -36,6 +36,11 @@ public class ArticleStatus {
     public ArticleStatus() {
     }
 
+    public ArticleStatus(Long id, String name, String color) {
+        this(name, color);
+        this.id = id;
+    }
+
     public ArticleStatus(String name, String color) {
         this.name = name;
         this.color = color;
