@@ -20,8 +20,10 @@ import no.dusken.momus.model.Article;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.model.Publication;
 import no.dusken.momus.test.AbstractTestRunner;
+import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,8 +32,13 @@ import static org.junit.Assert.assertEquals;
 
 public class IndesignGeneratorTest extends AbstractTestRunner {
 
-    @Autowired
+    @InjectMocks
     IndesignGenerator indesignGenerator;
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void testGenerateFromArticle() throws Exception {

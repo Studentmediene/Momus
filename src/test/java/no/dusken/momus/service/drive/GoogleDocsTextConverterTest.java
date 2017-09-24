@@ -17,8 +17,10 @@
 package no.dusken.momus.service.drive;
 
 import no.dusken.momus.test.AbstractTestRunner;
+import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertEquals;
@@ -26,8 +28,13 @@ import static org.junit.Assert.assertEquals;
 @Transactional
 public class GoogleDocsTextConverterTest extends AbstractTestRunner {
 
-    @Autowired
+    @InjectMocks
     GoogleDocsTextConverter googleDocsTextConverter;
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void testDefaultConverting() {
