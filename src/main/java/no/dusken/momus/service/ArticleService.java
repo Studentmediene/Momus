@@ -18,7 +18,6 @@ package no.dusken.momus.service;
 
 import com.google.api.services.drive.model.File;
 import no.dusken.momus.authentication.UserDetailsService;
-import no.dusken.momus.authentication.UserDetailsServiceImpl;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleRevision;
@@ -75,7 +74,7 @@ public class ArticleService {
         return article;
     }
 
-    public Article createNewArticle(Article article) {
+    public Article saveArticle(Article article) {
         File document = googleDriveService.createDocument(article.getName());
 
         if (document == null) {
@@ -87,16 +86,16 @@ public class ArticleService {
         Article newArticle = articleRepository.saveAndFlush(article);
 
         logger.info("Article with id {} created with data: {}", newArticle.getId(), newArticle.dump());
-        return articleRepository.findOne(newArticle.getId());
+        return newArticle;
     }
 
-    public Article saveUpdatedArticle(Article article) {
+    public Article updateArticle(Article article) {
         article.setLastUpdated(new Date());
         logger.info("Article with id {} updated, data: {}", article.getId(), article.dump());
         return articleRepository.saveAndFlush(article);
     }
 
-    public Article saveNewContent(Article article) {
+    public Article updateArticleContent(Article article) {
         Article existing = articleRepository.findOne(article.getId());
         String newContent = article.getContent();
         String oldContent = existing.getContent();
@@ -109,32 +108,14 @@ public class ArticleService {
         }
 
         existing.setContent(newContent);
-        createRawContent(existing);
 
         createNewRevision(existing, false);
 
-        return saveUpdatedArticle(existing);
+        return updateArticle(existing);
     }
 
-    public Article archiveArticle(Article article){
-        Article existing = getArticleById(article.getId());
-        existing.setArchived(true);
-
-        logger.info("Setting article with id {} to archived", article.getId());
-        return saveUpdatedArticle(existing);
-    }
-
-    public Article restoreArticle(Article article){
-        Article existing = getArticleById(article.getId());
-        existing.setArchived(false);
-
-        logger.info("Setting article with id {} to no longer archived", article.getId());
-        return saveUpdatedArticle(existing);
-    }
-
-    public Article saveMetadata(Article article) {
+    public Article updateArticleMetadata(Article article) {
         Article existing = articleRepository.findOne(article.getId());
-
         if (!article.getStatus().equals(existing.getStatus())) {
             createNewRevision(article, true);
         }
@@ -149,27 +130,27 @@ public class ArticleService {
         existing.setSection(article.getSection());
         existing.setUseIllustration(article.getUseIllustration());
         existing.setImageText(article.getImageText());
-        createRawContent(existing);
         existing.setQuoteCheckStatus(article.getQuoteCheckStatus());
         existing.setExternalAuthor(article.getExternalAuthor());
         existing.setExternalPhotographer(article.getExternalPhotographer());
         existing.setPhotoStatus(article.getPhotoStatus());
         existing.setReview(article.getReview());
 
-        return saveUpdatedArticle(existing);
+        return updateArticle(existing);
     }
 
-    public Article saveNote(Article article) {
-        Article existing = articleRepository.findOne(article.getId());
+    public Article updateNote(Article article, String note) {
+        article.setNote(note);
+        return updateArticle(article);
+    }
 
-        existing.setNote(article.getNote());
-
-        return saveUpdatedArticle(existing);
+    public Article updateArchived(Article article, Boolean archived) {
+        article.setArchived(archived);
+        return updateArticle(article);
     }
 
     public List<Article> searchForArticles(ArticleSearchParams params) {
         long start = System.currentTimeMillis();
-
 
         ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
         String queryText = builder.getFullQuery();
@@ -250,36 +231,11 @@ public class ArticleService {
         }
     }
 
-    public void createRawContent(Article article){
-        StringBuilder raw = new StringBuilder();
-
-        String content = stripOffHtml(article.getContent());
-
-        int contentLength = content.length();
-
-        raw.append(content).append(" ")
-                .append(article.getName()).append(" ")
-                .append(article.getSection() != null ? article.getSection().getName() : "").append(" ")
-                .append(article.getStatus() != null ? article.getStatus().getName() : "").append(" ")
-                .append(article.getType() != null ? article.getType().getName() : "").append(" ")
-                .append(article.getComment()).append(" ");
-
-        for(Person journalist : article.getJournalists()){
-            raw.append(journalist.getFullName()).append(" ");
-        }
-        for(Person photo : article.getPhotographers()){
-            raw.append(photo.getFullName()).append(" ");
-        }
-
-
-        String rawContent = raw.toString().toLowerCase();
-        logger.debug("Raw content {}, length of content: {}", rawContent, contentLength);
-
-        article.setRawcontent(rawContent);
-        article.setContentLength(contentLength);
+    public static String createRawContent(Article article){
+        return ArticleService.stripOffHtml(article.getContent()).toLowerCase();
     }
 
-    private String stripOffHtml(String html){
+    private static String stripOffHtml(String html){
         String[] tags = {"<h1>","<h2>","<h3>","<h4>","<h5>","<p>","<i>","<b>", "<blockquote>","<br>","<ul>","<ol>","<li>"};
         for (String tag : tags) {
             html = html.replaceAll(tag," ").replaceAll(tag.substring(0,1)+"/"+tag.substring(1,tag.length()),"");

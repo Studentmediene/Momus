@@ -8,6 +8,8 @@ npm-debug.log
 .classpath
 .project
 org.eclipse*
+*.swo
+*.swp
 
 log/
 database/
