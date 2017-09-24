@@ -19,7 +19,10 @@ package no.dusken.momus.model;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import no.dusken.momus.service.ArticleService;
+
 import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Set;
@@ -33,6 +36,7 @@ public class Article{
 
     private String name;
 
+    @JsonIgnore
     private String content;
 
     private String note;
@@ -71,6 +75,7 @@ public class Article{
 
     private String googleDriveId;
 
+    @JsonIgnore
     private String rawcontent;
 
     private int contentLength;
@@ -112,6 +117,9 @@ public class Article{
 
     public void setContent(String content) {
         this.content = content;
+        String rawContent = ArticleService.createRawContent(this);
+        this.setRawcontent(rawContent);
+        this.setContentLength(rawContent.length());
     }
 
     public String getPhotoStatus() {

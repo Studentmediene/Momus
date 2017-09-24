@@ -55,84 +55,93 @@ public class ArticleServiceTest extends AbstractTestRunner {
     ArticleReviewRepository articleReviewRepository;
 
     @Autowired
+    SectionRepository sectionRepository;
+
+    @Autowired
     ArticleService articleService;
+
+    private Person person1;
+    private Person person2;
+    private Person person3;
 
     private Article article1;
     private Article article2;
     private Article article3;
     private Article article4;
 
+    private Publication publication1;
+    private Publication publication2;
+
+    private ArticleStatus articleStatus1;
+    private ArticleStatus articleStatus2;
+
+    private ArticleReview articleReview1;
+    private ArticleReview articleReview2;
+
+    private ArticleType articleType1;
+    private ArticleType articleType2;
+
+    private Section section1;
+    private Section section2;
 
     @Before
     public void setUp() throws Exception {
-        Person person1 = new Person(1L, "mts", "Mats", "Matsessen", "", "", true);
-        Person person2 = new Person(2L, "aaa", "Kåre", "Kåressen", "", "", true);
-        Person person3 = new Person(3L, "bbb", "Flaks", "Flaksesen", "", "", true);
+        person1 = new Person(1L, "mts", "Mats", "Matsessen", "", "", true);
+        person2 = new Person(2L, "aaa", "Kåre", "Kåressen", "", "", true);
+        person3 = new Person(3L, "bbb", "Flaks", "Flaksesen", "", "", true);
 
         person1 = personRepository.save(person1);
         person2 = personRepository.save(person2);
         person3 = personRepository.save(person3);
 
-        Publication publication1 = new Publication(1L);
+        publication1 = new Publication(1L);
         publication1.setName("Pub1");
-        Publication publication2 = new Publication(2L);
+        publication2 = new Publication(2L);
         publication2.setName("Pub2");
 
         publication1 = publicationRepository.save(publication1);
         publication2 = publicationRepository.save(publication2);
 
-        ArticleStatus articleStatus1 = new ArticleStatus();
-        articleStatus1.setName("Skrives");
-        articleStatusRepository.save(articleStatus1);
+        articleStatus1 = articleStatusRepository.save(new ArticleStatus("Skrives", ""));
+        articleStatus2 = articleStatusRepository.save(new ArticleStatus("Til korrektur", ""));
 
-        ArticleReview articleReview1 = new ArticleReview();
-        articleReview1.setName("Ukjent");
-        articleReviewRepository.save(articleReview1);
+        articleReview1 = articleReviewRepository.save(new ArticleReview("Ukjent", ""));
+        articleReview2 = articleReviewRepository.save(new ArticleReview("Ferdig", ""));
 
-        // TODO: add section as well
+        articleType1 = articleTypeRepository.save(new ArticleType("Anmeldelse", ""));
+        articleType2 = articleTypeRepository.save(new ArticleType("Reportasje", ""));
+
+        section1 = sectionRepository.save(new Section("Musikk"));
+        section2 = sectionRepository.save(new Section("Forskning"));
 
         article1 = new Article();
         article1.setName("Artikkel 1");
         article1.setContent("Testinnhold for artikkel 1 yay");
-        Set<Person> article1journalists = new HashSet<>();
-        article1journalists.add(person1);
-        article1journalists.add(person2);
-        article1.setJournalists(article1journalists);
+        article1.setJournalists(new HashSet<>(Arrays.asList(person1, person2)));
         article1.setPhotographers(new HashSet<Person>());
         article1.setPublication(publication1);
-        articleService.createRawContent(article1);
-        article1 = articleRepository.saveAndFlush(article1);
-
-
+        article1.setSection(section1);
+        article1.setStatus(articleStatus1);
+        article1.setType(articleType1);
+        article1.setArchived(false);
 
         article2 = new Article();
         article2.setName("Artikkel 2");
         article2.setContent("Masse kult innhold, kan du søke i dette kanskje??");
-        Set<Person> article2journalists = new HashSet<>();
-        Set<Person> article2photographers = new HashSet<>();
-        article2journalists.add(person2);
-        article2photographers.add(person3);
-        article2.setJournalists(article2journalists);
-        article2.setPhotographers(article2photographers);
+        article2.setJournalists(new HashSet<>(Arrays.asList(person2)));
+        article2.setPhotographers(new HashSet<>(Arrays.asList(person3)));
         article2.setPublication(publication1);
-        articleService.createRawContent(article2);
-        article2 = articleRepository.save(article2);
-
-
+        article2.setSection(section1);
+        article2.setArchived(false);
 
         article3 = new Article();
         article3.setName("Artikkel 3");
         article3.setContent("Hei på deg, flott du leser testene! :)");
-        Set<Person> article3journalists = new HashSet<>();
-        Set<Person> article3photographers = new HashSet<>();
-        article3journalists.add(person1);
-        article3photographers.add(person2);
-        article3.setJournalists(article3journalists);
-        article3.setPhotographers(article3photographers);
+        article3.setJournalists(new HashSet<>(Arrays.asList(person1)));
+        article3.setPhotographers(new HashSet<>(Arrays.asList(person2)));
         article3.setPublication(publication1);
-        articleService.createRawContent(article3);
-        article3 = articleRepository.save(article3);
-
+        article2.setSection(section1);
+        article3.setArchived(false);
 
         article4 = new Article();
         article4.setName("Artikkel 4");
@@ -144,30 +153,25 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article4.setJournalists(article4journalists);
         article4.setPhotographers(article4photographers);
         article4.setPublication(publication2);
-        article4.setStatus(articleStatus1);
-        articleService.createRawContent(article4);
-        article4 = articleRepository.save(article4);
         article4.setReview(articleReview1);
+        article4.setStatus(articleStatus1);
+        article4.setSection(section1);
+        article4.setArchived(false);
+
+        article1 = articleRepository.save(article1);
+        article2 = articleRepository.save(article2);
+        article3 = articleRepository.save(article3);
+        article4 = articleRepository.save(article4);
     }
-
-
 
     @Test
     public void testSaveArticleUpdates() throws Exception {
         // Todo: Mock user and date
     }
 
-
-
     @Test
-    public void testSaveArticleMetadata() throws Exception {
+    public void testUpdateArticleMetadata() throws Exception {
         Article article = new Article(article1.getId());
-        ArticleStatus articleStatus1 = articleStatusRepository.save(new ArticleStatus("Desk", ""));
-        ArticleType articleType1 = articleTypeRepository.save(new ArticleType("KulturRaport", ""));
-        Publication publication1 = new Publication();
-        publication1.setName("testpublication");
-        publication1.setReleaseDate(new Date(114, 5, 5));
-        publication1 = publicationRepository.save(publication1);
 
         Set<Person> journalists = new HashSet<>();
         Set<Person> photographers = new HashSet<>();
@@ -178,29 +182,29 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article.setPhotographers(photographers);
         article.setContent("NEW CONTENT, SHOULD NOT BE CHANGED!");
         article.setComment("my cool comment");
-        article.setStatus(articleStatus1);
-        article.setType(articleType1);
-        article.setPublication(publication1);
+        article.setStatus(articleStatus2);
+        article.setType(articleType2);
+        article.setPublication(publication2);
 
-        article = articleService.saveMetadata(article);
+        article = articleService.updateArticleMetadata(article);
 
         assertEquals("Updated name", article.getName());
         assertEquals(0, article.getJournalists().size());
         assertEquals(1, article.getPhotographers().size());
         assertEquals("my cool comment", article.getComment());
-        assertEquals(articleStatus1.getName(), article.getStatus().getName());
-        assertEquals(articleType1.getName(), article.getType().getName());
-        assertEquals(publication1.getName(), article.getPublication().getName());
+        assertEquals(articleStatus2.getName(), article.getStatus().getName());
+        assertEquals(articleType2.getName(), article.getType().getName());
+        assertEquals(publication2.getName(), article.getPublication().getName());
 
         assertEquals("Testinnhold for artikkel 1 yay", article.getContent());
     }
 
     @Test
-    public void testSaveArticleContentsGeneratesARevision() throws Exception {
+    public void testUpdateArticleContentsGeneratesARevision() throws Exception {
         Article article = new Article(article1.getId());
         article.setContent("NEW CONTENT for article 1");
 
-        Article updated = articleService.saveNewContent(article);
+        Article updated = articleService.updateArticleContent(article);
 
         assertEquals("NEW CONTENT for article 1", updated.getContent());
 
@@ -224,6 +228,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
 
         List<Article> articles = articleService.searchForArticles(params);
+
         assertEquals(expected, articles);
 
         // just a check to see if the joins actually work, so that relations are populated
@@ -234,11 +239,11 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForContent() {
-        ArticleSearchParams params = new ArticleSearchParams("søkE dette KÅre", null, Collections.<Long>emptyList(),null, null, null, 0, 0, false);
+        ArticleSearchParams params = new ArticleSearchParams("kåre dettE SøkE", null, Collections.<Long>emptyList(),null, null, null, 100, 1, false);
 
         List<Article> expected = new ArrayList<>();
         expected.add(article2);
-
+     
         assertEquals(expected, articleService.searchForArticles(params));
     }
 
@@ -302,9 +307,10 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForStatus() {
-        ArticleSearchParams params = new ArticleSearchParams("",article4.getStatus().getId(),Collections.<Long>emptyList(),null,null,null, 0, 0, false);
+        ArticleSearchParams params = new ArticleSearchParams("",article4.getStatus().getId(),Collections.<Long>emptyList(),null,null,null, 100, 1, false);
 
         List<Article> expected = new ArrayList<>();
+        expected.add(article1);
         expected.add(article4);
 
         List<Article> articles = articleService.searchForArticles(params);
@@ -314,7 +320,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForReview() {
-        ArticleSearchParams params = new ArticleSearchParams("",null,Collections.<Long>emptyList(),article4.getReview().getId(),null,null, 0, 0, false);
+        ArticleSearchParams params = new ArticleSearchParams("",null,Collections.<Long>emptyList(),article4.getReview().getId(),null,null, 100, 1, false);
 
         List<Article> expected = new ArrayList<>();
         expected.add(article4);
@@ -326,7 +332,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Test
     public void testSearchingForContentAndPersonAndStatusAndPublication() {
-        ArticleSearchParams params = new ArticleSearchParams("moving",article4.getStatus().getId(),Arrays.asList(1L, 2L),null,null,article4.getPublication().getId(), 0, 0, false);
+        ArticleSearchParams params = new ArticleSearchParams("moving",article4.getStatus().getId(),Arrays.asList(1L, 2L),null,null,article4.getPublication().getId(), 100, 1, false);
 
         List<Article> expected = new ArrayList<>();
         expected.add(article4);

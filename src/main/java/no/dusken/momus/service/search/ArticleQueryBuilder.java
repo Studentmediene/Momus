@@ -32,8 +32,14 @@ public class ArticleQueryBuilder {
     private String fullQuery;
     private Map<String, Object> queryParams = new HashMap<>();
 
-    private final String baseQuery = "select a from Article a left join fetch a.status left join fetch a.publication";
-    private final String baseOrder = "order by a.publication.releaseDate DESC";
+    private final String baseQuery = 
+        "select a from Article a " + 
+        "left join a.status status " + 
+        "left join a.publication publication " + 
+        "left join a.section section " + 
+        "left join a.review review " + 
+        "left join a.type type";
+    private final String baseOrder = "order by publication.releaseDate DESC";
 
     public ArticleQueryBuilder(ArticleSearchParams search) {
         this.search = search;
@@ -47,12 +53,24 @@ public class ArticleQueryBuilder {
             String[] words = search.getFree().split(" ");
 
             for (int i = 0; i < words.length; i++) {
-                conditions.add("a.rawcontent like :free"+i);
+                List<String> freeConditions = new ArrayList<>();
+
+                freeConditions.add("a.rawcontent like :free"+i);
+                freeConditions.add("LOWER(a.comment) like :free"+i);
+                freeConditions.add("LOWER(a.name) like :free"+i);                
+                freeConditions.add("(publication is not null and LOWER(publication.name) like :free"+i+")");
+                freeConditions.add("(status is not null and LOWER(status.name) like :free"+i+")");
+                freeConditions.add("(section is not null and LOWER(section.name) like :free"+i+")");
+                freeConditions.add("(type is not null and LOWER(type.name) like :free"+i+")");
+                freeConditions.add("(review is not null and LOWER(review.name) like :free"+i+")");
+
+                freeConditions.add("exists (select p from Person p where p member of a.journalists and LOWER(p.fullName) LIKE :free"+i+")");
                 queryParams.put("free"+i, "%" + words[i].toLowerCase() + "%");
+                conditions.add("("+StringUtils.collectionToDelimitedString(freeConditions, " OR ")+")");
             }
         }
         if (search.getStatus() != null) {
-            conditions.add("a.status.id = :statusid");
+            conditions.add("status.id = :statusid");
             queryParams.put("statusid", search.getStatus());
         }
         if (search.getPersons() != null && search.getPersons().size() > 0) {
@@ -65,16 +83,16 @@ public class ArticleQueryBuilder {
             }
         }
         if (search.getSection() != null) {
-            conditions.add("a.section.id = :secid");
+            conditions.add("section.id = :secid");
             // TODO fix to use section!!
             queryParams.put("secid", search.getSection());
         }
         if (search.getPublication() != null) {
-            conditions.add("a.publication.id = :pubid");
+            conditions.add("publication.id = :pubid");
             queryParams.put("pubid", search.getPublication());
         }
         if (search.getReview() != null) {
-            conditions.add("a.review.id = :reviewid");
+            conditions.add("review.id = :reviewid");
             queryParams.put("reviewid", search.getReview());
         }
 

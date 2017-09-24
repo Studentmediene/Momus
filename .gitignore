@@ -5,9 +5,13 @@
 .idea/
 atlassian-ide-plugin.xml
 npm-debug.log
+
 .settings
-.project
 .classpath
+.project
+org.eclipse*
+*.swo
+*.swp
 
 log/
 database/

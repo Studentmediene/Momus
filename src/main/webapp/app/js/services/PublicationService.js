@@ -20,10 +20,10 @@ angular.module('momusApp.services')
     .service('PublicationService', function ($http) {
         return {
             getStatusCounts: function(id){
-                return $http.get('/api/article/statuscount/' + id);
+                return $http.get('/api/article/statuscount?publicationId=' + id);
             },
             getReviewStatusCounts: function(id){
-                return $http.get('/api/article/reviewstatuscount/' + id);
+                return $http.get('/api/article/reviewstatuscount?publicationId=' + id);
             }
         };
     })

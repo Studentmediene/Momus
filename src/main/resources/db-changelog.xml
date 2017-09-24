@@ -1093,4 +1093,32 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="articles_id">11</column>
         </insert>
     </changeSet>
+
+    <!-- Fix dev articles drive documents -->
+    <changeSet id="35" author="Eivind" context="dev">
+        <update tableName="article">
+            <column name="googledriveid">1dcnIaBnOOslEB3cjmCXjabp9H5b8m6VvRVevWCCyHLY</column>
+            <where>id=6</where>
+        </update>
+        <update tableName="article">
+            <column name="googledriveid">1ROiNgqOSEPE2Er5Dc7OzHISzMM2Guuqt1X1hxYA0snE</column>
+            <where>id=7</where>
+        </update>
+        <update tableName="article">
+            <column name="googledriveid">1xCQGwrIBXbUavXgr5O34ajdWN2jhqd0tD-f6ApXJ5aU</column>
+            <where>id=8</where>
+        </update>
+        <update tableName="article">
+            <column name="googledriveid">1E-jGV6c6qVIUcg4tQY0FHjrViCIwwdayhRT0oI3SgAU</column>
+            <where>id=9</where>
+        </update>
+        <update tableName="article">
+            <column name="googledriveid">1E-1qMgWu8Dn9z6Zz5fQJUXpQRyKEkNhsrQ1b_rW5iPZCZA</column>
+            <where>id=10</where>
+        </update>
+        <update tableName="article">
+            <column name="googledriveid">1Zfexe5cZSNtCZkSfNLsROg9KpqweKYYrg7pDYT5eoCE</column>
+            <where>id=11</where>
+        </update>
+    </changeSet>
 </databaseChangeLog>
