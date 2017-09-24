@@ -34,14 +34,14 @@ import java.util.Map;
 public class ArticleQueryBuilder {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final String baseQuery = 
+    public static final String baseQuery = 
         "select a from Article a " + 
         "left join a.status status " + 
         "left join a.publication publication " + 
         "left join a.section section " + 
         "left join a.review review " + 
         "left join a.type type";
-    private static final String baseOrder = "order by publication.releaseDate DESC";
+    public static final String baseOrder = "order by publication.releaseDate DESC";
 
     @Autowired
     private PersonRepository personRepository;
@@ -66,7 +66,7 @@ public class ArticleQueryBuilder {
                 freeConditions.add("(type is not null and LOWER(type.name) like :free"+i+")");
                 freeConditions.add("(review is not null and LOWER(review.name) like :free"+i+")");
 
-                freeConditions.add("exists (select p from Person p where p member of a.journalists and LOWER(p.fullName) LIKE :free"+i+")");
+                freeConditions.add("exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.fullName) LIKE :free"+i+")");
                 queryParams.put("free"+i, "%" + words[i].toLowerCase() + "%");
                 conditions.add("("+StringUtils.collectionToDelimitedString(freeConditions, " OR ")+")");
             }
