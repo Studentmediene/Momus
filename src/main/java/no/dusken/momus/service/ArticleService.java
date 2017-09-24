@@ -21,7 +21,6 @@ import no.dusken.momus.authentication.UserDetailsService;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleRevision;
-import no.dusken.momus.model.Person;
 import no.dusken.momus.service.drive.GoogleDriveService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;

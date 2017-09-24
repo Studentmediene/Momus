@@ -16,7 +16,6 @@
 
 package no.dusken.momus.controller;
 
-import no.dusken.momus.model.ArticleStatus;
 import no.dusken.momus.model.LayoutStatus;
 import no.dusken.momus.model.Page;
 import no.dusken.momus.model.Publication;

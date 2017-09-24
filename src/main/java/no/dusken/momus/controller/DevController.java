@@ -22,9 +22,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.model.About;
 import com.google.api.services.drive.model.FileList;
-import no.dusken.momus.authentication.*;
 import no.dusken.momus.ldap.LdapSyncer;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.drive.GoogleDriveService;
@@ -174,7 +172,7 @@ public class DevController {
             }
 
 
-            About execute = drive.about().get().execute();
+            //About execute = drive.about().get().execute();
 
 
             // insert file
