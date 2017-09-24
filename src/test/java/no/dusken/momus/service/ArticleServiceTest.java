@@ -18,14 +18,12 @@ package no.dusken.momus.service;
 
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.*;
-import no.dusken.momus.service.search.ArticleSearchParams;
 import no.dusken.momus.test.AbstractTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -67,15 +65,10 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     private Person person1;
     private Person person2;
-    private Person person3;
 
     private Article article1;
-    private Article article2;
-    private Article article3;
-    private Article article4;
 
     private ArticleRevision article1Revision1;
-    private ArticleRevision article1Revision2;
 
     private Publication publication1;
     private Publication publication2;
@@ -98,7 +91,6 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
         person1 = new Person(1L, "mts", "Mats", "Matsessen", "", "", true);
         person2 = new Person(2L, "aaa", "Kåre", "Kåressen", "", "", true);
-        person3 = new Person(3L, "bbb", "Flaks", "Flaksesen", "", "", true);
 
         publication1 = new Publication(1L);
         publication1.setName("Pub1");
@@ -124,40 +116,9 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article1.setSection(section1);
         article1.setStatus(articleStatus1);
         article1.setType(articleType1);
+        article1.setReview(articleReview1);
+        article1.setSection(section1);
         article1.setArchived(false);
-
-        article2 = new Article(2L);
-        article2.setName("Artikkel 2");
-        article2.setContent("Masse kult innhold, kan du søke i dette kanskje??");
-        article2.setJournalists(new HashSet<>(Arrays.asList(person2)));
-        article2.setPhotographers(new HashSet<>(Arrays.asList(person3)));
-        article2.setPublication(publication1);
-        article2.setSection(section1);
-        article2.setArchived(false);
-
-        article3 = new Article(3L);
-        article3.setName("Artikkel 3");
-        article3.setContent("Hei på deg, flott du leser testene! :)");
-        article3.setJournalists(new HashSet<>(Arrays.asList(person1)));
-        article3.setPhotographers(new HashSet<>(Arrays.asList(person2)));
-        article3.setPublication(publication1);
-        article2.setSection(section1);
-        article3.setArchived(false);
-
-        article4 = new Article(4L);
-        article4.setName("Artikkel 4");
-        article4.setContent("Its not about how hard you can hit, its about hard you can GET hit - and keep on moving");
-        Set<Person> article4journalists = new HashSet<>();
-        Set<Person> article4photographers = new HashSet<>();
-        article4photographers.add(person1);
-        article4photographers.add(person2);
-        article4.setJournalists(article4journalists);
-        article4.setPhotographers(article4photographers);
-        article4.setPublication(publication2);
-        article4.setReview(articleReview1);
-        article4.setStatus(articleStatus1);
-        article4.setSection(section1);
-        article4.setArchived(false);
 
         article1Revision1 = new ArticleRevision();
         article1Revision1.setArticle(article1);
@@ -165,17 +126,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article1Revision1.setStatus(article1.getStatus());
 
         when(articleRepository.findOne(article1.getId())).thenReturn(article1);
-        //when(articleRepository.findOne(article2.getId())).thenReturn(article2);
-        //when(articleRepository.findOne(article3.getId())).thenReturn(article3);
-        //when(articleRepository.findOne(article4.getId())).thenReturn(article4);
-
         when(articleRepository.saveAndFlush(any(Article.class))).then(returnsFirstArg());
-        
-    }
-
-    @Test
-    public void testSaveArticleUpdates() throws Exception {
-        // Todo: Mock user and date
     }
 
     /**
@@ -207,6 +158,8 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article.setComment("my cool comment");
         article.setStatus(articleStatus2);
         article.setType(articleType2);
+        article.setReview(articleReview2);
+        article.setSection(section2);
         article.setPublication(publication2);
 
         article = articleServiceSpy.updateArticleMetadata(article);
@@ -219,6 +172,8 @@ public class ArticleServiceTest extends AbstractTestRunner {
         assertEquals("my cool comment", article.getComment());
         assertEquals(articleStatus2.getName(), article.getStatus().getName());
         assertEquals(articleType2.getName(), article.getType().getName());
+        assertEquals(articleReview2.getName(), article.getReview().getName());
+        assertEquals(section2.getName(), article.getSection().getName());
         assertEquals(publication2.getName(), article.getPublication().getName());
         assertEquals("Testinnhold for artikkel 1 yay", article.getContent());
     }
