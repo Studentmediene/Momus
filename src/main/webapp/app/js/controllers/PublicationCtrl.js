@@ -55,7 +55,7 @@ angular.module('momusApp.controllers')
                 return true;
             }
             else{
-                return publication.release_date && publication.release_date.indexOf(vm.selectedYear) != -1;
+                return publication.release_date && new Date(publication.release_date).getFullYear() == vm.selectedYear;
             }
         }
 
@@ -90,8 +90,9 @@ angular.module('momusApp.controllers')
                     vm.isSaving = false;
                 })
             } else { // it's an old one
-                var updatedPublication = vm.publications.find(function(publication) { return publication.id === vm.editing.id});
-                updatedPublication = Publication.update({}, vm.editing, function() {
+                var updatedIndex = vm.publications.findIndex(function(publication) { return publication.id === vm.editing.id});
+                var updatedPublication = Publication.update({}, vm.editing, function() {
+                    vm.publications[updatedIndex] = updatedPublication;
                     vm.editPublication(updatedPublication);
                     vm.isSaving = false;
                 })

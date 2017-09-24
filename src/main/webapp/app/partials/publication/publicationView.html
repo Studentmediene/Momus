@@ -46,7 +46,7 @@
                                                                         | limitTo:vm.pageSize"
                         >
                             <td>{{publication.name}}</td>
-                            <td>{{publication.release_date}}</td>
+                            <td>{{publication.release_date | date: 'yyyy-MM-dd'}}</td>
                             <td><a href="#/artikler?publication={{publication.id}}">Se artikler</a></td>
                             <td><a href="#/disposisjon/{{publication.id}}">Disposisjon</a></td>
                             <td class=""><a class="interact" ng-click="vm.editPublication(publication)">Endre</a></td>
