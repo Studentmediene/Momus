@@ -280,8 +280,36 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
         assertTrue(articleServiceSpy.createRevision(article1) == article1Revision1);
     }
-    /*
 
+    /**
+     * Method: {@link ArticleService#updateNote()}
+     */
+    @Test
+    public void testUpdateNote() {
+        ArticleService articleServiceSpy = spy(articleService);
+        doReturn(article1).when(articleServiceSpy).updateArticle(article1);
+
+        Article article = articleServiceSpy.updateNote(article1, "New note");
+
+        verify(articleServiceSpy, times(1)).updateArticle(article1);
+        assertEquals("New note", article.getNote());
+    }
+
+    /**
+     * Method: {@link ArticleService#updateArchived())}
+     */
+    @Test
+    public void testUpdateArchived() {
+        ArticleService articleServiceSpy = spy(articleService);
+        doReturn(article1).when(articleServiceSpy).updateArticle(article1);
+
+        Article article = articleServiceSpy.updateArchived(article1, true);
+
+        verify(articleServiceSpy, times(1)).updateArticle(article1);
+        assertEquals(true, article.getArchived());
+    }
+
+    /*
     @Test
     public void testEmptyArticleSearchReturnsAll() {
         ArticleSearchParams params = new ArticleSearchParams("", null, Collections.<Long>emptyList(),null, null, null, 20, 1, false);

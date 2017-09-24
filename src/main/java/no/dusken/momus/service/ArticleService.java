@@ -184,11 +184,6 @@ public class ArticleService {
         return indesignGenerator.generateFromArticle(article);
     }
 
-    public ArticleRepository getArticleRepository() {
-        return articleRepository;
-    }
-
-
     /**
      * Either returns a new revision or reuses the last one.
      * Should be reused if: Last revision is less than three minutes old and was not for a status change
@@ -236,6 +231,10 @@ public class ArticleService {
         }
 
         return revisions.get(0);
+    }
+
+    public ArticleRepository getArticleRepository() {
+        return articleRepository;
     }
 
     public static String createRawContent(Article article){
