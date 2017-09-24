@@ -113,7 +113,7 @@ public class ArticleService {
 
         existing.setContent(newContent);
 
-        createNewRevision(existing, false);
+        createRevision(existing);
 
         return updateArticle(existing);
     }
@@ -121,7 +121,7 @@ public class ArticleService {
     public Article updateArticleMetadata(Article article) {
         Article existing = articleRepository.findOne(article.getId());
         if (!article.getStatus().equals(existing.getStatus())) {
-            createNewRevision(article, true);
+            createRevision(article);
         }
 
         existing.setName(article.getName());
@@ -189,10 +189,31 @@ public class ArticleService {
     }
 
 
-    public ArticleRevision createNewRevision(Article article, boolean changedStatus) {
-        ArticleRevision revision = getExistingRevision(article, changedStatus);
+    /**
+     * Either returns a new revision or reuses the last one.
+     * Should be reused if: Last revision is less than three minutes old and was not for a status change
+     */
+    public ArticleRevision createRevision(Article article) {
 
-        revision.setStatusChanged(changedStatus);
+        Date saveDate = new Date();
+        ArticleRevision revision = getLastRevision(article);
+
+        boolean isStatusChanged = 
+            revision != null && 
+            !revision.getArticle().getStatus().equals(article.getStatus());
+        
+        boolean canReuseOld = 
+            revision != null &&
+            !isRevisionTooOld(revision, saveDate) &&
+            !revision.isStatusChanged() &&
+            !isStatusChanged;
+        
+        if(!canReuseOld) {
+            revision = new ArticleRevision();
+        }
+        
+        revision.setSavedDate(new Date());
+        revision.setStatusChanged(isStatusChanged);
         revision.setContent(article.getContent());
         revision.setArticle(article);
         revision.setStatus(article.getStatus());
@@ -202,35 +223,19 @@ public class ArticleService {
         return revision;
     }
 
-    /**
-     * Returns a reusable revision if one is found, or a new one otherwise.
-     * This is to not get too man small revision.
-     * If the revision is for a status change, a new one is returned anyway
-     * A reusable revision is one that wasn't for a status change and not too old
-     */
-    private ArticleRevision getExistingRevision(Article article, boolean changedStatus) {
-        ArticleRevision newRevision = new ArticleRevision();
-        newRevision.setSavedDate(new Date());
+    private boolean isRevisionTooOld(ArticleRevision revision, Date date) {
+        long timeDiff = date.getTime() - revision.getSavedDate().getTime();
+        return timeDiff > 3 * 60 * 1000;
+    }
 
-        if (changedStatus) {
-            return newRevision;
-        }
-
+    private ArticleRevision getLastRevision(Article article) {
         List<ArticleRevision> revisions = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(article.getId());
-
+        
         if (revisions.size() == 0) {
-            return newRevision;
+            return null;
         }
 
-        ArticleRevision existing = revisions.get(0);
-        long timeDiff = new Date().getTime() - existing.getSavedDate().getTime();
-
-        if (timeDiff < 3 * 60 * 1000 && !existing.isStatusChanged()) {
-            logger.info("Reusing revision {} for article {}", existing.getId(), article.getId());
-            return existing;
-        } else {
-            return newRevision;
-        }
+        return revisions.get(0);
     }
 
     public static String createRawContent(Article article){

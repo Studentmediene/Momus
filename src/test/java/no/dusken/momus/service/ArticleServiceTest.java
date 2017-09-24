@@ -33,6 +33,7 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
+import static org.mockito.AdditionalAnswers.*;
 
 @Transactional
 public class ArticleServiceTest extends AbstractTestRunner {
@@ -73,6 +74,9 @@ public class ArticleServiceTest extends AbstractTestRunner {
     private Article article3;
     private Article article4;
 
+    private ArticleRevision article1Revision1;
+    private ArticleRevision article1Revision2;
+
     private Publication publication1;
     private Publication publication2;
 
@@ -101,17 +105,17 @@ public class ArticleServiceTest extends AbstractTestRunner {
         publication2 = new Publication(2L);
         publication2.setName("Pub2");
 
-        articleStatus1 = new ArticleStatus("Skrives", "");
-        articleStatus2 = new ArticleStatus("Til korrektur", "");
+        articleStatus1 = new ArticleStatus(0L, "Skrives", "");
+        articleStatus2 = new ArticleStatus(1L, "Til korrektur", "");
 
-        articleReview1 = new ArticleReview("Ukjent", "");
-        articleReview2 = new ArticleReview("Ferdig", "");
+        articleReview1 = new ArticleReview(0L, "Ukjent", "");
+        articleReview2 = new ArticleReview(1L, "Ferdig", "");
 
-        articleType1 = new ArticleType("Anmeldelse", "");
-        articleType2 = new ArticleType("Reportasje", "");
+        articleType1 = new ArticleType(0L, "Anmeldelse", "");
+        articleType2 = new ArticleType(1L, "Reportasje", "");
 
-        section1 = new Section("Musikk");
-        section2 = new Section("Forskning");
+        section1 = new Section(0L, "Musikk");
+        section2 = new Section(0L, "Forskning");
 
         article1 = new Article(1L);
         article1.setName("Artikkel 1");
@@ -122,7 +126,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article1.setType(articleType1);
         article1.setArchived(false);
 
-        article2 = new Article();
+        article2 = new Article(2L);
         article2.setName("Artikkel 2");
         article2.setContent("Masse kult innhold, kan du søke i dette kanskje??");
         article2.setJournalists(new HashSet<>(Arrays.asList(person2)));
@@ -131,7 +135,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article2.setSection(section1);
         article2.setArchived(false);
 
-        article3 = new Article();
+        article3 = new Article(3L);
         article3.setName("Artikkel 3");
         article3.setContent("Hei på deg, flott du leser testene! :)");
         article3.setJournalists(new HashSet<>(Arrays.asList(person1)));
@@ -140,7 +144,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article2.setSection(section1);
         article3.setArchived(false);
 
-        article4 = new Article();
+        article4 = new Article(4L);
         article4.setName("Artikkel 4");
         article4.setContent("Its not about how hard you can hit, its about hard you can GET hit - and keep on moving");
         Set<Person> article4journalists = new HashSet<>();
@@ -154,6 +158,19 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article4.setStatus(articleStatus1);
         article4.setSection(section1);
         article4.setArchived(false);
+
+        article1Revision1 = new ArticleRevision();
+        article1Revision1.setArticle(article1);
+        article1Revision1.setContent(article1.getContent());
+        article1Revision1.setStatus(article1.getStatus());
+
+        when(articleRepository.findOne(article1.getId())).thenReturn(article1);
+        //when(articleRepository.findOne(article2.getId())).thenReturn(article2);
+        //when(articleRepository.findOne(article3.getId())).thenReturn(article3);
+        //when(articleRepository.findOne(article4.getId())).thenReturn(article4);
+
+        when(articleRepository.saveAndFlush(any(Article.class))).then(returnsFirstArg());
+        
     }
 
     @Test
@@ -166,8 +183,6 @@ public class ArticleServiceTest extends AbstractTestRunner {
      */
     @Test
     public void testUpdateArticle() {
-        when(articleRepository.saveAndFlush(article1)).thenReturn(article1);
-
         article1 = articleService.updateArticle(article1);
 
         verify(articleRepository, times(1)).saveAndFlush(article1);
@@ -182,9 +197,8 @@ public class ArticleServiceTest extends AbstractTestRunner {
         Article article = new Article(article1.getId());
         ArticleService articleServiceSpy = spy(articleService);
 
-        when(articleRepository.findOne(article1.getId())).thenReturn(article1);
-        when(articleServiceSpy.updateArticle(article1)).thenReturn(article1);
-        reset(articleServiceSpy);
+        doReturn(article1).when(articleServiceSpy).updateArticle(article);
+        doReturn(new ArticleRevision()).when(articleServiceSpy).createRevision(article);
 
         article.setName("Updated name");
         article.setJournalists(new HashSet<>(Arrays.asList(person1, person2)));
@@ -197,6 +211,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
         article = articleServiceSpy.updateArticleMetadata(article);
 
+        verify(articleServiceSpy, times(1)).createRevision(article1);
         verify(articleServiceSpy, times(1)).updateArticle(article1);
         assertEquals("Updated name", article.getName());
         assertEquals(2, article.getJournalists().size());
@@ -216,26 +231,54 @@ public class ArticleServiceTest extends AbstractTestRunner {
         Article article = new Article(article1.getId());
         ArticleService articleServiceSpy = spy(articleService);
 
-        when(articleRepository.findOne(article1.getId())).thenReturn(article1);
-        when(articleServiceSpy.updateArticle(article1)).thenReturn(article1);
-        when(articleServiceSpy.createNewRevision(any(Article.class), anyBoolean())).thenReturn(new ArticleRevision());
-        reset(articleServiceSpy);
+        doReturn(new ArticleRevision()).when(articleServiceSpy).createRevision(any(Article.class));
+        doReturn(article1).when(articleServiceSpy).updateArticle(article);
 
         article.setContent("NEW CONTENT for article 1");
 
         article = articleServiceSpy.updateArticleContent(article);
 
         verify(articleServiceSpy, times(1)).updateArticle(article1);
-        verify(articleServiceSpy, times(1)).createNewRevision(article1, false);
+        verify(articleServiceSpy, times(1)).createRevision(article1);
         assertEquals("NEW CONTENT for article 1", article.getContent());
     }
 
     /**
-     * Method: {@link ArticleService#createNewRevision(Article)}
+     * Method: {@link ArticleService#createRevision(Article)}
      */
     @Test
     public void testCreateRevision() throws Exception {
-        
+        ArticleService articleServiceSpy = spy(articleService);
+
+        when(articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(article1.getId())).thenReturn(Collections.singletonList(article1Revision1));
+        when(articleRevisionRepository.save(any(ArticleRevision.class))).then(returnsFirstArg());
+
+        // Test too old previous revision creates new
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, -1);
+
+        article1Revision1.setSavedDate(c.getTime());
+        article1Revision1.setStatusChanged(false);
+
+        assertTrue(articleServiceSpy.createRevision(article1) != article1Revision1);
+
+        // Test young previous revision but changed status creates new
+        c = Calendar.getInstance();
+        c.add(Calendar.HOUR, -1);
+
+        article1Revision1.setSavedDate(c.getTime());
+        article1Revision1.setStatusChanged(true);
+
+        assertTrue(articleServiceSpy.createRevision(article1) != article1Revision1);
+
+        // Test young previous revision and not changed status reuses old
+        c = Calendar.getInstance();
+        c.add(Calendar.MINUTE, -1);
+
+        article1Revision1.setSavedDate(c.getTime());
+        article1Revision1.setStatusChanged(false);
+
+        assertTrue(articleServiceSpy.createRevision(article1) == article1Revision1);
     }
     /*
 
@@ -266,7 +309,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
         List<Article> expected = new ArrayList<>();
         expected.add(article2);
-     
+
         assertEquals(expected, articleService.searchForArticles(params));
     }
 
