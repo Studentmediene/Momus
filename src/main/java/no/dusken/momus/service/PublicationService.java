@@ -46,11 +46,10 @@ public class PublicationService {
     @Autowired
     private LayoutStatusRepository layoutStatusRepository;
 
-    public Publication savePublication(Publication publication){
+    public Publication savePublication(Publication publication, Integer numEmptyPages){
         Publication newPublication = publicationRepository.save(publication);
         newPublication = publicationRepository.findOne(newPublication.getId());
-        int numPages = 64;
-        for(int i = 0; i < numPages; i++){
+        for(int i = 0; i < numEmptyPages; i++){
             Page newPage = new Page();
             newPage.setPageNr(i + 1);
             newPage.setPublication(newPublication);

@@ -54,11 +54,15 @@ public class PublicationController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody Publication savePublication(@RequestBody Publication publication) {
+    public @ResponseBody Publication savePublication(@RequestBody Publication publication, @RequestParam(required = false, defaultValue = "50") Integer numEmptyPages) {
         if(publication.getId() != null && publicationService.getPublicationRepository().findOne(publication.getId()) != null){
             throw new RestException("Publication with given id already created. Did you mean to PUT?", HttpServletResponse.SC_BAD_REQUEST);
         }
-        return publicationService.savePublication(publication);
+        else if(numEmptyPages > 100){
+            throw new RestException("You don't want to create that many empty pages", HttpServletResponse.SC_BAD_REQUEST);
+        }
+
+        return publicationService.savePublication(publication, numEmptyPages);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
