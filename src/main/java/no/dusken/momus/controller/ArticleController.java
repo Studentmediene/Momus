@@ -112,7 +112,7 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "{id}/archived", method = RequestMethod.PATCH)
-    public @ResponseBody Article updateArchived(@PathVariable("id") Long id, Boolean archived) {
+    public @ResponseBody Article updateArchived(@PathVariable("id") Long id, @RequestParam boolean archived) {
         Article article = articleService.getArticleRepository().findOne(id);        
         if (article == null) {
             logger.warn("Article with id {} not found, tried by user {}", id, userDetailsService.getLoggedInPerson().getId());
@@ -177,7 +177,7 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "/statuscount", method = RequestMethod.GET)
-    public @ResponseBody Map<Long,Integer> getStatusCountsByPubId(Long publicationId){
+    public @ResponseBody Map<Long,Integer> getStatusCountsByPubId(@RequestParam Long publicationId){
         List<ArticleStatus> statuses = articleStatusRepository.findAll();
         Map<Long, Integer> map = new HashMap<>();
         for (ArticleStatus status : statuses) {
@@ -187,7 +187,7 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "/reviewstatuscount", method = RequestMethod.GET)
-    public @ResponseBody Map<Long,Integer> getReviewStatusCountsByPubId(Long publicationId){
+    public @ResponseBody Map<Long,Integer> getReviewStatusCountsByPubId(@RequestParam Long publicationId){
         List<ArticleReview> statuses = articleReviewRepository.findAll();
         Map<Long, Integer> map = new HashMap<>();
         for (ArticleReview status : statuses) {
