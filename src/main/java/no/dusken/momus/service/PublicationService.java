@@ -67,7 +67,8 @@ public class PublicationService {
 
         logger.info("Updated publication {} with data: {}", publication.getName(), publication);
 
-        return publication;
+        // It seems to be necessary to reaccess the publication or else the releaseDate is not returned in the proper format.
+        return publicationRepository.findOne(publication.getId());
     }
 
     /**

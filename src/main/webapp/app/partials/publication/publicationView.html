@@ -41,7 +41,7 @@
                         <tbody>
                         <tr ng-repeat="publication in vm.publications 
                                                                         | filter:vm.isInCurrentYear 
-                                                                        | orderBy: '-release_date' 
+                                                                        | orderBy:'release_date':true
                                                                         | startFrom:(vm.currentPage-1)*vm.pageSize 
                                                                         | limitTo:vm.pageSize"
                         >
