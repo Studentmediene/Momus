@@ -68,7 +68,7 @@
                         <!--Page number-->
                         <div class="d-table-cell handle pagenum">{{page.page_nr}}</div>
                         <!--Articles (edit mode)-->
-                        <div class="d-table-cell" ng-show="editPage">
+                        <div class="d-table-cell" ng-show="editPage" ng-style="{width: vm.articleWidth}">
                             <id-select multiple class="pull-left" style="width: 90%;"
                                        items="vm.articles"
                                        target="page.articles"
@@ -81,7 +81,7 @@
                             </div>
                         </div>
                         <!--Articles (view mode)-->
-                        <div class="d-table-cell article-cell" ng-hide="editPage">
+                        <div class="d-table-cell article-cell" ng-style="{width: vm.articleWidth}" ng-hide="editPage">
                             <div class="d-table article-table">
                                 <div class="d-table-row" ng-repeat="article in page.articles" ng-style="{background: vm.pageColor(page)}">
                                     <!--Name-->

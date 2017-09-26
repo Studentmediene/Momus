@@ -212,6 +212,7 @@ angular.module('momusApp.controllers')
                 comment: 0.2
             };
 
+            var articleWidth = constantArticleSize;
             for(var k in shareParts){
                 var width;
                 if($window.innerWidth > 992){
@@ -220,8 +221,12 @@ angular.module('momusApp.controllers')
                     width = parseInt(vm.responsiveColumns[k].minWidth);
                 }
 
+                articleWidth += width;
+
                 vm.responsiveColumns[k] = {minWidth: width + 'px', maxWidth: width + 'px', width: width + 'px'};
             }
+
+            vm.articleWidth = articleWidth;
         }
 
         updateDispSize();
