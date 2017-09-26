@@ -99,8 +99,22 @@ public class PublicationController {
     }
 
     @RequestMapping(value = "{id}/pages", method = RequestMethod.POST)
-    public @ResponseBody Page savePage(@PathVariable("id") Long id, @RequestBody Page page){
+    public @ResponseBody List<Page> savePage(@PathVariable("id") Long id, @RequestBody Page page){
         return publicationService.savePage(page);
+    }
+
+    @RequestMapping(value = "{id}/pages/list", method = RequestMethod.POST)
+    public @ResponseBody List<Page> savePage(@PathVariable("id") Long id, @RequestBody List<Page> pages){
+        int startingPageNr = pages.get(0).getPageNr();
+        for(int i = 0; i < pages.size(); i++) {
+            Page page = pages.get(i);
+            if(page.getId() != null && publicationService.getPageRepository().findOne(page.getId()) == null){
+                throw new RestException("Page with given id already added", HttpServletResponse.SC_BAD_REQUEST);
+            }else if(page.getPageNr() != startingPageNr + i) {
+                throw new RestException("Pages not following each other", HttpServletResponse.SC_BAD_REQUEST);
+            }
+        }
+        return publicationService.saveTrailingPages(pages);
     }
 
     @RequestMapping(value = "{id}/pages", method = RequestMethod.PUT)
@@ -129,12 +143,12 @@ public class PublicationController {
     }
 
     @RequestMapping(value = "{pubid}/pages/{pageid}", method = RequestMethod.DELETE)
-    public @ResponseBody void deletePage(@PathVariable("pubid") Long pubid, @PathVariable("pageid") Long pageid){
+    public @ResponseBody List<Page> deletePage(@PathVariable("pubid") Long pubid, @PathVariable("pageid") Long pageid){
         Page page = publicationService.getPageRepository().findOne(pageid);
         if(page == null){
             throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
         }
-        publicationService.deletePage(page);
+        return publicationService.deletePage(page);
     }
 
     @RequestMapping(value = "{id}/pages/layoutstatuscounts", method = RequestMethod.GET)

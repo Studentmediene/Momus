@@ -22,7 +22,7 @@ angular.module('momusApp.controllers')
 
         vm.maxNewPages = 100;
 
-        vm.newPage = newPage;
+        vm.newPages = newPages;
         vm.updatePage = updatePage;
         vm.deletePage = deletePage;
 
@@ -88,22 +88,33 @@ angular.module('momusApp.controllers')
             vm.layoutStatuses = Publication.layoutStatuses();
         }
 
-        function newPage(newPageAt, numNewPages){
+        function newPages(newPageAt, numNewPages){
+            var pages = [];
             for(var i = 0; i < numNewPages; i++) {
-                var page = {pageNr: newPageAt + i + 1, publicationid: vm.publication.id, layoutStatus: getLayoutStatusByName("Ukjent")};
-                var addedPage = Page.save({pubid: vm.publication.id}, page, function() {
-                    vm.publication.pages.splice(newPageAt, 0, addedPage);
-                });
-            }
+                var page = {
+                    page_nr: newPageAt + i + 1, 
+                    publication: vm.publication.id,
+                    layout_status: getLayoutStatusByName("Ukjent")
+                };
+                pages.push(page);
+            };
+            vm.loading = true;
+            var updatedPages = Page.saveMultiple({pubid: vm.publication.id}, pages, function() {
+                vm.publication.pages = updatedPages;
+                vm.loading = false;
+            });
         }
 
         function updatePage(page) {
+            vm.loading = true;
             var pages = Page.update({pubid: vm.publication.id}, page, function() {
                 vm.publication.pages = pages;
+                vm.loading = false;
             });
         }
 
         function updatePages(pages) {
+            vm.loading = true;
             var pages = Page.updateMultiple({pubid: vm.publication.id}, pages, function() {
                 vm.publication.pages = pages;
                 vm.loading = false;
@@ -112,8 +123,12 @@ angular.module('momusApp.controllers')
 
         function deletePage(page) {
             if(confirm("Er du sikker på at du vil slette denne siden?")){
+                vm.loading = true;
                 vm.publication.pages.splice(vm.publication.pages.indexOf(page), 1);
-                page.$delete({pubid: vm.publication.id, pageid: page.id});
+                var pages = Page.delete({pubid: vm.publication.id, pageid: page.id}, function() {
+                    vm.publication.pages = pages;
+                    vm.loading = false;
+                });
             }
         }
 
@@ -130,8 +145,7 @@ angular.module('momusApp.controllers')
             modal.result.then(function(id){
                 ArticleService.getArticle(id).success(function(data){
                     page.articles.push(data);
-                    vm.publication.articles.push(data);
-                    updatePage(page);
+                    vm.articles.push(data);
                 });
             });
         }
@@ -179,7 +193,6 @@ angular.module('momusApp.controllers')
                 placed.forEach(function(page, i) {
                     page.page_nr = newPosition + i + 1
                 });
-                vm.loading = true;
                 updatePages(placed);
             },
             placeholder: "disp-placeholder"

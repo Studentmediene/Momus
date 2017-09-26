@@ -118,12 +118,30 @@ public class PublicationServiceTest extends AbstractTestRunner{
         Page newPage = new Page();
         newPage.setPublication(publication1);
         newPage.setPageNr(2);
-        newPage = publicationService.savePage(newPage);
+        List<Page> updatedPages = publicationService.savePage(newPage);
 
         assertEquals(1, pageRepository.findOne(page1.getId()).getPageNr());
         assertEquals(2, pageRepository.findOne(newPage.getId()).getPageNr());
         assertEquals(3, pageRepository.findOne(page2.getId()).getPageNr());
         assertEquals(4, pageRepository.findOne(page3.getId()).getPageNr());
+    }
+
+    @Test
+    public void testSaveTrailingPages() throws Exception{
+        Page newPage = new Page();
+        newPage.setPublication(publication1);
+        newPage.setPageNr(2);
+        Page otherNewPage = new Page();
+        newPage.setPublication(publication1);
+        otherNewPage.setPageNr(3);
+
+        List<Page> updatedPages = publicationService.saveTrailingPages(Arrays.asList(newPage, otherNewPage));
+
+        assertEquals(1, pageRepository.findOne(page1.getId()).getPageNr());
+        assertEquals(2, pageRepository.findOne(newPage.getId()).getPageNr());
+        assertEquals(3, pageRepository.findOne(otherNewPage.getId()).getPageNr());
+        assertEquals(4, pageRepository.findOne(page2.getId()).getPageNr());
+        assertEquals(5, pageRepository.findOne(page3.getId()).getPageNr());
     }
 
     @Test
@@ -133,6 +151,17 @@ public class PublicationServiceTest extends AbstractTestRunner{
 
         assertEquals(1, pageRepository.findOne(page1.getId()).getPageNr());
         assertEquals(2, pageRepository.findOne(page3.getId()).getPageNr());
+        assertEquals(3, pageRepository.findOne(page2.getId()).getPageNr());
+    }
+
+    @Test
+    public void testUpdateTrailingPages() throws Exception{
+        page1.setPageNr(2);
+        page2.setPageNr(3);
+        publicationService.updateTrailingPages(Arrays.asList(page1, page2));
+
+        assertEquals(1, pageRepository.findOne(page3.getId()).getPageNr());
+        assertEquals(2, pageRepository.findOne(page1.getId()).getPageNr());
         assertEquals(3, pageRepository.findOne(page2.getId()).getPageNr());
     }
 

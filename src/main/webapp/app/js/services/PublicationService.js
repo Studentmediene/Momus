@@ -42,8 +42,11 @@ angular.module('momusApp.services')
 
         return $resource(baseUrl + '/:pageid', null,
             {
+                save: { method: 'POST', isArray: true},
+                saveMultiple: { method: 'POST', isArray:true, url: baseUrl + '/list'},
                 update: { method: 'PUT', isArray: true},
                 updateMultiple: { method: 'PUT', isArray: true, url: baseUrl + '/list'},
-                layoutStatusCounts: { method: 'GET', url: baseUrl + '/layoutstatuscounts'}
+                layoutStatusCounts: { method: 'GET', url: baseUrl + '/layoutstatuscounts'},
+                delete: { method: 'DELETE', isArray: true}
             });
     });

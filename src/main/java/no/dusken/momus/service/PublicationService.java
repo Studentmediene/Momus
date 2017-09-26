@@ -126,7 +126,7 @@ public class PublicationService {
         return active;
     }
 
-    public Page savePage(Page page){
+    public List<Page> savePage(Page page){
         List<Page> pages = pageRepository.findByPublicationIdOrderByPageNrAsc(page.getPublication().getId());
         Collections.sort(pages);
 
@@ -135,8 +135,25 @@ public class PublicationService {
         }
 
         pageRepository.save(pages);
+        
+        pageRepository.saveAndFlush(page);
+        
+        return pageRepository.findByPublicationIdOrderByPageNrAsc(page.getPublication().getId());
+    }
 
-        return pageRepository.saveAndFlush(page);
+    public List<Page> saveTrailingPages(List<Page> pages){
+        Publication publication = pages.get(0).getPublication();
+        List<Page> existingPages = pageRepository.findByPublicationIdOrderByPageNrAsc(publication.getId());
+        Collections.sort(existingPages);
+
+        for(int i = pages.get(0).getPageNr()-1; i < existingPages.size(); i++) {
+            existingPages.get(i).setPageNr(i + pages.size() + 1);
+        }
+
+        pageRepository.save(existingPages);
+        pageRepository.save(pages);
+        
+        return pageRepository.findByPublicationIdOrderByPageNrAsc(publication.getId());
     }
 
     public List<Page> updatePage(Page page){
@@ -177,8 +194,9 @@ public class PublicationService {
         return pageRepository.findByPublicationIdOrderByPageNrAsc(publication.getId());        
     }
 
-    public void deletePage(Page page){
-        List<Page> pages = pageRepository.findByPublicationIdOrderByPageNrAsc(page.getPublication().getId());
+    public List<Page> deletePage(Page page){
+        Publication publication = page.getPublication();
+        List<Page> pages = pageRepository.findByPublicationIdOrderByPageNrAsc(publication.getId());
         Collections.sort(pages);
 
         for(int i = page.getPageNr()-1; i < pages.size(); i++) {
@@ -187,6 +205,8 @@ public class PublicationService {
 
         pageRepository.save(pages);
         pageRepository.delete(page);
+
+        return pageRepository.findByPublicationIdOrderByPageNrAsc(publication.getId());                
     }
 
     public PublicationRepository getPublicationRepository() {
