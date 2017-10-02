@@ -24,6 +24,7 @@ angular.module('momusApp.controllers')
 
         vm.newPages = newPages;
         vm.updatePage = updatePage;
+		vm.updatePageMeta = updatePageMeta;
         vm.deletePage = deletePage;
 
         vm.createArticle = createArticle;
@@ -112,6 +113,14 @@ angular.module('momusApp.controllers')
                 vm.loading = false;
             });
         }
+
+		function updatePageMeta(page){
+			vm.loading = true;
+			var new_page = Page.updateMeta({pubid: vm.publication.id}, page, function() {
+				vm.publication.pages[page.page_nr-1] = new_page;
+				vm.loading = false;
+			});
+		}
 
         function updatePages(pages) {
             vm.loading = true;

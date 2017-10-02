@@ -146,6 +146,14 @@ public class PublicationController {
         return publicationService.updateTrailingPages(pages);
     }
 
+	@RequestMapping(value = "{id}/pages", method = RequestMethod.PATCH)
+	public @ResponseBody Page updatePageMeta(@RequestBody Page page){
+		if(publicationService.getPageRepository().findOne(page.getId()) == null){
+			throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
+		}
+		return publicationService.updatePageMeta(page);
+	}
+
     @RequestMapping(value = "{pubid}/pages/{pageid}", method = RequestMethod.DELETE)
     public @ResponseBody List<Page> deletePage(@PathVariable("pubid") Long pubid, @PathVariable("pageid") Long pageid){
         Page page = publicationService.getPageRepository().findOne(pageid);

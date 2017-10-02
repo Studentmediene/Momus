@@ -174,6 +174,19 @@ public class PublicationService {
         return pageRepository.findByPublicationIdOrderByPageNrAsc(page.getPublication().getId());
     }
 
+	public Page updatePageMeta(Page page){
+		Page existing = pageRepository.findOne(page.getId());
+		
+		existing.setNote(page.getNote());
+		existing.setAdvertisement(page.isAdvertisement());
+		existing.setWeb(page.isWeb());
+		existing.setDone(page.isDone());
+		existing.setArticles(page.getArticles());
+		existing.setLayoutStatus(page.getLayoutStatus());
+		
+		return pageRepository.saveAndFlush(existing);
+	}
+
     /**
      * Updates pages that are following each other. Undefined behavior if there are gaps!
      */

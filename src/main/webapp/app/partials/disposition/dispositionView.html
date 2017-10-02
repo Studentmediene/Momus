@@ -163,13 +163,13 @@
                         <div class="d-table-cell layout" ng-style="{background: page.layout_status.color}">
                             <select class="disp-dropdown"
                                     ng-model="page.layout_status"
-                                    ng-change="vm.updatePage(page)"
+                                    ng-change="vm.updatePageMeta(page)"
                                     ng-options="l.name for l in vm.layoutStatuses track by l.id">
                             </select>
                         </div>
                         <!--Ad-->
                         <div class="d-table-cell button">
-                            <span style="cursor: pointer" ng-click="page.advertisement = !page.advertisement; vm.updatePage(page);">
+                            <span style="cursor: pointer" ng-click="page.advertisement = !page.advertisement; vm.updatePageMeta(page);">
                                 <i class="fa fa-file fa-lg"
                                    ng-class="{'text-danger' : !page.advertisement, 'text-success' : page.advertisement }"
                                    tooltip="Siden inneholder {{!page.advertisement ? 'ikke ' : ''}} reklame">
@@ -178,7 +178,7 @@
                         </div>
                         <!--Done-->
                         <div class="d-table-cell button">
-                            <span style="cursor: pointer" ng-click="page.done = !page.done; vm.updatePage(page);">
+                            <span style="cursor: pointer" ng-click="page.done = !page.done; vm.updatePageMeta(page);">
                                 <i class="fa fa-check fa-lg"
                                    ng-class="{'text-danger' : !page.done, 'text-success' : page.done }"
                                    tooltip="Siden er {{!page.done ? 'ikke ' : ''}} helt ferdig">
@@ -190,7 +190,7 @@
                             <button ng-click="editPage = true" class="btn btn-warning btn-xs pull-right" ng-hide="editPage">
                                 <i class="fa fa-pencil"></i>
                             </button>
-                            <button ng-click="vm.updatePage(page);editPage = false" class="btn btn-success pull-right btn-xs" ng-show="editPage">
+                            <button ng-click="vm.updatePageMeta(page);editPage = false" class="btn btn-success pull-right btn-xs" ng-show="editPage">
                                 <i class="fa fa-save"></i>
                             </button>
                         </div>

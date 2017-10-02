@@ -45,6 +45,7 @@ angular.module('momusApp.services')
                 save: { method: 'POST', isArray: true},
                 saveMultiple: { method: 'POST', isArray:true, url: baseUrl + '/list'},
                 update: { method: 'PUT', isArray: true},
+				updateMeta: {method: 'PATCH', isArray: false},
                 updateMultiple: { method: 'PUT', isArray: true, url: baseUrl + '/list'},
                 layoutStatusCounts: { method: 'GET', url: baseUrl + '/layoutstatuscounts'},
                 delete: { method: 'DELETE', isArray: true}
