@@ -27,7 +27,7 @@ import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
+import javax.annotation.PostConstruct;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchControls;
@@ -75,10 +75,15 @@ public class LdapSyncer {
         logger.info("Done syncing from LDAP, it took {}ms", timeUsed);
     }
 
+    @PostConstruct
+    public void startUp(){
+        sync();
+    }
+
     /**
      * Syncs the person database with LDAP
      */
-    private void syncAllPersonsFromLdap() {
+    public void syncAllPersonsFromLdap() {
 
         lastId = 0L; // Contains the last granted id, for faster look-up for next free id
 

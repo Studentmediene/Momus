@@ -115,6 +115,7 @@ class ApplicationConfig extends WebMvcConfigurerAdapter {
         ldapContextSource.setUserDn(env.getProperty("ldap.username"));
         ldapContextSource.setPassword(env.getProperty("ldap.password"));
         ldapContextSource.setPooled(false);
+        ldapContextSource.afterPropertiesSet();        
         return new LdapTemplate(ldapContextSource);
     }
 
