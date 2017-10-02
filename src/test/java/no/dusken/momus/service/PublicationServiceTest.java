@@ -27,7 +27,12 @@ import no.dusken.momus.test.AbstractTestRunner;
 
 import org.apache.commons.ssl.TomcatServerXML;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,21 +41,24 @@ import liquibase.change.core.UpdateDataChange;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
+import static org.mockito.AdditionalAnswers.*;
 
 @Transactional
 public class PublicationServiceTest extends AbstractTestRunner{
-    @Autowired
+    @Mock
     PublicationRepository publicationRepository;
 
-    @Autowired
+    @InjectMocks
     PublicationService publicationService;
 
-    @Autowired
+    @Mock
     PageRepository pageRepository;
 
-    @Autowired
+    @Mock
     ArticleRepository articleRepository;
 
     private Publication publication1;
@@ -63,149 +71,166 @@ public class PublicationServiceTest extends AbstractTestRunner{
 
     @Before
     public void before() throws Exception {
-        publication1 = new Publication();
+        publication1 = new Publication(1L);
         publication1.setName("DUSKEN1");
 
-        publication2 = new Publication();
+        publication2 = new Publication(2L);
         publication2.setName("DUSKEN2");
 
-        publication3 = new Publication();
+        publication3 = new Publication(3L);
         publication3.setName("DUSKEN3");
 
-        publication1 = publicationRepository.save(publication1);
-        publication2 = publicationRepository.save(publication2);
-        publication3 = publicationRepository.save(publication3);
-
-        page1 = new Page();
+        page1 = new Page(1L);
         page1.setPageNr(1);
         page1.setPublication(publication1);
-        page2 = new Page();
+        page2 = new Page(2L);
         page2.setPageNr(2);
         page2.setPublication(publication1);
-        page3 = new Page();
+        page3 = new Page(3L);
         page3.setPageNr(3);        
         page3.setPublication(publication1);
-        
-        page1 = pageRepository.save(page1);
-        page2 = pageRepository.save(page2);
-        page3 = pageRepository.save(page3);
     }
 
+    /**
+     * Method: {@link PublicationService#updatePublication(Publication)}
+     */
     @Test
     public void testUpdatePublicationMetadata() throws Exception{
+        PublicationService publicationServiceSpy = spy(publicationService);
+        doReturn(publication1).when(publicationRepository).save(publication1);
+        doReturn(publication1).when(publicationRepository).findOne(publication1.getId());
         publication1.setName("justanupdatedpubname");
-        publication1 = publicationService.updatePublication(publication1);
+        publication1 = publicationServiceSpy.updatePublication(publication1);
 
+        verify(publicationRepository, times(1)).save(publication1);
+        verify(publicationRepository, times(1)).findOne(publication1.getId());
         assertEquals("justanupdatedpubname",publication1.getName());
     }
 
+    /**
+     * Method: {@link PublicationService#getActivePublication(Date)}
+     */
     @Test
     public void testGetActivePublication() throws Exception{
         publication1.setReleaseDate(new Date(2017, 8, 10)); //Old
-        publicationRepository.save(publication1);
-
         publication2.setReleaseDate(new Date(2017, 8, 12));
-        publicationRepository.save(publication2);
-
         publication3.setReleaseDate(new Date(2017, 8, 14));
-        publicationRepository.save(publication3);
+
+        doReturn(Arrays.asList(publication2, publication2, publication1)).when(publicationRepository).findAllByOrderByReleaseDateDesc();
 
         assertEquals(publication2, publicationService.getActivePublication(new Date(2017, 8, 11)));
     }
 
     @Test
     public void testSavePage() throws Exception{
-        Page newPage = new Page();
+        final List<Page> pages = new ArrayList<>(Arrays.asList(page1, page2, page3));
+        final Page newPage = new Page();
         newPage.setPublication(publication1);
         newPage.setPageNr(2);
-        List<Page> updatedPages = publicationService.savePage(newPage);
+        doAnswer((answer) -> {
+            pages.add(newPage);
+            return null;
+        }).when(pageRepository).saveAndFlush(any(Page.class));
+        doReturn(null).when(pageRepository).save(anyListOf(Page.class));
 
-        assertEquals(1, pageRepository.findOne(page1.getId()).getPageNr());
-        assertEquals(2, pageRepository.findOne(newPage.getId()).getPageNr());
-        assertEquals(3, pageRepository.findOne(page2.getId()).getPageNr());
-        assertEquals(4, pageRepository.findOne(page3.getId()).getPageNr());
+        doReturn(pages.stream().sorted().collect(Collectors.toList())).when(pageRepository).findByPublicationIdOrderByPageNrAsc(publication1.getId());
+
+        publicationService.savePage(newPage);
+
+        assertEquals(1, page1.getPageNr());
+        assertEquals(2, newPage.getPageNr());
+        assertEquals(3, page2.getPageNr());
+        assertEquals(4, page3.getPageNr());
     }
 
     @Test
     public void testSaveTrailingPages() throws Exception{
-        Page newPage = new Page();
+        final List<Page> pages = new ArrayList<>(Arrays.asList(page1, page2, page3));
+        Page newPage = new Page(4L);
         newPage.setPublication(publication1);
         newPage.setPageNr(2);
-        Page otherNewPage = new Page();
+        Page otherNewPage = new Page(5L);
         newPage.setPublication(publication1);
         otherNewPage.setPageNr(3);
 
-        List<Page> updatedPages = publicationService.saveTrailingPages(Arrays.asList(newPage, otherNewPage));
+        List<Page> newPages = Arrays.asList(newPage, otherNewPage);
 
-        assertEquals(1, pageRepository.findOne(page1.getId()).getPageNr());
-        assertEquals(2, pageRepository.findOne(newPage.getId()).getPageNr());
-        assertEquals(3, pageRepository.findOne(otherNewPage.getId()).getPageNr());
-        assertEquals(4, pageRepository.findOne(page2.getId()).getPageNr());
-        assertEquals(5, pageRepository.findOne(page3.getId()).getPageNr());
+        doReturn(null).when(pageRepository).save(anyListOf(Page.class));
+
+        doAnswer((answer) -> {
+            pages.addAll(newPages);
+            return null;
+        }).when(pageRepository).save(newPages);
+
+        doReturn(pages.stream().sorted().collect(Collectors.toList())).when(pageRepository).findByPublicationIdOrderByPageNrAsc(publication1.getId());
+
+        publicationService.saveTrailingPages(Arrays.asList(newPage, otherNewPage));
+
+        assertEquals(1, page1.getPageNr());
+        assertEquals(2, newPage.getPageNr());
+        assertEquals(3, otherNewPage.getPageNr());
+        assertEquals(4, page2.getPageNr());
+        assertEquals(5, page3.getPageNr());
     }
 
     @Test
-    public void testUpdatePage() throws Exception{
+    public void testUpdatePage() throws Exception {
+        doReturn(null).when(pageRepository).saveAndFlush(any(Page.class));
+        doReturn(null).when(pageRepository).save(anyListOf(Page.class));
+        doReturn(new ArrayList<>(Arrays.asList(page1, page2, page3))
+            .stream()
+            .sorted()
+            .collect(Collectors.toList())).when(pageRepository).findByPublicationIdOrderByPageNrAsc(publication1.getId());
+        
         page3.setPageNr(2);
+
         publicationService.updatePage(page3);
 
-        assertEquals(1, pageRepository.findOne(page1.getId()).getPageNr());
-        assertEquals(2, pageRepository.findOne(page3.getId()).getPageNr());
-        assertEquals(3, pageRepository.findOne(page2.getId()).getPageNr());
+        assertEquals(1, page1.getPageNr());
+        assertEquals(2, page3.getPageNr());
+        assertEquals(3, page2.getPageNr());
     }
 
     @Test
     public void testUpdateTrailingPages() throws Exception{
+        doReturn(null).when(pageRepository).save(anyListOf(Page.class));
+        doReturn(new ArrayList<>(Arrays.asList(page1, page2, page3))
+            .stream()
+            .sorted()
+            .collect(Collectors.toList())).when(pageRepository).findByPublicationIdOrderByPageNrAsc(publication1.getId());
+        
         page1.setPageNr(2);
         page2.setPageNr(3);
         publicationService.updateTrailingPages(Arrays.asList(page1, page2));
 
-        assertEquals(1, pageRepository.findOne(page3.getId()).getPageNr());
-        assertEquals(2, pageRepository.findOne(page1.getId()).getPageNr());
-        assertEquals(3, pageRepository.findOne(page2.getId()).getPageNr());
+        assertEquals(1, page3.getPageNr());
+        assertEquals(2, page1.getPageNr());
+        assertEquals(3, page2.getPageNr());
     }
 
     @Test
     public void testDeletePage() throws Exception{
-        publicationService.deletePage(page2);
+        doReturn(new ArrayList<>(Arrays.asList(page1, page2, page3))).when(pageRepository).findByPublicationIdOrderByPageNrAsc(publication1.getId());
 
-        assertEquals(1, pageRepository.findOne(page1.getId()).getPageNr());
-        assertEquals(2, pageRepository.findOne(page3.getId()).getPageNr());
+        publicationService.deletePage(page2);
+        assertEquals(1, page1.getPageNr());
+        assertEquals(2, page3.getPageNr());
     }
 
     @Test
-    public void testUpdatePageMetadata() throws Exception{        
+    public void testUpdatePageMetadata() throws Exception {
+        doReturn(page1).when(pageRepository).saveAndFlush(page1);
+        doReturn(page1).when(pageRepository).findOne(page1.getId());
+
         page1.setNote("vader is lukes father");
         page1.setWeb(true);
         page1.setAdvertisement(false);
-        publicationService.updatePage(page1);
 
-        Page updated = publicationService.getPageRepository().findOne(page1.getId());
+        Page page = publicationService.updatePageMeta(page1);
 
-        assertEquals("vader is lukes father", updated.getNote());
-        assertEquals(true, updated.isWeb());
-        assertEquals(false, updated.isAdvertisement());
-    }
-
-    @Test
-    public void testUpdateArticlesPage() throws Exception{        
-        Article a = new Article(1L);
-        a = articleRepository.save(a);
-        Set<Article> articles = new HashSet<>();
-        articles.add(a);
-        page1.setArticles(articles);
-        publicationService.updatePage(page1);
-
-        Page updated = publicationService.getPageRepository().findOne(page1.getId());
-
-        assertEquals(updated.getArticles(),articles);
-
-        articles.remove(a);
-        page1.setArticles(articles);
-        publicationService.updatePage(page1);
-
-        updated = publicationService.getPageRepository().findOne(page1.getId());        
-
-        assertEquals(articles, updated.getArticles());
+        verify(pageRepository, times(1)).saveAndFlush(page1);
+        assertEquals("vader is lukes father", page.getNote());
+        assertEquals(true, page.isWeb());
+        assertEquals(false, page.isAdvertisement());
     }
 }

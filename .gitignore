@@ -25,3 +25,4 @@ src/main/resources/local.properties
 # build folders
 target/
 src/main/webapp/dist/
+bin/
