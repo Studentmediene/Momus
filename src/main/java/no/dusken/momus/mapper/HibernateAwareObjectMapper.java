@@ -31,7 +31,6 @@ public class HibernateAwareObjectMapper extends ObjectMapper {
     public HibernateAwareObjectMapper() {
         // converts lastName to last_name and the other way
         setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
-        setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm a z"));
         registerModule(new Hibernate5Module());
     }
 }

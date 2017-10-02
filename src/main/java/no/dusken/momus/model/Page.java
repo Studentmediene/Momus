@@ -20,6 +20,7 @@ import javax.persistence.*;
 import java.util.Comparator;
 import java.util.Set;
 
+@Entity
 public class Page implements Comparable<Page>, Comparator<Page>{
 
     @Id
