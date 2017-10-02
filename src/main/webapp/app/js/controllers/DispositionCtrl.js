@@ -160,7 +160,10 @@ angular.module('momusApp.controllers')
         }
 
         function saveArticle(article){
-            ArticleService.updateMetadata(article);
+            vm.loading = true
+            ArticleService.updateMetadata(article).success(function(data){
+                vm.loading = false
+            });
         }
 
         function showHelp(){
