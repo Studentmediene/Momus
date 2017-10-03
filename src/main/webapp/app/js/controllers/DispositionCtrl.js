@@ -17,7 +17,24 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest, $route, $window, uiSortableMultiSelectionMethods, $q, Publication, Page) {
+    .controller('DispositionCtrl', function (
+            $scope,
+            $routeParams,
+            ArticleService,
+            PublicationService,
+            MessageModal,
+            $location,
+            $modal,
+            $templateRequest,
+            $route,
+            $window,
+            uiSortableMultiSelectionMethods,
+            $q,
+            Publication,
+            Page,
+            $stomp,
+            PersonService
+        ) {
         var vm = this;
 
         vm.maxNewPages = 100;
@@ -52,6 +69,20 @@ angular.module('momusApp.controllers')
         // Get all data
         getStatuses();
         getDisposition();
+
+
+        $stomp
+            .connect('/api/ws/disposition')
+            .then(function (frame) {
+                $stomp.subscribe('/ws/disposition/messages', function(payload, headers, res) {
+                    console.log(payload)
+                });
+
+                PersonService.getCurrentUser().success(function(user) {
+                    console.log(user)
+                    $stomp.send('/ws/disposition', {from: user, text: 'hello world', action: 'loggedin'})
+                })
+            })
 
         function getDisposition(){
             vm.loading = true;
