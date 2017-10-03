@@ -23,6 +23,9 @@
             <a href="/api/publications/{{vm.publication.id}}/colophon"><button class="btn btn-primary">
                 <i class="fa fa-file-text-o"/> Generer kolofon
             </button></a>
+            <span class="alert alert-danger alert-sm" ng-show="vm.lastRemoteUpdate > vm.lastUpdate">
+                Disposisjonen har blitt oppdatert av noen andre!<button ng-click="vm.refresh()">Oppdater</button>
+            </span>
         </div>
     </div>
 

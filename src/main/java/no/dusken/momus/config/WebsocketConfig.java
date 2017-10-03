@@ -2,10 +2,13 @@ package no.dusken.momus.config;
 
 import java.util.List;
 import no.dusken.momus.mapper.HibernateAwareObjectMapper;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -33,4 +36,15 @@ class WebsocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
         converters.add(converter);
         return false;
     }
+
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.setInterceptors(sessionChannelInterceptor());
+    }
+
+    @Bean
+    public ChannelInterceptor sessionChannelInterceptor() {
+        return new SessionChannelInterceptor();
+    }
+
 }

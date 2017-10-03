@@ -1,11 +1,13 @@
 package no.dusken.momus.model.websocket;
 
+import java.util.Date;
 import no.dusken.momus.model.Person;
 
 public class Message {
     private Person from;
     private String text;
     private String action;
+    private Date date;
 
     public Person getFrom(){
         return this.from;
@@ -29,5 +31,9 @@ public class Message {
 
 	public void setAction(String action) {
 		this.action = action;
+	}
+
+	public Date getDate() {
+		return date;
 	}
 }

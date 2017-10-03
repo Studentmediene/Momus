@@ -33,12 +33,18 @@ angular.module('momusApp.controllers')
             Publication,
             Page,
             $stomp,
-            PersonService
+            PersonService,
+            $http
         ) {
         var vm = this;
+        var isConnected = false;
+        var user;
 
         vm.maxNewPages = 100;
+        vm.lastUpdate = new Date();
+        vm.lastRemoteUpdate = new Date(vm.lastUpdate);
 
+        vm.refresh = function() { getDisposition(); vm.lastUpdate = vm.lastRemoteUpdate}
         vm.newPages = newPages;
         vm.updatePage = updatePage;
 		vm.updatePageMeta = updatePageMeta;
@@ -70,19 +76,21 @@ angular.module('momusApp.controllers')
         getStatuses();
         getDisposition();
 
+        PersonService.getCurrentUser().success(function(data) {
+            user = data;
 
-        $stomp
+            $stomp
             .connect('/api/ws/disposition')
             .then(function (frame) {
-                $stomp.subscribe('/ws/disposition/messages', function(payload, headers, res) {
-                    console.log(payload)
-                });
+                isConnected = true;
 
-                PersonService.getCurrentUser().success(function(user) {
-                    console.log(user)
-                    $stomp.send('/ws/disposition', {from: user, text: 'hello world', action: 'loggedin'})
+                $stomp.subscribe('/ws/disposition/changed', function(payload, headers, res) {
+                    console.log('change!')
+                    vm.lastRemoteUpdate = payload.date;
+                    $scope.$apply();
                 })
             })
+        })
 
         function getDisposition(){
             vm.loading = true;
@@ -134,6 +142,7 @@ angular.module('momusApp.controllers')
             var updatedPages = Page.saveMultiple({pubid: vm.publication.id}, pages, function() {
                 vm.publication.pages = updatedPages;
                 vm.loading = false;
+                dispositionChanged();                
             });
         }
 
@@ -142,6 +151,7 @@ angular.module('momusApp.controllers')
             var pages = Page.update({pubid: vm.publication.id}, page, function() {
                 vm.publication.pages = pages;
                 vm.loading = false;
+                dispositionChanged();
             });
         }
 
@@ -149,7 +159,8 @@ angular.module('momusApp.controllers')
 			vm.loading = true;
 			var new_page = Page.updateMeta({pubid: vm.publication.id}, page, function() {
 				vm.publication.pages[page.page_nr-1] = new_page;
-				vm.loading = false;
+                vm.loading = false;
+                dispositionChanged();                
 			});
 		}
 
@@ -158,6 +169,7 @@ angular.module('momusApp.controllers')
             var pages = Page.updateMultiple({pubid: vm.publication.id}, pages, function() {
                 vm.publication.pages = pages;
                 vm.loading = false;
+                dispositionChanged();                
             });
         }
 
@@ -168,6 +180,7 @@ angular.module('momusApp.controllers')
                 var pages = Page.delete({pubid: vm.publication.id, pageid: page.id}, function() {
                     vm.publication.pages = pages;
                     vm.loading = false;
+                    dispositionChanged();            
                 });
             }
         }
@@ -186,6 +199,7 @@ angular.module('momusApp.controllers')
                 ArticleService.getArticle(id).success(function(data){
                     page.articles.push(data);
                     vm.articles.push(data);
+                    dispositionChanged();            
                 });
             });
         }
@@ -194,7 +208,16 @@ angular.module('momusApp.controllers')
             vm.loading = true
             ArticleService.updateMetadata(article).success(function(data){
                 vm.loading = false
+                dispositionChanged();                
             });
+        }
+
+        function dispositionChanged() {
+            if(isConnected){
+                var datechanged = new Date();
+                $stomp.send('/ws/disposition/change', {from: user, text: 'changed', date: datechanged, action: 'update'})
+                vm.lastUpdate = datechanged;                         
+            }
         }
 
         function showHelp(){
@@ -280,6 +303,8 @@ angular.module('momusApp.controllers')
         });
 
         $scope.$on('$destroy', function(){
+            $stomp.send('/ws/disposition/logout', {from: user, text: 'hello world', action: 'loggedout'})
+            $stomp.disconnect()
             angular.element($window).unbind('resize');
         });
     });

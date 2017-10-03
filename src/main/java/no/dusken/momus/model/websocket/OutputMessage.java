@@ -1,14 +1,15 @@
 package no.dusken.momus.model.websocket;
 
+import java.util.Date;
 import no.dusken.momus.model.Person;
 
 public class OutputMessage {
     private Person from;
     private String text;
-    private String date;
+    private Date date;
     private String action;
     
-    public OutputMessage(Person from, String text, String date, String action) {
+    public OutputMessage(Person from, String text, Date date, String action) {
         this.from = from;
         this.text = text;
         this.date = date;
@@ -23,7 +24,7 @@ public class OutputMessage {
 		return this.text;
 	}
 
-	public String getDate() {
+	public Date getDate() {
 		return this.date;
 	}
 
