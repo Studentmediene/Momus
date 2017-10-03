@@ -37,7 +37,8 @@ angular.module('momusApp', [
         'ngCookies',
         'ui.sortable',
         'ui.sortable.multiselection',
-        'chart.js'
+        'chart.js',
+        'ngStomp'
     ]).
     config(['$routeProvider', function ($routeProvider) {
         // Admin interfaces
