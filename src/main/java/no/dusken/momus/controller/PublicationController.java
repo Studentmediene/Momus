@@ -31,7 +31,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -84,12 +86,16 @@ public class PublicationController {
     }
 
     @RequestMapping(value = "/{id}/colophon", method = RequestMethod.GET)
-    public @ResponseBody String getColophon(@PathVariable("id") Long id, HttpServletResponse response){
+    public @ResponseBody void getColophon(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
 
         response.addHeader("Content-Disposition", "attachment; filename=\"Kolofon_" + publicationService.getPublicationRepository().findOne(id).getName() + ".txt\"");
-        response.addHeader("Content-Type", "text/plain;charset=UTF-16LE");
+        response.addHeader("Content-Type", "text/plain;charset=UTF-8");
 
-        return publicationService.generateColophon(id);
+        ServletOutputStream outStream = response.getOutputStream();
+        String colophon = publicationService.generateColophon(id);
+        outStream.print(colophon);
+        outStream.flush();
+        outStream.close();
     }
 
     @RequestMapping(value = "/layoutstatuses", method = RequestMethod.GET)
