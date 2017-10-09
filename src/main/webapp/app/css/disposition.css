@@ -80,6 +80,12 @@
     cursor: move;
 }
 
+.input-group-addon.danger {
+    color: rgb(255, 255, 255);
+    background-color: rgb(217, 83, 79);
+    border-color: rgb(212, 63, 58);
+}
+
 .pagenum{
     width: 20px;
     min-width: 20px;

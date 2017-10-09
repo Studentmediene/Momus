@@ -85,7 +85,6 @@ angular.module('momusApp.controllers')
                 isConnected = true;
 
                 $stomp.subscribe('/ws/disposition/changed', function(payload, headers, res) {
-                    console.log('change!')
                     vm.lastRemoteUpdate = payload.date;
                     $scope.$apply();
                 })
@@ -99,7 +98,13 @@ angular.module('momusApp.controllers')
                 getPages(publication.id, function(pages){
                     publication.pages = pages;
                     ArticleService.search({publication: publication.id}).then(function(data){
-                        vm.articles = data.data;
+                        var articles = data.data
+                        publication.pages.forEach(function(page) {
+                            page.articles = page.articles.map(function(article) {
+                                return articles.find(function(other){return other.id === article.id});
+                            })
+                        });
+                        vm.articles = articles;
                         vm.publication = publication;
                         vm.loading = false;
                     });
@@ -129,6 +134,9 @@ angular.module('momusApp.controllers')
         }
 
         function newPages(newPageAt, numNewPages){
+            if(!checkRemoteUpdate()) {
+                return false;
+            }
             var pages = [];
             for(var i = 0; i < numNewPages; i++) {
                 var page = {
@@ -147,6 +155,9 @@ angular.module('momusApp.controllers')
         }
 
         function updatePage(page) {
+            if(!checkRemoteUpdate()) {
+                return false;
+            }
             vm.loading = true;
             var pages = Page.update({pubid: vm.publication.id}, page, function() {
                 vm.publication.pages = pages;
@@ -156,6 +167,9 @@ angular.module('momusApp.controllers')
         }
 
 		function updatePageMeta(page){
+            if(!checkRemoteUpdate()) {
+                return false;
+            }
 			vm.loading = true;
 			var new_page = Page.updateMeta({pubid: vm.publication.id}, page, function() {
 				vm.publication.pages[page.page_nr-1] = new_page;
@@ -165,6 +179,9 @@ angular.module('momusApp.controllers')
 		}
 
         function updatePages(pages) {
+            if(!checkRemoteUpdate()) {
+                return false;
+            }
             vm.loading = true;
             var pages = Page.updateMultiple({pubid: vm.publication.id}, pages, function() {
                 vm.publication.pages = pages;
@@ -174,6 +191,9 @@ angular.module('momusApp.controllers')
         }
 
         function deletePage(page) {
+            if(!checkRemoteUpdate()) {
+                return false;
+            }
             if(confirm("Er du sikker på at du vil slette denne siden?")){
                 vm.loading = true;
                 vm.publication.pages.splice(vm.publication.pages.indexOf(page), 1);
@@ -186,6 +206,9 @@ angular.module('momusApp.controllers')
         }
 
         function createArticle(page){
+            if(!checkRemoteUpdate()) {
+                return false;
+            }
             var modal = $modal.open({
                 templateUrl: 'partials/article/createArticleModal.html',
                 controller: 'CreateArticleModalCtrl',
@@ -210,6 +233,16 @@ angular.module('momusApp.controllers')
                 vm.loading = false
                 dispositionChanged();                
             });
+        }
+
+        function checkRemoteUpdate() {
+            if(vm.lastRemoteUpdate > vm.lastUpdate) {
+                if(confirm("Andre har gjort endringer. Gjør du dette risikerer du å overskrive noe andre har gjort.")) {
+                    return true;
+                }
+                return false;
+            }
+            return true;
         }
 
         function dispositionChanged() {
