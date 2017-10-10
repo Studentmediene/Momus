@@ -40,7 +40,7 @@ public class ArticleRevision {
     private boolean statusChanged;
 
 
-
+    
     public Long getId() {
         return id;
     }
@@ -83,5 +83,10 @@ public class ArticleRevision {
 
     public void setStatusChanged(boolean statusChanged) {
         this.statusChanged = statusChanged;
+    }
+
+    @Override
+    public String toString() {
+        return "ArticleRevision(id=" + this.id + ",article=" + this.article.getId() + ")";
     }
 }

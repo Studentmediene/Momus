@@ -194,7 +194,7 @@ public class ArticleService {
 
         boolean isStatusChanged = 
             revision != null && 
-            !revision.getArticle().getStatus().equals(article.getStatus());
+            !revision.getStatus().equals(article.getStatus());
         
         boolean canReuseOld = 
             revision != null &&
@@ -229,7 +229,7 @@ public class ArticleService {
             return null;
         }
 
-        return revisions.get(0);
+        return articleRevisionRepository.findOne(revisions.get(0).getId());
     }
 
     public ArticleRepository getArticleRepository() {
