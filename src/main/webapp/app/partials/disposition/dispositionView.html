@@ -25,14 +25,6 @@
                     <i class="fa fa-file-text-o"/> Generer kolofon
                 </button>
             </a>
-            <div ng-show="vm.lastRemoteUpdate > vm.lastUpdate" style="flex: 0">
-                <div class="input-group">
-                    <span class="input-group-addon danger">Disposisjonen har blitt endret av noen andre!</span>
-                    <span class="input-group-btn">
-                        <button class="btn btn-success" ng-click="vm.refresh()">Hent endringer</button>                        
-                    </span>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -131,7 +123,8 @@
                                         <select class="disp-dropdown"
                                                 ng-model="article.status"
                                                 ng-change="vm.saveArticle(article)"
-                                                ng-options="s.name for s in vm.articleStatuses track by s.id">
+                                                ng-options="s.name for s in vm.articleStatuses track by s.id"
+                                                ng-disabled="vm.loading">
                                         </select>
                                     </div>
                                     <!--Review-->
@@ -139,12 +132,13 @@
                                         <select class="disp-dropdown"
                                                 ng-model="article.review"
                                                 ng-change="vm.saveArticle(article)"
-                                                ng-options="s.name for s in vm.reviewStatuses track by s.id">
+                                                ng-options="s.name for s in vm.reviewStatuses track by s.id"
+                                                ng-disabled="vm.loading">
                                         </select>
                                     </div>
                                     <!--Photostatus-->
                                     <!--View-->
-                                    <div class="d-table-cell" ng-style="vm.responsiveColumns.pstatus" ng-click="editPhotoStatus = true; oldPhotoStatus = article.photo_status" ng-show="!editPhotoStatus">
+                                    <div class="d-table-cell" ng-style="vm.responsiveColumns.pstatus" ng-click="editPhotoStatus = !vm.loading; oldPhotoStatus = article.photo_status" ng-show="!editPhotoStatus">
                                         <textwrapper length="15" ng-attr-text="article.photo_status || '[Rediger]'"></textwrapper>
                                     </div>
                                     <!--Edit-->
@@ -156,7 +150,7 @@
                                     </div>
                                     <!--Comment-->
                                     <!--View-->
-                                    <div class="d-table-cell" ng-style="vm.responsiveColumns.comment" ng-click="editComment = true; oldComment = article.comment" ng-show="!editComment">
+                                    <div class="d-table-cell" ng-style="vm.responsiveColumns.comment" ng-click="editComment = !vm.loading; oldComment = article.comment" ng-show="!editComment">
                                         <textwrapper length="15" ng-attr-text="article.comment || '[Rediger]'"></textwrapper>
                                     </div>
                                     <!--Edit-->
@@ -174,7 +168,8 @@
                             <select class="disp-dropdown"
                                     ng-model="page.layout_status"
                                     ng-change="vm.updatePageMeta(page)"
-                                    ng-options="l.name for l in vm.layoutStatuses track by l.id">
+                                    ng-options="l.name for l in vm.layoutStatuses track by l.id"
+                                    ng-disabled="vm.loading">
                             </select>
                         </div>
                         <!--Ad-->

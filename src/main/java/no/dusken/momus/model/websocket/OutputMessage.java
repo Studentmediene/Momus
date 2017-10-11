@@ -1,34 +1,45 @@
 package no.dusken.momus.model.websocket;
 
 import java.util.Date;
-import no.dusken.momus.model.Person;
 
 public class OutputMessage {
-    private Person from;
-    private String text;
+	private Long pageId;
+	private Long articleId;
+    private Action action;
     private Date date;
-    private String action;
-    
-    public OutputMessage(Person from, String text, Date date, String action) {
-        this.from = from;
-        this.text = text;
-        this.date = date;
+
+    public OutputMessage(Long pageId, Long articleId, Action action, Date date){
+        this.pageId = pageId;
+        this.articleId = articleId;
         this.action = action;
+        this.date = date;
     }
 
-    public Person getFrom() {
-        return this.from;
+	public Action getAction() {
+		return this.action;
     }
 
-	public String getText() {
-		return this.text;
+	public void setAction(Action action) {
+		this.action = action;
 	}
 
 	public Date getDate() {
-		return this.date;
+		return date;
 	}
 
-	public String getAction() {
-		return this.action;
+	public Long getPageId() {
+		return pageId;
+	}
+
+	public void setPageId(Long pageId) {
+		this.pageId = pageId;
+	}
+
+	public Long getArticleId() {
+		return articleId;
+	}
+
+	public void setArticleId(Long articleId) {
+		this.articleId = articleId;
 	}
 }

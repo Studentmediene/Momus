@@ -21,32 +21,23 @@ angular.module('momusApp.controllers')
             $scope,
             $routeParams,
             ArticleService,
-            PublicationService,
             MessageModal,
-            $location,
             $modal,
             $templateRequest,
-            $route,
             $window,
             uiSortableMultiSelectionMethods,
             $q,
             Publication,
             Page,
-            $stomp,
-            PersonService,
-            $http
+            WebSocketService
         ) {
         var vm = this;
         var isConnected = false;
-        var user;
+        var lastUpdate = {date: new Date()};
 
         vm.maxNewPages = 100;
-        vm.lastUpdate = new Date();
-        vm.lastRemoteUpdate = new Date(vm.lastUpdate);
 
-        vm.refresh = function() { getDisposition(); vm.lastUpdate = vm.lastRemoteUpdate}
         vm.newPages = newPages;
-        vm.updatePage = updatePage;
 		vm.updatePageMeta = updatePageMeta;
         vm.deletePage = deletePage;
 
@@ -58,6 +49,7 @@ angular.module('momusApp.controllers')
         // Style
         var pageDoneColor = "#DDFFCB";
         var pageAdColor = "#f8f8f8";
+
         vm.pageColor = function(page) {
             return (page.done ? pageDoneColor : (page.advertisement ? pageAdColor : '#FFF'));
         };
@@ -70,26 +62,67 @@ angular.module('momusApp.controllers')
             pstatus: {minWidth: '90px'},
             comment: {minWidth: '100px'}
         };
-        vm.dispSortableStyle = {}; // Used to prevent the disposition from breaking while moving pages
 
         // Get all data
         getStatuses();
         getDisposition();
 
-        PersonService.getCurrentUser().success(function(data) {
-            user = data;
+        function onRemoteChange(payload, headers, res) {
+            if(isOwnUpdate(payload)){
+                return;
+            }
+            var index = 0;
+            switch(payload.action) {
+                case(WebSocketService.actions.updatePageMetadata):
+                    index = vm.publication.pages.findIndex(function(page){return page.id === payload.page_id;});
+                    var page = Page.get({pubid: vm.publication.id, pageid: payload.page_id}, function() {
+                        connectArticles(page, vm.articles);
+                        vm.publication.pages[index] = page;
+                    });
+                    break;
+                case(WebSocketService.actions.updateArticle):
+                    index = vm.articles.findIndex(function(article) { return article.id === payload.article_id;});
+                    // Since an article can be referenced on several pages, update properties not reference
+                    ArticleService.getArticle(payload.article_id).success(function(article) {
+                        replaceProperties(vm.articles[index], article);
+                    });
+                    break;
+                case(WebSocketService.actions.saveArticle):
+                    ArticleService.getArticle(payload.article_id).success(function(article) {
+                        index = vm.publication.pages.findIndex(function(page){return page.id === payload.page_id;});
+                        vm.articles.push(article);
+                        vm.publication.pages[index].articles.push(article);
+                    });
+                    break;
+                case(WebSocketService.actions.deletePage):
+                case(WebSocketService.actions.updatePagenr):
+                case(WebSocketService.actions.savePage):
+                    getPages(vm.publication.id, function(pages) {
+                        pages.forEach(function(page) {
+                            connectArticles(page, vm.articles);
+                        });
+                        vm.publication.pages = pages;
+                    });
+                    break;
+            }
+            $scope.$apply();
+        }
 
-            $stomp
-            .connect('/api/ws/disposition')
-            .then(function (frame) {
-                isConnected = true;
+        function isOwnUpdate(payload) {
+            return new Date(payload.date) <= lastUpdate.date;
+        }
 
-                $stomp.subscribe('/ws/disposition/changed', function(payload, headers, res) {
-                    vm.lastRemoteUpdate = payload.date;
-                    $scope.$apply();
-                })
-            })
-        })
+        function connectArticles(page, articles) {
+            page.articles = page.articles.map(function(article) {
+                return articles.find(function(other){return other.id === article.id;});
+            });
+        }
+
+        function replaceProperties(oldObject, newObject) {
+            Object.keys(oldObject).forEach(function(prop) {
+                oldObject[prop] = newObject[prop];
+            });
+        }
 
         function getDisposition(){
             vm.loading = true;
@@ -98,11 +131,10 @@ angular.module('momusApp.controllers')
                 getPages(publication.id, function(pages){
                     publication.pages = pages;
                     ArticleService.search({publication: publication.id}).then(function(data){
-                        var articles = data.data
+                        WebSocketService.subscribe(publication.id, onRemoteChange);
+                        var articles = data.data;
                         publication.pages.forEach(function(page) {
-                            page.articles = page.articles.map(function(article) {
-                                return articles.find(function(other){return other.id === article.id});
-                            })
+                            connectArticles(page, articles);
                         });
                         vm.articles = articles;
                         vm.publication = publication;
@@ -134,9 +166,7 @@ angular.module('momusApp.controllers')
         }
 
         function newPages(newPageAt, numNewPages){
-            if(!checkRemoteUpdate()) {
-                return false;
-            }
+            vm.loading = true;
             var pages = [];
             for(var i = 0; i < numNewPages; i++) {
                 var page = {
@@ -145,70 +175,47 @@ angular.module('momusApp.controllers')
                     layout_status: getLayoutStatusByName("Ukjent")
                 };
                 pages.push(page);
-            };
-            vm.loading = true;
+            }
             var updatedPages = Page.saveMultiple({pubid: vm.publication.id}, pages, function() {
                 vm.publication.pages = updatedPages;
                 vm.loading = false;
-                dispositionChanged();                
-            });
-        }
-
-        function updatePage(page) {
-            if(!checkRemoteUpdate()) {
-                return false;
-            }
-            vm.loading = true;
-            var pages = Page.update({pubid: vm.publication.id}, page, function() {
-                vm.publication.pages = pages;
-                vm.loading = false;
-                dispositionChanged();
+                lastUpdate = WebSocketService.pageSaved(vm.publication.id, -1);                
             });
         }
 
 		function updatePageMeta(page){
-            if(!checkRemoteUpdate()) {
-                return false;
-            }
 			vm.loading = true;
 			var new_page = Page.updateMeta({pubid: vm.publication.id}, page, function() {
-				vm.publication.pages[page.page_nr-1] = new_page;
                 vm.loading = false;
-                dispositionChanged();                
+                lastUpdate = WebSocketService.pageMetadataUpdated(vm.publication.id, new_page.id);
 			});
 		}
 
         function updatePages(pages) {
-            if(!checkRemoteUpdate()) {
-                return false;
-            }
             vm.loading = true;
-            var pages = Page.updateMultiple({pubid: vm.publication.id}, pages, function() {
-                vm.publication.pages = pages;
+            var updatedPages = Page.updateMultiple({pubid: vm.publication.id}, pages, function() {
+                updatedPages.forEach(function(page) {
+                    connectArticles(page, vm.articles);
+                });
+                vm.publication.pages = updatedPages;
                 vm.loading = false;
-                dispositionChanged();                
+                lastUpdate = WebSocketService.pageNrUpdated(vm.publication.id, -1);                
             });
         }
 
         function deletePage(page) {
-            if(!checkRemoteUpdate()) {
-                return false;
-            }
             if(confirm("Er du sikker på at du vil slette denne siden?")){
                 vm.loading = true;
                 vm.publication.pages.splice(vm.publication.pages.indexOf(page), 1);
                 var pages = Page.delete({pubid: vm.publication.id, pageid: page.id}, function() {
                     vm.publication.pages = pages;
                     vm.loading = false;
-                    dispositionChanged();            
+                    lastUpdate = WebSocketService.pageDeleted(vm.publication.id, page.id);                
                 });
             }
         }
 
         function createArticle(page){
-            if(!checkRemoteUpdate()) {
-                return false;
-            }
             var modal = $modal.open({
                 templateUrl: 'partials/article/createArticleModal.html',
                 controller: 'CreateArticleModalCtrl',
@@ -219,37 +226,27 @@ angular.module('momusApp.controllers')
                 }
             });
             modal.result.then(function(id){
-                ArticleService.getArticle(id).success(function(data){
-                    page.articles.push(data);
-                    vm.articles.push(data);
-                    dispositionChanged();            
+                ArticleService.getArticle(id).success(function(article){
+                    page.articles.push(article);
+                    vm.articles.push(article);
+                    lastUpdate = WebSocketService.articleSaved(vm.publication.id, page.id, article.id);
                 });
             });
         }
 
         function saveArticle(article){
-            vm.loading = true
+            vm.loading = true;
             ArticleService.updateMetadata(article).success(function(data){
-                vm.loading = false
-                dispositionChanged();                
+                vm.loading = false;
+                lastUpdate = WebSocketService.articleUpdated(vm.publication.id, article.id);
             });
         }
 
-        function checkRemoteUpdate() {
-            if(vm.lastRemoteUpdate > vm.lastUpdate) {
-                if(confirm("Andre har gjort endringer. Gjør du dette risikerer du å overskrive noe andre har gjort.")) {
-                    return true;
-                }
-                return false;
-            }
-            return true;
-        }
-
         function dispositionChanged() {
-            if(isConnected){
+            if(isConnected) {
                 var datechanged = new Date();
-                $stomp.send('/ws/disposition/change', {from: user, text: 'changed', date: datechanged, action: 'update'})
-                vm.lastUpdate = datechanged;                         
+                //WebSocketService.send(vm.publication.id, {from: null, text: 'changed', date: datechanged, action: 'update'});
+                lastUpdate = datechanged;
             }
         }
 
@@ -272,7 +269,6 @@ angular.module('momusApp.controllers')
         vm.sortableOptions = uiSortableMultiSelectionMethods.extendOptions({
             helper: uiSortableMultiSelectionMethods.helper,
             start: function(e, ui) {
-                vm.dispSortableStyle.tableLayout = "auto"; //To not break the table
                 $scope.$apply(); //Apply since this is jQuery stuff
 
                 //Calculate height of placeholder
@@ -286,11 +282,10 @@ angular.module('momusApp.controllers')
             axis: 'y',
             handle: '.handle',
             stop: function(e, ui){
-                vm.dispSortableStyle.tableLayout = "";
                 var placed = ui.item.sortableMultiSelect.selectedModels;
                 var newPosition = vm.publication.pages.indexOf(placed[0]);
                 placed.forEach(function(page, i) {
-                    page.page_nr = newPosition + i + 1
+                    page.page_nr = newPosition + i + 1;
                 });
                 updatePages(placed);
             },
@@ -336,8 +331,7 @@ angular.module('momusApp.controllers')
         });
 
         $scope.$on('$destroy', function(){
-            $stomp.send('/ws/disposition/logout', {from: user, text: 'hello world', action: 'loggedout'})
-            $stomp.disconnect()
+            WebSocketService.disconnect();
             angular.element($window).unbind('resize');
         });
     });

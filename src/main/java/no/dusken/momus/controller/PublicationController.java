@@ -152,7 +152,16 @@ public class PublicationController {
 			throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
 		}
 		return publicationService.updatePageMeta(page);
-	}
+    }
+    
+    @RequestMapping(value = "{pubid}/pages/{pageid}", method = RequestMethod.GET)
+    public @ResponseBody Page getPage(@PathVariable("pubid") Long pubid, @PathVariable("pageid") Long pageid){
+        Page page = publicationService.getPageRepository().findOne(pageid);
+        if(page == null){
+            throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
+        }
+        return page;
+    }
 
     @RequestMapping(value = "{pubid}/pages/{pageid}", method = RequestMethod.DELETE)
     public @ResponseBody List<Page> deletePage(@PathVariable("pubid") Long pubid, @PathVariable("pageid") Long pageid){
