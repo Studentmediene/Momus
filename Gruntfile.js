@@ -224,6 +224,13 @@ module.exports = function (grunt) {
                 options: {
                     spawn: true,
                 }
+            },
+            css: {
+                files: [app + '/css/**/*.css'],
+                tasks: ['devBuild'],
+                options: {
+                    spawn: true,
+                }
             }
           },
     });
