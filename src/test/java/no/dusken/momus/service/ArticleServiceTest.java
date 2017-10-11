@@ -120,7 +120,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article1.setSection(section1);
         article1.setArchived(false);
 
-        article1Revision1 = new ArticleRevision();
+        article1Revision1 = new ArticleRevision(0L);
         article1Revision1.setArticle(article1);
         article1Revision1.setContent(article1.getContent());
         article1Revision1.setStatus(article1.getStatus());
@@ -205,6 +205,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
     public void testCreateRevision() throws Exception {
         ArticleService articleServiceSpy = spy(articleService);
 
+        when(articleRevisionRepository.findOne(any(Long.class))).thenReturn(article1Revision1);
         when(articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(article1.getId())).thenReturn(Collections.singletonList(article1Revision1));
         when(articleRevisionRepository.save(any(ArticleRevision.class))).then(returnsFirstArg());
 
