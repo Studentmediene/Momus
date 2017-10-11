@@ -11,5 +11,6 @@
     "wysihtml5": true,
     "ZeroClipboard": true,
     "require": true
-  }
+  },
+  "esversion": 6
 }
