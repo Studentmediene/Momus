@@ -25,12 +25,12 @@
     vertical-align: top;
 }
 
-.disposition-table > div > .d-table-row > .d-table-cell {
+.disposition-table .d-table-row > .d-table-cell {
     border-top: solid #CCCCCC 1px;
     border-right: solid #CCCCCC 1px;
 }
 
-.disposition-table > div > .d-table-row > .d-table-cell:not(.article-cell) {
+.disposition-table .d-table-row > .d-table-cell:not(.article-cell) {
     padding: 3px;
 }
 
