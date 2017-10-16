@@ -164,6 +164,16 @@ a.zeroclipboard-is-hover {
     border-bottom: 1px dotted #999;
 }
 
+.person-widget-header {
+    white-space: nowrap;
+    width: 100%;
+}
+
+.person-widget-header tr #close-cell {
+    text-align: right;
+    padding-left: 10px;
+}
+
 .person-widget-element {
     position:absolute;
     background-color: #FFFFFF;
@@ -267,4 +277,16 @@ a.zeroclipboard-is-hover {
     top:50px;
     z-index:100;
     background-color: white;
+}
+
+inline-edit .shadow {
+    box-shadow: 5px 5px 8px grey !important;
+}
+
+.inline-edit-input {
+    min-height: 100px; 
+    width: 200px !important;
+    resize: vertical; 
+    float: left;
+    z-index: 0 !important;
 }

@@ -1,12 +1,12 @@
-<div class="input-group" style="position: absolute; box-shadow: #000000">
-    <textarea class="form-control input-sm" ng-model="text" style="min-height: 60px; width: 200px; resize: vertical; float:left"></textarea>
-    <div style="float:left">
-        <div><button class="btn btn-sm btn-danger" ng-click="cancel()">
-            <i class="fa fa-times"></i>
-        </button></div>
-
-        <div><button class="btn btn-sm btn-success" ng-click="save()">
-            <i class="fa fa-save"></i>
-        </button></div>
+<div class="input-group" style="position: absolute">
+        <textarea class="shadow text-input form-control input-sm inline-edit-input" ng-model="text"></textarea>
+        <div class="btn-group-vertical" style="float:left; margin-left: 5px;">
+            <button class="shadow btn btn-sm btn-danger" ng-click="cancel()">
+                <i class="fa fa-times"></i>
+            </button>
+    
+            <button class="shadow btn btn-sm btn-success" ng-click="save()">
+                <i class="fa fa-save"></i>
+            </button>
+        </div>
     </div>
-</div>
