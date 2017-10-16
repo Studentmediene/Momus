@@ -275,6 +275,11 @@
                 <configuration>
                     <contextXml>src/main/resources/jetty-context.xml</contextXml>
                     <webAppSourceDirectory>src/main/webapp</webAppSourceDirectory>
+                    <webApp>
+                        <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
+                            <resourcesAsCSV>src/main/webapp/dist, src/main/webapp</resourcesAsCSV>
+                        </baseResource>
+                    </webApp>
                 </configuration>
             </plugin>
             <!-- Control how the application is built -->

@@ -27,6 +27,8 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
     require('time-grunt')(grunt);
 
+    grunt.loadNpmTasks('grunt-contrib-watch')
+
     var dist = 'src/main/webapp/dist';
     var app = 'src/main/webapp/app';
 
@@ -86,6 +88,19 @@ module.exports = function (grunt) {
                 dirs: [dist]
             }
         },
+        browserify: {
+            dist: {
+                files: {
+                    '.tmp/concat/js/main.js': '.tmp/concat/js/main.js'
+                },
+                options: {
+                    transform: [['babelify', { presets: ['es2015', 'stage-2'] }]],
+                    browserifyOptions: {
+                        debug: true
+                    }
+                }
+            }
+        },
 
         // Put files not handled in other tasks here that should be copied to dist
         copy: {
@@ -101,6 +116,7 @@ module.exports = function (grunt) {
                             'images/**',
                             'partials/**',
                             'index.html'
+                            
                         ]
                     }
                 ]
@@ -162,6 +178,18 @@ module.exports = function (grunt) {
                         dest: dist + '/js'
                     }
                 ]
+            },
+            scripts: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: '.tmp/concat/js',
+                        dest: dist + '/js',
+                        src: [
+                            '*.js'
+                        ]
+                    }
+                ]
             }
         },
         ngAnnotate: {
@@ -181,7 +209,30 @@ module.exports = function (grunt) {
                 configFile: 'src/main/webapp/test/config/karma.conf.js',
                 singleRun: true
             }
-        }
+        },
+        watch: {
+            scripts: {
+              files: [app + '/js/**/*.js'],
+              tasks: ['devBuild'],
+              options: {
+                spawn: true,
+              },
+            },
+            html: {
+                files: [app + '/partials/**/*.html'],
+                tasks: ['devBuild'],
+                options: {
+                    spawn: true,
+                }
+            },
+            css: {
+                files: [app + '/css/**/*.css'],
+                tasks: ['devBuild'],
+                options: {
+                    spawn: true,
+                }
+            }
+          },
     });
 
     grunt.registerTask('test', [
@@ -195,6 +246,7 @@ module.exports = function (grunt) {
         'clean:dist',
         'useminPrepare',
         'concat',
+        'browserify:dist',
         'copy',
         'ngAnnotate',
         'cssmin',
@@ -202,6 +254,24 @@ module.exports = function (grunt) {
         'rev',
         'usemin',
         'clean:tmp'
+    ]);
+
+    grunt.registerTask('devBuild', [
+        'clean:dist',
+        'useminPrepare',
+        'concat',
+        'browserify:dist',
+        'copy',
+        'ngAnnotate',
+        'cssmin',
+        'rev',
+        'usemin',
+        'clean:tmp'        
+    ]);
+
+    grunt.registerTask('dev', [
+        'devBuild',
+        'watch'
     ]);
 
     grunt.registerTask('default', [
