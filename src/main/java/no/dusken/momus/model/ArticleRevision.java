@@ -39,8 +39,12 @@ public class ArticleRevision {
 
     private boolean statusChanged;
 
-
+    public ArticleRevision() {}
     
+    public ArticleRevision(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
