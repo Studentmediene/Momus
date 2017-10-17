@@ -93,7 +93,7 @@
                     InDesign fil
                 </a>
 
-                <span tooltip="Kopier sitatsjekk-tekst">
+                <span uib-tooltip="Kopier sitatsjekk-tekst">
                     <a zc-btn="quoteCheck" button-loader="copying" loading-text="Kopierer" completed-text="Kopiert"
                        ng-click=""
                        class="btn btn-primary"><i class="fa fa-quote-right"></i>
@@ -108,7 +108,7 @@
                 </span>
 
                 <span ng-show="article.archived">
-                    <a ng-click="restoreArticle()" class="btn btn-success" tooltip="Gjenopprett artikkelen så den vil vises i søk"><i class="fa fa-plus" ></i>
+                    <a ng-click="restoreArticle()" class="btn btn-success" uib-tooltip="Gjenopprett artikkelen så den vil vises i søk"><i class="fa fa-plus" ></i>
                         Gjenopprett
                     </a>
                 </span>
@@ -285,7 +285,7 @@
                                 </p>
                             </div>
                             <div class="col-sm-8" ng-show="metaEditMode">
-                                <input class="form-control input-sm" type="text" ng-model="metaEditing.external_author" tooltip="Separer navn med komma.">
+                                <input class="form-control input-sm" type="text" ng-model="metaEditing.external_author" uib-tooltip="Separer navn med komma.">
                             </div>
                         </div>
                         <hr class="divider">
@@ -336,7 +336,7 @@
                                 </p>
                             </div>
                             <div class="col-sm-8" ng-show="metaEditMode">
-                                <input class="form-control input-sm" type="text" ng-model="metaEditing.external_photographer" tooltip="Separer navn med komma.">
+                                <input class="form-control input-sm" type="text" ng-model="metaEditing.external_photographer" uib-tooltip="Separer navn med komma.">
                             </div>
                         </div>
                         <hr class="divider">

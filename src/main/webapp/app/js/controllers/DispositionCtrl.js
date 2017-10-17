@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest, $route, $window, uiSortableMultiSelectionMethods, $q, Publication, Page) {
+    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $uibModal, $templateRequest, $route, $window, uiSortableMultiSelectionMethods, $q, Publication, Page) {
         var vm = this;
 
         vm.maxNewPages = 100;
@@ -142,7 +142,7 @@ angular.module('momusApp.controllers')
         }
 
         function createArticle(page){
-            var modal = $modal.open({
+            var modal = $uibModal.open({
                 templateUrl: 'partials/article/createArticleModal.html',
                 controller: 'CreateArticleModalCtrl',
                 resolve: {

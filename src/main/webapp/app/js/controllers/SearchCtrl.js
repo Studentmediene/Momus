@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('SearchCtrl', function ($scope, $location, $q, PersonService, PublicationService, Publication, ArticleService, $modal, MessageModal, $templateRequest) {
+    .controller('SearchCtrl', function ($scope, $location, $q, PersonService, PublicationService, Publication, ArticleService, $uibModal, MessageModal, $templateRequest) {
         var pageSize = 100;
 
         $scope.data = [];
@@ -151,7 +151,7 @@ angular.module('momusApp.controllers')
         };
 
         $scope.createArticle = function(){
-            var modal = $modal.open({
+            var modal = $uibModal.open({
                 templateUrl: 'partials/article/createArticleModal.html',
                 controller: 'CreateArticleModalCtrl'
             });
