@@ -36,7 +36,7 @@
 						<i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
 					</div>
                     <div class="pull-right" scroll-trigger="attach-top-true">
-                        <page-adder max-num-pages="vm.maxNewPages" max-page-pos="vm.publication.pages.length" submit="vm.newPages(newPageAt, numNewPages);"></page-adder>
+                        <page-adder max-num-pages="vm.maxNewPages" max-page-pos="vm.publication.pages.length" submit="vm.newPages(newPageAt, numNewPages)"></page-adder>
                     </div>
             </div>
             <div class="d-table disposition-table">
@@ -66,7 +66,13 @@
                 </div>
 
                 <div ng-model="vm.publication.pages" ui-sortable="vm.sortableOptions">
-                    <div class="d-table-row" ng-repeat="page in vm.publication.pages" ng-style="{background: vm.pageColor(page)}" ui-sortable-selectable>
+                    <div 
+                        class="d-table-row"
+                        ng-repeat="page in vm.publication.pages"
+                        ng-init="vm.initPageScope(this)"
+                        ng-style="{background: vm.pageColor(page)}"
+                        ui-sortable-selectable
+                    >
                         <!--Page number-->
                         <div class="d-table-cell handle pagenum">{{page.page_nr}}</div>
                         <!--Articles (edit mode)-->
@@ -85,7 +91,12 @@
                         <!--Articles (view mode)-->
                         <div class="d-table-cell article-cell" ng-style="{width: vm.articleWidth}" ng-hide="editPage">
                             <div class="d-table article-table">
-                                <div class="d-table-row" ng-repeat="article in page.articles" ng-style="{background: vm.pageColor(page)}">
+                                <div 
+                                    class="d-table-row" 
+                                    ng-repeat="article in page.articles"
+                                    ng-init="vm.initArticleScope(this)"
+                                    ng-style="{background: vm.pageColor(page)}"
+                                >
                                     <!--Name-->
                                     <div class="d-table-cell" ng-style="vm.responsiveColumns.name">
                                         <a href="#/artikler/{{article.id}}">{{article.name}}</a> <span tooltip="Antall tegn">({{article.content_length}})</span>
@@ -138,26 +149,38 @@
                                     </div>
                                     <!--Photostatus-->
                                     <!--View-->
-                                    <div class="d-table-cell" ng-style="vm.responsiveColumns.pstatus" ng-click="editPhotoStatus = !vm.loading; oldPhotoStatus = article.photo_status" ng-show="!editPhotoStatus">
+                                    <div 
+                                        class="d-table-cell" 
+                                        ng-style="vm.responsiveColumns.pstatus" 
+                                        ng-click="vm.editArticleField(this, 'photo_status')" 
+                                        ng-show="!edit['photo_status']"
+                                    >
                                         <textwrapper length="15" ng-attr-text="article.photo_status || '[Rediger]'"></textwrapper>
                                     </div>
                                     <!--Edit-->
-                                    <div class="d-table-cell" ng-style="vm.responsiveColumns.pstatus" ng-show="editPhotoStatus">
+                                    <div class="d-table-cell" ng-style="vm.responsiveColumns.pstatus" ng-show="edit['photo_status']">
                                         <inline-edit text="article.photo_status"
-                                                     cancel="article.photo_status=oldPhotoStatus;editPhotoStatus=false;"
-                                                     save="vm.saveArticle(article); editPhotoStatus=false;">
+                                                     cancel="vm.submitArticleField(this, 'photo_status', false)"
+                                                     remote-change="remoteChanges['photo_status']"
+                                                     save="vm.submitArticleField(this, 'photo_status', true)">
                                         </inline-edit>
                                     </div>
                                     <!--Comment-->
                                     <!--View-->
-                                    <div class="d-table-cell" ng-style="vm.responsiveColumns.comment" ng-click="editComment = !vm.loading; oldComment = article.comment" ng-show="!editComment">
+                                    <div 
+                                        class="d-table-cell" 
+                                        ng-style="vm.responsiveColumns.comment" 
+                                        ng-click="vm.editArticleField(this, 'comment')" 
+                                        ng-show="!edit['comment']"
+                                    >
                                         <textwrapper length="15" ng-attr-text="article.comment || '[Rediger]'"></textwrapper>
                                     </div>
                                     <!--Edit-->
-                                    <div class="d-table-cell" ng-style="vm.responsiveColumns.comment" ng-show="editComment">
+                                    <div class="d-table-cell" ng-style="vm.responsiveColumns.comment" ng-show="edit['comment']">
                                         <inline-edit text="article.comment"
-                                                     cancel="article.comment=oldComment;editComment=false;"
-                                                     save="vm.saveArticle(article); editComment=false;">
+                                                     cancel="vm.submitArticleField(this, 'comment', false)"
+                                                     remote-change="remoteChanges['comment']"
+                                                     save="vm.submitArticleField(this, 'comment', true)">
                                         </inline-edit>
                                     </div>
                                 </div>
@@ -192,10 +215,10 @@
                         </div>
                         <!--Edit-->
                         <div class="d-table-cell button">
-                            <button ng-click="editPage = true" class="btn btn-warning btn-xs pull-right" ng-hide="editPage">
+                            <button ng-click="vm.editPage(this)" class="btn btn-warning btn-xs pull-right" ng-hide="editPage">
                                 <i class="fa fa-pencil"></i>
                             </button>
-                            <button ng-click="vm.updatePageMeta(page);editPage = false" class="btn btn-success pull-right btn-xs" ng-show="editPage">
+                            <button ng-click="vm.submitPage(this)" class="btn btn-success pull-right btn-xs" ng-show="editPage">
                                 <i class="fa fa-save"></i>
                             </button>
                         </div>

@@ -279,14 +279,7 @@ a.zeroclipboard-is-hover {
     background-color: white;
 }
 
-inline-edit .shadow {
-    box-shadow: 5px 5px 8px grey !important;
-}
-
-.inline-edit-input {
-    min-height: 100px; 
-    width: 200px !important;
+.inline-textarea {
+    min-height: 100px;
     resize: vertical; 
-    float: left;
-    z-index: 0 !important;
 }

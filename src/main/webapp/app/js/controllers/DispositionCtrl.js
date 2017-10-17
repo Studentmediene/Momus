@@ -40,9 +40,17 @@ angular.module('momusApp.controllers')
         vm.newPages = newPages;
 		vm.updatePageMeta = updatePageMeta;
         vm.deletePage = deletePage;
+        vm.initPageScope = initPageScope;
+        vm.editPage = editPage;
+        vm.submitPage = submitPage;
+        var pageEdits = [];
 
         vm.createArticle = createArticle;
         vm.saveArticle = saveArticle;
+        vm.initArticleScope = initArticleScope;
+        vm.editArticleField = editArticleField;
+        vm.submitArticleField = submitArticleField;
+        var articleEdits = {};
 
         vm.showHelp = showHelp;
 
@@ -68,44 +76,64 @@ angular.module('momusApp.controllers')
         getDisposition();
 
         function onRemoteChange(payload, headers, res) {
-            if(isOwnUpdate(payload)){
-                return;
-            }
-            var index = 0;
+            if(isOwnUpdate(payload)) return;
+
             switch(payload.action) {
                 case(WebSocketService.actions.updatePageMetadata):
-                    index = vm.publication.pages.findIndex(function(page){return page.id === payload.page_id;});
-                    var page = Page.get({pubid: vm.publication.id, pageid: payload.page_id}, function() {
-                        connectArticles(page, vm.articles);
-                        vm.publication.pages[index] = page;
-                    });
+                    handleRemotePageMetadataUpdate(payload.page_id);
                     break;
                 case(WebSocketService.actions.updateArticle):
-                    index = vm.articles.findIndex(function(article) { return article.id === payload.article_id;});
-                    // Since an article can be referenced on several pages, update properties not reference
-                    ArticleService.getArticle(payload.article_id).success(function(article) {
-                        replaceProperties(vm.articles[index], article);
-                    });
+                    handleRemoteArticleUpdate(payload.article_id, payload.edited_field);
                     break;
                 case(WebSocketService.actions.saveArticle):
-                    ArticleService.getArticle(payload.article_id).success(function(article) {
-                        index = vm.publication.pages.findIndex(function(page){return page.id === payload.page_id;});
-                        vm.articles.push(article);
-                        vm.publication.pages[index].articles.push(article);
-                    });
                     break;
                 case(WebSocketService.actions.deletePage):
                 case(WebSocketService.actions.updatePagenr):
                 case(WebSocketService.actions.savePage):
-                    getPages(vm.publication.id, function(pages) {
-                        pages.forEach(function(page) {
-                            connectArticles(page, vm.articles);
-                        });
-                        vm.publication.pages = pages;
-                    });
+                    handleRemotePageChange();
                     break;
             }
             $scope.$apply();
+        }
+
+        function handleRemotePageMetadataUpdate(pageId) {
+            var page = Page.get({pubid: vm.publication.id, pageid: pageId}, () => {
+                const index = vm.publication.pages.findIndex(page => page.id === pageId);
+                connectArticles(page, vm.articles);
+                vm.publication.pages[index] = page;
+            });
+        }
+
+        function handleRemoteArticleUpdate(articleId, editedField) {
+            // We are locally editing the field that has been changed remotely, so don't update immediately.
+            if(articleEdits[articleId][editedField]) {
+                const scope = articleEdits[articleId][editedField].scope;
+                ArticleService.getArticle(articleId).success(article => {
+                    scope.remoteChanges[editedField] = article[editedField];
+                    articleEdits[articleId][editedField].oldValue = article[editedField];
+                });
+                return;
+            }
+            // Since an article can be referenced on several pages, update properties not reference
+            ArticleService.getArticle(articleId).success(article => {
+                const index = vm.articles.findIndex((article) => article.id === articleId);
+                replaceProperties(vm.articles[index], article);
+            });
+        }
+
+        function handleRemoteArticleSave(articleId) {
+            ArticleService.getArticle(articleId).success(article => {
+                const index = vm.publication.pages.findIndex(page => page.id === articleId);
+                vm.articles.push(article);
+                vm.publication.pages[index].articles.push(article);
+            });
+        }
+
+        function handleRemotePageChange() {
+            getPages(vm.publication.id, pages => {
+                pages.forEach(page => connectArticles(page, vm.articles));
+                vm.publication.pages = pages;
+            });
         }
 
         function isOwnUpdate(payload) {
@@ -113,13 +141,11 @@ angular.module('momusApp.controllers')
         }
 
         function connectArticles(page, articles) {
-            page.articles = page.articles.map(function(article) {
-                return articles.find(function(other){return other.id === article.id;});
-            });
+            page.articles = page.articles.map(article => articles.find(other => other.id === article.id));
         }
 
         function replaceProperties(oldObject, newObject) {
-            Object.keys(oldObject).forEach(function(prop) {
+            Object.keys(oldObject).forEach(prop => {
                 oldObject[prop] = newObject[prop];
             });
         }
@@ -127,15 +153,13 @@ angular.module('momusApp.controllers')
         function getDisposition(){
             vm.loading = true;
             var pubid = $routeParams.id;
-            getPublication($routeParams.id, function(publication){
-                getPages(publication.id, function(pages){
+            getPublication($routeParams.id, publication => {
+                getPages(publication.id, pages => {
                     publication.pages = pages;
-                    ArticleService.search({publication: publication.id}).then(function(data){
+                    ArticleService.search({publication: publication.id}).then(data => {
                         WebSocketService.subscribe(publication.id, onRemoteChange);
                         var articles = data.data;
-                        publication.pages.forEach(function(page) {
-                            connectArticles(page, articles);
-                        });
+                        publication.pages.forEach(page => connectArticles(page, articles));
                         vm.articles = articles;
                         vm.publication = publication;
                         vm.loading = false;
@@ -145,20 +169,20 @@ angular.module('momusApp.controllers')
         }
 
         function getPages(pubid, callback){
-            var pages = Page.query({pubid: pubid}, function(){ callback(pages);});
+            var pages = Page.query({pubid: pubid}, () => callback(pages));
         }
 
         function getPublication(pubid, callback){
             var publication;
             if(pubid){
-                publication = Publication.get({id: pubid}, function(){ callback(publication);});
+                publication = Publication.get({id: pubid}, () => callback(publication));
             }else{
-                publication = Publication.active({}, function(){ callback(publication);});
+                publication = Publication.active({}, () => callback(publication));
             }
         }
 
         function getStatuses(){
-            $q.all([ArticleService.getReviews(), ArticleService.getStatuses()]).then(function(data){
+            $q.all([ArticleService.getReviews(), ArticleService.getStatuses()]).then(data => {
                 vm.reviewStatuses = data[0].data;
                 vm.articleStatuses = data[1].data;
             });
@@ -176,7 +200,7 @@ angular.module('momusApp.controllers')
                 };
                 pages.push(page);
             }
-            var updatedPages = Page.saveMultiple({pubid: vm.publication.id}, pages, function() {
+            var updatedPages = Page.saveMultiple({pubid: vm.publication.id}, pages, () => {
                 vm.publication.pages = updatedPages;
                 vm.loading = false;
                 lastUpdate = WebSocketService.pageSaved(vm.publication.id, -1);                
@@ -185,16 +209,16 @@ angular.module('momusApp.controllers')
 
 		function updatePageMeta(page){
 			vm.loading = true;
-			var new_page = Page.updateMeta({pubid: vm.publication.id}, page, function() {
+			var new_page = Page.updateMeta({pubid: vm.publication.id}, page, () => {
                 vm.loading = false;
                 lastUpdate = WebSocketService.pageMetadataUpdated(vm.publication.id, new_page.id);
 			});
-		}
+        }
 
         function updatePages(pages) {
             vm.loading = true;
-            var updatedPages = Page.updateMultiple({pubid: vm.publication.id}, pages, function() {
-                updatedPages.forEach(function(page) {
+            var updatedPages = Page.updateMultiple({pubid: vm.publication.id}, pages, () => {
+                updatedPages.forEach(page => {
                     connectArticles(page, vm.articles);
                 });
                 vm.publication.pages = updatedPages;
@@ -207,7 +231,7 @@ angular.module('momusApp.controllers')
             if(confirm("Er du sikker på at du vil slette denne siden?")){
                 vm.loading = true;
                 vm.publication.pages.splice(vm.publication.pages.indexOf(page), 1);
-                var pages = Page.delete({pubid: vm.publication.id, pageid: page.id}, function() {
+                var pages = Page.delete({pubid: vm.publication.id, pageid: page.id}, () => {
                     vm.publication.pages = pages;
                     vm.loading = false;
                     lastUpdate = WebSocketService.pageDeleted(vm.publication.id, page.id);                
@@ -215,18 +239,58 @@ angular.module('momusApp.controllers')
             }
         }
 
+        function initPageScope(scope) {
+            scope.editPage = pageEdits.includes(scope.page.id);
+        }
+
+        function editPage(scope) {
+            scope.editPage = true;
+            pageEdits.push(scope.page.id);
+        }
+
+        function submitPage(scope) {
+            updatePageMeta(scope.page);
+            scope.editPage = false;
+            pageEdits.splice(pageEdits.indexOf(scope.page.id), 1);
+        }
+
+        function initArticleScope(scope) {
+            scope.edit = {};
+            scope.remoteChanges = {};
+            articleEdits[scope.article.id] = {};
+        }
+
+        function editArticleField(scope, field) {
+            if(vm.loading) return;
+
+            articleEdits[scope.article.id][field] = {
+                scope: scope,
+                oldValue: scope.article[field]
+            };
+            scope.edit[field] = true;
+        }
+
+        function submitArticleField(scope, field, update) {
+            if(update) {
+                saveArticle(scope.article, field);                
+            }else {
+                scope.article[field] = articleEdits[scope.article.id][field].oldValue;
+            }
+
+            scope.edit[field] = false;
+            articleEdits[scope.article.id][field] = null;
+        }
+
         function createArticle(page){
             var modal = $modal.open({
                 templateUrl: 'partials/article/createArticleModal.html',
                 controller: 'CreateArticleModalCtrl',
                 resolve: {
-                    pubId: function(){
-                        return vm.publication.id;
-                    }
+                    pubId: () => vm.publication.id
                 }
             });
-            modal.result.then(function(id){
-                ArticleService.getArticle(id).success(function(article){
+            modal.result.then(id => {
+                ArticleService.getArticle(id).success(article => {
                     page.articles.push(article);
                     vm.articles.push(article);
                     lastUpdate = WebSocketService.articleSaved(vm.publication.id, page.id, article.id);
@@ -234,11 +298,11 @@ angular.module('momusApp.controllers')
             });
         }
 
-        function saveArticle(article){
+        function saveArticle(article, editedField){
             vm.loading = true;
-            ArticleService.updateMetadata(article).success(function(data){
+            ArticleService.updateMetadata(article).success(data => {
                 vm.loading = false;
-                lastUpdate = WebSocketService.articleUpdated(vm.publication.id, article.id);
+                lastUpdate = WebSocketService.articleUpdated(vm.publication.id, article.id, editedField);
             });
         }
 
@@ -251,7 +315,7 @@ angular.module('momusApp.controllers')
         }
 
         function showHelp(){
-            $templateRequest('partials/templates/help/dispHelp.html').then(function(template){
+            $templateRequest('partials/templates/help/dispHelp.html').then(template => {
                 MessageModal.info(template);
             });
         }
@@ -268,7 +332,7 @@ angular.module('momusApp.controllers')
 
         vm.sortableOptions = uiSortableMultiSelectionMethods.extendOptions({
             helper: uiSortableMultiSelectionMethods.helper,
-            start: function(e, ui) {
+            start: (e, ui) => {
                 $scope.$apply(); //Apply since this is jQuery stuff
 
                 //Calculate height of placeholder
@@ -281,10 +345,10 @@ angular.module('momusApp.controllers')
             },
             axis: 'y',
             handle: '.handle',
-            stop: function(e, ui){
+            stop: (e, ui) => {
                 var placed = ui.item.sortableMultiSelect.selectedModels;
                 var newPosition = vm.publication.pages.indexOf(placed[0]);
-                placed.forEach(function(page, i) {
+                placed.forEach((page, i) => {
                     page.page_nr = newPosition + i + 1;
                 });
                 updatePages(placed);
@@ -325,12 +389,12 @@ angular.module('momusApp.controllers')
 
         updateDispSize();
         // To recalculate disp table when resizing the screen
-        angular.element($window).bind('resize', function(){
+        angular.element($window).bind('resize', () => {
             updateDispSize();
             $scope.$apply();
         });
 
-        $scope.$on('$destroy', function(){
+        $scope.$on('$destroy', () => {
             WebSocketService.disconnect();
             angular.element($window).unbind('resize');
         });

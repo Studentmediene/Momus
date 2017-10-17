@@ -5,13 +5,15 @@ import java.util.Date;
 public class OutputMessage {
 	private Long pageId;
 	private Long articleId;
-    private Action action;
+	private Action action;
+	private String editedField;
     private Date date;
 
-    public OutputMessage(Long pageId, Long articleId, Action action, Date date){
+    public OutputMessage(Long pageId, Long articleId, Action action, String editedField, Date date){
         this.pageId = pageId;
         this.articleId = articleId;
-        this.action = action;
+		this.action = action;
+		this.editedField = editedField;
         this.date = date;
     }
 
@@ -41,5 +43,13 @@ public class OutputMessage {
 
 	public void setArticleId(Long articleId) {
 		this.articleId = articleId;
+	}
+
+	public String getEditedField() {
+		return editedField;
+	}
+
+	public void setEditedField(String editedField) {
+		this.editedField = editedField;
 	}
 }
