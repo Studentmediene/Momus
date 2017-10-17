@@ -50,7 +50,8 @@ module.exports = function (grunt) {
                     {
                         dot: true,
                         src: [
-                            '.tmp'
+                            '.tmp',
+                            app + '/style/*.css.map'
                         ]
                     }
                 ]
@@ -69,21 +70,21 @@ module.exports = function (grunt) {
                 files: {
                     src: [
                         dist + '/js/{,*/}*.js',
-                        dist + '/css/!(editor).css' // all css-files except the editor.css
+                        dist + '/style/!(editor).css' // all css-files except the editor.css
                     ]
                 }
             }
         },
         useminPrepare: {
             html: app + '/index.html',
-//            css: app + 'css/**',
+            css: app + '/style/*.css',
             options: {
                 dest: dist
             }
         },
         usemin: {
             html: [dist + '/{,*/}*.html'],
-            css: [dist + '/css/{,*/}*.css'],
+            css: [dist + '/style/{,*/}*.css'],
             options: {
                 dirs: [dist]
             }
@@ -116,7 +117,6 @@ module.exports = function (grunt) {
                             'images/**',
                             'partials/**',
                             'index.html'
-                            
                         ]
                     }
                 ]
@@ -155,7 +155,7 @@ module.exports = function (grunt) {
                         expand: true,
                         cwd: app + '/libs/select2',
                         src: ['*.png', '*.gif'],
-                        dest: dist + '/css'
+                        dest: dist + '/style'
                     }
                 ]
             },
@@ -163,9 +163,9 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: app + '/css/',
+                        cwd: app + '/style/',
                         src: ['editor.css'],
-                        dest: dist + '/css'
+                        dest: dist + '/style'
                     }
                 ]
             },
@@ -204,6 +204,18 @@ module.exports = function (grunt) {
                 ]
             }
         },
+        sass: {
+            options: {
+                sourceMap: true,
+                outputStyle: 'expanded'
+            },
+            dist: {
+                files: {
+                    'src/main/webapp/app/style/app.css': app + '/style/app.scss',
+                    'src/main/webapp/app/style/editor.css': app + '/style/editor.scss'
+                }
+            }
+        },
         karma: {
             unit: {
                 configFile: 'src/main/webapp/test/config/karma.conf.js',
@@ -226,7 +238,7 @@ module.exports = function (grunt) {
                 }
             },
             css: {
-                files: [app + '/css/**/*.css'],
+                files: [app + '/style/**/*.scss'],
                 tasks: ['devBuild'],
                 options: {
                     spawn: true,
@@ -244,6 +256,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'clean:dist',
+        'sass',
         'useminPrepare',
         'concat',
         'browserify:dist',
@@ -258,6 +271,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('devBuild', [
         'clean:dist',
+        'sass',
         'useminPrepare',
         'concat',
         'browserify:dist',
