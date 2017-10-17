@@ -18,7 +18,7 @@
 
 angular.module('momusApp.controllers')
     .controller('NavbarCtrl', function ($scope, $location, PersonService, $http, MessageModal, $rootScope, $window) {
-        PersonService.getCurrentUser().success(function(user) {
+        PersonService.getCurrentUser().then(function(user) {
             $scope.user = user;
         });
 

@@ -21,11 +21,11 @@ angular.module('momusApp.services')
             //Sets the home page to the page stored for the logged in user
             setLanding: function(){
                 var currentRoute = $location.path(); //Get the current route, to redirect after getting landing
-                PersonService.getLandingPage().success(function(data){
-                    if(data === null || data === ""){
+                PersonService.getLandingPage().then(function(data){
+                    if(data.data === null || data.data === ""){
                         return;
                     }
-                    var landing = data.page;
+                    var landing = data.data.page;             
                     $route.routes[null] = angular.extend(
                         {
                             redirectTo: '/' + landing,

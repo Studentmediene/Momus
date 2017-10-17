@@ -31,45 +31,44 @@ angular.module('momusApp.controllers')
         // Latest user articles
 
         $scope.loadingArticles = true;
-        PersonService.getCurrentUser().success(function(user){
-            $scope.user = user;
-            ArticleService.search({persons: [user.id], page_size: 9}).success(function (articles) {
+        PersonService.getCurrentUser().then(function(data){
+            $scope.user = data.data;
+            ArticleService.search({persons: [$scope.user.id], page_size: 9}).then(function (data) {
                 $scope.loadingArticles = false;
-                $scope.myArticles = articles;
+                $scope.myArticles = data.data;
                 if($scope.myArticles.length <= 0 ){
                     $scope.noArticles = true;
                 }
             });
         });
 
-
         // Recently viewed articles
 
         $scope.recentArticles = ViewArticleService.getRecentViews();
         if($scope.recentArticles){
             $scope.loadingRecent = true;
-            ArticleService.getMultiple($scope.recentArticles).success(function(data){
+            ArticleService.getMultiple($scope.recentArticles).then(function(data){
                 $scope.loadingRecent = false;
-                $scope.recentArticleInfo = data;
+                $scope.recentArticleInfo = data.data;
             });
         }
 
         $scope.orderRecentArticles = function(item){
-            return $scope.recentArticles.indexOf(item.id.toString());
+            return [$scope.recentArticles.indexOf(item.id.toString())];
         };
 
 
         // Favorite section
 
         $scope.loadingFavorites = true;
-        FavouriteSectionService.getFavouriteSection().success(function(data){
-            $scope.favouriteSection = data;
+        FavouriteSectionService.getFavouriteSection().then(function(data){
+            $scope.favouriteSection = data.data;
             searchForArticlesFromFavoriteSection();
         });
 
         var searchForArticlesFromFavoriteSection = function(){
             if($scope.favouriteSection.section){
-                ArticleService.search({section: $scope.favouriteSection.section.id, page_size: 9}).success(function(articles){
+                ArticleService.search({section: $scope.favouriteSection.section.id, page_size: 9}).then(function(articles){
                     $scope.favSectionArticles = articles;
                     $scope.loadingFavorites = false;
                 });
@@ -79,14 +78,14 @@ angular.module('momusApp.controllers')
         };
 
         $scope.updateFavouriteSection = function(){
-            FavouriteSectionService.updateFavouriteSection($scope.favouriteSection).success(function (data){
-                $scope.favouriteSection = data;
+            FavouriteSectionService.updateFavouriteSection($scope.favouriteSection).then(function (data){
+                $scope.favouriteSection = data.data;
                 searchForArticlesFromFavoriteSection();
             });
         };
 
-        ArticleService.getSections().success(function (data) {
-            $scope.sections = data;
+        ArticleService.getSections().then(function (data) {
+            $scope.sections = data.data;
         });
 
 
@@ -94,15 +93,15 @@ angular.module('momusApp.controllers')
 
         $scope.noteRules = noteParserRules;
 
-        NoteService.getNote().success(function (data) {
+        NoteService.getNote().then(function (data) {
             $scope.note = data;
             $scope.unedited = angular.copy(data);
         });
 
         $scope.saveNote = function () {
             $scope.savingNote = true;
-            NoteService.updateNote($scope.note).success(function (data) {
-                $scope.note = data;
+            NoteService.updateNote($scope.note).then(function (data) {
+                $scope.note = data.data;
                 $scope.unedited = angular.copy(data);
                 $scope.savingNote = false;
             });

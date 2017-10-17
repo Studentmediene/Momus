@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $modal, $templateRequest, $route, $window, uiSortableMultiSelectionMethods, $q, Publication, Page) {
+    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $uibModal, $templateRequest, $route, $window, uiSortableMultiSelectionMethods, $q, Publication, Page) {
         var vm = this;
 
         vm.maxNewPages = 100;
@@ -142,7 +142,7 @@ angular.module('momusApp.controllers')
         }
 
         function createArticle(page){
-            var modal = $modal.open({
+            var modal = $uibModal.open({
                 templateUrl: 'partials/article/createArticleModal.html',
                 controller: 'CreateArticleModalCtrl',
                 resolve: {
@@ -152,16 +152,17 @@ angular.module('momusApp.controllers')
                 }
             });
             modal.result.then(function(id){
-                ArticleService.getArticle(id).success(function(data){
-                    page.articles.push(data);
-                    vm.articles.push(data);
+                ArticleService.getArticle(id).then(function(data){
+                    const article = data.data;
+                    page.articles.push(article);
+                    vm.articles.push(article);
                 });
             });
         }
 
         function saveArticle(article){
             vm.loading = true
-            ArticleService.updateMetadata(article).success(function(data){
+            ArticleService.updateMetadata(article).then(function(data){
                 vm.loading = false
             });
         }
@@ -212,8 +213,8 @@ angular.module('momusApp.controllers')
 
         function updateDispSize(){
             var constantArticleSize = 320;
-            var constantDispSize = constantArticleSize + 220;
-            var dispWidth = angular.element(document.getElementById("disposition")).context.clientWidth;
+            var constantDispSize = constantArticleSize + 220;       
+            var dispWidth = angular.element(document.getElementById("disposition"))[0].clientWidth;
             //Must divide rest of width between journalists, photographers, photo status and comment.
             var widthLeft = dispWidth - constantDispSize;
             var shareParts = {
