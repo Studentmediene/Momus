@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.services')
-    .service('MessageModal', function($modal){
+    .service('MessageModal', function($uibModal){
 
         function showModal(color, heading, content, callback) {
             var config = {
@@ -30,25 +30,25 @@ angular.module('momusApp.services')
                 '<div class="modal-footer" style="margin-top: 0px">' +
                 '<button type="submit" class="btn btn-default" ng-click="closeAction()">Ok</button> ' +
                 '</div>\n',
-                controller: ['$scope', '$modalInstance', function($scope, $modalInstance) {
+                controller: ['$scope', '$modalInstance', function($scope, $uibModalInstance) {
                     $scope.content = content;
                     $scope.color = color;
                     $scope.heading = heading;
 
                     $scope.closeAction = function() {
-                        $modalInstance.close();
+                        $uibModalInstance.close();
 
                         if (callback) {
                             callback();
                         }
                     };
 
-                    $modalInstance.result.then(); //This must be here so the modal can be closed by clicking outside it
+                    $uibModalInstance.result.then(); //This must be here so the modal can be closed by clicking outside it
 
                 }]
 
             };
-            $modal.open(config);
+            $uibModal.open(config);
         }
 
 

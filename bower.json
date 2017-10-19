@@ -8,7 +8,7 @@
     "angular-resource": "~1.4.0",
     "bootstrap": "3.2.0",
     "components-font-awesome": "4.5.0",
-    "wysihtml5": "https://raw.github.com/xing/wysihtml5/master/dist/wysihtml5-0.4.0pre.min.js",
+    "wysihtml": "^0.5.5",
     "angular-ui-select2": "0.0.5",
     "select2-bootstrap3-css": "https://raw.githubusercontent.com/t0m/select2-bootstrap-css/bootstrap3/select2-bootstrap.css",
     "select2": "3.4.6",
