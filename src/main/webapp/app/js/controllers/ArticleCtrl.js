@@ -37,21 +37,21 @@ angular.module('momusApp.controllers')
             PersonService.addPersonsToArray($scope.persons, $scope.article.photographers);
         });
 
-        ArticleService.getTypes().success(function (data) {
-            $scope.types = data;
+        ArticleService.getTypes().then(function (data) {
+            $scope.types = data.data;
         });
 
-        ArticleService.getStatuses().success(function (data) {
-            $scope.statuses = data;
+        ArticleService.getStatuses().then(function (data) {
+            $scope.statuses = data.data;
         });
 
-        ArticleService.getReviews().success(function(data){
-            $scope.reviewOptions = data;
+        ArticleService.getReviews().then(function(data){
+            $scope.reviewOptions = data.data;
             $scope.loading--;
         });
 
-        ArticleService.getSections().success(function (data) {
-            $scope.sections = data;
+        ArticleService.getSections().then(function (data) {
+            $scope.sections = data.data;
         });
 
 
@@ -61,9 +61,10 @@ angular.module('momusApp.controllers')
         /* note panel */
         $scope.saveNote = function () {
             $scope.savingNote = true;
-            ArticleService.updateNote($scope.article).success(function (data) {
-                $scope.article.note = data.note;
-                $scope.unedited.note = data.note;
+            ArticleService.updateNote($scope.article).then(function (data) {
+                const note = data.data.note;
+                $scope.article.note = note;
+                $scope.unedited.note = note;
                 $scope.savingNote = false;
             });
         };
@@ -79,11 +80,12 @@ angular.module('momusApp.controllers')
 
         $scope.saveMeta = function() {
             $scope.savingMeta = true;
-            ArticleService.updateMetadata($scope.metaEditing).success(function(data) {
+            ArticleService.updateMetadata($scope.metaEditing).then(function(data) {
                 //data.content = $scope.article.content;
-                data.note = $scope.article.note;
-                $scope.article = data;
-                $scope.unedited = angular.copy(data);
+
+                data.data.note = $scope.article.note;
+                $scope.article = data.data;
+                $scope.unedited = angular.copy(data.data);
                 $scope.savingMeta = false;
                 $scope.metaEditMode = false;
 

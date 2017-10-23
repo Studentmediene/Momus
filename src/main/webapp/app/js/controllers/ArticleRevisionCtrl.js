@@ -22,16 +22,16 @@ angular.module('momusApp.controllers')
         $scope.diff = "";
         $scope.showDiff = false;
 
-        ArticleService.getRevisions($routeParams.id).success(function (data){
-            $scope.revisions = data;
+        ArticleService.getRevisions($routeParams.id).then(function (data){
+            $scope.revisions = data.data;
             $scope.current = data[0];
             if($scope.revisions.length > 1){
-                $scope.compare = [data[0].id,data[1].id];
+                $scope.compare = [data.data[0].id,data.data[1].id];
             }
         });
 
-        ArticleService.getArticle($routeParams.id).success(function (data){
-            $scope.article = data;
+        ArticleService.getArticle($routeParams.id).then(function (data){
+            $scope.article = data.data;
         });
 
         $scope.gotoRev = function(rev){
@@ -44,8 +44,8 @@ angular.module('momusApp.controllers')
         };
 
         $scope.getDiffs = function(){
-            ArticleService.getDiffs($scope.article.id, $scope.compare[0], $scope.compare[1]).success(function (data){
-                $scope.diff = data;
+            ArticleService.getDiffs($scope.article.id, $scope.compare[0], $scope.compare[1]).then(function (data){
+                $scope.diff = data.data;
             });
         };
 

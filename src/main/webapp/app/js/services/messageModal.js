@@ -30,7 +30,7 @@ angular.module('momusApp.services')
                 '<div class="modal-footer" style="margin-top: 0px">' +
                 '<button type="submit" class="btn btn-default" ng-click="closeAction()">Ok</button> ' +
                 '</div>\n',
-                controller: ['$scope', '$modalInstance', function($scope, $uibModalInstance) {
+                controller: ['$scope', '$uibModalInstance', function($scope, $uibModalInstance) {
                     $scope.content = content;
                     $scope.color = color;
                     $scope.heading = heading;
