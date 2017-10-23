@@ -8,6 +8,12 @@
     }
 }
 
+.attach-top-true {
+    position:fixed;
+    top:50px;
+    z-index:100;
+}
+
 .d-table {
     display: block;
 }

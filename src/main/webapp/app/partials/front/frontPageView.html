@@ -198,7 +198,7 @@
                             </td>
                         </tr>
                         <tr ng-repeat="article in recentArticleInfo | orderBy: orderRecentArticles : true">
-                            <td><i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i></td>
+                            <td><i ng-if="article.archived" class="fa fa-trash-o" uib-tooltip="Artikkelen er arkivert"></i></td>
                             <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
                             <td>{{article.content_length}}</td>
                             <td>
@@ -284,7 +284,7 @@
                     <h1 class="panel-title"><i class="fa fa-question-circle"></i> Tilfeldig tips
 
                         <div class="pull-right">
-                            <button class="btn btn-default btn-xs" ng-click="randomTip()" tooltip="Nytt tips">
+                            <button class="btn btn-default btn-xs" ng-click="randomTip()" uib-tooltip="Nytt tips">
                                 <i class="fa fa-refresh"></i>
                             </button>
                         </div>

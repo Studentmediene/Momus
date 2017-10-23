@@ -25,7 +25,7 @@
     <!-- Enable responsive features -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- build:css css/libs.css -->
+    <!-- build:css style/libs.css -->
     <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="libs/components-font-awesome/css/font-awesome.css">
     <link rel="stylesheet" href="libs/angular-ui-select/dist/select.css">
@@ -33,9 +33,8 @@
     <link rel="stylesheet" href="libs/select2-bootstrap-theme/dist/select2-bootstrap.css">
     <!-- endbuild -->
 
-    <!-- build:css css/main.css -->
-    <link rel="stylesheet" href="css/app.css"/>
-    <link rel="stylesheet" href="css/disposition.css"/>
+    <!-- build:css style/main.css -->
+    <link rel="stylesheet" href="style/app.css"/>
     <!-- endbuild -->
 </head>
 <body>
@@ -57,7 +56,11 @@
         <a class="navbar-brand" href="#">Momus</a>
     </div>
 
+<<<<<<< HEAD
     <div class="collapse navbar-collapse" id="navbar-collapse" data-toggle="collapse" data-target="#navbar-collapse.in">
+=======
+    <div class="collapse navbar-collapse" uib-collapse="isCollapsed" ng-click="isCollapsed = true">
+>>>>>>> develop
         <ul class="nav navbar-nav">
             <li ng-class="{active: isActive('/front%')}"><a href="#/front"><i class="fa fa-th-large"></i> Front</a></li>
             <li ng-class="{active: isActive('/disposisjon%')}"><a href="#/disposisjon"><i class="fa fa-file-text"></i> Disposisjon</a></li>
@@ -100,7 +103,7 @@
 <script src="libs/angular-chart.js/dist/angular-chart.js"></script>
 
 <!-- Include wysihtml5, the text editor -->
-<script src="libs/wysihtml5/index.js"></script>
+<script src="libs/wysihtml/dist/wysihtml-toolbar.min.js"></script>
 
 <!-- Include select and select2, the selectors -->
 <script src="libs/angular-ui-select/dist/select.js"></script>

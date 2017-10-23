@@ -36,5 +36,8 @@
   },
   "scripts": {
     "start": "concurrently \"mvn jetty:run\" \"grunt dev\""
+  },
+  "dependencies": {
+    "grunt-sass": "^2.0.0"
   }
 }
