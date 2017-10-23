@@ -2,6 +2,7 @@ package no.dusken.momus.config;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 import no.dusken.momus.exceptions.ExceptionHandler;
 import no.dusken.momus.mapper.HibernateAwareObjectMapper;
@@ -59,6 +60,7 @@ class ApplicationConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
+    @PostConstruct
     public SpringLiquibase liquibase() {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setDataSource(dataSource());
