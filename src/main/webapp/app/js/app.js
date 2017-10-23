@@ -30,6 +30,7 @@ angular.module('momusApp', [
         'momusApp.services',
         'momusApp.directives',
         'ngRoute',
+        'ngResource',
         'ui.select',
         'ui.select2',
         'ui.bootstrap',
@@ -73,7 +74,8 @@ angular.module('momusApp', [
             {
                 templateUrl: 'partials/publication/publicationView.html',
                 controller: 'PublicationCtrl',
-                title: "Utgaver"
+                title: 'Utgaver',
+                controllerAs: 'vm'
             }
         )
 
@@ -82,14 +84,16 @@ angular.module('momusApp', [
             {
                 templateUrl: 'partials/disposition/dispositionView.html',
                 controller: 'DispositionCtrl',
-                title: "Disposisjon"
+                title: 'Disposisjon',
+                controllerAs: 'vm'
             }
         )
             .when('/disposisjon',
             {
                 templateUrl:'partials/disposition/dispositionView.html',
                 controller:'DispositionCtrl',
-                title: "Disposisjon"
+                title: 'Disposisjon',
+                controllerAs: 'vm'
             }
         )
 

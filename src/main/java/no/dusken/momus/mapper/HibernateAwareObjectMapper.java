@@ -16,9 +16,11 @@
 
 package no.dusken.momus.mapper;
 
+import java.text.SimpleDateFormat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 
 /**
  * An ObjectMapper that registers a HibernateModule, so a JSON serialization
@@ -29,6 +31,6 @@ public class HibernateAwareObjectMapper extends ObjectMapper {
     public HibernateAwareObjectMapper() {
         // converts lastName to last_name and the other way
         setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
-        registerModule(new Hibernate4Module());
+        registerModule(new Hibernate5Module());
     }
 }

@@ -44,4 +44,10 @@ angular.module('momusApp.services')
 
             return $sce.trustAsHtml(html);
         };
-    }]);
+    }])
+    .filter('startFrom', function() {
+        return function(list, start){
+            start = +start;
+            return list.slice(start);
+        }
+    });

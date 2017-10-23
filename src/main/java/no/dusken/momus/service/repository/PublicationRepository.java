@@ -20,7 +20,9 @@ import no.dusken.momus.model.Publication;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PublicationRepository extends JpaRepository<Publication, Long> {
     public List<Publication> findAllByOrderByReleaseDateDesc();
 }

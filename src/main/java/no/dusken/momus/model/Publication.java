@@ -17,6 +17,7 @@
 package no.dusken.momus.model;
 
 import javax.persistence.*;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -36,7 +37,7 @@ public class Publication {
     @OneToMany(mappedBy = "publication", fetch = FetchType.LAZY)
     private Set<Article> articles;
 
-    @OneToMany(mappedBy = "publication", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "publication")
     private List<Page> pages;
 
     public Publication() {
@@ -82,6 +83,18 @@ public class Publication {
 
     public void setPages(List<Page> pages) {
         this.pages = pages;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Publication publication = (Publication) o;
+
+        if (!id.equals(publication.id)) return false;
+
+        return true;
     }
 
     @Override

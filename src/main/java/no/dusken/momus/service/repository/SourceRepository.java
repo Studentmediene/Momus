@@ -22,7 +22,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface SourceRepository extends JpaRepository<Source, Long> {
 
     @Query("select s from Source s join s.tags t where t.tag = (:tag)")

@@ -6,6 +6,15 @@
 atlassian-ide-plugin.xml
 npm-debug.log
 
+.settings
+.classpath
+.project
+org.eclipse*
+.vscode/
+*.swo
+*.swp
+.vscode/
+
 log/
 database/
 node_modules/
@@ -16,3 +25,7 @@ src/main/resources/local.properties
 # build folders
 target/
 src/main/webapp/dist/
+bin/
+
+**/*.css
+**/*.css.map

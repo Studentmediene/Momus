@@ -35,8 +35,14 @@ public class ArticleReview {
     public ArticleReview() {
     }
 
+    public ArticleReview(Long id, String name, String color) {
+        this(name, color);
+        this.id = id;
+    }
+
     public ArticleReview(String name, String color) {
         this.name = name;
+        this.color = color;
     }
 
     public Long getId() {

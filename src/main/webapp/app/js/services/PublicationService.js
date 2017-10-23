@@ -19,58 +19,35 @@
 angular.module('momusApp.services')
     .service('PublicationService', function ($http) {
         return {
-            getAll: function () {
-                return $http.get('/api/publication');
-            },
-            getById: function(id) {
-                return $http.get('/api/publication/' + id);
-            },
-            createNew: function(publication) {
-                return $http.post('/api/publication', publication);
-            },
-            updateMetadata: function(publication) {
-                return $http.put('/api/publication/metadata', publication);
-            },
-            getActive: function() {
-                return $http.get('/api/publication/active');
-            },
-            getPages: function(id) {
-                return $http.get('/api/publication/pages/'+id);
-            },
-            createPage: function(page) {
-                return $http.post('/api/publication/pages/', page);
-            },
-            deletePage: function(id) {
-                return $http.delete('/api/publication/pages/delete/' + id);
-            },
-            generateDisp: function(id) {
-                return $http.get('/api/publication/pages/generate/'+id);
-            },
-            getLayoutStatuses: function(){
-                return $http.get('/api/publication/layoutstatus');
-            },
             getStatusCounts: function(id){
-                return $http.get('/api/article/statuscount/' + id);
-            },
-            getLayoutStatusCounts: function(id){
-                return $http.get('/api/publication/statuscount/' + id);
+                return $http.get('/api/article/statuscount?publicationId=' + id);
             },
             getReviewStatusCounts: function(id){
-                return $http.get('/api/article/reviewstatuscount/' + id);
-            },
-            linkPagesToArticles: function(pages, articles){
-                for(var i = 0; i < pages.length; i++){
-                    var page = pages[i];
-                    for(var j = 0; j < page.articles.length; j++){
-                        var article = page.articles[j];
-                        for(var k = 0; k < articles.length; k++){
-                            if(articles[k].id === article.id){
-                                pages[i].articles[j] = articles[k];
-                                break;
-                            }
-                        }
-                    }
-                }
+                return $http.get('/api/article/reviewstatuscount?publicationId=' + id);
             }
         };
+    })
+    .factory('Publication', function($resource) {
+        var baseUrl = '/api/publications';
+
+        return $resource(baseUrl + '/:id', null,
+            {
+                active: { method: 'GET', url: baseUrl + '/active'},
+                update: { method: 'PUT'},
+                layoutStatuses: { method: 'GET', url: baseUrl + '/layoutstatuses', isArray: true}
+            });
+    })
+    .factory('Page', function($resource) {
+        var baseUrl = '/api/publications/:pubid/pages';
+
+        return $resource(baseUrl + '/:pageid', null,
+            {
+                save: { method: 'POST', isArray: true},
+                saveMultiple: { method: 'POST', isArray:true, url: baseUrl + '/list'},
+                update: { method: 'PUT', isArray: true},
+				updateMeta: {method: 'PATCH', isArray: false},
+                updateMultiple: { method: 'PUT', isArray: true, url: baseUrl + '/list'},
+                layoutStatusCounts: { method: 'GET', url: baseUrl + '/layoutstatuscounts'},
+                delete: { method: 'DELETE', isArray: true}
+            });
     });

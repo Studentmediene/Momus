@@ -1,0 +1,122 @@
+#disposition{
+    font-size: 85%;
+}
+/* Scroll on disposition on small screens */
+@media (max-width: 992px) {
+    #disposition{
+        overflow-x: scroll;
+    }
+}
+
+.attach-top-true {
+    position:fixed;
+    top:50px;
+    z-index:100;
+}
+
+.d-table {
+    display: block;
+}
+
+.d-table-header {
+    display: table-cell;
+}
+
+.d-table-row {
+    display: table-row;
+}
+
+.d-table-cell {
+    display: table-cell;
+    vertical-align: top;
+}
+
+.disposition-table > div > .d-table-row > .d-table-cell {
+    border-top: solid #CCCCCC 1px;
+    border-right: solid #CCCCCC 1px;
+}
+
+.disposition-table > div > .d-table-row > .d-table-cell:not(.article-cell) {
+    padding: 3px;
+}
+
+/* Should not draw border on first child as it is drawn by the outer table */
+.article-table > .d-table-row:not(:first-child) > .d-table-cell {
+    border-top: solid #ececec 1px;
+}
+
+.article-table > .d-table-row > .d-table-cell {
+    padding: 5px;
+    word-wrap:break-word;
+}
+
+.disp-break-word {
+    word-wrap:break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
+.disp-dropdown {
+    background: rgba(255,255,255,0.5);
+    outline: 0;
+    border: 1px solid #CCCCCC;
+}
+
+/* Styling for selected elements in disp */
+.ui-select-multiple input.ui-select-search {
+    width: 100% !important;
+}
+
+.ui-sortable-selected .handle {
+    border-left:3px solid #F00;
+}
+
+.ui-sortable-helper {
+    opacity:0.9;
+}
+
+.disp-placeholder {
+    background-color: #99ff99;
+}
+
+.handle{
+    text-align: center;
+    cursor: move;
+}
+
+.pagenum{
+    width: 20px;
+    min-width: 20px;
+    max-width: 20px;
+}
+
+.section{
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
+}
+.status{
+    width: 120px;
+    min-width: 120px;
+    max-width: 120px;
+}
+
+.review{
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
+}
+
+.layout{
+    width: 80px;
+    min-width: 80px;
+    max-width: 80px;
+}
+
+.button{
+    width:30px;
+    min-width: 30px;
+    max-width: 30px;
+}

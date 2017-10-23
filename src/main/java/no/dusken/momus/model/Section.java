@@ -35,6 +35,11 @@ public class Section {
 
     public Section(){}
 
+    public Section(Long id, String name) {
+        this(name);
+        this.id = id;
+    }
+
     public Section(String name) {
         this.name = name;
     }

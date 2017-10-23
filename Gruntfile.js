@@ -27,6 +27,8 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
     require('time-grunt')(grunt);
 
+    grunt.loadNpmTasks('grunt-contrib-watch')
+
     var dist = 'src/main/webapp/dist';
     var app = 'src/main/webapp/app';
 
@@ -48,7 +50,8 @@ module.exports = function (grunt) {
                     {
                         dot: true,
                         src: [
-                            '.tmp'
+                            '.tmp',
+                            app + '/style/*.css.map'
                         ]
                     }
                 ]
@@ -67,23 +70,36 @@ module.exports = function (grunt) {
                 files: {
                     src: [
                         dist + '/js/{,*/}*.js',
-                        dist + '/css/!(editor).css' // all css-files except the editor.css
+                        dist + '/style/!(editor).css' // all css-files except the editor.css
                     ]
                 }
             }
         },
         useminPrepare: {
             html: app + '/index.html',
-//            css: app + 'css/**',
+            css: app + '/style/*.css',
             options: {
                 dest: dist
             }
         },
         usemin: {
             html: [dist + '/{,*/}*.html'],
-            css: [dist + '/css/{,*/}*.css'],
+            css: [dist + '/style/{,*/}*.css'],
             options: {
                 dirs: [dist]
+            }
+        },
+        browserify: {
+            dist: {
+                files: {
+                    '.tmp/concat/js/main.js': '.tmp/concat/js/main.js'
+                },
+                options: {
+                    transform: [['babelify', { presets: ['es2015', 'stage-2'] }]],
+                    browserifyOptions: {
+                        debug: true
+                    }
+                }
             }
         },
 
@@ -139,7 +155,7 @@ module.exports = function (grunt) {
                         expand: true,
                         cwd: app + '/libs/select2',
                         src: ['*.png', '*.gif'],
-                        dest: dist + '/css'
+                        dest: dist + '/style'
                     }
                 ]
             },
@@ -147,9 +163,9 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: app + '/css/',
+                        cwd: app + '/style/',
                         src: ['editor.css'],
-                        dest: dist + '/css'
+                        dest: dist + '/style'
                     }
                 ]
             },
@@ -160,6 +176,18 @@ module.exports = function (grunt) {
                         cwd: app + '/libs/zeroclipboard/dist',
                         src: ['ZeroClipboard.swf'],
                         dest: dist + '/js'
+                    }
+                ]
+            },
+            scripts: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: '.tmp/concat/js',
+                        dest: dist + '/js',
+                        src: [
+                            '*.js'
+                        ]
                     }
                 ]
             }
@@ -176,12 +204,47 @@ module.exports = function (grunt) {
                 ]
             }
         },
+        sass: {
+            options: {
+                sourceMap: true,
+                outputStyle: 'expanded'
+            },
+            dist: {
+                files: {
+                    'src/main/webapp/app/style/app.css': app + '/style/app.scss',
+                    'src/main/webapp/app/style/editor.css': app + '/style/editor.scss'
+                }
+            }
+        },
         karma: {
             unit: {
                 configFile: 'src/main/webapp/test/config/karma.conf.js',
                 singleRun: true
             }
-        }
+        },
+        watch: {
+            scripts: {
+              files: [app + '/js/**/*.js'],
+              tasks: ['devBuild'],
+              options: {
+                spawn: true,
+              },
+            },
+            html: {
+                files: [app + '/partials/**/*.html'],
+                tasks: ['devBuild'],
+                options: {
+                    spawn: true,
+                }
+            },
+            css: {
+                files: [app + '/style/**/*.scss'],
+                tasks: ['devBuild'],
+                options: {
+                    spawn: true,
+                }
+            }
+          },
     });
 
     grunt.registerTask('test', [
@@ -193,8 +256,10 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'clean:dist',
+        'sass',
         'useminPrepare',
         'concat',
+        'browserify:dist',
         'copy',
         'ngAnnotate',
         'cssmin',
@@ -202,6 +267,25 @@ module.exports = function (grunt) {
         'rev',
         'usemin',
         'clean:tmp'
+    ]);
+
+    grunt.registerTask('devBuild', [
+        'clean:dist',
+        'sass',
+        'useminPrepare',
+        'concat',
+        'browserify:dist',
+        'copy',
+        'ngAnnotate',
+        'cssmin',
+        'rev',
+        'usemin',
+        'clean:tmp'        
+    ]);
+
+    grunt.registerTask('dev', [
+        'devBuild',
+        'watch'
     ]);
 
     grunt.registerTask('default', [

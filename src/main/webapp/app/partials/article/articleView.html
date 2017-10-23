@@ -59,7 +59,7 @@
             </tr>
         </table>
 
-        <div style="column-count: 2; -moz-column-count:2" ng-bind-html="article.content | trustHtml"></div>
+        <div style="column-count: 2; -moz-column-count:2" ng-bind-html="articleContent | trustHtml"></div>
 
     </div>
 
@@ -89,11 +89,11 @@
                     Historikk
                 </a>
 
-                <a href="/api/article/{{article.id}}/export" class="btn btn-primary"><i class="fa fa-file-text-o"></i>
+                <a href="/api/article/{{article.id}}/indesignfile" class="btn btn-primary"><i class="fa fa-file-text-o"></i>
                     InDesign fil
                 </a>
 
-                <span tooltip="Kopier sitatsjekk-tekst">
+                <span uib-tooltip="Kopier sitatsjekk-tekst">
                     <a zc-btn="quoteCheck" button-loader="copying" loading-text="Kopierer" completed-text="Kopiert"
                        ng-click=""
                        class="btn btn-primary"><i class="fa fa-quote-right"></i>
@@ -108,7 +108,7 @@
                 </span>
 
                 <span ng-show="article.archived">
-                    <a ng-click="restoreArticle()" class="btn btn-success" tooltip="Gjenopprett artikkelen så den vil vises i søk"><i class="fa fa-plus" ></i>
+                    <a ng-click="restoreArticle()" class="btn btn-success" uib-tooltip="Gjenopprett artikkelen så den vil vises i søk"><i class="fa fa-plus" ></i>
                         Gjenopprett
                     </a>
                 </span>
@@ -130,7 +130,7 @@
                     </h1>
                 </div>
                 <div class="panel-body">
-                    <div class="articleContent" ng-bind-html="article.content | trustHtml">
+                    <div class="articleContent" ng-bind-html="articleContent | trustHtml">
 
                     </div>
                     <div class="text-right">
@@ -285,7 +285,7 @@
                                 </p>
                             </div>
                             <div class="col-sm-8" ng-show="metaEditMode">
-                                <input class="form-control input-sm" type="text" ng-model="metaEditing.external_author" tooltip="Separer navn med komma.">
+                                <input class="form-control input-sm" type="text" ng-model="metaEditing.external_author" uib-tooltip="Separer navn med komma.">
                             </div>
                         </div>
                         <hr class="divider">
@@ -336,7 +336,7 @@
                                 </p>
                             </div>
                             <div class="col-sm-8" ng-show="metaEditMode">
-                                <input class="form-control input-sm" type="text" ng-model="metaEditing.external_photographer" tooltip="Separer navn med komma.">
+                                <input class="form-control input-sm" type="text" ng-model="metaEditing.external_photographer" uib-tooltip="Separer navn med komma.">
                             </div>
                         </div>
                         <hr class="divider">

@@ -28,7 +28,7 @@ angular.module('momusApp.directives').
                 length: '@',
                 text: '='
             },
-            template: '<span ng-if="showTooltip">\n    <span class="hidden-print" tooltip="{{fullText}}" style="border-bottom: 1px dotted #ccc;">{{shortenedText}}</span>\n    <span class="visible-print">{{fullText}}</span>\n</span>\n<span ng-if="!showTooltip">{{fullText}}</span> ',
+            template: '<span ng-if="showTooltip">\n    <span class="hidden-print" uib-tooltip="{{fullText}}" style="border-bottom: 1px dotted #ccc;">{{shortenedText}}</span>\n    <span class="visible-print">{{fullText}}</span>\n</span>\n<span ng-if="!showTooltip">{{fullText}}</span> ',
             link: function (scope, elm, attrs) {
                 var setText = function(){
                     var fullText = scope.text || "";

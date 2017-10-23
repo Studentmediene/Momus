@@ -19,7 +19,9 @@ package no.dusken.momus.service.repository;
 import no.dusken.momus.model.LandingPage;
 import no.dusken.momus.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface LandingPageRepository extends JpaRepository<LandingPage, Long> {
 
     public LandingPage findByOwner(Person person);

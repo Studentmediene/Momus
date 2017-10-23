@@ -23,8 +23,11 @@ angular.module('momusApp.services')
             getArticle: function (id) {
                 return $http.get('/api/article/' + id);
             },
+            getContent: function (id) {
+                return $http.get('/api/article/' + id + '/content');
+            },
             getMultiple: function(ids) {
-                return $http.post('/api/article/multiple', ids);
+                return $http.get('/api/article/multiple?' + ids.map(function(id){return "id=" + id}).join("&"));
             },
             search: function (searchObject) {
                 return $http.post('/api/article/search', searchObject);
@@ -35,30 +38,23 @@ angular.module('momusApp.services')
             getDiffs: function (articleId, revId1, revId2) {
                 return $http.get('/api/article/' + articleId + '/revisions/' + revId1 + '/' + revId2);
             },
-            getArticlesInPublication: function(id){
-                return $http.get('/api/article/publication/' + id);
-            },
 
             // Editing stuff
             updateMetadata: function (article) {
-                return $http.put('/api/article/metadata', article);
-            },
-
-            updateContent: function (article) {
-                return $http.put('/api/article/content', article);
+                return $http.patch('/api/article/metadata', article);
             },
 
             updateNote: function (article) {
-                return $http.put('/api/article/note', article);
+                return $http.patch('/api/article/' + article.id + '/note', JSON.stringify(article.note));
             },
             createNewArticle: function (article) {
                 return $http.post('/api/article', article);
             },
             deleteArticle: function(article){
-                return $http.post('/api/article/delete', article);
+                return $http.patch('/api/article/' + article.id + '/archived?archived=true');
             },
             restoreArticle: function(article){
-                return $http.post('/api/article/restore', article);
+                return $http.patch('/api/article/' + article.id + '/archived?archived=false');
             },
 
 
