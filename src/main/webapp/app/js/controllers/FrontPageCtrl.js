@@ -62,14 +62,18 @@ angular.module('momusApp.controllers')
 
         $scope.loadingFavorites = true;
         FavouriteSectionService.getFavouriteSection().then(function(data){
-            $scope.favouriteSection = data.data;
+            var favouriteSection = data.data;
+            if(data.data == "") {
+                favouriteSection = {};
+            }
+            $scope.favouriteSection =favouriteSection;
             searchForArticlesFromFavoriteSection();
         });
 
         var searchForArticlesFromFavoriteSection = function(){
             if($scope.favouriteSection.section){
-                ArticleService.search({section: $scope.favouriteSection.section.id, page_size: 9}).then(function(articles){
-                    $scope.favSectionArticles = articles;
+                ArticleService.search({section: $scope.favouriteSection.section.id, page_size: 9}).then(function(data){
+                    $scope.favSectionArticles = data.data;
                     $scope.loadingFavorites = false;
                 });
             }else{
