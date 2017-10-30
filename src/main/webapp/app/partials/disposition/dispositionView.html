@@ -88,7 +88,13 @@
                                 <div class="d-table-row" ng-style="{background: vm.pageColor(page)}" style="margin: 0px; padding: 0px">
                                     <!--Dropdown-arrow-->
                                     <div class="d-table-cell" ng-style="vm.columnWidths.dropdown" >
-                                        <button data-target="#{{page.page_nr}}-{{article.id}}-button-line" data-toggle="collapse" class="btn btn-primary btn-xs" type="button"><i class="fa fa-caret-down"></i></button>
+                                        <button 
+                                            data-target="#{{page.page_nr}}-{{article.id}}-button-line" 
+                                            data-toggle="collapse" 
+                                            class="btn btn-primary btn-xs" 
+                                            type="button">
+                                            <i class="fa fa-caret-down"></i>
+                                        </button>
                                     </div>
                                     <!--Name-->
                                     <div class="d-table-cell" ng-style="vm.columnWidths.name">
@@ -175,11 +181,15 @@
                                     </div>
                                 </div>
                                 <div class="collapse extra-button-line" id="{{page.page_nr}}-{{article.id}}-button-line">
-                                    <a href="/api/article/{{article.id}}/indesignfile" class="btn btn-primary"><i class="fa fa-file-text-o"></i>InDesign fil</a>
-                                    <a href="https://docs.google.com/document/d/{{article.google_drive_id}}/edit" target="_blank" class="btn btn-success">
-                                        <span class="fa fa-pencil"></span>
-                                        Rediger i Google Docs
-                                    </a>
+                                    <div style="margin: 5px">
+                                        <a href="/api/article/{{article.id}}/indesignfile" class="btn btn-primary btn-xs">
+                                            <i class="fa fa-file-text-o"></i>InDesign fil
+                                        </a>
+                                        <a href="https://docs.google.com/document/d/{{article.google_drive_id}}/edit" target="_blank" class="btn btn-success btn-xs">
+                                            <span class="fa fa-pencil"></span>
+                                            Rediger i Google Docs
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
