@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope, $q, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, PublicationService, $location, $filter) {
+    .controller('FrontPageCtrl', function ($scope, $q, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, Publication, Page, PublicationService, $location, $filter) {
 
         $scope.randomTip = function() {
             $scope.tip = TipAndNewsService.getRandomTip();
@@ -31,46 +31,49 @@ angular.module('momusApp.controllers')
         // Latest user articles
 
         $scope.loadingArticles = true;
-        PersonService.getCurrentUser().success(function(user){
-            $scope.user = user;
-            ArticleService.search({persons: [user.id], page_size: 9}).success(function (articles) {
+        PersonService.getCurrentUser().then(function(data){
+            $scope.user = data.data;
+            ArticleService.search({persons: [$scope.user.id], page_size: 9}).then(function (data) {
                 $scope.loadingArticles = false;
-                $scope.myArticles = articles;
+                $scope.myArticles = data.data;
                 if($scope.myArticles.length <= 0 ){
                     $scope.noArticles = true;
                 }
             });
         });
 
-
         // Recently viewed articles
 
         $scope.recentArticles = ViewArticleService.getRecentViews();
         if($scope.recentArticles){
             $scope.loadingRecent = true;
-            ArticleService.getMultiple($scope.recentArticles).success(function(data){
+            ArticleService.getMultiple($scope.recentArticles).then(function(data){
                 $scope.loadingRecent = false;
-                $scope.recentArticleInfo = data;
+                $scope.recentArticleInfo = data.data;
             });
         }
 
         $scope.orderRecentArticles = function(item){
-            return $scope.recentArticles.indexOf(item.id.toString());
+            return [$scope.recentArticles.indexOf(item.id.toString())];
         };
 
 
         // Favorite section
 
         $scope.loadingFavorites = true;
-        FavouriteSectionService.getFavouriteSection().success(function(data){
-            $scope.favouriteSection = data;
+        FavouriteSectionService.getFavouriteSection().then(function(data){
+            var favouriteSection = data.data;
+            if(data.data == "") {
+                favouriteSection = {};
+            }
+            $scope.favouriteSection =favouriteSection;
             searchForArticlesFromFavoriteSection();
         });
 
         var searchForArticlesFromFavoriteSection = function(){
             if($scope.favouriteSection.section){
-                ArticleService.search({section: $scope.favouriteSection.section.id, page_size: 9}).success(function(articles){
-                    $scope.favSectionArticles = articles;
+                ArticleService.search({section: $scope.favouriteSection.section.id, page_size: 9}).then(function(data){
+                    $scope.favSectionArticles = data.data;
                     $scope.loadingFavorites = false;
                 });
             }else{
@@ -79,14 +82,14 @@ angular.module('momusApp.controllers')
         };
 
         $scope.updateFavouriteSection = function(){
-            FavouriteSectionService.updateFavouriteSection($scope.favouriteSection).success(function (data){
-                $scope.favouriteSection = data;
+            FavouriteSectionService.updateFavouriteSection($scope.favouriteSection).then(function (data){
+                $scope.favouriteSection = data.data;
                 searchForArticlesFromFavoriteSection();
             });
         };
 
-        ArticleService.getSections().success(function (data) {
-            $scope.sections = data;
+        ArticleService.getSections().then(function (data) {
+            $scope.sections = data.data;
         });
 
 
@@ -94,15 +97,15 @@ angular.module('momusApp.controllers')
 
         $scope.noteRules = noteParserRules;
 
-        NoteService.getNote().success(function (data) {
+        NoteService.getNote().then(function (data) {
             $scope.note = data;
             $scope.unedited = angular.copy(data);
         });
 
         $scope.saveNote = function () {
             $scope.savingNote = true;
-            NoteService.updateNote($scope.note).success(function (data) {
-                $scope.note = data;
+            NoteService.updateNote($scope.note).then(function (data) {
+                $scope.note = data.data;
                 $scope.unedited = angular.copy(data);
                 $scope.savingNote = false;
             });
@@ -111,15 +114,13 @@ angular.module('momusApp.controllers')
 
         // Cake diagrams TODO (Could some of this be put into a service?)
 
-        PublicationService.getActive().success(function(data){
-            $scope.publication = data;
-
+        $scope.publication = Publication.active({}, function() {            
             $q.all([ PublicationService.getStatusCounts($scope.publication.id),ArticleService.getStatuses()]).then(function(data){
                 $scope.articlestatus = getStatusArrays(data[0].data, data[1].data);
             });
 
-            $q.all([ PublicationService.getLayoutStatusCounts($scope.publication.id),PublicationService.getLayoutStatuses()]).then(function(data){
-                $scope.layoutstatus = getStatusArrays(data[0].data, data[1].data);
+            $q.all([Page.layoutStatusCounts({pubid: $scope.publication.id}).$promise,Publication.layoutStatuses().$promise]).then(function(data){
+                $scope.layoutstatus = getStatusArrays(data[0], data[1]);
             });
 
             $q.all([ PublicationService.getReviewStatusCounts($scope.publication.id),ArticleService.getReviews()]).then(function(data){
@@ -134,6 +135,8 @@ angular.module('momusApp.controllers')
                 status.colors.push(statuses[i].color);
                 status.counts.push(counts[statuses[i].id]);
             }
+            status.colors = fixShortColorCodes(status.colors);
+
             return status;
         }
 
@@ -197,6 +200,16 @@ angular.module('momusApp.controllers')
 
         function promptCondition() {
             return $scope.unedited.content != $scope.note.content;
+        }
+
+        function fixShortColorCodes(colors){
+            return colors.map(function(color) {
+                if(color.length <= 4){
+                    return "#" + color.split("#")[1].split("").map(function(x){return x+x}).join("");
+                }else{
+                    return color;
+                }
+            });
         }
 
         $scope.$on('$destroy', function() {

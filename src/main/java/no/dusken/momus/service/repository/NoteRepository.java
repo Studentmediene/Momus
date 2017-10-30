@@ -19,7 +19,9 @@ package no.dusken.momus.service.repository;
 import no.dusken.momus.model.Note;
 import no.dusken.momus.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface NoteRepository extends JpaRepository<Note, Long> {
 
     public Note findByOwner(Person owner);

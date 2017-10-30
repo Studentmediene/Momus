@@ -16,72 +16,105 @@
 
 package no.dusken.momus.service;
 
+import no.dusken.momus.model.KeyValue;
+import no.dusken.momus.service.repository.KeyValueRepository;
 import no.dusken.momus.test.AbstractTestRunner;
+import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
+import static org.mockito.AdditionalAnswers.*;
 
 @Transactional
 public class KeyValueServiceTest extends AbstractTestRunner {
 
-    @Autowired
+    @InjectMocks
     KeyValueService keyValueService;
 
-    @Test
-    public void canSetAndRetrieveValue() {
-        keyValueService.setValue("My key", "This is my value");
+    @Mock
+    KeyValueRepository keyValueRepository;
 
-        String value = keyValueService.getValue("My key");
+    KeyValue keyValue1;
 
-        assertEquals("This is my value", value);
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+
+        keyValue1 = new KeyValue("DAKEY", "2342");
     }
 
     @Test
-    public void returnsLastSetValue() {
-        keyValueService.setValue("My key", "Value1");
-        keyValueService.setValue("My key", "Value2");
-        keyValueService.setValue("My key", "Value3");
+    public void testSetValueString() {
+        when(keyValueRepository.save(any(KeyValue.class))).then(returnsFirstArg());
 
-        String value = keyValueService.getValue("My key");
-        assertEquals("Value3", value);
+        keyValueService.setValue("Testing", "123");
+
+        verify(keyValueRepository, times(1)).save(any(KeyValue.class));
     }
 
     @Test
-    public void returnsDefaultValueIfNotSet() {
-        String value = keyValueService.getValue("My key", "Default");
+    public void testSetValueLong() {
+        KeyValueService keyValueServiceSpy = spy(keyValueService);
 
-        assertEquals("Default", value);
+        doNothing().when(keyValueServiceSpy).setValue(anyString(), anyString());
+
+        keyValueServiceSpy.setValue("Testing", 123);
+
+        verify(keyValueServiceSpy, times(1)).setValue("Testing", "123");
     }
 
     @Test
-    public void doesNotReturnDefaultValueIfSet() {
-        keyValueService.setValue("My key", "Super good value");
-        String value = keyValueService.getValue("My key", "Default");
+    public void testGetValue() {
+        when(keyValueRepository.findOne(anyString())).thenReturn(null);
+        when(keyValueRepository.findOne(keyValue1.getKey())).thenReturn(keyValue1);
 
-        assertEquals("Super good value", value);
+        String value;
+
+        //Existing no default
+        value = keyValueService.getValue(keyValue1.getKey());
+        assertEquals(value, keyValue1.getValue());
+
+        //Non existing no default
+        value = keyValueService.getValue("nonexisting");
+        assertTrue(value == null);
+
+        //Existing default
+        value = keyValueService.getValue(keyValue1.getKey(), "Defalut");
+        assertEquals(value, keyValue1.getValue());
+
+        //Non existing default
+        value = keyValueService.getValue("nonexisting", "Defalut");
+        assertEquals(value, "Defalut");
     }
 
     @Test
-    public void zeroWhenLongNotSet() {
-        long value = keyValueService.getValueAsLong("My long");
+    public void testGetValueAsLong() {
+        when(keyValueRepository.findOne(anyString())).thenReturn(null);
+        when(keyValueRepository.findOne(keyValue1.getKey())).thenReturn(keyValue1);
 
-        assertEquals(0L, value);
-    }
+        long value;
 
-    @Test
-    public void canSetAndRetrieveAsLong() {
-        keyValueService.setValue("My long", 5L);
-        long value = keyValueService.getValueAsLong("My long");
+        //Existing no default
+        value = keyValueService.getValueAsLong(keyValue1.getKey());
+        assertEquals(value, Long.parseLong(keyValue1.getValue()));
 
-        assertEquals(5L, value);
-    }
+        //Non existing no default
+        value = keyValueService.getValueAsLong("nonexisting");
+        assertTrue(value == 0L);
 
-    @Test
-    public void canSetDefaultValueForLong() {
-        long value = keyValueService.getValueAsLong("My long", 10L);
+        //Existing default
+        value = keyValueService.getValueAsLong(keyValue1.getKey(), 23L);
+        assertEquals(value, Long.parseLong(keyValue1.getValue()));
 
-        assertEquals(10L, value);
+        //Non existing default
+        value = keyValueService.getValueAsLong("nonexisting", 23);
+        assertEquals(value, 23);
+
     }
 }

@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('SearchCtrl', function ($scope, $http, $location, $q, PersonService, PublicationService, ArticleService, $modal, MessageModal, $templateRequest) {
+    .controller('SearchCtrl', function ($scope, $location, $q, PersonService, PublicationService, Publication, ArticleService, $uibModal, MessageModal, $templateRequest) {
         var pageSize = 100;
 
         $scope.data = [];
@@ -39,30 +39,30 @@ angular.module('momusApp.controllers')
         $scope.search = angular.copy($scope.defaultSearch);
 
         // Get stuff from the server
-        $q.all([PersonService.getAll(), PublicationService.getAll()]).then(function (data) {
+        $q.all([PersonService.getAll(), Publication.query().$promise]).then(function (data) {
             $scope.persons = data[0].data;
-            $scope.publications = data[1].data;
+            $scope.publications = data[1];
             if (updateSearchParametersFromUrl()) { // If the URL contained a search
                 search();
             } else if ($scope.publications.length > 0) { // default search on the newest publication
-                PublicationService.getActive().success(function(data){
-                    $scope.search.publication = data.id;
+                var active = Publication.active({}, function(){
+                    $scope.search.publication = active.id;
                     $location.search('publication', $scope.search.publication).replace();
                     search();
                 });
             }
         });
 
-        ArticleService.getSections().success(function (data) {
-            $scope.sections = data;
+        ArticleService.getSections().then(function (data) {
+            $scope.sections = data.data;
         });
 
-        ArticleService.getStatuses().success(function (data) {
-            $scope.statuses = data;
+        ArticleService.getStatuses().then(function (data) {
+            $scope.statuses = data.data;
         });
 
-        ArticleService.getReviews().success(function (data) {
-            $scope.reviews = data;
+        ArticleService.getReviews().then(function (data) {
+            $scope.reviews = data.data;
         });
 
 
@@ -128,9 +128,10 @@ angular.module('momusApp.controllers')
             $scope.loading = true;
             $scope.noArticles = false;
 
-            ArticleService.search($scope.search).success(function (data) {
-                $scope.hasNextPage = (data.length > pageSize); // search always returns one too many
-                $scope.data = data.slice(0, pageSize);
+            ArticleService.search($scope.search).then(function (data) {
+                const articles = data.data;
+                $scope.hasNextPage = (articles.length > pageSize); // search always returns one too many
+                $scope.data = articles.slice(0, pageSize);
             }).finally(function () {
                 $scope.loading = false;
                 if ($scope.data.length <= 0) {
@@ -151,7 +152,7 @@ angular.module('momusApp.controllers')
         };
 
         $scope.createArticle = function(){
-            var modal = $modal.open({
+            var modal = $uibModal.open({
                 templateUrl: 'partials/article/createArticleModal.html',
                 controller: 'CreateArticleModalCtrl'
             });

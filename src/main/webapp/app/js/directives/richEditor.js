@@ -34,7 +34,7 @@ angular.module('momusApp.directives').
                     parserRules: scope.richeditorRules,
                     toolbar: scope.toolbarId,
                     useLineBreaks: false,
-                    stylesheets: ['css/editor.css']
+                    stylesheets: ['style/editor.css']
                 });
 
                 // update the editor content if the model changes

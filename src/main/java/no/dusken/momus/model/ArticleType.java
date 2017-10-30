@@ -36,6 +36,11 @@ public class ArticleType {
     public ArticleType() {
     }
 
+    public ArticleType(Long id, String name, String description) {
+        this(name, description);
+        this.id = id;
+    }
+
     public ArticleType(String name, String description) {
         this.name = name;
         this.description = description;

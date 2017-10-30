@@ -17,11 +17,11 @@
 package no.dusken.momus.model;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Comparator;
 import java.util.Set;
 
 @Entity
-public class Page {
+public class Page implements Comparable<Page>, Comparator<Page>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +34,7 @@ public class Page {
     private boolean done;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false, updatable = false) // Should not be able to change the publication of a page
     private Publication publication;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -110,5 +111,32 @@ public class Page {
 
     public void setLayoutStatus(LayoutStatus layoutStatus) {
         this.layoutStatus = layoutStatus;
+    }
+
+    @Override
+    public String toString() {
+        return publication.getId() + " page: " + pageNr;
+    }
+
+    @Override
+    public int compareTo(Page page) {
+        return pageNr - page.getPageNr();
+    }
+
+    @Override
+    public int compare(Page page, Page t1) {
+        return page.compareTo(t1);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Page page = (Page) o;
+
+        if (!id.equals(page.id)) return false;
+
+        return true;
     }
 }

@@ -20,7 +20,9 @@ import no.dusken.momus.model.ArticleRevision;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ArticleRevisionRepository extends JpaRepository<ArticleRevision, Long> {
 
     public List<ArticleRevision> findByArticleIdOrderBySavedDateDesc(Long id);

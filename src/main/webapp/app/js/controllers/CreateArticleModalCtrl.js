@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('CreateArticleModalCtrl', function($scope, $modalInstance, PublicationService, ArticleService, PersonService, $q, pubId){
+    .controller('CreateArticleModalCtrl', function($scope, $uibModalInstance, Publication, ArticleService, PersonService, $q, pubId){
         $scope.article = {
             name: "",
             journalists: null,
@@ -35,9 +35,9 @@ angular.module('momusApp.controllers')
             quote_check_status: false
         };
 
-        $q.all([PublicationService.getAll(), PublicationService.getActive()]).then(function (data) {
-            $scope.publications = data[0].data;
-            $scope.article.publication = data[1].data;
+        $q.all([Publication.query(), Publication.active()]).then(function (data) {
+            $scope.publications = data[0];
+            $scope.article.publication = data[1];
 
             // Set the publication if one was passed into the modal
             if(pubId){
@@ -50,26 +50,26 @@ angular.module('momusApp.controllers')
             }
         });
 
-        ArticleService.getStatuses().success(function (data) {
-            $scope.statuses = data;
-            $scope.article.status = data[0];
+        ArticleService.getStatuses().then(function (data) {
+            $scope.statuses = data.data;
+            $scope.article.status = data.data[0];
         });
 
-        ArticleService.getTypes().success(function (data) {
-            $scope.types = data;
+        ArticleService.getTypes().then(function (data) {
+            $scope.types = data.data;
         });
 
-        ArticleService.getSections().success(function (data) {
-            $scope.sections = data;
-            $scope.article.section = data[0];
+        ArticleService.getSections().then(function (data) {
+            $scope.sections = data.data;
+            $scope.article.section = data.data[0];
         });
 
-        ArticleService.getReviews().success(function (data){
-            $scope.article.review = data[0];
+        ArticleService.getReviews().then(function (data){
+            $scope.article.review = data.data[0];
         });
 
-        PersonService.getAll().success(function (data) {
-            $scope.persons = data;
+        PersonService.getAll().then(function (data) {
+            $scope.persons = data.data;
         });
 
         $scope.photoTypes = [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}];
@@ -78,14 +78,14 @@ angular.module('momusApp.controllers')
 
         $scope.createArticle = function () {
             $scope.creating = true;
-            ArticleService.createNewArticle($scope.article).success(function (data) {
+            ArticleService.createNewArticle($scope.article).then(function (data) {
                 $scope.creating = false;
-                $modalInstance.close(data.id);
+                $uibModalInstance.close(data.data.id);
             });
         };
 
         $scope.cancel = function(){
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
         };
 
     }).value('pubId',null);

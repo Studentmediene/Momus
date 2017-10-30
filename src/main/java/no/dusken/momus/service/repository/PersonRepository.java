@@ -16,12 +16,13 @@
 
 package no.dusken.momus.service.repository;
 
-import no.dusken.momus.model.LandingPage;
 import no.dusken.momus.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
     public Person findByUsername(String username);

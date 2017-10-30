@@ -18,16 +18,16 @@ package no.dusken.momus.service;
 
 import com.google.api.services.drive.model.File;
 import no.dusken.momus.authentication.UserDetailsService;
-import no.dusken.momus.authentication.UserDetailsServiceImpl;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleRevision;
-import no.dusken.momus.model.Person;
+import no.dusken.momus.model.ArticleStatus;
 import no.dusken.momus.service.drive.GoogleDriveService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
 import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.ArticleRevisionRepository;
+import no.dusken.momus.service.search.ArticleQuery;
 import no.dusken.momus.service.search.ArticleQueryBuilder;
 import no.dusken.momus.service.search.ArticleSearchParams;
 import org.slf4j.Logger;
@@ -62,6 +62,9 @@ public class ArticleService {
     @Autowired
     private GoogleDriveService googleDriveService;
 
+    @Autowired
+    private ArticleQueryBuilder articleQueryBuilder;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -75,7 +78,7 @@ public class ArticleService {
         return article;
     }
 
-    public Article createNewArticle(Article article) {
+    public Article saveArticle(Article article) {
         File document = googleDriveService.createDocument(article.getName());
 
         if (document == null) {
@@ -87,16 +90,16 @@ public class ArticleService {
         Article newArticle = articleRepository.saveAndFlush(article);
 
         logger.info("Article with id {} created with data: {}", newArticle.getId(), newArticle.dump());
-        return articleRepository.findOne(newArticle.getId());
+        return newArticle;
     }
 
-    public Article saveUpdatedArticle(Article article) {
+    public Article updateArticle(Article article) {
         article.setLastUpdated(new Date());
         logger.info("Article with id {} updated, data: {}", article.getId(), article.dump());
         return articleRepository.saveAndFlush(article);
     }
 
-    public Article saveNewContent(Article article) {
+    public Article updateArticleContent(Article article) {
         Article existing = articleRepository.findOne(article.getId());
         String newContent = article.getContent();
         String oldContent = existing.getContent();
@@ -109,35 +112,16 @@ public class ArticleService {
         }
 
         existing.setContent(newContent);
-        createRawContent(existing);
 
-        createNewRevision(existing, false);
+        createRevision(existing);
 
-        return saveUpdatedArticle(existing);
+        return updateArticle(existing);
     }
 
-    public Article archiveArticle(Article article){
-        Article existing = getArticleById(article.getId());
-        existing.setArchived(true);
-
-        logger.info("Setting article with id {} to archived", article.getId());
-        return saveUpdatedArticle(existing);
-    }
-
-    public Article restoreArticle(Article article){
-        Article existing = getArticleById(article.getId());
-        existing.setArchived(false);
-
-        logger.info("Setting article with id {} to no longer archived", article.getId());
-        return saveUpdatedArticle(existing);
-    }
-
-    public Article saveMetadata(Article article) {
+    public Article updateArticleMetadata(Article article) {
         Article existing = articleRepository.findOne(article.getId());
 
-        if (!article.getStatus().equals(existing.getStatus())) {
-            createNewRevision(article, true);
-        }
+        ArticleStatus oldStatus = existing.getStatus();
 
         existing.setName(article.getName());
         existing.setJournalists(article.getJournalists());
@@ -149,35 +133,37 @@ public class ArticleService {
         existing.setSection(article.getSection());
         existing.setUseIllustration(article.getUseIllustration());
         existing.setImageText(article.getImageText());
-        createRawContent(existing);
         existing.setQuoteCheckStatus(article.getQuoteCheckStatus());
         existing.setExternalAuthor(article.getExternalAuthor());
         existing.setExternalPhotographer(article.getExternalPhotographer());
         existing.setPhotoStatus(article.getPhotoStatus());
         existing.setReview(article.getReview());
 
-        return saveUpdatedArticle(existing);
+        if (!article.getStatus().equals(oldStatus)) {
+            createRevision(existing);
+        }
+
+        return updateArticle(existing);
     }
 
-    public Article saveNote(Article article) {
-        Article existing = articleRepository.findOne(article.getId());
+    public Article updateNote(Article article, String note) {
+        article.setNote(note);
+        return updateArticle(article);
+    }
 
-        existing.setNote(article.getNote());
-
-        return saveUpdatedArticle(existing);
+    public Article updateArchived(Article article, Boolean archived) {
+        article.setArchived(archived);
+        return updateArticle(article);
     }
 
     public List<Article> searchForArticles(ArticleSearchParams params) {
         long start = System.currentTimeMillis();
 
+        ArticleQuery articleQuery = articleQueryBuilder.buildQuery(params);
 
-        ArticleQueryBuilder builder = new ArticleQueryBuilder(params);
-        String queryText = builder.getFullQuery();
-        Map<String, Object> queryParams = builder.getQueryParams();
+        TypedQuery<Article> query = entityManager.createQuery(articleQuery.getQuery(), Article.class);
 
-        TypedQuery<Article> query = entityManager.createQuery(queryText, Article.class);
-
-        for (Map.Entry<String, Object> e : queryParams.entrySet()) {
+        for (Map.Entry<String, Object> e : articleQuery.getParams().entrySet()) {
             query.setParameter(e.getKey(), e.getValue());
         }
 
@@ -201,85 +187,64 @@ public class ArticleService {
         return indesignGenerator.generateFromArticle(article);
     }
 
-    public ArticleRepository getArticleRepository() {
-        return articleRepository;
-    }
+    /**
+     * Either returns a new revision or reuses the last one.
+     * Should be reused if: Last revision is less than three minutes old and was not for a status change
+     */
+    public ArticleRevision createRevision(Article article) {
 
+        Date saveDate = new Date();
+        ArticleRevision revision = getLastRevision(article);
 
-    private void createNewRevision(Article article, boolean changedStatus) {
-        ArticleRevision revision = getExistingRevision(article, changedStatus);
-
-
-        revision.setStatusChanged(changedStatus);
+        boolean isStatusChanged = 
+            revision != null && 
+            !revision.getStatus().equals(article.getStatus());
+        
+        boolean canReuseOld = 
+            revision != null &&
+            !isRevisionTooOld(revision, saveDate) &&
+            !revision.isStatusChanged() &&
+            !isStatusChanged;
+        
+        if(!canReuseOld) {
+            revision = new ArticleRevision();
+        }
+        
+        revision.setSavedDate(new Date());
+        revision.setStatusChanged(isStatusChanged);
         revision.setContent(article.getContent());
         revision.setArticle(article);
         revision.setStatus(article.getStatus());
 
         revision = articleRevisionRepository.save(revision);
         logger.info("Saved revision for article(id:{}) with id: {}", article.getId(), revision.getId());
+        return revision;
     }
 
-    /**
-     * Returns a reusable revision if one is found, or a new one otherwise.
-     * This is to not get too man small revision.
-     * If the revision is for a status change, a new one is returned anyway
-     * A reusable revision is one that wasn't for a status change and not too old
-     */
-    private ArticleRevision getExistingRevision(Article article, boolean changedStatus) {
-        ArticleRevision newRevision = new ArticleRevision();
-        newRevision.setSavedDate(new Date());
+    private boolean isRevisionTooOld(ArticleRevision revision, Date date) {
+        long timeDiff = date.getTime() - revision.getSavedDate().getTime();
+        return timeDiff > 3 * 60 * 1000;
+    }
 
-        if (changedStatus) {
-            return newRevision;
-        }
-
+    private ArticleRevision getLastRevision(Article article) {
         List<ArticleRevision> revisions = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(article.getId());
-
+        
         if (revisions.size() == 0) {
-            return newRevision;
+            return null;
         }
 
-        ArticleRevision existing = revisions.get(0);
-        long timeDiff = new Date().getTime() - existing.getSavedDate().getTime();
-
-        if (timeDiff < 3 * 60 * 1000 && !existing.isStatusChanged()) {
-            logger.info("Reusing revision {} for article {}", existing.getId(), article.getId());
-            return existing;
-        } else {
-            return newRevision;
-        }
+        return articleRevisionRepository.findOne(revisions.get(0).getId());
     }
 
-    public void createRawContent(Article article){
-        StringBuilder raw = new StringBuilder();
-
-        String content = stripOffHtml(article.getContent());
-
-        int contentLength = content.length();
-
-        raw.append(content).append(" ")
-                .append(article.getName()).append(" ")
-                .append(article.getSection() != null ? article.getSection().getName() : "").append(" ")
-                .append(article.getStatus() != null ? article.getStatus().getName() : "").append(" ")
-                .append(article.getType() != null ? article.getType().getName() : "").append(" ")
-                .append(article.getComment()).append(" ");
-
-        for(Person journalist : article.getJournalists()){
-            raw.append(journalist.getFullName()).append(" ");
-        }
-        for(Person photo : article.getPhotographers()){
-            raw.append(photo.getFullName()).append(" ");
-        }
-
-
-        String rawContent = raw.toString().toLowerCase();
-        logger.debug("Raw content {}, length of content: {}", rawContent, contentLength);
-
-        article.setRawcontent(rawContent);
-        article.setContentLength(contentLength);
+    public ArticleRepository getArticleRepository() {
+        return articleRepository;
     }
 
-    private String stripOffHtml(String html){
+    public static String createRawContent(Article article){
+        return ArticleService.stripOffHtml(article.getContent()).toLowerCase();
+    }
+
+    private static String stripOffHtml(String html){
         String[] tags = {"<h1>","<h2>","<h3>","<h4>","<h5>","<p>","<i>","<b>", "<blockquote>","<br>","<ul>","<ol>","<li>"};
         for (String tag : tags) {
             html = html.replaceAll(tag," ").replaceAll(tag.substring(0,1)+"/"+tag.substring(1,tag.length()),"");

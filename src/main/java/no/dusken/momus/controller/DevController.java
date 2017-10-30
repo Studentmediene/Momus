@@ -22,11 +22,10 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.model.About;
 import com.google.api.services.drive.model.FileList;
-import no.dusken.momus.authentication.*;
 import no.dusken.momus.ldap.LdapSyncer;
 import no.dusken.momus.model.*;
+import no.dusken.momus.service.drive.GoogleDriveService;
 import no.dusken.momus.service.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,10 +40,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.*;
+import java.io.File;
 
 /**
  * Dev only, not accessible when live
@@ -53,12 +52,7 @@ import java.util.*;
 @Controller
 @RequestMapping("/dev")
 public class DevController {
-
     private Logger logger = LoggerFactory.getLogger(getClass());
-
-
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
     private SectionRepository sectionRepository;
@@ -76,6 +70,9 @@ public class DevController {
     private ArticleStatusRepository articleStatusRepository;
     @Autowired
     private PublicationRepository publicationRepository;
+
+    @Autowired
+    private GoogleDriveService driveService;
 
     @Autowired
     LdapSyncer ldapSyncer;
@@ -175,7 +172,7 @@ public class DevController {
             }
 
 
-            About execute = drive.about().get().execute();
+            //About execute = drive.about().get().execute();
 
 
             // insert file
@@ -551,5 +548,21 @@ public class DevController {
 
 
         return "created sections, types and statuses";
+    }
+
+    @RequestMapping("/creategdocs")
+    public @ResponseBody List<Article> createGDocs(){
+        List<Article> articles = articleRepository.findAll();
+
+        for(Article article : articles) {
+            if(article.getGoogleDriveId() == null) {
+                com.google.api.services.drive.model.File document = driveService.createDocument(article.getName());
+                if(document != null){
+                    article.setGoogleDriveId(document.getId());
+                }
+            }
+        }
+
+        return articleRepository.save(articles);
     }
 }

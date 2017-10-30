@@ -1,0 +1,157 @@
+/*
+ * Copyright 2016 Studentmediene i Trondheim AS
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@import "disposition";
+@import "personWidget";
+@import "frontPage";
+
+body {
+    padding-top: 70px;
+    padding-bottom: 50px;
+}
+
+/* Removes padding when priting to avoid blank space*/
+@media print {
+    body {
+        padding-top: 0px;
+    }
+}
+
+textarea.article {
+    height: 500px;
+}
+
+textarea.note {
+    height: 200px;
+    background-color: #fff95d;;
+}
+
+hr.divider {
+    width:100%;
+    border: 1px #bce8f1;
+}
+
+div.metaline {
+    margin-top: -10px;
+
+}
+
+label.important-field {
+    font-size: 17px;
+}
+
+.articleContent h2{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.wysihtml5-command-active {
+    background-color: #cccccc;
+    background-image: none;
+    outline: 0;
+    -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.top-spacing {
+    margin-top: 20px;
+}
+
+/* Set on things that should pretend to be clickable */
+.interact {
+    cursor: pointer;
+}
+
+.select2-container {
+    width: 100%;
+}
+
+#meta-panel id-select .select2-search-choice,
+#meta-panel id-select .select2-search-field {
+    clear: both;
+}
+
+/* So that browsers doesn't display an outline around clicked links and stuff */
+a:focus {
+    outline: 0;
+}
+
+.btn:focus {
+    outline: 0;
+}
+
+.editor-toolbar .btn-group {
+    margin: 0 5px 10px 0;
+}
+
+.btn-row .btn {
+    margin-bottom: 2px;
+    margin-top: 2px;
+}
+
+/* used for ui-bootstrap */
+.nav, .pagination, .carousel, .panel-title a {
+    cursor: pointer;
+}
+
+td.articleHover:hover {
+    cursor: pointer;
+    background-color: #d9edf7;
+}
+
+#articleSearchInterface .row > div {
+    margin-bottom: 10px;
+}
+
+/* Fixes empty space when listing journalists on an article in search view */
+td > ul, td > ol {
+    margin-bottom: 0;
+}
+
+/* quoteCheck button effects */
+a.zeroclipboard-is-hover {
+    background-color: #3071a9;
+}
+
+.article-revisions del, .article-revisions .del {
+    background:#ffe6e6;
+}
+.article-revisions ins, .article-revisions .ins {
+    background: #e6ffe6;
+}
+
+/* Fix table overflow if article name contains a word that is too long */
+@media (max-width: 992px) { /* use the max to specify at each container level */
+    .search-article-name {
+        max-width: 80px; /* adjust to desired wrapping */
+    }
+
+    .break-word {
+        word-wrap: break-word; /* Internet Explorer 5.5+ */
+    }
+}
+
+@media (max-width: 768px){
+    .search-article-name {
+        max-width:none;
+    }
+}
+
+.sortBtn:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

@@ -25,21 +25,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.control.PagedResultsDirContextProcessor;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.DefaultTlsDirContextAuthenticationStrategy;
-import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.PostConstruct;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchControls;
-import javax.naming.ldap.LdapContext;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Service
 public class LdapSyncer {
@@ -54,31 +47,11 @@ public class LdapSyncer {
     LdapTemplate ldapTemplate;
 
     @Autowired
-    LdapContextSource contextSource;
-
-    @Autowired
     PersonRepository personRepository;
 
 
     @Value("${ldap.syncEnabled}")
     private boolean enabled;
-
-    /**
-     * This will be run when the server starts
-     */
-    @PostConstruct
-    public void startUp() {
-        DefaultTlsDirContextAuthenticationStrategy tls = new DefaultTlsDirContextAuthenticationStrategy();
-        tls.setHostnameVerifier(new HostnameVerifier() {
-            @Override
-            public boolean verify(String s, SSLSession sslSession) {
-                return true;
-            }
-        });
-        contextSource.setAuthenticationStrategy(tls);
-
-        sync();
-    }
 
     /**
      * Will pull data from LDAP and update our local copy
@@ -102,10 +75,15 @@ public class LdapSyncer {
         logger.info("Done syncing from LDAP, it took {}ms", timeUsed);
     }
 
+    @PostConstruct
+    public void startUp(){
+        sync();
+    }
+
     /**
      * Syncs the person database with LDAP
      */
-    private void syncAllPersonsFromLdap() {
+    public void syncAllPersonsFromLdap() {
 
         lastId = 0L; // Contains the last granted id, for faster look-up for next free id
 

@@ -17,7 +17,6 @@
 package no.dusken.momus.service;
 
 import no.dusken.momus.authentication.UserDetailsService;
-import no.dusken.momus.authentication.UserDetailsServiceImpl;
 import no.dusken.momus.model.Note;
 import no.dusken.momus.service.repository.NoteRepository;
 import org.slf4j.Logger;
