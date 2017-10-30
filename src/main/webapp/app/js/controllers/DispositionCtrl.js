@@ -39,16 +39,6 @@ angular.module('momusApp.controllers')
             return (page.done ? pageDoneColor : (page.advertisement ? pageAdColor : '#FFF'));
         };
 
-        // Widths of columns in the disp. Used to sync widths across pages (which are separate tables)
-        vm.responsiveColumns = {
-            name: {minWidth: '100px'},
-            journalist: {minWidth: '80px'},
-            photographer: {minWidth: '80px'},
-            pstatus: {minWidth: '90px'},
-            comment: {minWidth: '100px'}
-        };
-        vm.dispSortableStyle = {}; // Used to prevent the disposition from breaking while moving pages
-
         // Get all data
         getStatuses();
         getDisposition();
@@ -98,7 +88,7 @@ angular.module('momusApp.controllers')
                     layout_status: getLayoutStatusByName("Ukjent")
                 };
                 pages.push(page);
-            };
+            }
             vm.loading = true;
             var updatedPages = Page.saveMultiple({pubid: vm.publication.id}, pages, function() {
                 vm.publication.pages = updatedPages;
@@ -161,9 +151,9 @@ angular.module('momusApp.controllers')
         }
 
         function saveArticle(article){
-            vm.loading = true
+            vm.loading = true;
             ArticleService.updateMetadata(article).then(function(data){
-                vm.loading = false
+                vm.loading = false;
             });
         }
 
@@ -186,7 +176,6 @@ angular.module('momusApp.controllers')
         vm.sortableOptions = uiSortableMultiSelectionMethods.extendOptions({
             helper: uiSortableMultiSelectionMethods.helper,
             start: function(e, ui) {
-                vm.dispSortableStyle.tableLayout = "auto"; //To not break the table
                 $scope.$apply(); //Apply since this is jQuery stuff
 
                 //Calculate height of placeholder
@@ -200,7 +189,6 @@ angular.module('momusApp.controllers')
             axis: 'y',
             handle: '.handle',
             stop: function(e, ui){
-                vm.dispSortableStyle.tableLayout = "";
                 var placed = ui.item.sortableMultiSelect.selectedModels;
                 var newPosition = vm.publication.pages.indexOf(placed[0]);
                 placed.forEach(function(page, i) {
@@ -211,33 +199,90 @@ angular.module('momusApp.controllers')
             placeholder: "disp-placeholder"
         });
 
+        const columnWidthTemplates = {
+            page_nr:
+                {scope: 'page', width: 20},
+            dropdown:
+                {scope: 'article', width: 25},
+            name: {
+                scope: 'article',
+                part: 0.25,
+                min: 100,
+                calculated: 100,
+            },
+            section: {scope: 'article', width: 100},
+            journalists: {
+                scope: 'article',
+                part: 0.2,
+                min: 80,
+                calculated: 80
+            },
+            photographers: {
+                scope: 'article',
+                part: 0.2,
+                min: 80,
+                calculated: 80
+            },
+            status: {scope: 'article', width: 120},
+            review: {scope: 'article', width: 100},
+            photo_status: {
+                scope: 'article',
+                part: 0.15,
+                min: 90,
+                calculated: 90
+            },
+            comment: {
+                scope: 'article',
+                part: 0.2,
+                min: 100,
+                calculated: 100
+            },
+            layout: {scope: 'page', width: 80},
+            ad: {scope: 'page', width: 30},
+            done: {scope: 'page', width: 30},
+            edit: {scope: 'page', width: 30},
+            delete: {scope: 'page', width: 30}
+        };
+
+        const columnWidths = {};
+        vm.columnWidths = columnWidths;
+
         function updateDispSize(){
-            var constantArticleSize = 320;
-            var constantDispSize = constantArticleSize + 220;       
-            var dispWidth = angular.element(document.getElementById("disposition"))[0].clientWidth;
-            //Must divide rest of width between journalists, photographers, photo status and comment.
-            var widthLeft = dispWidth - constantDispSize;
-            var shareParts = {
-                name: 0.25,
-                journalist: 0.2,
-                photographer: 0.2,
-                pstatus: 0.15,
-                comment: 0.2
-            };
+            const [constDispWidth, constArticleWidth] = Object.keys(columnWidthTemplates)
+                .filter(key => columnWidthTemplates[key].width)
+                .reduce(([dispSize, articleSize],key) => {
+                    const colWidth = columnWidthTemplates[key].width;
+                    return [
+                        dispSize + colWidth, 
+                        articleSize + (columnWidthTemplates[key].scope === 'article' ? colWidth : 0)
+                    ];
+                }, [0, 0]);
 
-            var articleWidth = constantArticleSize;
-            for(var k in shareParts){
-                var width;
-                if($window.innerWidth > 992){
-                    width = Math.floor(shareParts[k]*widthLeft);
-                }else{ //Use min width and scroll if screen is too small.
-                    width = parseInt(vm.responsiveColumns[k].minWidth);
-                }
+            const dispWidth = angular.element(document.getElementById("disposition"))[0].clientWidth;
+            const widthLeft = dispWidth - constDispWidth;
 
-                articleWidth += width;
-
-                vm.responsiveColumns[k] = {minWidth: width + 'px', maxWidth: width + 'px', width: width + 'px'};
-            }
+            let articleWidth = constArticleWidth;
+            Object.keys(columnWidthTemplates)
+                .filter(key => columnWidthTemplates[key].part)
+                .forEach(key => {
+                    const column = columnWidthTemplates[key];
+                    const width = $window.innerWidth > 992 ? Math.floor(column.part*widthLeft) : column.min;
+                    column.calculated = width;
+                    if(column.scope === 'article') {
+                        articleWidth += width;
+                    }
+                });
+            
+            Object.keys(columnWidthTemplates)
+                .forEach(key => {
+                    const col = columnWidthTemplates[key];
+                    const columnWidth = (col.width | col.calculated) + 'px';
+                    columnWidths[key] = {
+                        minWidth: columnWidth,
+                        width: columnWidth,
+                        maxWidth: columnWidth,
+                    };
+                });
 
             vm.articleWidth = articleWidth;
         }
