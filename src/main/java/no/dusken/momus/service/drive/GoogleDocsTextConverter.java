@@ -124,8 +124,6 @@ public class GoogleDocsTextConverter {
         Matcher italicsMatcher = italicStyleName.matcher(css);
         Matcher boldMatcher = boldStyleName.matcher(css);
 
-        System.out.println(body);
-
         int start = 0;
         while (italicsMatcher.find(start)) {
             String italicSelectorName = italicsMatcher.group(1);
@@ -136,12 +134,9 @@ public class GoogleDocsTextConverter {
             start = italicsMatcher.start() + 1;
         }
 
-        System.out.println(body);
-
         start = 0;
         while (boldMatcher.find(start)) {
             String boldSelectorName = boldMatcher.group(1);
-            System.out.println(boldSelectorName);
             Pattern boldClasses = Pattern.compile("<span class=\"[^\"]*" + boldSelectorName + "[^\"]*\">(.*?)</span>");
             Matcher spanMatcherBold = boldClasses.matcher(body);
 
