@@ -77,7 +77,7 @@
                                        show="name">
                             </id-select>
                             <div class="pull-right">
-                                <button ng-click="vm.createArticle(page)" class="btn btn-success" tooltip="Lag ny artikkel">
+                                <button ng-click="vm.createArticle(page)" class="btn btn-success" uib-tooltip="Lag ny artikkel">
                                     <i class="fa fa-plus"></i> <i class="fa fa-file-text"></i>
                                 </button>
                             </div>
@@ -187,7 +187,7 @@
                             <span style="cursor: pointer" ng-click="page.advertisement = !page.advertisement; vm.updatePageMeta(page);">
                                 <i class="fa fa-file fa-lg"
                                    ng-class="{'text-danger' : !page.advertisement, 'text-success' : page.advertisement }"
-                                   tooltip="Siden inneholder {{!page.advertisement ? 'ikke ' : ''}} reklame">
+                                   uib-tooltip="Siden inneholder {{!page.advertisement ? 'ikke ' : ''}} reklame">
                                 </i>
                                 </span>
                         </div>
@@ -196,7 +196,7 @@
                             <span style="cursor: pointer" ng-click="page.done = !page.done; vm.updatePageMeta(page);">
                                 <i class="fa fa-check fa-lg"
                                    ng-class="{'text-danger' : !page.done, 'text-success' : page.done }"
-                                   tooltip="Siden er {{!page.done ? 'ikke ' : ''}} helt ferdig">
+                                   uib-tooltip="Siden er {{!page.done ? 'ikke ' : ''}} helt ferdig">
                                 </i>
                                 </span>
                         </div>

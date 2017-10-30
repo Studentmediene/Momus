@@ -59,6 +59,10 @@ angular.module('momusApp.services')
 
         // Date: year, month - 1, day
         var news = [{
+            date: new Date(2017, 9, 23),
+            title: "Long time, no update",
+            text: "<p>Første oppdatering på en stund! Disposisjonen har fått litt bedre nettleserstøtte, (blant annet firefox), kolofonen har blitt fikset, og litt andre småting. Se etter flere kule ting i neste oppdatering!</p>"
+        },{
             date: new Date(2017, 2, 29),
             title: "Kaker, kakerlakker og kolofoner",
             text: "<p>I denne oppdateringen er det fikset en del bugs og lagt til små forbedringer. Blant annet er det gjort tydeligere når en side inneholder reklame og det er mulig å generere kolofon fra disposisjonen. Det er også lagt til kakediagrammer på forsiden som viser status til den siste utgaven.</p>"
