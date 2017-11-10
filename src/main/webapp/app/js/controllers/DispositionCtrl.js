@@ -30,14 +30,15 @@ angular.module('momusApp.controllers')
         vm.createArticle = createArticle;
         vm.saveArticle = saveArticle;
 
+        vm.expandAllButtonRows = () => angular.element(".extra-button-line").collapse("show");
+        vm.hideAllButtonRows = () => angular.element(".extra-button-line").collapse("hide");
+
         vm.showHelp = showHelp;
 
         // Style
         var pageDoneColor = "#DDFFCB";
-        var pageAdColor = "#f8f8f8";
-        vm.pageColor = function(page) {
-            return (page.done ? pageDoneColor : (page.advertisement ? pageAdColor : '#FFF'));
-        };
+        var pageAdColor = "#f6f6f6";
+        vm.pageColor = page => page.done ? pageDoneColor : (page.advertisement ? pageAdColor : '#FFF');
 
         // Get all data
         getStatuses();
