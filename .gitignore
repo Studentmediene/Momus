@@ -26,3 +26,6 @@ src/main/resources/local.properties
 target/
 src/main/webapp/dist/
 bin/
+
+**/*.css
+**/*.css.map

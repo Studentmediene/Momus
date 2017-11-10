@@ -1,0 +1,84 @@
+.person-widget-element td {
+    max-width:initial !important;
+    min-width:initial !important;
+}
+
+.person-widget-wrapper {
+    position:relative;
+}
+
+.person-widget-wrapper {
+    position:relative;
+}
+
+.person-widget-btn {
+    border-bottom: 1px dotted #ccc;
+    cursor: pointer;
+}
+
+.person-widget-btn :hover {
+    border-bottom: 1px dotted #999;
+}
+
+.person-widget-header {
+    white-space: nowrap;
+    width: 100%;
+}
+
+.person-widget-header tr #close-cell {
+    text-align: right;
+    padding-left: 10px;
+}
+
+.person-widget-element {
+    position:absolute;
+    background-color: #FFFFFF;
+    border:1px solid #CCC;
+    border-radius:5px;
+    z-index:100;
+    cursor:default;
+    bottom:40%;
+    left:-20%;
+    overflow: visible;
+}
+
+.person-widget-btn {
+    border-bottom: 1px dotted #ccc;
+    cursor: pointer;
+}
+
+.closePw {
+    opacity:0.5;
+    cursor:pointer;
+    padding:0;
+    margin:0;
+}
+
+.closePw:hover {
+    opacity:1;
+}
+
+
+.person-widget-element:after, .person-widget-element:before {
+    top: 100%;
+    left: 20%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+}
+
+
+.person-widget-element:after {
+    border-color: rgba(255, 255, 255, 0);
+    border-top-color: #FFF;
+    border-width: 10px;
+    margin-left: -10px;
+}
+.person-widget-element:before {
+    border-color: rgba(204, 204, 204, 0);
+    border-top-color: #CCC;
+    border-width: 11px;
+    margin-left: -11px;
+}

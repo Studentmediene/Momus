@@ -22,7 +22,7 @@ angular.module('momusApp.controllers')
             $routeParams,
             ArticleService,
             MessageModal,
-            $modal,
+            $uibModal,
             $templateRequest,
             $window,
             uiSortableMultiSelectionMethods,
@@ -52,24 +52,15 @@ angular.module('momusApp.controllers')
         vm.submitArticleField = submitArticleField;
         var articleEdits = {};
 
+        vm.expandAllButtonRows = () => angular.element(".extra-button-line").collapse("show");
+        vm.hideAllButtonRows = () => angular.element(".extra-button-line").collapse("hide");
+
         vm.showHelp = showHelp;
 
         // Style
         var pageDoneColor = "#DDFFCB";
-        var pageAdColor = "#f8f8f8";
-
-        vm.pageColor = function(page) {
-            return (page.done ? pageDoneColor : (page.advertisement ? pageAdColor : '#FFF'));
-        };
-
-        // Widths of columns in the disp. Used to sync widths across pages (which are separate tables)
-        vm.responsiveColumns = {
-            name: {minWidth: '100px'},
-            journalist: {minWidth: '80px'},
-            photographer: {minWidth: '80px'},
-            pstatus: {minWidth: '90px'},
-            comment: {minWidth: '100px'}
-        };
+        var pageAdColor = "#f6f6f6";
+        vm.pageColor = page => page.done ? pageDoneColor : (page.advertisement ? pageAdColor : '#FFF');
 
         // Get all data
         getStatuses();
@@ -282,7 +273,7 @@ angular.module('momusApp.controllers')
         }
 
         function createArticle(page){
-            var modal = $modal.open({
+            var modal = $uibModal.open({
                 templateUrl: 'partials/article/createArticleModal.html',
                 controller: 'CreateArticleModalCtrl',
                 resolve: {
@@ -290,7 +281,8 @@ angular.module('momusApp.controllers')
                 }
             });
             modal.result.then(id => {
-                ArticleService.getArticle(id).success(article => {
+                ArticleService.getArticle(id).then(data => {
+                    const article = data.data;
                     page.articles.push(article);
                     vm.articles.push(article);
                     lastUpdate = WebSocketService.articleSaved(vm.publication.id, page.id, article.id);
@@ -300,7 +292,7 @@ angular.module('momusApp.controllers')
 
         function saveArticle(article, editedField){
             vm.loading = true;
-            ArticleService.updateMetadata(article).success(data => {
+            ArticleService.updateMetadata(article).then(() => {
                 vm.loading = false;
                 lastUpdate = WebSocketService.articleUpdated(vm.publication.id, article.id, editedField);
             });
@@ -356,33 +348,90 @@ angular.module('momusApp.controllers')
             placeholder: "disp-placeholder"
         });
 
+        const columnWidthTemplates = {
+            page_nr:
+                {scope: 'page', width: 20},
+            dropdown:
+                {scope: 'article', width: 25},
+            name: {
+                scope: 'article',
+                part: 0.25,
+                min: 100,
+                calculated: 100,
+            },
+            section: {scope: 'article', width: 100},
+            journalists: {
+                scope: 'article',
+                part: 0.2,
+                min: 80,
+                calculated: 80
+            },
+            photographers: {
+                scope: 'article',
+                part: 0.2,
+                min: 80,
+                calculated: 80
+            },
+            status: {scope: 'article', width: 120},
+            review: {scope: 'article', width: 100},
+            photo_status: {
+                scope: 'article',
+                part: 0.15,
+                min: 90,
+                calculated: 90
+            },
+            comment: {
+                scope: 'article',
+                part: 0.2,
+                min: 100,
+                calculated: 100
+            },
+            layout: {scope: 'page', width: 80},
+            ad: {scope: 'page', width: 30},
+            done: {scope: 'page', width: 30},
+            edit: {scope: 'page', width: 30},
+            delete: {scope: 'page', width: 30}
+        };
+
+        const columnWidths = {};
+        vm.columnWidths = columnWidths;
+
         function updateDispSize(){
-            var constantArticleSize = 320;
-            var constantDispSize = constantArticleSize + 220;
-            var dispWidth = angular.element(document.getElementById("disposition")).context.clientWidth;
-            //Must divide rest of width between journalists, photographers, photo status and comment.
-            var widthLeft = dispWidth - constantDispSize;
-            var shareParts = {
-                name: 0.25,
-                journalist: 0.2,
-                photographer: 0.2,
-                pstatus: 0.15,
-                comment: 0.2
-            };
+            const [constDispWidth, constArticleWidth] = Object.keys(columnWidthTemplates)
+                .filter(key => columnWidthTemplates[key].width)
+                .reduce(([dispSize, articleSize],key) => {
+                    const colWidth = columnWidthTemplates[key].width;
+                    return [
+                        dispSize + colWidth, 
+                        articleSize + (columnWidthTemplates[key].scope === 'article' ? colWidth : 0)
+                    ];
+                }, [0, 0]);
 
-            var articleWidth = constantArticleSize;
-            for(var k in shareParts){
-                var width;
-                if($window.innerWidth > 992){
-                    width = Math.floor(shareParts[k]*widthLeft);
-                }else{ //Use min width and scroll if screen is too small.
-                    width = parseInt(vm.responsiveColumns[k].minWidth);
-                }
+            const dispWidth = angular.element(document.getElementById("disposition"))[0].clientWidth;
+            const widthLeft = dispWidth - constDispWidth;
 
-                articleWidth += width;
-
-                vm.responsiveColumns[k] = {minWidth: width + 'px', maxWidth: width + 'px', width: width + 'px'};
-            }
+            let articleWidth = constArticleWidth;
+            Object.keys(columnWidthTemplates)
+                .filter(key => columnWidthTemplates[key].part)
+                .forEach(key => {
+                    const column = columnWidthTemplates[key];
+                    const width = $window.innerWidth > 992 ? Math.floor(column.part*widthLeft) : column.min;
+                    column.calculated = width;
+                    if(column.scope === 'article') {
+                        articleWidth += width;
+                    }
+                });
+            
+            Object.keys(columnWidthTemplates)
+                .forEach(key => {
+                    const col = columnWidthTemplates[key];
+                    const columnWidth = (col.width | col.calculated) + 'px';
+                    columnWidths[key] = {
+                        minWidth: columnWidth,
+                        width: columnWidth,
+                        maxWidth: columnWidth,
+                    };
+                });
 
             vm.articleWidth = articleWidth;
         }

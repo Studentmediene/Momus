@@ -167,7 +167,7 @@
                 </tr>
                 <tr ng-repeat="article in data | orderBy:articleSortType:articleSortReverse">
                     <td class="search-article-name break-word">
-                        <i ng-if="article.archived" class="fa fa-trash-o" tooltip="Artikkelen er arkivert"></i>
+                        <i ng-if="article.archived" class="fa fa-trash-o" uib-tooltip="Artikkelen er arkivert"></i>
                         <a href="#/artikler/{{ article.id }}">
                             {{ article.name }}
                         </a>
@@ -181,7 +181,7 @@
                             <li ng-repeat="person in article.journalists">
                                 <span person-widget="person">{{ person.full_name }}</span>
                             </li>
-                            <li><i tooltip="Ekstern">{{article.external_author}}</i></li>
+                            <li><i uib-tooltip="Ekstern">{{article.external_author}}</i></li>
                         </ul>
                     </td>
                     <td>
@@ -193,7 +193,7 @@
                                 <i class="fa fa-camera" ng-show="!article.use_illustration"> </i>
                                 <span person-widget="person">{{ person.full_name }}</span>
                             </li>
-                            <li><i tooltip="Ekstern">{{article.external_photographer}}</i></li>
+                            <li><i uib-tooltip="Ekstern">{{article.external_photographer}}</i></li>
                         </ul>
                     </td>
 
@@ -208,10 +208,10 @@
 
                     <td>{{ article.content_length }}</td>
                     <td style="white-space: nowrap">
-                        <i class="fa fa-user fa-lg" tooltip="{{article.image_text ? 'Bildetekst er satt' : 'Bildetekst er ikke satt'}}"
+                        <i class="fa fa-user fa-lg" uib-tooltip="{{article.image_text ? 'Bildetekst er satt' : 'Bildetekst er ikke satt'}}"
                            ng-class="{'text-danger': !article.image_text || article.image_text.length == 0, 'text-success': article.image_text.length > 0}"></i>
 
-                        <i class="fa fa-quote-right fa-lg" tooltip="{{article.quote_check_status ? 'Sitatsjekk er ikke i orden' : 'Sitatetsjekk er i orden'}}"
+                        <i class="fa fa-quote-right fa-lg" uib-tooltip="{{article.quote_check_status ? 'Sitatsjekk er ikke i orden' : 'Sitatetsjekk er i orden'}}"
                            ng-class="{'text-danger': article.quote_check_status, 'text-success': !article.quote_check_status}"></i>
                     </td>
                     <td class="break-word" style="background-color: {{article.status.color}}; padding: 3px;">

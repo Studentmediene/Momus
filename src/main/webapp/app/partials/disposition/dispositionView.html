@@ -20,11 +20,11 @@
             <button ng-click="vm.showHelp()" class="btn btn-success">
                 Hjelp?
             </button>
-            <a href="/api/publications/{{vm.publication.id}}/colophon" style="flex: 1">
-                <button class="btn btn-primary">
-                    <i class="fa fa-file-text-o"/> Generer kolofon
-                </button>
-            </a>
+            <a href="/api/publications/{{vm.publication.id}}/colophon"><button class="btn btn-primary">
+                <i class="fa fa-file-text-o"/> Generer kolofon
+            </button></a>
+            <button ng-click="vm.expandAllButtonRows()" class="btn btn-primary" type="button"><i class="fa fa-caret-down"></i> Åpne ekstraknapp-rader</button>
+            <button ng-click="vm.hideAllButtonRows()" class="btn btn-primary" type="button"><i class="fa fa-caret-up"></i> Lukke ekstraknapp-rader</button>
         </div>
     </div>
 
@@ -42,26 +42,27 @@
             <div class="d-table disposition-table">
                 <div>
                     <div class="d-table-row">
-                        <div class="d-table-header pagenum">#</div>
+                        <div class="d-table-header" ng-style="vm.columnWidths.page_nr">#</div>
                         <div class="d-table-header">
                             <div class="d-table">
                                 <div class="d-table-row">
-                                    <div class="d-table-header" ng-style="vm.responsiveColumns.name">Navn</div>
-                                    <div class="d-table-header section">Seksjon</div>
-                                    <div class="d-table-header" ng-style="vm.responsiveColumns.journalist">Journalister</div>
-                                    <div class="d-table-header" ng-style="vm.responsiveColumns.photographer">Fotografer</div>
-                                    <div class="d-table-header status">Status</div>
-                                    <div class="d-table header review">Korrektur</div>
-                                    <div class="d-table-header" ng-style="vm.responsiveColumns.pstatus">Fotostatus</div>
-                                    <div class="d-table-header" ng-style="vm.responsiveColumns.comment">Kommentar</div>
+                                    <div class="d-table-header" ng-style="vm.columnWidths.dropdown"></div>
+                                    <div class="d-table-header" ng-style="vm.columnWidths.name">Navn</div>
+                                    <div class="d-table-header" ng-style="vm.columnWidths.section">Seksjon</div>
+                                    <div class="d-table-header" ng-style="vm.columnWidths.journalists">Journalister</div>
+                                    <div class="d-table-header" ng-style="vm.columnWidths.photographers">Fotografer</div>
+                                    <div class="d-table-header" ng-style="vm.columnWidths.status">Status</div>
+                                    <div class="d-table header" ng-style="vm.columnWidths.review">Korrektur</div>
+                                    <div class="d-table-header" ng-style="vm.columnWidths.photo_status">Fotostatus</div>
+                                    <div class="d-table-header" ng-style="vm.columnWidths.comment">Kommentar</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="d-table-header layout">Layout</div>
-                        <div class="d-table-header button">Ads</div>
-                        <div class="d-table-header button"></div>
-                        <div class="d-table-header button"></div>
-                        <div class="d-table-header button"></div>
+                        <div class="d-table-header" ng-style="vm.columnWidths.layout">Layout</div>
+                        <div class="d-table-header" ng-style="vm.columnWidths.ad">Ads</div>
+                        <div class="d-table-header" ng-style="vm.columnWidths.done"></div>
+                        <div class="d-table-header" ng-style="vm.columnWidths.edit"></div>
+                        <div class="d-table-header" ng-style="vm.columnWidths.delete"></div>
                     </div>
                 </div>
 
@@ -74,37 +75,47 @@
                         ui-sortable-selectable
                     >
                         <!--Page number-->
-                        <div class="d-table-cell handle pagenum">{{page.page_nr}}</div>
+                        <div class="d-table-cell handle" ng-style="vm.columnWidths.page_nr">{{page.page_nr}}</div>
                         <!--Articles (edit mode)-->
-                        <div class="d-table-cell" ng-show="editPage" ng-style="{width: vm.articleWidth}">
+                        <div class="d-table-cell" ng-style="{width: vm.articleWidth}" ng-show="editPage">
                             <id-select multiple class="pull-left" style="width: 90%;"
                                        items="vm.articles"
                                        target="page.articles"
                                        show="name">
                             </id-select>
                             <div class="pull-right">
-                                <button ng-click="vm.createArticle(page)" class="btn btn-success" tooltip="Lag ny artikkel">
+                                <button ng-click="vm.createArticle(page)" class="btn btn-success" uib-tooltip="Lag ny artikkel">
                                     <i class="fa fa-plus"></i> <i class="fa fa-file-text"></i>
                                 </button>
                             </div>
                         </div>
                         <!--Articles (view mode)-->
                         <div class="d-table-cell article-cell" ng-style="{width: vm.articleWidth}" ng-hide="editPage">
-                            <div class="d-table article-table">
-                                <div 
-                                    class="d-table-row" 
-                                    ng-repeat="article in page.articles"
-                                    ng-init="vm.initArticleScope(this)"
-                                    ng-style="{background: vm.pageColor(page)}"
-                                >
+                            <div ng-repeat="article in page.articles" class="d-table article-table" ng-init="vm.initArticleScope(this)">
+                                <div class="d-table-row" ng-style="{background: vm.pageColor(page)}" style="margin: 0px; padding: 0px">
+                                    <!--Dropdown-arrow-->
+                                    <div class="d-table-cell" ng-style="vm.columnWidths.dropdown" >
+                                        <button 
+                                            data-target="#{{page.page_nr}}-{{article.id}}-button-line" 
+                                            data-toggle="collapse" 
+                                            class="btn btn-primary btn-xs" 
+                                            type="button">
+                                            <i class="fa fa-arrows-v"></i>
+                                        </button>
+                                    </div>
                                     <!--Name-->
-                                    <div class="d-table-cell" ng-style="vm.responsiveColumns.name">
+                                    <div class="d-table-cell" ng-style="vm.columnWidths.name">
                                         <a href="#/artikler/{{article.id}}">{{article.name}}</a> <span tooltip="Antall tegn">({{article.content_length}})</span>
                                     </div>
                                     <!--Section-->
-                                    <div class="d-table-cell section" ng-style="{background: article.section.color}">{{article.section.name}}</div>
+                                    <div 
+                                        class="d-table-cell" 
+                                        ng-style="vm.columnWidths.section"
+                                        style="background: {{article.section.color}}">
+                                            {{article.section.name}}
+                                    </div>
                                     <!--Journalists-->
-                                    <div class="d-table-cell" ng-style="vm.responsiveColumns.journalist">
+                                    <div class="d-table-cell" ng-style="vm.columnWidths.journalists">
                                         <ul class="list-unstyled">
                                             <li ng-repeat="person in article.journalists">
                                                 <span person-widget="person" class="disp-break-word">
@@ -117,7 +128,7 @@
                                         </ul>
                                     </div>
                                     <!--Photographers-->
-                                    <div class="d-table-cell" ng-style="vm.responsiveColumns.photographer">
+                                    <div class="d-table-cell" ng-style="vm.columnWidths.photographers">
                                         <ul class="list-unstyled">
                                             <li ng-repeat="person in article.photographers">
                                                 <span person-widget="person">
@@ -130,7 +141,10 @@
                                         </ul>
                                     </div>
                                     <!--Status-->
-                                    <div class="d-table-cell status" ng-style="{background: article.status.color}">
+                                    <div 
+                                        class="d-table-cell" 
+                                        ng-style="vm.columnWidths.status" 
+                                        style="background: {{article.status.color}}">
                                         <select class="disp-dropdown"
                                                 ng-model="article.status"
                                                 ng-change="vm.saveArticle(article)"
@@ -139,7 +153,10 @@
                                         </select>
                                     </div>
                                     <!--Review-->
-                                    <div class="d-table-cell review" ng-style="{background: article.review.color}">
+                                    <div 
+                                        class="d-table-cell"
+                                        ng-style="vm.columnWidths.review"
+                                        style="background: {{article.review.color}}">
                                         <select class="disp-dropdown"
                                                 ng-model="article.review"
                                                 ng-change="vm.saveArticle(article)"
@@ -151,14 +168,14 @@
                                     <!--View-->
                                     <div 
                                         class="d-table-cell" 
-                                        ng-style="vm.responsiveColumns.pstatus" 
+                                        ng-style="vm.columnWidths.photo_status" 
                                         ng-click="vm.editArticleField(this, 'photo_status')" 
                                         ng-show="!edit['photo_status']"
                                     >
                                         <textwrapper length="15" ng-attr-text="article.photo_status || '[Rediger]'"></textwrapper>
                                     </div>
                                     <!--Edit-->
-                                    <div class="d-table-cell" ng-style="vm.responsiveColumns.pstatus" ng-show="edit['photo_status']">
+                                    <div class="d-table-cell" ng-style="vm.columnWidths.photo_status" ng-show="edit['photo_status']">
                                         <inline-edit text="article.photo_status"
                                                      cancel="vm.submitArticleField(this, 'photo_status', false)"
                                                      remote-change="remoteChanges['photo_status']"
@@ -169,14 +186,14 @@
                                     <!--View-->
                                     <div 
                                         class="d-table-cell" 
-                                        ng-style="vm.responsiveColumns.comment" 
+                                        ng-style="vm.columnWidths.comment" 
                                         ng-click="vm.editArticleField(this, 'comment')" 
                                         ng-show="!edit['comment']"
                                     >
                                         <textwrapper length="15" ng-attr-text="article.comment || '[Rediger]'"></textwrapper>
                                     </div>
                                     <!--Edit-->
-                                    <div class="d-table-cell" ng-style="vm.responsiveColumns.comment" ng-show="edit['comment']">
+                                    <div class="d-table-cell" ng-style="vm.columnWidths.comment" ng-show="edit['comment']">
                                         <inline-edit text="article.comment"
                                                      cancel="vm.submitArticleField(this, 'comment', false)"
                                                      remote-change="remoteChanges['comment']"
@@ -184,10 +201,24 @@
                                         </inline-edit>
                                     </div>
                                 </div>
+                                <div class="collapse extra-button-line" id="{{page.page_nr}}-{{article.id}}-button-line">
+                                    <div style="margin: 5px">
+                                        <a href="/api/article/{{article.id}}/indesignfile" class="btn btn-primary btn-xs">
+                                            <i class="fa fa-file-text-o"></i>InDesign fil
+                                        </a>
+                                        <a href="https://docs.google.com/document/d/{{article.google_drive_id}}/edit" target="_blank" class="btn btn-success btn-xs">
+                                            <span class="fa fa-pencil"></span>
+                                            Rediger i Google Docs
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <!--Layout status-->
-                        <div class="d-table-cell layout" ng-style="{background: page.layout_status.color}">
+                        <div 
+                            class="d-table-cell" 
+                            ng-style="vm.columnWidths.layout"
+                            style="background: {{page.layout_status.color}}">
                             <select class="disp-dropdown"
                                     ng-model="page.layout_status"
                                     ng-change="vm.updatePageMeta(page)"
@@ -196,25 +227,25 @@
                             </select>
                         </div>
                         <!--Ad-->
-                        <div class="d-table-cell button">
+                        <div class="d-table-cell" ng-style="vm.columnWidths.ad">
                             <span style="cursor: pointer" ng-click="page.advertisement = !page.advertisement; vm.updatePageMeta(page);">
                                 <i class="fa fa-file fa-lg"
                                    ng-class="{'text-danger' : !page.advertisement, 'text-success' : page.advertisement }"
-                                   tooltip="Siden inneholder {{!page.advertisement ? 'ikke ' : ''}} reklame">
+                                   uib-tooltip="Siden inneholder {{!page.advertisement ? 'ikke ' : ''}} reklame">
                                 </i>
                             </span>
                         </div>
                         <!--Done-->
-                        <div class="d-table-cell button">
+                        <div class="d-table-cell button" ng-style="vm.columnWidths.done">
                             <span style="cursor: pointer" ng-click="page.done = !page.done; vm.updatePageMeta(page);">
                                 <i class="fa fa-check fa-lg"
                                    ng-class="{'text-danger' : !page.done, 'text-success' : page.done }"
-                                   tooltip="Siden er {{!page.done ? 'ikke ' : ''}} helt ferdig">
+                                   uib-tooltip="Siden er {{!page.done ? 'ikke ' : ''}} helt ferdig">
                                 </i>
                             </span>
                         </div>
                         <!--Edit-->
-                        <div class="d-table-cell button">
+                        <div class="d-table-cell button" ng-style="vm.columnWidths.edit">
                             <button ng-click="vm.editPage(this)" class="btn btn-warning btn-xs pull-right" ng-hide="editPage">
                                 <i class="fa fa-pencil"></i>
                             </button>
@@ -223,7 +254,7 @@
                             </button>
                         </div>
                         <!--Delete-->
-                        <div class="d-table-cell button">
+                        <div class="d-table-cell button" ng-style="vm.columnWidths.delete">
                             <button ng-click="vm.deletePage(page)" class="btn btn-danger pull-right btn-xs">
                                 <i class="fa fa-trash-o"></i>
                             </button>

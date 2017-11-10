@@ -38,6 +38,8 @@ angular.module('momusApp.controllers')
         vm.editPublication = editPublication;
         vm.saveEditedPublication = saveEditedPublication;
 
+        vm.showHelp = showHelp;
+
         getPublications();
 
         function getPublications() {

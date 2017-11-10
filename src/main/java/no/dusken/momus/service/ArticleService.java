@@ -21,6 +21,7 @@ import no.dusken.momus.authentication.UserDetailsService;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleRevision;
+import no.dusken.momus.model.ArticleStatus;
 import no.dusken.momus.service.drive.GoogleDriveService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
@@ -119,9 +120,8 @@ public class ArticleService {
 
     public Article updateArticleMetadata(Article article) {
         Article existing = articleRepository.findOne(article.getId());
-        if (!article.getStatus().equals(existing.getStatus())) {
-            createRevision(article);
-        }
+
+        ArticleStatus oldStatus = existing.getStatus();
 
         existing.setName(article.getName());
         existing.setJournalists(article.getJournalists());
@@ -138,6 +138,10 @@ public class ArticleService {
         existing.setExternalPhotographer(article.getExternalPhotographer());
         existing.setPhotoStatus(article.getPhotoStatus());
         existing.setReview(article.getReview());
+
+        if (!article.getStatus().equals(oldStatus)) {
+            createRevision(existing);
+        }
 
         return updateArticle(existing);
     }

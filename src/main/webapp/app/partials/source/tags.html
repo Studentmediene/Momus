@@ -32,7 +32,7 @@
                     <i class="fa fa-save"></i>
                 </button>
 
-                <button ng-if="tag.unused" ng-click="deleteTag($index)" class="btn btn-danger" tooltip="Det er ingen kilder som bruker denne tagen. Den kan trygt slettes." tooltip-append-to-body="true">
+                <button ng-if="tag.unused" ng-click="deleteTag($index)" class="btn btn-danger" uib-tooltip="Det er ingen kilder som bruker denne tagen. Den kan trygt slettes." tooltip-append-to-body="true">
                     Ubrukt! <i class="fa fa-times"></i>
                 </button>
                 <button ng-if="!tag.unused" class="btn btn-danger" ng-click="deleteTag($index)"><i class="fa fa-times"></i></button>

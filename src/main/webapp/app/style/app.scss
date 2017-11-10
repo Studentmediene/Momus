@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-/* app css stylesheet */
+@import "disposition";
+@import "personWidget";
+@import "frontPage";
 
 body {
     padding-top: 70px;
@@ -26,7 +28,6 @@ body {
     body {
         padding-top: 0px;
     }
-
 }
 
 textarea.article {
@@ -100,7 +101,6 @@ a:focus {
 .btn-row .btn {
     margin-bottom: 2px;
     margin-top: 2px;
-
 }
 
 /* used for ui-bootstrap */
@@ -111,13 +111,13 @@ a:focus {
 td.articleHover:hover {
     cursor: pointer;
     background-color: #d9edf7;
-
 }
 
 #articleSearchInterface .row > div {
     margin-bottom: 10px;
 }
 
+/* Fixes empty space when listing journalists on an article in search view */
 td > ul, td > ol {
     margin-bottom: 0;
 }
@@ -127,106 +127,12 @@ a.zeroclipboard-is-hover {
     background-color: #3071a9;
 }
 
-/* Front page table column widths */
-
-.front-column-trash { width: 2%;  }
-.front-column-name {  width: 25%;  }
-.front-column-symbols {  width: 5%;  }
-.front-column-journalists {  width: 25%;  }
-.front-column-status {  width: 15%;  }
-.front-column-section {  width: 13%;  }
-.front-column-publication {  width: 15%;  }
-
-
 .article-revisions del, .article-revisions .del {
     background:#ffe6e6;
 }
 .article-revisions ins, .article-revisions .ins {
     background: #e6ffe6;
 }
-
-/* Person Widget */
-
-.person-widget-wrapper {
-    position:relative;
-}
-
-.person-widget-wrapper {
-    position:relative;
-}
-
-.person-widget-btn {
-    border-bottom: 1px dotted #ccc;
-    cursor: pointer;
-}
-
-.person-widget-btn :hover {
-    border-bottom: 1px dotted #999;
-}
-
-.person-widget-header {
-    white-space: nowrap;
-    width: 100%;
-}
-
-.person-widget-header tr #close-cell {
-    text-align: right;
-    padding-left: 10px;
-}
-
-.person-widget-element {
-    position:absolute;
-    background-color: #FFFFFF;
-    border:1px solid #CCC;
-    border-radius:5px;
-    z-index:100;
-    cursor:default;
-    bottom:40%;
-    left:-20%;
-    overflow: visible;
-}
-
-.person-widget-btn {
-    border-bottom: 1px dotted #ccc;
-    cursor: pointer;
-}
-
-.closePw {
-    opacity:0.5;
-    cursor:pointer;
-    padding:0;
-    margin:0;
-}
-
-.closePw:hover {
-    opacity:1;
-}
-
-
-.person-widget-element:after, .person-widget-element:before {
-    top: 100%;
-    left: 20%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-}
-
-
-.person-widget-element:after {
-    border-color: rgba(255, 255, 255, 0);
-    border-top-color: #FFF;
-    border-width: 10px;
-    margin-left: -10px;
-}
-.person-widget-element:before {
-    border-color: rgba(204, 204, 204, 0);
-    border-top-color: #CCC;
-    border-width: 11px;
-    margin-left: -11px;
-}
-
 
 /* Fix table overflow if article name contains a word that is too long */
 @media (max-width: 992px) { /* use the max to specify at each container level */
@@ -249,34 +155,9 @@ a.zeroclipboard-is-hover {
     text-decoration: underline;
     cursor: pointer;
 }
+
 .fav {
     line-height:32px;
-}
-
-.person-widget-element td {
-    max-width:initial !important;
-    min-width:initial !important;
-}
-
-.attach-top-true {
-    position:fixed;
-    top:50px;
-    z-index:100;
-}
-
-.panel-header-attach {
-    position:fixed;
-    width:1500px;
-    top:50px;
-    z-index:100;
-}
-
-.table-header-attach {
-    position:fixed;
-    width:1500px;
-    top:50px;
-    z-index:100;
-    background-color: white;
 }
 
 .inline-textarea {

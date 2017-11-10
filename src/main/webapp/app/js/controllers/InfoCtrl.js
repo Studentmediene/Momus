@@ -27,9 +27,9 @@ angular.module('momusApp.controllers')
         $scope.news = TipAndNewsService.getNews();
 
         $scope.getLanding = function() {
-            PersonService.getLandingPage().success(function(data){
-                if(data) {
-                    $scope.landing = data.page;
+            PersonService.getLandingPage().then(function(data){
+                if(data.data) {
+                    $scope.landing = data.data.page;
                 }else{
                     $scope.landing = '';
                 }
@@ -43,8 +43,8 @@ angular.module('momusApp.controllers')
 
         $scope.updateLanding = function(){
             $scope.savingLanding = true;
-            PersonService.updateLandingPage($scope.landing).success(function(data){
-                $scope.landing = data.page;
+            PersonService.updateLandingPage($scope.landing).then(function(data){
+                $scope.landing = data.data.page;
                 LandingChanger.setLanding();
                 $scope.savingLanding = false;
             });
