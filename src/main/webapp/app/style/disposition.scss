@@ -36,7 +36,7 @@
     border-right: solid #CCCCCC 1px;
 }
 
-.disposition-table > div > .d-table-row > .d-table-cell:not(.article-cell) {
+.disposition-table .d-table-row > .d-table-cell:not(.article-cell) {
     padding: 3px;
 }
 
@@ -81,42 +81,7 @@
     background-color: #99ff99;
 }
 
-.handle{
+.handle {
     text-align: center;
     cursor: move;
-}
-
-.pagenum{
-    width: 20px;
-    min-width: 20px;
-    max-width: 20px;
-}
-
-.section{
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
-}
-.status{
-    width: 120px;
-    min-width: 120px;
-    max-width: 120px;
-}
-
-.review{
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
-}
-
-.layout{
-    width: 80px;
-    min-width: 80px;
-    max-width: 80px;
-}
-
-.button{
-    width:30px;
-    min-width: 30px;
-    max-width: 30px;
 }
