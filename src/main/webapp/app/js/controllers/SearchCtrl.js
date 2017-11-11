@@ -17,7 +17,18 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('SearchCtrl', function ($scope, $location, $q, PersonService, PublicationService, Publication, ArticleService, $uibModal, MessageModal, $templateRequest) {
+    .controller('SearchCtrl', function (
+        $scope, 
+        $location, 
+        $q, 
+        PersonService, 
+        PublicationService, 
+        Publication,
+        Article,
+        $uibModal, 
+        MessageModal, 
+        $templateRequest
+    ) {
         var pageSize = 100;
 
         $scope.data = [];
@@ -53,18 +64,9 @@ angular.module('momusApp.controllers')
             }
         });
 
-        ArticleService.getSections().then(function (data) {
-            $scope.sections = data.data;
-        });
-
-        ArticleService.getStatuses().then(function (data) {
-            $scope.statuses = data.data;
-        });
-
-        ArticleService.getReviews().then(function (data) {
-            $scope.reviews = data.data;
-        });
-
+        $scope.sections = Article.sections();
+        $scope.statuses = Article.statuses();
+        $scope.reviews = Article.reviewStatuses();
 
         $scope.$on('$routeUpdate', function () { // when going back/forward
             updateSearchParametersFromUrl();
@@ -128,11 +130,9 @@ angular.module('momusApp.controllers')
             $scope.loading = true;
             $scope.noArticles = false;
 
-            ArticleService.search($scope.search).then(function (data) {
-                const articles = data.data;
+            const articles = Article.search({}, $scope.search, () => {
                 $scope.hasNextPage = (articles.length > pageSize); // search always returns one too many
                 $scope.data = articles.slice(0, pageSize);
-            }).finally(function () {
                 $scope.loading = false;
                 if ($scope.data.length <= 0) {
                     $scope.noArticles = true;

@@ -76,20 +76,20 @@ angular.module('momusApp.services')
             }
         };
     })
-    .factory('Article', $resource => {
-        return $resource('/api/article/:id/:resource', 
+    .factory('Article', ($resource, $http) => {
+        const Article = $resource('/api/article/:id/:resource', 
             {
                 id: '@id'
             },
             {
-                content: { method: 'GET', params: {resource: 'content'} },
-                revisions: { method: 'GET', url: '/api/article/:id/revisions/:rev1/:rev2', isArray: true },
+                revisions: { method: 'GET', params: {resource: 'revisions'}, isArray: true },
+                compareRevisions: { method: 'GET', url: '/api/article/:id/revisions/:rev1/:rev2', isArray: true },
                 multiple: { method: 'GET', params: {id: 'multiple'}, isArray: true },                
                 search: { method: 'POST', params: {id: 'search'}, isArray: true },
                 updateMetadata: { method: 'PATCH', params: {resource: 'metadata'} },
                 updateNote: { method: 'PATCH', params: { resource: 'note'} },
-                archive: { method: 'PATCH', params: {archived: true} },
-                restore: { method: 'PATCH', params: {archived: false} },
+                archive: { method: 'PATCH', params: {resource: 'archived', archived: true}, hasBody: false },
+                restore: { method: 'PATCH', params: {resource: 'archived', archived: false}, hasBody: false },
 
                 types: { method: 'GET', params: {id: 'types'}, isArray: true },
                 statuses: { method: 'GET', params: {id: 'statuses'}, isArray: true },
@@ -98,4 +98,8 @@ angular.module('momusApp.services')
                 statusCounts: { method: 'GET', params: {id: 'statuscounts'} },
                 reviewStatusCounts: { method: 'GET', params: {id: 'reviewstatuscounts'} },
             });
+        // Since content is only a string, $resource does not now how to handle it
+        // So use raw http call instead
+        Article.content = id => $http.get('/api/article/' + id + '/content');
+        return Article;
     });

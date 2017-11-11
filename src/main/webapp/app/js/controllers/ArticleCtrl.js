@@ -17,18 +17,36 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleCtrl', function ($scope, PersonService,$timeout, ArticleService, Publication, PublicationService, TitleChanger, noteParserRules, $routeParams, ViewArticleService, MessageModal, $templateRequest, $q) {
+    .controller('ArticleCtrl', function (
+        $scope,
+        PersonService,
+        $timeout,
+        Article,
+        Publication,
+        PublicationService,
+        TitleChanger,
+        noteParserRules,
+        $routeParams,
+        ViewArticleService,
+        MessageModal,
+        $templateRequest,
+        $q
+    ) {
         $scope.metaEditMode = false;
         $scope.noteRules = noteParserRules;
 
-        $q.all([PersonService.getAll(), ArticleService.getArticle($routeParams.id), ArticleService.getContent($routeParams.id)]).then(function(data){
+        $q.all([
+            PersonService.getAll(), 
+            Article.get({id: $routeParams.id}).$promise, 
+            Article.content($routeParams.id)
+        ]).then(function(data){
             $scope.persons = data[0].data;
 
-            $scope.article = data[1].data;
+            $scope.article = data[1];
 
             $scope.articleContent = data[2].data;
 
-            $scope.unedited = angular.copy(data[1].data);
+            $scope.unedited = angular.copy(data[1]);
             TitleChanger.setTitle($scope.article.name);
             ViewArticleService.viewArticle($routeParams.id);
 
@@ -37,23 +55,10 @@ angular.module('momusApp.controllers')
             PersonService.addPersonsToArray($scope.persons, $scope.article.photographers);
         });
 
-        ArticleService.getTypes().then(function (data) {
-            $scope.types = data.data;
-        });
-
-        ArticleService.getStatuses().then(function (data) {
-            $scope.statuses = data.data;
-        });
-
-        ArticleService.getReviews().then(function(data){
-            $scope.reviewOptions = data.data;
-            $scope.loading--;
-        });
-
-        ArticleService.getSections().then(function (data) {
-            $scope.sections = data.data;
-        });
-
+        $scope.sections = Article.sections();
+        $scope.statuses = Article.statuses();
+        $scope.reviews = Article.reviewStatuses();
+        $scope.types = Article.types();
 
         $scope.photoTypes = [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}];
         $scope.quoteCheckTypes = [{value: false, name: 'I orden'}, {value: true, name: 'Trenger sitatsjekk'}];
@@ -61,11 +66,13 @@ angular.module('momusApp.controllers')
         /* note panel */
         $scope.saveNote = function () {
             $scope.savingNote = true;
-            ArticleService.updateNote($scope.article).then(function (data) {
-                const note = data.data.note;
-                $scope.article.note = note;
-                $scope.unedited.note = note;
-                $scope.savingNote = false;
+            Article.updateNote(
+                {id: $scope.article.id}, 
+                JSON.stringify($scope.article.note),
+                article => {
+                    $scope.article.note = article.note;
+                    $scope.unedited.note = article.note;
+                    $scope.savingNote = false;
             });
         };
 
@@ -80,15 +87,12 @@ angular.module('momusApp.controllers')
 
         $scope.saveMeta = function() {
             $scope.savingMeta = true;
-            ArticleService.updateMetadata($scope.metaEditing).then(function(data) {
-                //data.content = $scope.article.content;
-
-                data.data.note = $scope.article.note;
-                $scope.article = data.data;
-                $scope.unedited = angular.copy(data.data);
+            $scope.metaEditing.$updateMetadata({}, updatedArticle => {
+                updatedArticle.note = $scope.article.note;
+                $scope.article = updatedArticle;
+                $scope.unedited = angular.copy(updatedArticle);
                 $scope.savingMeta = false;
                 $scope.metaEditMode = false;
-
                 TitleChanger.setTitle($scope.article.name);
             });
 
@@ -139,13 +143,13 @@ angular.module('momusApp.controllers')
 
         $scope.deleteArticle = function(){
             if(confirm("Er du sikker på at du vil slette artikkelen?")){
-                ArticleService.deleteArticle($scope.article);
+                $scope.article.$archive();
                 $scope.article.archived = true;
             }
         };
 
         $scope.restoreArticle = function(){
-            ArticleService.restoreArticle($scope.article);
+            $scope.article.$restore();
             $scope.article.archived = false;
         };
 
