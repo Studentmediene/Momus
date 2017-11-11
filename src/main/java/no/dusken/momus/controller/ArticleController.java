@@ -122,7 +122,7 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "/multiple", method = RequestMethod.GET)
-    public @ResponseBody List<Article> getArticlesByID(@RequestParam(value="id") List<Long> ids) {
+    public @ResponseBody List<Article> getArticlesByID(@RequestParam(value="ids") List<Long> ids) {
         if(ids == null) {
             return new ArrayList<>();
         }

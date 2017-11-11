@@ -17,7 +17,22 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope, $q, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, Publication, Page, PublicationService, $location, $filter) {
+    .controller('FrontPageCtrl', function (
+        $scope,
+        $q,
+        NoteService,
+        noteParserRules,
+        PersonService,
+        TipAndNewsService,
+        ViewArticleService,
+        FavouriteSectionService,
+        Publication,
+        Page,
+        Article,
+        PublicationService,
+        $location,
+        $filter
+    ) {
 
         $scope.randomTip = function() {
             $scope.tip = TipAndNewsService.getRandomTip();
@@ -33,9 +48,8 @@ angular.module('momusApp.controllers')
         $scope.loadingArticles = true;
         PersonService.getCurrentUser().then(function(data){
             $scope.user = data.data;
-            ArticleService.search({persons: [$scope.user.id], page_size: 9}).then(function (data) {
+            $scope.myArticles = Article.search({}, {persons: [$scope.user.id], page_size: 9}, () => {
                 $scope.loadingArticles = false;
-                $scope.myArticles = data.data;
                 if($scope.myArticles.length <= 0 ){
                     $scope.noArticles = true;
                 }
@@ -47,10 +61,10 @@ angular.module('momusApp.controllers')
         $scope.recentArticles = ViewArticleService.getRecentViews();
         if($scope.recentArticles){
             $scope.loadingRecent = true;
-            ArticleService.getMultiple($scope.recentArticles).then(function(data){
-                $scope.loadingRecent = false;
-                $scope.recentArticleInfo = data.data;
-            });
+            $scope.recentArticleInfo = Article.multiple(
+                {ids: $scope.recentArticles},
+                () => $scope.loadingRecent = false
+            );
         }
 
         $scope.orderRecentArticles = function(item){
@@ -66,16 +80,16 @@ angular.module('momusApp.controllers')
             if(data.data == "") {
                 favouriteSection = {};
             }
-            $scope.favouriteSection =favouriteSection;
+            $scope.favouriteSection = favouriteSection;
             searchForArticlesFromFavoriteSection();
         });
 
         var searchForArticlesFromFavoriteSection = function(){
             if($scope.favouriteSection.section){
-                ArticleService.search({section: $scope.favouriteSection.section.id, page_size: 9}).then(function(data){
-                    $scope.favSectionArticles = data.data;
-                    $scope.loadingFavorites = false;
-                });
+                $scope.favSectionArticles = Article.search(
+                    {}, 
+                    {section: $scope.favouriteSection.section.id, page_size: 9},
+                    () => $scope.loadingFavorites = false);
             }else{
                 $scope.loadingFavorites = false;
             }
@@ -88,10 +102,7 @@ angular.module('momusApp.controllers')
             });
         };
 
-        ArticleService.getSections().then(function (data) {
-            $scope.sections = data.data;
-        });
-
+        $scope.sections = Article.sections();
 
         // Note
 
@@ -115,17 +126,20 @@ angular.module('momusApp.controllers')
         // Cake diagrams TODO (Could some of this be put into a service?)
 
         $scope.publication = Publication.active({}, function() {            
-            $q.all([ PublicationService.getStatusCounts($scope.publication.id),ArticleService.getStatuses()]).then(function(data){
-                $scope.articlestatus = getStatusArrays(data[0].data, data[1].data);
-            });
+            $q.all([
+                Article.statusCounts({publicationId: $scope.publication.id}).$promise, 
+                Article.statuses().$promise]
+            ).then(data => $scope.articlestatus = getStatusArrays(...data));
 
-            $q.all([Page.layoutStatusCounts({pubid: $scope.publication.id}).$promise,Publication.layoutStatuses().$promise]).then(function(data){
-                $scope.layoutstatus = getStatusArrays(data[0], data[1]);
-            });
+            $q.all([
+                Page.layoutStatusCounts({pubid: $scope.publication.id}).$promise, 
+                Publication.layoutStatuses().$promise]
+            ).then(data => $scope.layoutstatus = getStatusArrays(...data));
 
-            $q.all([ PublicationService.getReviewStatusCounts($scope.publication.id),ArticleService.getReviews()]).then(function(data){
-                $scope.reviewstatus = getStatusArrays(data[0].data, data[1].data);
-            });
+            $q.all([
+                Article.reviewStatusCounts({publicationId: $scope.publication.id}).$promise, 
+                Article.reviewStatuses().$promise]
+            ).then(data => $scope.reviewstatus = getStatusArrays(...data));
         });
 
         function getStatusArrays(counts, statuses){

@@ -27,7 +27,7 @@ angular.module('momusApp.services')
                 return $http.get('/api/article/' + id + '/content');
             },
             getMultiple: function(ids) {
-                return $http.get('/api/article/multiple?' + ids.map(id => "id=" + id).join("&"));
+                return $http.get('/api/article/multiple?' + ids.map(id => "ids=" + id).join("&"));
             },
             search: function (searchObject) {
                 return $http.post('/api/article/search', searchObject);
@@ -94,8 +94,8 @@ angular.module('momusApp.services')
                 types: { method: 'GET', params: {id: 'types'}, isArray: true },
                 statuses: { method: 'GET', params: {id: 'statuses'}, isArray: true },
                 reviewStatuses: { method: 'GET', params: {id: 'reviews'}, isArray: true },
-                sections: { method: 'GET', params: {id: 'sections', isArray: true }},
-                statusCounts: { method: 'GET', params: {id: 'statuscounts'}, isArray: true },
-                reviewStatusCounts: { method: 'GET', params: {id: 'reviewstatuscounts'}, isArray: true },
+                sections: { method: 'GET', params: {id: 'sections'}, isArray: true },
+                statusCounts: { method: 'GET', params: {id: 'statuscounts'} },
+                reviewStatusCounts: { method: 'GET', params: {id: 'reviewstatuscounts'} },
             });
     });
