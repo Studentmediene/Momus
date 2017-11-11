@@ -83,12 +83,12 @@ public class ArticleController {
         return articleService.saveArticle(article);
     }
 
-    @RequestMapping(value = "/metadata", method = RequestMethod.PATCH)
-    public @ResponseBody Article updateArticle(@RequestBody Article article){
-        if (articleService.getArticleRepository().findOne(article.getId()) == null) {
-            throw new RestException("Article " + article.getId() + " not found", HttpServletResponse.SC_NOT_FOUND);
+    @RequestMapping(value = "{id}/metadata", method = RequestMethod.PATCH)
+    public @ResponseBody Article updateArticle(@PathVariable("id") Long id, @RequestBody Article article){
+        if (articleService.getArticleRepository().findOne(id) == null) {
+            throw new RestException("Article " + id + " not found", HttpServletResponse.SC_NOT_FOUND);
         }
-        return articleService.updateArticleMetadata(article);
+        return articleService.updateArticleMetadata(id, article);
     }
 
     @RequestMapping(value = "{id}/content", method = RequestMethod.GET)
@@ -176,7 +176,7 @@ public class ArticleController {
         return articleReviewRepository.findAll();
     }
 
-    @RequestMapping(value = "/statuscount", method = RequestMethod.GET)
+    @RequestMapping(value = "/statuscounts", method = RequestMethod.GET)
     public @ResponseBody Map<Long,Integer> getStatusCountsByPubId(@RequestParam Long publicationId){
         List<ArticleStatus> statuses = articleStatusRepository.findAll();
         Map<Long, Integer> map = new HashMap<>();
@@ -186,7 +186,7 @@ public class ArticleController {
         return map;
     }
 
-    @RequestMapping(value = "/reviewstatuscount", method = RequestMethod.GET)
+    @RequestMapping(value = "/reviewstatuscounts", method = RequestMethod.GET)
     public @ResponseBody Map<Long,Integer> getReviewStatusCountsByPubId(@RequestParam Long publicationId){
         List<ArticleReview> statuses = articleReviewRepository.findAll();
         Map<Long, Integer> map = new HashMap<>();

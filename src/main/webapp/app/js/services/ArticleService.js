@@ -27,7 +27,7 @@ angular.module('momusApp.services')
                 return $http.get('/api/article/' + id + '/content');
             },
             getMultiple: function(ids) {
-                return $http.get('/api/article/multiple?' + ids.map(function(id){return "id=" + id}).join("&"));
+                return $http.get('/api/article/multiple?' + ids.map(id => "id=" + id).join("&"));
             },
             search: function (searchObject) {
                 return $http.post('/api/article/search', searchObject);
@@ -41,7 +41,7 @@ angular.module('momusApp.services')
 
             // Editing stuff
             updateMetadata: function (article) {
-                return $http.patch('/api/article/metadata', article);
+                return $http.patch('/api/article/' + article.id + '/metadata', article);
             },
 
             updateNote: function (article) {
@@ -75,4 +75,27 @@ angular.module('momusApp.services')
                 return $http.get('/api/article/reviews', {cache: true});
             }
         };
+    })
+    .factory('Article', $resource => {
+        return $resource('/api/article/:id/:resource', 
+            {
+                id: '@id'
+            },
+            {
+                content: { method: 'GET', params: {resource: 'content'} },
+                revisions: { method: 'GET', url: '/api/article/:id/revisions/:rev1/:rev2', isArray: true },
+                multiple: { method: 'GET', params: {id: 'multiple'}, isArray: true },                
+                search: { method: 'POST', params: {id: 'search'}, isArray: true },
+                updateMetadata: { method: 'PATCH', params: {resource: 'metadata'} },
+                updateNote: { method: 'PATCH', params: { resource: 'note'} },
+                archive: { method: 'PATCH', params: {archived: true} },
+                restore: { method: 'PATCH', params: {archived: false} },
+
+                types: { method: 'GET', params: {id: 'types'}, isArray: true },
+                statuses: { method: 'GET', params: {id: 'statuses'}, isArray: true },
+                reviewStatuses: { method: 'GET', params: {id: 'reviews'}, isArray: true },
+                sections: { method: 'GET', params: {id: 'sections', isArray: true }},
+                statusCounts: { method: 'GET', params: {id: 'statuscounts'}, isArray: true },
+                reviewStatusCounts: { method: 'GET', params: {id: 'reviewstatuscounts'}, isArray: true },
+            });
     });

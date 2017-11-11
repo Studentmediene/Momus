@@ -17,7 +17,22 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $uibModal, $templateRequest, $route, $window, uiSortableMultiSelectionMethods, $q, Publication, Page) {
+    .controller('DispositionCtrl', function (
+        $scope,
+        $routeParams,
+        PublicationService,
+        MessageModal,
+        $location,
+        $uibModal,
+        $templateRequest,
+        $route,
+        $window,
+        uiSortableMultiSelectionMethods,
+        $q,
+        Publication,
+        Page,
+        Article
+    ) {
         var vm = this;
 
         vm.maxNewPages = 100;
@@ -49,11 +64,8 @@ angular.module('momusApp.controllers')
             publicationQuery($routeParams.id)(publication => {
                 Page.query({pubid: publication.id}, pages => {
                     publication.pages = pages;
-                    ArticleService.search({publication: publication.id}).then(function(data){
-                        vm.articles = data.data;
-                        vm.publication = publication;
-                        vm.loading = false;
-                    });
+                    vm.publication = publication;
+                    vm.articles = Article.search({}, {publication: publication.id}, () => vm.loading = false);
                 });
             });
         }
@@ -65,10 +77,8 @@ angular.module('momusApp.controllers')
         }
 
         function fetchStatuses(){
-            $q.all([ArticleService.getReviews(), ArticleService.getStatuses()]).then(function(data){
-                vm.reviewStatuses = data[0].data;
-                vm.articleStatuses = data[1].data;
-            });
+            vm.articleStatuses = Article.statuses();            
+            vm.reviewStatuses = Article.reviewStatuses();
             vm.layoutStatuses = Publication.layoutStatuses();
         }
 
@@ -130,9 +140,8 @@ angular.module('momusApp.controllers')
                     }
                 }
             });
-            modal.result.then(function(id){
-                ArticleService.getArticle(id).then(function(data){
-                    const article = data.data;
+            modal.result.then(id => {
+                const article = Article.get({id: id}, () => {
                     page.articles.push(article);
                     vm.articles.push(article);
                 });
@@ -141,9 +150,7 @@ angular.module('momusApp.controllers')
 
         function saveArticle(article){
             vm.loading = true;
-            ArticleService.updateMetadata(article).then(function(data){
-                vm.loading = false;
-            });
+            Article.updateMetadata({id: article.id}, article, () => vm.loading = false);
         }
 
         function showHelp(){

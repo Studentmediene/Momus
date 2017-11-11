@@ -162,7 +162,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article.setSection(section2);
         article.setPublication(publication2);
 
-        article = articleServiceSpy.updateArticleMetadata(article);
+        article = articleServiceSpy.updateArticleMetadata(article.getId(), article);
 
         verify(articleServiceSpy, times(1)).createRevision(article1);
         verify(articleServiceSpy, times(1)).updateArticle(article1);
