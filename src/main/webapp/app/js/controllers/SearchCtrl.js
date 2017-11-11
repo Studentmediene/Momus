@@ -18,15 +18,14 @@
 
 angular.module('momusApp.controllers')
     .controller('SearchCtrl', function (
-        $scope, 
-        $location, 
-        $q, 
-        PersonService, 
-        PublicationService, 
+        $scope,
+        $location,
+        $q,
+        PersonService,
         Publication,
         Article,
-        $uibModal, 
-        MessageModal, 
+        $uibModal,
+        MessageModal,
         $templateRequest
     ) {
         var pageSize = 100;

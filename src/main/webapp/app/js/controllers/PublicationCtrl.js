@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('PublicationCtrl', function ($scope, PublicationService, $templateRequest, MessageModal, Publication) {
+    .controller('PublicationCtrl', function ($scope, $templateRequest, MessageModal, Publication) {
         var vm = this;
 
         vm.publications = [];

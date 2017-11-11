@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('CreateArticleModalCtrl', function($scope, $uibModalInstance, Publication, ArticleService, PersonService, $q, pubId){
+    .controller('CreateArticleModalCtrl', function($scope, $uibModalInstance, Publication, Article, PersonService, $q, pubId){
         $scope.article = {
             name: "",
             journalists: null,
@@ -35,38 +35,20 @@ angular.module('momusApp.controllers')
             quote_check_status: false
         };
 
-        $q.all([Publication.query(), Publication.active()]).then(function (data) {
-            $scope.publications = data[0];
-            $scope.article.publication = data[1];
-
-            // Set the publication if one was passed into the modal
-            if(pubId){
-                for(var i = 0; i < $scope.publications.length;i++){
-                    if($scope.publications[i].id === pubId){
-                        $scope.article.publication = $scope.publications[i];
-                        break;
-                    }
-                }
-            }
+        $q.all([
+            Publication.query().$promise,
+            Publication.active().$promise
+        ]).then(([publications, active]) => {
+            $scope.publications = publications;
+            $scope.article.publication = pubId ?
+                publications.find(pub => pub.id === pubId) :
+                active;
         });
 
-        ArticleService.getStatuses().then(function (data) {
-            $scope.statuses = data.data;
-            $scope.article.status = data.data[0];
-        });
-
-        ArticleService.getTypes().then(function (data) {
-            $scope.types = data.data;
-        });
-
-        ArticleService.getSections().then(function (data) {
-            $scope.sections = data.data;
-            $scope.article.section = data.data[0];
-        });
-
-        ArticleService.getReviews().then(function (data){
-            $scope.article.review = data.data[0];
-        });
+        Article.reviewStatuses({}, reviews => $scope.article.review = reviews[0]);        
+        $scope.statuses = Article.statuses({}, () => $scope.article.status = $scope.statuses[0]);
+        $scope.sections = Article.sections({}, () => $scope.article.section = $scope.sections[0]);
+        $scope.types = Article.types();
 
         PersonService.getAll().then(function (data) {
             $scope.persons = data.data;
@@ -78,9 +60,9 @@ angular.module('momusApp.controllers')
 
         $scope.createArticle = function () {
             $scope.creating = true;
-            ArticleService.createNewArticle($scope.article).then(function (data) {
+            Article.save({}, $scope.article, article => {
                 $scope.creating = false;
-                $uibModalInstance.close(data.data.id);
+                $uibModalInstance.close(article.id);
             });
         };
 

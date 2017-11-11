@@ -29,7 +29,6 @@ angular.module('momusApp.controllers')
         Publication,
         Page,
         Article,
-        PublicationService,
         $location,
         $filter
     ) {

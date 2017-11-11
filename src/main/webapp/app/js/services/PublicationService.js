@@ -17,16 +17,6 @@
 'use strict';
 
 angular.module('momusApp.services')
-    .service('PublicationService', function ($http) {
-        return {
-            getStatusCounts: function(id){
-                return $http.get('/api/article/statuscounts?publicationId=' + id);
-            },
-            getReviewStatusCounts: function(id){
-                return $http.get('/api/article/reviewstatuscounts?publicationId=' + id);
-            }
-        };
-    })
     .factory('Publication', $resource => {
         return $resource('/api/publications/:id', 
             {

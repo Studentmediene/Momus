@@ -17,65 +17,6 @@
 'use strict';
 
 angular.module('momusApp.services')
-    .service('ArticleService', function ($http) {
-        return {
-            // Getting stuff
-            getArticle: function (id) {
-                return $http.get('/api/article/' + id);
-            },
-            getContent: function (id) {
-                return $http.get('/api/article/' + id + '/content');
-            },
-            getMultiple: function(ids) {
-                return $http.get('/api/article/multiple?' + ids.map(id => "ids=" + id).join("&"));
-            },
-            search: function (searchObject) {
-                return $http.post('/api/article/search', searchObject);
-            },
-            getRevisions: function (id) {
-                return $http.get('/api/article/' + id + '/revisions');
-            },
-            getDiffs: function (articleId, revId1, revId2) {
-                return $http.get('/api/article/' + articleId + '/revisions/' + revId1 + '/' + revId2);
-            },
-
-            // Editing stuff
-            updateMetadata: function (article) {
-                return $http.patch('/api/article/' + article.id + '/metadata', article);
-            },
-
-            updateNote: function (article) {
-                return $http.patch('/api/article/' + article.id + '/note', JSON.stringify(article.note));
-            },
-            createNewArticle: function (article) {
-                return $http.post('/api/article', article);
-            },
-            deleteArticle: function(article){
-                return $http.patch('/api/article/' + article.id + '/archived?archived=true');
-            },
-            restoreArticle: function(article){
-                return $http.patch('/api/article/' + article.id + '/archived?archived=false');
-            },
-
-
-            // Getting metadata, cache everything
-            getTypes: function () {
-                return $http.get('/api/article/types', {cache: true});
-            },
-
-            getStatuses: function () {
-                return $http.get('/api/article/statuses', {cache: true});
-            },
-
-            getSections: function () {
-                return $http.get('/api/article/sections', {cache: true});
-            },
-
-            getReviews: function () {
-                return $http.get('/api/article/reviews', {cache: true});
-            }
-        };
-    })
     .factory('Article', ($resource, $http) => {
         const Article = $resource('/api/article/:id/:resource', 
             {

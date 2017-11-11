@@ -23,7 +23,6 @@ angular.module('momusApp.controllers')
         $timeout,
         Article,
         Publication,
-        PublicationService,
         TitleChanger,
         noteParserRules,
         $routeParams,

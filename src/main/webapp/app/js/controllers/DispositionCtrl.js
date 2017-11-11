@@ -20,7 +20,6 @@ angular.module('momusApp.controllers')
     .controller('DispositionCtrl', function (
         $scope,
         $routeParams,
-        PublicationService,
         MessageModal,
         $location,
         $uibModal,
