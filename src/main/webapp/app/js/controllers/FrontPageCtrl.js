@@ -20,8 +20,6 @@ angular.module('momusApp.controllers')
     .controller('FrontPageCtrl', function (
         $scope,
         $q,
-        NoteService,
-        noteParserRules,
         PersonService,
         TipAndNewsService,
         ViewArticleService,
@@ -102,24 +100,6 @@ angular.module('momusApp.controllers')
         };
 
         $scope.sections = Article.sections();
-
-        // Note
-
-        $scope.noteRules = noteParserRules;
-
-        NoteService.getNote().then(function (data) {
-            $scope.note = data;
-            $scope.unedited = angular.copy(data);
-        });
-
-        $scope.saveNote = function () {
-            $scope.savingNote = true;
-            NoteService.updateNote($scope.note).then(function (data) {
-                $scope.note = data.data;
-                $scope.unedited = angular.copy(data);
-                $scope.savingNote = false;
-            });
-        };
 
 
         // Cake diagrams TODO (Could some of this be put into a service?)
