@@ -152,9 +152,9 @@ public class PublicationController {
         return publicationService.updateTrailingPages(pages);
     }
 
-	@RequestMapping(value = "{id}/pages", method = RequestMethod.PATCH)
-	public @ResponseBody Page updatePageMeta(@RequestBody Page page){
-		if(publicationService.getPageRepository().findOne(page.getId()) == null){
+	@RequestMapping(value = "{id}/pages/{pageid}", method = RequestMethod.PATCH)
+	public @ResponseBody Page updatePageMeta(@RequestBody Page page, @PathVariable("pageid") Long pageid){
+		if(publicationService.getPageRepository().findOne(pageid) == null){
 			throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
 		}
 		return publicationService.updatePageMeta(page);

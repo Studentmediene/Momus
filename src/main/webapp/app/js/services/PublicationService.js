@@ -27,27 +27,30 @@ angular.module('momusApp.services')
             }
         };
     })
-    .factory('Publication', function($resource) {
-        var baseUrl = '/api/publications';
-
-        return $resource(baseUrl + '/:id', null,
+    .factory('Publication', $resource => {
+        return $resource('/api/publications/:id', 
             {
-                active: { method: 'GET', url: baseUrl + '/active'},
+                id: '@id'
+            },
+            {
+                active: { method: 'GET', params: {id: 'active'} },
                 update: { method: 'PUT'},
-                layoutStatuses: { method: 'GET', url: baseUrl + '/layoutstatuses', isArray: true}
+                layoutStatuses: { method: 'GET', isArray: true, params: {id: 'layoutstatuses'} }
             });
     })
-    .factory('Page', function($resource) {
-        var baseUrl = '/api/publications/:pubid/pages';
-
-        return $resource(baseUrl + '/:pageid', null,
+    .factory('Page', $resource => {
+        return $resource('/api/publications/:pubid/pages/:pageid', 
+            {
+                pageid: '@id',
+                pubid: '@publication.id'
+            },
             {
                 save: { method: 'POST', isArray: true},
-                saveMultiple: { method: 'POST', isArray:true, url: baseUrl + '/list'},
+                saveMultiple: { method: 'POST', isArray:true, params: {pageid: 'list'} },
                 update: { method: 'PUT', isArray: true},
-				updateMeta: {method: 'PATCH', isArray: false},
-                updateMultiple: { method: 'PUT', isArray: true, url: baseUrl + '/list'},
-                layoutStatusCounts: { method: 'GET', url: baseUrl + '/layoutstatuscounts'},
+				updateMeta: {method: 'PATCH'},
+                updateMultiple: { method: 'PUT', isArray: true, params: {pageid: 'list'} },
+                layoutStatusCounts: { method: 'GET', params: {pageid: 'layoutstatuscounts'} },
                 delete: { method: 'DELETE', isArray: true}
             });
     });

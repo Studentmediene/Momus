@@ -41,14 +41,13 @@ angular.module('momusApp.controllers')
         vm.pageColor = page => page.done ? pageDoneColor : (page.advertisement ? pageAdColor : '#FFF');
 
         // Get all data
-        getStatuses();
-        getDisposition();
+        fetchStatuses();
+        fetchDisposition();
 
-        function getDisposition(){
+        function fetchDisposition(){
             vm.loading = true;
-            var pubid = $routeParams.id;
-            getPublication($routeParams.id, function(publication){
-                getPages(publication.id, function(pages){
+            publicationQuery($routeParams.id)(publication => {
+                Page.query({pubid: publication.id}, pages => {
                     publication.pages = pages;
                     ArticleService.search({publication: publication.id}).then(function(data){
                         vm.articles = data.data;
@@ -59,20 +58,13 @@ angular.module('momusApp.controllers')
             });
         }
 
-        function getPages(pubid, callback){
-            var pages = Page.query({pubid: pubid}, function(){ callback(pages);});
+        function publicationQuery(pubid){
+            return pubid ? 
+                callback => Publication.get({id: pubid}, callback) : 
+                callback => Publication.active({}, callback);
         }
 
-        function getPublication(pubid, callback){
-            var publication;
-            if(pubid){
-                publication = Publication.get({id: pubid}, function(){ callback(publication);});
-            }else{
-                publication = Publication.active({}, function(){ callback(publication);});
-            }
-        }
-
-        function getStatuses(){
+        function fetchStatuses(){
             $q.all([ArticleService.getReviews(), ArticleService.getStatuses()]).then(function(data){
                 vm.reviewStatuses = data[0].data;
                 vm.articleStatuses = data[1].data;
@@ -81,41 +73,38 @@ angular.module('momusApp.controllers')
         }
 
         function newPages(newPageAt, numNewPages){
-            var pages = [];
-            for(var i = 0; i < numNewPages; i++) {
-                var page = {
+            const pages = Array.from(new Array(numNewPages), (_, i) => ({
                     page_nr: newPageAt + i + 1, 
                     publication: vm.publication.id,
                     layout_status: getLayoutStatusByName("Ukjent")
-                };
-                pages.push(page);
-            }
+                })
+            );
             vm.loading = true;
-            var updatedPages = Page.saveMultiple({pubid: vm.publication.id}, pages, function() {
-                vm.publication.pages = updatedPages;
+            Page.saveMultiple({pubid: vm.publication.id}, pages, pages => {
+                vm.publication.pages = pages;
                 vm.loading = false;
             });
         }
 
         function updatePage(page) {
             vm.loading = true;
-            var pages = Page.update({pubid: vm.publication.id}, page, function() {
+            var pages = page.$update({}, pages => {
                 vm.publication.pages = pages;
                 vm.loading = false;
             });
         }
 
 		function updatePageMeta(page){
-			vm.loading = true;
-			var new_page = Page.updateMeta({pubid: vm.publication.id}, page, function() {
-				vm.publication.pages[page.page_nr-1] = new_page;
+            vm.loading = true;
+			page.$updateMeta({}, page => {
+                vm.publication.pages[page.page_nr-1] = page;
 				vm.loading = false;
-			});
+            });
 		}
 
         function updatePages(pages) {
             vm.loading = true;
-            var pages = Page.updateMultiple({pubid: vm.publication.id}, pages, function() {
+            Page.updateMultiple({pubid: vm.publication.id}, pages, pages => {
                 vm.publication.pages = pages;
                 vm.loading = false;
             });
@@ -124,8 +113,7 @@ angular.module('momusApp.controllers')
         function deletePage(page) {
             if(confirm("Er du sikker på at du vil slette denne siden?")){
                 vm.loading = true;
-                vm.publication.pages.splice(vm.publication.pages.indexOf(page), 1);
-                var pages = Page.delete({pubid: vm.publication.id, pageid: page.id}, function() {
+                Page.delete({pageid: page.id, pubid: page.publication.id}, pages => {
                     vm.publication.pages = pages;
                     vm.loading = false;
                 });
