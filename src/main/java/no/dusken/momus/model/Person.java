@@ -134,6 +134,7 @@ public class Person {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
                 '}';
     }
 }
