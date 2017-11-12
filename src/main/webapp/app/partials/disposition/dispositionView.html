@@ -113,7 +113,7 @@
                                         <ul class="list-unstyled">
                                             <li ng-repeat="person in article.journalists">
                                                 <span person-widget="person" class="disp-break-word">
-                                                    {{person.full_name}}
+                                                    {{person.name}}
                                                 </span>
                                             </li>
                                             <li ng-repeat="person in article.external_author.split(',')">
@@ -126,7 +126,7 @@
                                         <ul class="list-unstyled">
                                             <li ng-repeat="person in article.photographers">
                                                 <span person-widget="person">
-                                                    {{person.full_name}}
+                                                    {{person.name}}
                                                 </span>
                                             </li>
                                             <li ng-repeat="person in article.external_photographer.split(',')">

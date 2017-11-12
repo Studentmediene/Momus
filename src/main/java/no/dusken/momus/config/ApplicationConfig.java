@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
+
+import com.google.common.collect.ImmutableMap;
 import no.dusken.momus.exceptions.ExceptionHandler;
 import no.dusken.momus.mapper.HibernateAwareObjectMapper;
 
@@ -116,6 +118,8 @@ class ApplicationConfig extends WebMvcConfigurerAdapter {
         ldapContextSource.setBase(env.getProperty("ldap.base"));
         ldapContextSource.setUserDn(env.getProperty("ldap.username"));
         ldapContextSource.setPassword(env.getProperty("ldap.password"));
+        ldapContextSource.setBaseEnvironmentProperties(
+                ImmutableMap.of("java.naming.ldap.attributes.binary", "objectGUID"));
         ldapContextSource.setPooled(false);
         ldapContextSource.afterPropertiesSet();        
         return new LdapTemplate(ldapContextSource);
