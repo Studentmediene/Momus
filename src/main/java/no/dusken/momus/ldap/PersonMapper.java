@@ -56,23 +56,11 @@ public class PersonMapper implements AttributesMapper<Person> {
         return name;
     }
 
-    private Optional<Person> getPersonIfExists(UUID guid, String username) {
+    private Person getPersonIfExists(UUID guid, String username) {
         Person person = personRepository.findByGuid(guid);
 
-        if(person == null)
-            person = personRepository.findByUsername(username);
+        if(person == null) person = personRepository.findByUsername(username);
 
-        if(person == null)
-            return Optional.empty();
-
-        return Optional.of(person);
-    }
-
-    private Person updatePerson(Person person, UUID guid, String username, String email, String phoneNumber) {
-        person.setGuid(guid);
-        person.setUsername(username);
-        person.setEmail(email);
-        person.setPhoneNumber(phoneNumber);
         return person;
     }
 
@@ -83,25 +71,31 @@ public class PersonMapper implements AttributesMapper<Person> {
         String phoneNumber = getAttribute(attributes, "telephoneNumber");
         UUID guid = getGuidFromBytes((byte[]) attributes.get("objectGUID").get());
 
-        Optional<Person> person = getPersonIfExists(guid, username);
-        if(person.isPresent()) {
-            return updatePerson(person.get(), guid, username, email, phoneNumber);
+        Person person = getPersonIfExists(guid, username);
+
+        // Person already exists, only have to update fields
+        if(person != null) {
+            person.setGuid(guid);
+            person.setUsername(username);
+            person.setEmail(email);
+            person.setPhoneNumber(phoneNumber);
+            return person;
         }
 
-        System.out.println(String.format("Did not find %s in db ", username));
-
-        Long id = findFreeId();
-
-        return new Person(id, guid, username, name, email, phoneNumber, active);
+        return new Person(findFreeId(), guid, username, name, email, phoneNumber, active);
     }
 
     @Override
     public Person mapFromAttributes(Attributes attributes) throws NamingException {
         Person person = getPersonFromAttributes(attributes);
         return personRepository.saveAndFlush(person);
-
     }
 
+    /**
+     * We have to find id manually since before AD, the user id was directly fetched from LDAP,
+     * but with AD there is no simple number field that is unique. We have to retain old user ids to ensure
+     * reference integrity of old articles.
+     */
     private Long findFreeId(){
         while(personRepository.findOne(lastId) != null){ // New person
             lastId++;

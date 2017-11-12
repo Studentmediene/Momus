@@ -1132,4 +1132,9 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         <dropColumn tableName="person" columnName="firstname" />
         <renameColumn tableName="person" oldColumnName="fullname" newColumnName="name" />
     </changeSet>
+
+    <!-- I don't remember what this table was for in the first place -->
+    <changeSet id="38_dropmaptable" author="Eivind">
+        <dropTable tableName="usernamemap" />
+    </changeSet>
 </databaseChangeLog>
