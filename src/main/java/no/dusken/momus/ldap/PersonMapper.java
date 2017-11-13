@@ -22,22 +22,32 @@ public class PersonMapper implements AttributesMapper<Person> {
         this.lastId = 0L;
     }
 
-    private String getAttribute(Attributes attributes, String... keys) throws NamingException {
-        Attribute attribute;
-        for (String key : keys) {
-            attribute = attributes.get(key);
-            if (attribute != null) {
-                return (String) attribute.get();
-            }
-        }
-        return "";
+    @Override
+    public Person mapFromAttributes(Attributes attributes) throws NamingException {
+        Person person = getPersonFromAttributes(attributes);
+        return personRepository.saveAndFlush(person);
     }
 
-    private UUID getGuidFromBytes(byte[] bytes) {
-        ByteBuffer bb = ByteBuffer.wrap(bytes);
-        long high = bb.getLong();
-        long low = bb.getLong();
-        return new UUID(high, low);
+    private Person getPersonFromAttributes(Attributes attributes) throws NamingException{
+        String username = getAttribute(attributes, "sAMAccountName");
+        String name = getName(attributes);
+        String email = getAttribute(attributes, "mail", "otherMailbox");
+        String phoneNumber = getAttribute(attributes, "telephoneNumber");
+        UUID guid = getGuidFromBytes((byte[]) attributes.get("objectGUID").get());
+
+        Person person = getPersonIfExists(guid, username);
+
+        // Person already exists, only have to update fields
+        if(person != null) {
+            person.setGuid(guid);
+            person.setUsername(username);
+            person.setEmail(email);
+            person.setPhoneNumber(phoneNumber);
+        }else {
+            person = new Person(findFreeId(), guid, username, name, email, phoneNumber, active);
+        }
+
+        return person;
     }
 
     private String getName(Attributes attributes) throws NamingException {
@@ -64,31 +74,22 @@ public class PersonMapper implements AttributesMapper<Person> {
         return person;
     }
 
-    private Person getPersonFromAttributes(Attributes attributes) throws NamingException{
-        String username = getAttribute(attributes, "sAMAccountName");
-        String name = getName(attributes);
-        String email = getAttribute(attributes, "mail", "otherMailbox");
-        String phoneNumber = getAttribute(attributes, "telephoneNumber");
-        UUID guid = getGuidFromBytes((byte[]) attributes.get("objectGUID").get());
-
-        Person person = getPersonIfExists(guid, username);
-
-        // Person already exists, only have to update fields
-        if(person != null) {
-            person.setGuid(guid);
-            person.setUsername(username);
-            person.setEmail(email);
-            person.setPhoneNumber(phoneNumber);
-            return person;
+    private String getAttribute(Attributes attributes, String... keys) throws NamingException {
+        Attribute attribute;
+        for (String key : keys) {
+            attribute = attributes.get(key);
+            if (attribute != null) {
+                return (String) attribute.get();
+            }
         }
-
-        return new Person(findFreeId(), guid, username, name, email, phoneNumber, active);
+        return "";
     }
 
-    @Override
-    public Person mapFromAttributes(Attributes attributes) throws NamingException {
-        Person person = getPersonFromAttributes(attributes);
-        return personRepository.saveAndFlush(person);
+    private UUID getGuidFromBytes(byte[] bytes) {
+        ByteBuffer bb = ByteBuffer.wrap(bytes);
+        long high = bb.getLong();
+        long low = bb.getLong();
+        return new UUID(high, low);
     }
 
     /**
