@@ -44,7 +44,6 @@ public class LdapSyncer {
     @Autowired
     PersonRepository personRepository;
 
-
     @Value("${ldap.syncEnabled}")
     private boolean enabled;
 
@@ -64,7 +63,6 @@ public class LdapSyncer {
 
         syncAllPersonsFromLdap();
 
-
         long end = System.currentTimeMillis();
         long timeUsed = end - start;
         logger.info("Done syncing from LDAP, it took {}ms", timeUsed);
@@ -75,12 +73,7 @@ public class LdapSyncer {
         sync();
     }
 
-    /**
-     * Syncs the person database with LDAP
-     */
     public void syncAllPersonsFromLdap() {
-
-        // Get all active persons, with base ou=Brukere
         List<Person> activePersons = searchForPersons("Brukere", true);
 
         List<Person> inactivePersons = searchForPersons("Sluttede", false);
@@ -106,7 +99,6 @@ public class LdapSyncer {
     }
 
     /**
-     *
      * @param ou group to search in
      * @param active Whether or not the user should be flagged as active
      * @return A list of the found persons

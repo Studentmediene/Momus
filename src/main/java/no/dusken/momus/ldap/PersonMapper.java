@@ -37,14 +37,14 @@ public class PersonMapper implements AttributesMapper<Person> {
 
         Person person = getPersonIfExists(guid, username);
 
-        // Person already exists, only have to update fields
-        if(person != null) {
+        if (person == null) {
+            person = new Person(findFreeId(), guid, username, name, email, phoneNumber, active);
+        } else {
             person.setGuid(guid);
             person.setUsername(username);
+            person.setName(name);
             person.setEmail(email);
             person.setPhoneNumber(phoneNumber);
-        }else {
-            person = new Person(findFreeId(), guid, username, name, email, phoneNumber, active);
         }
 
         return person;
@@ -60,7 +60,7 @@ public class PersonMapper implements AttributesMapper<Person> {
             if (name.trim().isEmpty()) {
                 name = String.format(
                         "%s (mangler visningsnavn)",
-                        getAttribute(attributes, "username"));
+                        getAttribute(attributes, "sAMAccountName"));
             }
         }
         return name;
@@ -68,9 +68,8 @@ public class PersonMapper implements AttributesMapper<Person> {
 
     private Person getPersonIfExists(UUID guid, String username) {
         Person person = personRepository.findByGuid(guid);
-
-        if(person == null) person = personRepository.findByUsername(username);
-
+        if(person == null)
+            person = personRepository.findByUsername(username);
         return person;
     }
 
