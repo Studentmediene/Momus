@@ -16,7 +16,7 @@
 
 package no.dusken.momus.controller;
 
-import no.dusken.momus.authentication.UserDetailsServiceImpl;
+import no.dusken.momus.authentication.UserDetailsService;
 import no.dusken.momus.model.LandingPage;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.LandingPageRepository;
@@ -45,7 +45,7 @@ public class PersonController {
     private LandingPageService landingPageService;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private UserDetailsService userDetailsService;
 
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody List<Person> getAllPersons() {
