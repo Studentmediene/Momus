@@ -5,10 +5,7 @@ import no.dusken.momus.service.repository.PersonRepository;
 import org.springframework.ldap.core.AttributesMapper;
 
 import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
-import java.nio.ByteBuffer;
-import java.util.Optional;
 import java.util.UUID;
 
 public class PersonMapper implements AttributesMapper<Person> {
@@ -29,11 +26,11 @@ public class PersonMapper implements AttributesMapper<Person> {
     }
 
     private Person getPersonFromAttributes(Attributes attributes) throws NamingException{
-        String username = getAttribute(attributes, "sAMAccountName");
-        String name = getName(attributes);
-        String email = getAttribute(attributes, "mail", "otherMailbox");
-        String phoneNumber = getAttribute(attributes, "telephoneNumber");
-        UUID guid = getGuidFromBytes((byte[]) attributes.get("objectGUID").get());
+        String username = LDAPAttributes.getUsername(attributes);
+        String name = LDAPAttributes.getName(attributes);
+        String email = LDAPAttributes.getEmail(attributes);
+        String phoneNumber = LDAPAttributes.getPhoneNumber(attributes);
+        UUID guid = LDAPAttributes.getGuid(attributes);
 
         Person person = getPersonIfExists(guid, username);
 
@@ -50,45 +47,11 @@ public class PersonMapper implements AttributesMapper<Person> {
         return person;
     }
 
-    private String getName(Attributes attributes) throws NamingException {
-        String name = getAttribute(attributes, "displayName");
-        if (name.trim().isEmpty()) {
-            name = String.format(
-                    "%s %s",
-                    getAttribute(attributes, "givenName"),
-                    getAttribute(attributes, "sn"));
-            if (name.trim().isEmpty()) {
-                name = String.format(
-                        "%s (mangler visningsnavn)",
-                        getAttribute(attributes, "sAMAccountName"));
-            }
-        }
-        return name;
-    }
-
     private Person getPersonIfExists(UUID guid, String username) {
         Person person = personRepository.findByGuid(guid);
         if(person == null)
             person = personRepository.findByUsername(username);
         return person;
-    }
-
-    private String getAttribute(Attributes attributes, String... keys) throws NamingException {
-        Attribute attribute;
-        for (String key : keys) {
-            attribute = attributes.get(key);
-            if (attribute != null) {
-                return (String) attribute.get();
-            }
-        }
-        return "";
-    }
-
-    private UUID getGuidFromBytes(byte[] bytes) {
-        ByteBuffer bb = ByteBuffer.wrap(bytes);
-        long high = bb.getLong();
-        long low = bb.getLong();
-        return new UUID(high, low);
     }
 
     /**

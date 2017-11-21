@@ -43,7 +43,9 @@ import liquibase.integration.spring.SpringLiquibase;
 @EnableSpringDataWebSupport
 @ComponentScan(basePackages = "no.dusken.momus")
 @EnableJpaRepositories(basePackages = "no.dusken.momus.service.repository")
-@PropertySource(value = {"classpath:momus.properties","classpath:local.properties"}, ignoreResourceNotFound = true)
+@PropertySource(
+        value = {"classpath:momus.properties", "classpath:local.properties"},
+        ignoreResourceNotFound = true)
 class ApplicationConfig extends WebMvcConfigurerAdapter {
 
     @Autowired

@@ -47,6 +47,9 @@ public class LdapSyncer {
     @Value("${ldap.syncEnabled}")
     private boolean enabled;
 
+    @Value("${ldap.filter.user}")
+    private String userFilter;
+
     /**
      * Will pull data from LDAP and update our local copy
      * 02:00 each day (second minute hour day month weekdays)
@@ -118,7 +121,7 @@ public class LdapSyncer {
         List<Person> persons = new ArrayList<>();
 
         do{
-            List<Person> result = ldapTemplate.search(base, filter, ctrl, personMapper, processor);
+            List<Person> result = ldapTemplate.search(base, userFilter, ctrl, personMapper, processor);
             persons.addAll(result);
             processor = new PagedResultsDirContextProcessor(PAGE_SIZE, processor.getCookie());
         }while (processor.getCookie().getCookie() != null);
