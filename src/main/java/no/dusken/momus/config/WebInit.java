@@ -20,6 +20,8 @@ public class WebInit implements WebApplicationInitializer {
         servletContext.addListener(new ContextLoaderListener(config));
         ServletRegistration.Dynamic dispatcher = 
             servletContext.addServlet("momusapi", new DispatcherServlet());
+
+        dispatcher.setAsyncSupported(true);
         
         dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/api/*");
