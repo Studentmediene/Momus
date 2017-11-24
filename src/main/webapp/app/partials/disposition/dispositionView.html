@@ -14,6 +14,9 @@
   ~ limitations under the License.
   -->
 <div id="disposition" class="container">
+    <div ng-show="vm.loading" class="d-loading-spinner">
+        <i class="fa fa-circle-o-notch fa-spin fa-4x"></i>
+    </div>
     <div class="row d-title">
         <h1>Disposisjon for {{vm.publication.name}}</h1>
     </div>
@@ -29,17 +32,14 @@
                 <i class="fa fa-caret-up"></i> Lukke ekstraknapp-rader
             </button>
             <page-adder 
-                max-num-pages="vm.maxNewPages" 
-                max-page-pos="vm.publication.pages.length" 
+                max-num-pages="vm.maxNewPages"
+                max-page-pos="vm.publication.pages.length"
                 submit="vm.newPages(newPageAt, numNewPages)">
             </page-adder>
             <button class="btn btn-success" ng-click="vm.showHelp()">
                 Hjelp?
             </button>
         </div>
-        <span ng-show="vm.loading" class="col-md-offset-5">
-            <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
-        </span>
         <!-- Headers -->
         <div class="d-table headers">
             <div class="d-table-row">

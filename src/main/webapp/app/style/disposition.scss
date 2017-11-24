@@ -10,6 +10,13 @@ $pageAdBackground: #f6f6f6;
     font-size: 85%;
 }
 
+.d-loading-spinner {
+    position: fixed;
+    top: 64px;
+    left: 50%;
+    z-index: 200;
+}
+
 .d-toolbar {
     z-index: 100;
     background: $headerBackground;
@@ -41,8 +48,8 @@ $pageAdBackground: #f6f6f6;
     position: fixed;
     top: 51px;
     border-bottom: $pageBorder;
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 .disposition-table {
@@ -76,7 +83,7 @@ $pageAdBackground: #f6f6f6;
 }
 
 .page-ad {
-    background: pageAdBackground;
+    background: $pageAdBackground;
 }
 
 .d-break-word {
