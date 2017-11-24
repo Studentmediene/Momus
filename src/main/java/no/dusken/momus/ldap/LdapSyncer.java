@@ -38,6 +38,8 @@ public class LdapSyncer {
 
     private final int PAGE_SIZE = 1000;
 
+    private final String USER_FILTER = "(&(objectClass=user)(!(objectClass=inetOrgPerson)))";
+
     @Autowired
     LdapTemplate ldapTemplate;
 
@@ -46,9 +48,6 @@ public class LdapSyncer {
 
     @Value("${ldap.syncEnabled}")
     private boolean enabled;
-
-    @Value("${ldap.filter.user}")
-    private String userFilter;
 
     /**
      * Will pull data from LDAP and update our local copy
@@ -120,7 +119,7 @@ public class LdapSyncer {
         List<Person> persons = new ArrayList<>();
 
         do{
-            List<Person> result = ldapTemplate.search(base, userFilter, ctrl, personMapper, processor);
+            List<Person> result = ldapTemplate.search(base, USER_FILTER, ctrl, personMapper, processor);
             persons.addAll(result);
             processor = new PagedResultsDirContextProcessor(PAGE_SIZE, processor.getCookie());
         }while (processor.getCookie().getCookie() != null);
