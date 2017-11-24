@@ -20,6 +20,16 @@
     border-bottom: 1px dotted #999;
 }
 
+.person-widget-header {
+    white-space: nowrap;
+    width: 100%;
+}
+
+.person-widget-header tr #close-cell {
+    text-align: right;
+    padding-left: 10px;
+}
+
 .person-widget-element {
     position:absolute;
     background-color: #FFFFFF;

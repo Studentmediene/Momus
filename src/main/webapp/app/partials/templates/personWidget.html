@@ -16,10 +16,13 @@
 
 <span class="hidden-xs person-widget-wrapper">
     <div class="person-widget-element panel panel-default" ng-show="isVisible">
-        <div class="panel-heading">{{pw_person.full_name}}
-            <span ng-click="togglePW()" class="closePw pull-right">
-                <i class="fa fa-times"></i>
-            </span>
+        <div class="panel-heading">
+            <table class="person-widget-header">
+                <tr>
+                    <td>{{pw_person.full_name}}</td>
+                    <td id="close-cell"><i ng-click="togglePW()" class="fa fa-times closePw"></i></td>
+                </tr>
+            </table>
         </div>
         <table class="table table-condensed">
             <tr>

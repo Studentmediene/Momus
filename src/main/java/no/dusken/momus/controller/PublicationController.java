@@ -82,7 +82,11 @@ public class PublicationController {
 
     @RequestMapping(value = "/active", method = RequestMethod.GET)
     public @ResponseBody Publication getActivePublication(){
-        return publicationService.getActivePublication(new Date());
+        Publication active = publicationService.getActivePublication(new Date());
+        if(active == null)
+            throw new RestException("No active publication found", HttpServletResponse.SC_NOT_FOUND);
+
+        return active;
     }
 
     @RequestMapping(value = "/{id}/colophon", method = RequestMethod.GET)
@@ -158,7 +162,16 @@ public class PublicationController {
 			throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
 		}
 		return publicationService.updatePageMeta(page);
-	}
+    }
+    
+    @RequestMapping(value = "{pubid}/pages/{pageid}", method = RequestMethod.GET)
+    public @ResponseBody Page getPage(@PathVariable("pubid") Long pubid, @PathVariable("pageid") Long pageid){
+        Page page = publicationService.getPageRepository().findOne(pageid);
+        if(page == null){
+            throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
+        }
+        return page;
+    }
 
     @RequestMapping(value = "{pubid}/pages/{pageid}", method = RequestMethod.DELETE)
     public @ResponseBody List<Page> deletePage(@PathVariable("pubid") Long pubid, @PathVariable("pageid") Long pageid){
