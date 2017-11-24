@@ -57,15 +57,15 @@ angular.module('momusApp.services')
             // Publications
             '<h4>Utgaver</h4><p>Opprett utgaver som hver artikkel senere kan lenkes til.</p>',
             '<h4>Utgavedato</h4><p>På hver utgave setter man en publiseringsdato. Denne brukes av Momus for å sortere utgavene. Den første som har publiseringsdato etter i dag anses av Momus som "aktiv utgave".</p>',
-
-            // Sources
-            // '<h4>Kilder</h4><p>Legg inn kilder du har vært i kontakt med for at andre lett kan få tak i dem.</p>',
-            // '<h4>Kildetagging</h4><p>Kilder kan tagges for lett filtrering.</p>'
         ];
 
 
         // Date: year, month - 1, day
         var news = [{
+            date: new Date(2017, 10, 24),
+            title: "Samtidig redigering!",
+            text: "<p>Nå har samtidig redigering kommet til disposisjonen! Når andre gjør en endring skal det dukke opp hos deg også. Hvis du har hatt nettleservinduet inaktivt over lang tid, kan det likevel hende du har blitt logget ut. Gi gjerne tilbakemelding hvis du finner noe som ikke fungerer riktig.</p>"
+        },{
             date: new Date(2017, 9, 23),
             title: "Long time, no update",
             text: "<p>Første oppdatering på en stund! Disposisjonen har fått litt bedre nettleserstøtte, (blant annet firefox), kolofonen har blitt fikset, og litt andre småting. Se etter flere kule ting i neste oppdatering!</p>"
