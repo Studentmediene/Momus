@@ -21,7 +21,7 @@ directive('scrollTrigger', function($rootScope, $window) {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
-                var top = element.offset().top - element.height() - element.outerHeight();
+                var top = element[0].offsetTop - 51; // Because of navbar
                 angular.element($window).bind("scroll", function() {
                     if(this.pageYOffset >= top) {
                         element.addClass(attrs.scrollTrigger);

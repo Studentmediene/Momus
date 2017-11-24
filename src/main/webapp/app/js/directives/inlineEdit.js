@@ -25,8 +25,15 @@ angular.module('momusApp.directives').
             templateUrl: 'partials/templates/inlineEdit.html',
             scope:{
                 text: '=',
+                remoteChange: '=',
                 save: '&',
                 cancel: '&'
+            },
+            link: scope => {
+                scope.applyRemoteChange = () => {
+                    scope.text = scope.remoteChange;
+                    scope.remoteChange = null;
+                };
             }
         };
 });
