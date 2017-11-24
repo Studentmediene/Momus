@@ -108,7 +108,6 @@ public class LdapSyncer {
      */
     private List<Person> searchForPersons(String ou, final boolean active){
         String base = String.format("ou=%s", ou);
-        String filter = "(objectClass=person)";
         // For pagination
         PagedResultsDirContextProcessor processor = new PagedResultsDirContextProcessor(PAGE_SIZE, null);
 
