@@ -40,9 +40,12 @@ angular.module('momusApp', [
         'ngStomp'
     ]).
     config(['$routeProvider', function ($routeProvider) {
-        // Admin interfaces
         $routeProvider
-
+            .when('/front', {
+                    templateUrl: 'partials/front/frontPageView.html',
+                    controller: 'FrontPageCtrl'
+                }
+            )
             .when('/artikler',
             {
                 templateUrl: 'partials/search/searchView.html',
@@ -51,25 +54,18 @@ angular.module('momusApp', [
                 title: "Artikkelsøk"
             }
         )
-            .when('/artikler/ny',
-            {
-                redirectTo: '/artikler'
-            }
-        )
             .when('/artikler/:id',
             {
                 templateUrl: 'partials/article/articleView.html',
                 controller: 'ArticleCtrl'
             }
         )
-
             .when('/artikler/revisjon/:id',
             {
                 templateUrl: 'partials/article/articleRevisionView.html',
                 controller: 'ArticleRevisionCtrl'
             }
         )
-
             .when('/utgaver',
             {
                 templateUrl: 'partials/publication/publicationView.html',
@@ -78,7 +74,6 @@ angular.module('momusApp', [
                 controllerAs: 'vm'
             }
         )
-
             //Disposition
             .when('/disposisjon/:id',
             {
@@ -96,36 +91,6 @@ angular.module('momusApp', [
                 controllerAs: 'vm'
             }
         )
-
-            /* Sources
-            .when('/kilder',
-            {
-                templateUrl: 'partials/source/search.html',
-                controller: 'SourceSearchCtrl',
-                reloadOnSearch: false,
-                title: "Kilder"
-            }
-        )
-            .when('/kilder/ny',
-            {
-                templateUrl: 'partials/source/edit.html',
-                controller: 'SourceEditCtrl',
-                title: "Ny kilde"
-            }
-        )
-            .when('/kilder/tags',
-            {
-                templateUrl: 'partials/source/tags.html',
-                controller: 'SourceTagsCtrl',
-                title: "Rediger kildetags"
-            }
-        )
-            .when('/kilder/:id',
-            {
-                templateUrl: 'partials/source/edit.html',
-                controller: 'SourceEditCtrl'
-            }
-        )*/
             .when('/info',
             {
                 templateUrl: 'partials/info/infoView.html',
@@ -133,13 +98,7 @@ angular.module('momusApp', [
                 title: 'Info'
             }
         )
-            .when('/front', {
-                templateUrl: 'partials/front/frontPageView.html',
-                controller: 'FrontPageCtrl'
-            }
-        )
-
-            .otherwise({redirectTo: 'disposisjon'});
+            .otherwise({redirectTo: 'front'});
 
     }]).
     config(['$locationProvider', function($locationProvider) {

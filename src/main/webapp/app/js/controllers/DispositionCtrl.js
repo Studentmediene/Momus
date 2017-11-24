@@ -18,22 +18,21 @@
 
 angular.module('momusApp.controllers')
     .controller('DispositionCtrl', function (
-            $scope,
-            $routeParams,
-            ArticleService,
-            MessageModal,
-            $uibModal,
-            $templateRequest,
-            $window,
-            uiSortableMultiSelectionMethods,
-            $q,
-            Publication,
-            Page,
-            WebSocketService,
-            DispositionStyleService
-        ) {
+        $scope,
+        $routeParams,
+        ArticleService,
+        MessageModal,
+        $uibModal,
+        $templateRequest,
+        $window,
+        uiSortableMultiSelectionMethods,
+        $q,
+        Publication,
+        Page,
+        WebSocketService,
+        DispositionStyleService)
+    {
         var vm = this;
-        var isConnected = false;
         var lastUpdate = {date: new Date()};
 
         vm.maxNewPages = 100;
@@ -79,8 +78,6 @@ angular.module('momusApp.controllers')
                     break;
                 case(WebSocketService.actions.updateArticle):
                     handleRemoteArticleUpdate(payload.article_id, payload.edited_field);
-                    break;
-                case(WebSocketService.actions.updateArticle):
                     break;
                 case(WebSocketService.actions.deletePage):
                 case(WebSocketService.actions.updatePagenr):

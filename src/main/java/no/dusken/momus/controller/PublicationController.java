@@ -82,7 +82,11 @@ public class PublicationController {
 
     @RequestMapping(value = "/active", method = RequestMethod.GET)
     public @ResponseBody Publication getActivePublication(){
-        return publicationService.getActivePublication(new Date());
+        Publication active = publicationService.getActivePublication(new Date());
+        if(active == null)
+            throw new RestException("No active publication found", HttpServletResponse.SC_NOT_FOUND);
+
+        return active;
     }
 
     @RequestMapping(value = "/{id}/colophon", method = RequestMethod.GET)
