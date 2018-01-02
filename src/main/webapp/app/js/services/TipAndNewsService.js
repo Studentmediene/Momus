@@ -62,6 +62,10 @@ angular.module('momusApp.services')
 
         // Date: year, month - 1, day
         var news = [{
+            date: new Date(2018, 0, 2),
+            title: "Godt nyttår!",
+            text: "<p>Godt nyttår! Det har vært litt problemer med å få samtidig redigering til å fungere, så det er blitt midlertidig deaktivert. Håper å fikse det så fort som mulig!</p>"
+        },{
             date: new Date(2017, 10, 24),
             title: "Samtidig redigering!",
             text: "<p>Nå har samtidig redigering kommet til disposisjonen! Når andre gjør en endring skal det dukke opp hos deg også. Hvis du har hatt nettleservinduet inaktivt over lang tid, kan det likevel hende du har blitt logget ut. Gi gjerne tilbakemelding hvis du finner noe som ikke fungerer riktig.</p>"
