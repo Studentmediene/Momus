@@ -60,7 +60,7 @@ public class PersonMapper implements AttributesMapper<Person> {
      * reference integrity of old articles.
      */
     private Long findFreeId(){
-        while(personRepository.findOne(lastId) != null){ // New person
+        while(personRepository.exists(lastId)){ // New person
             lastId++;
         }
         return lastId;

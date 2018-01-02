@@ -115,6 +115,11 @@ public class PublicationService {
      */
     public Publication getActivePublication(Date date){
         List<Publication> publications = publicationRepository.findAllByOrderByReleaseDateDesc();
+
+        if(publications.isEmpty()) return null;
+
+        if(publications.size() == 1) return publications.get(0);
+
         Publication active = publications.get(0);
         for(Publication p : publications.subList(1,publications.size()-1)){
             if(p.getReleaseDate().before(date)){

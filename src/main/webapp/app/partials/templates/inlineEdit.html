@@ -1,12 +1,30 @@
-<div class="input-group" style="position: absolute; box-shadow: #000000">
-    <textarea class="form-control input-sm" ng-model="text" style="min-height: 60px; width: 200px; resize: vertical; float:left"></textarea>
-    <div style="float:left">
-        <div><button class="btn btn-sm btn-danger" ng-click="cancel()">
-            <i class="fa fa-times"></i>
-        </button></div>
+<div style="position: absolute; overflow: visible;">
+    <div class="input-group" style="width: 200px">
+        <textarea class="form-control custom-control inline-textarea input-sm" ng-model="text"></textarea>
+    </div>
 
-        <div><button class="btn btn-sm btn-success" ng-click="save()">
-            <i class="fa fa-save"></i>
-        </button></div>
+    <div style="display: flex;">
+        <div class="btn-group" style="flex-grow: 1;">
+            <button class="btn btn-warning" ng-click="cancel()" style="border-top-left-radius: 0px;">
+                <i class="fa fa-times"></i>
+            </button>
+            <button class="btn btn-success" ng-click="save()" style="border-top-right-radius: 0px;">
+                <i class="fa fa-save"></i>
+            </button>
+        </div>
+
+        <div
+            uib-tooltip-template="'partials/templates/inlineEditRemoteTooltip.html'"
+            tooltip-append-to-body="true"
+        >
+            <button
+                ng-show="remoteChange"
+                class="btn btn-danger" 
+                style="border-top-right-radius: 0px; border-top-left-radius: 0px;"
+                ng-click="applyRemoteChange()"
+            >
+                <i class="fa fa-exclamation"></i>
+            </button>
+        </div>
     </div>
 </div>

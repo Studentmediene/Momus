@@ -32,7 +32,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -135,13 +137,17 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "/{id}/indesignfile", method = RequestMethod.GET)
-    public @ResponseBody String getIndesignExport(@PathVariable("id") Long id, HttpServletResponse response) {
+    public void getIndesignExport(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
         IndesignExport indesignExport = articleService.exportArticle(id);
 
         response.addHeader("Content-Disposition", "attachment; filename=\"" + indesignExport.getName() + ".txt\"");
         response.addHeader("Content-Type", "text/plain;charset=UTF-16LE"); // Encoding InDesign likes
 
-        return indesignExport.getContent();
+        ServletOutputStream outStream = response.getOutputStream();
+        String exportContent = indesignExport.getContent();
+        outStream.print(exportContent);
+        outStream.flush();
+        outStream.close();
     }
 
     @RequestMapping(value = "/{id}/revisions", method = RequestMethod.GET)
