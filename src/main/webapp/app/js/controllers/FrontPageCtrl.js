@@ -23,7 +23,6 @@ angular.module('momusApp.controllers')
         Person,
         TipAndNewsService,
         ViewArticleService,
-        FavouriteSectionService,
         Publication,
         Page,
         Article,
