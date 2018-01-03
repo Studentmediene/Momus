@@ -41,7 +41,6 @@ angular.module('momusApp.controllers')
 
 
         // Latest user articles
-
         $scope.loadingArticles = true;
         PersonService.getCurrentUser().then(function(data){
             $scope.user = data.data;

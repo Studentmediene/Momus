@@ -17,11 +17,8 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.authentication.UserDetailsServiceImpl;
-import no.dusken.momus.model.LandingPage;
 import no.dusken.momus.model.Person;
-import no.dusken.momus.service.repository.LandingPageRepository;
 import no.dusken.momus.service.repository.PersonRepository;
-import no.dusken.momus.service.LandingPageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,13 +33,6 @@ public class PersonController {
 
     @Autowired
     private PersonRepository personRepository;
-
-    @Autowired
-    private LandingPageRepository landingPageRepository;
-
-
-    @Autowired
-    private LandingPageService landingPageService;
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
@@ -61,15 +51,5 @@ public class PersonController {
     @RequestMapping("/me")
     public @ResponseBody Person getCurrentUser() {
         return userDetailsService.getLoggedInPerson();
-    }
-
-    @RequestMapping(value="/landing", method = RequestMethod.GET)
-    public @ResponseBody LandingPage getLandingPage() {
-        return landingPageRepository.findByOwner_Id(userDetailsService.getLoggedInPerson().getId());
-    }
-
-    @RequestMapping(value="/landing/{landing}", method = RequestMethod.GET)
-    public @ResponseBody LandingPage saveLandingPage(@PathVariable("landing") String landing){
-        return landingPageService.saveLandingPage(landing);
     }
 }

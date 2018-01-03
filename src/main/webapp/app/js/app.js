@@ -108,7 +108,7 @@ angular.module('momusApp', [
         $httpProvider.interceptors.push('HttpInterceptor');
         $httpProvider.defaults.withCredentials = true;
     }]).
-    run(['$location', '$rootScope', 'TitleChanger', 'LandingChanger', '$route', function ($location, $rootScope, TitleChanger, LandingChanger, $route) {
+    run(['$location', '$rootScope', 'TitleChanger', function ($location, $rootScope, TitleChanger) {
         // Whenever there is a route change, we try to update the url with the title set in the rootprovider above
         // if there is no title, we clear it
         $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
@@ -118,11 +118,6 @@ angular.module('momusApp', [
                 TitleChanger.setTitle("");
             }
         });
-        LandingChanger.setLanding();
-        $rootScope.$on('loginComplete', function(){
-            LandingChanger.setLanding();
-        });
-
     }]);
 
 
