@@ -24,25 +24,35 @@ angular.module('momusApp.controllers')
         $location,
         $uibModal,
         $templateRequest,
-        $route,
         $window,
         uiSortableMultiSelectionMethods,
         $q,
         Publication,
         Page,
-        Article
+        Article,
+        WebSocketService,
+        DispositionStyleService
     ) {
         var vm = this;
+        var lastUpdate = {date: new Date()};
+        var websocketActive = false;
 
         vm.maxNewPages = 100;
 
         vm.newPages = newPages;
-        vm.updatePage = updatePage;
 		vm.updatePageMeta = updatePageMeta;
         vm.deletePage = deletePage;
+        vm.initPageScope = initPageScope;
+        vm.editPage = editPage;
+        vm.submitPage = submitPage;
+        var pageEdits = [];
 
         vm.createArticle = createArticle;
-        vm.saveArticle = saveArticle;
+        vm.updateArticle = updateArticle;
+        vm.initArticleScope = initArticleScope;
+        vm.editArticleField = editArticleField;
+        vm.submitArticleField = submitArticleField;
+        var articleEdits = {};
 
         vm.expandAllButtonRows = () => angular.element(".extra-button-line").collapse("show");
         vm.hideAllButtonRows = () => angular.element(".extra-button-line").collapse("hide");
@@ -50,13 +60,99 @@ angular.module('momusApp.controllers')
         vm.showHelp = showHelp;
 
         // Style
-        var pageDoneColor = "#DDFFCB";
-        var pageAdColor = "#f6f6f6";
-        vm.pageColor = page => page.done ? pageDoneColor : (page.advertisement ? pageAdColor : '#FFF');
+
+        vm.dispWidth = 0;
+        vm.applyColumnWidth = (column, extra = {}) => angular.extend(extra, vm.columnWidths[column]);
+        vm.offsetDispositionTable = offsetDispositionTable;
+        vm.columnWidths = {};
+        vm.toolbarStyle = {};
 
         // Get all data
         fetchStatuses();
         fetchDisposition();
+
+        function onRemoteChange(payload, headers, res) {
+            if(isOwnUpdate(payload)) return;
+
+            switch(payload.action) {
+                case(WebSocketService.actions.updatePageMetadata):
+                    handleRemotePageMetadataUpdate(payload.page_id);
+                    break;
+                case(WebSocketService.actions.updateArticle):
+                    handleRemoteArticleUpdate(payload.article_id, payload.edited_field);
+                    break;
+                case(WebSocketService.actions.deletePage):
+                case(WebSocketService.actions.updatePagenr):
+                case(WebSocketService.actions.savePage):
+                    handleRemotePageChange();
+                    break;
+            }
+            $scope.$apply();
+        }
+
+        function handleRemotePageMetadataUpdate(pageId) {
+            vm.loading = true;
+            var page = Page.get({pubid: vm.publication.id, pageid: pageId}, () => {
+                const index = vm.publication.pages.findIndex(page => page.id === pageId);
+                connectArticles(page, vm.articles);
+                vm.publication.pages[index] = page;
+                vm.loading = false;
+            });
+        }
+
+        function handleRemoteArticleUpdate(articleId, editedField) {
+            vm.loading = true;
+            // We are locally editing the field that has been changed remotely, so don't update immediately.
+            if(articleEdits[articleId][editedField]) {
+                const scope = articleEdits[articleId][editedField].scope;
+                ArticleService.getArticle(articleId).then(data => {
+                    const article = data.data;
+                    scope.remoteChanges[editedField] = article[editedField];
+                    articleEdits[articleId][editedField].oldValue = article[editedField];
+                    vm.loading = false;
+                });
+                return;
+            }
+            // Since an article can be referenced on several pages, update properties not reference
+            ArticleService.getArticle(articleId).then(data => {
+                const article = data.data;
+                const index = vm.articles.findIndex((article) => article.id === articleId);
+                replaceProperties(vm.articles[index], article);
+                vm.loading = false;
+            });
+        }
+
+        function handleRemoteArticleSave(articleId) {
+            vm.loading = true;
+            ArticleService.getArticle(articleId).then(data => {
+                const article = data.data;
+                const index = vm.publication.pages.findIndex(page => page.id === articleId);
+                vm.articles.push(article);
+                vm.publication.pages[index].articles.push(article);
+                vm.loading = false;
+            });
+        }
+
+        function handleRemotePageChange() {
+            getPages(vm.publication.id, pages => {
+                pages.forEach(page => connectArticles(page, vm.articles));
+                vm.publication.pages = pages;
+            });
+        }
+
+        function isOwnUpdate(payload) {
+            return new Date(payload.date) <= lastUpdate.date;
+        }
+
+        function connectArticles(page, articles) {
+            page.articles = page.articles.map(article => articles.find(other => other.id === article.id));
+        }
+
+        function replaceProperties(oldObject, newObject) {
+            Object.keys(oldObject).forEach(prop => {
+                oldObject[prop] = newObject[prop];
+            });
+        }
 
         function fetchDisposition(){
             vm.loading = true;
@@ -64,34 +160,44 @@ angular.module('momusApp.controllers')
                 Page.query({pubid: publication.id}, pages => {
                     publication.pages = pages;
                     vm.publication = publication;
-                    vm.articles = Article.search({}, {publication: publication.id}, () => vm.loading = false);
+                    vm.articles = Article.search({}, {publication: publication.id}, () => {
+                        if($routeParams.ws){
+                            WebSocketService.subscribe(publication.id, onRemoteChange);
+                            websocketActive = true;
+                        }
+                        publication.pages.forEach(page => connectArticles(page, vm.articles));
+                        vm.loading = false;
+                    });
                 });
             });
         }
 
         function publicationQuery(pubid){
-            return pubid ? 
-                callback => Publication.get({id: pubid}, callback) : 
+            return pubid ?
+                callback => Publication.get({id: pubid}, callback) :
                 callback => Publication.active({}, callback);
         }
 
         function fetchStatuses(){
-            vm.articleStatuses = Article.statuses();            
+            vm.articleStatuses = Article.statuses();
             vm.reviewStatuses = Article.reviewStatuses();
             vm.layoutStatuses = Publication.layoutStatuses();
         }
 
         function newPages(newPageAt, numNewPages){
             const pages = Array.from(new Array(numNewPages), (_, i) => ({
-                    page_nr: newPageAt + i + 1, 
+                    page_nr: newPageAt + i + 1,
                     publication: vm.publication.id,
                     layout_status: getLayoutStatusByName("Ukjent")
                 })
             );
             vm.loading = true;
-            Page.saveMultiple({pubid: vm.publication.id}, pages, pages => {
-                vm.publication.pages = pages;
+            var updatedPages = Page.saveMultiple({pubid: vm.publication.id}, pages, function() {
+                vm.publication.pages = updatedPages;
                 vm.loading = false;
+                if(websocketActive){
+                    lastUpdate = WebSocketService.pageSaved(vm.publication.id, -1);
+                }
             });
         }
 
@@ -104,29 +210,82 @@ angular.module('momusApp.controllers')
         }
 
 		function updatePageMeta(page){
-            vm.loading = true;
+			vm.loading = true;
 			page.$updateMeta({}, page => {
-                vm.publication.pages[page.page_nr-1] = page;
 				vm.loading = false;
-            });
+                if(websocketActive) {
+                    lastUpdate = WebSocketService.pageMetadataUpdated(vm.publication.id, page.id);
+                }
+			});
 		}
 
         function updatePages(pages) {
             vm.loading = true;
             Page.updateMultiple({pubid: vm.publication.id}, pages, pages => {
+                pages.forEach(page => {
+                    connectArticles(page, vm.articles);
+                });
                 vm.publication.pages = pages;
                 vm.loading = false;
+                if(websocketActive){
+                    lastUpdate = WebSocketService.pageNrUpdated(vm.publication.id, -1);
+                }
             });
         }
 
         function deletePage(page) {
             if(confirm("Er du sikker på at du vil slette denne siden?")){
                 vm.loading = true;
-                Page.delete({pageid: page.id, pubid: page.publication.id}, pages => {
+                Page.delete({pubid: page.publication.id, pageid: page.id}, pages => {
                     vm.publication.pages = pages;
                     vm.loading = false;
+                    if(websocketActive){
+                        lastUpdate = WebSocketService.pageDeleted(vm.publication.id, page.id);
+                    }
                 });
             }
+        }
+
+        function initPageScope(scope) {
+            scope.editPage = pageEdits.includes(scope.page.id);
+        }
+
+        function editPage(scope) {
+            scope.editPage = true;
+            pageEdits.push(scope.page.id);
+        }
+
+        function submitPage(scope) {
+            updatePageMeta(scope.page);
+            scope.editPage = false;
+            pageEdits.splice(pageEdits.indexOf(scope.page.id), 1);
+        }
+
+        function initArticleScope(scope) {
+            scope.edit = {};
+            scope.remoteChanges = {};
+            articleEdits[scope.article.id] = {};
+        }
+
+        function editArticleField(scope, field) {
+            if(vm.loading) return;
+
+            articleEdits[scope.article.id][field] = {
+                scope: scope,
+                oldValue: scope.article[field]
+            };
+            scope.edit[field] = true;
+        }
+
+        function submitArticleField(scope, field, update) {
+            if(update) {
+                updateArticle(scope.article, field);
+            }else {
+                scope.article[field] = articleEdits[scope.article.id][field].oldValue;
+            }
+
+            scope.edit[field] = false;
+            articleEdits[scope.article.id][field] = null;
         }
 
         function createArticle(page){
@@ -134,26 +293,32 @@ angular.module('momusApp.controllers')
                 templateUrl: 'partials/article/createArticleModal.html',
                 controller: 'CreateArticleModalCtrl',
                 resolve: {
-                    pubId: function(){
-                        return vm.publication.id;
-                    }
+                    pubId: () => vm.publication.id
                 }
             });
             modal.result.then(id => {
                 const article = Article.get({id: id}, () => {
                     page.articles.push(article);
                     vm.articles.push(article);
+                    if(websocketActive){
+                        lastUpdate = WebSocketService.articleSaved(vm.publication.id, page.id, article.id);
+                    }
                 });
             });
         }
 
-        function saveArticle(article){
+        function updateArticle(article, editedField){
             vm.loading = true;
-            Article.updateMetadata({id: article.id}, article, () => vm.loading = false);
+            Article.updateMetadata({id: article.id}, article, () => {
+                vm.loading = false;
+                if(websocketActive){
+                    lastUpdate = WebSocketService.articleUpdated(vm.publication.id, article.id, editedField);
+                }
+            });
         }
 
         function showHelp(){
-            $templateRequest('partials/templates/help/dispHelp.html').then(function(template){
+            $templateRequest('partials/templates/help/dispHelp.html').then(template => {
                 MessageModal.info(template);
             });
         }
@@ -168,128 +333,69 @@ angular.module('momusApp.controllers')
             return null;
         }
 
+        function offsetDispositionTable() {
+            const titleElement = angular.element(".d-title")[0];
+            const toolbarElement = angular.element(".d-toolbar")[0];
+            return {top: titleElement.offsetHeight + titleElement.offsetTop + toolbarElement.offsetHeight};
+        }
+
+        function updateToolbar(){
+            angular.extend(vm.toolbarStyle, {
+                left: -$window.scrollX + angular.element(".container")[0].offsetLeft + 15,
+                width: vm.dispWidth
+            });
+        }
+
+        function updateDispSize() {
+            const elementWidth = angular.element("#disposition")[0].clientWidth;
+            const windowWidth = $window.innerWidth;
+            const { columnWidths, articleWidth, dispWidth } = DispositionStyleService.calcDispSize(elementWidth, windowWidth);
+            angular.extend(vm, {
+                columnWidths: columnWidths,
+                articleWidth: articleWidth,
+                dispWidth: dispWidth
+            });
+        }
+
         vm.sortableOptions = uiSortableMultiSelectionMethods.extendOptions({
             helper: uiSortableMultiSelectionMethods.helper,
-            start: function(e, ui) {
-                $scope.$apply(); //Apply since this is jQuery stuff
-
+            start: (e, ui) => {
                 //Calculate height of placeholder
-                var totalHeight = 0;
-                for(var i = 0; i< ui.helper[0].children.length;i++){
-                    var child = ui.helper[0].children[i];
-                    totalHeight += parseInt($window.getComputedStyle(child).height.replace("px", ""));
-                }
-                ui.placeholder[0].style.height = totalHeight +"px";
+                ui.placeholder[0].style.height = Array.from(ui.helper[0].children).reduce((acc, child) => {
+                    return acc + parseInt($window.getComputedStyle(child).height.replace("px", ""));
+                }, 0) + "px";
             },
-            axis: 'y',
-            handle: '.handle',
-            stop: function(e, ui){
+            axis: "y",
+            handle: ".handle",
+            stop: (e, ui) => {
                 var placed = ui.item.sortableMultiSelect.selectedModels;
                 var newPosition = vm.publication.pages.indexOf(placed[0]);
-                placed.forEach(function(page, i) {
-                    page.page_nr = newPosition + i + 1
+                placed.forEach((page, i) => {
+                    page.page_nr = newPosition + i + 1;
                 });
                 updatePages(placed);
             },
-            placeholder: "disp-placeholder"
+            placeholder: "d-placeholder"
         });
-
-        const columnWidthTemplates = {
-            page_nr:
-                {scope: 'page', width: 20},
-            dropdown:
-                {scope: 'article', width: 25},
-            name: {
-                scope: 'article',
-                part: 0.25,
-                min: 100,
-                calculated: 100,
-            },
-            section: {scope: 'article', width: 100},
-            journalists: {
-                scope: 'article',
-                part: 0.2,
-                min: 80,
-                calculated: 80
-            },
-            photographers: {
-                scope: 'article',
-                part: 0.2,
-                min: 80,
-                calculated: 80
-            },
-            status: {scope: 'article', width: 120},
-            review: {scope: 'article', width: 100},
-            photo_status: {
-                scope: 'article',
-                part: 0.15,
-                min: 90,
-                calculated: 90
-            },
-            comment: {
-                scope: 'article',
-                part: 0.2,
-                min: 100,
-                calculated: 100
-            },
-            layout: {scope: 'page', width: 80},
-            ad: {scope: 'page', width: 30},
-            done: {scope: 'page', width: 30},
-            edit: {scope: 'page', width: 30},
-            delete: {scope: 'page', width: 30}
-        };
-
-        const columnWidths = {};
-        vm.columnWidths = columnWidths;
-
-        function updateDispSize(){
-            const [constDispWidth, constArticleWidth] = Object.keys(columnWidthTemplates)
-                .filter(key => columnWidthTemplates[key].width)
-                .reduce(([dispSize, articleSize],key) => {
-                    const colWidth = columnWidthTemplates[key].width;
-                    return [
-                        dispSize + colWidth, 
-                        articleSize + (columnWidthTemplates[key].scope === 'article' ? colWidth : 0)
-                    ];
-                }, [0, 0]);
-
-            const dispWidth = angular.element(document.getElementById("disposition"))[0].clientWidth;
-            const widthLeft = dispWidth - constDispWidth;
-
-            let articleWidth = constArticleWidth;
-            Object.keys(columnWidthTemplates)
-                .filter(key => columnWidthTemplates[key].part)
-                .forEach(key => {
-                    const column = columnWidthTemplates[key];
-                    const width = $window.innerWidth > 992 ? Math.floor(column.part*widthLeft) : column.min;
-                    column.calculated = width;
-                    if(column.scope === 'article') {
-                        articleWidth += width;
-                    }
-                });
-            
-            Object.keys(columnWidthTemplates)
-                .forEach(key => {
-                    const col = columnWidthTemplates[key];
-                    const columnWidth = (col.width | col.calculated) + 'px';
-                    columnWidths[key] = {
-                        minWidth: columnWidth,
-                        width: columnWidth,
-                        maxWidth: columnWidth,
-                    };
-                });
-
-            vm.articleWidth = articleWidth;
-        }
 
         updateDispSize();
         // To recalculate disp table when resizing the screen
-        angular.element($window).bind('resize', function(){
-            updateDispSize();
-            $scope.$apply();
-        });
+        angular.element($window)
+            .bind('resize', () => {
+                updateDispSize();
+                updateToolbar();
+                $scope.$apply();
+            })
+            .bind('scroll', () => {
+                updateToolbar();
+                $scope.$apply();
+            });
 
-        $scope.$on('$destroy', function(){
+        $scope.$on('$destroy', () => {
+            if(websocketActive) {
+                WebSocketService.disconnect();
+                websocketActive = false;
+            }
             angular.element($window).unbind('resize');
         });
     });

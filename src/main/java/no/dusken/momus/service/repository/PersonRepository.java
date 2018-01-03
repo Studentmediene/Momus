@@ -20,12 +20,16 @@ import no.dusken.momus.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.UUID;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
     public Person findByUsername(String username);
+
+    public Person findByGuid(UUID guid);
 
     public List<Person> findByActiveTrue();
 

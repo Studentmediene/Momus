@@ -27,6 +27,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
@@ -65,12 +66,12 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
         article.setPublication(pub);
 
         Set<Person> journalists = new HashSet<>();
-        journalists.add(new Person(1L, "user1", "Mats", "Mats Matsesen", "mats@mats.mats", "12345678", true));
-        journalists.add(new Person(2L, "user1", "Kåre", "Kåre Kål", "lala@lolo.com", "12345678", true));
+        journalists.add(new Person(1L, UUID.randomUUID(), "user1", "Mats Matsesen", "mats@mats.mats", "12345678", true));
+        journalists.add(new Person(2L, UUID.randomUUID(), "user1", "Kåre Kål", "lala@lolo.com", "12345678", true));
         article.setJournalists(journalists);
 
         Set<Person> photographers = new HashSet<>();
-        photographers.add(new Person(3L, "user1", "Einar", "Einar Einarsen", "einar@lala.org", "12345678", true));
+        photographers.add(new Person(3L, UUID.randomUUID(), "user1", "Einar Einarsen", "einar@lala.org", "12345678", true));
         article.setPhotographers(photographers);
 
         String expected = "<UNICODE-WIN>\r\n" +
@@ -113,8 +114,8 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
         article.setJournalists(new HashSet<Person>());
 
         Set<Person> photographers = new HashSet<>();
-        photographers.add(new Person(3L, "user1", "Einar", "Einar Einarsen", "einar@lala.org", "12345678", true));
-        photographers.add(new Person(10L, "user1", "Roy", "Roy Royce", "einar@lala.org", "12345678", true));
+        photographers.add(new Person(3L, UUID.randomUUID(), "user1", "Einar Einarsen", "einar@lala.org", "12345678", true));
+        photographers.add(new Person(10L, UUID.randomUUID(), "user1", "Roy Royce", "einar@lala.org", "12345678", true));
         article.setPhotographers(photographers);
 
         article.setUseIllustration(true);
@@ -137,7 +138,7 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
 
         article.setJournalists(new HashSet<Person>());
         Set<Person> photographers = new HashSet<>();
-        photographers.add(new Person(3L, "user1", "Einar", "Einar Einarsen", "einar@lala.org", "12345678", true));
+        photographers.add(new Person(3L, UUID.randomUUID(), "user1", "Einar Einarsen", "einar@lala.org", "12345678", true));
         article.setPhotographers(photographers);
 
         String expected = "<UNICODE-WIN>\r\n" +
@@ -161,7 +162,7 @@ public class IndesignGeneratorTest extends AbstractTestRunner {
 
         article.setJournalists(new HashSet<Person>());
         Set<Person> photographers = new HashSet<>();
-        photographers.add(new Person(3L, "user1", "Einar", "Einar Einarsen", "einar@lala.org", "12345678", true));
+        photographers.add(new Person(3L, UUID.randomUUID(), "user1", "Einar Einarsen", "einar@lala.org", "12345678", true));
         article.setPhotographers(photographers);
 
         article.setExternalAuthor("Ekstern Eksternsen");

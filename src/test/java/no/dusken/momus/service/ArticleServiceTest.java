@@ -89,8 +89,8 @@ public class ArticleServiceTest extends AbstractTestRunner {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        person1 = new Person(1L, "mts", "Mats", "Matsessen", "", "", true);
-        person2 = new Person(2L, "aaa", "Kåre", "Kåressen", "", "", true);
+        person1 = new Person(1L, UUID.randomUUID(), "mts", "Mats Matsessen", "", "", true);
+        person2 = new Person(2L, UUID.randomUUID(), "aaa", "Kåre Kåressen", "", "", true);
 
         publication1 = new Publication(1L);
         publication1.setName("Pub1");

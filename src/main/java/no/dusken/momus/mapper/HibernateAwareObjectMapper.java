@@ -28,9 +28,11 @@ import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
  */
 public class HibernateAwareObjectMapper extends ObjectMapper {
 
+    static final long serialVersionUID = 23L;
+
     public HibernateAwareObjectMapper() {
         // converts lastName to last_name and the other way
-        setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
+        setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
         registerModule(new Hibernate5Module());
     }
 }
