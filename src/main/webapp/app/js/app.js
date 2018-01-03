@@ -22,7 +22,6 @@ angular.module('momusApp.filters', []);
 angular.module('momusApp.services', []);
 angular.module('momusApp.directives', []);
 
-
 // Declare app level module which depends on filters, and services
 angular.module('momusApp', [
         'momusApp.controllers',
@@ -39,85 +38,65 @@ angular.module('momusApp', [
         'chart.js',
         'ngStomp'
     ]).
-    config(['$routeProvider', function ($routeProvider) {
+    config(['$routeProvider', $routeProvider => {
         $routeProvider
-            .when('/front', {
+            .when('/front',
+            {
                     templateUrl: 'partials/front/frontPageView.html',
                     controller: 'FrontPageCtrl'
-                }
-            )
+            })
             .when('/artikler',
             {
                 templateUrl: 'partials/search/searchView.html',
                 controller: 'SearchCtrl',
                 reloadOnSearch: false,
                 title: "Artikkelsøk"
-            }
-        )
+            })
             .when('/artikler/:id',
             {
                 templateUrl: 'partials/article/articleView.html',
                 controller: 'ArticleCtrl'
-            }
-        )
+            })
             .when('/artikler/revisjon/:id',
             {
                 templateUrl: 'partials/article/articleRevisionView.html',
                 controller: 'ArticleRevisionCtrl'
-            }
-        )
+            })
             .when('/utgaver',
             {
                 templateUrl: 'partials/publication/publicationView.html',
                 controller: 'PublicationCtrl',
                 title: 'Utgaver',
                 controllerAs: 'vm'
-            }
-        )
+            })
             //Disposition
-            .when('/disposisjon/:id',
+            .when('/disposisjon/:id?',
             {
                 templateUrl: 'partials/disposition/dispositionView.html',
                 controller: 'DispositionCtrl',
                 title: 'Disposisjon',
                 controllerAs: 'vm'
-            }
-        )
-            .when('/disposisjon',
-            {
-                templateUrl:'partials/disposition/dispositionView.html',
-                controller:'DispositionCtrl',
-                title: 'Disposisjon',
-                controllerAs: 'vm'
-            }
-        )
+            })
             .when('/info',
             {
                 templateUrl: 'partials/info/infoView.html',
                 controller: 'InfoCtrl',
                 title: 'Info'
-            }
-        )
+            })
             .otherwise({redirectTo: 'front'});
 
     }]).
-    config(['$locationProvider', function($locationProvider) {
+    config(['$locationProvider', $locationProvider => {
         $locationProvider.hashPrefix('');
     }]).
-    config(['$httpProvider', function ($httpProvider) {
+    config(['$httpProvider', $httpProvider => {
         $httpProvider.interceptors.push('HttpInterceptor');
         $httpProvider.defaults.withCredentials = true;
     }]).
-    run(['$location', '$rootScope', 'TitleChanger', function ($location, $rootScope, TitleChanger) {
+    run(['$rootScope', 'TitleChanger', ($rootScope, TitleChanger) => {
         // Whenever there is a route change, we try to update the url with the title set in the rootprovider above
         // if there is no title, we clear it
-        $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
-            if (current.$$route && current.$$route.title) {
-                TitleChanger.setTitle(current.$$route.title);
-            } else {
-                TitleChanger.setTitle("");
-            }
+        $rootScope.$on('$routeChangeSuccess', (event, current, previous) => {
+            TitleChanger.setTitle(current.$$route && current.$$route.title || "");
         });
     }]);
-
-
