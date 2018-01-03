@@ -176,25 +176,6 @@ angular.module('momusApp.controllers')
             $scope.$apply();
         };
 
-
-        $scope.$on('$locationChangeStart', function (event) {
-            if (promptCondition()) {
-                if (!confirm("Er du sikker på at du vil forlate siden? Det finnes ulagrede endringer.")) {
-                    event.preventDefault();
-                }
-            }
-        });
-
-        window.onbeforeunload = function () {
-            if (promptCondition()) {
-                return "Det finnes ulagrede endringer.";
-            }
-        };
-
-        function promptCondition() {
-            return $scope.unedited.content != $scope.note.content;
-        }
-
         function fixShortColorCodes(colors){
             return colors.map(function(color) {
                 if(color.length <= 4){

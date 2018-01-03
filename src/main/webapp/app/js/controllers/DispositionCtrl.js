@@ -92,7 +92,7 @@ angular.module('momusApp.controllers')
 
         function handleRemotePageMetadataUpdate(pageId) {
             vm.loading = true;
-            var page = Page.get({pubid: vm.publication.id, pageid: pageId}, () => {
+            Page.get({pubid: vm.publication.id, pageid: pageId}, page => {
                 const index = vm.publication.pages.findIndex(page => page.id === pageId);
                 connectArticles(page, vm.articles);
                 vm.publication.pages[index] = page;
@@ -105,8 +105,7 @@ angular.module('momusApp.controllers')
             // We are locally editing the field that has been changed remotely, so don't update immediately.
             if(articleEdits[articleId][editedField]) {
                 const scope = articleEdits[articleId][editedField].scope;
-                ArticleService.getArticle(articleId).then(data => {
-                    const article = data.data;
+                Article.get({id: articleId}, article => {
                     scope.remoteChanges[editedField] = article[editedField];
                     articleEdits[articleId][editedField].oldValue = article[editedField];
                     vm.loading = false;
@@ -114,8 +113,7 @@ angular.module('momusApp.controllers')
                 return;
             }
             // Since an article can be referenced on several pages, update properties not reference
-            ArticleService.getArticle(articleId).then(data => {
-                const article = data.data;
+            Article.get({id: articleId}, article => {
                 const index = vm.articles.findIndex((article) => article.id === articleId);
                 replaceProperties(vm.articles[index], article);
                 vm.loading = false;
@@ -124,8 +122,7 @@ angular.module('momusApp.controllers')
 
         function handleRemoteArticleSave(articleId) {
             vm.loading = true;
-            ArticleService.getArticle(articleId).then(data => {
-                const article = data.data;
+            Article.get({id: articleId}, article => {
                 const index = vm.publication.pages.findIndex(page => page.id === articleId);
                 vm.articles.push(article);
                 vm.publication.pages[index].articles.push(article);
@@ -134,7 +131,7 @@ angular.module('momusApp.controllers')
         }
 
         function handleRemotePageChange() {
-            getPages(vm.publication.id, pages => {
+            Page.query({pubid: vm.publication.id}, pages => {
                 pages.forEach(page => connectArticles(page, vm.articles));
                 vm.publication.pages = pages;
             });
