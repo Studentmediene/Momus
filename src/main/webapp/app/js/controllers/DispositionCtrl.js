@@ -78,6 +78,9 @@ angular.module('momusApp.controllers')
                 case(WebSocketService.actions.updatePageMetadata):
                     handleRemotePageMetadataUpdate(payload.page_id);
                     break;
+                case(WebSocketService.actions.saveArticle):
+                    handleRemoteArticleSave(payload.article_id);
+                    break;
                 case(WebSocketService.actions.updateArticle):
                     handleRemoteArticleUpdate(payload.article_id, payload.edited_field);
                     break;
@@ -123,9 +126,7 @@ angular.module('momusApp.controllers')
         function handleRemoteArticleSave(articleId) {
             vm.loading = true;
             Article.get({id: articleId}, article => {
-                const index = vm.publication.pages.findIndex(page => page.id === articleId);
                 vm.articles.push(article);
-                vm.publication.pages[index].articles.push(article);
                 vm.loading = false;
             });
         }
