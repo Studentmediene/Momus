@@ -20,7 +20,6 @@ angular.module('momusApp.controllers')
     .controller('FrontPageCtrl', function (
         $scope,
         $q,
-        PersonService,
         Person,
         TipAndNewsService,
         ViewArticleService,
@@ -69,14 +68,12 @@ angular.module('momusApp.controllers')
         };
 
         var searchForArticlesFromFavoriteSection = function(){
-            $scope.loadingFavourites = true;
             if($scope.user.favouritesection){
+                $scope.loadingFavourites = true;
                 $scope.favSectionArticles = Article.search(
                     {}, 
                     {section: $scope.user.favouritesection.id, page_size: 9},
                     () => $scope.loadingFavourites = false);
-            }else{
-                $scope.loadingFavourites = false;
             }
         };
 
@@ -147,7 +144,7 @@ angular.module('momusApp.controllers')
             var id = $filter("filter")($scope.articlestatus.statuses,{name:selected})[0].id;
             if(id === undefined) {
                 $location.url('artikler');
-            } else{
+            } else {
                 $location.url('artikler?publication=' + $scope.publication.id + '&status=' + id);
             }
             $scope.$apply();

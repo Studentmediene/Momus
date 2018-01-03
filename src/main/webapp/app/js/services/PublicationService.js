@@ -25,7 +25,7 @@ angular.module('momusApp.services')
             {
                 active: { method: 'GET', params: {id: 'active'} },
                 update: { method: 'PUT'},
-                layoutStatuses: { method: 'GET', isArray: true, params: {id: 'layoutstatuses'} }
+                layoutStatuses: { method: 'GET', isArray: true, params: {id: 'layoutstatuses'}, cache: true }
             });
     })
     .factory('Page', $resource => {

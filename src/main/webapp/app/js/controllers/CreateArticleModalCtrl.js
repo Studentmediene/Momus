@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('CreateArticleModalCtrl', function($scope, $uibModalInstance, Publication, Article, PersonService, $q, pubId){
+    .controller('CreateArticleModalCtrl', function($scope, $uibModalInstance, Publication, Article, Person, $q, pubId){
         $scope.article = {
             name: "",
             journalists: null,
@@ -49,10 +49,7 @@ angular.module('momusApp.controllers')
         $scope.statuses = Article.statuses({}, () => $scope.article.status = $scope.statuses[0]);
         $scope.sections = Article.sections({}, () => $scope.article.section = $scope.sections[0]);
         $scope.types = Article.types();
-
-        PersonService.getAll().then(function (data) {
-            $scope.persons = data.data;
-        });
+        $scope.persons = Person.query();
 
         $scope.photoTypes = [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}];
         $scope.quoteCheckTypes = [{value: false, name: 'I orden'}, {value: true, name: 'Trenger sitatsjekk'}];

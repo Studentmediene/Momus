@@ -21,7 +21,7 @@ angular.module('momusApp.controllers')
         $scope,
         $location,
         $q,
-        PersonService,
+        Person,
         Publication,
         Article,
         $uibModal,
@@ -49,8 +49,8 @@ angular.module('momusApp.controllers')
         $scope.search = angular.copy($scope.defaultSearch);
 
         // Get stuff from the server
-        $q.all([PersonService.getAll(), Publication.query().$promise]).then(function (data) {
-            $scope.persons = data[0].data;
+        $q.all([Person.query().$promise, Publication.query().$promise]).then(function (data) {
+            $scope.persons = data[0];
             $scope.publications = data[1];
             if (updateSearchParametersFromUrl()) { // If the URL contained a search
                 search();

@@ -20,6 +20,7 @@ angular.module('momusApp.controllers')
     .controller('ArticleCtrl', function (
         $scope,
         PersonService,
+        Person,
         $timeout,
         Article,
         Publication,
@@ -35,17 +36,16 @@ angular.module('momusApp.controllers')
         $scope.noteRules = noteParserRules;
 
         $q.all([
-            PersonService.getAll(), 
-            Article.get({id: $routeParams.id}).$promise, 
+            Person.query().$promise,
+            Article.get({id: $routeParams.id}).$promise,
             Article.content($routeParams.id)
-        ]).then(function(data){
-            $scope.persons = data[0].data;
+        ]).then(data => {
+            $scope.persons = data[0];
 
             $scope.article = data[1];
 
             $scope.articleContent = data[2].data;
 
-            $scope.unedited = angular.copy(data[1]);
             TitleChanger.setTitle($scope.article.name);
             ViewArticleService.viewArticle($routeParams.id);
 

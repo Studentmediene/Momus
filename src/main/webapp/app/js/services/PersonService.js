@@ -48,7 +48,7 @@ angular.module('momusApp.services')
                 id: '@id'
             },
             {
-                me: { method: 'GET' , params: {id: 'me'} },
-                updateFavouritesection: { method: 'PATCH', params: {id: 'me', resource: 'favouritesection'}, hasBody: false }
+                me: { method: 'GET' , params: {id: 'me'}, cache: true },
+                updateFavouritesection: {method: 'PATCH', params: {id: 'me', resource: 'favouritesection'}, cache: true }
             })
     });
