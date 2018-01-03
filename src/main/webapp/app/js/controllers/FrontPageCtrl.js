@@ -21,6 +21,7 @@ angular.module('momusApp.controllers')
         $scope,
         $q,
         PersonService,
+        Person,
         TipAndNewsService,
         ViewArticleService,
         FavouriteSectionService,
@@ -39,17 +40,17 @@ angular.module('momusApp.controllers')
 
         $scope.news = TipAndNewsService.getNews();
 
-
         // Latest user articles
         $scope.loadingArticles = true;
-        PersonService.getCurrentUser().then(function(data){
-            $scope.user = data.data;
+        Person.me({}, person => {
+            $scope.user = person;
             $scope.myArticles = Article.search({}, {persons: [$scope.user.id], page_size: 9}, () => {
                 $scope.loadingArticles = false;
                 if($scope.myArticles.length <= 0 ){
                     $scope.noArticles = true;
                 }
             });
+            searchForArticlesFromFavoriteSection();
         });
 
         // Recently viewed articles
@@ -67,34 +68,22 @@ angular.module('momusApp.controllers')
             return [$scope.recentArticles.indexOf(item.id.toString())];
         };
 
-
-        // Favorite section
-
-        $scope.loadingFavorites = true;
-        FavouriteSectionService.getFavouriteSection().then(function(data){
-            var favouriteSection = data.data;
-            if(data.data == "") {
-                favouriteSection = {};
-            }
-            $scope.favouriteSection = favouriteSection;
-            searchForArticlesFromFavoriteSection();
-        });
-
         var searchForArticlesFromFavoriteSection = function(){
-            if($scope.favouriteSection.section){
+            $scope.loadingFavourites = true;
+            if($scope.user.favouritesection){
                 $scope.favSectionArticles = Article.search(
                     {}, 
-                    {section: $scope.favouriteSection.section.id, page_size: 9},
-                    () => $scope.loadingFavorites = false);
+                    {section: $scope.user.favouritesection.id, page_size: 9},
+                    () => $scope.loadingFavourites = false);
             }else{
-                $scope.loadingFavorites = false;
+                $scope.loadingFavourites = false;
             }
         };
 
         $scope.updateFavouriteSection = function(){
-            FavouriteSectionService.updateFavouriteSection($scope.favouriteSection).then(function (data){
-                $scope.favouriteSection = data.data;
+            Person.updateFavouritesection({section: $scope.user.favouritesection.id}, person => {
                 searchForArticlesFromFavoriteSection();
+                $scope.user = person;
             });
         };
 

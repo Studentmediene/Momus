@@ -41,4 +41,14 @@ angular.module('momusApp.services')
                 }
             }
         };
+    })
+    .factory('Person', $resource => {
+        return $resource('/api/person/:id/:resource',
+            {
+                id: '@id'
+            },
+            {
+                me: { method: 'GET' , params: {id: 'me'} },
+                updateFavouritesection: { method: 'PATCH', params: {id: 'me', resource: 'favouritesection'}, hasBody: false }
+            })
     });

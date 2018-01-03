@@ -17,16 +17,20 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.authentication.UserDetailsServiceImpl;
+import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Person;
+import no.dusken.momus.service.PersonService;
 import no.dusken.momus.service.repository.PersonRepository;
+import no.dusken.momus.service.repository.SectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-@Controller
+@RestController
 @Transactional
 @RequestMapping("/person")
 public class PersonController {
@@ -37,19 +41,37 @@ public class PersonController {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @Autowired
+    private SectionRepository sectionRepository;
+
+    @Autowired
+    private PersonService personService;
+
+    @GetMapping
     public @ResponseBody List<Person> getAllPersons() {
         return personRepository.findByActiveTrue();
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/{id}")
     public @ResponseBody Person getPersonById(@PathVariable("id") Long id) {
         return personRepository.findOne(id);
     }
 
-
-    @RequestMapping("/me")
+    @GetMapping("/me")
     public @ResponseBody Person getCurrentUser() {
         return userDetailsService.getLoggedInPerson();
     }
+
+    @PatchMapping("/me/favouritesection")
+    public @ResponseBody Person updateFavouritesection(@RequestParam Long section) {
+        if(!sectionRepository.exists(section)) {
+            throw new RestException(
+                    "Can't set favourite section, section with id " + section + " does not exist",
+                    HttpServletResponse.SC_NOT_FOUND);
+        }
+        return personService.updateFavouritesection(
+                userDetailsService.getLoggedInPerson(),
+                sectionRepository.findOne(section));
+    }
+
 }
