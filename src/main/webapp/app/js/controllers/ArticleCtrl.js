@@ -36,7 +36,7 @@ angular.module('momusApp.controllers')
         $scope.noteRules = noteParserRules;
 
         $q.all([
-            Person.query().$promise,
+            Person.query({articleIds: [$routeParams.id]}).$promise,
             Article.get({id: $routeParams.id}).$promise,
             Article.content($routeParams.id)
         ]).then(data => {

@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @Transactional
@@ -47,9 +47,14 @@ public class PersonController {
     @Autowired
     private PersonService personService;
 
+    /**
+     * Gets all active persons. In addition, if article ids are supplied, will return all contributors on those
+     * even if they are inactive
+     */
     @GetMapping
-    public @ResponseBody List<Person> getAllPersons() {
-        return personRepository.findByActiveTrue();
+    public @ResponseBody Set<Person> getActivePersons(@RequestParam(
+            value="articleIds", required = false, defaultValue = "") List<Long> articleIds) {
+        return personService.getActivePersonsAndArticleContributors(articleIds);
     }
 
     @GetMapping(value = "/{id}")
