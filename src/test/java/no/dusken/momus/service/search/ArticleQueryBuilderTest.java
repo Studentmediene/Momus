@@ -44,8 +44,8 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
     ArticleQueryBuilder articleQueryBuilder;
 
     private void initPersonMocks() {
-        person1 = new Person(1L, "mts", "Mats", "Matsessen", "", "", true);
-        person2 = new Person(2L, "aaa", "Kåre", "Kåressen", "", "", true);
+        person1 = new Person(1L, UUID.randomUUID(),"mts", "Mats Matsessen", "", "", true);
+        person2 = new Person(2L, UUID.randomUUID(), "aaa", "Kåre Kåressen", "", "", true);
 
         when(personRepository.findOne(person1.getId())).thenReturn(person1);
         when(personRepository.findOne(person2.getId())).thenReturn(person2);
@@ -96,7 +96,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
         expectedQueryBuilder.append("(section is not null and lower(section.name) like :free0) or ");
         expectedQueryBuilder.append("(type is not null and lower(type.name) like :free0) or ");
         expectedQueryBuilder.append("(review is not null and lower(review.name) like :free0) or ");
-        expectedQueryBuilder.append("exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.fullName) LIKE :free0)) and ");
+        expectedQueryBuilder.append("exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.name) LIKE :free0)) and ");
         expectedQueryBuilder.append("(a.rawcontent like :free1 or ");
         expectedQueryBuilder.append("lower(a.comment) like :free1 or ");
         expectedQueryBuilder.append("lower(a.name) like :free1 or ");  
@@ -105,7 +105,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
         expectedQueryBuilder.append("(section is not null and lower(section.name) like :free1) or ");
         expectedQueryBuilder.append("(type is not null and lower(type.name) like :free1) or ");
         expectedQueryBuilder.append("(review is not null and lower(review.name) like :free1) or ");
-        expectedQueryBuilder.append("exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.fullName) LIKE :free1)) and ");
+        expectedQueryBuilder.append("exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.name) LIKE :free1)) and ");
         expectedQueryBuilder.append("a.archived = :arch ");
         expectedQueryBuilder.append(ArticleQueryBuilder.baseOrder);
 
@@ -217,7 +217,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
         expectedQueryBuilder.append("(section is not null and lower(section.name) like :free0) or ");
         expectedQueryBuilder.append("(type is not null and lower(type.name) like :free0) or ");
         expectedQueryBuilder.append("(review is not null and lower(review.name) like :free0) or ");
-        expectedQueryBuilder.append("exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.fullName) LIKE :free0)) and ");
+        expectedQueryBuilder.append("exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.name) LIKE :free0)) and ");
         expectedQueryBuilder.append("(a.rawcontent like :free1 or ");
         expectedQueryBuilder.append("lower(a.comment) like :free1 or ");
         expectedQueryBuilder.append("lower(a.name) like :free1 or ");  
@@ -226,7 +226,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
         expectedQueryBuilder.append("(section is not null and lower(section.name) like :free1) or ");
         expectedQueryBuilder.append("(type is not null and lower(type.name) like :free1) or ");
         expectedQueryBuilder.append("(review is not null and lower(review.name) like :free1) or ");
-        expectedQueryBuilder.append("exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.fullName) LIKE :free1)) and ");
+        expectedQueryBuilder.append("exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.name) LIKE :free1)) and ");
         expectedQueryBuilder.append("status.id = :statusid and ");
         expectedQueryBuilder.append("( :personid0 member of a.journalists or ");
         expectedQueryBuilder.append(":personid0 member of a.photographers ) and ");

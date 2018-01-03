@@ -35,7 +35,7 @@ angular.module('momusApp.directives').
                 };
 
                 scope.openModal = function(){
-                    var pwMessage = '<table class="table table-condensed"><tr><td>Navn:</td><td>'+ scope.pw_person.full_name + '</td></tr><tr><td>Email:</td><td><a href="mailto:' + scope.pw_person.email + '">' + scope.pw_person.email + '</a></td></tr><tr><td>Telefon:</td><td>' + scope.pw_person.phone_number + '</td></tr></table>';
+                    var pwMessage = '<table class="table table-condensed"><tr><td>Navn:</td><td>'+ scope.pw_person.name + '</td></tr><tr><td>Email:</td><td><a href="mailto:' + scope.pw_person.email + '">' + scope.pw_person.email + '</a></td></tr><tr><td>Telefon:</td><td>' + scope.pw_person.phone_number + '</td></tr></table>';
                     MessageModal.info(pwMessage);
                 };
 

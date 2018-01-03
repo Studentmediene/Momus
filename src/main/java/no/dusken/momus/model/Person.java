@@ -16,8 +16,12 @@
 
 package no.dusken.momus.model;
 
+import org.hibernate.annotations.Type;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.UUID;
 
 @Entity
 public class Person {
@@ -27,13 +31,16 @@ public class Person {
 
     private String username;
 
-    private String firstName;
-    private String fullName;
+    private String name;
 
     private String email;
     private String phoneNumber;
 
     private boolean active;
+
+    @Column(columnDefinition = "BINARY(16)")
+    @Type(type = "uuid-binary")
+    private UUID guid;
 
     public Person() {
     }
@@ -42,11 +49,11 @@ public class Person {
         this.id = id;
     }
 
-    public Person(Long id, String username, String firstName, String fullName, String email, String phoneNumber, boolean active) {
+    public Person(Long id, UUID guid, String username, String name, String email, String phoneNumber, boolean active) {
         this.id = id;
+        this.guid = guid;
         this.username = username;
-        this.firstName = firstName;
-        this.fullName = fullName;
+        this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.active = active;
@@ -54,6 +61,14 @@ public class Person {
 
     public Long getId() {
         return id;
+    }
+
+    public UUID getGuid() {
+        return guid;
+    }
+
+    public void setGuid(UUID guid) {
+        this.guid = guid;
     }
 
     public String getUsername() {
@@ -64,20 +79,12 @@ public class Person {
         this.username = userName;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String lastName) {
-        this.fullName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -126,7 +133,7 @@ public class Person {
         return "Person{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", fullName='" + fullName + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

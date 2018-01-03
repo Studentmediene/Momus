@@ -143,7 +143,7 @@ public class IndesignGenerator {
         List<String> names = new ArrayList<>();
 
         for (Person person : persons) {
-            names.add(person.getFullName());
+            names.add(person.getName());
         }
 
         if (external != null && !external.isEmpty()) {

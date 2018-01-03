@@ -166,7 +166,7 @@ angular.module('momusApp.controllers')
             if($scope.article.journalists.length){
                 for(var i = 0; i < $scope.article.journalists.length;i++) {
                     qcAuthor +=
-                        $scope.article.journalists[i].full_name + " - " +
+                        $scope.article.journalists[i].name + " - " +
                         $scope.article.journalists[i].email + "<br />";
                 }
             } else {
