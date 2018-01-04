@@ -16,32 +16,7 @@
 
 'use strict';
 
-angular.module('momusApp.services')
-    .service('PersonService', function ($http) {
-        function personExistsInArray(array, person){
-            for(var i = 0; i < array.length; i++){
-                if(array[i].id == person.id){
-                    return true;
-                }
-            }
-            return false;
-        }
-        return {
-            getCurrentUser: function () {
-                return $http.get('/api/person/me', {cache: true});
-            },
-            getAll: function () {
-                return $http.get('/api/person/', {cache: true});
-            },
-            addPersonsToArray: function(array, persons){
-                for(var i = 0; i < persons.length;i++){
-                    if(!personExistsInArray(array, persons[i])){
-                        array.push(persons[i]);
-                    }
-                }
-            }
-        };
-    })
+angular.module('momusApp.resources')
     .factory('Person', $resource => {
         return $resource('/api/person/:id/:resource',
             {

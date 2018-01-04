@@ -16,20 +16,9 @@
 
 'use strict';
 
-angular.module('momusApp.services')
-    .factory('Publication', $resource => {
-        return $resource('/api/publications/:id', 
-            {
-                id: '@id'
-            },
-            {
-                active: { method: 'GET', params: {id: 'active'} },
-                update: { method: 'PUT'},
-                layoutStatuses: { method: 'GET', isArray: true, params: {id: 'layoutstatuses'}, cache: true }
-            });
-    })
+angular.module('momusApp.resources')
     .factory('Page', $resource => {
-        return $resource('/api/publications/:pubid/pages/:pageid', 
+        return $resource('/api/publications/:pubid/pages/:pageid',
             {
                 pageid: '@id',
                 pubid: '@publication.id'
@@ -38,7 +27,7 @@ angular.module('momusApp.services')
                 save: { method: 'POST', isArray: true},
                 saveMultiple: { method: 'POST', isArray:true, params: {pageid: 'list'} },
                 update: { method: 'PUT', isArray: true},
-				updateMeta: {method: 'PATCH'},
+                updateMeta: {method: 'PATCH'},
                 updateMultiple: { method: 'PUT', isArray: true, params: {pageid: 'list'} },
                 layoutStatusCounts: { method: 'GET', params: {pageid: 'layoutstatuscounts'} },
                 delete: { method: 'DELETE', isArray: true}

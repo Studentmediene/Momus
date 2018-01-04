@@ -19,15 +19,14 @@
 angular.module('momusApp.controllers')
     .controller('ArticleCtrl', function (
         $scope,
-        PersonService,
         Person,
-        $timeout,
         Article,
         Publication,
         TitleChanger,
-        noteParserRules,
-        $routeParams,
         ViewArticleService,
+        noteParserRules,
+        $timeout,
+        $routeParams,
         MessageModal,
         $templateRequest
     ) {
