@@ -29,29 +29,23 @@ angular.module('momusApp.controllers')
         $routeParams,
         ViewArticleService,
         MessageModal,
-        $templateRequest,
-        $q
+        $templateRequest
     ) {
+
+        ViewArticleService.viewArticle($routeParams.id);
+
         $scope.metaEditMode = false;
         $scope.noteRules = noteParserRules;
 
-        $q.all([
-            Person.query({articleIds: [$routeParams.id]}).$promise,
-            Article.get({id: $routeParams.id}).$promise,
-            Article.content($routeParams.id)
-        ]).then(data => {
-            $scope.persons = data[0];
+        $scope.persons = Person.query({articleIds: [$routeParams.id]});
 
-            $scope.article = data[1];
+        $scope.article = Article.get({id: $routeParams.id}, article => {
+            TitleChanger.setTitle(article.name);
+            $scope.uneditedNote = article.note;
+        });
 
-            $scope.articleContent = data[2].data;
-
-            TitleChanger.setTitle($scope.article.name);
-            ViewArticleService.viewArticle($routeParams.id);
-
-            // Add people already in article to persons in case they have become inactive since they wrote the article
-            PersonService.addPersonsToArray($scope.persons, $scope.article.journalists);
-            PersonService.addPersonsToArray($scope.persons, $scope.article.photographers);
+        Article.content($routeParams.id).then(data => {
+            $scope.articleContent = data.data;
         });
 
         $scope.sections = Article.sections();
@@ -69,8 +63,7 @@ angular.module('momusApp.controllers')
                 {id: $scope.article.id}, 
                 JSON.stringify($scope.article.note),
                 article => {
-                    $scope.article.note = article.note;
-                    $scope.unedited.note = article.note;
+                    $scope.uneditedNote = article.note;
                     $scope.savingNote = false;
             });
         };
@@ -89,12 +82,10 @@ angular.module('momusApp.controllers')
             $scope.metaEditing.$updateMetadata({}, updatedArticle => {
                 updatedArticle.note = $scope.article.note;
                 $scope.article = updatedArticle;
-                $scope.unedited = angular.copy(updatedArticle);
                 $scope.savingMeta = false;
                 $scope.metaEditMode = false;
                 TitleChanger.setTitle($scope.article.name);
             });
-
         };
 
         $scope.editMeta = function() {
@@ -137,7 +128,7 @@ angular.module('momusApp.controllers')
         });
 
         function promptCondition() {
-            return $scope.metaEditMode === true || $scope.unedited.note != $scope.article.note;
+            return $scope.metaEditMode === true || $scope.uneditedNote !== $scope.article.note;
         }
 
         $scope.deleteArticle = function(){
@@ -151,8 +142,6 @@ angular.module('momusApp.controllers')
             $scope.article.$restore();
             $scope.article.archived = false;
         };
-
-
 
         $scope.quoteCheck = function(zc){
 

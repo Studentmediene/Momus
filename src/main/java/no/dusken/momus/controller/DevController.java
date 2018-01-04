@@ -475,50 +475,6 @@ public class DevController {
         return "ok";
     }
 
-    @RequestMapping("/test2")
-    public @ResponseBody List<Source> test22() {
-        String baseQuery = "select distinct s from Source s";
-
-        List<String> conditions = new ArrayList<>();
-        Map<String, String> params = new HashMap<>();
-
-        if (true) {
-            conditions.add("s.name like :name");
-            params.put("name", "%Mats%");
-        }
-
-
-        if (true) {
-            conditions.add("s.email like :email");
-            params.put("email", "mats.svensson@gmail.rart.com");
-        }
-
-        String conditionsString = StringUtils.collectionToDelimitedString(conditions, " AND ");
-        String fullQuery;
-
-        if (conditionsString.equals("")) {
-            fullQuery = baseQuery;
-        } else {
-            fullQuery = baseQuery + " WHERE " + conditionsString;
-        }
-
-
-        logger.debug(fullQuery);
-
-        TypedQuery<Source> query = entityManager.createQuery(fullQuery, Source.class);
-
-        for (Map.Entry<String, String> e : params.entrySet()) {
-            query.setParameter(e.getKey(), e.getValue());
-        }
-
-
-//        query.setFirstResult(1);
-//        query.setMaxResults(2);
-
-
-        return query.getResultList();
-    }
-
     @RequestMapping("/createMetadata")
     public @ResponseBody String createMetadata() {
 
