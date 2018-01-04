@@ -183,7 +183,9 @@ angular.module('momusApp.controllers')
             if(pubid){
                 publication = Publication.get({id: pubid}, () => callback(publication));
             }else{
-                publication = Publication.active({}, () => callback(publication));
+                publication = Publication.active({},
+                    () => callback(publication),
+                    () => vm.noPublication = true);
             }
         }
 
