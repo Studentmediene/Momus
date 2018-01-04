@@ -41,7 +41,7 @@
                 <th>Journalister:</th>
                 <td>
                 <span ng-repeat="journalist in article.journalists">
-                    {{ journalist.full_name }}<span ng-if="!$last">,</span>
+                    {{ journalist.name }}<span ng-if="!$last">,</span>
                 </span>
                 </td>
                 <th>Kommentar:</th>
@@ -51,7 +51,7 @@
                 <th>Fotografer:</th>
                 <td>
                 <span ng-repeat="photographer in article.photographers">
-                    {{ photographer_full_name }}<span ng-if="!$last">,</span>
+                    {{ photographer_name }}<span ng-if="!$last">,</span>
                 </span>
                 </td>
                 <th>Utgave:</th>
@@ -263,14 +263,14 @@
                             <div class="col-sm-8">
                                 <ul class="list-unstyled form-control-static" ng-hide="metaEditMode">
                                     <li ng-repeat="journalist in article.journalists">
-                                        <span person-widget="journalist">{{ journalist.full_name }}</span>
+                                        <span person-widget="journalist">{{ journalist.name }}</span>
                                     </li>
                                 </ul>
                                 <id-select multiple
                                            ng-show="metaEditMode"
                                            items="persons"
                                            target="metaEditing.journalists"
-                                           show="full_name">
+                                           show="name">
                                 </id-select>
                             </div>
                         </div>
@@ -314,14 +314,14 @@
                             <div class="col-sm-8">
                                 <ul class="list-unstyled form-control-static" ng-hide="metaEditMode">
                                     <li ng-repeat="photographer in article.photographers">
-                                        <span person-widget="photographer">{{ photographer.full_name }}</span>
+                                        <span person-widget="photographer">{{ photographer.name }}</span>
                                     </li>
                                 </ul>
                                 <id-select multiple
                                            ng-show="metaEditMode"
                                            items="persons"
                                            target="metaEditing.photographers"
-                                           show="full_name">
+                                           show="name">
                                 </id-select>
                             </div>
                         </div>

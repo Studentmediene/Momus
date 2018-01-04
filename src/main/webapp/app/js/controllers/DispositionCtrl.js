@@ -34,6 +34,7 @@ angular.module('momusApp.controllers')
     {
         var vm = this;
         var lastUpdate = {date: new Date()};
+        var websocketActive = false;
 
         vm.maxNewPages = 100;
 
@@ -159,7 +160,10 @@ angular.module('momusApp.controllers')
                 getPages(publication.id, pages => {
                     publication.pages = pages;
                     ArticleService.search({publication: publication.id}).then(data => {
-                        WebSocketService.subscribe(publication.id, onRemoteChange);
+                        if($routeParams.ws){
+                            WebSocketService.subscribe(publication.id, onRemoteChange);
+                            websocketActive = true;
+                        }
                         var articles = data.data;
                         publication.pages.forEach(page => connectArticles(page, articles));
                         vm.articles = articles;
@@ -205,7 +209,9 @@ angular.module('momusApp.controllers')
             var updatedPages = Page.saveMultiple({pubid: vm.publication.id}, pages, () => {
                 vm.publication.pages = updatedPages;
                 vm.loading = false;
-                lastUpdate = WebSocketService.pageSaved(vm.publication.id, -1);                
+                if(websocketActive){
+                    lastUpdate = WebSocketService.pageSaved(vm.publication.id, -1);
+                }
             });
         }
 
@@ -213,7 +219,9 @@ angular.module('momusApp.controllers')
 			vm.loading = true;
 			var new_page = Page.updateMeta({pubid: vm.publication.id}, page, () => {
                 vm.loading = false;
-                lastUpdate = WebSocketService.pageMetadataUpdated(vm.publication.id, new_page.id);
+                if(websocketActive) {
+                    lastUpdate = WebSocketService.pageMetadataUpdated(vm.publication.id, new_page.id);
+                }
 			});
         }
 
@@ -225,7 +233,9 @@ angular.module('momusApp.controllers')
                 });
                 vm.publication.pages = updatedPages;
                 vm.loading = false;
-                lastUpdate = WebSocketService.pageNrUpdated(vm.publication.id, -1);                
+                if(websocketActive){
+                    lastUpdate = WebSocketService.pageNrUpdated(vm.publication.id, -1);
+                }
             });
         }
 
@@ -236,7 +246,9 @@ angular.module('momusApp.controllers')
                 var pages = Page.delete({pubid: vm.publication.id, pageid: page.id}, () => {
                     vm.publication.pages = pages;
                     vm.loading = false;
-                    lastUpdate = WebSocketService.pageDeleted(vm.publication.id, page.id);                
+                    if(websocketActive){
+                        lastUpdate = WebSocketService.pageDeleted(vm.publication.id, page.id);
+                    }
                 });
             }
         }
@@ -296,7 +308,9 @@ angular.module('momusApp.controllers')
                     const article = data.data;
                     page.articles.push(article);
                     vm.articles.push(article);
-                    lastUpdate = WebSocketService.articleSaved(vm.publication.id, page.id, article.id);
+                    if(websocketActive){
+                        lastUpdate = WebSocketService.articleSaved(vm.publication.id, page.id, article.id);
+                    }
                 });
             });
         }
@@ -305,7 +319,9 @@ angular.module('momusApp.controllers')
             vm.loading = true;
             ArticleService.updateMetadata(article).then(() => {
                 vm.loading = false;
-                lastUpdate = WebSocketService.articleUpdated(vm.publication.id, article.id, editedField);
+                if(websocketActive){
+                    lastUpdate = WebSocketService.articleUpdated(vm.publication.id, article.id, editedField);
+                }
             });
         }
 
@@ -384,7 +400,10 @@ angular.module('momusApp.controllers')
             });
 
         $scope.$on('$destroy', () => {
-            WebSocketService.disconnect();
+            if(websocketActive) {
+                WebSocketService.disconnect();
+                websocketActive = false;
+            }
             angular.element($window).unbind('resize');
         });
     });

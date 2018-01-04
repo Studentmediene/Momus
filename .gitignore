@@ -29,3 +29,5 @@ bin/
 
 **/*.css
 **/*.css.map
+
+package-lock.json

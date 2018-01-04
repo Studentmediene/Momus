@@ -103,7 +103,7 @@
                     <select multiple class="form-control" id="searchPersons" ui-select2 ng-model="search.persons"
                             placeholder="Velg personer">
                         <option ng-repeat="person in persons" value="{{ person.id }}">
-                            {{ person.full_name }}
+                            {{ person.name }}
                         </option>
                     </select>
                 </div>
@@ -179,7 +179,7 @@
                     <td>
                         <ul class="list-unstyled">
                             <li ng-repeat="person in article.journalists">
-                                <span person-widget="person">{{ person.full_name }}</span>
+                                <span person-widget="person">{{ person.name }}</span>
                             </li>
                             <li><i uib-tooltip="Ekstern">{{article.external_author}}</i></li>
                         </ul>
@@ -191,7 +191,7 @@
 
                                 <i class="fa fa-paint-brush" ng-show="article.use_illustration"> </i>
                                 <i class="fa fa-camera" ng-show="!article.use_illustration"> </i>
-                                <span person-widget="person">{{ person.full_name }}</span>
+                                <span person-widget="person">{{ person.name }}</span>
                             </li>
                             <li><i uib-tooltip="Ekstern">{{article.external_photographer}}</i></li>
                         </ul>

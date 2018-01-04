@@ -1121,4 +1121,20 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <where>id=11</where>
         </update>
     </changeSet>
+    
+    <changeSet id="36_addPersonGuid" author="Eivind">
+        <addColumn tableName="person">
+            <column name="guid" type="BINARY(16)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="37_removePersonFirstname" author="Eivind">
+        <dropColumn tableName="person" columnName="firstname" />
+        <renameColumn tableName="person" oldColumnName="fullname" newColumnName="name" />
+    </changeSet>
+
+    <!-- I don't remember what this table was for in the first place -->
+    <changeSet id="38_dropmaptable" author="Eivind">
+        <dropTable tableName="usernamemap" />
+    </changeSet>
 </databaseChangeLog>
