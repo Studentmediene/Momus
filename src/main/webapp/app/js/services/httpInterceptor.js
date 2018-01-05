@@ -29,7 +29,6 @@ angular.module('momusApp.services').
          If the reason is something else, a modal will pop up with an error message.
          */
 
-
         // Make sure we only send one request for login form
         var hasRequestedLogin = false;
 

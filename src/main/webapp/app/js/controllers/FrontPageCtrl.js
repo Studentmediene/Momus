@@ -29,7 +29,6 @@ angular.module('momusApp.controllers')
 
 
         // Latest user articles
-
         $scope.loadingArticles = true;
         PersonService.getCurrentUser().then(function(data){
             $scope.user = data.data;
@@ -111,22 +110,32 @@ angular.module('momusApp.controllers')
             });
         };
 
-
         // Cake diagrams TODO (Could some of this be put into a service?)
+        $scope.publication = Publication.active({},
+            publication => {
+                $q.all([
+                    PublicationService.getStatusCounts(publication.id),
+                    ArticleService.getStatuses()]).then(
+                    function (data) {
+                        $scope.articlestatus = getStatusArrays(data[0].data, data[1].data);
+                    });
 
-        $scope.publication = Publication.active({}, function() {            
-            $q.all([ PublicationService.getStatusCounts($scope.publication.id),ArticleService.getStatuses()]).then(function(data){
-                $scope.articlestatus = getStatusArrays(data[0].data, data[1].data);
-            });
+                $q.all([
+                    Page.layoutStatusCounts({pubid: publication.id}).$promise,
+                    Publication.layoutStatuses().$promise]).then(
+                    function (data) {
+                        $scope.layoutstatus = getStatusArrays(data[0], data[1]);
+                    });
 
-            $q.all([Page.layoutStatusCounts({pubid: $scope.publication.id}).$promise,Publication.layoutStatuses().$promise]).then(function(data){
-                $scope.layoutstatus = getStatusArrays(data[0], data[1]);
-            });
-
-            $q.all([ PublicationService.getReviewStatusCounts($scope.publication.id),ArticleService.getReviews()]).then(function(data){
-                $scope.reviewstatus = getStatusArrays(data[0].data, data[1].data);
-            });
-        });
+                $q.all([
+                    PublicationService.getReviewStatusCounts(publication.id),
+                    ArticleService.getReviews()]).then(
+                    function (data) {
+                        $scope.reviewstatus = getStatusArrays(data[0].data, data[1].data);
+                    });
+            },
+            () => $scope.noPublication = true
+        );
 
         function getStatusArrays(counts, statuses){
             var status = {statuses: statuses, labels: [], colors: [], counts: []};

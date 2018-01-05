@@ -18,6 +18,13 @@
 
 angular.module('momusApp.controllers')
     .controller('NavbarCtrl', function ($scope, $location, PersonService, $http, MessageModal, $rootScope, $window) {
+        $scope.devmode = false;
+
+        $http.get('/api/dev/devmode', {bypassInterceptor: true}).then(
+            response => $scope.devmode = response.data,
+            () => $scope.devmode = false
+        );
+
         PersonService.getCurrentUser().then(function(data) {
             $scope.user = data.data;
         });
