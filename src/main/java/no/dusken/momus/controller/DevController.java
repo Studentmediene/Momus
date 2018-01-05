@@ -25,9 +25,8 @@ import no.dusken.momus.service.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.core.env.Environment;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -35,7 +34,7 @@ import java.util.*;
  * Dev only, not accessible when live
  * Utility methods etc. goes here.
  */
-@Controller
+@RestController
 @RequestMapping("/dev")
 public class DevController {
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -71,16 +70,19 @@ public class DevController {
     private GoogleDriveService driveService;
 
     @Autowired
+    private Environment env;
+
+
+    @Autowired
     LdapSyncer ldapSyncer;
 
-
-    @RequestMapping("/ldaptest")
+    @GetMapping("/ldaptest")
     public @ResponseBody String ldaptest() {
         ldapSyncer.sync();
         return "oook";
     }
 
-    @RequestMapping("/generatedata")
+    @PostMapping("/generatedata")
     public @ResponseBody String generatePublicationsAndArticles() {
         Random random = new Random();
 
@@ -160,19 +162,8 @@ public class DevController {
         return "dummy articles and publications generated";
     }
 
-    @RequestMapping("/creategdocs")
-    public @ResponseBody List<Article> createGDocs(){
-        List<Article> articles = articleRepository.findAll();
-
-        for(Article article : articles) {
-            if(article.getGoogleDriveId() == null) {
-                com.google.api.services.drive.model.File document = driveService.createDocument(article.getName());
-                if(document != null){
-                    article.setGoogleDriveId(document.getId());
-                }
-            }
-        }
-
-        return articleRepository.save(articles);
+    @GetMapping("/devmode")
+    public @ResponseBody boolean isDevmode() {
+        return Boolean.valueOf(env.getProperty("devmode"));
     }
 }
