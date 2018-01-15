@@ -28,7 +28,7 @@ class WebsocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws/disposition");
-        registry.addEndpoint("/ws/disposition").withSockJS();
+        registry.addEndpoint("/ws/disposition").setAllowedOrigins("https://momus.smint.no").withSockJS();
     }
 
     @Override
