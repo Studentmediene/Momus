@@ -32,7 +32,7 @@ angular.module('momusApp.services')
 
         return $resource(baseUrl + '/:id', null,
             {
-                active: { method: 'GET', url: baseUrl + '/active'},
+                active: { method: 'GET', url: baseUrl + '/active', bypassInterceptor: true},
                 update: { method: 'PUT'},
                 layoutStatuses: { method: 'GET', url: baseUrl + '/layoutstatuses', isArray: true}
             });

@@ -98,6 +98,14 @@ angular.module('momusApp', [
                 title: 'Info'
             }
         )
+            .when('/dev',
+            {
+                templateUrl: 'partials/dev/devView.html',
+                controller: 'DevCtrl',
+                title: 'Dev',
+                controllerAs: 'vm'
+            }
+        )
             .otherwise({redirectTo: 'front'});
 
     }]).

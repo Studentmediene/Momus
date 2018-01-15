@@ -164,3 +164,22 @@ a.zeroclipboard-is-hover {
     min-height: 100px;
     resize: vertical; 
 }
+
+.navbar-dev {
+    background-color: #ff413c;
+
+    a {
+        color: white !important;
+    }
+
+    &.active{
+        a {
+            background-color: #ff1309 !important;
+        }
+    }
+}
+
+// https://docs.angularjs.org/api/ng/directive/ngCloak
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}

@@ -121,7 +121,7 @@ public class PublicationService {
         if(publications.size() == 1) return publications.get(0);
 
         Publication active = publications.get(0);
-        for(Publication p : publications.subList(1,publications.size()-1)){
+        for(Publication p : publications.subList(1,publications.size())){
             if(p.getReleaseDate().before(date)){
                 return active;
             }else{
