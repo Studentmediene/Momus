@@ -129,8 +129,30 @@ public class GoogleDocsTextConverter {
             String italicSelectorName = italicsMatcher.group(1);
             Pattern italicClasses = Pattern.compile("<span class=\"[^\"]*" + italicSelectorName + "[^\"]*\">(.*?)</span>");
             Matcher spanMatcherItalics = italicClasses.matcher(body);
-
-            body = spanMatcherItalics.replaceAll("<i>$1</i>"); // $1 means what is matched inside the parentheses in the pattern
+            
+            System.out.println("stuff");
+            System.out.println(spanMatcherItalics);
+            StringBuffer sb = new StringBuffer();
+            while(spanMatcherItalics.find()) {
+              boolean italicbold = false;
+              int boldStart = 0;
+              while(boldMatcher.find(boldStart)) {
+                String boldSelectorName = boldMatcher.group(1);
+                Pattern boldClasses = Pattern.compile("<span class=\"[^\"]*" + boldSelectorName + "[^\"]*\">(.*?)</span>");
+                Matcher spanMatcherBold = boldClasses.matcher(spanMatcherItalics.group());
+                if(spanMatcherBold.matches()) {
+                  italicbold = true;
+                }
+                boldStart = boldMatcher.start() + 1;
+              }
+              String replaceString = "<i>$1</i>";
+              if(italicbold){
+                replaceString = "<i><b>$1</b></i>";
+              }
+              spanMatcherItalics.appendReplacement(sb, replaceString);
+            }
+            body = spanMatcherItalics.appendTail(sb).toString();
+            //body = spanMatcherItalics.replaceAll("<i>$1</i>"); // $1 means what is matched inside the parentheses in the pattern
             start = italicsMatcher.start() + 1;
         }
 
