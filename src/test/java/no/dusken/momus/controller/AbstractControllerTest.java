@@ -1,0 +1,75 @@
+package no.dusken.momus.controller;
+
+import no.dusken.momus.config.TestConfig;
+import no.dusken.momus.model.Person;
+import no.dusken.momus.service.repository.PersonRepository;
+import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {TestConfig.class})
+@WebAppConfiguration
+@Transactional
+public abstract class AbstractControllerTest {
+
+    @Autowired
+    WebApplicationContext webApplicationContext;
+
+    @Autowired
+    PersonRepository personRepository;
+
+    MockMvc mockMvc;
+
+    @Before
+    public void setup() {
+        mockMvc = webAppContextSetup(webApplicationContext).build();
+        Person me = new Person(1L);
+        personRepository.saveAndFlush(me);
+        internalSetup();
+    }
+
+    void internalSetup() {
+        // Intentionally empty, override if necessary
+    }
+
+    public RequestBuilder buildGet(String url) {
+        return get(url).accept(MediaType.APPLICATION_JSON);
+    }
+
+    public RequestBuilder buildPut(String url, String content) throws Exception {
+        return put(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content);
+    }
+
+    public ResultActions performPutExpectOk(String url, String content) throws Exception {
+        return mockMvc.perform(buildPut(url, content))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    public ResultActions performGetExpectOk(String url) throws Exception {
+        return mockMvc.perform(buildGet(url))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+
+}
