@@ -173,7 +173,7 @@ angular.module('momusApp.controllers')
         function publicationQuery(pubid){
             return pubid ?
                 callback => Publication.get({id: pubid}, callback) :
-                callback => Publication.active({}, callback);
+                callback => Publication.active({}, callback, () => vm.noPublication = true);
         }
 
         function fetchStatuses(){

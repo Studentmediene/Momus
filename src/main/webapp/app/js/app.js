@@ -21,7 +21,7 @@ angular.module('momusApp.controllers', []);
 angular.module('momusApp.filters', []);
 angular.module('momusApp.services', []);
 angular.module('momusApp.directives', []);
-angular.module('momusApp.resources', []);
+
 
 // Declare app level module which depends on filters, and services
 angular.module('momusApp', [
@@ -29,7 +29,6 @@ angular.module('momusApp', [
         'momusApp.filters',
         'momusApp.services',
         'momusApp.directives',
-        'momusApp.resources',
         'ngRoute',
         'ngResource',
         'ui.select',
@@ -84,6 +83,13 @@ angular.module('momusApp', [
                 templateUrl: 'partials/info/infoView.html',
                 controller: 'InfoCtrl',
                 title: 'Info'
+            })
+            .when('/dev',
+            {
+                templateUrl: 'partials/dev/devView.html',
+                controller: 'DevCtrl',
+                title: 'Dev',
+                controllerAs: 'vm'
             })
             .otherwise({redirectTo: 'front'});
 

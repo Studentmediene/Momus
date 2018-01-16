@@ -18,6 +18,13 @@
 
 angular.module('momusApp.controllers')
     .controller('NavbarCtrl', function ($scope, $location, Person, $http, MessageModal, $rootScope, $window) {
+        $scope.devmode = false;
+
+        $http.get('/api/dev/devmode', {bypassInterceptor: true}).then(
+            response => $scope.devmode = response.data,
+            () => $scope.devmode = false
+        );
+
         $scope.user = Person.me();
 
         $scope.isCollapsed = true;

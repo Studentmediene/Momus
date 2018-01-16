@@ -1,5 +1,6 @@
 package no.dusken.momus.config;
 
+import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
@@ -27,8 +28,11 @@ public class WebInit implements WebApplicationInitializer {
         dispatcher.addMapping("/api/*");
 
         // Add security to the servlet
-        servletContext.addFilter("springSecurityFilterChain", DelegatingFilterProxy.class)
-            .addMappingForUrlPatterns(null, false, "/*");
+        FilterRegistration.Dynamic securityFilter = servletContext
+                .addFilter("springSecurityFilterChain", DelegatingFilterProxy.class);
+
+        securityFilter.setAsyncSupported(true);
+        securityFilter.addMappingForUrlPatterns(null, false, "/*");
 	}
 
 } 

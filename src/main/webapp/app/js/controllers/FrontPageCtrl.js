@@ -70,7 +70,7 @@ angular.module('momusApp.controllers')
             if($scope.user.favouritesection){
                 $scope.loadingFavourites = true;
                 $scope.favSectionArticles = Article.search(
-                    {}, 
+                    {},
                     {section: $scope.user.favouritesection.id, page_size: 9},
                     () => $scope.loadingFavourites = false);
             }
@@ -85,22 +85,21 @@ angular.module('momusApp.controllers')
 
         $scope.sections = Article.sections();
 
-
         // Cake diagrams TODO (Could some of this be put into a service?)
 
         $scope.publication = Publication.active({}, function() {            
             $q.all([
-                Article.statusCounts({publicationId: $scope.publication.id}).$promise, 
+                Article.statusCounts({publicationId: $scope.publication.id}).$promise,
                 Article.statuses().$promise]
             ).then(data => $scope.articlestatus = getStatusArrays(...data));
 
             $q.all([
-                Page.layoutStatusCounts({pubid: $scope.publication.id}).$promise, 
+                Page.layoutStatusCounts({pubid: $scope.publication.id}).$promise,
                 Publication.layoutStatuses().$promise]
             ).then(data => $scope.layoutstatus = getStatusArrays(...data));
 
             $q.all([
-                Article.reviewStatusCounts({publicationId: $scope.publication.id}).$promise, 
+                Article.reviewStatusCounts({publicationId: $scope.publication.id}).$promise,
                 Article.reviewStatuses().$promise]
             ).then(data => $scope.reviewstatus = getStatusArrays(...data));
         });

@@ -57,7 +57,7 @@ public class PublicationController {
 
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody Publication savePublication(@RequestBody Publication publication, @RequestParam(required = false, defaultValue = "50") Integer numEmptyPages) {
-        if(publication.getId() != null && publicationService.getPublicationRepository().findOne(publication.getId()) != null){
+        if(publication.getId() != null && publicationService.getPublicationRepository().exists(publication.getId())){
             throw new RestException("Publication with given id already created. Did you mean to PUT?", HttpServletResponse.SC_BAD_REQUEST);
         }
         else if(numEmptyPages > 100){
@@ -69,7 +69,7 @@ public class PublicationController {
 
     @RequestMapping(method = RequestMethod.PUT)
     public @ResponseBody Publication updatePublication(@RequestBody Publication publication) {
-        if(publicationService.getPublicationRepository().findOne(publication.getId()) == null){
+        if(!publicationService.getPublicationRepository().exists(publication.getId())){
             throw new RestException("Publication with given id not found", HttpServletResponse.SC_BAD_REQUEST);
         }
         return publicationService.updatePublication(publication);
@@ -77,14 +77,18 @@ public class PublicationController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody Publication getPublicationById(@PathVariable("id") Long id){
+        if(!publicationService.getPublicationRepository().exists(id)){
+            throw new RestException("Publication with given id not found", HttpServletResponse.SC_NOT_FOUND);
+        }
         return publicationService.getPublicationRepository().findOne(id);
     }
 
     @RequestMapping(value = "/active", method = RequestMethod.GET)
     public @ResponseBody Publication getActivePublication(){
         Publication active = publicationService.getActivePublication(new Date());
-        if(active == null)
+        if(active == null) {
             throw new RestException("No active publication found", HttpServletResponse.SC_NOT_FOUND);
+        }
 
         return active;
     }

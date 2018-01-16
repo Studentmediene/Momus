@@ -13,7 +13,14 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<div id="disposition" class="container">
+
+<div class="container" ng-if="vm.noPublication">
+    <div class="row d-title">
+        <h1>Ingen utgaver funnet.</h1>
+    </div>
+</div>
+
+<div id="disposition" class="container" ng-hide="vm.noPublication">
     <div ng-show="vm.loading" class="d-loading-spinner">
         <i class="fa fa-circle-o-notch fa-spin fa-4x"></i>
     </div>
