@@ -40,7 +40,6 @@ angular.module('momusApp.services').
                     errorMessage = '<p>Du har enten vært inaktiv for lenge eller blitt logget ut i en annen fane.</p> ' +
                         '<p>Ønsker du å bli videresendt til innloggingsportalen?</p>';
                     reloadOnAlertClose = true;
-                    console.log('yo');
                 }
 
                 else if (response.data.error) {
@@ -48,7 +47,6 @@ angular.module('momusApp.services').
                     showExtras = true;
                 }
                 const MessageModal = $injector.get('MessageModal');
-                console.log('creating modal');
                 const redirect = () => {
                     if (reloadOnAlertClose) {
                         $window.location.reload();

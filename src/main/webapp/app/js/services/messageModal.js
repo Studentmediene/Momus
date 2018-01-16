@@ -66,8 +66,6 @@ angular.module('momusApp.services')
                     content += '</p><p>' + extraInfo;
                 }
 
-                console.log('showing modal');
-
                 showModal('danger', 'Noe gikk feil', content, callback, dismissedCallback);
             }
         };
