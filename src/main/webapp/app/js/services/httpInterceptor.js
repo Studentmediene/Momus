@@ -18,54 +18,7 @@
 
 angular.module('momusApp.services').
 
-    factory('HttpInterceptor', function ($q, $location, $injector, $rootScope) {
-        /*
-         This interceptor will intercept http requests that have failed.
-
-         If the reason for failing is 401 it means we are not logged in on our server.
-         So we show a login form and wait for the LoginCtrl to tell us that the user is logged in.
-         All failed 401 requests will be put in a buffer so they can be resent when logged in.
-
-         If the reason is something else, a modal will pop up with an error message.
-         */
-
-        // Make sure we only send one request for login form
-        var hasRequestedLogin = false;
-
-        // Buffer holding all requests that failed
-        var resendBuffer = [];
-
-        function addToBuffer(request, deferred) {
-            resendBuffer.push({
-                request: request,
-                deferred: deferred
-            });
-        }
-
-        function resendAllInBuffer() {
-            for (var i = 0; i < resendBuffer.length; i++) {
-                resendRequest(resendBuffer[i].request, resendBuffer[i].deferred);
-            }
-            resendBuffer = [];
-        }
-
-        function resendRequest(request, deferred) {
-            var $http = $injector.get('$http');
-            $http(request).then(
-                function (response) {
-                    deferred.resolve(response);
-                },
-                function (response) {
-                    deferred.reject(response);
-                }
-            );
-        }
-
-        $rootScope.$on('loginComplete', function() {
-            hasRequestedLogin = false;
-            resendAllInBuffer();
-        });
-
+    factory('HttpInterceptor', function ($q, $location, $injector, $window) {
         return {
             'responseError': function (response) {
                 // Allow $http requests to handle errors themselves
@@ -76,17 +29,33 @@ angular.module('momusApp.services').
                 // is the problem we're not logged in?
                 if (response.status === 401) {
                     return $q.reject(response);
-                } else {
-                    // show an error message
-                    var errorMessage = '';
-
-                    if (response.data.error) {
-                        errorMessage = response.data.error;
-                    }
-                    var MessageModal = $injector.get('MessageModal');
-                    MessageModal.error(errorMessage, true);
 
                 }
+
+                let errorMessage = '';
+                let showExtras = false;
+                let reloadOnAlertClose = false;
+
+                if (Object.prototype.hasOwnProperty.call(response, 'data') && response.data === null) {
+                    errorMessage = '<p>Du har enten vært inaktiv for lenge eller blitt logget ut i en annen fane.</p> ' +
+                        '<p>Ønsker du å bli videresendt til innloggingsportalen?</p>';
+                    reloadOnAlertClose = true;
+                    console.log('yo');
+                }
+
+                else if (response.data.error) {
+                    errorMessage = response.data.error;
+                    showExtras = true;
+                }
+                const MessageModal = $injector.get('MessageModal');
+                console.log('creating modal');
+                const redirect = () => {
+                    if (reloadOnAlertClose) {
+                        $window.location.reload();
+                    }
+                };
+                MessageModal.error(errorMessage, showExtras, redirect, redirect);
+
                 return $q.reject(response);
             }
         };
