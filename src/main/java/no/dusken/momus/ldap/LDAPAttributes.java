@@ -1,9 +1,14 @@
 package no.dusken.momus.ldap;
 
+import org.w3c.dom.Attr;
+
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
+import javax.sql.rowset.serial.SerialBlob;
 import java.nio.ByteBuffer;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -14,6 +19,7 @@ public class LDAPAttributes {
     private static final String phoneNumberAttribute = "telephoneNumber";
     private static final String firstNameAttribute = "givenName";
     private static final String lastNameAttribute = "sn";
+    private static final String photoAttribute = "thumbnailPhoto";
     private static final String[] nameAttributes = {"displayName", "name", "cn"};
 
     public static String getUsername(Attributes attributes) throws NamingException {
@@ -30,6 +36,18 @@ public class LDAPAttributes {
 
     public static String getPhoneNumber(Attributes attributes) throws NamingException {
         return getAttribute(attributes, phoneNumberAttribute);
+    }
+
+    public static Blob getPhoto(Attributes attributes) throws NamingException {
+        Attribute photo = attributes.get(photoAttribute);
+        if(photo == null) {
+            return null;
+        }
+        try {
+            return new SerialBlob((byte[]) photo.get());
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     public static String getName(Attributes attributes) throws NamingException {

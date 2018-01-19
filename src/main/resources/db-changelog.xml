@@ -712,4 +712,10 @@
                 onUpdate="CASCADE"
         />
     </changeSet>
+
+    <changeSet id="41_adduserphoto" author="Eivind">
+        <addColumn tableName="person">
+            <column name="photo" type="BLOB" />
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

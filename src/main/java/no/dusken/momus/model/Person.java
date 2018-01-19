@@ -16,9 +16,11 @@
 
 package no.dusken.momus.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.sql.Blob;
 import java.util.UUID;
 
 @Entity
@@ -42,6 +44,11 @@ public class Person {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Section favouritesection;
+
+
+    @JsonIgnore
+    @Lob
+    private Blob photo;
 
     public Person() {
     }
@@ -118,6 +125,14 @@ public class Person {
 
     public void setFavouritesection(Section favouritesection) {
         this.favouritesection = favouritesection;
+    }
+
+    public Blob getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(Blob photo) {
+        this.photo = photo;
     }
 
     @Override
