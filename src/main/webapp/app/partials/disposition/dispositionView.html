@@ -182,6 +182,7 @@
                                 ng-style="vm.columnWidths.photo_status" 
                                 ng-click="vm.editArticleField(this, 'photo_status')" 
                                 ng-show="!edit['photo_status']"
+                                title="Klikk for å redigere" 
                             >
                                 <textwrapper length="15" ng-attr-text="article.photo_status || '[Rediger]'"></textwrapper>
                             </div>
@@ -200,6 +201,7 @@
                                 ng-style="vm.columnWidths.comment" 
                                 ng-click="vm.editArticleField(this, 'comment')" 
                                 ng-show="!edit['comment']"
+                                title="Klikk for å redigere" 
                             >
                                 <textwrapper length="15" ng-attr-text="article.comment || '[Rediger]'"></textwrapper>
                             </div>

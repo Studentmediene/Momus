@@ -18,7 +18,7 @@
 
 angular.module('momusApp.resources')
     .factory('Page', $resource => {
-        return $resource('/api/publications/:pubid/pages/:pageid',
+        return $resource('/api/publications/:pubid/pages/:pageid/:resource',
             {
                 pageid: '@id',
                 pubid: '@publication.id'
@@ -26,8 +26,7 @@ angular.module('momusApp.resources')
             {
                 save: { method: 'POST', isArray: true},
                 saveMultiple: { method: 'POST', isArray:true, params: {pageid: 'list'} },
-                update: { method: 'PUT', isArray: true},
-                updateMeta: {method: 'PATCH'},
+                updateMeta: {method: 'PATCH', params: {resource: 'metadata'} },
                 updateMultiple: { method: 'PUT', isArray: true, params: {pageid: 'list'} },
                 layoutStatusCounts: { method: 'GET', params: {pageid: 'layoutstatuscounts'} },
                 delete: { method: 'DELETE', isArray: true}

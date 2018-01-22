@@ -125,25 +125,38 @@ public class GoogleDocsTextConverter {
         Matcher boldMatcher = boldStyleName.matcher(css);
 
         int start = 0;
-        while (italicsMatcher.find(start)) {
-            String italicSelectorName = italicsMatcher.group(1);
-            Pattern italicClasses = Pattern.compile("<span class=\"[^\"]*" + italicSelectorName + "[^\"]*\">(.*?)</span>");
-            Matcher spanMatcherItalics = italicClasses.matcher(body);
-
-            body = spanMatcherItalics.replaceAll("<i>$1</i>"); // $1 means what is matched inside the parentheses in the pattern
-            start = italicsMatcher.start() + 1;
-        }
-
-        start = 0;
-        while (boldMatcher.find(start)) {
-            String boldSelectorName = boldMatcher.group(1);
-            Pattern boldClasses = Pattern.compile("<span class=\"[^\"]*" + boldSelectorName + "[^\"]*\">(.*?)</span>");
-            Matcher spanMatcherBold = boldClasses.matcher(body);
-
-            body = spanMatcherBold.replaceAll("<b>$1</b>");
+        ArrayList<Pattern> boldClasses = new ArrayList<Pattern>();
+        while(boldMatcher.find(start)) {
+            boldClasses.add(Pattern.compile("<span class=\"[^\"]*" + boldMatcher.group(1) + "[^\"]*\">(.*?)</span>"));
             start = boldMatcher.start() + 1;
         }
 
+        start = 0;
+        while (italicsMatcher.find(start)) {
+            Pattern italicClasses = Pattern.compile("<span class=\"[^\"]*" + italicsMatcher.group(1) + "[^\"]*\">(.*?)</span>");
+            Matcher spanMatcherItalics = italicClasses.matcher(body);
+            
+            StringBuffer sb = new StringBuffer();
+            while(spanMatcherItalics.find()) {
+                boolean italicbold = false;
+                int boldStart = 0;
+                for(Pattern boldClass : boldClasses) {
+                    Matcher spanMatcherBold = boldClass.matcher(spanMatcherItalics.group());
+                    if(spanMatcherBold.matches()) {
+                        italicbold = true;
+                    }
+                }
+                String replaceString = italicbold ? "<i><b>$1</b></i>" : "<i>$1</i>";
+                spanMatcherItalics.appendReplacement(sb, replaceString);
+            }
+            body = spanMatcherItalics.appendTail(sb).toString();
+            start = italicsMatcher.start() + 1;
+        }
+
+        for (Pattern boldClass : boldClasses) {
+            Matcher spanMatcherBold = boldClass.matcher(body);
+            body = spanMatcherBold.replaceAll("<b>$1</b>");
+        }
 
         return body;
     }
