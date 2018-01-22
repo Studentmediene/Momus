@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('NavbarCtrl', function ($scope, $location, PersonService, $http, MessageModal, $rootScope, $window) {
+    .controller('NavbarCtrl', function ($scope, $location, Person, $http, MessageModal, $rootScope, $window) {
         $scope.devmode = false;
 
         $http.get('/api/dev/devmode', {bypassInterceptor: true}).then(
@@ -25,9 +25,7 @@ angular.module('momusApp.controllers')
             () => $scope.devmode = false
         );
 
-        PersonService.getCurrentUser().then(function(data) {
-            $scope.user = data.data;
-        });
+        $scope.user = Person.me();
 
         $scope.isCollapsed = true;
 

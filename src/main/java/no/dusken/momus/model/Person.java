@@ -18,9 +18,7 @@ package no.dusken.momus.model;
 
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -41,6 +39,9 @@ public class Person {
     @Column(columnDefinition = "BINARY(16)")
     @Type(type = "uuid-binary")
     private UUID guid;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Section favouritesection;
 
     public Person() {
     }
@@ -109,6 +110,14 @@ public class Person {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Section getFavouritesection() {
+        return favouritesection;
+    }
+
+    public void setFavouritesection(Section favouritesection) {
+        this.favouritesection = favouritesection;
     }
 
     @Override

@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
@@ -36,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
-@Service
+@RestController
 @RequestMapping("/publications")
 public class PublicationController {
     Logger logger = LoggerFactory.getLogger(getClass());
@@ -50,13 +49,16 @@ public class PublicationController {
     @Autowired
     private LayoutStatusRepository layoutStatusRepository;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public @ResponseBody List<Publication> getAllPublications(){
         return publicationService.getPublicationRepository().findAll(new Sort(new Sort.Order(Sort.Direction.DESC, "releaseDate")));
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody Publication savePublication(@RequestBody Publication publication, @RequestParam(required = false, defaultValue = "50") Integer numEmptyPages) {
+    @PostMapping
+    public @ResponseBody Publication savePublication(
+            @RequestBody Publication publication,
+            @RequestParam(required = false, defaultValue = "50") Integer numEmptyPages
+    ) {
         if(publication.getId() != null && publicationService.getPublicationRepository().exists(publication.getId())){
             throw new RestException("Publication with given id already created. Did you mean to PUT?", HttpServletResponse.SC_BAD_REQUEST);
         }
@@ -67,23 +69,23 @@ public class PublicationController {
         return publicationService.savePublication(publication, numEmptyPages);
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public @ResponseBody Publication updatePublication(@RequestBody Publication publication) {
-        if(!publicationService.getPublicationRepository().exists(publication.getId())){
-            throw new RestException("Publication with given id not found", HttpServletResponse.SC_BAD_REQUEST);
+    @GetMapping("/{pubid}")
+    public @ResponseBody Publication getPublicationById(@PathVariable Long pubid){
+        if(!publicationService.getPublicationRepository().exists(pubid)){
+            throw new RestException("Publication with given id not found", HttpServletResponse.SC_NOT_FOUND);
+        }
+        return publicationService.getPublicationRepository().findOne(pubid);
+    }
+
+    @PutMapping("/{pubid}")
+    public @ResponseBody Publication updatePublication(@RequestBody Publication publication, @PathVariable Long pubid) {
+        if(!publicationService.getPublicationRepository().exists(pubid)){
+            throw new RestException("Publication with given id not found", HttpServletResponse.SC_NOT_FOUND);
         }
         return publicationService.updatePublication(publication);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public @ResponseBody Publication getPublicationById(@PathVariable("id") Long id){
-        if(!publicationService.getPublicationRepository().exists(id)){
-            throw new RestException("Publication with given id not found", HttpServletResponse.SC_NOT_FOUND);
-        }
-        return publicationService.getPublicationRepository().findOne(id);
-    }
-
-    @RequestMapping(value = "/active", method = RequestMethod.GET)
+    @GetMapping("/active")
     public @ResponseBody Publication getActivePublication(){
         Publication active = publicationService.getActivePublication(new Date());
         if(active == null) {
@@ -93,36 +95,47 @@ public class PublicationController {
         return active;
     }
 
-    @RequestMapping(value = "/{id}/colophon", method = RequestMethod.GET)
-    public @ResponseBody void getColophon(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
+    @GetMapping("/{pubid}/colophon")
+    public @ResponseBody void getColophon(@PathVariable Long pubid, HttpServletResponse response) throws IOException {
 
-        response.addHeader("Content-Disposition", "attachment; filename=\"Kolofon_" + publicationService.getPublicationRepository().findOne(id).getName() + ".txt\"");
+        response.addHeader(
+                "Content-Disposition",
+                "attachment; filename=\"Kolofon_" + publicationService.getPublicationRepository().findOne(pubid).getName() + ".txt\"");
         response.addHeader("Content-Type", "text/plain;charset=UTF-8");
 
         ServletOutputStream outStream = response.getOutputStream();
-        String colophon = publicationService.generateColophon(id);
+        String colophon = publicationService.generateColophon(pubid);
         outStream.print(colophon);
         outStream.flush();
         outStream.close();
     }
 
-    @RequestMapping(value = "/layoutstatuses", method = RequestMethod.GET)
+    @GetMapping("/layoutstatuses")
     public @ResponseBody List<LayoutStatus> getLayoutStatuses(){
         return layoutStatusRepository.findAll();
     }
 
-    @RequestMapping(value = "{id}/pages", method = RequestMethod.GET)
-    public @ResponseBody List<Page> getPagesByPublication(@PathVariable("id") Long id) {
-        return publicationService.getPageRepository().findByPublicationIdOrderByPageNrAsc(id);
+    @GetMapping("/{pubid}/pages")
+    public @ResponseBody List<Page> getPagesByPublication(@PathVariable Long pubid) {
+        return publicationService.getPageRepository().findByPublicationIdOrderByPageNrAsc(pubid);
     }
 
-    @RequestMapping(value = "{id}/pages", method = RequestMethod.POST)
-    public @ResponseBody List<Page> savePage(@PathVariable("id") Long id, @RequestBody Page page){
+    @GetMapping("/{pubid}/pages/{pageid}")
+    public @ResponseBody Page getPage(@PathVariable Long pubid, @PathVariable Long pageid){
+        Page page = publicationService.getPageRepository().findOne(pageid);
+        if(page == null){
+            throw new RestException("Page with given id not found", HttpServletResponse.SC_NOT_FOUND);
+        }
+        return page;
+    }
+
+    @PostMapping("/{pubid}/pages")
+    public @ResponseBody List<Page> savePage(@PathVariable Long pubid, @RequestBody Page page){
         return publicationService.savePage(page);
     }
 
-    @RequestMapping(value = "{id}/pages/list", method = RequestMethod.POST)
-    public @ResponseBody List<Page> savePage(@PathVariable("id") Long id, @RequestBody List<Page> pages){
+    @PostMapping("/{pubid}/pages/list")
+    public @ResponseBody List<Page> savePage(@PathVariable Long pubid, @RequestBody List<Page> pages){
         int startingPageNr = pages.get(0).getPageNr();
         for(int i = 0; i < pages.size(); i++) {
             Page page = pages.get(i);
@@ -135,16 +148,8 @@ public class PublicationController {
         return publicationService.saveTrailingPages(pages);
     }
 
-    @RequestMapping(value = "{id}/pages", method = RequestMethod.PUT)
-    public @ResponseBody List<Page> updatePage(@RequestBody Page page){
-        if(publicationService.getPageRepository().findOne(page.getId()) == null){
-            throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
-        }
-        return publicationService.updatePage(page);
-    }
-
-    @RequestMapping(value = "{id}/pages/list", method = RequestMethod.PUT)
-    public @ResponseBody List<Page> updateMultiplePages(@PathVariable("id") Long id, @RequestBody List<Page> pages){
+    @PutMapping("/{pubid}/pages/list")
+    public @ResponseBody List<Page> updateMultiplePages(@PathVariable Long pubid, @RequestBody List<Page> pages){
 
         // Check that all pages exist and that the pages are following each other
         int startingPageNr = pages.get(0).getPageNr();
@@ -160,25 +165,16 @@ public class PublicationController {
         return publicationService.updateTrailingPages(pages);
     }
 
-	@RequestMapping(value = "{id}/pages", method = RequestMethod.PATCH)
-	public @ResponseBody Page updatePageMeta(@RequestBody Page page){
-		if(publicationService.getPageRepository().findOne(page.getId()) == null){
-			throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
+	@PatchMapping("/{pubid}/pages/{pageid}/metadata")
+	public @ResponseBody Page updatePageMeta(@RequestBody Page page, @PathVariable String pubid, @PathVariable Long pageid){
+		if(publicationService.getPageRepository().findOne(pageid) == null){
+			throw new RestException("Page with given id not found", HttpServletResponse.SC_NOT_FOUND);
 		}
 		return publicationService.updatePageMeta(page);
     }
-    
-    @RequestMapping(value = "{pubid}/pages/{pageid}", method = RequestMethod.GET)
-    public @ResponseBody Page getPage(@PathVariable("pubid") Long pubid, @PathVariable("pageid") Long pageid){
-        Page page = publicationService.getPageRepository().findOne(pageid);
-        if(page == null){
-            throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
-        }
-        return page;
-    }
 
-    @RequestMapping(value = "{pubid}/pages/{pageid}", method = RequestMethod.DELETE)
-    public @ResponseBody List<Page> deletePage(@PathVariable("pubid") Long pubid, @PathVariable("pageid") Long pageid){
+    @DeleteMapping("/{pubid}/pages/{pageid}")
+    public @ResponseBody List<Page> deletePage(@PathVariable Long pubid, @PathVariable Long pageid){
         Page page = publicationService.getPageRepository().findOne(pageid);
         if(page == null){
             throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
@@ -186,23 +182,23 @@ public class PublicationController {
         return publicationService.deletePage(page);
     }
 
-    @RequestMapping(value = "{id}/pages/layoutstatuscounts", method = RequestMethod.GET)
-    public @ResponseBody Map<Long,Integer> getStatusCountsByPubId(@PathVariable("id") Long id){
+    @GetMapping("/{pubid}/pages/layoutstatuscounts")
+    public @ResponseBody Map<Long,Integer> getStatusCountsByPubId(@PathVariable Long pubid){
         List<LayoutStatus> statuses = this.getLayoutStatuses();
         Map<Long, Integer> map = new HashMap<>();
         for (LayoutStatus status : statuses) {
-            map.put(status.getId(), this.getStatusCount(status.getName(), id));
+            map.put(status.getId(), this.getStatusCount(status.getName(), pubid));
         }
         return map;
     }
 
-    @RequestMapping(value = "{id}/pages/layoutstatuscounts/{status}", method = RequestMethod.GET)
+    @GetMapping("/{id}/pages/layoutstatuscounts/{status}")
     public @ResponseBody int getStatusCount(@PathVariable("status") String status, @PathVariable("id") Long id){
         Long statusId = layoutStatusRepository.findByName(status).getId();
         return publicationService.getPageRepository().countByLayoutStatusIdAndPublicationId(statusId, id);
     }
 
-    @RequestMapping(value = "{id}/articles", method = RequestMethod.GET)
+    @GetMapping("/{id}/articles")
     public @ResponseBody List<Article> getArticlesInPublication(@PathVariable("id") Long id){
         return articleService.getArticleRepository().findByPublicationId(id);
     }

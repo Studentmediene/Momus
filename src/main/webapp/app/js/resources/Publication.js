@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package no.dusken.momus.service.repository;
+'use strict';
 
-import no.dusken.momus.model.Source;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
-import java.util.List;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public interface SourceRepository extends JpaRepository<Source, Long> {
-
-    @Query("select s from Source s join s.tags t where t.tag = (:tag)")
-    public List<Source> findByTag(@Param("tag") String tag);
-
-}
+angular.module('momusApp.resources')
+    .factory('Publication', $resource => {
+        return $resource('/api/publications/:id', 
+            {
+                id: '@id'
+            },
+            {
+                active: { method: 'GET', params: {id: 'active'} },
+                update: { method: 'PUT'},
+                layoutStatuses: { method: 'GET', isArray: true, params: {id: 'layoutstatuses'}, cache: true }
+            });
+    });

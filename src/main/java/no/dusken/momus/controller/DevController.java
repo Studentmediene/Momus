@@ -90,7 +90,7 @@ public class DevController {
         List<ArticleType> articleTypes = articleTypeRepository.findAll();
         List<Section> sections = sectionRepository.findAll();
         List<ArticleReview> articleReviews = articleReviewRepository.findAll();
-        List<Person> people = personRepository.findByActiveTrue();
+        List<Person> people = new ArrayList<>(personRepository.findByActiveTrue());
 
         Publication p1 = new Publication();
         p1.setName("UD #1-2018");
