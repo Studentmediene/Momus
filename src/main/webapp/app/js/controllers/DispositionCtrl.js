@@ -30,13 +30,16 @@ angular.module('momusApp.controllers')
         Publication,
         Page,
         WebSocketService,
-        DispositionStyleService)
+        DispositionStyleService,
+        $interval)
     {
         var vm = this;
         var lastUpdate = {date: new Date()};
         var websocketActive = false;
 
         vm.maxNewPages = 100;
+
+        vm.connectedUsers = {};
 
         vm.newPages = newPages;
 		vm.updatePageMeta = updatePageMeta;
@@ -87,6 +90,18 @@ angular.module('momusApp.controllers')
                     break;
             }
             $scope.$apply();
+        }
+
+        function onUserAction(payload, headers, res) {
+            const username = payload.username;
+            switch(payload.user_action) {
+                case(WebSocketService.userAction.alive):
+                    if(!(username in vm.connectedUsers)) {
+                        vm.connectedUsers[username] = {active: true, display_name: payload.display_name};
+                    }
+                    vm.connectedUsers[username]['active'] = true;
+                    break;
+            }
         }
 
         function handleRemotePageMetadataUpdate(pageId) {
@@ -153,6 +168,20 @@ angular.module('momusApp.controllers')
             });
         }
 
+        function heartbeat(pubId) {
+            WebSocketService.sendUserAction(pubId, WebSocketService.userAction.alive);
+            for (let key in vm.connectedUsers) {
+                const value = vm.connectedUsers[key];
+                const alive = value['active'];
+                if (!alive) {
+                    delete vm.connectedUsers[key];
+                } else {
+                    vm.connectedUsers[key]['active'] = false;
+                }
+            }
+
+        }
+
         function getDisposition(){
             vm.loading = true;
             var pubid = $routeParams.id;
@@ -161,7 +190,8 @@ angular.module('momusApp.controllers')
                     publication.pages = pages;
                     ArticleService.search({publication: publication.id}).then(data => {
                         if($routeParams.ws){
-                            WebSocketService.subscribe(publication.id, onRemoteChange);
+                            WebSocketService.subscribe(publication.id, onRemoteChange, onUserAction);
+                            $interval(() => heartbeat(publication.id), 10000);
                             websocketActive = true;
                         }
                         var articles = data.data;

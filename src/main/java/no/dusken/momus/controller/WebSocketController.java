@@ -2,6 +2,7 @@ package no.dusken.momus.controller;
 
 import no.dusken.momus.model.websocket.Message;
 import no.dusken.momus.model.websocket.OutputMessage;
+import no.dusken.momus.model.websocket.UserEventMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -20,5 +21,11 @@ public class WebSocketController {
     @SendTo("/ws/disposition/{id}/changed")
     public OutputMessage sendChange(Message message, @DestinationVariable Long id) throws Exception {
         return new OutputMessage(message.getPageId(), message.getArticleId(), message.getAction(), message.getEditedField(), message.getDate());
+    }
+
+    @MessageMapping("/disposition/{id}/user")
+    @SendTo("/ws/disposition/{id}/users")
+    public UserEventMessage sendUserEvent(UserEventMessage message, @DestinationVariable Long id) throws Exception {
+        return message;
     }
 }
