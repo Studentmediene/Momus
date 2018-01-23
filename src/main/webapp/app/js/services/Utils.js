@@ -50,4 +50,13 @@ angular.module('momusApp.services')
             start = +start;
             return list.slice(start);
         }
+    })
+    .filter('initials', function() {
+        return function(name) {
+            return name
+                .split(' ')
+                .filter((e, i, a) => i === 0 || i === a.length -1)
+                .map(e => e[0])
+                .join('')
+        }
     });
