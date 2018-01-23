@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('momusApp.services')
-    .service('WebSocketService', function($stomp, PersonService) {
+    .service('WebSocketService', function($stomp, Person) {
         var actions = {
             saveArticle: 'SAVE_ARTICLE',
             updateArticle: 'UPDATE_ARTICLE',
@@ -15,11 +15,7 @@ angular.module('momusApp.services')
             alive: 'ALIVE',
         };
 
-        let person;
-
-        PersonService.getCurrentUser().then(function(data) {
-            person = data.data;
-        });
+        const person = Person.me();
 
         function sendChange(pubId, pageId, articleId, action, editedField) {
             editedField = editedField || "";

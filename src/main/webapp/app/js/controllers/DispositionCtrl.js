@@ -100,10 +100,11 @@ angular.module('momusApp.controllers')
             const username = payload.username;
             switch(payload.user_action) {
                 case(WebSocketService.userAction.alive):
-                    if(!(username in vm.connectedUsers)) {
+                    if(username in vm.connectedUsers) {
+                        vm.connectedUsers[username].active = true;
+                    } else {
                         vm.connectedUsers[username] = {active: true, display_name: payload.display_name};
                     }
-                    vm.connectedUsers[username]['active'] = true;
                     break;
             }
         }
@@ -169,13 +170,12 @@ angular.module('momusApp.controllers')
 
         function heartbeat(pubId) {
             WebSocketService.sendUserAction(pubId, WebSocketService.userAction.alive);
-            for (let key in vm.connectedUsers) {
-                const value = vm.connectedUsers[key];
-                const alive = value['active'];
+            for (let username in vm.connectedUsers) {
+                const alive = vm.connectedUsers[username].active;
                 if (!alive) {
-                    delete vm.connectedUsers[key];
+                    delete vm.connectedUsers[username];
                 } else {
-                    vm.connectedUsers[key]['active'] = false;
+                    vm.connectedUsers[username].active = false;
                 }
             }
         }
