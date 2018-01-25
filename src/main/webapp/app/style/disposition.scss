@@ -39,6 +39,14 @@ $pageAdBackground: #f6f6f6;
         }
     }
 
+    .online-users {
+        display: flex;
+        flex-direction: row;
+        > * {
+            margin: 5px;
+        }
+    }
+
     .headers {
         border-top: $pageBorder;
     }

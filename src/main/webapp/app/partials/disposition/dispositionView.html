@@ -47,6 +47,9 @@
                 Hjelp?
             </button>
         </div>
+        <div class="online-users">
+            <span class="label label-default" ng-repeat="user in vm.connectedUsers">{{user['display_name']}}</span>
+        </div>
         <!-- Headers -->
         <div class="d-table headers">
             <div class="d-table-row">
