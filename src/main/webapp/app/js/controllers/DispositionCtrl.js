@@ -187,16 +187,19 @@ angular.module('momusApp.controllers')
                     publication.pages = pages;
                     vm.publication = publication;
                     vm.articles = Article.search({}, {publication: publication.id}, () => {
-                        if($routeParams.ws){
-                            WebSocketService.subscribe(publication.id, onRemoteChange, onUserAction);
-                            $interval(() => heartbeat(publication.id), 10000);
-                            websocketActive = true;
-                        }
+                        if($routeParams.ws)
+                            connectToWebSocket(publication.id);
                         publication.pages.forEach(page => connectArticles(page, vm.articles));
                         vm.loading = false;
                     });
                 });
             });
+        }
+
+        function connectToWebSocket(pubId) {
+            WebSocketService.subscribe(pubId, onRemoteChange, onUserAction);
+            $interval(() => heartbeat(pubId), 10000);
+            websocketActive = true;
         }
 
         function publicationQuery(pubid){
