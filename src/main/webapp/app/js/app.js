@@ -58,7 +58,8 @@ angular.module('momusApp', [
             .when('/artikler/:id',
             {
                 templateUrl: 'partials/article/articleView.html',
-                controller: 'ArticleCtrl'
+                controller: 'ArticleCtrl',
+                controllerAs: 'vm'
             })
             .when('/artikler/revisjon/:id',
             {
