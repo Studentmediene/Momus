@@ -143,21 +143,20 @@
             </div>
         </div>
         <div class="col-md-5 hidden-print">
-
             <div id="meta-panel" class="panel panel-info">
                 <div class="panel-heading">
                     <h1 class="panel-title">
                         <span class="fa fa-tag"></span>
                         Detaljer
-                    <span class="pull-right">
-                        <button class="btn btn-xs btn-info" ng-show="metaEditMode" ng-click="cancelMeta()">
-                            Avbryt
-                        </button>
-                        <button class="btn btn-xs btn-primary" ng-click="metaClicked()" button-loader="savingMeta">
-                            <span ng-show="!metaEditMode">Rediger</span>
-                            <span ng-show="metaEditMode">Lagre</span>
-                        </button>
-                    </span>
+                        <span class="pull-right">
+                            <button class="btn btn-xs btn-info" ng-show="metaEditMode" ng-click="cancelMeta()">
+                                Avbryt
+                            </button>
+                            <button class="btn btn-xs btn-primary" ng-click="metaClicked()" button-loader="savingMeta">
+                                <span ng-show="!metaEditMode">Rediger</span>
+                                <span ng-show="metaEditMode">Lagre</span>
+                            </button>
+                        </span>
                     </h1>
                 </div>
                 <div class="panel-body">
@@ -398,7 +397,7 @@
                         Artikkel-notater
                         <div class="pull-right">
                             <button class="btn btn-default btn-xs"
-                                    ng-disabled="article.note == unedited.note"
+                                    ng-disabled="article.note === uneditedNote"
                                     ng-click="saveNote()"
                                     button-loader="savingNote">
                                 <i class="fa fa-save"></i>
@@ -443,14 +442,6 @@
                                 <i class="fa fa-list-ol"></i>
                             </button>
                         </div>
-                        <!--
-                        <div class="btn-group pull-right">
-                            <button class="btn btn-default"
-                                    data-wysihtml5-action="change_view"
-                                    title="Se rådata (avansert)">
-                                <i class="fa fa-exchange"></i>
-                            </button>
-                        </div>-->
                     </div>
         <textarea id="noteArea"
                   class="form-control note"

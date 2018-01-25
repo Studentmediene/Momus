@@ -691,4 +691,25 @@
     <changeSet id="38_dropmaptable" author="Eivind">
         <dropTable tableName="usernamemap" />
     </changeSet>
+
+    <changeSet id="39_removelanding" author="Eivind">
+        <dropTable tableName="landingpage" />
+    </changeSet>
+
+    <!-- Since we now update person rows instead of replacing them, favourite section can be column in person -->
+    <changeSet id="40_move_favsection_to_persontable" author="Eivind">
+        <dropTable tableName="favouritesection" />
+        <addColumn tableName="person">
+            <column name="favouritesection_id" type="BIGINT" />
+        </addColumn>
+        <addForeignKeyConstraint
+                baseTableName="person"
+                baseColumnNames="favouritesection_id"
+                constraintName="FK_person_favouritesection"
+                referencedTableName="section"
+                referencedColumnNames="id"
+                onDelete="SET NULL"
+                onUpdate="CASCADE"
+        />
+    </changeSet>
 </databaseChangeLog>

@@ -47,6 +47,9 @@
                 Hjelp?
             </button>
         </div>
+        <div class="online-users">
+            <span class="label label-default" ng-repeat="user in vm.connectedUsers">{{user['display_name']}}</span>
+        </div>
         <!-- Headers -->
         <div class="d-table headers">
             <div class="d-table-row">
@@ -81,7 +84,7 @@
                 class="d-table-row"
                 ng-repeat="page in vm.publication.pages"
                 ng-init="vm.initPageScope(this)"
-                ng-class="{'page-ad': page.advertisement, 'page-done': page.done}"
+                ng-class="{'page-reklame': page.advertisement, 'page-done': page.done}"
                 ui-sortable-selectable
             >
                 <!--Page number-->
@@ -102,7 +105,7 @@
                 <!--Articles (view mode)-->
                 <div class="d-table-cell article-cell" ng-style="{width: vm.articleWidth}" ng-hide="editPage">
                     <div class="d-table article-table" ng-repeat="article in page.articles" ng-init="vm.initArticleScope(this)">
-                        <div class="d-table-row" ng-class="{'page-ad' : page.advertisement, 'page-done': page.done}">
+                        <div class="d-table-row" ng-class="{'page-reklame': page.advertisement, 'page-done': page.done}">
                             <!--Dropdown-arrow-->
                             <div class="d-table-cell" ng-style="vm.columnWidths.dropdown">
                                 <button 
@@ -182,6 +185,7 @@
                                 ng-style="vm.columnWidths.photo_status" 
                                 ng-click="vm.editArticleField(this, 'photo_status')" 
                                 ng-show="!edit['photo_status']"
+                                title="Klikk for å redigere" 
                             >
                                 <textwrapper length="15" ng-attr-text="article.photo_status || '[Rediger]'"></textwrapper>
                             </div>
@@ -200,6 +204,7 @@
                                 ng-style="vm.columnWidths.comment" 
                                 ng-click="vm.editArticleField(this, 'comment')" 
                                 ng-show="!edit['comment']"
+                                title="Klikk for å redigere" 
                             >
                                 <textwrapper length="15" ng-attr-text="article.comment || '[Rediger]'"></textwrapper>
                             </div>

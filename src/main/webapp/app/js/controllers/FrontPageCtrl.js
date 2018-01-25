@@ -17,7 +17,18 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('FrontPageCtrl', function ($scope, $q, NoteService, noteParserRules, PersonService, ArticleService, TipAndNewsService, ViewArticleService, FavouriteSectionService, Publication, Page, PublicationService, $location, $filter) {
+    .controller('FrontPageCtrl', function (
+        $scope,
+        $q,
+        Person,
+        TipAndNewsService,
+        ViewArticleService,
+        Publication,
+        Page,
+        Article,
+        $location,
+        $filter
+    ) {
 
         $scope.randomTip = function() {
             $scope.tip = TipAndNewsService.getRandomTip();
@@ -27,18 +38,17 @@ angular.module('momusApp.controllers')
 
         $scope.news = TipAndNewsService.getNews();
 
-
         // Latest user articles
         $scope.loadingArticles = true;
-        PersonService.getCurrentUser().then(function(data){
-            $scope.user = data.data;
-            ArticleService.search({persons: [$scope.user.id], page_size: 9}).then(function (data) {
+        Person.me({}, person => {
+            $scope.user = person;
+            $scope.myArticles = Article.search({}, {persons: [$scope.user.id], page_size: 9}, () => {
                 $scope.loadingArticles = false;
-                $scope.myArticles = data.data;
                 if($scope.myArticles.length <= 0 ){
                     $scope.noArticles = true;
                 }
             });
+            searchForArticlesFromFavoriteSection();
         });
 
         // Recently viewed articles
@@ -46,96 +56,53 @@ angular.module('momusApp.controllers')
         $scope.recentArticles = ViewArticleService.getRecentViews();
         if($scope.recentArticles){
             $scope.loadingRecent = true;
-            ArticleService.getMultiple($scope.recentArticles).then(function(data){
-                $scope.loadingRecent = false;
-                $scope.recentArticleInfo = data.data;
-            });
+            $scope.recentArticleInfo = Article.multiple(
+                {ids: $scope.recentArticles},
+                () => $scope.loadingRecent = false
+            );
         }
 
         $scope.orderRecentArticles = function(item){
             return [$scope.recentArticles.indexOf(item.id.toString())];
         };
 
-
-        // Favorite section
-
-        $scope.loadingFavorites = true;
-        FavouriteSectionService.getFavouriteSection().then(function(data){
-            var favouriteSection = data.data;
-            if(data.data == "") {
-                favouriteSection = {};
-            }
-            $scope.favouriteSection =favouriteSection;
-            searchForArticlesFromFavoriteSection();
-        });
-
         var searchForArticlesFromFavoriteSection = function(){
-            if($scope.favouriteSection.section){
-                ArticleService.search({section: $scope.favouriteSection.section.id, page_size: 9}).then(function(data){
-                    $scope.favSectionArticles = data.data;
-                    $scope.loadingFavorites = false;
-                });
-            }else{
-                $scope.loadingFavorites = false;
+            if($scope.user.favouritesection){
+                $scope.loadingFavourites = true;
+                $scope.favSectionArticles = Article.search(
+                    {},
+                    {section: $scope.user.favouritesection.id, page_size: 9},
+                    () => $scope.loadingFavourites = false);
             }
         };
 
         $scope.updateFavouriteSection = function(){
-            FavouriteSectionService.updateFavouriteSection($scope.favouriteSection).then(function (data){
-                $scope.favouriteSection = data.data;
+            Person.updateFavouritesection({section: $scope.user.favouritesection.id}, person => {
                 searchForArticlesFromFavoriteSection();
+                $scope.user = person;
             });
         };
 
-        ArticleService.getSections().then(function (data) {
-            $scope.sections = data.data;
-        });
-
-
-        // Note
-
-        $scope.noteRules = noteParserRules;
-
-        NoteService.getNote().then(function (data) {
-            $scope.note = data;
-            $scope.unedited = angular.copy(data);
-        });
-
-        $scope.saveNote = function () {
-            $scope.savingNote = true;
-            NoteService.updateNote($scope.note).then(function (data) {
-                $scope.note = data.data;
-                $scope.unedited = angular.copy(data);
-                $scope.savingNote = false;
-            });
-        };
+        $scope.sections = Article.sections();
 
         // Cake diagrams TODO (Could some of this be put into a service?)
-        $scope.publication = Publication.active({},
-            publication => {
-                $q.all([
-                    PublicationService.getStatusCounts(publication.id),
-                    ArticleService.getStatuses()]).then(
-                    function (data) {
-                        $scope.articlestatus = getStatusArrays(data[0].data, data[1].data);
-                    });
 
-                $q.all([
-                    Page.layoutStatusCounts({pubid: publication.id}).$promise,
-                    Publication.layoutStatuses().$promise]).then(
-                    function (data) {
-                        $scope.layoutstatus = getStatusArrays(data[0], data[1]);
-                    });
+        $scope.publication = Publication.active({}, function() {            
+            $q.all([
+                Article.statusCounts({publicationId: $scope.publication.id}).$promise,
+                Article.statuses().$promise]
+            ).then(data => $scope.articlestatus = getStatusArrays(...data));
 
-                $q.all([
-                    PublicationService.getReviewStatusCounts(publication.id),
-                    ArticleService.getReviews()]).then(
-                    function (data) {
-                        $scope.reviewstatus = getStatusArrays(data[0].data, data[1].data);
-                    });
-            },
-            () => $scope.noPublication = true
-        );
+            $q.all([
+                Page.layoutStatusCounts({pubid: $scope.publication.id}).$promise,
+                Publication.layoutStatuses().$promise]
+            ).then(data => $scope.layoutstatus = getStatusArrays(...data));
+
+            $q.all([
+                Article.reviewStatusCounts({publicationId: $scope.publication.id}).$promise,
+                Article.reviewStatuses().$promise]
+            ).then(data => $scope.reviewstatus = getStatusArrays(...data));
+        });
 
         function getStatusArrays(counts, statuses){
             var status = {statuses: statuses, labels: [], colors: [], counts: []};
@@ -175,7 +142,7 @@ angular.module('momusApp.controllers')
             var id = $filter("filter")($scope.articlestatus.statuses,{name:selected})[0].id;
             if(id === undefined) {
                 $location.url('artikler');
-            } else{
+            } else {
                 $location.url('artikler?publication=' + $scope.publication.id + '&status=' + id);
             }
             $scope.$apply();
@@ -191,25 +158,6 @@ angular.module('momusApp.controllers')
             $location.url('disposisjon');
             $scope.$apply();
         };
-
-
-        $scope.$on('$locationChangeStart', function (event) {
-            if (promptCondition()) {
-                if (!confirm("Er du sikker på at du vil forlate siden? Det finnes ulagrede endringer.")) {
-                    event.preventDefault();
-                }
-            }
-        });
-
-        window.onbeforeunload = function () {
-            if (promptCondition()) {
-                return "Det finnes ulagrede endringer.";
-            }
-        };
-
-        function promptCondition() {
-            return $scope.unedited.content != $scope.note.content;
-        }
 
         function fixShortColorCodes(colors){
             return colors.map(function(color) {

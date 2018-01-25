@@ -17,22 +17,19 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleRevisionCtrl', function($scope, ArticleService, $routeParams, MessageModal, $templateRequest){
+    .controller('ArticleRevisionCtrl', function($scope, Article, $routeParams, MessageModal, $templateRequest){
 
         $scope.diff = "";
         $scope.showDiff = false;
 
-        ArticleService.getRevisions($routeParams.id).then(function (data){
-            $scope.revisions = data.data;
-            $scope.current = data[0];
+        $scope.revisions = Article.revisions({id: $routeParams.id}, () =>{
+            $scope.current = $scope.revisions[0];
             if($scope.revisions.length > 1){
-                $scope.compare = [data.data[0].id,data.data[1].id];
+                $scope.compare = [$scope.revisions[0].id, $scope.revisions[1].id];
             }
         });
 
-        ArticleService.getArticle($routeParams.id).then(function (data){
-            $scope.article = data.data;
-        });
+        $scope.article = Article.get({id: $routeParams.id});
 
         $scope.gotoRev = function(rev){
             $scope.current = rev;
@@ -44,9 +41,9 @@ angular.module('momusApp.controllers')
         };
 
         $scope.getDiffs = function(){
-            ArticleService.getDiffs($scope.article.id, $scope.compare[0], $scope.compare[1]).then(function (data){
-                $scope.diff = data.data;
-            });
+            const diffs = Article.compareRevisions(
+                {id: $scope.article.id, rev1: $scope.compare[0], rev2: $scope.compare[1]},
+                () => $scope.diff = diffs);
         };
 
         $scope.showHelp = function(){

@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package no.dusken.momus.service.repository;
+'use strict';
 
-import no.dusken.momus.model.LandingPage;
-import no.dusken.momus.model.Person;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public interface LandingPageRepository extends JpaRepository<LandingPage, Long> {
-
-    public LandingPage findByOwner(Person person);
-
-    public LandingPage findByOwner_Id(Long id);
-}
+angular.module('momusApp.resources')
+    .factory('Person', $resource => {
+        return $resource('/api/person/:id/:resource',
+            {
+                id: '@id'
+            },
+            {
+                me: { method: 'GET' , params: {id: 'me'}, cache: true },
+                updateFavouritesection: {method: 'PATCH', params: {id: 'me', resource: 'favouritesection'}, cache: true }
+            })
+    });
