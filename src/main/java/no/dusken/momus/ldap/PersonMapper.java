@@ -45,7 +45,6 @@ public class PersonMapper implements AttributesMapper<Person> {
             person.setName(name);
             person.setEmail(email);
             person.setPhoneNumber(phoneNumber);
-            person.setPhoto(photo);
         }
 
         if(photo != null) {
