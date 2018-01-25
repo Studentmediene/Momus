@@ -69,6 +69,7 @@
         <mockito-core.version>2.8.47</mockito-core.version>
         <hamcrest-all.version>1.3</hamcrest-all.version>
         <json-path.version>2.4.0</json-path.version>
+        <tomcat-embed-websocket.version>9.0.2</tomcat-embed-websocket.version>
         <logback-classic.version>1.2.3</logback-classic.version>
         <janino.version>3.0.7</janino.version>
 
@@ -177,6 +178,12 @@
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path-assert</artifactId>
             <version>${json-path.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-websocket</artifactId>
+            <version>${tomcat-embed-websocket.version}</version>
             <scope>test</scope>
         </dependency>
 
