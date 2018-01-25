@@ -32,7 +32,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -83,12 +85,12 @@ public class ArticleController {
         return articleService.saveArticle(article);
     }
 
-    @RequestMapping(value = "/metadata", method = RequestMethod.PATCH)
-    public @ResponseBody Article updateArticle(@RequestBody Article article){
-        if (articleService.getArticleRepository().findOne(article.getId()) == null) {
-            throw new RestException("Article " + article.getId() + " not found", HttpServletResponse.SC_NOT_FOUND);
+    @RequestMapping(value = "{id}/metadata", method = RequestMethod.PATCH)
+    public @ResponseBody Article updateArticle(@PathVariable("id") Long id, @RequestBody Article article){
+        if (articleService.getArticleRepository().findOne(id) == null) {
+            throw new RestException("Article " + id + " not found", HttpServletResponse.SC_NOT_FOUND);
         }
-        return articleService.updateArticleMetadata(article);
+        return articleService.updateArticleMetadata(id, article);
     }
 
     @RequestMapping(value = "{id}/content", method = RequestMethod.GET)
@@ -122,7 +124,7 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "/multiple", method = RequestMethod.GET)
-    public @ResponseBody List<Article> getArticlesByID(@RequestParam(value="id") List<Long> ids) {
+    public @ResponseBody List<Article> getArticlesByID(@RequestParam(value="ids") List<Long> ids) {
         if(ids == null) {
             return new ArrayList<>();
         }
@@ -135,13 +137,17 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "/{id}/indesignfile", method = RequestMethod.GET)
-    public @ResponseBody String getIndesignExport(@PathVariable("id") Long id, HttpServletResponse response) {
+    public void getIndesignExport(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
         IndesignExport indesignExport = articleService.exportArticle(id);
 
         response.addHeader("Content-Disposition", "attachment; filename=\"" + indesignExport.getName() + ".txt\"");
         response.addHeader("Content-Type", "text/plain;charset=UTF-16LE"); // Encoding InDesign likes
 
-        return indesignExport.getContent();
+        ServletOutputStream outStream = response.getOutputStream();
+        String exportContent = indesignExport.getContent();
+        outStream.print(exportContent);
+        outStream.flush();
+        outStream.close();
     }
 
     @RequestMapping(value = "/{id}/revisions", method = RequestMethod.GET)
@@ -176,7 +182,7 @@ public class ArticleController {
         return articleReviewRepository.findAll();
     }
 
-    @RequestMapping(value = "/statuscount", method = RequestMethod.GET)
+    @RequestMapping(value = "/statuscounts", method = RequestMethod.GET)
     public @ResponseBody Map<Long,Integer> getStatusCountsByPubId(@RequestParam Long publicationId){
         List<ArticleStatus> statuses = articleStatusRepository.findAll();
         Map<Long, Integer> map = new HashMap<>();
@@ -186,7 +192,7 @@ public class ArticleController {
         return map;
     }
 
-    @RequestMapping(value = "/reviewstatuscount", method = RequestMethod.GET)
+    @RequestMapping(value = "/reviewstatuscounts", method = RequestMethod.GET)
     public @ResponseBody Map<Long,Integer> getReviewStatusCountsByPubId(@RequestParam Long publicationId){
         List<ArticleReview> statuses = articleReviewRepository.findAll();
         Map<Long, Integer> map = new HashMap<>();

@@ -47,18 +47,29 @@ angular.module('momusApp.services')
             '<h4>Fnutter</h4><p>"Tekst" i Google Docs blir konvertert til «Tekst» i Momus.</p>',
             '<h4>Eksterne fotografer</h4><p>Bildekreditering til eksterne kan legges på en artikkel, og vil bli inkludert i eksporteringen til InDesign.</p>',
 
+            // Disposition
+            '<h4>Disposisjon</h4><p>Momus brukes for å lage disposisjon til Under Dusken.</p>',
+            '<h4>Flytte sider i disposisjon</h4><p>Flytt på sider i disposisjonen ved å dra dem rundt. Flere sider kan også merkes.</p>',
+            '<h4>Artikler i disposisjonen</h4><p>Trykker man på rediger-knappen til en side vil det dukke opp en knapp for å legge en ny artikkel inn i Momus.</p>',
+            '<h4>Reklame i disposisjonen</h4><p>Man kan markere at en side skal inneholde reklame i disposisjonen. Da vil den bli grå.</p>',            
+            '<h4>Ferdig side i disposisjonen</h4><p>Man kan markere at en side er helt ferdig i disposisjonen. Da vil den bli grønn.</p>',            
+
             // Publications
             '<h4>Utgaver</h4><p>Opprett utgaver som hver artikkel senere kan lenkes til.</p>',
-            '<h4>Utgavedato</h4><p>På hver utgave setter man en publiseringsdato. Denne brukes av Momus for å sortere utgavene. Den med senest dato anses av Momus som "aktiv utgave".</p>',
-
-            // Sources
-            '<h4>Kilder</h4><p>Legg inn kilder du har vært i kontakt med for at andre lett kan få tak i dem.</p>',
-            '<h4>Kildetagging</h4><p>Kilder kan tagges for lett filtrering.</p>'
+            '<h4>Utgavedato</h4><p>På hver utgave setter man en publiseringsdato. Denne brukes av Momus for å sortere utgavene. Den første som har publiseringsdato etter i dag anses av Momus som "aktiv utgave".</p>',
         ];
 
 
         // Date: year, month - 1, day
         var news = [{
+            date: new Date(2018, 0, 4),
+            title: "Godt nyttår!",
+            text: "<p>Godt nyttår! Det har vært litt problemer med å få samtidig redigering til å fungere, så det er blitt midlertidig deaktivert. Håper å fikse det så fort som mulig! Også forbedret synkronisering med brukerdatabasen.</p>"
+        },{
+            date: new Date(2017, 10, 24),
+            title: "Samtidig redigering!",
+            text: "<p>Nå har samtidig redigering kommet til disposisjonen! Når andre gjør en endring skal det dukke opp hos deg også. Hvis du har hatt nettleservinduet inaktivt over lang tid, kan det likevel hende du har blitt logget ut. Gi gjerne tilbakemelding hvis du finner noe som ikke fungerer riktig.</p>"
+        },{
             date: new Date(2017, 9, 23),
             title: "Long time, no update",
             text: "<p>Første oppdatering på en stund! Disposisjonen har fått litt bedre nettleserstøtte, (blant annet firefox), kolofonen har blitt fikset, og litt andre småting. Se etter flere kule ting i neste oppdatering!</p>"

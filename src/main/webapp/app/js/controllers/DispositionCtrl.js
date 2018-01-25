@@ -17,98 +17,220 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('DispositionCtrl', function ($scope, $routeParams, ArticleService, PublicationService, MessageModal, $location, $uibModal, $templateRequest, $route, $window, uiSortableMultiSelectionMethods, $q, Publication, Page) {
+    .controller('DispositionCtrl', function (
+        $scope,
+        $routeParams,
+        MessageModal,
+        $location,
+        $uibModal,
+        $templateRequest,
+        $window,
+        uiSortableMultiSelectionMethods,
+        $q,
+        Publication,
+        Page,
+        Article,
+        WebSocketService,
+        DispositionStyleService,
+        $interval)
+    {
         var vm = this;
+        var lastUpdate = {date: new Date()};
+        var websocketActive = false;
 
         vm.maxNewPages = 100;
 
+        vm.connectedUsers = {};
+
         vm.newPages = newPages;
-        vm.updatePage = updatePage;
 		vm.updatePageMeta = updatePageMeta;
         vm.deletePage = deletePage;
+        vm.initPageScope = initPageScope;
+        vm.editPage = editPage;
+        vm.submitPage = submitPage;
+        var pageEdits = [];
 
         vm.createArticle = createArticle;
-        vm.saveArticle = saveArticle;
+        vm.updateArticle = updateArticle;
+        vm.initArticleScope = initArticleScope;
+        vm.editArticleField = editArticleField;
+        vm.submitArticleField = submitArticleField;
+        var articleEdits = {};
+
+        vm.expandAllButtonRows = () => angular.element(".extra-button-line").collapse("show");
+        vm.hideAllButtonRows = () => angular.element(".extra-button-line").collapse("hide");
 
         vm.showHelp = showHelp;
 
         // Style
-        var pageDoneColor = "#DDFFCB";
-        var pageAdColor = "#f8f8f8";
-        vm.pageColor = function(page) {
-            return (page.done ? pageDoneColor : (page.advertisement ? pageAdColor : '#FFF'));
-        };
 
-        // Widths of columns in the disp. Used to sync widths across pages (which are separate tables)
-        vm.responsiveColumns = {
-            name: {minWidth: '100px'},
-            journalist: {minWidth: '80px'},
-            photographer: {minWidth: '80px'},
-            pstatus: {minWidth: '90px'},
-            comment: {minWidth: '100px'}
-        };
-        vm.dispSortableStyle = {}; // Used to prevent the disposition from breaking while moving pages
+        vm.dispWidth = 0;
+        vm.applyColumnWidth = (column, extra = {}) => angular.extend(extra, vm.columnWidths[column]);
+        vm.offsetDispositionTable = offsetDispositionTable;
+        vm.columnWidths = {};
+        vm.toolbarStyle = {};
 
         // Get all data
-        getStatuses();
-        getDisposition();
+        fetchStatuses();
+        fetchDisposition();
 
-        function getDisposition(){
+        function onRemoteChange(payload, headers, res) {
+            if(isOwnUpdate(payload)) return;
+
+            switch(payload.action) {
+                case(WebSocketService.actions.updatePageMetadata):
+                    handleRemotePageMetadataUpdate(payload.page_id);
+                    break;
+                case(WebSocketService.actions.saveArticle):
+                    handleRemoteArticleSave(payload.article_id);
+                    break;
+                case(WebSocketService.actions.updateArticle):
+                    handleRemoteArticleUpdate(payload.article_id, payload.edited_field);
+                    break;
+                case(WebSocketService.actions.deletePage):
+                case(WebSocketService.actions.updatePagenr):
+                case(WebSocketService.actions.savePage):
+                    handleRemotePageChange();
+                    break;
+            }
+            $scope.$apply();
+        }
+
+        function onUserAction(payload, headers, res) {
+            const username = payload.username;
+            switch(payload.user_action) {
+                case(WebSocketService.userAction.alive):
+                    if(username in vm.connectedUsers) {
+                        vm.connectedUsers[username].active = true;
+                    } else {
+                        vm.connectedUsers[username] = {active: true, display_name: payload.display_name};
+                    }
+                    break;
+            }
+        }
+
+        function handleRemotePageMetadataUpdate(pageId) {
             vm.loading = true;
-            var pubid = $routeParams.id;
-            getPublication($routeParams.id, function(publication){
-                getPages(publication.id, function(pages){
+            Page.get({pubid: vm.publication.id, pageid: pageId}, page => {
+                const index = vm.publication.pages.findIndex(page => page.id === pageId);
+                connectArticles(page, vm.articles);
+                vm.publication.pages[index] = page;
+                vm.loading = false;
+            });
+        }
+
+        function handleRemoteArticleUpdate(articleId, editedField) {
+            vm.loading = true;
+            // We are locally editing the field that has been changed remotely, so don't update immediately.
+            if(articleEdits[articleId][editedField]) {
+                const scope = articleEdits[articleId][editedField].scope;
+                Article.get({id: articleId}, article => {
+                    scope.remoteChanges[editedField] = article[editedField];
+                    articleEdits[articleId][editedField].oldValue = article[editedField];
+                    vm.loading = false;
+                });
+                return;
+            }
+            // Since an article can be referenced on several pages, update properties not reference
+            Article.get({id: articleId}, article => {
+                const index = vm.articles.findIndex((article) => article.id === articleId);
+                replaceProperties(vm.articles[index], article);
+                vm.loading = false;
+            });
+        }
+
+        function handleRemoteArticleSave(articleId) {
+            vm.loading = true;
+            Article.get({id: articleId}, article => {
+                vm.articles.push(article);
+                vm.loading = false;
+            });
+        }
+
+        function handleRemotePageChange() {
+            Page.query({pubid: vm.publication.id}, pages => {
+                pages.forEach(page => connectArticles(page, vm.articles));
+                vm.publication.pages = pages;
+            });
+        }
+
+        function isOwnUpdate(payload) {
+            return new Date(payload.date) <= lastUpdate.date;
+        }
+
+        function connectArticles(page, articles) {
+            page.articles = page.articles.map(article => articles.find(other => other.id === article.id));
+        }
+
+        function replaceProperties(oldObject, newObject) {
+            Object.keys(oldObject).forEach(prop => {
+                oldObject[prop] = newObject[prop];
+            });
+        }
+
+        function heartbeat(pubId) {
+            WebSocketService.sendUserAction(pubId, WebSocketService.userAction.alive);
+            for (let username in vm.connectedUsers) {
+                const alive = vm.connectedUsers[username].active;
+                if (!alive) {
+                    delete vm.connectedUsers[username];
+                } else {
+                    vm.connectedUsers[username].active = false;
+                }
+            }
+        }
+
+        function fetchDisposition(){
+            vm.loading = true;
+            publicationQuery($routeParams.id)(publication => {
+                Page.query({pubid: publication.id}, pages => {
                     publication.pages = pages;
-                    ArticleService.search({publication: publication.id}).then(function(data){
-                        vm.articles = data.data;
-                        vm.publication = publication;
+                    vm.publication = publication;
+                    vm.articles = Article.search({}, {publication: publication.id}, () => {
+                        if($routeParams.ws){
+                            WebSocketService.subscribe(publication.id, onRemoteChange, onUserAction);
+                            $interval(() => heartbeat(publication.id), 10000);
+                            websocketActive = true;
+                        }
+                        publication.pages.forEach(page => connectArticles(page, vm.articles));
                         vm.loading = false;
                     });
                 });
             });
         }
 
-        function getPages(pubid, callback){
-            var pages = Page.query({pubid: pubid}, function(){ callback(pages);});
+        function publicationQuery(pubid){
+            return pubid ?
+                callback => Publication.get({id: pubid}, callback) :
+                callback => Publication.active({}, callback, () => vm.noPublication = true);
         }
 
-        function getPublication(pubid, callback){
-            var publication;
-            if(pubid){
-                publication = Publication.get({id: pubid}, function(){ callback(publication);});
-            }else{
-                publication = Publication.active({}, function(){ callback(publication);});
-            }
-        }
-
-        function getStatuses(){
-            $q.all([ArticleService.getReviews(), ArticleService.getStatuses()]).then(function(data){
-                vm.reviewStatuses = data[0].data;
-                vm.articleStatuses = data[1].data;
-            });
+        function fetchStatuses(){
+            vm.articleStatuses = Article.statuses();
+            vm.reviewStatuses = Article.reviewStatuses();
             vm.layoutStatuses = Publication.layoutStatuses();
         }
 
         function newPages(newPageAt, numNewPages){
-            var pages = [];
-            for(var i = 0; i < numNewPages; i++) {
-                var page = {
-                    page_nr: newPageAt + i + 1, 
+            const pages = Array.from(new Array(numNewPages), (_, i) => ({
+                    page_nr: newPageAt + i + 1,
                     publication: vm.publication.id,
                     layout_status: getLayoutStatusByName("Ukjent")
-                };
-                pages.push(page);
-            };
+                })
+            );
             vm.loading = true;
             var updatedPages = Page.saveMultiple({pubid: vm.publication.id}, pages, function() {
                 vm.publication.pages = updatedPages;
                 vm.loading = false;
+                if(websocketActive){
+                    lastUpdate = WebSocketService.pageSaved(vm.publication.id, -1);
+                }
             });
         }
 
         function updatePage(page) {
             vm.loading = true;
-            var pages = Page.update({pubid: vm.publication.id}, page, function() {
+            var pages = page.$update({}, pages => {
                 vm.publication.pages = pages;
                 vm.loading = false;
             });
@@ -116,29 +238,81 @@ angular.module('momusApp.controllers')
 
 		function updatePageMeta(page){
 			vm.loading = true;
-			var new_page = Page.updateMeta({pubid: vm.publication.id}, page, function() {
-				vm.publication.pages[page.page_nr-1] = new_page;
+			page.$updateMeta({}, page => {
 				vm.loading = false;
+                if(websocketActive) {
+                    lastUpdate = WebSocketService.pageMetadataUpdated(vm.publication.id, page.id);
+                }
 			});
 		}
 
         function updatePages(pages) {
             vm.loading = true;
-            var pages = Page.updateMultiple({pubid: vm.publication.id}, pages, function() {
+            Page.updateMultiple({pubid: vm.publication.id}, pages, pages => {
+                pages.forEach(page => {
+                    connectArticles(page, vm.articles);
+                });
                 vm.publication.pages = pages;
                 vm.loading = false;
+                if(websocketActive){
+                    lastUpdate = WebSocketService.pageNrUpdated(vm.publication.id, -1);
+                }
             });
         }
 
         function deletePage(page) {
             if(confirm("Er du sikker på at du vil slette denne siden?")){
                 vm.loading = true;
-                vm.publication.pages.splice(vm.publication.pages.indexOf(page), 1);
-                var pages = Page.delete({pubid: vm.publication.id, pageid: page.id}, function() {
+                Page.delete({pubid: page.publication.id, pageid: page.id}, pages => {
                     vm.publication.pages = pages;
                     vm.loading = false;
+                    if(websocketActive){
+                        lastUpdate = WebSocketService.pageDeleted(vm.publication.id, page.id);
+                    }
                 });
             }
+        }
+
+        function initPageScope(scope) {
+            scope.editPage = pageEdits.includes(scope.page.id);
+        }
+
+        function editPage(scope) {
+            scope.editPage = true;
+            pageEdits.push(scope.page.id);
+        }
+
+        function submitPage(scope) {
+            updatePageMeta(scope.page);
+            scope.editPage = false;
+            pageEdits.splice(pageEdits.indexOf(scope.page.id), 1);
+        }
+
+        function initArticleScope(scope) {
+            scope.edit = {};
+            scope.remoteChanges = {};
+            articleEdits[scope.article.id] = {};
+        }
+
+        function editArticleField(scope, field) {
+            if(vm.loading) return;
+
+            articleEdits[scope.article.id][field] = {
+                scope: scope,
+                oldValue: scope.article[field]
+            };
+            scope.edit[field] = true;
+        }
+
+        function submitArticleField(scope, field, update) {
+            if(update) {
+                updateArticle(scope.article, field);
+            }else {
+                scope.article[field] = articleEdits[scope.article.id][field].oldValue;
+            }
+
+            scope.edit[field] = false;
+            articleEdits[scope.article.id][field] = null;
         }
 
         function createArticle(page){
@@ -146,29 +320,32 @@ angular.module('momusApp.controllers')
                 templateUrl: 'partials/article/createArticleModal.html',
                 controller: 'CreateArticleModalCtrl',
                 resolve: {
-                    pubId: function(){
-                        return vm.publication.id;
-                    }
+                    pubId: () => vm.publication.id
                 }
             });
-            modal.result.then(function(id){
-                ArticleService.getArticle(id).then(function(data){
-                    const article = data.data;
+            modal.result.then(id => {
+                const article = Article.get({id: id}, () => {
                     page.articles.push(article);
                     vm.articles.push(article);
+                    if(websocketActive){
+                        lastUpdate = WebSocketService.articleSaved(vm.publication.id, page.id, article.id);
+                    }
                 });
             });
         }
 
-        function saveArticle(article){
-            vm.loading = true
-            ArticleService.updateMetadata(article).then(function(data){
-                vm.loading = false
+        function updateArticle(article, editedField){
+            vm.loading = true;
+            Article.updateMetadata({id: article.id}, article, () => {
+                vm.loading = false;
+                if(websocketActive){
+                    lastUpdate = WebSocketService.articleUpdated(vm.publication.id, article.id, editedField);
+                }
             });
         }
 
         function showHelp(){
-            $templateRequest('partials/templates/help/dispHelp.html').then(function(template){
+            $templateRequest('partials/templates/help/dispHelp.html').then(template => {
                 MessageModal.info(template);
             });
         }
@@ -183,73 +360,69 @@ angular.module('momusApp.controllers')
             return null;
         }
 
+        function offsetDispositionTable() {
+            const titleElement = angular.element(".d-title")[0];
+            const toolbarElement = angular.element(".d-toolbar")[0];
+            return {top: titleElement.offsetHeight + titleElement.offsetTop + toolbarElement.offsetHeight};
+        }
+
+        function updateToolbar(){
+            angular.extend(vm.toolbarStyle, {
+                left: -$window.scrollX + angular.element(".container")[0].offsetLeft + 15,
+                width: vm.dispWidth
+            });
+        }
+
+        function updateDispSize() {
+            const elementWidth = angular.element("#disposition")[0].clientWidth;
+            const windowWidth = $window.innerWidth;
+            const { columnWidths, articleWidth, dispWidth } = DispositionStyleService.calcDispSize(elementWidth, windowWidth);
+            angular.extend(vm, {
+                columnWidths: columnWidths,
+                articleWidth: articleWidth,
+                dispWidth: dispWidth
+            });
+        }
+
         vm.sortableOptions = uiSortableMultiSelectionMethods.extendOptions({
             helper: uiSortableMultiSelectionMethods.helper,
-            start: function(e, ui) {
-                vm.dispSortableStyle.tableLayout = "auto"; //To not break the table
-                $scope.$apply(); //Apply since this is jQuery stuff
-
+            start: (e, ui) => {
                 //Calculate height of placeholder
-                var totalHeight = 0;
-                for(var i = 0; i< ui.helper[0].children.length;i++){
-                    var child = ui.helper[0].children[i];
-                    totalHeight += parseInt($window.getComputedStyle(child).height.replace("px", ""));
-                }
-                ui.placeholder[0].style.height = totalHeight +"px";
+                ui.placeholder[0].style.height = Array.from(ui.helper[0].children).reduce((acc, child) => {
+                    return acc + parseInt($window.getComputedStyle(child).height.replace("px", ""));
+                }, 0) + "px";
             },
-            axis: 'y',
-            handle: '.handle',
-            stop: function(e, ui){
-                vm.dispSortableStyle.tableLayout = "";
+            axis: "y",
+            handle: ".handle",
+            stop: (e, ui) => {
                 var placed = ui.item.sortableMultiSelect.selectedModels;
                 var newPosition = vm.publication.pages.indexOf(placed[0]);
-                placed.forEach(function(page, i) {
-                    page.page_nr = newPosition + i + 1
+                placed.forEach((page, i) => {
+                    page.page_nr = newPosition + i + 1;
                 });
                 updatePages(placed);
             },
-            placeholder: "disp-placeholder"
+            placeholder: "d-placeholder"
         });
-
-        function updateDispSize(){
-            var constantArticleSize = 320;
-            var constantDispSize = constantArticleSize + 220;       
-            var dispWidth = angular.element(document.getElementById("disposition"))[0].clientWidth;
-            //Must divide rest of width between journalists, photographers, photo status and comment.
-            var widthLeft = dispWidth - constantDispSize;
-            var shareParts = {
-                name: 0.25,
-                journalist: 0.2,
-                photographer: 0.2,
-                pstatus: 0.15,
-                comment: 0.2
-            };
-
-            var articleWidth = constantArticleSize;
-            for(var k in shareParts){
-                var width;
-                if($window.innerWidth > 992){
-                    width = Math.floor(shareParts[k]*widthLeft);
-                }else{ //Use min width and scroll if screen is too small.
-                    width = parseInt(vm.responsiveColumns[k].minWidth);
-                }
-
-                articleWidth += width;
-
-                vm.responsiveColumns[k] = {minWidth: width + 'px', maxWidth: width + 'px', width: width + 'px'};
-            }
-
-            vm.articleWidth = articleWidth;
-        }
 
         updateDispSize();
         // To recalculate disp table when resizing the screen
-        angular.element($window).bind('resize', function(){
-            updateDispSize();
-            $scope.$apply();
-        });
+        angular.element($window)
+            .bind('resize', () => {
+                updateDispSize();
+                updateToolbar();
+                $scope.$apply();
+            })
+            .bind('scroll', () => {
+                updateToolbar();
+                $scope.$apply();
+            });
 
-        $scope.$on('$destroy', function(){
+        $scope.$on('$destroy', () => {
+            if(websocketActive) {
+                WebSocketService.disconnect();
+                websocketActive = false;
+            }
             angular.element($window).unbind('resize');
         });
     });

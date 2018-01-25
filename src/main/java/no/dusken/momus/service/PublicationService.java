@@ -94,17 +94,17 @@ public class PublicationService {
 
         colophonBuilder.append("Journalister:\r\n");
         for(Person p : journalists){
-            colophonBuilder.append(p.getFullName()).append("\r\n");
+            colophonBuilder.append(p.getName()).append("\r\n");
         }
 
         colophonBuilder.append("\r\nFotografer:\r\n");
         for(Person p : photographers){
-            colophonBuilder.append(p.getFullName()).append("\r\n");
+            colophonBuilder.append(p.getName()).append("\r\n");
         }
 
         colophonBuilder.append("\r\nIllustratører:\r\n");
         for(Person p : illustrators){
-            colophonBuilder.append(p.getFullName()).append("\r\n");
+            colophonBuilder.append(p.getName()).append("\r\n");
         }
         return colophonBuilder.toString();
     }
@@ -115,8 +115,13 @@ public class PublicationService {
      */
     public Publication getActivePublication(Date date){
         List<Publication> publications = publicationRepository.findAllByOrderByReleaseDateDesc();
+
+        if(publications.isEmpty()) return null;
+
+        if(publications.size() == 1) return publications.get(0);
+
         Publication active = publications.get(0);
-        for(Publication p : publications.subList(1,publications.size()-1)){
+        for(Publication p : publications.subList(1,publications.size())){
             if(p.getReleaseDate().before(date)){
                 return active;
             }else{

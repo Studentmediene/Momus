@@ -19,7 +19,7 @@
 angular.module('momusApp.services')
     .service('MessageModal', function($uibModal){
 
-        function showModal(color, heading, content, callback) {
+        function showModal(color, heading, content, callback, dismissCallback) {
             var config = {
                 template: '<div class="modal-header alert-{{color}}">\n' +
                 '<h2 class="panel-title">{{heading}}</h2>\n' +
@@ -42,9 +42,7 @@ angular.module('momusApp.services')
                             callback();
                         }
                     };
-
-                    $uibModalInstance.result.then(); //This must be here so the modal can be closed by clicking outside it
-
+                    $uibModalInstance.closed.then(dismissCallback);
                 }]
 
             };
@@ -61,14 +59,14 @@ angular.module('momusApp.services')
                 showModal('success', 'Fullført', content, callback);
             },
 
-            error: function(content, showExtras, callback) {
+            error: function(content, showExtras, callback, dismissedCallback) {
                 var extraInfo = "Ved vedvarende feil kontakt oss på momus@smitit.no";
 
                 if (showExtras) {
                     content += '</p><p>' + extraInfo;
                 }
 
-                showModal('danger', 'Noe gikk feil', content, callback);
+                showModal('danger', 'Noe gikk feil', content, callback, dismissedCallback);
             }
         };
     });

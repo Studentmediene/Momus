@@ -118,8 +118,8 @@ public class ArticleService {
         return updateArticle(existing);
     }
 
-    public Article updateArticleMetadata(Article article) {
-        Article existing = articleRepository.findOne(article.getId());
+    public Article updateArticleMetadata(Long id, Article article) {
+        Article existing = articleRepository.findOne(id);
 
         ArticleStatus oldStatus = existing.getStatus();
 

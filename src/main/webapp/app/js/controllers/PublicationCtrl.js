@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('PublicationCtrl', function ($scope, PublicationService, $templateRequest, MessageModal, Publication) {
+    .controller('PublicationCtrl', function ($scope, $templateRequest, MessageModal, Publication) {
         var vm = this;
 
         vm.publications = [];
@@ -66,7 +66,7 @@ angular.module('momusApp.controllers')
             var sinceYearX = oldest && new Date(oldest.release_date).getFullYear() || 2009;
             var years = ["Alle"];
 
-            for (var i = new Date().getFullYear(); i > sinceYearX; i--) {
+            for (var i = new Date().getFullYear(); i >= sinceYearX; i--) {
                 years.push(i);
             }
 

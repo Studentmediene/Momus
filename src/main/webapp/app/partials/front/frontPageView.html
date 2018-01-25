@@ -15,12 +15,12 @@
   -->
 
 <div class="container">
-    <div class="row">
+    <div class="row" ng-hide="noPublication">
         <div class="col-md-12">
             <h3>Status {{publication.name}}</h3>
         </div>
     </div>
-    <div class="row">
+    <div class="row" ng-hide="noPublication">
         <div class="col-md-4">
             <div class="panel panel-info">
                 <div class="panel-heading">
@@ -150,7 +150,7 @@
                             <td>{{article.content_length}}</td>
                             <td>
                                 <ul class="list-unstyled">
-                                    <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.full_name}}</span></li>
+                                    <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.name}}</span></li>
                                 </ul>
                             </td>
                             <td style="background-color:{{article.status.color}};">{{article.status.name}}</td>
@@ -203,7 +203,7 @@
                             <td>{{article.content_length}}</td>
                             <td>
                                 <ul class="list-unstyled">
-                                    <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.full_name}}</span></li>
+                                    <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.name}}</span></li>
                                 </ul>
                             </td>
                             <td style="background-color: {{article.status.color}};">{{article.status.name}}</td>
@@ -219,12 +219,16 @@
             <div class="panel panel-info">
                 <div class="panel-heading clearfix">
                     <div class="pull-right">
-                        <select id="favsec" class="form-control input-sm" ng-model="favouriteSection.section" ng-change="updateFavouriteSection()"
+                        <select id="favsec" class="form-control input-sm" ng-model="user.favouritesection" ng-change="updateFavouriteSection()"
                                 ng-options="s.name for s in sections  | filter:{deleted: false} track by s.id">
                         </select>
                     </div>
                     <h1 class="panel-title fav">
-                        <i class="fa fa-star"></i> {{favouriteSection.section == null ? "Velg favorittseksjon for å vise de nyeste artiklene derfra" : "Siste artikler fra din favorittseksjon (" + favouriteSection.section.name + ")" }}
+                        <i class="fa fa-star"></i>
+                        {{!user.favouritesection ?
+                            "Velg favorittseksjon for å vise de nyeste artiklene derfra" :
+                            "Siste artikler fra din favorittseksjon (" + user.favouritesection.name + ")"
+                        }}
                     </h1>
                 </div>
                 <div class="table-responsive">
@@ -242,18 +246,18 @@
                         </thead>
                         <tbody>
 
-                        <tr ng-if="loadingFavorites">
+                        <tr ng-show="loadingFavourites">
                             <td colspan="10" style="text-align: center;">
                                 <i class="fa fa-4x fa-spinner fa-spin"></i>
                             </td>
                         </tr>
 
-                        <tr ng-if="favouriteSection.section == null">
+                        <tr ng-show="!loadingFavourites && !user.favouritesection">
                             <td colspan="10" style="text-align: center;">
                                 Du har ikke satt en favorittseksjon
                             </td>
                         </tr>
-                        <tr ng-if="favouriteSection.section != null && favSectionArticles.length == 0">
+                        <tr ng-show="!loadingFavourites && user.favouritesection && favSectionArticles.length == 0">
                             <td colspan="10" style="text-align: center;">
                                 Det finnes ingen artikler i denne seksjonen
                             </td>
@@ -264,7 +268,7 @@
                             <td>{{article.content_length}}</td>
                             <td>
                                 <ul class="list-unstyled">
-                                    <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.full_name}}</span></li>
+                                    <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.name}}</span></li>
                                 </ul>
                             </td>
                             <td style="background-color: {{article.status.color}};">{{article.status.name}}</td>
@@ -296,7 +300,7 @@
             <!--News-->
             <div class="panel panel-info">
                 <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-bullhorn"></i> Nyheter</h1></div>
-                <div class="panel-body" style="height:300px; overflow-y: auto">
+                <div style="height:300px; overflow-y: auto">
                     <table class="table">
                         <tbody ng-repeat="n in news | orderBy: '-date'">
                         <tr ng-class="{danger: n.new, active:!n.new}" class="interact" ng-click="n.show = !n.show">

@@ -94,7 +94,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .exceptionHandling()
             .authenticationEntryPoint(samlEntryPoint())
             .and().logout().invalidateHttpSession(true).logoutUrl("/api/logout");
-
     }
 
     @Bean

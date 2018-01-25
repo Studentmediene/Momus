@@ -308,196 +308,6 @@
         <insert tableName="articlestatus"><column name="id">6</column><column name="color">#0f0</column><column name="name">Publisert</column></insert>
     </changeSet>
 
-
-
-    <!-- Create some dummy data for DEV ONLY -->
-    <changeSet id="3" author="Mats" context="dev">
-        <!-- First some persons. These will be overridden by LDAP sync data shortly, but are needed here or the database gets angry -->
-        <insert tableName="person"><column name="id">1006</column></insert>
-        <insert tableName="person"><column name="id">1003</column></insert>
-        <insert tableName="person"><column name="id">2411</column></insert>
-
-
-        <!-- Some Publications -->
-        <insert tableName="publication"><column name="id">1</column><column name="name">UD14-2013</column><column name="releasedate" valueDate="2013-09-02"/></insert>
-        <insert tableName="publication"><column name="id">2</column><column name="name">UD15-2013</column><column name="releasedate" valueDate="2013-10-18"/></insert>
-        <insert tableName="publication"><column name="id">3</column><column name="name">UD16-2013</column><column name="releasedate" valueDate="2013-12-17"/></insert>
-        <insert tableName="publication"><column name="id">4</column><column name="name">UD11-2014</column><column name="releasedate" valueDate="2014-08-01"/></insert>
-        <insert tableName="publication"><column name="id">5</column><column name="name">UD12-2014</column><column name="releasedate" valueDate="2014-10-05"/></insert>
-        <insert tableName="publication"><column name="id">6</column><column name="name">UD13-2014</column><column name="releasedate" valueDate="2014-11-22"/></insert>
-        <insert tableName="publication"><column name="id">7</column><column name="name">UD14-2014</column><column name="releasedate" valueDate="2014-12-05"/></insert>
-        <insert tableName="publication"><column name="id">8</column><column name="name">UD15-2014</column><column name="releasedate" valueDate="2014-12-21"/></insert>
-
-        <!-- Some dispositions -->
-        <!-- TODO -->
-
-        <!-- Some articles -->
-        <insert tableName="article">
-            <column name="id">1</column><column name="name">Siden Sist</column><column name="comment"></column><column name="lastupdated"></column>
-            <column name="publication_id">8</column><column name="section_id">3</column><column name="status_id">2</column><column name="type_id">2</column>
-            <column name="content"><![CDATA[]]></column>
-            <column name="note"><![CDATA[<p>Hva har skjedd siden sist a?</p>]]></column>
-        </insert>
-        <insert tableName="article">
-            <column name="id">2</column><column name="name">Lovlig Norsk</column><column name="comment">Må ikke deskes før lørdag</column><column name="lastupdated"></column>
-            <column name="publication_id">8</column><column name="section_id">6</column><column name="status_id">5</column><column name="type_id">5</column>
-            <column name="content"><![CDATA[<h1>Lovlig Norsk</h1><h4>I 2011 ble tidligere NTNU-student Maria Amelie tvangsreturnert etter åtte års ulovlig opphold i Norge. I går var hun tilbake på Studentersamfundet for å fortelle om boka Takk.</h4><p>Maria Amelie engasjerte tusenvis av nordmenn og skapte stor debatt da Utlendingsnemnda i januar 2011 vedtok at Amelie ikke hadde rett til å
-bli i Norge. Hun måtte returnere til Russland – til tross for at hun
-snakket norsk, hadde et norsk nettverk, mastergrad fra NTNU og var selve
- kroneksempelet på vellykket integrering. I Russland hadde hun kanskje
-ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet. Et sted hun trolig har vært mye, gjennom verv i ISFiT, UKA og Kulturutvalget. Hennes første bok, titulert&nbsp;<i>Ulovlig norsk</i>, bidro til både æresmedlemsskap på Samfundet og tvangsdeportering til «hjemlandet». I går leste hun fra&nbsp;<i>Takk</i>. Den handler om oppholdet på Trandum asylfengsel, et sted som selveste FNs torturkomite har rettet sterk kritikk mot.</p><blockquote>«Vi skal kroppsvisitere deg», sa en av politikvinnene. «Du må ta av deg alt du har på deg», sa hun mens hun dro på seg tynne plasthansker. «Absolutt alt?» spurte jeg. «Ja», svarte hun. Hjertet mitt slo fortere. Jeg nølte, men bet tennene sammen og begynte å ta av meg kardigan, skjørt, topp, behå, sko, strømpebukser, truse, sokker. (…) «Dette er rutinene våre, vi gjør det med alle, selv om det kan føles litt ubehagelig». «Jeg skrev ikke boken for å ha det behagelig», sa jeg mens jeg tok av meg trusene.</blockquote><p>– Jeg måtte forsøke å dele meg i to: kroppen, og tankene. Jeg tenkte på eldre damer og små barn som måtte gjennom samme undersøkelse. Og jeg var veldig glad foreldrene mine slapp dette, sier hun.</p><p>Amelies foreldre reiste tilbake til Russland i 2011. Begge to hadde i lang tid vært syke.</p><p>– De ønsket begge å arbeide for å bidra i samfunnet. Men det kunne de ikke uten oppholdstillatelse. Nå har de endelige fått profesjonell hjelp av psykolog, og helsa har blitt bedre.</p><h3>Helt usynlig</h3><p>Som papirløs har du ingen rettigheter: Ikke studielån fra Lånekassen, ikke fastlege. Det er ingen statistikk som fanger deg opp. Dette ble særlig klart for Maria Amelie etter en sykdomsperiode hvor hun ikke torde å oppsøke lege.</p><p>– Jeg tenkte: Hva om jeg hadde en kjempesmittsom sykdom? Hva om jeg ble gravid? Hva om jeg ble vitne til en kriminell hendelse?</p><p>Da hun i september 2011 ga ut boken Ulovlig norsk som blant annet er basert på hennes egne dagboknotater, følte hun for første gang på lenge at «nå finnes jeg».</p><p>Trandum asylfengsel Konsekvensen av «å finnes» ble Trandum asylfengsel, et sted like ved Gardemoen for midlertidig oppbevaring av asylsøkere. Både Maria og mange organisasjoner har kritisert Trandum for brudd på menneskerettighetene. Blant det som er blitt kritisert er stedets strenge sikkerhetsprosedyrer og minimale aktivitetstilbud.</p><p>– Trandum har betydd mye for meg. På godt og vondt. Mest på vondt.</p><p><i>Takk</i>&nbsp;handler mye om tida på Trandum. Herfra ser man ironisk nok kun fly som forlater Norge, og ingen som lander, forteller Maria.</p><p>– Å være asylsøker betyr “ingen ende på reisen”. Jeg visste aldri hvor lenge jeg måtte vente på Trandum. Andre kriminelle får vite hvor lenge de skal sitte fengslet, og i det ligger det litt verdighet. Den verdigheten fikk ikke jeg, sier hun.</p><h3>Regelendring</h3><p>Som en følge av den voldsomme støtten fra både offentligheten og politikere endret regjeringen regelverket i Utlendingsloven. Etter april 2011 kunne personer med relevant fagutdanning og jobbtilbud komme tilbake til Norge som arbeidsinnvandrere, etter avslag på søknad om asyl.</p><br>]]></column>
-            <column name="note"><![CDATA[<p>notater er <b>bra</b></p>]]></column>
-        </insert>
-        <insert tableName="article">
-            <column name="id">3</column><column name="name">Mora mi</column><column name="comment">Venter på sitatsjekk</column><column name="lastupdated"></column>
-            <column name="publication_id">7</column><column name="section_id">3</column><column name="status_id">4</column><column name="type_id">1</column>
-            <column name="content"><![CDATA[<h1>Lovlig Norsk</h1><h4>I 2011 ble tidligere NTNU-student Maria Amelie tvangsreturnert etter åtte års ulovlig opphold i Norge. I går var hun tilbake på Studentersamfundet for å fortelle om boka Takk.</h4><p>Maria Amelie engasjerte tusenvis av nordmenn og skapte stor debatt da Utlendingsnemnda i januar 2011 vedtok at Amelie ikke hadde rett til å
-bli i Norge. Hun måtte returnere til Russland – til tross for at hun
-snakket norsk, hadde et norsk nettverk, mastergrad fra NTNU og var selve
- kroneksempelet på vellykket integrering. I Russland hadde hun kanskje
-ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet. Et sted hun trolig har vært mye, gjennom verv i ISFiT, UKA og Kulturutvalget. Hennes første bok, titulert&nbsp;<i>Ulovlig norsk</i>, bidro til både æresmedlemsskap på Samfundet og tvangsdeportering til «hjemlandet». I går leste hun fra&nbsp;<i>Takk</i>. Den handler om oppholdet på Trandum asylfengsel, et sted som selveste FNs torturkomite har rettet sterk kritikk mot.</p><blockquote>«Vi skal kroppsvisitere deg», sa en av politikvinnene. «Du må ta av deg alt du har på deg», sa hun mens hun dro på seg tynne plasthansker. «Absolutt alt?» spurte jeg. «Ja», svarte hun. Hjertet mitt slo fortere. Jeg nølte, men bet tennene sammen og begynte å ta av meg kardigan, skjørt, topp, behå, sko, strømpebukser, truse, sokker. (…) «Dette er rutinene våre, vi gjør det med alle, selv om det kan føles litt ubehagelig». «Jeg skrev ikke boken for å ha det behagelig», sa jeg mens jeg tok av meg trusene.</blockquote><p>– Jeg måtte forsøke å dele meg i to: kroppen, og tankene. Jeg tenkte på eldre damer og små barn som måtte gjennom samme undersøkelse. Og jeg var veldig glad foreldrene mine slapp dette, sier hun.</p><p>Amelies foreldre reiste tilbake til Russland i 2011. Begge to hadde i lang tid vært syke.</p><p>– De ønsket begge å arbeide for å bidra i samfunnet. Men det kunne de ikke uten oppholdstillatelse. Nå har de endelige fått profesjonell hjelp av psykolog, og helsa har blitt bedre.</p><h3>Helt usynlig</h3><p>Som papirløs har du ingen rettigheter: Ikke studielån fra Lånekassen, ikke fastlege. Det er ingen statistikk som fanger deg opp. Dette ble særlig klart for Maria Amelie etter en sykdomsperiode hvor hun ikke torde å oppsøke lege.</p><p>– Jeg tenkte: Hva om jeg hadde en kjempesmittsom sykdom? Hva om jeg ble gravid? Hva om jeg ble vitne til en kriminell hendelse?</p><p>Da hun i september 2011 ga ut boken Ulovlig norsk som blant annet er basert på hennes egne dagboknotater, følte hun for første gang på lenge at «nå finnes jeg».</p><p>Trandum asylfengsel Konsekvensen av «å finnes» ble Trandum asylfengsel, et sted like ved Gardemoen for midlertidig oppbevaring av asylsøkere. Både Maria og mange organisasjoner har kritisert Trandum for brudd på menneskerettighetene. Blant det som er blitt kritisert er stedets strenge sikkerhetsprosedyrer og minimale aktivitetstilbud.</p><p>– Trandum har betydd mye for meg. På godt og vondt. Mest på vondt.</p><p><i>Takk</i>&nbsp;handler mye om tida på Trandum. Herfra ser man ironisk nok kun fly som forlater Norge, og ingen som lander, forteller Maria.</p><p>– Å være asylsøker betyr “ingen ende på reisen”. Jeg visste aldri hvor lenge jeg måtte vente på Trandum. Andre kriminelle får vite hvor lenge de skal sitte fengslet, og i det ligger det litt verdighet. Den verdigheten fikk ikke jeg, sier hun.</p><h3>Regelendring</h3><p>Som en følge av den voldsomme støtten fra både offentligheten og politikere endret regjeringen regelverket i Utlendingsloven. Etter april 2011 kunne personer med relevant fagutdanning og jobbtilbud komme tilbake til Norge som arbeidsinnvandrere, etter avslag på søknad om asyl.</p><br>]]></column>
-            <column name="note"></column>
-        </insert>
-        <insert tableName="article">
-            <column name="id">4</column><column name="name">Mats er deilig</column><column name="comment">Alle er enige</column><column name="lastupdated"></column>
-            <column name="publication_id">8</column><column name="section_id">1</column><column name="status_id">3</column><column name="type_id">4</column>
-            <column name="content"><![CDATA[<h1>Lalalala</h1>]]></column>
-            <column name="note"><![CDATA[<p><b>Whoho!</b></p>]]></column>
-        </insert>
-
-        <!-- Some people connected to articles -->
-        <insert tableName="article_journalist"><column name="article_id">1</column><column name="journalists_id">1006</column></insert>
-        <insert tableName="article_journalist"><column name="article_id">2</column><column name="journalists_id">1006</column></insert>
-        <insert tableName="article_photographer"><column name="article_id">2</column><column name="photographers_id">1003</column></insert>
-        <insert tableName="article_journalist"><column name="article_id">3</column><column name="journalists_id">2411</column></insert>
-        <insert tableName="article_photographer"><column name="article_id">3</column><column name="photographers_id">1006</column></insert>
-
-        <!-- And some revisions -->
-
-        <!-- Some sources with tags, and some unused tags -->
-        <insert tableName="sourcetag"><column name="tag">ap</column></insert>
-        <insert tableName="sourcetag"><column name="tag">dekan</column></insert>
-        <insert tableName="sourcetag"><column name="tag">frp</column></insert>
-        <insert tableName="sourcetag"><column name="tag">hf</column></insert>
-        <insert tableName="sourcetag"><column name="tag">ikm</column></insert>
-        <insert tableName="sourcetag"><column name="tag">ime</column></insert>
-        <insert tableName="sourcetag"><column name="tag">nato</column></insert>
-        <insert tableName="sourcetag"><column name="tag">ntnu</column></insert>
-        <insert tableName="sourcetag"><column name="tag">politiker</column></insert>
-        <insert tableName="sourcetag"><column name="tag">rektor</column></insert>
-        <insert tableName="sourcetag"><column name="tag">student</column></insert>
-        <insert tableName="sourcetag"><column name="tag">studenttinget</column></insert>
-        <insert tableName="sourcetag"><column name="tag">kul type</column></insert>
-
-        <insert tableName="source">
-            <column name="id">1</column>
-            <column name="name">Jens Stolfjell</column>
-            <column name="description">Tidligere statsminister</column>
-            <column name="telephone">12345678</column>
-            <column name="email">jens@jensemann.com</column>
-            <column name="webpage">jensemann.com</column>
-            <column name="address">Natobygningen\n123</column>
-            <column name="note">Var der før, er der nå</column>
-        </insert>
-        <insert tableName="source">
-            <column name="id">2</column>
-            <column name="name">Siv Jansrud</column>
-            <column name="description">Politiker frp</column>
-            <column name="telephone">666666</column>
-            <column name="email">siv@sivsiv.com</column>
-            <column name="webpage"></column>
-            <column name="address">Stooortinget</column>
-            <column name="note">Mornaaa Jeeeens</column>
-        </insert>
-        <insert tableName="source">
-            <column name="id">3</column>
-            <column name="name">Gunnar Bovim</column>
-            <column name="description">Rektor for NTNU</column>
-            <column name="telephone">13371337</column>
-            <column name="email">thaboss@ntnu.no</column>
-            <column name="webpage">ntnu.edu</column>
-            <column name="address">Galtvort</column>
-            <column name="note"></column>
-        </insert>
-        <insert tableName="source">
-            <column name="id">4</column>
-            <column name="name">Anne Mols Myr</column>
-            <column name="description">leder Institutt for kunst- og medievitenskap</column>
-            <column name="telephone"></column>
-            <column name="email"></column>
-            <column name="webpage"></column>
-            <column name="address"></column>
-            <column name="note"></column>
-        </insert>
-        <insert tableName="source">
-            <column name="id">5</column>
-            <column name="name">Kathrine Ssssr</column>
-            <column name="description">dekan Det humanistiske fakultet</column>
-            <column name="telephone"></column>
-            <column name="email"></column>
-            <column name="webpage"></column>
-            <column name="address"></column>
-            <column name="note"></column>
-        </insert>
-        <insert tableName="source">
-            <column name="id">6</column>
-            <column name="name">Elena Etternavn</column>
-            <column name="description">leder studenttinget</column>
-            <column name="telephone"></column>
-            <column name="email">naiv@over9000.com</column>
-            <column name="webpage"></column>
-            <column name="address"></column>
-            <column name="note"></column>
-        </insert>
-        <insert tableName="source">
-            <column name="id">7</column>
-            <column name="name">Marta Mellomnavn Etternavn</column>
-            <column name="description">IMEs rep Studenttinget</column>
-            <column name="telephone">12344321</column>
-            <column name="email"></column>
-            <column name="webpage"></column>
-            <column name="address"></column>
-            <column name="note"></column>
-        </insert>
-
-        <insert tableName="source_sourcetag"><column name="source_id">1</column><column name="tags_tag">ap</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">1</column><column name="tags_tag">nato</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">1</column><column name="tags_tag">politiker</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">2</column><column name="tags_tag">politiker</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">2</column><column name="tags_tag">frp</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">3</column><column name="tags_tag">rektor</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">3</column><column name="tags_tag">ntnu</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">4</column><column name="tags_tag">ntnu</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">4</column><column name="tags_tag">ikm</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">5</column><column name="tags_tag">dekan</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">5</column><column name="tags_tag">hf</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">5</column><column name="tags_tag">ntnu</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">6</column><column name="tags_tag">ntnu</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">6</column><column name="tags_tag">politiker</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">6</column><column name="tags_tag">student</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">7</column><column name="tags_tag">studenttinget</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">7</column><column name="tags_tag">ntnu</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">7</column><column name="tags_tag">student</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">7</column><column name="tags_tag">politiker</column></insert>
-        <insert tableName="source_sourcetag"><column name="source_id">7</column><column name="tags_tag">ime</column></insert>
-
-
-
-        <!-- Some private notes -->
-        <insert tableName="note">
-            <column name="id">1</column>
-            <column name="content"><![CDATA[<p><b>Whoho!</b><br>Et notat</p><p>for meg!</p>]]></column>
-            <column name="owner_id">1003</column>
-        </insert>
-        <insert tableName="note">
-            <column name="id">2</column>
-            <column name="content"><![CDATA[<p>Mitt notat...</p>]]></column>
-            <column name="owner_id">1006</column>
-        </insert>
-
-    </changeSet>
-
-
     <!-- Add support for Google Drive -->
     <changeSet id="4" author="Mats">
         <addColumn tableName="article">
@@ -552,15 +362,6 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         </addColumn>
     </changeSet>
 
-    <!-- Update dev-data with raw content -->
-    <changeSet id="5" author="EivindAndMats" context="dev">
-        <update tableName="article"><column name="rawcontent" value="siden sist nyhet planlagt nyhetsartikkel null sharon nymo" /><where>id=1</where></update>
-        <update tableName="article"><column name="rawcontent">lovlig norsk i 2011 ble tidligere ntnu student maria amelie tvangsreturnert etter åtte års ulovlig opphold i norge i går var hun tilbake på studentersamfundet for å fortelle om boka takk maria amelie engasjerte tusenvis av nordmenn og skapte stor debatt da utlendingsnemnda i januar 2011 vedtok at amelie ikke hadde rett til å bli i norge hun måtte returnere til russland til tross for at hun snakket norsk hadde et norsk nettverk mastergrad fra ntnu og var selve kroneksempelet på vellykket integrering i russland hadde hun kanskje ingen tilbake på samfundet men nå er hun tilbake på samfundet et sted hun trolig har vært mye gjennom verv i isfit uka og kulturutvalget hennes første bok titulert nbsp ulovlig norsk bidro til både æresmedlemsskap på samfundet og tvangsdeportering til hjemlandet i går leste hun fra nbsp takk den handler om oppholdet på trandum asylfengsel et sted som selveste fns torturkomite har rettet sterk kritikk mot vi skal kroppsvisitere deg sa en av politikvinnene du må ta av deg alt du har på deg sa hun mens hun dro på seg tynne plasthansker absolutt alt spurte jeg ja svarte hun hjertet mitt slo fortere jeg nølte men bet tennene sammen og begynte å ta av meg kardigan skjørt topp behå sko strømpebukser truse sokker dette er rutinene våre vi gjør det med alle selv om det kan føles litt ubehagelig jeg skrev ikke boken for å ha det behagelig sa jeg mens jeg tok av meg trusene jeg måtte forsøke å dele meg i to kroppen og tankene jeg tenkte på eldre damer og små barn som måtte gjennom samme undersøkelse og jeg var veldig glad foreldrene mine slapp dette sier hun amelies foreldre reiste tilbake til russland i 2011 begge to hadde i lang tid vært syke de ønsket begge å arbeide for å bidra i samfunnet men det kunne de ikke uten oppholdstillatelse nå har de endelige fått profesjonell hjelp av psykolog og helsa har blitt bedre helt usynlig som papirløs har du ingen rettigheter ikke studielån fra lånekassen ikke fastlege det er ingen statistikk som fanger deg opp dette ble særlig klart for maria amelie etter en sykdomsperiode hvor hun ikke torde å oppsøke lege jeg tenkte hva om jeg hadde en kjempesmittsom sykdom hva om jeg ble gravid hva om jeg ble vitne til en kriminell hendelse da hun i september 2011 ga ut boken ulovlig norsk som blant annet er basert på hennes egne dagboknotater følte hun for første gang på lenge at nå finnes jeg trandum asylfengsel konsekvensen av å finnes ble trandum asylfengsel et sted like ved gardemoen for midlertidig oppbevaring av asylsøkere både maria og mange organisasjoner har kritisert trandum for brudd på menneskerettighetene blant det som er blitt kritisert er stedets strenge sikkerhetsprosedyrer og minimale aktivitetstilbud trandum har betydd mye for meg på godt og vondt mest på vondt takk nbsp handler mye om tida på trandum herfra ser man ironisk nok kun fly som forlater norge og ingen som lander forteller maria å være asylsøker betyr ingen ende på reisen jeg visste aldri hvor lenge jeg måtte vente på trandum andre kriminelle får vite hvor lenge de skal sitte fengslet og i det ligger det litt verdighet den verdigheten fikk ikke jeg sier hun regelendring som en følge av den voldsomme støtten fra både offentligheten og politikere endret regjeringen regelverket i utlendingsloven etter april 2011 kunne personer med relevant fagutdanning og jobbtilbud komme tilbake til norge som arbeidsinnvandrere etter avslag på søknad om asyl  lovlig norsk reportasje deskes reportasje må ikke deskes før lørdag sharon nymo birgith rolandsen</column><where>id=2</where></update>
-        <update tableName="article"><column name="rawcontent">lovlig norsk i 2011 ble tidligere ntnu student maria amelie tvangsreturnert etter åtte års ulovlig opphold i norge i går var hun tilbake på studentersamfundet for å fortelle om boka takk maria amelie engasjerte tusenvis av nordmenn og skapte stor debatt da utlendingsnemnda i januar 2011 vedtok at amelie ikke hadde rett til å bli i norge hun måtte returnere til russland til tross for at hun snakket norsk hadde et norsk nettverk mastergrad fra ntnu og var selve kroneksempelet på vellykket integrering i russland hadde hun kanskje ingen tilbake på samfundet men nå er hun tilbake på samfundet et sted hun trolig har vært mye gjennom verv i isfit uka og kulturutvalget hennes første bok titulert nbsp ulovlig norsk bidro til både æresmedlemsskap på samfundet og tvangsdeportering til hjemlandet i går leste hun fra nbsp takk den handler om oppholdet på trandum asylfengsel et sted som selveste fns torturkomite har rettet sterk kritikk mot vi skal kroppsvisitere deg sa en av politikvinnene du må ta av deg alt du har på deg sa hun mens hun dro på seg tynne plasthansker absolutt alt spurte jeg ja svarte hun hjertet mitt slo fortere jeg nølte men bet tennene sammen og begynte å ta av meg kardigan skjørt topp behå sko strømpebukser truse sokker dette er rutinene våre vi gjør det med alle selv om det kan føles litt ubehagelig jeg skrev ikke boken for å ha det behagelig sa jeg mens jeg tok av meg trusene jeg måtte forsøke å dele meg i to kroppen og tankene jeg tenkte på eldre damer og små barn som måtte gjennom samme undersøkelse og jeg var veldig glad foreldrene mine slapp dette sier hun amelies foreldre reiste tilbake til russland i 2011 begge to hadde i lang tid vært syke de ønsket begge å arbeide for å bidra i samfunnet men det kunne de ikke uten oppholdstillatelse nå har de endelige fått profesjonell hjelp av psykolog og helsa har blitt bedre helt usynlig som papirløs har du ingen rettigheter ikke studielån fra lånekassen ikke fastlege det er ingen statistikk som fanger deg opp dette ble særlig klart for maria amelie etter en sykdomsperiode hvor hun ikke torde å oppsøke lege jeg tenkte hva om jeg hadde en kjempesmittsom sykdom hva om jeg ble gravid hva om jeg ble vitne til en kriminell hendelse da hun i september 2011 ga ut boken ulovlig norsk som blant annet er basert på hennes egne dagboknotater følte hun for første gang på lenge at nå finnes jeg trandum asylfengsel konsekvensen av å finnes ble trandum asylfengsel et sted like ved gardemoen for midlertidig oppbevaring av asylsøkere både maria og mange organisasjoner har kritisert trandum for brudd på menneskerettighetene blant det som er blitt kritisert er stedets strenge sikkerhetsprosedyrer og minimale aktivitetstilbud trandum har betydd mye for meg på godt og vondt mest på vondt takk nbsp handler mye om tida på trandum herfra ser man ironisk nok kun fly som forlater norge og ingen som lander forteller maria å være asylsøker betyr ingen ende på reisen jeg visste aldri hvor lenge jeg måtte vente på trandum andre kriminelle får vite hvor lenge de skal sitte fengslet og i det ligger det litt verdighet den verdigheten fikk ikke jeg sier hun regelendring som en følge av den voldsomme støtten fra både offentligheten og politikere endret regjeringen regelverket i utlendingsloven etter april 2011 kunne personer med relevant fagutdanning og jobbtilbud komme tilbake til norge som arbeidsinnvandrere etter avslag på søknad om asyl  lovlig norsk reportasje deskes reportasje må ikke deskes før lørdag sharon nymo birgith rolandsen</column><where>id=3</where></update>
-        <update tableName="article"><column name="rawcontent">lalalala mats er deilig anmeldelse skrives kulturtegn alle er enige</column><where>id=4</where></update>
-    </changeSet>
-
-
     <!-- Adding new field to a revision, that states if that revision is
     saved to mark a status change, or because the text was updated -->
     <changeSet id="6" author="Mats">
@@ -576,18 +377,6 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         </addColumn>
     </changeSet>
 
-    <!-- Update dev-data with lengths -->
-    <changeSet id="8" author="Mats" context="dev">
-        <update tableName="article"><column name="contentlength">28</column><where>id=1</where></update>
-        <update tableName="article"><column name="contentlength">3688</column><where>id=2</where></update>
-        <update tableName="article"><column name="contentlength">3688</column><where>id=3</where></update>
-        <update tableName="article"><column name="contentlength">8</column><where>id=4</where></update>
-    </changeSet>
-
-
-
-
-
     <!-- Save if the article should have illustration instead of photo -->
     <changeSet id="9" author="Mats">
         <addColumn tableName="article">
@@ -595,26 +384,12 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         </addColumn>
     </changeSet>
 
-
-
-
     <!-- Image texts -->
     <changeSet id="10" author="Mats">
         <addColumn tableName="article">
             <column name="imagetext" type="TEXT" />
         </addColumn>
     </changeSet>
-
-
-
-    <!-- Dev only: Google Drive ID's -->
-    <changeSet id="11" author="Mats" context="dev">
-        <update tableName="article"><column name="googledriveid">1ruyVYOp2GdUCVEJ0v8qs9hfj7XFepCCViUHjTxadL5Y</column><where>id=1</where></update>
-        <update tableName="article"><column name="googledriveid">1Fq5PFGf9FDnYR-2-F9slDGfmPCvT_eIyhENuN_gStNw</column><where>id=2</where></update>
-        <update tableName="article"><column name="googledriveid">1b0_RpgHHYg3-B9pFdBqqumeZVW-RpUDQAEu7M42Nzoc</column><where>id=3</where></update>
-        <update tableName="article"><column name="googledriveid">14ZIZ_q3m0aEUMLn-zOrGzWhW6g42sfIU3tMy3don76E</column><where>id=4</where></update>
-    </changeSet>
-
 
     <!-- We can't delete statuses etc. because articles may be linked to them, so we add a field
         and hide it instead -->
@@ -692,6 +467,7 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
     <changeSet id="18" author="Eivind">
         <dropTable tableName="favouriteSection"/>
     </changeSet>
+
     <changeSet id="19" author="Eivind">
         <createTable tableName="favouritesection">
             <column autoIncrement="true" name="id" type="BIGINT">
@@ -789,7 +565,6 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <column name="web" type="BOOLEAN" />
         </addColumn>
 
-
         <!-- Inserting the review-statuses   -->
         <insert tableName="articlereview">
             <column name="id">1</column>
@@ -816,7 +591,6 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         </insert>
     </changeSet>
     <changeSet id="24" author="Christoffer">
-
         <update tableName="articlestatus"><column name="color">#ffffff</column><where>id=1</where></update>
         <update tableName="articlestatus"><column name="color">#eeeeee</column><where>id=2</where></update>
         <update tableName="articlestatus"><column name="color">#aaaaff</column><where>id=3</where></update>
@@ -834,7 +608,6 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         <update tableName="layoutstatus"><column name="color">#ff9999</column><where>id=2</where></update>
         <update tableName="layoutstatus"><column name="color">#eeeeee</column><where>id=3</where></update>
         <update tableName="layoutstatus"><column name="color">#ffffff</column><where>id=4</where></update>
-
     </changeSet>
 
     <changeSet id="25" author="Eivind">
@@ -861,7 +634,6 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         <update tableName="section"><column name="color">#FF4D4D</column><where>id=7</where></update>
         <update tableName="section"><column name="color">#FF7345</column><where>id=8</where></update>
         <update tableName="section"><column name="color">#CCCCCC</column><where>id=9</where></update>
-
     </changeSet>
 
     <changeSet id="27" author="Eivind">
@@ -877,9 +649,11 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
             <where>id=5</where>
         </update>
     </changeSet>
+
     <changeSet id="29" author="Eivind">
         <dropColumn tableName="page" columnName="done"/>
     </changeSet>
+
     <changeSet id="30" author="Eivind">
         <addColumn tableName="page">
             <column name="done" type="BOOLEAN" valueBoolean="false" defaultValueBoolean="false"/>
@@ -895,230 +669,47 @@ ingen.</p><h3>Tilbake på Samfundet</h3><p>Men nå er hun tilbake på Samfundet.
         </createTable>
     </changeSet>
 
-    <!--Update some dev data to reflect database migration as we are no longer using a staging server but the real thing-->
-    <changeSet id="32" author="Eivind" context="dev">
-        <delete tableName="note"/>
-
-        <insert tableName="person"><column name="id">11713</column></insert>
-        <insert tableName="person"><column name="id">11716</column></insert>
-
-        <update tableName="article_journalist">
-            <column name="journalists_id">11713</column>
-            <where>article_id=1 and journalists_id=1006</where>
-        </update>
-        <update tableName="article_journalist">
-            <column name="journalists_id">11713</column>
-            <where>article_id=2 and journalists_id=1006</where>
-        </update>
-        <update tableName="article_photographer">
-            <column name="photographers_id">11716</column>
-            <where>article_id=2 and photographers_id=1003</where>
-        </update>
-        <update tableName="article_journalist">
-            <column name="journalists_id">11716</column>
-            <where>article_id=3 and journalists_id=2411</where>
-        </update>
-        <update tableName="article_photographer">
-            <column name="photographers_id">11713</column>
-            <where>article_id=3 and photographers_id=1006</where>
-        </update>
-    </changeSet>
-
     <!--Set all existing users to inactive so old ldap users are set as such (migrated users are updated anyways)-->
     <changeSet id="33" author="Eivind">
         <update tableName="person">
             <column name="active">false</column>
         </update>
     </changeSet>
-
-    <!--Some more development data-->
-    <changeSet id="34" author="Eivind" context="dev">
-        <insert tableName="publication">
-            <column name="id">10</column>
-            <column name="name">UD#23_2017</column>
-            <column name="releasedate" valueDate="2017-04-23"/>
-        </insert>
-        <insert tableName="article">
-            <column name="id">6</column><column name="name">Lorem ipsum</column><column name="comment"></column><column name="lastupdated"></column>
-            <column name="publication_id">10</column><column name="section_id">1</column><column name="status_id">2</column><column name="type_id">2</column>
-            <column name="content"><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed massa mauris, tempor vel velit quis, lobortis accumsan justo. Proin laoreet viverra quam sit amet condimentum. Sed sit amet libero metus. Praesent molestie neque vel lectus feugiat rutrum. Aenean feugiat, diam sed tempus pretium, sem nisl porttitor magna, maximus pellentesque lacus lacus a quam. Etiam vestibulum urna nec luctus faucibus. Maecenas sagittis tristique velit, sed volutpat enim ultrices quis. In aliquet, magna mattis eleifend pretium, ipsum magna pulvinar nunc, at fringilla purus risus nec nulla. Fusce at velit faucibus, pretium lacus vitae, scelerisque ante. Donec vulputate nulla nec ipsum rutrum, eget blandit dui sagittis. Nulla sodales neque ac nibh vehicula, ultricies fringilla dui commodo. Proin eros mauris, commodo ac dapibus ornare, rutrum sed lorem. Sed in dignissim nunc. Cras a enim tempor, euismod nulla sit amet, imperdiet est. Quisque sed lacinia augue. Pellentesque sit amet sem eu nulla rutrum volutpat at dignissim tortor.</p><p>Phasellus eget pellentesque dui. Curabitur bibendum nisl ex, eu facilisis mi convallis tincidunt. Proin sed fermentum neque, et feugiat diam. Nullam ornare magna sodales, pharetra orci nec, laoreet leo. Aliquam consectetur commodo aliquet. Aliquam posuere lacus eu dui dictum maximus. Fusce posuere ipsum vitae dui efficitur, sed posuere metus sodales. Duis sed faucibus metus. Pellentesque sit amet felis eget urna dapibus ornare id vel ex. Mauris aliquam nunc ac ullamcorper tristique. Sed augue sem, sodales eu congue ut, laoreet at mi. Mauris volutpat eget diam et vulputate.</p>]]></column>
-            <column name="note"><![CDATA[<p>Dolor sit?</p>]]></column>
-        </insert>
-        <insert tableName="article">
-            <column name="id">7</column><column name="name">Bacon ipsum</column><column name="comment"></column><column name="lastupdated"></column>
-            <column name="publication_id">10</column><column name="section_id">2</column><column name="status_id">1</column><column name="type_id">4</column>
-            <column name="content"><![CDATA[Bacon ipsum dolor amet short loin pancetta ribeye t-bone swine bresaola shoulder cupim chicken meatball. Pork sausage bresaola tongue chicken. Shoulder beef ribs ball tip, bacon swine ground round turducken corned beef ribeye porchetta tail pork loin. Pork belly sausage frankfurter tenderloin.]]></column>
-            <column name="note"><![CDATA[<p>Yep</p>]]></column>
-        </insert>
-        <insert tableName="article">
-            <column name="id">8</column><column name="name">Testetesten</column><column name="comment">Ikke ferdig</column><column name="lastupdated"></column>
-            <column name="publication_id">10</column><column name="section_id">5</column><column name="status_id">4</column><column name="type_id">5</column>
-            <column name="content"><![CDATA[<p>asdjklaskfjsdf</p>]]></column>
-            <column name="note"><![CDATA[<p>Yep</p>]]></column>
-        </insert>
-        <insert tableName="article">
-            <column name="id">9</column><column name="name">Eivind er tøff</column><column name="comment">Alle synes det</column><column name="lastupdated"></column>
-            <column name="publication_id">10</column><column name="section_id">3</column><column name="status_id">5</column><column name="type_id">4</column>
-            <column name="content"><![CDATA[<p>Blablalalalala</p>]]></column>
-            <column name="note"><![CDATA[<p>Dette er et notat</p>]]></column>
-        </insert>
-        <insert tableName="article">
-            <column name="id">10</column><column name="name">Christoffer og</column><column name="comment">Alle synes det</column><column name="lastupdated"></column>
-            <column name="publication_id">10</column><column name="section_id">3</column><column name="status_id">5</column><column name="type_id">4</column>
-            <column name="content"><![CDATA[<p>Blablalalalala</p>]]></column>
-            <column name="note"><![CDATA[<p>Jajaja</p>]]></column>
-        </insert>
-        <insert tableName="article">
-            <column name="id">11</column><column name="name">Artikkelen</column><column name="comment">Meh</column><column name="lastupdated"></column>
-            <column name="publication_id">10</column><column name="section_id">3</column><column name="status_id">5</column><column name="type_id">6</column>
-            <column name="content"><![CDATA[<p>Blablalalalala</p>]]></column>
-            <column name="note"><![CDATA[<p>Jajaja</p>]]></column>
-        </insert>
-
-        <insert tableName="article_journalist"><column name="article_id">9</column><column name="journalists_id">11713</column></insert>
-        <insert tableName="article_journalist"><column name="article_id">9</column><column name="journalists_id">11716</column></insert>
-        <insert tableName="article_photographer"><column name="article_id">9</column><column name="photographers_id">11713</column></insert>
-        <insert tableName="article_journalist"><column name="article_id">8</column><column name="journalists_id">11713</column></insert>
-        <insert tableName="article_photographer"><column name="article_id">3</column><column name="photographers_id">11716</column></insert>
-
-        <insert tableName="page">
-            <column name="id">1</column>
-            <column name="pagenr">1</column>
-            <column name="publication_id">10</column>
-            <column name="note">Ikke ferdig i det hele tatt</column>
-            <column name="done" valueBoolean="false"/>
-            <column name="advertisement" valueBoolean="false"/>
-            <column name="web" valueBoolean="false"/>
-            <column name="layoutstatus_id">1</column>
-        </insert>
-        <insert tableName="page">
-            <column name="id">2</column>
-            <column name="pagenr">2</column>
-            <column name="publication_id">10</column>
-            <column name="note"></column>
-            <column name="done" valueBoolean="false"/>
-            <column name="advertisement" valueBoolean="false"/>
-            <column name="web" valueBoolean="false"/>
-            <column name="layoutstatus_id">3</column>
-        </insert>
-        <insert tableName="page">
-            <column name="id">3</column>
-            <column name="pagenr">3</column>
-            <column name="publication_id">10</column>
-            <column name="note"></column>
-            <column name="done" valueBoolean="false"/>
-            <column name="advertisement" valueBoolean="false"/>
-            <column name="web" valueBoolean="false"/>
-            <column name="layoutstatus_id">1</column>
-        </insert>
-        <insert tableName="page">
-            <column name="id">4</column>
-            <column name="pagenr">4</column>
-            <column name="publication_id">10</column>
-            <column name="note">Ferdig!</column>
-            <column name="advertisement" valueBoolean="false"/>
-            <column name="done" valueBoolean="true"/>
-            <column name="web" valueBoolean="false"/>
-            <column name="layoutstatus_id">1</column>
-        </insert>
-        <insert tableName="page">
-            <column name="id">5</column>
-            <column name="pagenr">5</column>
-            <column name="publication_id">10</column>
-            <column name="note">Ferdig!</column>
-            <column name="advertisement" valueBoolean="true"/>
-            <column name="done" valueBoolean="false"/>
-            <column name="web" valueBoolean="false"/>
-            <column name="layoutstatus_id">1</column>
-        </insert>
-        <insert tableName="page">
-            <column name="id">6</column>
-            <column name="pagenr">6</column>
-            <column name="publication_id">10</column>
-            <column name="advertisement" valueBoolean="true"/>
-            <column name="done" valueBoolean="false"/>
-            <column name="web" valueBoolean="false"/>
-            <column name="layoutstatus_id">3</column>
-        </insert>
-        <insert tableName="page">
-            <column name="id">7</column>
-            <column name="pagenr">7</column>
-            <column name="publication_id">10</column>
-            <column name="note">Dette blir vanskelig</column>
-            <column name="advertisement" valueBoolean="false"/>
-            <column name="done" valueBoolean="true"/>
-            <column name="web" valueBoolean="false"/>
-            <column name="layoutstatus_id">2</column>
-        </insert>
-        <insert tableName="page">
-            <column name="id">8</column>
-            <column name="pagenr">8</column>
-            <column name="publication_id">10</column>
-            <column name="advertisement" valueBoolean="true"/>
-            <column name="done" valueBoolean="false"/>
-            <column name="web" valueBoolean="false"/>
-            <column name="layoutstatus_id">1</column>
-        </insert>
-
-        <insert tableName="page_article">
-            <column name="page_id">1</column>
-            <column name="articles_id">9</column>
-        </insert>
-        <insert tableName="page_article">
-            <column name="page_id">2</column>
-            <column name="articles_id">9</column>
-        </insert>
-        <insert tableName="page_article">
-            <column name="page_id">3</column>
-            <column name="articles_id">7</column>
-        </insert>
-        <insert tableName="page_article">
-            <column name="page_id">4</column>
-            <column name="articles_id">6</column>
-        </insert>
-        <insert tableName="page_article">
-            <column name="page_id">4</column>
-            <column name="articles_id">10</column>
-        </insert>
-        <insert tableName="page_article">
-            <column name="page_id">5</column>
-            <column name="articles_id">8</column>
-        </insert>
-        <insert tableName="page_article">
-            <column name="page_id">7</column>
-            <column name="articles_id">11</column>
-        </insert>
-        <insert tableName="page_article">
-            <column name="page_id">8</column>
-            <column name="articles_id">11</column>
-        </insert>
+    
+    <changeSet id="36_addPersonGuid" author="Eivind">
+        <addColumn tableName="person">
+            <column name="guid" type="BINARY(16)" />
+        </addColumn>
     </changeSet>
 
-    <!-- Fix dev articles drive documents -->
-    <changeSet id="35" author="Eivind" context="dev">
-        <update tableName="article">
-            <column name="googledriveid">1dcnIaBnOOslEB3cjmCXjabp9H5b8m6VvRVevWCCyHLY</column>
-            <where>id=6</where>
-        </update>
-        <update tableName="article">
-            <column name="googledriveid">1ROiNgqOSEPE2Er5Dc7OzHISzMM2Guuqt1X1hxYA0snE</column>
-            <where>id=7</where>
-        </update>
-        <update tableName="article">
-            <column name="googledriveid">1xCQGwrIBXbUavXgr5O34ajdWN2jhqd0tD-f6ApXJ5aU</column>
-            <where>id=8</where>
-        </update>
-        <update tableName="article">
-            <column name="googledriveid">1E-jGV6c6qVIUcg4tQY0FHjrViCIwwdayhRT0oI3SgAU</column>
-            <where>id=9</where>
-        </update>
-        <update tableName="article">
-            <column name="googledriveid">1E-1qMgWu8Dn9z6Zz5fQJUXpQRyKEkNhsrQ1b_rW5iPZCZA</column>
-            <where>id=10</where>
-        </update>
-        <update tableName="article">
-            <column name="googledriveid">1Zfexe5cZSNtCZkSfNLsROg9KpqweKYYrg7pDYT5eoCE</column>
-            <where>id=11</where>
-        </update>
+    <changeSet id="37_removePersonFirstname" author="Eivind">
+        <dropColumn tableName="person" columnName="firstname" />
+        <renameColumn tableName="person" oldColumnName="fullname" newColumnName="name" />
+    </changeSet>
+
+    <!-- I don't remember what this table was for in the first place -->
+    <changeSet id="38_dropmaptable" author="Eivind">
+        <dropTable tableName="usernamemap" />
+    </changeSet>
+
+    <changeSet id="39_removelanding" author="Eivind">
+        <dropTable tableName="landingpage" />
+    </changeSet>
+
+    <!-- Since we now update person rows instead of replacing them, favourite section can be column in person -->
+    <changeSet id="40_move_favsection_to_persontable" author="Eivind">
+        <dropTable tableName="favouritesection" />
+        <addColumn tableName="person">
+            <column name="favouritesection_id" type="BIGINT" />
+        </addColumn>
+        <addForeignKeyConstraint
+                baseTableName="person"
+                baseColumnNames="favouritesection_id"
+                constraintName="FK_person_favouritesection"
+                referencedTableName="section"
+                referencedColumnNames="id"
+                onDelete="SET NULL"
+                onUpdate="CASCADE"
+        />
     </changeSet>
 </databaseChangeLog>

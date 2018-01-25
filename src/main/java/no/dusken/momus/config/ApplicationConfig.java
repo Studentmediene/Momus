@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
+
+import com.google.common.collect.ImmutableMap;
 import no.dusken.momus.exceptions.ExceptionHandler;
 import no.dusken.momus.mapper.HibernateAwareObjectMapper;
 
@@ -25,6 +27,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -37,11 +40,14 @@ import liquibase.integration.spring.SpringLiquibase;
 @Configuration
 @EnableWebMvc
 @EnableScheduling
+@EnableAsync
 @EnableTransactionManagement
 @EnableSpringDataWebSupport
 @ComponentScan(basePackages = "no.dusken.momus")
 @EnableJpaRepositories(basePackages = "no.dusken.momus.service.repository")
-@PropertySource(value = {"classpath:momus.properties","classpath:local.properties"}, ignoreResourceNotFound = true)
+@PropertySource(
+        value = {"classpath:momus.properties", "classpath:local.properties"},
+        ignoreResourceNotFound = true)
 class ApplicationConfig extends WebMvcConfigurerAdapter {
 
     @Autowired
@@ -116,6 +122,8 @@ class ApplicationConfig extends WebMvcConfigurerAdapter {
         ldapContextSource.setBase(env.getProperty("ldap.base"));
         ldapContextSource.setUserDn(env.getProperty("ldap.username"));
         ldapContextSource.setPassword(env.getProperty("ldap.password"));
+        ldapContextSource.setBaseEnvironmentProperties(
+                ImmutableMap.of("java.naming.ldap.attributes.binary", "objectGUID"));
         ldapContextSource.setPooled(false);
         ldapContextSource.afterPropertiesSet();        
         return new LdapTemplate(ldapContextSource);

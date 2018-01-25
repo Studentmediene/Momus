@@ -66,7 +66,7 @@ public class ArticleQueryBuilder {
                 freeConditions.add("(type is not null and LOWER(type.name) like :free"+i+")");
                 freeConditions.add("(review is not null and LOWER(review.name) like :free"+i+")");
 
-                freeConditions.add("exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.fullName) LIKE :free"+i+")");
+                freeConditions.add("exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.name) LIKE :free"+i+")");
                 queryParams.put("free"+i, "%" + words[i].toLowerCase() + "%");
                 conditions.add("("+StringUtils.collectionToDelimitedString(freeConditions, " OR ")+")");
             }

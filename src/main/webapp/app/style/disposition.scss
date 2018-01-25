@@ -1,17 +1,130 @@
-#disposition{
+$pageBorder: solid #CCCCCC 1px;
+$articleBorder: solid #ececec 1px;
+
+$headerBackground: #f6f6f6;
+
+$pageDoneBackground:#DDFFCB;
+$pageAdBackground: #f6f6f6;
+
+#disposition {
     font-size: 85%;
 }
-/* Scroll on disposition on small screens */
-@media (max-width: 992px) {
-    #disposition{
-        overflow-x: scroll;
+
+.d-loading-spinner {
+    position: fixed;
+    top: 64px;
+    left: 50%;
+    z-index: 200;
+}
+
+.d-toolbar {
+    z-index: 100;
+    background: $headerBackground;
+    border-left: $pageBorder;
+    border-right: $pageBorder;
+    border-top: $pageBorder;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+
+    .button-group {
+        display: flex;
+        flex-direction: row;
+
+        > * {
+            margin: 5px;
+        }
+
+        page-adder {
+            flex-grow: 1;
+        }
+    }
+
+    .online-users {
+        display: flex;
+        flex-direction: row;
+        > * {
+            margin: 5px;
+        }
+    }
+
+    .headers {
+        border-top: $pageBorder;
     }
 }
 
-.attach-top-true {
-    position:fixed;
-    top:50px;
-    z-index:100;
+.d-toolbar-attach {
+    position: fixed;
+    top: 51px;
+    border-bottom: $pageBorder;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.disposition-table {
+    position: absolute;
+
+    > div > .d-table-row {
+        > .d-table-cell {
+            border-top: $pageBorder;
+            border-right: $pageBorder;
+        }
+
+        > .d-table-cell:first-child {
+            border-left: $pageBorder;
+        }
+    }
+
+    .d-table-row > .d-table-cell:not(.article-cell) {
+        padding: 3px;
+    }
+}
+
+/* Should not draw border on first child as it is drawn by the outer table */
+.article-cell {
+    .article-table:not(:first-child) {
+        border-top: $articleBorder;
+    }
+}
+
+.page-done {
+    background: $pageDoneBackground !important; //Want this to override ad color
+}
+
+.page-ad {
+    background: $pageAdBackground;
+}
+
+.d-break-word {
+    word-wrap:break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
+.d-dropdown {
+    background: rgba(255,255,255,0.5);
+    outline: 0;
+    border: $pageBorder;
+}
+
+.ui-sortable-helper {
+    opacity:0.7;
+}
+
+.d-placeholder {
+    background-color: #99ff99;
+}
+
+.handle {
+    text-align: center;
+    cursor: move;
+}
+
+.ui-sortable-selected {
+    .handle {
+        border-left:3px solid #F00 !important;
+    }
 }
 
 .d-table {
@@ -29,94 +142,4 @@
 .d-table-cell {
     display: table-cell;
     vertical-align: top;
-}
-
-.disposition-table > div > .d-table-row > .d-table-cell {
-    border-top: solid #CCCCCC 1px;
-    border-right: solid #CCCCCC 1px;
-}
-
-.disposition-table > div > .d-table-row > .d-table-cell:not(.article-cell) {
-    padding: 3px;
-}
-
-/* Should not draw border on first child as it is drawn by the outer table */
-.article-table > .d-table-row:not(:first-child) > .d-table-cell {
-    border-top: solid #ececec 1px;
-}
-
-.article-table > .d-table-row > .d-table-cell {
-    padding: 5px;
-    word-wrap:break-word;
-}
-
-.disp-break-word {
-    word-wrap:break-word;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    hyphens: auto;
-}
-
-.disp-dropdown {
-    background: rgba(255,255,255,0.5);
-    outline: 0;
-    border: 1px solid #CCCCCC;
-}
-
-/* Styling for selected elements in disp */
-.ui-select-multiple input.ui-select-search {
-    width: 100% !important;
-}
-
-.ui-sortable-selected .handle {
-    border-left:3px solid #F00;
-}
-
-.ui-sortable-helper {
-    opacity:0.9;
-}
-
-.disp-placeholder {
-    background-color: #99ff99;
-}
-
-.handle{
-    text-align: center;
-    cursor: move;
-}
-
-.pagenum{
-    width: 20px;
-    min-width: 20px;
-    max-width: 20px;
-}
-
-.section{
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
-}
-.status{
-    width: 120px;
-    min-width: 120px;
-    max-width: 120px;
-}
-
-.review{
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
-}
-
-.layout{
-    width: 80px;
-    min-width: 80px;
-    max-width: 80px;
-}
-
-.button{
-    width:30px;
-    min-width: 30px;
-    max-width: 30px;
 }

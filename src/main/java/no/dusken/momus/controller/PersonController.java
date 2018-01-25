@@ -17,19 +17,20 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.authentication.UserDetailsService;
-import no.dusken.momus.model.LandingPage;
+import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Person;
-import no.dusken.momus.service.repository.LandingPageRepository;
+import no.dusken.momus.service.PersonService;
 import no.dusken.momus.service.repository.PersonRepository;
-import no.dusken.momus.service.LandingPageService;
+import no.dusken.momus.service.repository.SectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
-@Controller
+@RestController
 @Transactional
 @RequestMapping("/person")
 public class PersonController {
@@ -38,38 +39,44 @@ public class PersonController {
     private PersonRepository personRepository;
 
     @Autowired
-    private LandingPageRepository landingPageRepository;
-
-
-    @Autowired
-    private LandingPageService landingPageService;
-
-    @Autowired
     private UserDetailsService userDetailsService;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody List<Person> getAllPersons() {
-        return personRepository.findByActiveTrue();
+    @Autowired
+    private SectionRepository sectionRepository;
+
+    @Autowired
+    private PersonService personService;
+
+    /**
+     * Gets all active persons. In addition, if article ids are supplied, will return all contributors on those
+     * even if they are inactive
+     */
+    @GetMapping
+    public @ResponseBody Set<Person> getActivePersons(@RequestParam(
+            value="articleIds", required = false, defaultValue = "") List<Long> articleIds) {
+        return personService.getActivePersonsAndArticleContributors(articleIds);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/{id}")
     public @ResponseBody Person getPersonById(@PathVariable("id") Long id) {
         return personRepository.findOne(id);
     }
 
-
-    @RequestMapping("/me")
+    @GetMapping("/me")
     public @ResponseBody Person getCurrentUser() {
         return userDetailsService.getLoggedInPerson();
     }
 
-    @RequestMapping(value="/landing", method = RequestMethod.GET)
-    public @ResponseBody LandingPage getLandingPage() {
-        return landingPageRepository.findByOwner_Id(userDetailsService.getLoggedInPerson().getId());
+    @PatchMapping("/me/favouritesection")
+    public @ResponseBody Person updateFavouritesection(@RequestParam Long section) {
+        if(!sectionRepository.exists(section)) {
+            throw new RestException(
+                    "Can't set favourite section, section with id " + section + " does not exist",
+                    HttpServletResponse.SC_NOT_FOUND);
+        }
+        return personService.updateFavouritesection(
+                userDetailsService.getLoggedInPerson(),
+                sectionRepository.findOne(section));
     }
 
-    @RequestMapping(value="/landing/{landing}", method = RequestMethod.GET)
-    public @ResponseBody LandingPage saveLandingPage(@PathVariable("landing") String landing){
-        return landingPageService.saveLandingPage(landing);
-    }
 }
