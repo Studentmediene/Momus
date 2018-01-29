@@ -24,6 +24,8 @@ import no.dusken.momus.model.Publication;
 import no.dusken.momus.service.ArticleService;
 import no.dusken.momus.service.PublicationService;
 import no.dusken.momus.service.repository.LayoutStatusRepository;
+import no.dusken.momus.service.repository.PageRepository;
+import no.dusken.momus.service.repository.PublicationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,11 +46,17 @@ public class PublicationController {
     private PublicationService publicationService;
 
     @Autowired
+    private PublicationRepository publicationRepository;
+
+    @Autowired
+    private PageRepository pageRepository;
+
+    @Autowired
     private LayoutStatusRepository layoutStatusRepository;
 
     @GetMapping
     public @ResponseBody List<Publication> getAllPublications(){
-        return publicationService.getPublicationRepository().findAll(new Sort(new Sort.Order(Sort.Direction.DESC, "releaseDate")));
+        return publicationRepository.findAll(new Sort(new Sort.Order(Sort.Direction.DESC, "releaseDate")));
     }
 
     @PostMapping
@@ -56,7 +64,7 @@ public class PublicationController {
             @RequestBody Publication publication,
             @RequestParam(required = false, defaultValue = "50") Integer numEmptyPages
     ) {
-        if(publication.getId() != null && publicationService.getPublicationRepository().exists(publication.getId())){
+        if(publication.getId() != null && publicationRepository.exists(publication.getId())){
             throw new RestException("Publication with given id already created. Did you mean to PUT?", HttpServletResponse.SC_BAD_REQUEST);
         }
         else if(numEmptyPages > 100){
@@ -68,15 +76,15 @@ public class PublicationController {
 
     @GetMapping("/{pubid}")
     public @ResponseBody Publication getPublicationById(@PathVariable Long pubid){
-        if(!publicationService.getPublicationRepository().exists(pubid)){
+        if(!publicationRepository.exists(pubid)){
             throw new RestException("Publication with given id not found", HttpServletResponse.SC_NOT_FOUND);
         }
-        return publicationService.getPublicationRepository().findOne(pubid);
+        return publicationRepository.findOne(pubid);
     }
 
     @PutMapping("/{pubid}")
     public @ResponseBody Publication updatePublication(@RequestBody Publication publication, @PathVariable Long pubid) {
-        if(!publicationService.getPublicationRepository().exists(pubid)){
+        if(!publicationRepository.exists(pubid)){
             throw new RestException("Publication with given id not found", HttpServletResponse.SC_NOT_FOUND);
         }
         return publicationService.updatePublication(publication);
@@ -97,7 +105,7 @@ public class PublicationController {
 
         response.addHeader(
                 "Content-Disposition",
-                "attachment; filename=\"Kolofon_" + publicationService.getPublicationRepository().findOne(pubid).getName() + ".txt\"");
+                "attachment; filename=\"Kolofon_" + publicationRepository.findOne(pubid).getName() + ".txt\"");
         response.addHeader("Content-Type", "text/plain;charset=UTF-8");
 
         ServletOutputStream outStream = response.getOutputStream();
@@ -114,12 +122,12 @@ public class PublicationController {
 
     @GetMapping("/{pubid}/pages")
     public @ResponseBody List<Page> getPagesByPublication(@PathVariable Long pubid) {
-        return publicationService.getPageRepository().findByPublicationIdOrderByPageNrAsc(pubid);
+        return pageRepository.findByPublicationIdOrderByPageNrAsc(pubid);
     }
 
     @GetMapping("/{pubid}/pages/{pageid}")
     public @ResponseBody Page getPage(@PathVariable Long pubid, @PathVariable Long pageid){
-        Page page = publicationService.getPageRepository().findOne(pageid);
+        Page page = pageRepository.findOne(pageid);
         if(page == null){
             throw new RestException("Page with given id not found", HttpServletResponse.SC_NOT_FOUND);
         }
@@ -136,7 +144,7 @@ public class PublicationController {
         int startingPageNr = pages.get(0).getPageNr();
         for(int i = 0; i < pages.size(); i++) {
             Page page = pages.get(i);
-            if(page.getId() != null && publicationService.getPageRepository().findOne(page.getId()) == null){
+            if(page.getId() != null && pageRepository.findOne(page.getId()) == null){
                 throw new RestException("Page with given id already added", HttpServletResponse.SC_BAD_REQUEST);
             }else if(page.getPageNr() != startingPageNr + i) {
                 throw new RestException("Pages not following each other", HttpServletResponse.SC_BAD_REQUEST);
@@ -152,7 +160,7 @@ public class PublicationController {
         int startingPageNr = pages.get(0).getPageNr();
         for(int i = 0; i < pages.size(); i++) {
             Page page = pages.get(i);
-            if(publicationService.getPageRepository().findOne(page.getId()) == null){
+            if(pageRepository.findOne(page.getId()) == null){
                 throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
             }else if(page.getPageNr() != startingPageNr + i) {
                 throw new RestException("Pages not following each other", HttpServletResponse.SC_BAD_REQUEST);
@@ -164,7 +172,7 @@ public class PublicationController {
 
 	@PatchMapping("/{pubid}/pages/{pageid}/metadata")
 	public @ResponseBody Page updatePageMeta(@RequestBody Page page, @PathVariable String pubid, @PathVariable Long pageid){
-		if(publicationService.getPageRepository().findOne(pageid) == null){
+		if(pageRepository.findOne(pageid) == null){
 			throw new RestException("Page with given id not found", HttpServletResponse.SC_NOT_FOUND);
 		}
 		return publicationService.updatePageMeta(page);
@@ -172,7 +180,7 @@ public class PublicationController {
 
     @DeleteMapping("/{pubid}/pages/{pageid}")
     public @ResponseBody List<Page> deletePage(@PathVariable Long pubid, @PathVariable Long pageid){
-        Page page = publicationService.getPageRepository().findOne(pageid);
+        Page page = pageRepository.findOne(pageid);
         if(page == null){
             throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
         }
@@ -192,6 +200,6 @@ public class PublicationController {
     @GetMapping("/{id}/pages/layoutstatuscounts/{status}")
     public @ResponseBody int getStatusCount(@PathVariable String status, @PathVariable Long id){
         Long statusId = layoutStatusRepository.findByName(status).getId();
-        return publicationService.getPageRepository().countByLayoutStatusIdAndPublicationId(statusId, id);
+        return pageRepository.countByLayoutStatusIdAndPublicationId(statusId, id);
     }
 }

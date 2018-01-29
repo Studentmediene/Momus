@@ -16,39 +16,26 @@
 
 package no.dusken.momus.service;
 
-import no.dusken.momus.model.Article;
-import no.dusken.momus.model.Page;
-import no.dusken.momus.model.Publication;
-import no.dusken.momus.service.PublicationService;
+import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.ArticleRepository;
+import no.dusken.momus.service.repository.LayoutStatusRepository;
 import no.dusken.momus.service.repository.PageRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
-import no.dusken.momus.test.AbstractTestRunner;
 
-import org.apache.commons.ssl.TomcatServerXML;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import liquibase.change.core.UpdateDataChange;
-
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.mockito.AdditionalAnswers.*;
 
 @Transactional
-public class PublicationServiceTest extends AbstractTestRunner{
+public class PublicationServiceTest extends AbstractServiceTest {
     @Mock
     PublicationRepository publicationRepository;
 
@@ -60,6 +47,9 @@ public class PublicationServiceTest extends AbstractTestRunner{
 
     @Mock
     ArticleRepository articleRepository;
+
+    @Mock
+    LayoutStatusRepository layoutStatusRepository;
 
     private Publication publication1;
     private Publication publication2;
@@ -232,5 +222,46 @@ public class PublicationServiceTest extends AbstractTestRunner{
         assertEquals("vader is lukes father", page.getNote());
         assertEquals(true, page.isWeb());
         assertEquals(false, page.isAdvertisement());
+    }
+
+    @Test
+    public void testSavePublication() {
+        doReturn(publication1).when(publicationRepository).save(publication1);
+        doReturn(new LayoutStatus()).when(layoutStatusRepository).findByName("Ukjent");
+
+        publicationService.savePublication(publication1, 50);
+        verify(publicationRepository, times(1)).save(publication1);
+        verify(pageRepository, times(50)).save(any(Page.class));
+    }
+
+    @Test
+    public void testGenerateColophon() {
+        doReturn(publication1).when(publicationRepository).findOne(publication1.getId());
+
+        Article art = new Article(0L);
+        art.setJournalists(new HashSet<>(Arrays.asList(
+                new Person(0L, UUID.randomUUID(), "ei", "Eiv", "ei@vi.nd", "4", true),
+                new Person(1L, UUID.randomUUID(), "ch", "Chr", "c@h.ri", "4", true)
+        )));
+        art.setUseIllustration(false);
+        art.setPhotographers(new HashSet<>(Arrays.asList(
+                new Person(2L, UUID.randomUUID(), "do", "Don", "do@na.ld", "4", true),
+                new Person(3L, UUID.randomUUID(), "ob", "Oba", "o@ba.ma", "4", true)
+        )));
+        Article art2 = new Article(1L);
+        art2.setUseIllustration(true);
+        art2.setJournalists(new HashSet<>());
+        art2.setPhotographers(new HashSet<>(Arrays.asList(
+                new Person(4L, UUID.randomUUID(), "il", "Ill", "ill@us.tr", "4", true)
+        )));
+
+        doReturn(Arrays.asList(art, art2)).when(articleRepository).findByPublicationId(publication1.getId());
+
+        String colophon = publicationService.generateColophon(publication1.getId());
+
+
+        String expected = "Journalister:\r\nEiv\r\nChr\r\n\r\nFotografer:\r\nDon\r\nOba\r\n\r\nIllustratører:\r\nIll\r\n";
+
+        assertEquals(expected, colophon);
     }
 }

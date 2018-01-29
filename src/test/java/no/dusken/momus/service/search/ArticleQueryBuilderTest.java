@@ -18,7 +18,7 @@ package no.dusken.momus.service.search;
 
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.PersonRepository;
-import no.dusken.momus.test.AbstractTestRunner;
+import no.dusken.momus.service.AbstractServiceTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -30,7 +30,7 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class ArticleQueryBuilderTest extends AbstractTestRunner {
+public class ArticleQueryBuilderTest extends AbstractServiceTest {
 
     List<Long> emptyList = Collections.emptyList();
 

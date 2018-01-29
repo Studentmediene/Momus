@@ -19,7 +19,7 @@ package no.dusken.momus.service.indesign;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.model.Publication;
-import no.dusken.momus.test.AbstractTestRunner;
+import no.dusken.momus.service.AbstractServiceTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -31,7 +31,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
-public class IndesignGeneratorTest extends AbstractTestRunner {
+public class IndesignGeneratorTest extends AbstractServiceTest {
 
     @InjectMocks
     IndesignGenerator indesignGenerator;

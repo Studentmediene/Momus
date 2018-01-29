@@ -16,7 +16,7 @@
 
 package no.dusken.momus.service.drive;
 
-import no.dusken.momus.test.AbstractTestRunner;
+import no.dusken.momus.service.AbstractServiceTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.junit.Assert.assertEquals;
 
 @Transactional
-public class GoogleDocsTextConverterTest extends AbstractTestRunner {
+public class GoogleDocsTextConverterTest extends AbstractServiceTest {
 
     @InjectMocks
     GoogleDocsTextConverter googleDocsTextConverter;

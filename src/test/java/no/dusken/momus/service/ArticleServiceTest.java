@@ -22,12 +22,10 @@ import no.dusken.momus.service.drive.GoogleDriveService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
 import no.dusken.momus.service.repository.*;
-import no.dusken.momus.test.AbstractTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -38,7 +36,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.AdditionalAnswers.*;
 
 @Transactional
-public class ArticleServiceTest extends AbstractTestRunner {
+public class ArticleServiceTest extends AbstractServiceTest {
     @Mock
     ArticleRepository articleRepository;
 
@@ -79,10 +77,8 @@ public class ArticleServiceTest extends AbstractTestRunner {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-
-        person1 = new Person(1L, UUID.randomUUID(), "mts", "Mats Matsessen", "", "", true);
-        person2 = new Person(2L, UUID.randomUUID(), "aaa", "Kåre Kåressen", "", "", true);
+        person1 = new Person(2L, UUID.randomUUID(), "mts", "Mats Matsessen", "", "", true);
+        person2 = new Person(3L, UUID.randomUUID(), "aaa", "Kåre Kåressen", "", "", true);
 
         publication1 = new Publication(1L);
         publication1.setName("Pub1");
