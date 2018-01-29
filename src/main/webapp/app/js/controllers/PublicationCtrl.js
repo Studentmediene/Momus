@@ -26,7 +26,7 @@ angular.module('momusApp.controllers')
         vm.selectedYear = new Date().getFullYear();
 
         vm.currentPage = 1;
-        vm.pageSize = 3;
+        vm.pageSize = 10;
 
         vm.editing = {};
 
