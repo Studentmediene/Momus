@@ -55,11 +55,11 @@
                     </table>
                 </div>
                 <div class="text-center">
-                    <uib-pagination direction-links="false"
+                    <ul uib-pagination direction-links="false"
                                     total-items="vm.publications.filter(vm.isInCurrentYear).length"
                                     items-per-page="vm.pageSize"
                                     ng-model="vm.currentPage">
-                    </uib-pagination>
+                    </ul>
                 </div>
             </div>
         </div>
