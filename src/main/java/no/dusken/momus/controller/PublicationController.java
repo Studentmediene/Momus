@@ -44,9 +44,6 @@ public class PublicationController {
     private PublicationService publicationService;
 
     @Autowired
-    private ArticleService articleService;
-
-    @Autowired
     private LayoutStatusRepository layoutStatusRepository;
 
     @GetMapping
@@ -193,13 +190,8 @@ public class PublicationController {
     }
 
     @GetMapping("/{id}/pages/layoutstatuscounts/{status}")
-    public @ResponseBody int getStatusCount(@PathVariable("status") String status, @PathVariable("id") Long id){
+    public @ResponseBody int getStatusCount(@PathVariable String status, @PathVariable Long id){
         Long statusId = layoutStatusRepository.findByName(status).getId();
         return publicationService.getPageRepository().countByLayoutStatusIdAndPublicationId(statusId, id);
-    }
-
-    @GetMapping("/{id}/articles")
-    public @ResponseBody List<Article> getArticlesInPublication(@PathVariable("id") Long id){
-        return articleService.getArticleRepository().findByPublicationId(id);
     }
 }
