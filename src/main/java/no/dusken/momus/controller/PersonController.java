@@ -17,7 +17,7 @@
 package no.dusken.momus.controller;
 
 import com.google.api.client.util.IOUtils;
-import no.dusken.momus.authentication.UserDetailsServiceImpl;
+import no.dusken.momus.authentication.UserDetailsService;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.PersonService;
@@ -43,7 +43,7 @@ public class PersonController {
     private PersonRepository personRepository;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private UserDetailsService userDetailsService;
 
     @Autowired
     private SectionRepository sectionRepository;
