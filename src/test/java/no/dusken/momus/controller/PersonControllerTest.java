@@ -1,5 +1,6 @@
 package no.dusken.momus.controller;
 
+import no.dusken.momus.authentication.UserDetailsService;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.model.Section;
 import no.dusken.momus.service.repository.PersonRepository;
@@ -26,6 +27,9 @@ public class PersonControllerTest extends AbstractControllerTest {
 
     @Autowired
     SectionRepository sectionRepository;
+
+    @Autowired
+    UserDetailsService userDetailsService;
 
     @Test
     public void getAllPersonsAfterAdd() throws Exception {
@@ -58,10 +62,11 @@ public class PersonControllerTest extends AbstractControllerTest {
                 .andDo(print()).andExpect(status().isNotFound());
         Section sport = new Section("Sport");
         sport = sectionRepository.saveAndFlush(sport);
-        System.out.println(sport.getId());
         mockMvc.perform(patch("/person/me/favouritesection")
                 .accept(MediaType.APPLICATION_JSON)
                 .param("section", sport.getId().toString()))
                 .andDo(print()).andExpect(status().isOk());
+
+        assert userDetailsService.getLoggedInPerson().getFavouritesection().getId().equals(sport.getId());
     }
 }

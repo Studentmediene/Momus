@@ -25,6 +25,7 @@ public class NoteServiceTest extends AbstractServiceTest {
 
     @Before
     public void setUp() {
+        userMockSetup();
         note = new Note(1L);
         note.setOwner(userDetailsService.getLoggedInPerson());
         note.setContent("Et notat");

@@ -17,6 +17,8 @@
 package no.dusken.momus.service.search;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 
 public class ArticleSearchParams {
@@ -104,6 +106,7 @@ public class ArticleSearchParams {
         return pageNumber;
     }
 
+    @JsonIgnore
     public int getStartOfPage() {
         return pageSize * (pageNumber - 1);
     }

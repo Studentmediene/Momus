@@ -32,6 +32,7 @@ import no.dusken.momus.service.search.ArticleSearchParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -67,6 +68,9 @@ public class ArticleService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Value("${drive.syncEnabled}")
+    private boolean driveEnabled;
+
     public Article getArticleById(Long id) {
         if(!articleRepository.exists(id)) {
             throw new RestException("Article with id=" + id + " not found", HttpServletResponse.SC_NOT_FOUND);
@@ -82,13 +86,15 @@ public class ArticleService {
     }
 
     public Article saveArticle(Article article) {
-        File document = googleDriveService.createDocument(article.getName());
+        if(driveEnabled) {
+            File document = googleDriveService.createDocument(article.getName());
 
-        if (document == null) {
-            throw new RestException("Couldn't create article, Google Docs failed", 500);
+            if (document == null) {
+                throw new RestException("Couldn't create article, Google Docs failed", 500);
+            }
+
+            article.setGoogleDriveId(document.getId());
         }
-
-        article.setGoogleDriveId(document.getId());
 
         Article newArticle = articleRepository.saveAndFlush(article);
 

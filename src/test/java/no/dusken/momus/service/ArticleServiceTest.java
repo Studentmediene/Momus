@@ -44,9 +44,6 @@ public class ArticleServiceTest extends AbstractServiceTest {
     ArticleRevisionRepository articleRevisionRepository;
 
     @Mock
-    GoogleDriveService googleDriveService;
-
-    @Mock
     IndesignGenerator indesignGenerator;
 
     @InjectMocks
@@ -123,7 +120,6 @@ public class ArticleServiceTest extends AbstractServiceTest {
         article1Revision1.setStatus(article1.getStatus());
 
         when(indesignGenerator.generateFromArticle(article1)).thenReturn(new IndesignExport("meh", "meh"));
-        when(googleDriveService.createDocument(anyString())).thenReturn(new File());
         when(articleRepository.exists(longThat(i -> i == 1L || i == 2L ))).thenReturn(true);
         when(articleRepository.findOne(article1.getId())).thenReturn(article1);
         when(articleRepository.findOne(article2.getId())).thenReturn(article2);
@@ -155,7 +151,6 @@ public class ArticleServiceTest extends AbstractServiceTest {
     public void testSaveArticle() {
         article1 = articleService.saveArticle(article1);
 
-        verify(googleDriveService, times(1)).createDocument(article1.getName());
         verify(articleRepository, times(1)).saveAndFlush(article1);
     }
 

@@ -236,8 +236,6 @@ public class PublicationServiceTest extends AbstractServiceTest {
 
     @Test
     public void testGenerateColophon() {
-        doReturn(publication1).when(publicationRepository).findOne(publication1.getId());
-
         Article art = new Article(0L);
         art.setJournalists(new HashSet<>(Arrays.asList(
                 new Person(0L, UUID.randomUUID(), "ei", "Eiv", "ei@vi.nd", "4", true),

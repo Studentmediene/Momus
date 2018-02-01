@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ContextConfiguration;
 import static org.mockito.Mockito.*;
 
@@ -40,8 +41,7 @@ public abstract class AbstractServiceTest {
     @Mock
     UserDetailsService userDetailsService;
 
-    @Before
-    public void superSetup() {
+    public void userMockSetup() {
         MockitoAnnotations.initMocks(this);
         Person me = new Person(
                 1L,
