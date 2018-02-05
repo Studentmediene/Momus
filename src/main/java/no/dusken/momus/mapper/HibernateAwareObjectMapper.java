@@ -17,6 +17,7 @@
 package no.dusken.momus.mapper;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -41,5 +42,6 @@ public class HibernateAwareObjectMapper extends ObjectMapper {
         disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
         disable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
         configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 }
