@@ -36,6 +36,7 @@ angular.module('momusApp.controllers')
         vm.photoTypes = [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}];
         vm.quoteCheckTypes = [{value: false, name: 'I orden'}, {value: true, name: 'Trenger sitatsjekk'}];
 
+        vm.requestIllustration = requestIllustration;
         vm.saveNote = saveNote;
         vm.metaClicked = () => { vm.metaEditMode ? saveMeta() : editMeta() };
         vm.cancelMeta = () => { vm.metaEditMode = false; };
@@ -58,6 +59,16 @@ angular.module('momusApp.controllers')
         Article.content(articleId).then(data => { vm.articleContent = data.data; });
 
         CookieService.viewArticle(articleId);
+
+        function requestIllustration() {
+            const modal = $uibModal.open({
+                templateUrl: 'partials/illustrationrequests/requestIllustrationModal.html',
+                controller: 'RequestIllustrationModalCtrl',
+                resolve: {
+                    article: () => $scope.article
+                }
+            });
+        }
 
         /* note panel */
         function saveNote () {

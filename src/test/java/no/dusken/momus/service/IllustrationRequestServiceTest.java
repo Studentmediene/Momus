@@ -1,4 +1,7 @@
 package no.dusken.momus.service;
 
-public class IllustrationRequestServiceTest {
+import no.dusken.momus.test.AbstractTestRunner;
+
+
+public class IllustrationRequestServiceTest extends AbstractTestRunner {
 }

@@ -1,0 +1,75 @@
+<!--
+  ~ Copyright 2016 Studentmediene i Trondheim AS
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div class="modal-header alert-success">
+    <h2 class="panel-title">Forespør en illustrasjon for {{request.article.name}}</h2>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" name="requestIllustrationForm">
+        <div class="form-group" ng-class="{'has-error': requestIllustrationForm.Description.$invalid }">
+            <label class="col-sm-3 control-label">
+                Beskrivelse
+            </label>
+            <div class="col-sm-9">
+                <textarea
+                        name="Description"
+                        class="form-control input-sm"
+                        ng-model="request.description"
+                        required>
+                </textarea>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error': requestIllustrationForm.Illustrations.$invalid }">
+            <label class="col-sm-3 control-label">
+                Antall illustrasjoner
+            </label>
+            <div class="col-sm-9">
+                <input
+                        name="Illustrations"
+                        type="number"
+                        min="1"
+                        class="form-control input-sm"
+                        ng-model="request.number_of_illustrations"
+                        required>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error': requestIllustrationForm.Pages.$invalid }">
+            <label class="col-sm-3 control-label">
+                Antall sider artikkelen går over
+            </label>
+            <div class="col-sm-9">
+                <input
+                        name="Pages"
+                        type="number"
+                        min="1"
+                        class="form-control input-sm"
+                        ng-model="request.number_of_pages"
+                        required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <button class="btn btn-md btn-primary" ng-click="createRequest()" button-loader="creating"
+                        ng-disabled="requestIllustrationForm.$invalid">
+                    <span>Forespør illustrasjon</span>
+                </button>
+                <button class="btn btn-md btn-default" ng-click="cancel()">
+                    <span>Avbryt</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
