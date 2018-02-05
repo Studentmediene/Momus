@@ -26,7 +26,7 @@ angular.module('momusApp.services')
 
 
         function sendUserAction(pubId, action) {
-            const userEvent = {user_action: action, username: person.username, display_name: person.name};
+            const userEvent = {user_action: action, userid: person.id};
             $stomp.send('/ws/disposition/' + pubId + '/user', userEvent);
         }
 

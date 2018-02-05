@@ -30,9 +30,11 @@ angular.module('momusApp.controllers')
         Publication,
         Page,
         Article,
+        Person,
         WebSocketService,
         DispositionStyleService,
-        $interval)
+        $interval,
+        $timeout)
     {
         var vm = this;
         var lastUpdate = {date: new Date()};
@@ -97,13 +99,13 @@ angular.module('momusApp.controllers')
         }
 
         function onUserAction(payload, headers, res) {
-            const username = payload.username;
+            const userid = payload.userid;
             switch(payload.user_action) {
                 case(WebSocketService.userAction.alive):
-                    if(username in vm.connectedUsers) {
-                        vm.connectedUsers[username].active = true;
+                    if(userid in vm.connectedUsers) {
+                        vm.connectedUsers[userid].active = true;
                     } else {
-                        vm.connectedUsers[username] = {active: true, display_name: payload.display_name};
+                        vm.connectedUsers[userid] = {active: true, user: Person.get({id: userid})};
                     }
                     break;
             }
@@ -170,12 +172,12 @@ angular.module('momusApp.controllers')
 
         function heartbeat(pubId) {
             WebSocketService.sendUserAction(pubId, WebSocketService.userAction.alive);
-            for (let username in vm.connectedUsers) {
-                const alive = vm.connectedUsers[username].active;
+            for (let userid in vm.connectedUsers) {
+                const alive = vm.connectedUsers[userid].active;
                 if (!alive) {
-                    delete vm.connectedUsers[username];
+                    delete vm.connectedUsers[userid];
                 } else {
-                    vm.connectedUsers[username].active = false;
+                    vm.connectedUsers[userid].active = false;
                 }
             }
         }
@@ -187,8 +189,7 @@ angular.module('momusApp.controllers')
                     publication.pages = pages;
                     vm.publication = publication;
                     vm.articles = Article.search({}, {publication: publication.id}, () => {
-                        if($routeParams.ws)
-                            connectToWebSocket(publication.id);
+                        connectToWebSocket(publication.id);
                         publication.pages.forEach(page => connectArticles(page, vm.articles));
                         vm.loading = false;
                     });
@@ -414,11 +415,11 @@ angular.module('momusApp.controllers')
             .bind('resize', () => {
                 updateDispSize();
                 updateToolbar();
-                $scope.$apply();
+                $timeout(() => $scope.$apply());
             })
             .bind('scroll', () => {
                 updateToolbar();
-                $scope.$apply();
+                $timeout(() => $scope.$apply());
             });
 
         $scope.$on('$destroy', () => {
@@ -427,5 +428,6 @@ angular.module('momusApp.controllers')
                 websocketActive = false;
             }
             angular.element($window).unbind('resize');
+            angular.element($window).unbind('scroll');
         });
     });

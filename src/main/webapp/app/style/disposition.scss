@@ -39,12 +39,11 @@ $pageAdBackground: #f6f6f6;
         }
     }
 
-    .online-users {
+    #online-users {
         display: flex;
         flex-direction: row;
-        > * {
-            margin: 5px;
-        }
+        flex-wrap: wrap;
+        align-content: center;
     }
 
     .headers {

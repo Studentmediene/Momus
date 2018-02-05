@@ -1,19 +1,8 @@
 package no.dusken.momus.model.websocket;
 
-import no.dusken.momus.model.websocket.UserAction;
-
 public class UserEventMessage {
     private UserAction userAction;
-    private String username;
-    private String displayName;
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
+    private Long userid;
 
     public UserAction getUserAction() {
         return userAction;
@@ -23,11 +12,11 @@ public class UserEventMessage {
         this.userAction = userAction;
     }
 
-    public String getUsername() {
-        return username;
+    public Long getUserid() {
+        return userid;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserid(Long userid) {
+        this.userid = userid;
     }
 }

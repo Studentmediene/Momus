@@ -18,7 +18,7 @@
 
 angular.module('momusApp.controllers')
     .controller('PublicationCtrl', function ($scope, $templateRequest, MessageModal, Publication) {
-        var vm = this;
+        const vm = this;
 
         vm.publications = [];
 
@@ -53,20 +53,20 @@ angular.module('momusApp.controllers')
         }
 
         function isInCurrentYear(publication) {
-            if(vm.selectedYear == "Alle"){
+            if(vm.selectedYear === "Alle"){
                 return true;
             }
             else{
-                return publication.release_date && new Date(publication.release_date).getFullYear() == vm.selectedYear;
+                return publication.release_date && new Date(publication.release_date).getFullYear() === vm.selectedYear;
             }
         }
 
         function createYearOptions() {
-            var oldest = getOldestPublication();
-            var sinceYearX = oldest && new Date(oldest.release_date).getFullYear() || 2009;
-            var years = ["Alle"];
+            const oldest = getOldestPublication();
+            const sinceYearX = oldest && new Date(oldest.release_date).getFullYear() || 2009;
+            const years = ["Alle"];
 
-            for (var i = new Date().getFullYear(); i >= sinceYearX; i--) {
+            for (let i = new Date().getFullYear(); i >= sinceYearX; i--) {
                 years.push(i);
             }
 
@@ -81,29 +81,29 @@ angular.module('momusApp.controllers')
                 vm.editing.release_date = '';
             }
             $scope.publicationForm.$setPristine();
-        };
+        }
 
         function saveEditedPublication() {
             vm.isSaving = true;
             if (!vm.editing.id) { // no id means it's a new one
-                var publication = Publication.save({}, vm.editing, function() {
+                const publication = Publication.save({}, vm.editing, function() {
                     vm.publications.push(publication);
                     vm.editPublication(publication);
                     vm.isSaving = false;
                 })
             } else { // it's an old one
-                var updatedIndex = vm.publications.findIndex(function(publication) { return publication.id === vm.editing.id});
-                var updatedPublication = Publication.update({}, vm.editing, function() {
+                const updatedIndex = vm.publications.findIndex(function(publication) { return publication.id === vm.editing.id});
+                const updatedPublication = Publication.update({}, vm.editing, function() {
                     vm.publications[updatedIndex] = updatedPublication;
                     vm.editPublication(updatedPublication);
                     vm.isSaving = false;
                 })
             }
-        };
+        }
 
         function showHelp(){
             $templateRequest("partials/templates/help/publicationHelp.html").then(function(template){
                 MessageModal.info(template);
             });
-        };
+        }
     });

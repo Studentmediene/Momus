@@ -6,6 +6,8 @@ import org.springframework.ldap.core.AttributesMapper;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.UUID;
 
 public class PersonMapper implements AttributesMapper<Person> {
@@ -25,12 +27,13 @@ public class PersonMapper implements AttributesMapper<Person> {
         return personRepository.saveAndFlush(person);
     }
 
-    private Person getPersonFromAttributes(Attributes attributes) throws NamingException{
+    private Person getPersonFromAttributes(Attributes attributes) throws NamingException {
         String username = LDAPAttributes.getUsername(attributes);
         String name = LDAPAttributes.getName(attributes);
         String email = LDAPAttributes.getEmail(attributes);
         String phoneNumber = LDAPAttributes.getPhoneNumber(attributes);
         UUID guid = LDAPAttributes.getGuid(attributes);
+        Blob photo = LDAPAttributes.getPhoto(attributes);
 
         Person person = getPersonIfExists(guid, username);
 
@@ -42,6 +45,10 @@ public class PersonMapper implements AttributesMapper<Person> {
             person.setName(name);
             person.setEmail(email);
             person.setPhoneNumber(phoneNumber);
+        }
+
+        if(photo != null) {
+            person.setPhoto(photo);
         }
 
         return person;

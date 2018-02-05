@@ -37,9 +37,31 @@
     border-radius:5px;
     z-index:100;
     cursor:default;
-    bottom:40%;
     left:-20%;
     overflow: visible;
+
+     > :before, :after {
+        top: 100%;
+        left: 10%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+    }
+
+    > :after {
+        border-color: rgba(255, 255, 255, 0);
+        border-top-color: #FFF;
+        border-width: 10px;
+        margin-left: -10px;
+    }
+    > :before {
+        border-color: rgba(204, 204, 204, 0);
+        border-top-color: #CCC;
+        border-width: 11px;
+        margin-left: -11px;
+    }
 }
 
 .person-widget-btn {
@@ -52,33 +74,8 @@
     cursor:pointer;
     padding:0;
     margin:0;
-}
 
-.closePw:hover {
-    opacity:1;
-}
-
-
-.person-widget-element:after, .person-widget-element:before {
-    top: 100%;
-    left: 20%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-}
-
-
-.person-widget-element:after {
-    border-color: rgba(255, 255, 255, 0);
-    border-top-color: #FFF;
-    border-width: 10px;
-    margin-left: -10px;
-}
-.person-widget-element:before {
-    border-color: rgba(204, 204, 204, 0);
-    border-top-color: #CCC;
-    border-width: 11px;
-    margin-left: -11px;
+    :hover {
+        opacity:1;
+    }
 }

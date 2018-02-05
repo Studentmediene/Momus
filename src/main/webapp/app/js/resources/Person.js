@@ -24,6 +24,6 @@ angular.module('momusApp.resources')
             },
             {
                 me: { method: 'GET' , params: {id: 'me'}, cache: true },
-                updateFavouritesection: {method: 'PATCH', params: {id: 'me', resource: 'favouritesection'}, cache: true }
+                updateFavouritesection: {method: 'PATCH', params: {id: 'me', resource: 'favouritesection'} }
             })
     });

@@ -16,7 +16,8 @@
 
 package no.dusken.momus.controller;
 
-import no.dusken.momus.authentication.UserDetailsServiceImpl;
+import com.google.api.client.util.IOUtils;
+import no.dusken.momus.authentication.UserDetailsService;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.PersonService;
@@ -27,7 +28,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
 
 @RestController
@@ -39,7 +43,7 @@ public class PersonController {
     private PersonRepository personRepository;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private UserDetailsService userDetailsService;
 
     @Autowired
     private SectionRepository sectionRepository;
@@ -57,14 +61,35 @@ public class PersonController {
         return personService.getActivePersonsAndArticleContributors(articleIds);
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public @ResponseBody Person getPersonById(@PathVariable("id") Long id) {
         return personRepository.findOne(id);
+    }
+
+    @GetMapping("/{id}/photo")
+    public void getPersonPhoto(@PathVariable("id") Long id, HttpServletResponse response) throws IOException, SQLException {
+        Person person = personRepository.findOne(id);
+
+        if(person.getPhoto() == null) {
+            throw new RestException("No photo found for user", 404);
+        }
+
+        response.addHeader("Content-Type", "image/jpeg");
+
+        ServletOutputStream outStream = response.getOutputStream();
+        IOUtils.copy(person.getPhoto().getBinaryStream(), outStream);
+        outStream.flush();
+        outStream.close();
     }
 
     @GetMapping("/me")
     public @ResponseBody Person getCurrentUser() {
         return userDetailsService.getLoggedInPerson();
+    }
+
+    @GetMapping("/me/photo")
+    public void getCurrentUserPhoto(HttpServletResponse response) throws IOException, SQLException {
+        getPersonPhoto(userDetailsService.getLoggedInPerson().getId(), response);
     }
 
     @PatchMapping("/me/favouritesection")
