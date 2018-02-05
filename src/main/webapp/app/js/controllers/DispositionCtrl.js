@@ -189,8 +189,7 @@ angular.module('momusApp.controllers')
                     publication.pages = pages;
                     vm.publication = publication;
                     vm.articles = Article.search({}, {publication: publication.id}, () => {
-                        if($routeParams.ws)
-                            connectToWebSocket(publication.id);
+                        connectToWebSocket(publication.id);
                         publication.pages.forEach(page => connectArticles(page, vm.articles));
                         vm.loading = false;
                     });
