@@ -28,6 +28,16 @@
         <h1>Disposisjon for {{vm.publication.name}}</h1>
     </div>
     <div class="row d-toolbar" scroll-trigger="d-toolbar-attach" ng-style="vm.toolbarStyle">
+        <div id="online-users" style="min-height: 40px">
+            <div ng-repeat="user in vm.connectedUsers" style="margin: 5px">
+                <user-avatar
+                        uib-tooltip="{{user.user.name}} redigerer denne disposisjonen"
+                        tooltip-placement="bottom"
+                        user="user.user"
+                        size="30">
+                </user-avatar>
+            </div>
+        </div>
         <div class="button-group">
             <a class="btn btn-primary" href="/api/publications/{{vm.publication.id}}/colophon">
                 <i class="fa fa-file-text-o"/> Generer kolofon
@@ -46,9 +56,6 @@
             <button class="btn btn-success" ng-click="vm.showHelp()">
                 Hjelp?
             </button>
-        </div>
-        <div class="online-users">
-            <span class="label label-default" ng-repeat="user in vm.connectedUsers">{{user['display_name']}}</span>
         </div>
         <!-- Headers -->
         <div class="d-table headers">
