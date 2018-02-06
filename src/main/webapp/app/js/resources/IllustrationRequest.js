@@ -8,7 +8,7 @@ angular.module('momusApp.resources')
             },
             {
                 createExternal: { method: 'POST', params: {id: 'external'} },
-                mine: { method: 'GET', params: {id: 'mine'} },
+                mine: { method: 'GET', params: {id: 'mine'}, isArray: true },
                 updateStatus: { method: 'PATCH', params: {resource: 'status'} }
             })
     });

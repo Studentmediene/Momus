@@ -7,6 +7,8 @@ import no.dusken.momus.service.repository.IllustrationRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -37,6 +39,7 @@ public class IllustrationRequestService {
 
     public IllustrationRequest createInternalRequest(IllustrationRequest request) {
         request.setExternal(false);
+        request.setCreated(LocalDateTime.now());
         request.setStatus(IllustrationRequest.Status.PENDING);
         request.setRequester(userDetailsService.getLoggedInPerson());
         return illustrationRequestRepository.saveAndFlush(request);
@@ -44,6 +47,7 @@ public class IllustrationRequestService {
 
     public IllustrationRequest createExternalRequest(IllustrationRequest request) {
         request.setExternal(true);
+        request.setCreated(LocalDateTime.now());
         request.setStatus(IllustrationRequest.Status.PENDING);
         return illustrationRequestRepository.saveAndFlush(request);
     }

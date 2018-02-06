@@ -23,6 +23,7 @@ angular.module('momusApp.controllers')
         TipAndNewsService,
         CookieService,
         Person,
+        IllustrationRequest,
         Article,
         expandColorCode,
         loggedInPerson,
@@ -56,6 +57,14 @@ angular.module('momusApp.controllers')
             vm.reviewstatus = getStatusArrays(reviewStatusCounts, reviewStatuses);
             vm.layoutstatus = getStatusArrays(layoutStatusCounts, layoutStatuses);
         }
+
+        $scope.requests = IllustrationRequest.mine();
+        $scope.requestStatuses = {
+            PENDING: {color: '#ffcc00', name: 'Venter'},
+            ACCEPTED: {color: '#5cb85c', name: 'Godkjent'},
+            DENIED: {color: '#d9534f', name: 'Avvist'},
+            COMPLETED: {color: '#5bc0de', name: 'Gjort'}
+        };
 
         vm.pageSize = 3;
         vm.currentPage = 1;

@@ -2,6 +2,7 @@ package no.dusken.momus.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class IllustrationRequest {
@@ -26,6 +27,8 @@ public class IllustrationRequest {
     private String contactEmail;
 
     private LocalDate dueDate;
+
+    private LocalDateTime created;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -108,5 +111,13 @@ public class IllustrationRequest {
 
     public void setArticle(Article article) {
         this.article = article;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
     }
 }
