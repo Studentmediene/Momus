@@ -16,12 +16,14 @@
 
 package no.dusken.momus.ldap;
 
+import no.dusken.momus.authorization.Role;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.PersonRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.ldap.control.PagedResultsDirContextProcessor;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -29,7 +31,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.naming.directory.SearchControls;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class LdapSyncer {
@@ -46,8 +50,13 @@ public class LdapSyncer {
     @Autowired
     PersonRepository personRepository;
 
+    @Autowired
+    Environment env;
+
     @Value("${ldap.syncEnabled}")
     private boolean enabled;
+
+    private Map<String, Role> groupToRole = new HashMap<>();
 
     /**
      * Will pull data from LDAP and update our local copy
@@ -72,6 +81,7 @@ public class LdapSyncer {
 
     @PostConstruct
     public void startUp(){
+        groupToRole.put(env.getProperty("roles.momus_admin"), Role.ROLE_ADMIN);
         sync();
     }
 
@@ -114,7 +124,7 @@ public class LdapSyncer {
         SearchControls ctrl = new SearchControls();
         ctrl.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-        PersonMapper personMapper = new PersonMapper(personRepository, active);
+        PersonMapper personMapper = new PersonMapper(personRepository, active, groupToRole);
 
         List<Person> persons = new ArrayList<>();
 

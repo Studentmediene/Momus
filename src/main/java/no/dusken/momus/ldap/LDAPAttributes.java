@@ -2,6 +2,7 @@ package no.dusken.momus.ldap;
 
 import org.w3c.dom.Attr;
 
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
@@ -9,8 +10,7 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.nio.ByteBuffer;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.UUID;
+import java.util.*;
 
 public class LDAPAttributes {
     private static final String usernameAttribute = "sAMAccountName";
@@ -20,6 +20,7 @@ public class LDAPAttributes {
     private static final String firstNameAttribute = "givenName";
     private static final String lastNameAttribute = "sn";
     private static final String photoAttribute = "thumbnailPhoto";
+    private static final String groupAttribute = "memberOf";
     private static final String[] nameAttributes = {"displayName", "name", "cn"};
 
     public static String getUsername(Attributes attributes) throws NamingException {
@@ -61,6 +62,18 @@ public class LDAPAttributes {
                 .filter(s -> !s.trim().isEmpty())
                 .findFirst()
                 .orElse(String.format("%s (mangler visningsnavn)", getUsername(attributes)));
+    }
+
+    public static Collection<String> getGroups(Attributes attributes) throws NamingException {
+        Attribute groupAttributes = attributes.get(groupAttribute);
+        Collection<String> groupSet = new HashSet<>();
+        if (groupAttributes != null) {
+            NamingEnumeration<?> groups = groupAttributes.getAll();
+            while (groups.hasMore()) {
+                groupSet.add((String) groups.next());
+            }
+        }
+        return groupSet;
     }
 
     private static String getAttribute(Attributes attributes, String... keys) throws NamingException {
