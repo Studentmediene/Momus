@@ -18,7 +18,6 @@ package no.dusken.momus.service;
 
 import no.dusken.momus.model.KeyValue;
 import no.dusken.momus.service.repository.KeyValueRepository;
-import no.dusken.momus.test.AbstractTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -32,15 +31,15 @@ import static org.mockito.Mockito.*;
 import static org.mockito.AdditionalAnswers.*;
 
 @Transactional
-public class KeyValueServiceTest extends AbstractTestRunner {
+public class KeyValueServiceTest extends AbstractServiceTest {
 
     @InjectMocks
-    KeyValueService keyValueService;
+    private KeyValueService keyValueService;
 
     @Mock
-    KeyValueRepository keyValueRepository;
+    private KeyValueRepository keyValueRepository;
 
-    KeyValue keyValue1;
+    private KeyValue keyValue1;
 
     @Before
     public void setUp() {

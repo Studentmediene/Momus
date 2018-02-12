@@ -226,12 +226,4 @@ public class PublicationService {
 
         return pageRepository.findByPublicationIdOrderByPageNrAsc(publication.getId());                
     }
-
-    public PublicationRepository getPublicationRepository() {
-        return publicationRepository;
-    }
-
-    public PageRepository getPageRepository() {
-        return pageRepository;
-    }
 }

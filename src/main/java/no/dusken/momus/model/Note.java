@@ -30,6 +30,12 @@ public class Note {
     @OneToOne(fetch = FetchType.LAZY)
     private Person owner;
 
+    public Note() {}
+
+    public Note(Long id) {
+        this.id = id;
+    }
+
 
     public Long getId() {
         return id;

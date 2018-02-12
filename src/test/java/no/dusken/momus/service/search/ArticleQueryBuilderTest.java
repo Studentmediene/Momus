@@ -18,7 +18,7 @@ package no.dusken.momus.service.search;
 
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.PersonRepository;
-import no.dusken.momus.test.AbstractTestRunner;
+import no.dusken.momus.service.AbstractServiceTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -30,18 +30,18 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class ArticleQueryBuilderTest extends AbstractTestRunner {
+public class ArticleQueryBuilderTest extends AbstractServiceTest {
 
-    List<Long> emptyList = Collections.emptyList();
+    private final List<Long> emptyList = Collections.emptyList();
 
     private Person person1;
     private Person person2;
 
     @Mock
-    PersonRepository personRepository;
+    private PersonRepository personRepository;
 
     @InjectMocks
-    ArticleQueryBuilder articleQueryBuilder;
+    private ArticleQueryBuilder articleQueryBuilder;
 
     private void initPersonMocks() {
         person1 = new Person(1L, UUID.randomUUID(),"mts", "Mats Matsessen", "", "", true);
@@ -86,35 +86,34 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQuery query = articleQueryBuilder.buildQuery(params);
 
-        StringBuilder expectedQueryBuilder = new StringBuilder(ArticleQueryBuilder.baseQuery);
-        expectedQueryBuilder.append(" where ");
-        expectedQueryBuilder.append("(a.rawcontent like :free0 or ");
-        expectedQueryBuilder.append("lower(a.comment) like :free0 or ");
-        expectedQueryBuilder.append("lower(a.name) like :free0 or ");        
-        expectedQueryBuilder.append("(publication is not null and lower(publication.name) like :free0) or ");
-        expectedQueryBuilder.append("(status is not null and lower(status.name) like :free0) or ");
-        expectedQueryBuilder.append("(section is not null and lower(section.name) like :free0) or ");
-        expectedQueryBuilder.append("(type is not null and lower(type.name) like :free0) or ");
-        expectedQueryBuilder.append("(review is not null and lower(review.name) like :free0) or ");
-        expectedQueryBuilder.append("exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.name) LIKE :free0)) and ");
-        expectedQueryBuilder.append("(a.rawcontent like :free1 or ");
-        expectedQueryBuilder.append("lower(a.comment) like :free1 or ");
-        expectedQueryBuilder.append("lower(a.name) like :free1 or ");  
-        expectedQueryBuilder.append("(publication is not null and lower(publication.name) like :free1) or ");
-        expectedQueryBuilder.append("(status is not null and lower(status.name) like :free1) or ");
-        expectedQueryBuilder.append("(section is not null and lower(section.name) like :free1) or ");
-        expectedQueryBuilder.append("(type is not null and lower(type.name) like :free1) or ");
-        expectedQueryBuilder.append("(review is not null and lower(review.name) like :free1) or ");
-        expectedQueryBuilder.append("exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.name) LIKE :free1)) and ");
-        expectedQueryBuilder.append("a.archived = :arch ");
-        expectedQueryBuilder.append(ArticleQueryBuilder.baseOrder);
+        String expectedQueryBuilder = ArticleQueryBuilder.baseQuery + " where " +
+                "(a.rawcontent like :free0 or " +
+                "lower(a.comment) like :free0 or " +
+                "lower(a.name) like :free0 or " +
+                "(publication is not null and lower(publication.name) like :free0) or " +
+                "(status is not null and lower(status.name) like :free0) or " +
+                "(section is not null and lower(section.name) like :free0) or " +
+                "(type is not null and lower(type.name) like :free0) or " +
+                "(review is not null and lower(review.name) like :free0) or " +
+                "exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.name) LIKE :free0)) and " +
+                "(a.rawcontent like :free1 or " +
+                "lower(a.comment) like :free1 or " +
+                "lower(a.name) like :free1 or " +
+                "(publication is not null and lower(publication.name) like :free1) or " +
+                "(status is not null and lower(status.name) like :free1) or " +
+                "(section is not null and lower(section.name) like :free1) or " +
+                "(type is not null and lower(type.name) like :free1) or " +
+                "(review is not null and lower(review.name) like :free1) or " +
+                "exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.name) LIKE :free1)) and " +
+                "a.archived = :arch " +
+                ArticleQueryBuilder.baseOrder;
 
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("free0", "%finn%");
         expectedMap.put("free1", "%meg%");
         expectedMap.put("arch", false);
 
-        assertEquals(expectedQueryBuilder.toString().toLowerCase(), query.getQuery().toLowerCase());
+        assertEquals(expectedQueryBuilder.toLowerCase(), query.getQuery().toLowerCase());
         assertEquals(expectedMap, query.getParams());
     }
 
@@ -207,35 +206,34 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
 
         ArticleQuery query = articleQueryBuilder.buildQuery(params);
 
-        StringBuilder expectedQueryBuilder = new StringBuilder(ArticleQueryBuilder.baseQuery);
-        expectedQueryBuilder.append(" where ");
-        expectedQueryBuilder.append("(a.rawcontent like :free0 or ");
-        expectedQueryBuilder.append("lower(a.comment) like :free0 or ");
-        expectedQueryBuilder.append("lower(a.name) like :free0 or ");        
-        expectedQueryBuilder.append("(publication is not null and lower(publication.name) like :free0) or ");
-        expectedQueryBuilder.append("(status is not null and lower(status.name) like :free0) or ");
-        expectedQueryBuilder.append("(section is not null and lower(section.name) like :free0) or ");
-        expectedQueryBuilder.append("(type is not null and lower(type.name) like :free0) or ");
-        expectedQueryBuilder.append("(review is not null and lower(review.name) like :free0) or ");
-        expectedQueryBuilder.append("exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.name) LIKE :free0)) and ");
-        expectedQueryBuilder.append("(a.rawcontent like :free1 or ");
-        expectedQueryBuilder.append("lower(a.comment) like :free1 or ");
-        expectedQueryBuilder.append("lower(a.name) like :free1 or ");  
-        expectedQueryBuilder.append("(publication is not null and lower(publication.name) like :free1) or ");
-        expectedQueryBuilder.append("(status is not null and lower(status.name) like :free1) or ");
-        expectedQueryBuilder.append("(section is not null and lower(section.name) like :free1) or ");
-        expectedQueryBuilder.append("(type is not null and lower(type.name) like :free1) or ");
-        expectedQueryBuilder.append("(review is not null and lower(review.name) like :free1) or ");
-        expectedQueryBuilder.append("exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.name) LIKE :free1)) and ");
-        expectedQueryBuilder.append("status.id = :statusid and ");
-        expectedQueryBuilder.append("( :personid0 member of a.journalists or ");
-        expectedQueryBuilder.append(":personid0 member of a.photographers ) and ");
-        expectedQueryBuilder.append("( :personid1 member of a.journalists or ");
-        expectedQueryBuilder.append(":personid1 member of a.photographers ) and ");
-        expectedQueryBuilder.append("section.id = :secid and ");
-        expectedQueryBuilder.append("publication.id = :pubid and ");
-        expectedQueryBuilder.append("a.archived = :arch ");
-        expectedQueryBuilder.append(ArticleQueryBuilder.baseOrder);
+        String expectedQueryBuilder = ArticleQueryBuilder.baseQuery + " where " +
+                "(a.rawcontent like :free0 or " +
+                "lower(a.comment) like :free0 or " +
+                "lower(a.name) like :free0 or " +
+                "(publication is not null and lower(publication.name) like :free0) or " +
+                "(status is not null and lower(status.name) like :free0) or " +
+                "(section is not null and lower(section.name) like :free0) or " +
+                "(type is not null and lower(type.name) like :free0) or " +
+                "(review is not null and lower(review.name) like :free0) or " +
+                "exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.name) LIKE :free0)) and " +
+                "(a.rawcontent like :free1 or " +
+                "lower(a.comment) like :free1 or " +
+                "lower(a.name) like :free1 or " +
+                "(publication is not null and lower(publication.name) like :free1) or " +
+                "(status is not null and lower(status.name) like :free1) or " +
+                "(section is not null and lower(section.name) like :free1) or " +
+                "(type is not null and lower(type.name) like :free1) or " +
+                "(review is not null and lower(review.name) like :free1) or " +
+                "exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.name) LIKE :free1)) and " +
+                "status.id = :statusid and " +
+                "( :personid0 member of a.journalists or " +
+                ":personid0 member of a.photographers ) and " +
+                "( :personid1 member of a.journalists or " +
+                ":personid1 member of a.photographers ) and " +
+                "section.id = :secid and " +
+                "publication.id = :pubid and " +
+                "a.archived = :arch " +
+                ArticleQueryBuilder.baseOrder;
 
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("free0", "%kombinert%");
@@ -247,7 +245,7 @@ public class ArticleQueryBuilderTest extends AbstractTestRunner {
         expectedMap.put("pubid", 2L);
         expectedMap.put("arch", true);
 
-        assertEquals(expectedQueryBuilder.toString().toLowerCase(), query.getQuery().toLowerCase());
+        assertEquals(expectedQueryBuilder.toLowerCase(), query.getQuery().toLowerCase());
         assertEquals(expectedMap, query.getParams());
     }
 }

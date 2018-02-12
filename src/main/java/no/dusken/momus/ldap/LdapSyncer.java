@@ -34,7 +34,7 @@ import java.util.List;
 @Service
 public class LdapSyncer {
 
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private final int PAGE_SIZE = 1000;
 

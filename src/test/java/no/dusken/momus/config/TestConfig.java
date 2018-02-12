@@ -16,6 +16,6 @@ public class TestConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public UserDetailsService userDetailsServiceImpl() {
-        return (UserDetailsService) new UserDetailsServiceMock();
+        return new UserDetailsServiceMock();
     }
 }

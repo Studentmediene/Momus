@@ -24,7 +24,6 @@ import no.dusken.momus.service.PersonService;
 import no.dusken.momus.service.repository.PersonRepository;
 import no.dusken.momus.service.repository.SectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
