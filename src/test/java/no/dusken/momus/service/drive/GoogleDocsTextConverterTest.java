@@ -29,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 public class GoogleDocsTextConverterTest extends AbstractServiceTest {
 
     @InjectMocks
-    GoogleDocsTextConverter googleDocsTextConverter;
+    private GoogleDocsTextConverter googleDocsTextConverter;
 
     @Before
     public void setUp() {

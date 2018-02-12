@@ -17,9 +17,6 @@
 package no.dusken.momus.service;
 
 import com.google.api.services.drive.model.File;
-import no.dusken.momus.authentication.UserDetailsService;
-import no.dusken.momus.diff.DiffMatchPatch;
-import no.dusken.momus.diff.DiffUtil;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.drive.GoogleDriveService;

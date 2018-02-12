@@ -17,11 +17,9 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.exceptions.RestException;
-import no.dusken.momus.model.Article;
 import no.dusken.momus.model.LayoutStatus;
 import no.dusken.momus.model.Page;
 import no.dusken.momus.model.Publication;
-import no.dusken.momus.service.ArticleService;
 import no.dusken.momus.service.PublicationService;
 import no.dusken.momus.service.repository.LayoutStatusRepository;
 import no.dusken.momus.service.repository.PageRepository;

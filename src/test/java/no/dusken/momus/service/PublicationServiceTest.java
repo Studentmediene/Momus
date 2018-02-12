@@ -37,19 +37,19 @@ import static org.mockito.Mockito.*;
 @Transactional
 public class PublicationServiceTest extends AbstractServiceTest {
     @Mock
-    PublicationRepository publicationRepository;
+    private PublicationRepository publicationRepository;
 
     @InjectMocks
-    PublicationService publicationService;
+    private PublicationService publicationService;
 
     @Mock
-    PageRepository pageRepository;
+    private PageRepository pageRepository;
 
     @Mock
-    ArticleRepository articleRepository;
+    private ArticleRepository articleRepository;
 
     @Mock
-    LayoutStatusRepository layoutStatusRepository;
+    private LayoutStatusRepository layoutStatusRepository;
 
     private Publication publication1;
     private Publication publication2;
@@ -60,7 +60,7 @@ public class PublicationServiceTest extends AbstractServiceTest {
     private Page page3;
 
     @Before
-    public void before() throws Exception {
+    public void before() {
         publication1 = new Publication(1L);
         publication1.setName("DUSKEN1");
 
@@ -85,7 +85,7 @@ public class PublicationServiceTest extends AbstractServiceTest {
      * Method: {@link PublicationService#updatePublication(Publication)}
      */
     @Test
-    public void testUpdatePublicationMetadata() throws Exception{
+    public void testUpdatePublicationMetadata() {
         PublicationService publicationServiceSpy = spy(publicationService);
         doReturn(publication1).when(publicationRepository).save(publication1);
         doReturn(publication1).when(publicationRepository).findOne(publication1.getId());
@@ -101,7 +101,7 @@ public class PublicationServiceTest extends AbstractServiceTest {
      * Method: {@link PublicationService#getActivePublication(Date)}
      */
     @Test
-    public void testGetActivePublication() throws Exception{
+    public void testGetActivePublication() {
         publication1.setReleaseDate(new Date(2017, 8, 10)); //Old
         publication2.setReleaseDate(new Date(2017, 8, 12));
         publication3.setReleaseDate(new Date(2017, 8, 14));
@@ -112,7 +112,7 @@ public class PublicationServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void testSavePage() throws Exception{
+    public void testSavePage() {
         final List<Page> pages = new ArrayList<>(Arrays.asList(page1, page2, page3));
         final Page newPage = new Page();
         newPage.setPublication(publication1);
@@ -121,7 +121,7 @@ public class PublicationServiceTest extends AbstractServiceTest {
             pages.add(newPage);
             return null;
         }).when(pageRepository).saveAndFlush(any(Page.class));
-        doReturn(null).when(pageRepository).save(anyListOf(Page.class));
+        doReturn(null).when(pageRepository).save(anyList());
 
         doReturn(pages.stream().sorted().collect(Collectors.toList())).when(pageRepository).findByPublicationIdOrderByPageNrAsc(publication1.getId());
 
@@ -134,7 +134,7 @@ public class PublicationServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void testSaveTrailingPages() throws Exception{
+    public void testSaveTrailingPages() {
         final List<Page> pages = new ArrayList<>(Arrays.asList(page1, page2, page3));
         Page newPage = new Page(4L);
         newPage.setPublication(publication1);
@@ -145,7 +145,7 @@ public class PublicationServiceTest extends AbstractServiceTest {
 
         List<Page> newPages = Arrays.asList(newPage, otherNewPage);
 
-        doReturn(null).when(pageRepository).save(anyListOf(Page.class));
+        doReturn(null).when(pageRepository).save(anyList());
 
         doAnswer((answer) -> {
             pages.addAll(newPages);
@@ -164,9 +164,9 @@ public class PublicationServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void testUpdatePage() throws Exception {
+    public void testUpdatePage() {
         doReturn(null).when(pageRepository).saveAndFlush(any(Page.class));
-        doReturn(null).when(pageRepository).save(anyListOf(Page.class));
+        doReturn(null).when(pageRepository).save(anyList());
         doReturn(new ArrayList<>(Arrays.asList(page1, page2, page3))
             .stream()
             .sorted()
@@ -182,8 +182,8 @@ public class PublicationServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void testUpdateTrailingPages() throws Exception{
-        doReturn(null).when(pageRepository).save(anyListOf(Page.class));
+    public void testUpdateTrailingPages(){
+        doReturn(null).when(pageRepository).save(anyList());
         doReturn(new ArrayList<>(Arrays.asList(page1, page2, page3))
             .stream()
             .sorted()
@@ -199,7 +199,7 @@ public class PublicationServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void testDeletePage() throws Exception{
+    public void testDeletePage(){
         doReturn(new ArrayList<>(Arrays.asList(page1, page2, page3))).when(pageRepository).findByPublicationIdOrderByPageNrAsc(publication1.getId());
 
         publicationService.deletePage(page2);
@@ -208,7 +208,7 @@ public class PublicationServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void testUpdatePageMetadata() throws Exception {
+    public void testUpdatePageMetadata() {
         doReturn(page1).when(pageRepository).saveAndFlush(page1);
         doReturn(page1).when(pageRepository).findOne(page1.getId());
 

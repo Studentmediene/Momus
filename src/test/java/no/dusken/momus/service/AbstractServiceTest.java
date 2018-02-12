@@ -18,12 +18,10 @@ package no.dusken.momus.service;
 
 import no.dusken.momus.authentication.UserDetailsService;
 import no.dusken.momus.model.Person;
-import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ContextConfiguration;
 import static org.mockito.Mockito.*;
 

@@ -16,9 +16,7 @@
 
 package no.dusken.momus.service;
 
-import com.google.api.services.drive.model.File;
 import no.dusken.momus.model.*;
-import no.dusken.momus.service.drive.GoogleDriveService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
 import no.dusken.momus.service.repository.*;
@@ -38,16 +36,16 @@ import static org.mockito.AdditionalAnswers.*;
 @Transactional
 public class ArticleServiceTest extends AbstractServiceTest {
     @Mock
-    ArticleRepository articleRepository;
+    private ArticleRepository articleRepository;
 
     @Mock
-    ArticleRevisionRepository articleRevisionRepository;
+    private ArticleRevisionRepository articleRevisionRepository;
 
     @Mock
-    IndesignGenerator indesignGenerator;
+    private IndesignGenerator indesignGenerator;
 
     @InjectMocks
-    ArticleService articleService;
+    private ArticleService articleService;
 
     private Person person1;
     private Person person2;
@@ -169,7 +167,7 @@ public class ArticleServiceTest extends AbstractServiceTest {
      * Method: {@link ArticleService#updateArticleMetadata(Long, Article)}
      */
     @Test
-    public void testUpdateArticleMetadata() throws Exception {
+    public void testUpdateArticleMetadata() {
         Article article = new Article(article1.getId());
         ArticleService articleServiceSpy = spy(articleService);
 

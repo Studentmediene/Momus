@@ -34,12 +34,12 @@ import static org.mockito.AdditionalAnswers.*;
 public class KeyValueServiceTest extends AbstractServiceTest {
 
     @InjectMocks
-    KeyValueService keyValueService;
+    private KeyValueService keyValueService;
 
     @Mock
-    KeyValueRepository keyValueRepository;
+    private KeyValueRepository keyValueRepository;
 
-    KeyValue keyValue1;
+    private KeyValue keyValue1;
 
     @Before
     public void setUp() {

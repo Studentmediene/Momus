@@ -34,7 +34,7 @@ import static org.junit.Assert.assertEquals;
 public class IndesignGeneratorTest extends AbstractServiceTest {
 
     @InjectMocks
-    IndesignGenerator indesignGenerator;
+    private IndesignGenerator indesignGenerator;
 
     @Before
     public void setUp() {
@@ -42,7 +42,7 @@ public class IndesignGeneratorTest extends AbstractServiceTest {
     }
 
     @Test
-    public void testGenerateFromArticle() throws Exception {
+    public void testGenerateFromArticle() {
         Article article = new Article(1L);
 
         /*
@@ -111,7 +111,7 @@ public class IndesignGeneratorTest extends AbstractServiceTest {
 
         article.setContent("");
 
-        article.setJournalists(new HashSet<Person>());
+        article.setJournalists(new HashSet<>());
 
         Set<Person> photographers = new HashSet<>();
         photographers.add(new Person(3L, UUID.randomUUID(), "user1", "Einar Einarsen", "einar@lala.org", "12345678", true));
@@ -136,7 +136,7 @@ public class IndesignGeneratorTest extends AbstractServiceTest {
 
         article.setImageText("Bilde 1 er tatt av Kåre, viser John.\nBilde med grønn fyr viser en grønn fyr.");
 
-        article.setJournalists(new HashSet<Person>());
+        article.setJournalists(new HashSet<>());
         Set<Person> photographers = new HashSet<>();
         photographers.add(new Person(3L, UUID.randomUUID(), "user1", "Einar Einarsen", "einar@lala.org", "12345678", true));
         article.setPhotographers(photographers);
@@ -160,7 +160,7 @@ public class IndesignGeneratorTest extends AbstractServiceTest {
         Article article = new Article(1L);
         article.setContent("<h1>Min kule tittel!</h1>");
 
-        article.setJournalists(new HashSet<Person>());
+        article.setJournalists(new HashSet<>());
         Set<Person> photographers = new HashSet<>();
         photographers.add(new Person(3L, UUID.randomUUID(), "user1", "Einar Einarsen", "einar@lala.org", "12345678", true));
         article.setPhotographers(photographers);

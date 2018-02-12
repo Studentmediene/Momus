@@ -106,7 +106,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}/revisions")
-    public @ResponseBody List<ArticleRevision> getArticleRevisions(@PathVariable("id") Long id) {
+    public @ResponseBody List<ArticleRevision> getArticleRevisions(@PathVariable Long id) {
         return articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(id);
     }
 

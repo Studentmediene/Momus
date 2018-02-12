@@ -1,7 +1,5 @@
 package no.dusken.momus.ldap;
 
-import org.w3c.dom.Attr;
-
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;

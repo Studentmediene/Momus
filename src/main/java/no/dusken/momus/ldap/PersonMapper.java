@@ -7,7 +7,6 @@ import org.springframework.ldap.core.AttributesMapper;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.UUID;
 
 public class PersonMapper implements AttributesMapper<Person> {
