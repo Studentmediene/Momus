@@ -1,5 +1,6 @@
 package no.dusken.momus.ldap;
 
+import no.dusken.momus.authorization.Role;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.PersonRepository;
 import org.springframework.ldap.core.AttributesMapper;
@@ -7,17 +8,20 @@ import org.springframework.ldap.core.AttributesMapper;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import java.sql.Blob;
-import java.util.UUID;
+import java.util.*;
 
 public class PersonMapper implements AttributesMapper<Person> {
     private PersonRepository personRepository;
     private boolean active;
     private long lastId;
 
-    public PersonMapper(PersonRepository personRepository, boolean active) {
+    private Map<String, Role> groupToRole;
+
+    public PersonMapper(PersonRepository personRepository, boolean active, Map<String, Role> groupToRole) {
         this.personRepository = personRepository;
         this.active = active;
         this.lastId = 0L;
+        this.groupToRole = groupToRole;
     }
 
     @Override
@@ -33,6 +37,7 @@ public class PersonMapper implements AttributesMapper<Person> {
         String phoneNumber = LDAPAttributes.getPhoneNumber(attributes);
         UUID guid = LDAPAttributes.getGuid(attributes);
         Blob photo = LDAPAttributes.getPhoto(attributes);
+        Collection<String> groups = LDAPAttributes.getGroups(attributes);
 
         Person person = getPersonIfExists(guid, username);
 
@@ -49,6 +54,14 @@ public class PersonMapper implements AttributesMapper<Person> {
         if(photo != null) {
             person.setPhoto(photo);
         }
+
+        Collection<Role> roles = new HashSet<>();
+        roles.add(Role.ROLE_USER);
+        for (String accessGroup: groupToRole.keySet())
+            if (groups.contains(accessGroup)) {
+                roles.add(groupToRole.get(accessGroup));
+        }
+        person.setRoles(roles);
 
         return person;
     }
