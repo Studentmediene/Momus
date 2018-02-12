@@ -24,158 +24,105 @@ angular.module('momusApp.controllers')
         Publication,
         TitleChanger,
         ViewArticleService,
-        noteParserRules,
-        $timeout,
-        $routeParams,
         MessageModal,
+        $routeParams,
+        $timeout,
         $templateRequest
     ) {
+        const vm = this;
+
+        vm.metaEditMode = false;
+        vm.photoTypes = [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}];
+        vm.quoteCheckTypes = [{value: false, name: 'I orden'}, {value: true, name: 'Trenger sitatsjekk'}];
+
+        vm.saveNote = saveNote;
+        vm.metaClicked = () => { vm.metaEditMode ? saveMeta() : editMeta() };
+        vm.cancelMeta = () => { vm.metaEditMode = false; };
+
+        vm.archiveArticle = archiveArticle;
+        vm.restoreArticle = restoreArticle;
+
+        vm.showHelp = showHelp;
+
+        // Get data
+        vm.persons = Person.query({articleIds: [$routeParams.id]});
+        vm.sections = Article.sections();
+        vm.statuses = Article.statuses();
+        vm.reviews = Article.reviewStatuses();
+        vm.types = Article.types();
+        vm.article = Article.get({id: $routeParams.id}, article => {
+            TitleChanger.setTitle(article.name);
+            vm.uneditedNote = article.note;
+        });
+        Article.content($routeParams.id).then(data => { vm.articleContent = data.data; });
 
         ViewArticleService.viewArticle($routeParams.id);
 
-        $scope.metaEditMode = false;
-        $scope.noteRules = noteParserRules;
-
-        $scope.persons = Person.query({articleIds: [$routeParams.id]});
-
-        $scope.article = Article.get({id: $routeParams.id}, article => {
-            TitleChanger.setTitle(article.name);
-            $scope.uneditedNote = article.note;
-        });
-
-        Article.content($routeParams.id).then(data => {
-            $scope.articleContent = data.data;
-        });
-
-        $scope.sections = Article.sections();
-        $scope.statuses = Article.statuses();
-        $scope.reviews = Article.reviewStatuses();
-        $scope.types = Article.types();
-
-        $scope.photoTypes = [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}];
-        $scope.quoteCheckTypes = [{value: false, name: 'I orden'}, {value: true, name: 'Trenger sitatsjekk'}];
-
         /* note panel */
-        $scope.saveNote = function () {
-            $scope.savingNote = true;
+        function saveNote () {
+            vm.savingNote = true;
+            vm.uneditedNote = vm.article.note;
             Article.updateNote(
-                {id: $scope.article.id}, 
-                JSON.stringify($scope.article.note),
-                article => {
-                    $scope.uneditedNote = article.note;
-                    $scope.savingNote = false;
-            });
-        };
+                {id: vm.article.id},
+                JSON.stringify(vm.article.note),
+                () => { vm.savingNote = false;});
+        }
 
         /* meta panel */
-        $scope.metaClicked = function() {
-            if ($scope.metaEditMode) {
-                $scope.saveMeta();
-            } else {
-                $scope.editMeta();
-            }
-        };
-
-        $scope.saveMeta = function() {
-            $scope.savingMeta = true;
-            $scope.metaEditing.$updateMetadata({}, updatedArticle => {
-                updatedArticle.note = $scope.article.note;
-                $scope.article = updatedArticle;
-                $scope.savingMeta = false;
-                $scope.metaEditMode = false;
-                TitleChanger.setTitle($scope.article.name);
+        function saveMeta() {
+            vm.savingMeta = true;
+            vm.metaEditing.$updateMetadata({}, updatedArticle => {
+                updatedArticle.note = vm.article.note;
+                vm.article = updatedArticle;
+                vm.savingMeta = false;
+                vm.metaEditMode = false;
+                TitleChanger.setTitle(vm.article.name);
             });
-        };
+        }
 
-        $scope.editMeta = function() {
-            $scope.metaEditMode = true;
-            $scope.metaEditing = angular.copy($scope.article);
+        function editMeta() {
+            vm.metaEditMode = true;
+            vm.metaEditing = angular.copy(vm.article);
 
-            if (!$scope.publications) {
-                $scope.publications = Publication.query();
+            if (!vm.publications) {
+                vm.publications = Publication.query();
             }
-        };
+        }
 
-        $scope.cancelMeta = function() {
-            $scope.metaEditMode = false;
-        };
+        function archiveArticle(){
+            if(confirm("Er du sikker på at du vil slette artikkelen?")){
+                vm.article.$archive();
+                vm.article.archived = true;
+            }
+        }
 
-        $scope.showHelp = function () {
+        function restoreArticle(){
+            vm.article.$restore();
+            vm.article.archived = false;
+        }
+
+        function showHelp() {
             $templateRequest('partials/templates/help/articleHelp.html').then(function(template){
                 MessageModal.info(template);
             });
+        }
 
-        };
+        function promptCondition() {
+            return vm.metaEditMode === true || vm.uneditedNote !== vm.article.note;
+        }
 
-
-        $scope.$on('$locationChangeStart', function(event){
-            if(promptCondition()){
-                if(!confirm("Er du sikker på at du vil forlate siden? Det finnes ulagrede endringer.")){
+        $scope.$on('$locationChangeStart', (event) => {
+            if (promptCondition()) {
+                if (!confirm("Er du sikker på at du vil forlate siden? Det finnes ulagrede endringer.")) {
                     event.preventDefault();
                 }
             }
         });
+        $scope.$on('$destroy', () => { window.onbeforeunload = undefined; });
 
         window.onbeforeunload = function(){
             if(promptCondition()){
                 return "Det finnes ulagrede endringer.";
             }
-        };
-
-        $scope.$on('$destroy', function() {
-            window.onbeforeunload = undefined;
-        });
-
-        function promptCondition() {
-            return $scope.metaEditMode === true || $scope.uneditedNote !== $scope.article.note;
-        }
-
-        $scope.deleteArticle = function(){
-            if(confirm("Er du sikker på at du vil slette artikkelen?")){
-                $scope.article.$archive();
-                $scope.article.archived = true;
-            }
-        };
-
-        $scope.restoreArticle = function(){
-            $scope.article.$restore();
-            $scope.article.archived = false;
-        };
-
-        $scope.quoteCheck = function(zc){
-
-            $scope.copying = true;
-
-            var qcMessage = "Dette er en sitatgjennomgang fra studentavisa Under Dusken i Trondheim. <br />" +
-                "Endring av avgitte uttalelser bør begrenses til korrigering av faktiske feil " +
-                "(jf. Vær Varsom-plakatens §3.8).<br /><br />";
-
-            var qcArticle = $scope.articleContent;
-            var qcAuthor = "";
-            var qcRed = "<br />Studentavisa Under Dusken <br /> Ansvarlig redaktør " + "Syn" + "ne Ha" + "mmervik " + "synn" + "ehammer" + "vik@gmail.com";
-
-            if($scope.article.journalists.length){
-                for(var i = 0; i < $scope.article.journalists.length;i++) {
-                    qcAuthor +=
-                        $scope.article.journalists[i].name + " - " +
-                        $scope.article.journalists[i].email + "<br />";
-                }
-            } else {
-                qcAuthor = "Under Dusken";
-            }
-
-            var qcEmail =
-                qcMessage +
-                qcArticle +
-                "Med vennlig hilsen <br />" +
-                qcAuthor +
-                qcRed
-            ;
-            zc.setHtml(qcEmail);
-
-
-            $timeout(function() {
-                $scope.copying = false;
-            }, 0);
         };
     });
