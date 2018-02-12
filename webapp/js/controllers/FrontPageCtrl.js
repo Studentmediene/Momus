@@ -24,6 +24,7 @@ angular.module('momusApp.controllers')
         CookieService,
         Person,
         IllustrationRequest,
+        illustrationRequestStatuses,
         Article,
         expandColorCode,
         loggedInPerson,
@@ -59,12 +60,7 @@ angular.module('momusApp.controllers')
         }
 
         $scope.requests = IllustrationRequest.mine();
-        $scope.requestStatuses = {
-            PENDING: {color: '#ffcc00', name: 'Venter'},
-            ACCEPTED: {color: '#5cb85c', name: 'Godkjent'},
-            DENIED: {color: '#d9534f', name: 'Avvist'},
-            COMPLETED: {color: '#5bc0de', name: 'Gjort'}
-        };
+        $scope.illustrationRequestStatuses = illustrationRequestStatuses;
 
         vm.pageSize = 3;
         vm.currentPage = 1;

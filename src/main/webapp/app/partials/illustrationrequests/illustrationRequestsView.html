@@ -1,0 +1,52 @@
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Interne illustrasjonsforespørsler
+        </div>
+        <div class="table-responsive">
+            <table class="table table-condensed table-striped" style="font-size: 85%">
+                <thead>
+                <tr>
+                    <th>Artikkel</th>
+                    <th>Seksjon</th>
+                    <th>Type</th>
+                    <th>Forespurt av</th>
+                    <th>Beskrivelse</th>
+                    <th>Antall illustrasjoner</th>
+                    <th>Antall sider</th>
+                    <th>Status</th>
+                    <th>Endre status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="request in vm.requests | filter:{external:false}"
+                    ng-style="{backgroundColor: vm.statusData[request.status].color}"
+                >
+                    <td>
+                        <a href="#/artikler/{{request.article.id}}">{{request.article.name}}</a>
+                    </td>
+                    <td ng-style="{backgroundColor: request.article.section.color}">
+                        {{request.article.section.name}}
+                    </td>
+                    <td>{{request.article.type.name}}</td>
+                    <td>
+                        <span>{{request.requester.name}}</span>
+                    </td>
+                    <td>{{request.description}}</td>
+                    <td>{{request.number_of_illustrations}}</td>
+                    <td>{{request.number_of_pages}}</td>
+                    <td>{{vm.statusData[request.status].name}}</td>
+                    <td>
+                        <select
+                                class="input-sm"
+                                ng-model="request.status"
+                                ng-options="k as v.name for (k, v) in vm.statusData"
+                                ng-change="vm.updateStatus(request)">
+                        </select>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

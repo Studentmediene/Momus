@@ -236,6 +236,15 @@ angular.module('momusApp', [
                 controllerAs: 'vm',
                 title: 'Info'
             })
+            .state('illustrations', {
+                parent: 'root',
+                url: 'illustrasjonsforespørsler',
+                title: 'Illustrasjonsforespørsler',
+                templateUrl: 'partials/illustrationrequests/illustrationRequestsView.html',
+                controller: 'IllustrationRequestsCtrl',
+                controllerAs: 'vm',
+                access: ["ROLE_ADMIN", "ROLE_ILLUSTRATOR"]
+            })
             .state('admin',
             {
                 parent: 'root',
