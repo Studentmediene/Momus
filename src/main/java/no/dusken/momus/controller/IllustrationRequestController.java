@@ -1,5 +1,6 @@
 package no.dusken.momus.controller;
 
+import no.dusken.momus.authorization.IllustratorAuthorization;
 import no.dusken.momus.model.IllustrationRequest;
 import no.dusken.momus.service.IllustrationRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class IllustrationRequestController {
     }
 
     @GetMapping
+    @IllustratorAuthorization
     public @ResponseBody List<IllustrationRequest> getRequests(
             @RequestParam(required = false) List<IllustrationRequest.Status> statuses) {
         return illustrationRequestService.getRequests(statuses);
@@ -37,6 +39,7 @@ public class IllustrationRequestController {
     }
 
     @PatchMapping("/{id}/status")
+    @IllustratorAuthorization
     public void updateStatus(@PathVariable Long id, @RequestParam IllustrationRequest.Status status) {
         illustrationRequestService.updateStatus(id, status);
     }
