@@ -82,6 +82,7 @@ public class LdapSyncer {
     @PostConstruct
     public void startUp(){
         groupToRole.put(env.getProperty("roles.admin"), Role.ROLE_ADMIN);
+        groupToRole.put(env.getProperty("roles.illustrator"), Role.ROLE_ILLUSTRATOR);
         sync();
     }
 
