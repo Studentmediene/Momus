@@ -53,7 +53,9 @@ angular.module('momusApp.controllers')
         var pageEdits = [];
 
         vm.createArticle = createArticle;
+        vm.createAdvert = createAdvert;
         vm.updateArticle = updateArticle;
+        vm.updateAdvert = updateAdvert;
         vm.initArticleScope = initArticleScope;
         vm.editArticleField = editArticleField;
         vm.submitArticleField = submitArticleField;
@@ -83,7 +85,7 @@ angular.module('momusApp.controllers')
                 case(WebSocketService.actions.updatePageMetadata):
                     handleRemotePageMetadataUpdate(payload.page_id);
                     break;
-                case(WebSocketService.actions.saveArticle):
+                case(WebSocketService.actions.saveArticle):  //YARA: UNDERSTAND THIS
                     handleRemoteArticleSave(payload.article_id);
                     break;
                 case(WebSocketService.actions.updateArticle):
@@ -338,6 +340,27 @@ angular.module('momusApp.controllers')
             });
         }
 
+        function createAdvert(page){
+           var modal = $uibModal.open({
+               templateUrl: 'partials/article/createAdvertModal.html',
+               controller: 'CreateAdvertModalCtrl',
+               resolve: {
+                   pubId: () => vm.publication.id,
+                   advertCheck: () => true
+               }
+           });
+           modal.result.then(id => {
+               const advert = Advert.get({id: id}, () => {
+                   page.adverts.push(advert);
+                   vm.adverts.push(advert);
+                   if(websocketActive){
+                       lastUpdate = WebSocketService.articleSaved(vm.publication.id, page.id, article.id); //YARA: FIX WEBSOCKETSERVICE
+                   }
+               });
+           });
+       }
+
+
         function updateArticle(article, editedField){
             vm.loading = true;
             Article.updateMetadata({id: article.id}, article, () => {
@@ -346,6 +369,10 @@ angular.module('momusApp.controllers')
                     lastUpdate = WebSocketService.articleUpdated(vm.publication.id, article.id, editedField);
                 }
             });
+        }
+
+        function updateAdvert(advert, editedField){
+          //YARA: FINISH THIS
         }
 
         function showHelp(){

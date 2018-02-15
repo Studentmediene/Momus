@@ -735,4 +735,47 @@
                 onUpdate="CASCADE"
         />
     </changeSet>
+
+    <changeSet id="43_addadvert" author="Yara">
+        <createTable tableName="advert">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="publication_id" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="page_advert">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="advert_id" type="BIGINT"/>
+            <column name="page_id" type="BIGINT"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseColumnNames="publication_id"
+                baseTableName="advert"
+                constraintName="FK_advert_publication"
+                deferrable="false" initiallyDeferred="false"
+                onDelete="NO ACTION" onUpdate="NO ACTION"
+                referencedColumnNames="id" referencedTableName="publication"
+        />
+
+        <addForeignKeyConstraint
+                baseColumnNames="page_id" baseTableName="page_advert"
+                constraintName="FK_page_advert_page"
+                deferrable="false" initiallyDeferred="false"
+                onDelete="NO ACTION" onUpdate="NO ACTION"
+                referencedColumnNames="id" referencedTableName="page"
+        />
+
+        <addForeignKeyConstraint
+                baseColumnNames="advert_id" baseTableName="page_advert"
+                constraintName="FK_page_advert_advert"
+                deferrable="false" initiallyDeferred="false"
+                onDelete="NO ACTION" onUpdate="NO ACTION"
+                referencedColumnNames="id" referencedTableName="advert"
+        />
+    </changeSet>
 </databaseChangeLog>

@@ -40,6 +40,9 @@ public class Page implements Comparable<Page>, Comparator<Page>{
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Article> articles;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Advert> adverts;
+
     @ManyToOne(fetch = FetchType.EAGER)
     private LayoutStatus layoutStatus;
 
@@ -96,6 +99,10 @@ public class Page implements Comparable<Page>, Comparator<Page>{
     public void setArticles(Set<Article> articles) {
         this.articles = articles;
     }
+
+    public Set<Advert> getAdverts() { return adverts; }
+
+    public void setAdverts(Set<Advert> adverts) { this.adverts = adverts; }
 
     public Publication getPublication() {
         return publication;
