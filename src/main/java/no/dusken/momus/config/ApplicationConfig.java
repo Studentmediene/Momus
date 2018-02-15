@@ -1,6 +1,7 @@
 package no.dusken.momus.config;
 
 import java.util.List;
+import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
@@ -34,6 +35,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import liquibase.integration.spring.SpringLiquibase;
 
@@ -133,4 +135,22 @@ class ApplicationConfig extends WebMvcConfigurerAdapter {
     public ExceptionHandler exceptionResolver() {
         return new ExceptionHandler();
     }
+
+    @Bean
+    public JavaMailSenderImpl getJavaMailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost(env.getProperty("mail.host"));
+        mailSender.setPort(Integer.parseInt(env.getProperty("mail.port")));
+
+        mailSender.setUsername(env.getProperty("mail.address"));
+        mailSender.setPassword(env.getProperty("mail.password"));
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.debug", "true");
+
+        return mailSender;
+    } 
 }
