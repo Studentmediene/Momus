@@ -1,15 +1,15 @@
 package no.dusken.momus.model.websocket;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 public class OutputMessage {
 	private Long pageId;
 	private Long articleId;
 	private Action action;
 	private String editedField;
-    private Date date;
+	private ZonedDateTime date;
 
-    public OutputMessage(Long pageId, Long articleId, Action action, String editedField, Date date){
+    public OutputMessage(Long pageId, Long articleId, Action action, String editedField, ZonedDateTime date){
         this.pageId = pageId;
         this.articleId = articleId;
 		this.action = action;
@@ -25,7 +25,7 @@ public class OutputMessage {
 		this.action = action;
 	}
 
-	public Date getDate() {
+	public ZonedDateTime getDate() {
 		return date;
 	}
 

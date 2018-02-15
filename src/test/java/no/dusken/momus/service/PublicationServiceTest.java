@@ -28,6 +28,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -98,17 +100,17 @@ public class PublicationServiceTest extends AbstractServiceTest {
     }
 
     /**
-     * Method: {@link PublicationService#getActivePublication(Date)}
+     * Method: {@link PublicationService#getActivePublication(ZonedDateTime)}
      */
     @Test
     public void testGetActivePublication() {
-        publication1.setReleaseDate(new Date(2017, 8, 10)); //Old
-        publication2.setReleaseDate(new Date(2017, 8, 12));
-        publication3.setReleaseDate(new Date(2017, 8, 14));
+        publication1.setReleaseDate(ZonedDateTime.of(2017, 8, 10, 0, 0, 0, 0, ZoneId.systemDefault())); //Old
+        publication2.setReleaseDate(ZonedDateTime.of(2017, 8, 12, 0, 0, 0, 0, ZoneId.systemDefault()));
+        publication3.setReleaseDate(ZonedDateTime.of(2017, 8, 14, 0, 0, 0, 0, ZoneId.systemDefault()));
 
         doReturn(Arrays.asList(publication2, publication2, publication1)).when(publicationRepository).findAllByOrderByReleaseDateDesc();
 
-        assertEquals(publication2, publicationService.getActivePublication(new Date(2017, 8, 11)));
+        assertEquals(publication2, publicationService.getActivePublication(ZonedDateTime.of(2017, 8, 11, 0, 0, 0, 0, ZoneId.systemDefault())));
     }
 
     @Test

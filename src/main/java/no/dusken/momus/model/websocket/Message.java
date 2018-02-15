@@ -1,6 +1,7 @@
 package no.dusken.momus.model.websocket;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
+
 import no.dusken.momus.model.websocket.Action;
 
 public class Message {
@@ -8,7 +9,7 @@ public class Message {
 	private Long articleId;
 	private Action action;
 	private String editedField;
-    private Date date;
+	private ZonedDateTime date;
 
 	public Action getAction() {
 		return this.action;
@@ -18,7 +19,7 @@ public class Message {
 		this.action = action;
 	}
 
-	public Date getDate() {
+	public ZonedDateTime getDate() {
 		return date;
 	}
 

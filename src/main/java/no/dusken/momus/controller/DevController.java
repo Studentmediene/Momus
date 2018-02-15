@@ -28,6 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 /**
@@ -94,12 +96,12 @@ public class DevController {
 
         Publication p1 = new Publication();
         p1.setName("UD #1-2018");
-        p1.setReleaseDate(new GregorianCalendar(2018, Calendar.JANUARY, 20).getTime());
+        p1.setReleaseDate(ZonedDateTime.of(2018, 1, 20, 0, 0, 0, 0, ZoneId.systemDefault()));
         p1 = publicationService.savePublication(p1, 50);
 
         Publication p2 = new Publication();
         p2.setName("UD #2-2018");
-        p2.setReleaseDate(new GregorianCalendar(2018, Calendar.FEBRUARY, 10).getTime());
+        p1.setReleaseDate(ZonedDateTime.of(2018, 2, 10, 0, 0, 0, 0, ZoneId.systemDefault()));
         p2 = publicationService.savePublication(p2, 50);
 
         Article a1 = new Article();
