@@ -17,7 +17,12 @@
 'use strict';
 
 angular.module('momusApp.directives').
-    directive( 'personWidget', ['$rootScope', 'MessageModal', function ($rootScope, MessageModal) {
+    directive( 'personWidget', ['$rootScope', 'MessageModal', '$window',
+        function (
+            $rootScope,
+            MessageModal,
+            $window
+        ) {
         return {
             restrict: 'A',
             scope:{
@@ -25,23 +30,31 @@ angular.module('momusApp.directives').
             },
             templateUrl: 'partials/templates/personWidget.html',
             transclude: true,
-            link: function(scope, element, attrs){
+            link: (scope, element, attrs) => {
                 scope.isVisible = false;
 
-                scope.togglePW = function(){
-                    var oldValue = scope.isVisible;
+                scope.openPW = () => {
                     $rootScope.$broadcast('closePersonWidgets');
-                    scope.isVisible = !(oldValue);
+                    angular.element(element).on('click', e => e.stopPropagation());
+                    angular.element($window).on('click', scope.closePW);
+                    $rootScope.$on('closePersonWidgets', scope.closePW);
+                    scope.$evalAsync(() => {
+                        scope.isVisible = true;
+                    });
                 };
 
-                scope.openModal = function(){
-                    var pwMessage = '<table class="table table-condensed"><tr><td>Navn:</td><td>'+ scope.pw_person.name + '</td></tr><tr><td>Email:</td><td><a href="mailto:' + scope.pw_person.email + '">' + scope.pw_person.email + '</a></td></tr><tr><td>Telefon:</td><td>' + scope.pw_person.phone_number + '</td></tr></table>';
+                scope.closePW = () => {
+                    $rootScope.$on('closePersonWidgets', null);
+                    angular.element($window).off('click', scope.closePW);
+                    scope.$evalAsync(() => {
+                        scope.isVisible = false;
+                    });
+                };
+
+                scope.openModal = () => {
+                    const pwMessage = '<table class="table table-condensed"><tr><td>Navn:</td><td>'+ scope.pw_person.name + '</td></tr><tr><td>Email:</td><td><a href="mailto:' + scope.pw_person.email + '">' + scope.pw_person.email + '</a></td></tr><tr><td>Telefon:</td><td>' + scope.pw_person.phone_number + '</td></tr></table>';
                     MessageModal.info(pwMessage);
                 };
-
-                $rootScope.$on('closePersonWidgets', function(){
-                    scope.isVisible = false;
-                });
             }
         };
     }]

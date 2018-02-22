@@ -1,33 +1,5 @@
-.person-widget-element td {
-    max-width:initial !important;
-    min-width:initial !important;
-}
-
 .person-widget-wrapper {
     position:relative;
-}
-
-.person-widget-wrapper {
-    position:relative;
-}
-
-.person-widget-btn {
-    border-bottom: 1px dotted #ccc;
-    cursor: pointer;
-}
-
-.person-widget-btn :hover {
-    border-bottom: 1px dotted #999;
-}
-
-.person-widget-header {
-    white-space: nowrap;
-    width: 100%;
-}
-
-.person-widget-header tr #close-cell {
-    text-align: right;
-    padding-left: 10px;
 }
 
 .person-widget-element {
@@ -39,10 +11,22 @@
     cursor:default;
     left:-20%;
     overflow: visible;
+    bottom: -10px;
+
+    > .panel-heading {
+        padding: 1px 15px !important;
+    }
+
+    > .panel-body {
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
      > :before, :after {
         top: 100%;
-        left: 10%;
+        left: 20%;
         border: solid transparent;
         content: " ";
         height: 0;
@@ -64,18 +48,30 @@
     }
 }
 
-.person-widget-btn {
+.person-widget-text {
     border-bottom: 1px dotted #ccc;
     cursor: pointer;
+
+    &:hover {
+        border-bottom: 1px dotted #999;
+    }
 }
 
-.closePw {
+.person-widget-table {
+    margin-bottom: 0;
+    td {
+        border-style: none !important;
+        white-space: nowrap;
+    }
+}
+
+.person-widget-close {
     opacity:0.5;
     cursor:pointer;
     padding:0;
     margin:0;
 
-    :hover {
+    &:hover {
         opacity:1;
     }
 }
