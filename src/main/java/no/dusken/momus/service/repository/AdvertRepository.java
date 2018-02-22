@@ -14,23 +14,15 @@
  * limitations under the License.
  */
 
-'use strict';
+package no.dusken.momus.service.repository;
 
-angular.module('momusApp.controllers')
-    .controller('CreateAdvertModalCtrl', function($scope, $uibModalInstance, Advert){
-        $scope.advert = {
-            name: ""
-        };
-        $scope.createAdvert = function () {
-            $scope.creating = true;
-            Advert.save({}, $scope.advert, advert => {
-                $scope.creating = false;
-                $uibModalInstance.close(advert.id);
-            });
-        };
+import no.dusken.momus.model.Advert;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.util.List;
 
-        $scope.cancel = function(){
-            $uibModalInstance.dismiss('cancel');
-        };
+@Repository
+public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
-    });
+
+}

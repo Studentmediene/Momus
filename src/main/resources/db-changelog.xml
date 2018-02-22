@@ -742,7 +742,6 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="name" type="VARCHAR(255)"/>
-            <column name="publication_id" type="BIGINT"/>
         </createTable>
 
         <createTable tableName="page_advert">
@@ -752,15 +751,6 @@
             <column name="advert_id" type="BIGINT"/>
             <column name="page_id" type="BIGINT"/>
         </createTable>
-
-        <addForeignKeyConstraint
-                baseColumnNames="publication_id"
-                baseTableName="advert"
-                constraintName="FK_advert_publication"
-                deferrable="false" initiallyDeferred="false"
-                onDelete="NO ACTION" onUpdate="NO ACTION"
-                referencedColumnNames="id" referencedTableName="publication"
-        />
 
         <addForeignKeyConstraint
                 baseColumnNames="page_id" baseTableName="page_advert"

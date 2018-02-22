@@ -153,7 +153,10 @@ angular.module('momusApp.controllers')
 
         function handleRemotePageChange() {
             Page.query({pubid: vm.publication.id}, pages => {
-                pages.forEach(page => connectArticles(page, vm.articles));
+                pages.forEach(function(page){
+                  connectArticles(page, vm.articles);
+                  connectAdverts(page, vm.adverts);
+                });
                 vm.publication.pages = pages;
             });
         }
@@ -164,6 +167,10 @@ angular.module('momusApp.controllers')
 
         function connectArticles(page, articles) {
             page.articles = page.articles.map(article => articles.find(other => other.id === article.id));
+        }
+
+        function connectAdverts(page, adverts) {
+          page.adverts = page.adverts.map(advert => adverts.find(other => other.id === advert.id));
         }
 
         function replaceProperties(oldObject, newObject) {
@@ -342,19 +349,15 @@ angular.module('momusApp.controllers')
 
         function createAdvert(page){
            var modal = $uibModal.open({
-               templateUrl: 'partials/article/createAdvertModal.html',
-               controller: 'CreateAdvertModalCtrl',
-               resolve: {
-                   pubId: () => vm.publication.id,
-                   advertCheck: () => true
-               }
+               templateUrl: 'partials/advert/createAdvertModal.html',
+               controller: 'CreateAdvertModalCtrl'
            });
            modal.result.then(id => {
                const advert = Advert.get({id: id}, () => {
                    page.adverts.push(advert);
                    vm.adverts.push(advert);
                    if(websocketActive){
-                       lastUpdate = WebSocketService.articleSaved(vm.publication.id, page.id, article.id); //YARA: FIX WEBSOCKETSERVICE
+                       lastUpdate = WebSocketService.advertSaved(vm.publication.id, page.id, advert.id);
                    }
                });
            });

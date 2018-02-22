@@ -36,9 +36,6 @@ public class Advert{
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Publication publication;
-
     public Advert() {
 
     }
@@ -59,19 +56,14 @@ public class Advert{
         this.name = name;
     }
 
-    public Publication getPublication() {return publication; }
-
-    public void setPublication(Publication publication) {this.publication = publication; }
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Article article = (Article) o;
+        Advert advert = (Advert) o;
 
-        if (!id.equals(article.id)) return false;
+        if (!id.equals(advert.id)) return false;
 
         return true;
     }
@@ -94,7 +86,6 @@ public class Advert{
         return "Advert{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", publication=" + publication +
                 '}';
     }
 }

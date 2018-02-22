@@ -20,7 +20,7 @@ public class WebSocketController {
     @MessageMapping("/disposition/{id}/change")
     @SendTo("/ws/disposition/{id}/changed")
     public OutputMessage sendChange(Message message, @DestinationVariable Long id) throws Exception {
-        return new OutputMessage(message.getPageId(), message.getArticleId(), message.getAction(), message.getEditedField(), message.getDate());
+        return new OutputMessage(message.getPageId(), message.getArticleId(), message.getAdvertId(), message.getAction(), message.getEditedField(), message.getDate());
     }
 
     @MessageMapping("/disposition/{id}/user")

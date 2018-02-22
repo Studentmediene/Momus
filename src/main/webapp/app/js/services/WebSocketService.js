@@ -5,6 +5,7 @@ angular.module('momusApp.services')
         var actions = {
             saveArticle: 'SAVE_ARTICLE',
             updateArticle: 'UPDATE_ARTICLE',
+            saveAdvert: 'SAVE_ADVERT',
             savePage: 'SAVE_PAGE',
             deletePage: 'DELETE_PAGE',
             updatePageMetadata: 'UPDATE_PAGE_METADATA',
@@ -17,9 +18,9 @@ angular.module('momusApp.services')
 
         const person = Person.me();
 
-        function sendChange(pubId, pageId, articleId, action, editedField) {
+        function sendChange(pubId, pageId, articleId, advertId, action, editedField) {
             editedField = editedField || "";
-            var change = {action: action, page_id: pageId, article_id: articleId, edited_field: editedField, date: new Date()};
+            var change = {action: action, page_id: pageId, article_id: articleId,  edited_field: editedField, date: new Date()};
             $stomp.send('/ws/disposition/' + pubId + '/change', change);
             return change;
         }
@@ -42,22 +43,25 @@ angular.module('momusApp.services')
                 $stomp.disconnect();
             },
             pageSaved: function(pubId, pageId) {
-                return sendChange(pubId, pageId, -1, actions.savePage);
+                return sendChange(pubId, pageId, -1, -1, actions.savePage);
             },
             pageDeleted: function(pubId, pageId) {
-                return sendChange(pubId, pageId, -1, actions.deletePage);          
+                return sendChange(pubId, pageId, -1, -1, actions.deletePage);
             },
             pageNrUpdated: function(pubId, pageId) {
-                return sendChange(pubId, pageId, -1, actions.updatePagenr, 'page_nr');              
+                return sendChange(pubId, pageId, -1, -1, actions.updatePagenr, 'page_nr');
             },
             pageMetadataUpdated: function(pubId, pageId, editedField) {
-                return sendChange(pubId, pageId, -1,  actions.updatePageMetadata, editedField);
+                return sendChange(pubId, pageId, -1, -1,  actions.updatePageMetadata, editedField);
             },
             articleSaved: function(pubId, pageId, articleId) {
-                return sendChange(pubId, pageId, articleId, actions.saveArticle);
+                return sendChange(pubId, pageId, articleId, -1, actions.saveArticle);
             },
             articleUpdated: function(pubId, articleId, editedField) {
-                return sendChange(pubId, -1, articleId, actions.updateArticle, editedField);
+                return sendChange(pubId, -1, articleId, -1, actions.updateArticle, editedField);
+            },
+            advertSaved: function(pubId, pageId, advertId) {
+              return sendChange( pubId, pageId, -1, advertId, actions.saveAdvert);
             },
             actions: actions,
             userAction: userAction,

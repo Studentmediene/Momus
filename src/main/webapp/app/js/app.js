@@ -66,6 +66,11 @@ angular.module('momusApp', [
                 templateUrl: 'partials/article/articleRevisionView.html',
                 controller: 'ArticleRevisionCtrl'
             })
+            .when('/reklamer/:id',{
+              templateUrl: 'partials/advert/advertView.html',
+              controller: 'AdvertCtrl',
+              controllerAs: 'vm'
+            })
             .when('/utgaver',
             {
                 templateUrl: 'partials/publication/publicationView.html',
