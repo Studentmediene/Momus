@@ -6,9 +6,13 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 
 import com.google.common.collect.ImmutableMap;
+import no.dusken.momus.authentication.UserDetailsService;
+import no.dusken.momus.authentication.UserDetailsServiceDev;
+import no.dusken.momus.authentication.UserDetailsServiceImpl;
 import no.dusken.momus.exceptions.ExceptionHandler;
 import no.dusken.momus.mapper.HibernateAwareObjectMapper;
 
+import no.dusken.momus.service.repository.PersonRepository;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -50,8 +54,20 @@ import liquibase.integration.spring.SpringLiquibase;
         ignoreResourceNotFound = true)
 class ApplicationConfig extends WebMvcConfigurerAdapter {
 
-    @Autowired
-    private Environment env;
+    private final Environment env;
+
+    public ApplicationConfig(Environment env) {
+        this.env = env;
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService(PersonRepository personRepository) {
+        if(Boolean.valueOf(env.getProperty("devmode.disableAuth"))) {
+            return new UserDetailsServiceDev(personRepository);
+        }else {
+            return new UserDetailsServiceImpl(personRepository);
+        }
+    }
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {

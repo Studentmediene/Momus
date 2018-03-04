@@ -16,6 +16,7 @@
 
 package no.dusken.momus.controller;
 
+import no.dusken.momus.authentication.UserDetailsServiceDev;
 import no.dusken.momus.ldap.LdapSyncer;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.ArticleService;
@@ -165,5 +166,10 @@ public class DevController {
     @GetMapping("/devmode")
     public @ResponseBody boolean isDevmode() {
         return Boolean.valueOf(env.getProperty("devmode"));
+    }
+
+    @PutMapping("/loggedinuser/{id}")
+    public void setLoggedInUser(@PathVariable Long id) {
+        UserDetailsServiceDev.LOGGED_IN_USER = id;
     }
 }

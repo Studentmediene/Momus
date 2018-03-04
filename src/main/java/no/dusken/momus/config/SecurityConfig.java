@@ -83,6 +83,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception{
+        if(Boolean.valueOf(env.getProperty("devmode.disableAuth"))) {
+            http
+                    .csrf().disable()
+                    .authorizeRequests()
+                    .antMatchers("/**").permitAll();
+            return;
+        }
+
         http
             .csrf().disable()
             .addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class)
