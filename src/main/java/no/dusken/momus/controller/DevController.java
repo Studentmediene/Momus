@@ -168,6 +168,11 @@ public class DevController {
         return Boolean.valueOf(env.getProperty("devmode"));
     }
 
+    @GetMapping("/noauth")
+    public @ResponseBody boolean isNoAuth() {
+        return Boolean.valueOf(env.getProperty("devmode.noAuth"));
+    }
+
     @PutMapping("/loggedinuser/{id}")
     public void setLoggedInUser(@PathVariable Long id) {
         UserDetailsServiceDev.LOGGED_IN_USER = id;

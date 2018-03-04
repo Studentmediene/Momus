@@ -14,7 +14,6 @@ import no.dusken.momus.mapper.HibernateAwareObjectMapper;
 
 import no.dusken.momus.service.repository.PersonRepository;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -62,7 +61,7 @@ class ApplicationConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public UserDetailsService userDetailsService(PersonRepository personRepository) {
-        if(Boolean.valueOf(env.getProperty("devmode.disableAuth"))) {
+        if(Boolean.valueOf(env.getProperty("devmode.noAuth"))) {
             return new UserDetailsServiceDev(personRepository);
         }else {
             return new UserDetailsServiceImpl(personRepository);

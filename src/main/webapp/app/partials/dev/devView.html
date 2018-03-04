@@ -1,11 +1,46 @@
 <div class="container">
-    <div
-            class="btn btn-primary"
-            button-loader="vm.generating"
-            ng-click="vm.generateData()"
-            loading-text="Generating"
-            completed-text="Generated"
-    >
-        Generate dummy articles and publications
-    </div>
+    <p>
+        <span
+                class="btn btn-primary"
+                button-loader="vm.generating"
+                ng-click="vm.generateData()"
+                loading-text="Generating"
+                completed-text="Generated"
+        >
+            Generate dummy articles and publications
+        </span>
+    </p>
+    <p ng-if="vm.noAuth">
+        <div class="input-group">
+            <span class="input-group-btn">
+                <span
+                        class="btn btn-primary"
+                        button-loader="vm.settingUser"
+                        ng-click="vm.setLoggedInUser(vm.selectedUser.id)"
+                        loading-text="Setting"
+                        completed-text="Set!"
+                >
+                    Set logged in user
+                </span>
+            </span>
+            <ui-select
+                    theme="bootstrap"
+                    ng-model="vm.selectedUser">
+                <ui-select-match placeholder="Selected">
+                    <span ng-bind="$select.selected.name"></span>
+                </ui-select-match>
+
+                <ui-select-choices repeat="person in (vm.persons | filter: $select.search) track by person.id">
+                    <span ng-bind="person.name"></span>
+                </ui-select-choices>
+            </ui-select>
+            <!--<select-->
+                    <!--id="selected-user"-->
+                    <!--ui-select2-->
+                    <!--class="form-control"-->
+                    <!--ng-model="vm.selectedUser"-->
+                    <!--ng-options="person as person.name for person in vm.persons track by person.id">-->
+            <!--</select>-->
+        </div>
+    </p>
 </div>

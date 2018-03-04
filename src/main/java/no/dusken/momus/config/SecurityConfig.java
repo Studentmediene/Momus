@@ -83,7 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception{
-        if(Boolean.valueOf(env.getProperty("devmode.disableAuth"))) {
+        if(Boolean.valueOf(env.getProperty("devmode.noAuth"))) {
             http
                     .csrf().disable()
                     .authorizeRequests()
