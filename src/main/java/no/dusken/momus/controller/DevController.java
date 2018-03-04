@@ -94,13 +94,17 @@ public class DevController {
         List<Person> people = new ArrayList<>(personRepository.findByActiveTrue());
 
         Publication p1 = new Publication();
-        p1.setName("UD #1-2018");
-        p1.setReleaseDate(new GregorianCalendar(2018, Calendar.JANUARY, 20).getTime());
+        p1.setName("UD #1");
+        Calendar p1ReleaseDate = new GregorianCalendar();
+        p1ReleaseDate.add(Calendar.DAY_OF_YEAR, 7);
+        p1.setReleaseDate(p1ReleaseDate.getTime());
         p1 = publicationService.savePublication(p1, 50);
 
         Publication p2 = new Publication();
-        p2.setName("UD #2-2018");
-        p2.setReleaseDate(new GregorianCalendar(2018, Calendar.FEBRUARY, 10).getTime());
+        p2.setName("UD #2");
+        Calendar p2ReleaseDate = new GregorianCalendar();
+        p2ReleaseDate.add(Calendar.DAY_OF_YEAR, 14);
+        p2.setReleaseDate(p2ReleaseDate.getTime());
         p2 = publicationService.savePublication(p2, 50);
 
         Article a1 = new Article();

@@ -10,6 +10,8 @@ import org.apache.velocity.app.VelocityEngine;
 import org.opensaml.saml2.metadata.provider.HTTPMetadataProvider;
 import org.opensaml.xml.parse.StaticBasicParserPool;
 import org.opensaml.xml.parse.XMLParserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -75,15 +77,22 @@ import no.dusken.momus.authentication.UserDetailsService;
 @PropertySource(value = {"classpath:momus.properties","classpath:local.properties"}, ignoreResourceNotFound = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private Environment env;
+    private final Environment env;
+
+    private final UserDetailsService userDetailsService;
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    public SecurityConfig(Environment env, UserDetailsService userDetailsService) {
+        this.env = env;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     public void configure(HttpSecurity http) throws Exception{
         if(Boolean.valueOf(env.getProperty("devmode.noAuth"))) {
+            logger.info("Auth disabled, not setting up security");
             http
                     .csrf().disable()
                     .authorizeRequests()
