@@ -17,7 +17,7 @@ angular.module('momusApp.controllers')
                     $location.url('/front');
                 }else {
                     $http.get('/api/dev/noauth').then(
-                        (response) => { vm.noAuth = response.data }
+                        (response) => { vm.noAuth = response.data; }
                     )
                 }
             },

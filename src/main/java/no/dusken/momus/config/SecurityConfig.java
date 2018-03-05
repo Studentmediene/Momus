@@ -12,11 +12,7 @@ import org.opensaml.xml.parse.StaticBasicParserPool;
 import org.opensaml.xml.parse.XMLParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -75,6 +71,7 @@ import no.dusken.momus.authentication.UserDetailsService;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @ComponentScan("org.springframework.security.saml")
 @PropertySource(value = {"classpath:momus.properties","classpath:local.properties"}, ignoreResourceNotFound = true)
+@Profile("!noAuth")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final Environment env;
@@ -83,7 +80,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
     public SecurityConfig(Environment env, UserDetailsService userDetailsService) {
         this.env = env;
         this.userDetailsService = userDetailsService;
@@ -91,15 +87,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception{
-        if(Boolean.valueOf(env.getProperty("devmode.noAuth"))) {
-            logger.info("Auth disabled, not setting up security");
-            http
-                    .csrf().disable()
-                    .authorizeRequests()
-                    .antMatchers("/**").permitAll();
-            return;
-        }
-
         http
             .csrf().disable()
             .addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class)
@@ -120,7 +107,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+	protected void configure(AuthenticationManagerBuilder auth) {
 		auth.authenticationProvider(samlAuthenticationProvider());
     }
 
@@ -216,7 +203,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new SAMLLogoutProcessingFilter(successLogoutHandler(), new LogoutHandler[]{logoutHandler()});
     }
 
-    @Bean 
+    @Bean
     public SimpleUrlLogoutSuccessHandler successLogoutHandler() {
         SimpleUrlLogoutSuccessHandler handler = new SimpleUrlLogoutSuccessHandler();
         handler.setDefaultTargetUrl("/");

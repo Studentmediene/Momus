@@ -174,7 +174,7 @@ public class DevController {
 
     @GetMapping("/noauth")
     public @ResponseBody boolean isNoAuth() {
-        return Boolean.valueOf(env.getProperty("devmode.noAuth"));
+        return env.acceptsProfiles("noAuth");
     }
 
     @PutMapping("/loggedinuser/{id}")
