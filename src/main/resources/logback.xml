@@ -61,7 +61,7 @@
     <logger name="PROTOCOL_MESSAGE" level="INFO"/>
     <logger name="httpclient" level="INFO"/>
 
-    <if condition="${devmode}">
+    <if condition='property("spring.profiles.active").contains("dev")'>
         <then>
             <root level="DEBUG">
                 <appender-ref ref="STDOUT" />

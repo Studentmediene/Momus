@@ -92,7 +92,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class)
             .addFilterAfter(samlFilter(), BasicAuthenticationFilter.class)
             .authorizeRequests()
-            .antMatchers("/api/dev/**").access(env.getProperty("devmode"))
+            .antMatchers("/api/dev/**").access(String.valueOf(env.acceptsProfiles("dev")))
             .antMatchers("/**").fullyAuthenticated()
             .and()
             .exceptionHandling()

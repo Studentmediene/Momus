@@ -169,7 +169,7 @@ public class DevController {
 
     @GetMapping("/devmode")
     public @ResponseBody boolean isDevmode() {
-        return Boolean.valueOf(env.getProperty("devmode"));
+        return env.acceptsProfiles("dev");
     }
 
     @GetMapping("/noauth")
