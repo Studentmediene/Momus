@@ -14,7 +14,7 @@ import no.dusken.momus.authentication.UserDetailsServiceMock;
 @PropertySource(value = {"classpath:momus.properties", "classpath:test.properties"})
 public class TestConfig extends WebMvcConfigurerAdapter {
 
-    @Bean
+    @Bean(name = "userDetailsService")
     public UserDetailsService userDetailsServiceImpl() {
         return new UserDetailsServiceMock();
     }
