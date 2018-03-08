@@ -14,9 +14,9 @@ import org.springframework.web.servlet.DispatcherServlet;
 public class WebInit implements WebApplicationInitializer {
 
 	@Override
-	public void onStartup(ServletContext servletContext) throws ServletException {
+	public void onStartup(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext config = new AnnotationConfigWebApplicationContext();
-        config.register(ApplicationConfig.class, SecurityConfig.class);
+        config.register(ApplicationConfig.class);
         
         servletContext.addListener(new ContextLoaderListener(config));
         ServletRegistration.Dynamic dispatcher = 
