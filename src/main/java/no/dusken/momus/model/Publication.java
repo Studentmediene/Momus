@@ -18,6 +18,7 @@ package no.dusken.momus.model;
 
 import javax.persistence.*;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +32,7 @@ public class Publication {
 
     private String name;
 
-    private ZonedDateTime releaseDate;
+    private LocalDate releaseDate;
 
     @OneToMany(mappedBy = "publication", fetch = FetchType.LAZY)
     private Set<Article> articles;
@@ -60,11 +61,11 @@ public class Publication {
         this.name = name;
     }
 
-    public ZonedDateTime getReleaseDate() {
+    public LocalDate getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(ZonedDateTime releaseDate) {
+    public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
     }
 

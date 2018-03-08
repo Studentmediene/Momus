@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
 
@@ -91,7 +92,7 @@ public class PublicationController {
 
     @GetMapping("/active")
     public @ResponseBody Publication getActivePublication(){
-        Publication active = publicationService.getActivePublication(ZonedDateTime.now());
+        Publication active = publicationService.getActivePublication(LocalDate.now());
         if(active == null) {
             throw new RestException("No active publication found", HttpServletResponse.SC_NOT_FOUND);
         }

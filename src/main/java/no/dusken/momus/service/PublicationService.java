@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
 
@@ -114,7 +115,7 @@ public class PublicationService {
      *
      * @return Returns the oldest publication that has not been released yet at the time of the date parameter
      */
-    public Publication getActivePublication(ZonedDateTime date){
+    public Publication getActivePublication(LocalDate date){
         List<Publication> publications = publicationRepository.findAllByOrderByReleaseDateDesc();
 
         if(publications.isEmpty()) return null;

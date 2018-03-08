@@ -40,5 +40,6 @@ public class HibernateAwareObjectMapper extends ObjectMapper {
         registerModule(new JavaTimeModule());
         disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
         disable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
+        configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
 }
