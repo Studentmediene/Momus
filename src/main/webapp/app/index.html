@@ -73,6 +73,9 @@
             <li ng-class="{active: isActive('/info%')}">
                 <a href="#/info"><i class="fa fa-info"></i> Info/nyheter</a>
             </li>
+            <li ng-class="{active: isActive('/admin%')}">
+                <a href="#/admin"><i class="fa fa-rebel"></i>Admin</a>
+            </li>
             <li ng-class="{active: isActive('/dev%')}" ng-cloak ng-show="devmode" class="navbar-dev">
                 <a href="#/dev"><i class="fa fa-cog"></i> Dev</a>
             </li>
@@ -133,6 +136,7 @@
 <script src="js/controllers/FrontPageCtrl.js"></script>
 <script src="js/controllers/CreateArticleModalCtrl.js"></script>
 <script src="js/controllers/InfoCtrl.js"></script>
+<script src="js/controllers/AdminCtrl.js"></script>
 <script src="js/controllers/DevCtrl.js"></script>
 
 <!-- Services -->
@@ -150,6 +154,7 @@
 <script src="js/resources/Person.js"></script>
 <script src="js/resources/Publication.js"></script>
 <script src="js/resources/Page.js"></script>
+<script src="js/resources/News.js"></script>
 
 <!-- Directives -->
 <script src="js/directives/buttonLoader.js"></script>

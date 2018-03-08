@@ -735,4 +735,23 @@
                 onUpdate="CASCADE"
         />
     </changeSet>
+    <changeSet id="42_addnews" author="Christoffer">
+        <createTable tableName="news">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="title" type="VARCHAR(255)" />
+            <column name="date" type="DATE" />
+            <column name="content" type="TEXT" />
+            <column name="author_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+            baseTableName="news" baseColumnNames="author_id"
+            constraintName="FK_news_person"
+            referencedTableName="person"
+            referencedColumnNames="id"
+        />
+    </changeSet>
 </databaseChangeLog>

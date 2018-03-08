@@ -87,6 +87,13 @@ angular.module('momusApp', [
                 controller: 'InfoCtrl',
                 title: 'Info'
             })
+            .when('/admin',
+            {
+                templateUrl: 'partials/admin/adminView.html',
+                controller: 'AdminCtrl',
+                title: 'Admin',
+                controllerAs: 'vm'
+            })
             .when('/dev',
             {
                 templateUrl: 'partials/dev/devView.html',
