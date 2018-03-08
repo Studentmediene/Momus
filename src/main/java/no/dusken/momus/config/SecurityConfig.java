@@ -10,8 +10,6 @@ import org.apache.velocity.app.VelocityEngine;
 import org.opensaml.saml2.metadata.provider.HTTPMetadataProvider;
 import org.opensaml.xml.parse.StaticBasicParserPool;
 import org.opensaml.xml.parse.XMLParserException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -77,8 +75,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final Environment env;
 
     private final UserDetailsService userDetailsService;
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public SecurityConfig(Environment env, UserDetailsService userDetailsService) {
         this.env = env;
