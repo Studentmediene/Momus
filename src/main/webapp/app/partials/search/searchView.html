@@ -84,15 +84,14 @@
                     <label class="sr-only" for="searchPublication">
                         Utgave
                     </label>
-                    <select class="form-control" id="searchPublication" ui-select2 ng-model="search.publication">
-                        <option value="">
-                            Alle utgaver
-                        </option>
-                        <option ng-repeat="publication in publications | orderBy: '-release_date'"
-                                value="{{ publication.id }}">
-                            {{ publication.name }}
-                        </option>
-                    </select>
+                    <id-select
+                            use-ids
+                            id="searchPublication"
+                            placeholder="Utgaver"
+                            items="publications"
+                            target="search.publication"
+                            show="name">
+                    </id-select>
                 </div>
 
                 <!-- Person search -->
@@ -100,12 +99,15 @@
                     <label class="sr-only" for="searchPersons">
                         Personer
                     </label>
-                    <select multiple class="form-control" id="searchPersons" ui-select2 ng-model="search.persons"
-                            placeholder="Velg personer">
-                        <option ng-repeat="person in persons" value="{{ person.id }}">
-                            {{ person.name }}
-                        </option>
-                    </select>
+                    <id-select
+                            id="searchPersons"
+                            placeholder="Personer"
+                            multiple
+                            use-ids
+                            items="persons"
+                            target="search.persons"
+                            show="name">
+                    </id-select>
                 </div>
 
                 <div class="col-sm-3"></div>
