@@ -77,7 +77,7 @@ angular.module('momusApp.controllers')
         };
 
         $scope.updateFavouriteSection = function(){
-            Person.updateFavouritesection({section: $scope.user.favouritesection.id}, person => {
+            Person.updateFavouritesection({section: $scope.user.favouritesection.id}, {}, person => {
                 searchForArticlesFromFavoriteSection();
                 $scope.user = person;
             });
@@ -102,7 +102,7 @@ angular.module('momusApp.controllers')
                 Article.reviewStatusCounts({publicationId: $scope.publication.id}).$promise,
                 Article.reviewStatuses().$promise]
             ).then(data => $scope.reviewstatus = getStatusArrays(...data));
-        });
+        }, () => $scope.noPublication = true);
 
         function getStatusArrays(counts, statuses){
             var status = {statuses: statuses, labels: [], colors: [], counts: []};

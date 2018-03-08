@@ -17,14 +17,19 @@
 package no.dusken.momus.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import no.dusken.momus.authorization.Role;
 import org.hibernate.annotations.Type;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.sql.Blob;
+import java.util.Collection;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
-public class Person {
+public class Person implements UserDetails {
 
     @Id
     private Long id;
@@ -49,6 +54,10 @@ public class Person {
     @JsonIgnore
     @Lob
     private Blob photo;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private Collection<Role> roles;
 
     public Person() {
     }
@@ -134,6 +143,57 @@ public class Person {
     public void setPhoto(Blob photo) {
         this.photo = photo;
     }
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
+    }
+
+    /*
+    The following methods is to implement UserDetails,
+    so that Spring can get a persons roles.
+     */
+
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
+
+    @JsonIgnore
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    /* End UserDetails */
 
     @Override
     public boolean equals(Object o) {

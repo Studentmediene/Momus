@@ -23,7 +23,7 @@ angular.module('momusApp.resources')
                 id: '@id'
             },
             {
-                active: { method: 'GET', params: {id: 'active'} },
+                active: { method: 'GET', params: {id: 'active'}, bypassInterceptor: true },
                 update: { method: 'PUT'},
                 layoutStatuses: { method: 'GET', isArray: true, params: {id: 'layoutstatuses'}, cache: true }
             });

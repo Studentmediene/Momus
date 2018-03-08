@@ -58,15 +58,6 @@ label.important-field {
     font-weight: bold;
 }
 
-.wysihtml5-command-active {
-    background-color: #cccccc;
-    background-image: none;
-    outline: 0;
-    -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
 .top-spacing {
     margin-top: 20px;
 }
@@ -122,11 +113,6 @@ td > ul, td > ol {
     margin-bottom: 0;
 }
 
-/* quoteCheck button effects */
-a.zeroclipboard-is-hover {
-    background-color: #3071a9;
-}
-
 .article-revisions del, .article-revisions .del {
     background:#ffe6e6;
 }
@@ -163,6 +149,10 @@ a.zeroclipboard-is-hover {
 .inline-textarea {
     min-height: 100px;
     resize: vertical; 
+}
+
+.table-responsive {
+    overflow-x: visible;
 }
 
 .navbar-dev {

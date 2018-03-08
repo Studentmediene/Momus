@@ -14,18 +14,41 @@
  * limitations under the License.
  */
 
-package no.dusken.momus.test;
+package no.dusken.momus.service;
 
+import no.dusken.momus.authentication.UserDetailsService;
+import no.dusken.momus.model.Person;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.ContextConfiguration;
+import static org.mockito.Mockito.*;
 
 import no.dusken.momus.config.TestConfig;
+
+import java.util.UUID;
 
 /**
  * Values needed for most of the test cases
  */
 @RunWith(MockitoJUnitRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-public abstract class AbstractTestRunner {
+public abstract class AbstractServiceTest {
+
+    @Mock
+    UserDetailsService userDetailsService;
+
+    public void userMockSetup() {
+        MockitoAnnotations.initMocks(this);
+        Person me = new Person(
+                1L,
+                UUID.randomUUID(),
+                "ei",
+                "Eivind",
+                "ei@vi.nd",
+                "12345678",
+                true);
+        when(userDetailsService.getLoggedInPerson()).thenReturn(me);
+    }
 }

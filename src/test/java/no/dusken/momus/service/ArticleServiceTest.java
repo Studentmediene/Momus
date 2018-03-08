@@ -17,13 +17,13 @@
 package no.dusken.momus.service;
 
 import no.dusken.momus.model.*;
+import no.dusken.momus.service.indesign.IndesignExport;
+import no.dusken.momus.service.indesign.IndesignGenerator;
 import no.dusken.momus.service.repository.*;
-import no.dusken.momus.test.AbstractTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -34,39 +34,24 @@ import static org.mockito.Mockito.*;
 import static org.mockito.AdditionalAnswers.*;
 
 @Transactional
-public class ArticleServiceTest extends AbstractTestRunner {
+public class ArticleServiceTest extends AbstractServiceTest {
+    @Mock
+    private ArticleRepository articleRepository;
 
     @Mock
-    PersonRepository personRepository;
+    private ArticleRevisionRepository articleRevisionRepository;
 
     @Mock
-    ArticleRepository articleRepository;
-
-    @Mock
-    PublicationRepository publicationRepository;
-
-    @Mock
-    ArticleStatusRepository articleStatusRepository;
-
-    @Mock
-    ArticleTypeRepository articleTypeRepository;
-
-    @Mock
-    ArticleRevisionRepository articleRevisionRepository;
-
-    @Mock
-    ArticleReviewRepository articleReviewRepository;
-
-    @Mock
-    SectionRepository sectionRepository;
+    private IndesignGenerator indesignGenerator;
 
     @InjectMocks
-    ArticleService articleService;
+    private ArticleService articleService;
 
     private Person person1;
     private Person person2;
 
     private Article article1;
+    private Article article2;
 
     private ArticleRevision article1Revision1;
 
@@ -86,11 +71,9 @@ public class ArticleServiceTest extends AbstractTestRunner {
     private Section section2;
 
     @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-
-        person1 = new Person(1L, UUID.randomUUID(), "mts", "Mats Matsessen", "", "", true);
-        person2 = new Person(2L, UUID.randomUUID(), "aaa", "Kåre Kåressen", "", "", true);
+    public void setUp() {
+        person1 = new Person(2L, UUID.randomUUID(), "mts", "Mats Matsessen", "", "", true);
+        person2 = new Person(3L, UUID.randomUUID(), "aaa", "Kåre Kåressen", "", "", true);
 
         publication1 = new Publication(1L);
         publication1.setName("Pub1");
@@ -117,16 +100,56 @@ public class ArticleServiceTest extends AbstractTestRunner {
         article1.setStatus(articleStatus1);
         article1.setType(articleType1);
         article1.setReview(articleReview1);
-        article1.setSection(section1);
         article1.setArchived(false);
+
+        article2 = new Article(2L);
+        article2.setName("Artikkel 2");
+        article2.setContent("Lorem ipsum");
+        article2.setPublication(publication1);
+        article2.setSection(section1);
+        article2.setStatus(articleStatus1);
+        article2.setType(articleType1);
+        article2.setReview(articleReview1);
+        article2.setArchived(false);
 
         article1Revision1 = new ArticleRevision(0L);
         article1Revision1.setArticle(article1);
         article1Revision1.setContent(article1.getContent());
         article1Revision1.setStatus(article1.getStatus());
 
+        when(indesignGenerator.generateFromArticle(article1)).thenReturn(new IndesignExport("meh", "meh"));
+        when(articleRepository.exists(longThat(i -> i == 1L || i == 2L ))).thenReturn(true);
         when(articleRepository.findOne(article1.getId())).thenReturn(article1);
+        when(articleRepository.findOne(article2.getId())).thenReturn(article2);
         when(articleRepository.saveAndFlush(any(Article.class))).then(returnsFirstArg());
+    }
+
+    /**
+     * Method: {@link ArticleService#getArticleById}
+     */
+    @Test
+    public void testGetArticleById() {
+        Article article = articleService.getArticleById(1L);
+        assert(article.getId() == 1L);
+    }
+
+    /**
+     * Method: {@link ArticleService#getArticlesByIds}
+     */
+    @Test
+    public void testGetArticlesByIds() {
+        List<Article> articles = articleService.getArticlesByIds(new ArrayList<>(Arrays.asList(1L, 2L)));
+        assert(articles.size() == 2);
+    }
+
+    /**
+     * Method: {@link ArticleService#saveArticle}
+     */
+    @Test
+    public void testSaveArticle() {
+        article1 = articleService.saveArticle(article1);
+
+        verify(articleRepository, times(1)).saveAndFlush(article1);
     }
 
     /**
@@ -141,10 +164,10 @@ public class ArticleServiceTest extends AbstractTestRunner {
     }
 
     /**
-     * Method: {@link ArticleService#updateArticleMetadata(Article)}
+     * Method: {@link ArticleService#updateArticleMetadata(Long, Article)}
      */
     @Test
-    public void testUpdateArticleMetadata() throws Exception {
+    public void testUpdateArticleMetadata() {
         Article article = new Article(article1.getId());
         ArticleService articleServiceSpy = spy(articleService);
 
@@ -182,7 +205,7 @@ public class ArticleServiceTest extends AbstractTestRunner {
      * Method: {@link ArticleService#updateArticleContent(Article)}
      */
     @Test
-    public void testUpdateArticleContent() throws Exception {
+    public void testUpdateArticleContent() {
         Article article = new Article(article1.getId());
         ArticleService articleServiceSpy = spy(articleService);
 
@@ -199,10 +222,36 @@ public class ArticleServiceTest extends AbstractTestRunner {
     }
 
     /**
+     * Method: {@link ArticleService#updateArticleContent(Article)}
+     * Verify that a new revision is not created when there is no change in content
+     */
+    @Test
+    public void testUpdateArticleContentNoChange() {
+        Article article = new Article(article1.getId());
+        article.setContent(article1.getContent());
+        ArticleService articleServiceSpy = spy(articleService);
+
+        articleServiceSpy.updateArticleContent(article);
+
+        verify(articleServiceSpy, times(0)).updateArticle(article1);
+        verify(articleServiceSpy, times(0)).createRevision(article1);
+    }
+
+    /**
+     * Method: {@link ArticleService#exportArticle}
+     */
+    @Test
+    public void testExportArticle() {
+        articleService.exportArticle(article1.getId());
+
+        verify(indesignGenerator, times(1)).generateFromArticle(article1);
+    }
+
+    /**
      * Method: {@link ArticleService#createRevision(Article)}
      */
     @Test
-    public void testCreateRevision() throws Exception {
+    public void testCreateRevision() {
         ArticleService articleServiceSpy = spy(articleService);
 
         when(articleRevisionRepository.findOne(any(Long.class))).thenReturn(article1Revision1);
@@ -238,28 +287,28 @@ public class ArticleServiceTest extends AbstractTestRunner {
     }
 
     /**
-     * Method: {@link ArticleService#updateNote()}
+     * Method: {@link ArticleService#updateNote}
      */
     @Test
     public void testUpdateNote() {
         ArticleService articleServiceSpy = spy(articleService);
         doReturn(article1).when(articleServiceSpy).updateArticle(article1);
 
-        Article article = articleServiceSpy.updateNote(article1, "New note");
+        Article article = articleServiceSpy.updateNote(article1.getId(), "New note");
 
         verify(articleServiceSpy, times(1)).updateArticle(article1);
         assertEquals("New note", article.getNote());
     }
 
     /**
-     * Method: {@link ArticleService#updateArchived())}
+     * Method: {@link ArticleService#updateArchived}
      */
     @Test
     public void testUpdateArchived() {
         ArticleService articleServiceSpy = spy(articleService);
         doReturn(article1).when(articleServiceSpy).updateArticle(article1);
 
-        Article article = articleServiceSpy.updateArchived(article1, true);
+        Article article = articleServiceSpy.updateArchived(article1.getId(), true);
 
         verify(articleServiceSpy, times(1)).updateArticle(article1);
         assertEquals(true, article.getArchived());

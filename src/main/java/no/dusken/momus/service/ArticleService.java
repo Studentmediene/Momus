@@ -17,30 +17,30 @@
 package no.dusken.momus.service;
 
 import com.google.api.services.drive.model.File;
-import no.dusken.momus.authentication.UserDetailsService;
 import no.dusken.momus.exceptions.RestException;
-import no.dusken.momus.model.Article;
-import no.dusken.momus.model.ArticleRevision;
-import no.dusken.momus.model.ArticleStatus;
+import no.dusken.momus.model.*;
 import no.dusken.momus.service.drive.GoogleDriveService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
-import no.dusken.momus.service.repository.ArticleRepository;
-import no.dusken.momus.service.repository.ArticleRevisionRepository;
+import no.dusken.momus.service.repository.*;
 import no.dusken.momus.service.search.ArticleQuery;
 import no.dusken.momus.service.search.ArticleQueryBuilder;
 import no.dusken.momus.service.search.ArticleSearchParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleService {
@@ -57,9 +57,6 @@ public class ArticleService {
     private IndesignGenerator indesignGenerator;
 
     @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
     private GoogleDriveService googleDriveService;
 
     @Autowired
@@ -68,24 +65,33 @@ public class ArticleService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Value("${drive.syncEnabled}")
+    private boolean driveEnabled;
 
     public Article getArticleById(Long id) {
-        Article article = articleRepository.findOne(id);
-        if (article == null) {
-            logger.warn("Article with id {} not found, tried by user {}", id, userDetailsService.getLoggedInPerson().getId());
-            throw new RestException("Article " + id + " not found", 404);
+        if(!articleRepository.exists(id)) {
+            throw new RestException("Article with id=" + id + " not found", HttpServletResponse.SC_NOT_FOUND);
         }
-        return article;
+        return articleRepository.findOne(id);
+    }
+
+    public List<Article> getArticlesByIds(List<Long> ids) {
+        if(ids == null) {
+            return new ArrayList<>();
+        }
+        return ids.stream().map(this::getArticleById).collect(Collectors.toList());
     }
 
     public Article saveArticle(Article article) {
-        File document = googleDriveService.createDocument(article.getName());
+        if(driveEnabled) {
+            File document = googleDriveService.createDocument(article.getName());
 
-        if (document == null) {
-            throw new RestException("Couldn't create article, Google Docs failed", 500);
+            if (document == null) {
+                throw new RestException("Couldn't create article, Google Docs failed", 500);
+            }
+
+            article.setGoogleDriveId(document.getId());
         }
-
-        article.setGoogleDriveId(document.getId());
 
         Article newArticle = articleRepository.saveAndFlush(article);
 
@@ -119,7 +125,7 @@ public class ArticleService {
     }
 
     public Article updateArticleMetadata(Long id, Article article) {
-        Article existing = articleRepository.findOne(id);
+        Article existing = getArticleById(id);
 
         ArticleStatus oldStatus = existing.getStatus();
 
@@ -146,12 +152,14 @@ public class ArticleService {
         return updateArticle(existing);
     }
 
-    public Article updateNote(Article article, String note) {
+    public Article updateNote(Long id, String note) {
+        Article article = getArticleById(id);
         article.setNote(note);
         return updateArticle(article);
     }
 
-    public Article updateArchived(Article article, Boolean archived) {
+    public Article updateArchived(Long id, Boolean archived) {
+        Article article = getArticleById(id);
         article.setArchived(archived);
         return updateArticle(article);
     }
@@ -183,8 +191,7 @@ public class ArticleService {
     }
 
     public IndesignExport exportArticle(Long id) {
-        Article article = getArticleById(id);
-        return indesignGenerator.generateFromArticle(article);
+        return indesignGenerator.generateFromArticle(getArticleById(id));
     }
 
     /**
@@ -234,10 +241,6 @@ public class ArticleService {
         }
 
         return articleRevisionRepository.findOne(revisions.get(0).getId());
-    }
-
-    public ArticleRepository getArticleRepository() {
-        return articleRepository;
     }
 
     public static String createRawContent(Article article){

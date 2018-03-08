@@ -16,11 +16,6 @@
 
 package no.dusken.momus.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import no.dusken.momus.exceptions.RestException;
-import no.dusken.momus.authentication.UserDetailsService;
 import no.dusken.momus.diff.DiffMatchPatch;
 import no.dusken.momus.diff.DiffUtil;
 import no.dusken.momus.model.*;
@@ -29,28 +24,27 @@ import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.repository.*;
 import no.dusken.momus.service.search.ArticleSearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @RequestMapping("/article")
 public class ArticleController {
-    private Logger logger = LoggerFactory.getLogger(getClass());    
 
     @Autowired
     private ArticleService articleService;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private DiffUtil diffUtil;
+
+    @Autowired
+    private ArticleRepository articleRepository;
 
     @Autowired
     private ArticleTypeRepository articleTypeRepository;
@@ -59,85 +53,46 @@ public class ArticleController {
     private ArticleStatusRepository articleStatusRepository;
 
     @Autowired
-    private ArticleRevisionRepository articleRevisionRepository;
-
-    @Autowired
     private ArticleReviewRepository articleReviewRepository;
 
     @Autowired
     private SectionRepository sectionRepository;
 
     @Autowired
-    private DiffUtil diffUtil;
+    private ArticleRevisionRepository articleRevisionRepository;
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public @ResponseBody Article getArticleByID(@PathVariable("id") Long id) {
-        Article article = articleService.getArticleRepository().findOne(id);
-        if (article == null) {
-            logger.warn("Article with id {} not found, tried by user {}", id, userDetailsService.getLoggedInPerson().getId());
-            throw new RestException("Article " + id + " not found", HttpServletResponse.SC_NOT_FOUND);
-        }
-        return article;
+    @GetMapping("/{id}")
+    public @ResponseBody Article getArticleByID(@PathVariable Long id) {
+        return articleService.getArticleById(id);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public @ResponseBody Article saveArticle(@RequestBody Article article){
         return articleService.saveArticle(article);
     }
 
-    @RequestMapping(value = "{id}/metadata", method = RequestMethod.PATCH)
-    public @ResponseBody Article updateArticle(@PathVariable("id") Long id, @RequestBody Article article){
-        if (articleService.getArticleRepository().findOne(id) == null) {
-            throw new RestException("Article " + id + " not found", HttpServletResponse.SC_NOT_FOUND);
-        }
+    @PatchMapping("{id}/metadata")
+    public @ResponseBody Article updateArticle(@PathVariable Long id, @RequestBody Article article){
         return articleService.updateArticleMetadata(id, article);
     }
 
-    @RequestMapping(value = "{id}/content", method = RequestMethod.GET)
-    public @ResponseBody String getArticleContent(@PathVariable("id") Long id) {
-        Article article = articleService.getArticleRepository().findOne(id);
-        if (article == null) {
-            logger.warn("Article with id {} not found, tried by user {}", id, userDetailsService.getLoggedInPerson().getId());
-            throw new RestException("Article " + id + " not found", HttpServletResponse.SC_NOT_FOUND);
-        }
-        return article.getContent();
+    @GetMapping("{id}/content")
+    public @ResponseBody String getArticleContent(@PathVariable Long id) {
+        return getArticleByID(id).getContent();
     }
 
-    @RequestMapping(value = "{id}/note", method = RequestMethod.PATCH)
-    public @ResponseBody Article updateArticleNote(@PathVariable("id") Long id, @RequestBody String note){
-        Article article = articleService.getArticleRepository().findOne(id);        
-        if (article == null) {
-            logger.warn("Article with id {} not found, tried by user {}", id, userDetailsService.getLoggedInPerson().getId());
-            throw new RestException("Article " + id + " not found", HttpServletResponse.SC_NOT_FOUND);
-        }
-        return articleService.updateNote(article, note);
+    @PatchMapping("{id}/note")
+    public @ResponseBody Article updateArticleNote(@PathVariable Long id, @RequestBody String note){
+        return articleService.updateNote(id, note);
     }
 
-    @RequestMapping(value = "{id}/archived", method = RequestMethod.PATCH)
-    public @ResponseBody Article updateArchived(@PathVariable("id") Long id, @RequestParam boolean archived) {
-        Article article = articleService.getArticleRepository().findOne(id);        
-        if (article == null) {
-            logger.warn("Article with id {} not found, tried by user {}", id, userDetailsService.getLoggedInPerson().getId());
-            throw new RestException("Article " + id + " not found", HttpServletResponse.SC_NOT_FOUND);
-        }
-        return articleService.updateArchived(article, archived);
+    @PatchMapping("{id}/archived")
+    public @ResponseBody Article updateArchived(@PathVariable Long id, @RequestParam boolean archived) {
+        return articleService.updateArchived(id, archived);
     }
 
-    @RequestMapping(value = "/multiple", method = RequestMethod.GET)
-    public @ResponseBody List<Article> getArticlesByID(@RequestParam(value="ids") List<Long> ids) {
-        if(ids == null) {
-            return new ArrayList<>();
-        }
-        return articleService.getArticleRepository().findAll(ids);
-    }
-
-    @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public @ResponseBody List<Article> getSearchData(@RequestBody ArticleSearchParams search) {
-        return articleService.searchForArticles(search);
-    }
-
-    @RequestMapping(value = "/{id}/indesignfile", method = RequestMethod.GET)
-    public void getIndesignExport(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
+    @GetMapping("/{id}/indesignfile")
+    public void getIndesignExport(@PathVariable Long id, HttpServletResponse response) throws IOException {
         IndesignExport indesignExport = articleService.exportArticle(id);
 
         response.addHeader("Content-Disposition", "attachment; filename=\"" + indesignExport.getName() + ".txt\"");
@@ -150,55 +105,60 @@ public class ArticleController {
         outStream.close();
     }
 
-    @RequestMapping(value = "/{id}/revisions", method = RequestMethod.GET)
-    public @ResponseBody List<ArticleRevision> getArticleRevisions(@PathVariable("id") Long id) {
+    @GetMapping("/{id}/revisions")
+    public @ResponseBody List<ArticleRevision> getArticleRevisions(@PathVariable Long id) {
         return articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(id);
     }
 
-    @RequestMapping(value = "/{id}/revisions/{revId1}/{revId2}", method = RequestMethod.GET)
-    public @ResponseBody LinkedList<DiffMatchPatch.Diff> getRevisionsDiffs(
-        @PathVariable("id") Long id, 
-        @PathVariable("revId1") Long revId1, 
-        @PathVariable("revId2") Long revId2) {
-            return diffUtil.getDiffList(id, revId1, revId2);
+    @GetMapping("/{id}/revisions/{revId1}/{revId2}")
+    public @ResponseBody List<DiffMatchPatch.Diff> getRevisionsDiffs(
+            @PathVariable Long id, @PathVariable Long revId1, @PathVariable Long revId2) {
+        return diffUtil.getDiffList(id, revId1, revId2);
     }
 
-    @RequestMapping(value = "/types", method = RequestMethod.GET)
+    @GetMapping("/multiple")
+    public @ResponseBody List<Article> getArticlesByID(@RequestParam(value="ids") List<Long> ids) {
+        return articleService.getArticlesByIds(ids);
+    }
+
+    @PostMapping("/search")
+    public @ResponseBody List<Article> getSearchData(@RequestBody ArticleSearchParams search) {
+        return articleService.searchForArticles(search);
+    }
+
+    @GetMapping("/types")
     public @ResponseBody List<ArticleType> getAllArticleTypes(){
         return articleTypeRepository.findAll();
     }
 
-    @RequestMapping(value = "/statuses", method = RequestMethod.GET)
+    @GetMapping("/statuses")
     public @ResponseBody List<ArticleStatus> getAllArticleStatuses(){
         return articleStatusRepository.findAll();
     }
-    @RequestMapping(value = "/sections", method = RequestMethod.GET)
+
+    @GetMapping("/sections")
     public @ResponseBody List<Section> getAllSections(){
         return sectionRepository.findAll();
     }
 
-    @RequestMapping(value = "/reviews", method = RequestMethod.GET)
+    @GetMapping("/reviews")
     public @ResponseBody List<ArticleReview> getAllReviewStatuses() {
         return articleReviewRepository.findAll();
     }
 
-    @RequestMapping(value = "/statuscounts", method = RequestMethod.GET)
+    @GetMapping("/statuscounts")
     public @ResponseBody Map<Long,Integer> getStatusCountsByPubId(@RequestParam Long publicationId){
-        List<ArticleStatus> statuses = articleStatusRepository.findAll();
-        Map<Long, Integer> map = new HashMap<>();
-        for (ArticleStatus status : statuses) {
-            map.put(status.getId(), articleService.getArticleRepository().countByStatusIdAndPublicationId(status.getId(), publicationId));
-        }
-        return map;
+        return getAllArticleStatuses().stream().map(ArticleStatus::getId)
+                .collect(Collectors.toMap(
+                        t -> t,
+                        t -> articleRepository.countByStatusIdAndPublicationId(t, publicationId)));
     }
 
-    @RequestMapping(value = "/reviewstatuscounts", method = RequestMethod.GET)
+    @GetMapping("/reviewstatuscounts")
     public @ResponseBody Map<Long,Integer> getReviewStatusCountsByPubId(@RequestParam Long publicationId){
-        List<ArticleReview> statuses = articleReviewRepository.findAll();
-        Map<Long, Integer> map = new HashMap<>();
-        for (ArticleReview status : statuses) {
-            map.put(status.getId(), articleService.getArticleRepository().countByReviewIdAndPublicationId(status.getId(), publicationId));
-        }
-        return map;
+        return getAllReviewStatuses().stream().map(ArticleReview::getId)
+                .collect(Collectors.toMap(
+                        t -> t,
+                        t -> articleRepository.countByReviewIdAndPublicationId(t, publicationId)));
     }
 }

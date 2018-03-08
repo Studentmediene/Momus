@@ -16,50 +16,40 @@
 
 package no.dusken.momus.service;
 
-import no.dusken.momus.model.Article;
-import no.dusken.momus.model.Page;
-import no.dusken.momus.model.Publication;
-import no.dusken.momus.service.PublicationService;
+import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.ArticleRepository;
+import no.dusken.momus.service.repository.LayoutStatusRepository;
 import no.dusken.momus.service.repository.PageRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
-import no.dusken.momus.test.AbstractTestRunner;
 
-import org.apache.commons.ssl.TomcatServerXML;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import liquibase.change.core.UpdateDataChange;
-
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.mockito.AdditionalAnswers.*;
 
 @Transactional
-public class PublicationServiceTest extends AbstractTestRunner{
+public class PublicationServiceTest extends AbstractServiceTest {
     @Mock
-    PublicationRepository publicationRepository;
+    private PublicationRepository publicationRepository;
 
     @InjectMocks
-    PublicationService publicationService;
+    private PublicationService publicationService;
 
     @Mock
-    PageRepository pageRepository;
+    private PageRepository pageRepository;
 
     @Mock
-    ArticleRepository articleRepository;
+    private ArticleRepository articleRepository;
+
+    @Mock
+    private LayoutStatusRepository layoutStatusRepository;
 
     private Publication publication1;
     private Publication publication2;
@@ -70,7 +60,7 @@ public class PublicationServiceTest extends AbstractTestRunner{
     private Page page3;
 
     @Before
-    public void before() throws Exception {
+    public void before() {
         publication1 = new Publication(1L);
         publication1.setName("DUSKEN1");
 
@@ -95,7 +85,7 @@ public class PublicationServiceTest extends AbstractTestRunner{
      * Method: {@link PublicationService#updatePublication(Publication)}
      */
     @Test
-    public void testUpdatePublicationMetadata() throws Exception{
+    public void testUpdatePublicationMetadata() {
         PublicationService publicationServiceSpy = spy(publicationService);
         doReturn(publication1).when(publicationRepository).save(publication1);
         doReturn(publication1).when(publicationRepository).findOne(publication1.getId());
@@ -111,7 +101,7 @@ public class PublicationServiceTest extends AbstractTestRunner{
      * Method: {@link PublicationService#getActivePublication(Date)}
      */
     @Test
-    public void testGetActivePublication() throws Exception{
+    public void testGetActivePublication() {
         publication1.setReleaseDate(new Date(2017, 8, 10)); //Old
         publication2.setReleaseDate(new Date(2017, 8, 12));
         publication3.setReleaseDate(new Date(2017, 8, 14));
@@ -122,7 +112,7 @@ public class PublicationServiceTest extends AbstractTestRunner{
     }
 
     @Test
-    public void testSavePage() throws Exception{
+    public void testSavePage() {
         final List<Page> pages = new ArrayList<>(Arrays.asList(page1, page2, page3));
         final Page newPage = new Page();
         newPage.setPublication(publication1);
@@ -131,7 +121,7 @@ public class PublicationServiceTest extends AbstractTestRunner{
             pages.add(newPage);
             return null;
         }).when(pageRepository).saveAndFlush(any(Page.class));
-        doReturn(null).when(pageRepository).save(anyListOf(Page.class));
+        doReturn(null).when(pageRepository).save(anyList());
 
         doReturn(pages.stream().sorted().collect(Collectors.toList())).when(pageRepository).findByPublicationIdOrderByPageNrAsc(publication1.getId());
 
@@ -144,7 +134,7 @@ public class PublicationServiceTest extends AbstractTestRunner{
     }
 
     @Test
-    public void testSaveTrailingPages() throws Exception{
+    public void testSaveTrailingPages() {
         final List<Page> pages = new ArrayList<>(Arrays.asList(page1, page2, page3));
         Page newPage = new Page(4L);
         newPage.setPublication(publication1);
@@ -155,7 +145,7 @@ public class PublicationServiceTest extends AbstractTestRunner{
 
         List<Page> newPages = Arrays.asList(newPage, otherNewPage);
 
-        doReturn(null).when(pageRepository).save(anyListOf(Page.class));
+        doReturn(null).when(pageRepository).save(anyList());
 
         doAnswer((answer) -> {
             pages.addAll(newPages);
@@ -174,9 +164,9 @@ public class PublicationServiceTest extends AbstractTestRunner{
     }
 
     @Test
-    public void testUpdatePage() throws Exception {
+    public void testUpdatePage() {
         doReturn(null).when(pageRepository).saveAndFlush(any(Page.class));
-        doReturn(null).when(pageRepository).save(anyListOf(Page.class));
+        doReturn(null).when(pageRepository).save(anyList());
         doReturn(new ArrayList<>(Arrays.asList(page1, page2, page3))
             .stream()
             .sorted()
@@ -192,8 +182,8 @@ public class PublicationServiceTest extends AbstractTestRunner{
     }
 
     @Test
-    public void testUpdateTrailingPages() throws Exception{
-        doReturn(null).when(pageRepository).save(anyListOf(Page.class));
+    public void testUpdateTrailingPages(){
+        doReturn(null).when(pageRepository).save(anyList());
         doReturn(new ArrayList<>(Arrays.asList(page1, page2, page3))
             .stream()
             .sorted()
@@ -209,7 +199,7 @@ public class PublicationServiceTest extends AbstractTestRunner{
     }
 
     @Test
-    public void testDeletePage() throws Exception{
+    public void testDeletePage(){
         doReturn(new ArrayList<>(Arrays.asList(page1, page2, page3))).when(pageRepository).findByPublicationIdOrderByPageNrAsc(publication1.getId());
 
         publicationService.deletePage(page2);
@@ -218,7 +208,7 @@ public class PublicationServiceTest extends AbstractTestRunner{
     }
 
     @Test
-    public void testUpdatePageMetadata() throws Exception {
+    public void testUpdatePageMetadata() {
         doReturn(page1).when(pageRepository).saveAndFlush(page1);
         doReturn(page1).when(pageRepository).findOne(page1.getId());
 
@@ -232,5 +222,44 @@ public class PublicationServiceTest extends AbstractTestRunner{
         assertEquals("vader is lukes father", page.getNote());
         assertEquals(true, page.isWeb());
         assertEquals(false, page.isAdvertisement());
+    }
+
+    @Test
+    public void testSavePublication() {
+        doReturn(publication1).when(publicationRepository).save(publication1);
+        doReturn(new LayoutStatus()).when(layoutStatusRepository).findByName("Ukjent");
+
+        publicationService.savePublication(publication1, 50);
+        verify(publicationRepository, times(1)).save(publication1);
+        verify(pageRepository, times(50)).save(any(Page.class));
+    }
+
+    @Test
+    public void testGenerateColophon() {
+        Article art = new Article(0L);
+        art.setJournalists(new HashSet<>(Arrays.asList(
+                new Person(0L, UUID.randomUUID(), "ei", "Eiv", "ei@vi.nd", "4", true),
+                new Person(1L, UUID.randomUUID(), "ch", "Chr", "c@h.ri", "4", true)
+        )));
+        art.setUseIllustration(false);
+        art.setPhotographers(new HashSet<>(Arrays.asList(
+                new Person(2L, UUID.randomUUID(), "do", "Don", "do@na.ld", "4", true),
+                new Person(3L, UUID.randomUUID(), "ob", "Oba", "o@ba.ma", "4", true)
+        )));
+        Article art2 = new Article(1L);
+        art2.setUseIllustration(true);
+        art2.setJournalists(new HashSet<>());
+        art2.setPhotographers(new HashSet<>(Arrays.asList(
+                new Person(4L, UUID.randomUUID(), "il", "Ill", "ill@us.tr", "4", true)
+        )));
+
+        doReturn(Arrays.asList(art, art2)).when(articleRepository).findByPublicationId(publication1.getId());
+
+        String colophon = publicationService.generateColophon(publication1.getId());
+
+
+        String expected = "Journalister:\r\nEiv\r\nChr\r\n\r\nFotografer:\r\nDon\r\nOba\r\n\r\nIllustratører:\r\nIll\r\n";
+
+        assertEquals(expected, colophon);
     }
 }

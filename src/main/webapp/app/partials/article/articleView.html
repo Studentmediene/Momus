@@ -16,109 +16,102 @@
 
 
 <div class="container">
-    <div class="row hidden-print top-spacing" ng-show="article.archived">
+    <div class="row hidden-print top-spacing" ng-show="vm.article.archived">
         <div class="col-xs-12">
             <div class="alert alert-danger">
                 <p>
-                    <i class="fa fa-exclamation-circle fa-2"></i><strong> Artikkelen er arkivert.</strong> Den vil ikke vises i søk.
+                    <i class="fa fa-exclamation-circle fa-2"></i>
+                    <strong> Artikkelen er arkivert.</strong> Den vil ikke vises i søk.
                 </p>
             </div>
         </div>
     </div>
 
-    <h1>{{article.name}}</h1>
+    <h1>{{vm.article.name}}</h1>
 
     <!-- Used when printing Ctrl+P-->
     <div class="visible-print">
         <table class="table table-condensed">
             <tr>
                 <th>Navn:</th>
-                <td>{{ article.name }}</td>
+                <td>{{ vm.article.name }}</td>
                 <td></td>
                 <td></td>
             </tr>
             <tr>
                 <th>Journalister:</th>
                 <td>
-                <span ng-repeat="journalist in article.journalists">
+                <span ng-repeat="journalist in vm.article.journalists">
                     {{ journalist.name }}<span ng-if="!$last">,</span>
                 </span>
                 </td>
                 <th>Kommentar:</th>
-                <td>{{article.comment}}</td>
+                <td>{{vm.article.comment}}</td>
             </tr>
             <tr>
                 <th>Fotografer:</th>
                 <td>
-                <span ng-repeat="photographer in article.photographers">
-                    {{ photographer_name }}<span ng-if="!$last">,</span>
+                <span ng-repeat="photographer in vm.article.photographers">
+                    {{ photographer.name }}<span ng-if="!$last">,</span>
                 </span>
                 </td>
                 <th>Utgave:</th>
-                <td>{{article.publication.name}}</td>
+                <td>{{vm.article.publication.name}}</td>
             </tr>
         </table>
 
-        <div style="column-count: 2; -moz-column-count:2" ng-bind-html="articleContent | trustHtml"></div>
+        <div style="column-count: 2; -moz-column-count:2" ng-bind-html="vm.articleContent | trustHtml"></div>
 
     </div>
 
-    <div class="row hidden-print top-spacing" ng-show="article.comment">
+    <div class="row hidden-print top-spacing" ng-show="vm.article.comment">
         <div class="col-xs-12">
             <div class="alert alert-info">
                 <p>
-                    <strong>Kommentar:</strong> {{article.comment}}
+                    <strong>Kommentar:</strong> {{vm.article.comment}}
                 </p>
             </div>
         </div>
     </div>
 
-
     <div class="row hidden-print">
         <div class="col-xs-12">
-
             <div class="btn-row">
-                <div class="btn-group">
-                    <a href="https://docs.google.com/document/d/{{article.google_drive_id}}/edit" target="_blank" class="btn btn-success">
-                        <span class="fa fa-pencil"></span>
-                        Rediger i Google Docs
-                    </a>
-                </div>
+                <a href="https://docs.google.com/document/d/{{vm.article.google_drive_id}}/edit" target="_blank" class="btn btn-success">
+                    <span class="fa fa-pencil"></span>
+                    Rediger i Google Docs
+                </a>
 
-                <a href="#/artikler/revisjon/{{article.id}}" class="btn btn-primary"><i class="fa fa-file-text-o"></i>
+                <a href="#/artikler/revisjon/{{vm.article.id}}" class="btn btn-primary">
+                    <i class="fa fa-file-text-o"></i>
                     Historikk
                 </a>
 
-                <a href="/api/article/{{article.id}}/indesignfile" class="btn btn-primary"><i class="fa fa-file-text-o"></i>
+                <a href="/api/article/{{vm.article.id}}/indesignfile" class="btn btn-primary">
+                    <i class="fa fa-file-text-o"></i>
                     InDesign fil
                 </a>
 
-                <span uib-tooltip="Kopier sitatsjekk-tekst">
-                    <a zc-btn="quoteCheck" button-loader="copying" loading-text="Kopierer" completed-text="Kopiert"
-                       ng-click=""
-                       class="btn btn-primary"><i class="fa fa-quote-right"></i>
-                        Sitatsjekk
-                    </a>
-                </span>
-
-                <span ng-hide="article.archived">
-                    <a ng-click="deleteArticle()" class="btn btn-danger"><i class="fa fa-trash-o" ></i>
+                <span ng-hide="vm.article.archived">
+                    <a ng-click="vm.archiveArticle()" class="btn btn-danger">
+                        <i class="fa fa-trash-o"></i>
                         Arkiver artikkelen
                     </a>
                 </span>
 
-                <span ng-show="article.archived">
-                    <a ng-click="restoreArticle()" class="btn btn-success" uib-tooltip="Gjenopprett artikkelen så den vil vises i søk"><i class="fa fa-plus" ></i>
+                <span ng-show="vm.article.archived">
+                    <a ng-click="vm.restoreArticle()" class="btn btn-success" uib-tooltip="Gjenopprett artikkelen så den vil vises i søk">
+                        <i class="fa fa-plus"></i>
                         Gjenopprett
                     </a>
                 </span>
-                <a ng-click="showHelp()" class="btn btn-success">
+
+                <a ng-click="vm.showHelp()" class="btn btn-success">
                     Hjelp?
                 </a>
             </div>
         </div>
     </div>
-
 
     <div class="row hidden-print top-spacing">
         <div class="col-md-7">
@@ -130,18 +123,16 @@
                     </h1>
                 </div>
                 <div class="panel-body">
-                    <div class="articleContent" ng-bind-html="articleContent | trustHtml">
-
-                    </div>
+                    <div class="articleContent" ng-bind-html="vm.articleContent | trustHtml"></div>
                     <div class="text-right">
                         <small class="text-muted">
-                            Ca. {{article.content_length}} tegn
+                            Ca. {{vm.article.content_length}} tegn
                         </small>
                     </div>
-
                 </div>
             </div>
         </div>
+
         <div class="col-md-5 hidden-print">
             <div id="meta-panel" class="panel panel-info">
                 <div class="panel-heading">
@@ -149,31 +140,31 @@
                         <span class="fa fa-tag"></span>
                         Detaljer
                         <span class="pull-right">
-                            <button class="btn btn-xs btn-info" ng-show="metaEditMode" ng-click="cancelMeta()">
+                            <button class="btn btn-xs btn-info" ng-show="vm.metaEditMode" ng-click="vm.cancelMeta()">
                                 Avbryt
                             </button>
-                            <button class="btn btn-xs btn-primary" ng-click="metaClicked()" button-loader="savingMeta">
-                                <span ng-show="!metaEditMode">Rediger</span>
-                                <span ng-show="metaEditMode">Lagre</span>
+                            <button class="btn btn-xs btn-primary" ng-click="vm.metaClicked()" button-loader="vm.savingMeta">
+                                <span ng-show="!vm.metaEditMode">Rediger</span>
+                                <span ng-show="vm.metaEditMode">Lagre</span>
                             </button>
                         </span>
                     </h1>
                 </div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" ng-submit="metaClicked()">
+                    <form class="form-horizontal" role="form" ng-submit="vm.metaClicked()">
                         <input type="submit" style="display: none;"/><!-- This is required to submit with enter -->
                         <div class="form-group metaline">
                             <label class="col-sm-4 control-label important-field">
                                 Kommentar
                             </label>
 
-                            <div class="col-sm-8" ng-hide="metaEditMode">
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
                                 <p class="form-control-static">
-                                    {{ article.comment }}
+                                    {{ vm.article.comment }}
                                 </p>
                             </div>
-                            <div class="col-sm-8" ng-show="metaEditMode">
-                                <input class="form-control input-sm" type="text" ng-model="metaEditing.comment">
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <input class="form-control input-sm" type="text" ng-model="vm.metaEditing.comment">
                             </div>
                         </div>
                         <div class="form-group metaline">
@@ -181,11 +172,11 @@
                                 Bildetekster
                             </label>
 
-                            <div class="col-sm-8" ng-hide="metaEditMode">
-                                <p class="form-control-static" style="overflow: auto; max-height: 75px; white-space: pre-wrap;">{{ article.image_text }}</p>
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
+                                <p class="form-control-static" style="overflow: auto; max-height: 75px; white-space: pre-wrap;">{{ vm.article.image_text }}</p>
                             </div>
-                            <div class="col-sm-8" ng-show="metaEditMode">
-                                <textarea class="form-control" ng-model="metaEditing.image_text" style="height: 150px;"></textarea>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <textarea class="form-control" ng-model="vm.metaEditing.image_text" style="height: 150px;"></textarea>
                             </div>
                         </div>
                         <div class="form-group metaline">
@@ -193,14 +184,14 @@
                                 Status
                             </label>
 
-                            <div class="col-sm-8" ng-hide="metaEditMode">
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
                                 <p class="form-control-static">
-                                    {{ article.status.name }}
+                                    {{ vm.article.status.name }}
                                 </p>
                             </div>
-                            <div class="col-sm-8" ng-show="metaEditMode">
-                                <select class="form-control input-sm" ng-model="metaEditing.status"
-                                        ng-options="s.name for s in statuses | filter:{deleted: false} | orderBy:'status_order' track by s.id "></select>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <select class="form-control input-sm" ng-model="vm.metaEditing.status"
+                                        ng-options="s.name for s in vm.statuses | filter:{deleted: false} | orderBy:'status_order' track by s.id "></select>
                             </div>
                         </div>
                         <div class="form-group metaline">
@@ -208,14 +199,14 @@
                                 Korrektur
                             </label>
 
-                            <div class="col-sm-8" ng-hide="metaEditMode">
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
                                 <p class="form-control-static">
-                                    {{ article.review.name }}
+                                    {{ vm.article.review.name }}
                                 </p>
                             </div>
-                            <div class="col-sm-8" ng-show="metaEditMode">
-                                <select class="form-control input-sm" ng-model="metaEditing.review"
-                                        ng-options="s.name for s in reviewOptions track by s.id "></select>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <select class="form-control input-sm" ng-model="vm.metaEditing.review"
+                                        ng-options="s.name for s in vm.reviews track by s.id "></select>
                             </div>
                         </div>
                         <div class="form-group metaline">
@@ -223,19 +214,19 @@
                                 Sitatsjekk
                             </label>
 
-                            <div class="col-sm-8" ng-hide="metaEditMode">
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
                                 <p class="form-control-static">
-                        <span ng-show="article.quote_check_status">
+                        <span ng-show="vm.article.quote_check_status">
                             Trenger sitatsjekk
                         </span>
-                        <span ng-hide="article.quote_check_status">
+                        <span ng-hide="vm.article.quote_check_status">
                             I orden
                         </span>
                                 </p>
                             </div>
-                            <div class="col-sm-8" ng-show="metaEditMode">
-                                <select class="form-control input-sm" ng-model="metaEditing.quote_check_status"
-                                        ng-options="o.value as o.name for o in quoteCheckTypes"></select>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <select class="form-control input-sm" ng-model="vm.metaEditing.quote_check_status"
+                                        ng-options="o.value as o.name for o in vm.quoteCheckTypes"></select>
                             </div>
                         </div>
                         <hr class="divider">
@@ -244,13 +235,13 @@
                                 Navn
                             </label>
 
-                            <div class="col-sm-8" ng-hide="metaEditMode">
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
                                 <p class="form-control-static">
-                                    {{ article.name }}
+                                    {{ vm.article.name }}
                                 </p>
                             </div>
-                            <div class="col-sm-8" ng-show="metaEditMode">
-                                <input class="form-control input-sm" type="text" ng-model="metaEditing.name" required="true">
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <input class="form-control input-sm" type="text" ng-model="vm.metaEditing.name" required>
                             </div>
                         </div>
 
@@ -260,15 +251,15 @@
                             </label>
 
                             <div class="col-sm-8">
-                                <ul class="list-unstyled form-control-static" ng-hide="metaEditMode">
-                                    <li ng-repeat="journalist in article.journalists">
+                                <ul class="list-unstyled form-control-static" ng-hide="vm.metaEditMode">
+                                    <li ng-repeat="journalist in vm.article.journalists">
                                         <span person-widget="journalist">{{ journalist.name }}</span>
                                     </li>
                                 </ul>
                                 <id-select multiple
-                                           ng-show="metaEditMode"
-                                           items="persons"
-                                           target="metaEditing.journalists"
+                                           ng-show="vm.metaEditMode"
+                                           items="vm.persons"
+                                           target="vm.metaEditing.journalists"
                                            show="name">
                                 </id-select>
                             </div>
@@ -278,13 +269,13 @@
                                 Ekstern
                             </label>
 
-                            <div class="col-sm-8" ng-hide="metaEditMode">
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
                                 <p class="form-control-static">
-                                    {{ article.external_author }}
+                                    {{ vm.article.external_author }}
                                 </p>
                             </div>
-                            <div class="col-sm-8" ng-show="metaEditMode">
-                                <input class="form-control input-sm" type="text" ng-model="metaEditing.external_author" uib-tooltip="Separer navn med komma.">
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <input class="form-control input-sm" type="text" ng-model="vm.metaEditing.external_author" uib-tooltip="Separer navn med komma.">
                             </div>
                         </div>
                         <hr class="divider">
@@ -293,33 +284,33 @@
                                 Foto/Illu
                             </label>
 
-                            <div class="col-sm-8" ng-hide="metaEditMode">
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
                                 <p class="form-control-static">
-                                    <span ng-show="article.use_illustration"><i class="fa fa-paint-brush"> </i> Illustrasjon</span>
-                                    <span ng-show="!article.use_illustration"><i class="fa fa-camera"> </i> Foto</span>
+                                    <span ng-show="vm.article.use_illustration"><i class="fa fa-paint-brush"> </i> Illustrasjon</span>
+                                    <span ng-show="!vm.article.use_illustration"><i class="fa fa-camera"> </i> Foto</span>
 
                                 </p>
                             </div>
-                            <div class="col-sm-8" ng-show="metaEditMode">
-                                <select class="form-control input-sm" ng-model="metaEditing.use_illustration"
-                                        ng-options="o.value as o.name for o in photoTypes"></select>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <select class="form-control input-sm" ng-model="vm.metaEditing.use_illustration"
+                                        ng-options="o.value as o.name for o in vm.photoTypes"></select>
                             </div>
                         </div>
                         <div class="form-group metaline">
                             <label class="col-sm-4 control-label">
-                                {{article.use_illustration ? 'Illustratører' : 'Fotografer'}}
+                                {{vm.article.use_illustration ? 'Illustratører' : 'Fotografer'}}
                             </label>
 
                             <div class="col-sm-8">
-                                <ul class="list-unstyled form-control-static" ng-hide="metaEditMode">
-                                    <li ng-repeat="photographer in article.photographers">
+                                <ul class="list-unstyled form-control-static" ng-hide="vm.metaEditMode">
+                                    <li ng-repeat="photographer in vm.article.photographers">
                                         <span person-widget="photographer">{{ photographer.name }}</span>
                                     </li>
                                 </ul>
                                 <id-select multiple
-                                           ng-show="metaEditMode"
-                                           items="persons"
-                                           target="metaEditing.photographers"
+                                           ng-show="vm.metaEditMode"
+                                           items="vm.persons"
+                                           target="vm.metaEditing.photographers"
                                            show="name">
                                 </id-select>
                             </div>
@@ -329,13 +320,13 @@
                                 Ekstern
                             </label>
 
-                            <div class="col-sm-8" ng-hide="metaEditMode">
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
                                 <p class="form-control-static">
-                                    {{ article.external_photographer }}
+                                    {{ vm.article.external_photographer }}
                                 </p>
                             </div>
-                            <div class="col-sm-8" ng-show="metaEditMode">
-                                <input class="form-control input-sm" type="text" ng-model="metaEditing.external_photographer" uib-tooltip="Separer navn med komma.">
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <input class="form-control input-sm" type="text" ng-model="vm.metaEditing.external_photographer" uib-tooltip="Separer navn med komma.">
                             </div>
                         </div>
                         <hr class="divider">
@@ -344,14 +335,14 @@
                                 Utgave
                             </label>
 
-                            <div class="col-sm-8" ng-hide="metaEditMode">
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
                                 <p class="form-control-static">
-                                    {{ article.publication.name }}
+                                    {{ vm.article.publication.name }}
                                 </p>
                             </div>
-                            <div class="col-sm-8" ng-show="metaEditMode">
-                                <select class="form-control input-sm" ng-model="metaEditing.publication"
-                                        ng-options="s.name for s in publications track by s.id"></select>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <select class="form-control input-sm" ng-model="vm.metaEditing.publication"
+                                        ng-options="s.name for s in vm.publications track by s.id"></select>
 
                             </div>
                         </div>
@@ -360,14 +351,14 @@
                                 Seksjon
                             </label>
 
-                            <div class="col-sm-8" ng-hide="metaEditMode">
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
                                 <p class="form-control-static">
-                                    {{ article.section.name }}
+                                    {{ vm.article.section.name }}
                                 </p>
                             </div>
-                            <div class="col-sm-8" ng-show="metaEditMode">
-                                <select class="form-control input-sm" ng-model="metaEditing.section"
-                                        ng-options="s.name for s in sections  | filter:{deleted: false} track by s.id"></select>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <select class="form-control input-sm" ng-model="vm.metaEditing.section"
+                                        ng-options="s.name for s in vm.sections  | filter:{deleted: false} track by s.id"></select>
                             </div>
                         </div>
                         <div class="form-group metaline">
@@ -375,31 +366,30 @@
                                 Artikkeltype
                             </label>
 
-                            <div class="col-sm-8" ng-hide="metaEditMode">
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
                                 <p class="form-control-static">
-                                    {{ article.type.name }}
+                                    {{ vm.article.type.name }}
                                 </p>
                             </div>
-                            <div class="col-sm-8" ng-show="metaEditMode">
-                                <select class="form-control input-sm" ng-model="metaEditing.type"
-                                        ng-options="s.name for s in types | orderBy:'type_order' | filter:{deleted: false} track by s.id "></select>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <select class="form-control input-sm" ng-model="vm.metaEditing.type"
+                                        ng-options="s.name for s in vm.types | orderBy:'type_order' | filter:{deleted: false} track by s.id "></select>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
 
-
-            <div if="note-panel" class="panel panel-warning">
+            <div class="panel panel-warning">
                 <div class="panel-heading">
                     <h1 class="panel-title">
                         <span class="fa fa-list"></span>
                         Artikkel-notater
                         <div class="pull-right">
                             <button class="btn btn-default btn-xs"
-                                    ng-disabled="article.note === uneditedNote"
-                                    ng-click="saveNote()"
-                                    button-loader="savingNote">
+                                    ng-disabled="vm.article.note === vm.uneditedNote"
+                                    ng-click="vm.saveNote()"
+                                    button-loader="vm.savingNote">
                                 <i class="fa fa-save"></i>
                                 Lagre
                             </button>
@@ -407,52 +397,15 @@
                     </h1>
                 </div>
                 <div class="panel-body">
-                    <div id="note-toolbar" class="editor-toolbar">
-                        <div class="btn-group">
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="bold"
-                                    title="Fet tekst (Ctrl+B)">
-                                <i class="fa fa-bold"></i>
-                            </button>
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="italic"
-                                    title="Kursiv tekst (Ctrl+I)">
-                                <i class="fa fa-italic"></i>
-                            </button>
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="underline"
-                                    title="Understreket tekst (Ctrl+U)">
-                                <i class="fa fa-underline"></i>
-                            </button>
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="strikethrough"
-                                    title="Gjennomstreket tekst">
-                                <i class="fa fa-strikethrough"></i>
-                            </button>
-                        </div>
-                        <div class="btn-group">
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="insertUnorderedList"
-                                    title="Usortert liste">
-                                <i class="fa fa-list-ul"></i>
-                            </button>
-                            <button class="btn btn-default"
-                                    data-wysihtml5-command="insertOrderedList"
-                                    title="Sortert liste">
-                                <i class="fa fa-list-ol"></i>
-                            </button>
-                        </div>
+                    <div>
+                        <textarea
+                                id="noteArea"
+                                class="form-control note"
+                                ng-model="vm.article.note">
+                        </textarea>
                     </div>
-        <textarea id="noteArea"
-                  class="form-control note"
-                  richeditor="article.note"
-                  richeditor-rules="noteRules"
-                  richeditor-toolbar="note-toolbar">
-        </textarea>
                 </div>
             </div>
-
-
         </div>
     </div>
 </div>

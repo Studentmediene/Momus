@@ -16,8 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -52,8 +51,22 @@ public abstract class AbstractControllerTest {
         return get(url).accept(MediaType.APPLICATION_JSON);
     }
 
-    public RequestBuilder buildPut(String url, String content) throws Exception {
+    public RequestBuilder buildPut(String url, String content) {
         return put(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content);
+    }
+
+    public RequestBuilder buildPost(String url, String content) {
+        return post(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content);
+    }
+
+    public RequestBuilder buildPatch(String url, String content) {
+        return patch(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
@@ -67,6 +80,18 @@ public abstract class AbstractControllerTest {
 
     public ResultActions performGetExpectOk(String url) throws Exception {
         return mockMvc.perform(buildGet(url))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    public ResultActions performPatchExpectOk(String url, String content) throws Exception {
+        return mockMvc.perform(buildPatch(url, content))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    public ResultActions performPostExpectOk(String url, String content) throws Exception {
+        return mockMvc.perform(buildPost(url, content))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

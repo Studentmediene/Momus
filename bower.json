@@ -16,10 +16,8 @@
     "angular-mocks": "^1.6.6",
     "bootstrap": "boostrap#^3.3.7",
     "components-font-awesome": "^4.7.0",
-    "wysihtml5": "https://raw.github.com/xing/wysihtml5/master/dist/wysihtml5-0.4.0pre.min.js",
     "select2": "^4.0.4",
     "select2-bootstrap-theme": "^0.1.0-beta.10",
-    "zeroclipboard": "^2.3.0",
     "ng-stomp": "^0.4.0"
   }
 }

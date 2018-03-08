@@ -16,8 +16,6 @@
 
 package no.dusken.momus.mapper;
 
-import java.text.SimpleDateFormat;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
