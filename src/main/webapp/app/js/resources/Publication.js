@@ -31,19 +31,18 @@ angular.module('momusApp.resources')
         );
     });
 
-const publicationResponseTransform = publication => {
+function publicationResponseTransform(publication) {
     if(!publication) return publication;
-
     return {
         ...publication,
         release_date: new Date(publication.release_date)
     }
-};
+}
 
-const publicationRequestTransform = publication => {
+function publicationRequestTransform(publication) {
     if(!publication) return publication;
     return {
         ...publication,
         release_date: publication.release_date.toISOString()
     }
-};
+}
