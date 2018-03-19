@@ -2,7 +2,6 @@ package no.dusken.momus.config;
 
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
 import org.springframework.web.WebApplicationInitializer;
@@ -15,6 +14,8 @@ public class WebInit implements WebApplicationInitializer {
 
 	@Override
 	public void onStartup(ServletContext servletContext) {
+        servletContext.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
+
         AnnotationConfigWebApplicationContext config = new AnnotationConfigWebApplicationContext();
         config.register(ApplicationConfig.class);
         
