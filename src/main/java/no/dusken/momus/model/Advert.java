@@ -36,6 +36,8 @@ public class Advert{
 
     private String name;
 
+    private String comment;
+
     public Advert() {
 
     }
@@ -55,6 +57,10 @@ public class Advert{
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getComment() { return comment; }
+
+    public void setComment(String comment) { this.comment = comment; }
 
     @Override
     public boolean equals(Object o) {
@@ -79,6 +85,7 @@ public class Advert{
         return "Advert{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", comment='" + comment + '\'' +
                 '}';
     }
 
@@ -86,6 +93,7 @@ public class Advert{
         return "Advert{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", comment='" + comment + '\'' +
                 '}';
     }
 }

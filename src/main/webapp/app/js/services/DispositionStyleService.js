@@ -41,10 +41,9 @@ angular.module('momusApp.services')
             calculated: 100
         },
         layout: {scope: 'page', width: 80},
-        ad: {scope: 'page', width: 30},
-        done: {scope: 'page', width: 30},
-        edit: {scope: 'page', width: 30},
-        delete: {scope: 'page', width: 30}
+        done: {scope: 'page', width: 40},
+        edit: {scope: 'page', width: 40},
+        delete: {scope: 'page', width: 40}
     };
 
     // Get the width of the entire disposition and article table that is constant
@@ -53,7 +52,7 @@ angular.module('momusApp.services')
         .reduce(([dispSize, articleSize],key) => {
             const colWidth = columnWidthTemplates[key].width;
             return [
-                dispSize + colWidth, 
+                dispSize + colWidth,
                 articleSize + (columnWidthTemplates[key].scope === 'article' ? colWidth : 0)
             ];
         }, [0, 0]
@@ -76,7 +75,7 @@ angular.module('momusApp.services')
                     }
                     dispWidth += width;
                 });
-            
+
             const columnWidths = {};
             Object.keys(columnWidthTemplates)
                 .forEach(key => {
@@ -88,7 +87,7 @@ angular.module('momusApp.services')
                         maxWidth: columnWidth,
                     };
                 });
-            
+
             return {
                 columnWidths: columnWidths,
                 articleWidth: articleWidth,

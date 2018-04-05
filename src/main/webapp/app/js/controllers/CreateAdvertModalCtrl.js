@@ -19,7 +19,8 @@
 angular.module('momusApp.controllers')
     .controller('CreateAdvertModalCtrl', function($scope, $uibModalInstance, Advert){
         $scope.advert = {
-            name: ""
+            name: "",
+            comment: ""
         };
         $scope.createAdvert = function () {
             $scope.creating = true;

@@ -18,22 +18,13 @@
 
 angular.module('momusApp.controllers')
     .controller('AdvertCtrl', function (
-        $scope,
         Advert,
-        Publication,
         TitleChanger,
         MessageModal,
         $routeParams,
-        $timeout,
         $templateRequest
     ) {
         const vm = this;
-
-        vm.metaEditMode = false;
-
-        vm.metaClicked = () => { vm.metaEditMode ? saveMeta() : editMeta() };
-        vm.cancelMeta = () => { vm.metaEditMode = false; };
-
         vm.showHelp = showHelp;
 
         // Get data
@@ -41,48 +32,11 @@ angular.module('momusApp.controllers')
             TitleChanger.setTitle(advert.name);
         });
 
-        /* meta panel */
-        function saveMeta() {
-            vm.savingMeta = true;
-            vm.metaEditing.$updateMetadata({}, updatedAdvert => {
-                vm.advert = updatedAdvert;
-                vm.savingMeta = false;
-                vm.metaEditMode = false;
-                TitleChanger.setTitle(vm.advert.name);
-            });
-        }
-
-        function editMeta() {
-            vm.metaEditMode = true;
-            vm.metaEditing = angular.copy(vm.advert);
-
-            if (!vm.publications) {
-                vm.publications = Publication.query();
-            }
-        }
-
         function showHelp() {
             $templateRequest('partials/templates/help/advertHelp.html').then(function(template){
                 MessageModal.info(template);
             });
         }
 
-        function promptCondition() {
-            return vm.metaEditMode === true;
-        }
 
-        $scope.$on('$locationChangeStart', (event) => {
-            if (promptCondition()) {
-                if (!confirm("Er du sikker på at du vil forlate siden? Det finnes ulagrede endringer.")) {
-                    event.preventDefault();
-                }
-            }
-        });
-        $scope.$on('$destroy', () => { window.onbeforeunload = undefined; });
-
-        window.onbeforeunload = function(){
-            if(promptCondition()){
-                return "Det finnes ulagrede endringer.";
-            }
-        };
     });

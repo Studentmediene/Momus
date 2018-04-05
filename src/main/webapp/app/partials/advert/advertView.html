@@ -16,12 +16,12 @@
 
 
 <div class="container">
-    <div class="row hidden-print top-spacing" ng-show="vm.article.archived">
+    <div class="row hidden-print top-spacing">
         <div class="col-xs-12">
             <div class="alert alert-danger">
                 <p>
                     <i class="fa fa-exclamation-circle fa-2"></i>
-                    <strong> Annonsen er arkivert.</strong> Den vil ikke vises i søk.
+                    <strong> Annonsen vil ikke vises i søk. </strong>
                 </p>
             </div>
         </div>
@@ -29,11 +29,11 @@
 
     <h1>{{vm.advert.name}}</h1>
 
-    <div class="row hidden-print top-spacing" ng-show="vm.article.comment">
+    <div class="row hidden-print top-spacing" ng-show="vm.advert.comment">
         <div class="col-xs-12">
             <div class="alert alert-info">
                 <p>
-                    <strong>Kommentar:</strong> {{vm.article.comment}}
+                    <strong>Kommentar:</strong> {{vm.advert.comment}}
                 </p>
             </div>
         </div>
@@ -49,60 +49,5 @@
             </div>
         </div>
     </div>
-
-
-        <div class="col-md-5 hidden-print">
-            <div id="meta-panel" class="panel panel-info">
-                <div class="panel-heading">
-                    <h1 class="panel-title">
-                        <span class="fa fa-tag"></span>
-                        Detaljer
-                        <span class="pull-right">
-                            <button class="btn btn-xs btn-info" ng-show="vm.metaEditMode" ng-click="vm.cancelMeta()">
-                                Avbryt
-                            </button>
-                            <button class="btn btn-xs btn-primary" ng-click="vm.metaClicked()" button-loader="vm.savingMeta">
-                                <span ng-show="!vm.metaEditMode">Rediger</span>
-                                <span ng-show="vm.metaEditMode">Lagre</span>
-                            </button>
-                        </span>
-                    </h1>
-                </div>
-                <div class="panel-body">
-                    <form class="form-horizontal" role="form" ng-submit="vm.metaClicked()">
-                        <input type="submit" style="display: none;"/><!-- This is required to submit with enter -->
-
-                        <hr class="divider">
-                        <div class="form-group metaline">
-                            <label class="col-sm-4 control-label">
-                                Navn
-                            </label>
-
-                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
-                                <p class="form-control-static">
-                                    {{ vm.advert.name }}
-                                </p>
-                            </div>
-                            <div class="col-sm-8" ng-show="vm.metaEditMode">
-                                <input class="form-control input-sm" type="text" ng-model="vm.metaEditing.name" required>
-                            </div>
-                        </div>
-
-
-
-                        <hr class="divider">
-
-
-
-                        <hr class="divider">
-
-
-
-                    </form>
-                </div>
-            </div>
-
-      
-        </div>
     </div>
 </div>

@@ -30,6 +30,7 @@ angular.module('momusApp.controllers')
         Publication,
         Page,
         Article,
+        Advert,
         Person,
         WebSocketService,
         DispositionStyleService,
@@ -202,6 +203,8 @@ angular.module('momusApp.controllers')
                         publication.pages.forEach(page => connectArticles(page, vm.articles));
                         vm.loading = false;
                     });
+                    vm.adverts = Advert.query();
+
                 });
             });
         }
@@ -264,6 +267,7 @@ angular.module('momusApp.controllers')
             Page.updateMultiple({pubid: vm.publication.id}, pages, pages => {
                 pages.forEach(page => {
                     connectArticles(page, vm.articles);
+                    connectAdverts(page, vm.adverts);
                 });
                 vm.publication.pages = pages;
                 vm.loading = false;

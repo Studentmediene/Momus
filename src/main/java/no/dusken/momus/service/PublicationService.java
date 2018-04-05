@@ -183,6 +183,7 @@ public class PublicationService {
 		Page existing = pageRepository.findOne(page.getId());
 		
 		existing.setNote(page.getNote());
+		existing.setAdverts(page.getAdverts());
 		existing.setAdvertisement(page.isAdvertisement());
 		existing.setWeb(page.isWeb());
 		existing.setDone(page.isDone());

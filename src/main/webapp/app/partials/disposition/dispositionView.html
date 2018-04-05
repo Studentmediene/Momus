@@ -77,7 +77,6 @@
                     </div>
                 </div>
                 <div class="d-table-cell" ng-style="vm.columnWidths.layout">Layout</div>
-                <div class="d-table-cell" ng-style="vm.columnWidths.ad">Ads</div>
                 <div class="d-table-cell" ng-style="vm.columnWidths.done"></div>
                 <div class="d-table-cell" ng-style="vm.columnWidths.edit"></div>
                 <div class="d-table-cell" ng-style="vm.columnWidths.delete"></div>
@@ -103,10 +102,17 @@
                                 target="page.articles"
                                 show="name">
                     </id-select>
-                    <div class="pull-right btn-group-vertical">
+                    <div class="pull-right">
                         <button ng-click="vm.createArticle(page)" class="btn btn-success" uib-tooltip="Lag ny artikkel">
                             <i class="fa fa-plus"></i> <i class="fa fa-file-text"></i>
                         </button>
+                    </div>
+                    <id-select multiple class="pull-left" style="width: 90%;"
+                                items="vm.adverts"
+                                target="page.adverts"
+                                show="name">
+                    </id-select>
+                    <div class="pull-right">
                         <button ng-click="vm.createAdvert(page)" class="btn btn-warning" uib-tooltip="Lag ny reklame">
                             <i class="fa fa-plus"></i> <i class="fa fa-bullhorn"></i>
                         </button>
@@ -115,7 +121,7 @@
                 <!--Articles (view mode)-->
                 <div class="d-table-cell article-cell" ng-style="{width: vm.articleWidth}" ng-hide="editPage">
                     <div class="d-table article-table" ng-repeat="article in page.articles" ng-init="vm.initArticleScope(this)">
-                        <div class="d-table-row" ng-class="{page-done': page.done}">
+                        <div class="d-table-row" ng-class="{'page-done': page.done}">
                             <!--Dropdown-arrow-->
                             <div class="d-table-cell" ng-style="vm.columnWidths.dropdown">
                                 <button
@@ -221,7 +227,6 @@
                             <!--Edit-->
                             <div class="d-table-cell" ng-style="vm.columnWidths.comment" ng-show="edit['comment']">
                                 <inline-edit text="article.comment"
-                                                cancel="vm.submitArticleField(this, 'comment', false)"
                                                 remote-change="remoteChanges['comment']"
                                                 save="vm.submitArticleField(this, 'comment', true)">
                                 </inline-edit>
@@ -240,20 +245,16 @@
                         </div>
                     </div>
                     <!--Adverts-->
-                    <div class="d-table article-table" ng-repeat="advert in page.adverts" ng-init="vm.initArticleScope(this)">
-                      <!--Dropdown-arrow-->
-                      <div class="d-table-cell" ng-style="vm.columnWidths.dropdown">
-                          <button
-                              class="btn btn-primary btn-xs"
-                              data-target="#{{page.page_nr}}-{{advert.id}}-button-line"
-                              data-toggle="collapse"
-                          >
-                              <i class="fa fa-arrows-v"></i>
-                          </button>
-                      </div>
-                      <!--Name-->
-                      <div class="d-table-cell" ng-style="vm.columnWidths.name">
-                          <a href="#/reklamer/{{advert.id}}">{{advert.name}}</a>
+                    <div class="d-table advert-table" ng-repeat="advert in page.adverts" ng-style="{'background-color':'#FFE96B'}">
+                      <div class="d-table-row">
+                        <!--Dropdown-arrow-->
+                        <div class="d-table-cell" ng-style="vm.columnWidths.dropdown">
+                            <i class="fa fa-bullhorn"></i>
+                        </div>
+                        <!--Name-->
+                        <div class="d-table-cell" ng-style="vm.columnWidths.name">
+                            <a href="#/reklamer/{{advert.id}}">{{advert.name}}</a>
+                        </div>
                       </div>
                     </div>
                 </div>
@@ -268,15 +269,6 @@
                             ng-options="l.name for l in vm.layoutStatuses track by l.id"
                             ng-disabled="vm.loading">
                     </select>
-                </div>
-                <!--Ad-->
-                <div class="d-table-cell" ng-style="vm.columnWidths.ad">
-                    <span style="cursor: pointer" ng-click="page.advertisement = !page.advertisement; vm.updatePageMeta(page);">
-                        <i class="fa fa-file fa-lg"
-                            ng-class="{'text-danger' : !page.advertisement, 'text-success' : page.advertisement }"
-                            uib-tooltip="Siden inneholder {{!page.advertisement ? 'ikke ' : ''}} reklame">
-                        </i>
-                    </span>
                 </div>
                 <!--Done-->
                 <div class="d-table-cell button" ng-style="vm.columnWidths.done">

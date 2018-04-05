@@ -68,7 +68,6 @@ public class AdvertService {
 
     public Advert saveAdvert(Advert advert){
         Advert newAdvert = advertRepository.saveAndFlush(advert);
-
         logger.info("Advert with id {} creatd with data: {}", newAdvert.getId(), newAdvert.dump());
         return newAdvert;
     }

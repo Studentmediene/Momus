@@ -17,17 +17,13 @@
 'use strict';
 
 angular.module('momusApp.resources')
-    .factory('Advert', ($resource, $http) => {
-        const Advert = $resource('/api/advert/:id/:resource',
-            {
-                id: '@id'
-            },
-            {
-                multiple: { method: 'GET', params: {id: 'multiple'}, isArray: true },
-                search: { method: 'POST', params: {id: 'search'}, isArray: true },
-            });
-        // Since content is only a string, $resource does not now how to handle it
-        // So use raw http call instead
-        Advert.content = id => $http.get('/api/advert/' + id + '/content');
-        return Advert;
-    });
+    .factory('Advert', $resource => {
+      return $resource('/api/advert/:id',
+        {
+          id: '@id'
+        },
+        {
+          multiple: { method: 'GET', params: {id: 'multiple'}, isArray: true }
+        }
+    );
+  });
