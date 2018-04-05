@@ -23,42 +23,45 @@ angular.module('momusApp.directives')
             scope: {
                 items: '=',
                 target: '=',
+                placeholder: '@',
                 show: '@'
             },
-            link: function(scope, element, attrs) {
-                if (attrs.$attr.multiple === "multiple") {
-                    scope.multiple = true;
-                }
-                scope.selectedIDs = {selected: []};
-                scope.lookup = {};
+            link: (scope, element, attrs) => {
+                const multiple = attrs.hasOwnProperty('multiple');
+                const useIds = attrs.hasOwnProperty('useIds');
 
-                scope.$watch('items.length', function () {
-                    if (!scope.items) return;
-                    scope.items.forEach(function(item){
-                        scope.lookup[item.id] = item;
-                    });
-                });
+                scope.multiple = multiple;
 
-                scope.changed = function() { // when something is clicked
-                    if (scope.multiple){
-                        scope.target = scope.selectedIDs.selected.map(function(id) {
-                            return scope.lookup[id];
-                        });
+                scope.model = {};
+                if (multiple) { scope.model.selected = []; } else { scope.model.selected = null; }
+
+                scope.changed = () => { // when something is clicked
+                    if (!scope.model.selected) {
+                        scope.target = null;
+                        return;
+                    }
+                    if (multiple) {
+                        scope.target = scope.model.selected.map(item => useIds ? item.id : item);
                     } else {
-                        scope.target = [scope.lookup[scope.selectedIDs.selected]];
+                        scope.target = useIds ? scope.model.selected.id : scope.model.selected;
                     }
                 };
 
                 // when the model is changed somewhere else
                 // for instance, by the ctrl setting its value
-                scope.$watch('target', function () {
+                scope.$watch('target', () => {
                     if (!scope.target) return;
 
-                    scope.selectedIDs.selected = scope.target.map(function(o){
-                        return o.id;
-                    });
-                },true);
-
+                    if (multiple) {
+                        scope.model.selected = scope.target.map(
+                            target => useIds ? scope.items.find(item => item.id === parseInt(target)) : target
+                        );
+                    } else {
+                        scope.model.selected = useIds
+                            ? scope.items.find(item => item.id === parseInt(scope.target))
+                            : scope.target;
+                    }
+                }, true);
             }
         };
     });

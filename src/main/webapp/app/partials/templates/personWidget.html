@@ -13,28 +13,36 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<span class="hidden-xs person-widget-wrapper">
-    <div class="person-widget-element panel panel-default" ng-show="isVisible">
+<div class="person-widget-wrapper">
+    <div class="person-widget-element panel panel-primary" ng-show="isVisible">
         <div class="panel-heading">
-            <table class="person-widget-header">
-                <tr>
-                    <td>{{pw_person.name}}</td>
-                    <td><i ng-click="togglePW()" class="fa fa-times closePw"></i></td>
-                </tr>
-            </table>
+            <div style="display: flex; align-items: center">
+                <div style="flex-grow: 1;">
+                    <h5><b>{{pw_person.name}}</b></h5>
+                </div>
+                <div>
+                    <i ng-click="closePW()" class="fa fa-times fa-2x person-widget-close"></i>
+                </div>
+            </div>
         </div>
-        <table class="table table-condensed">
-            <tr>
-                <td><b>E-post:</b></td>
-                <td><a href="mailto:{{pw_person.email}}">{{pw_person.email}}</a></td>
-            </tr>
-            <tr>
-                <td><b>Telefon:</b></td>
-                <td>{{pw_person.phone_number}}</td>
-            </tr>
-        </table>
+        <div class="panel-body">
+            <div>
+                <user-avatar user="pw_person" size="60"></user-avatar>
+            </div>
+            <div>
+                <table class="table table-condensed person-widget-table">
+                    <tr>
+                        <td><b><i class="fa fa-envelope"></i></b></td>
+                        <td><a href="mailto:{{pw_person.email}}">{{pw_person.email}}</a></td>
+                    </tr>
+                    <tr>
+                        <td><b><i class="fa fa-phone"></i></b></td>
+                        <td>{{pw_person.phone_number}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
-    <span ng-click="togglePW()" class="person-widget-btn" ng-transclude></span>
-</span>
-<span class="visible-xs"><span ng-click="openModal()" class="person-widget-btn" ng-transclude></span></span>
+</div>
+<span class="hidden-xs person-widget-text" ng-click="openPW()" ng-transclude></span>
+<span class="visible-xs person-widget-text" ng-click="openModal()" ng-transclude></span>

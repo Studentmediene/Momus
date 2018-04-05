@@ -151,6 +151,10 @@ td > ul, td > ol {
     resize: vertical; 
 }
 
+.table-responsive {
+    overflow-x: visible;
+}
+
 .navbar-dev {
     background-color: #ff413c;
 
