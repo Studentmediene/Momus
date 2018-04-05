@@ -65,7 +65,7 @@ angular.module('momusApp.controllers')
                 templateUrl: 'partials/illustrationrequests/requestIllustrationModal.html',
                 controller: 'RequestIllustrationModalCtrl',
                 resolve: {
-                    article: () => $scope.article
+                    article: () => vm.article
                 }
             });
         }
