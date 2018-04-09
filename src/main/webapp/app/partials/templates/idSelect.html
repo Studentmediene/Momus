@@ -1,3 +1,4 @@
+
 <!--
   ~ Copyright 2016 Studentmediene i Trondheim AS
   ~
@@ -13,14 +14,29 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<ui-select multiple theme="bootstrap"
+<ui-select
+        multiple
         ng-if="multiple"
         ng-change="changed()"
-        ng-model="selectedIDs.selected">
-    <ui-select-match><span ng-bind="$item[show]"></span>
+        ng-model="model.selected">
+    <ui-select-match placeholder="{{placeholder}}">
+        <span ng-bind="$item[show]"></span>
     </ui-select-match>
 
-    <ui-select-choices repeat="item.id as item in items | filter: $select.search">
+    <ui-select-choices repeat="item in (items | filter: $select.search) track by item.id">
+        <span ng-bind="item[show]"></span>
+    </ui-select-choices>
+</ui-select>
+
+<ui-select
+        ng-if="!multiple"
+        ng-change="changed()"
+        ng-model="model.selected">
+    <ui-select-match placeholder="{{placeholder}}" allow-clear>
+        <span ng-bind="$select.selected.name"></span>
+    </ui-select-match>
+
+    <ui-select-choices repeat="item in (items | filter: $select.search) track by item.id">
         <span ng-bind="item[show]"></span>
     </ui-select-choices>
 </ui-select>

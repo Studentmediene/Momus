@@ -77,7 +77,7 @@ angular.module('momusApp.controllers')
         };
 
         $scope.updateFavouriteSection = function(){
-            Person.updateFavouritesection({section: $scope.user.favouritesection.id}, person => {
+            Person.updateFavouritesection({section: $scope.user.favouritesection.id}, {}, person => {
                 searchForArticlesFromFavoriteSection();
                 $scope.user = person;
             });
