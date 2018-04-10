@@ -91,7 +91,7 @@
                 class="d-table-row"
                 ng-repeat="page in vm.publication.pages"
                 ng-init="vm.initPageScope(this)"
-                ng-class="{'page-reklame': page.advertisement, 'page-done': page.done}"
+                ng-class="{'page-reklame': page.advertisement, 'page-done': page.done, 'page-edited': vm.WSedits['page' + page.id]}"
                 ui-sortable-selectable
             >
                 <!--Page number-->
@@ -112,7 +112,9 @@
                 <!--Articles (view mode)-->
                 <div class="d-table-cell article-cell" ng-style="{width: vm.articleWidth}" ng-hide="editPage">
                     <div class="d-table article-table" ng-repeat="article in page.articles" ng-init="vm.initArticleScope(this)">
-                        <div class="d-table-row" ng-class="{'page-reklame': page.advertisement, 'page-done': page.done}">
+                        <div class="d-table-row"
+                             ng-class="{'page-reklame': page.advertisement, 'page-done': page.done, 'article-edited': vm.WSedits['article' + article.id]}"
+                        >
                             <!--Dropdown-arrow-->
                             <div class="d-table-cell" ng-style="vm.columnWidths.dropdown">
                                 <button 

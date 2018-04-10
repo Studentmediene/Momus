@@ -44,6 +44,10 @@ angular.module('momusApp.controllers')
 
         vm.connectedUsers = {};
 
+        vm.WSedits = {};
+
+        vm.editedHighlightDuration = 2000;
+
         vm.newPages = newPages;
 		vm.updatePageMeta = updatePageMeta;
         vm.deletePage = deletePage;
@@ -114,6 +118,9 @@ angular.module('momusApp.controllers')
         function handleRemotePageMetadataUpdate(pageId) {
             vm.loading = true;
             Page.get({pubid: vm.publication.id, pageid: pageId}, page => {
+                const highlightKey = 'page' + page.id;
+                vm.WSedits[highlightKey] = true;
+                $timeout(() => {delete vm.WSedits[highlightKey]}, vm.editedHighlightDuration);
                 const index = vm.publication.pages.findIndex(page => page.id === pageId);
                 connectArticles(page, vm.articles);
                 vm.publication.pages[index] = page;
@@ -168,6 +175,9 @@ angular.module('momusApp.controllers')
             Object.keys(oldObject).forEach(prop => {
                 oldObject[prop] = newObject[prop];
             });
+            const highlightKey = 'article' + oldObject.id;
+            vm.WSedits[highlightKey] = true;
+            $timeout(() => {delete vm.WSedits[highlightKey]}, vm.editedHighlightDuration);
         }
 
         function heartbeat(pubId) {

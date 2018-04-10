@@ -5,6 +5,11 @@ $headerBackground: #f6f6f6;
 
 $pageDoneBackground:#DDFFCB;
 $pageAdBackground: #f6f6f6;
+$pageEditedBackground: #f4ff00;
+
+$articleEditedBackground: #00ff60;
+
+$editedTransitionDuration: 1000;
 
 #disposition {
     font-size: 85%;
@@ -89,8 +94,18 @@ $pageAdBackground: #f6f6f6;
     background: $pageDoneBackground !important; //Want this to override ad color
 }
 
+.page-edited {
+    background: $pageEditedBackground;
+    transition: background-color $editedTransitionDuration linear;
+}
+
 .page-ad {
     background: $pageAdBackground;
+}
+
+.article-edited {
+    background: $articleEditedBackground;
+    transition: background-color $editedTransitionDuration linear;
 }
 
 .d-break-word {
