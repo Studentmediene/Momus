@@ -18,12 +18,13 @@
 
 angular.module('momusApp.resources')
     .factory('Advert', $resource => {
-      return $resource('/api/advert/:id',
+      return $resource('/api/advert/:id/:resource',
         {
           id: '@id'
         },
         {
-          multiple: { method: 'GET', params: {id: 'multiple'}, isArray: true }
+          multiple: { method: 'GET', params: {id: 'multiple'}, isArray: true },
+          updateComment: { method: 'PATCH', params: {resource: 'comment'} },
         }
     );
   });

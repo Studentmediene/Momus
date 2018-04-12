@@ -77,4 +77,10 @@ public class AdvertService {
         return advertRepository.saveAndFlush(advert);
     }
 
+    public Advert updateComment(Long id, String comment) {
+        Advert advert = getAdvertById(id);
+        advert.setComment(comment);
+        return updateAdvert(advert);
+    }
+
 }

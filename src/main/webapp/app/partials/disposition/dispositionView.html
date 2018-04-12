@@ -100,7 +100,8 @@
                     <id-select multiple class="pull-left" style="width: 90%;"
                                 items="vm.articles"
                                 target="page.articles"
-                                show="name">
+                                show="name",
+                                header="'Artikler'">
                     </id-select>
                     <div class="pull-right">
                         <button ng-click="vm.createArticle(page)" class="btn btn-success" uib-tooltip="Lag ny artikkel">
@@ -110,7 +111,8 @@
                     <id-select multiple class="pull-left" style="width: 90%;"
                                 items="vm.adverts"
                                 target="page.adverts"
-                                show="name">
+                                show="name"
+                                header="'Reklamer'">
                     </id-select>
                     <div class="pull-right">
                         <button ng-click="vm.createAdvert(page)" class="btn btn-warning" uib-tooltip="Lag ny reklame">
@@ -227,6 +229,7 @@
                             <!--Edit-->
                             <div class="d-table-cell" ng-style="vm.columnWidths.comment" ng-show="edit['comment']">
                                 <inline-edit text="article.comment"
+                                                cancel="vm.submitArticleField(this, 'comment', false)"
                                                 remote-change="remoteChanges['comment']"
                                                 save="vm.submitArticleField(this, 'comment', true)">
                                 </inline-edit>
@@ -245,7 +248,7 @@
                         </div>
                     </div>
                     <!--Adverts-->
-                    <div class="d-table advert-table" ng-repeat="advert in page.adverts" ng-style="{'background-color':'#FFE96B'}">
+                    <div class="d-table advert-table" ng-repeat="advert in page.adverts" ng-style="{'background-color':'#FFE96B'}" ng-init="vm.initAdvertScope(this)">
                       <div class="d-table-row">
                         <!--Dropdown-arrow-->
                         <div class="d-table-cell" ng-style="vm.columnWidths.dropdown">
@@ -253,7 +256,33 @@
                         </div>
                         <!--Name-->
                         <div class="d-table-cell" ng-style="vm.columnWidths.name">
-                            <a href="#/reklamer/{{advert.id}}">{{advert.name}}</a>
+                            {{advert.name}}
+                        </div>
+                        <!--Quick Lazy Fix-->
+                        <div class="d-table-cell" ng-style="vm.columnWidths.section"></div>
+                        <div class="d-table-cell" ng-style="vm.columnWidths.journalists"></div>
+                        <div class="d-table-cell" ng-style="vm.columnWidths.photographers"></div>
+                        <div class="d-table-cell" ng-style="vm.columnWidths.status"></div>
+                        <div class="d-table-cell" ng-style="vm.columnWidths.review"></div>
+                        <div class="d-table-cell" ng-style="vm.columnWidths.photo_status"></div>
+                        <!--Comment-->
+                        <!--View-->
+                        <div
+                            class="d-table-cell"
+                            ng-style="vm.columnWidths.comment"
+                            ng-click="vm.editAdvertField(this, 'comment')"
+                            ng-show="!edit['comment']"
+                            title="Klikk for å redigere"
+                        >
+                            <textwrapper length="15" ng-attr-text="advert.comment || '[Rediger]'"></textwrapper>
+                        </div>
+                        <!--Edit-->
+                        <div class="d-table-cell" ng-style="vm.columnWidths.comment" ng-show="edit['comment']">
+                            <inline-edit text="advert.comment"
+                                            cancel="vm.submitAdvertField(this, 'comment', false)"
+                                            remote-change="remoteChanges['comment']"
+                                            save="vm.submitAdvertField(this, 'comment', true)">
+                            </inline-edit>
                         </div>
                       </div>
                     </div>

@@ -58,9 +58,13 @@ angular.module('momusApp.controllers')
         vm.updateArticle = updateArticle;
         vm.updateAdvert = updateAdvert;
         vm.initArticleScope = initArticleScope;
+        vm.initAdvertScope = initAdvertScope;
         vm.editArticleField = editArticleField;
+        vm.editAdvertField = editAdvertField;
         vm.submitArticleField = submitArticleField;
+        vm.submitAdvertField = submitAdvertField;
         var articleEdits = {};
+        var advertEdits = {};
 
         vm.expandAllButtonRows = () => angular.element(".extra-button-line").collapse("show");
         vm.hideAllButtonRows = () => angular.element(".extra-button-line").collapse("hide");
@@ -86,11 +90,16 @@ angular.module('momusApp.controllers')
                 case(WebSocketService.actions.updatePageMetadata):
                     handleRemotePageMetadataUpdate(payload.page_id);
                     break;
-                case(WebSocketService.actions.saveArticle):  //YARA: UNDERSTAND THIS
+                case(WebSocketService.actions.saveArticle):
                     handleRemoteArticleSave(payload.article_id);
                     break;
+                case(WebSocketService.actions.saveAdvert):
+                    handleRemoteAdvertSave(payload.advert_id);
                 case(WebSocketService.actions.updateArticle):
                     handleRemoteArticleUpdate(payload.article_id, payload.edited_field);
+                    break;
+                case(WebSocketService.actions.updateAdvert):
+                    handleRemoteAdvertUpdate(payload.advert_id, payload.edited_field);
                     break;
                 case(WebSocketService.actions.deletePage):
                 case(WebSocketService.actions.updatePagenr):
@@ -144,10 +153,38 @@ angular.module('momusApp.controllers')
             });
         }
 
+        function handleRemoteAdvertUpdate(advertId, editedField) {
+            vm.loading = true;
+            // We are locally editing the field that has been changed remotely, so don't update immediately.
+            if(advertEdits[advertId][editedField]) {
+                const scope = advertEdits[advertId][editedField].scope;
+                Advert.get({id: advertId}, advert => {
+                    scope.remoteChanges[editedField] = advert[editedField];
+                    advertEdits[advertId][editedField].oldValue = advert[editedField];
+                    vm.loading = false;
+                });
+                return;
+            }
+            // Since an advert can be referenced on several pages, update properties not reference
+            Advert.get({id: advertId}, advert => {
+                const index = vm.adverts.findIndex((advert) => advert.id === advertId);
+                replaceProperties(vm.adverts[index], advert);
+                vm.loading = false;
+            });
+        }
+
         function handleRemoteArticleSave(articleId) {
             vm.loading = true;
             Article.get({id: articleId}, article => {
                 vm.articles.push(article);
+                vm.loading = false;
+            });
+        }
+
+        function handleRemoteArticleSave(advertId) {
+            vm.loading = true;
+            Advert.get({id: advertId}, advert => {
+                vm.adverts.push(advert);
                 vm.loading = false;
             });
         }
@@ -311,6 +348,12 @@ angular.module('momusApp.controllers')
             articleEdits[scope.article.id] = {};
         }
 
+        function initAdvertScope(scope){
+          scope.edit = {};
+          scope.remoteChanges = {};
+          advertEdits[scope.advert.id] = {};
+        }
+
         function editArticleField(scope, field) {
             if(vm.loading) return;
 
@@ -319,6 +362,19 @@ angular.module('momusApp.controllers')
                 oldValue: scope.article[field]
             };
             scope.edit[field] = true;
+        }
+
+        function editAdvertField(scope, field) {
+          console.log("YOU CLICKED ME");
+          if(vm.loading) return;
+
+          console.log(advertEdits[scope.advert.id]);
+          advertEdits[scope.advert.id][field] = {
+            scope: scope,
+            oldValue: scope.advert[field]
+          };
+          scope.edit[field] = true;
+
         }
 
         function submitArticleField(scope, field, update) {
@@ -330,6 +386,17 @@ angular.module('momusApp.controllers')
 
             scope.edit[field] = false;
             articleEdits[scope.article.id][field] = null;
+        }
+
+        function submitAdvertField(scope, field, update) {
+          if(update) {
+            updateAdvert(scope.advert, field);
+          } else {
+            scope.advert[field] = advertEdits[scope.advert.id][field].oldValue;
+          }
+
+          scope.edit[field] = false;
+          advertEdits[scope.advert.id][field] = null;
         }
 
         function createArticle(page){
@@ -379,7 +446,13 @@ angular.module('momusApp.controllers')
         }
 
         function updateAdvert(advert, editedField){
-          //YARA: FINISH THIS
+          vm.loading = true;
+          Advert.updateComment({id: advert.id}, JSON.stringify(advert.comment), () => {
+            vm.loading = false;
+            if(websocketActive){
+              lastUpdate = WebSocketService.advertUpdated(vm.publication.id, advert.id, editedField);
+            }
+          });
         }
 
         function showHelp(){

@@ -61,6 +61,9 @@ public class AdvertController {
         return advertService.getAdvertsByIds(ids);
     }
 
-
+    @PatchMapping("{id}/comment")
+    public @ResponseBody Advert updateComment(@PathVariable Long id, @RequestBody String comment){
+        return advertService.updateComment(id, comment);
+    }
 
 }

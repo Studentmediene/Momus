@@ -6,6 +6,7 @@ angular.module('momusApp.services')
             saveArticle: 'SAVE_ARTICLE',
             updateArticle: 'UPDATE_ARTICLE',
             saveAdvert: 'SAVE_ADVERT',
+            updateAdvert: 'UPDATE_ADVERT',
             savePage: 'SAVE_PAGE',
             deletePage: 'DELETE_PAGE',
             updatePageMetadata: 'UPDATE_PAGE_METADATA',
@@ -62,6 +63,9 @@ angular.module('momusApp.services')
             },
             advertSaved: function(pubId, pageId, advertId) {
               return sendChange( pubId, pageId, -1, advertId, actions.saveAdvert);
+            },
+            advertUpdated: function(pubId, advertId, editedField) {
+              return sendChange(pubId, -1, -1, advertId, actions.updateAdvert, editedField);
             },
             actions: actions,
             userAction: userAction,
