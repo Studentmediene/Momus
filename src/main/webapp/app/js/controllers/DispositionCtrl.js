@@ -128,6 +128,7 @@ angular.module('momusApp.controllers')
             Page.get({pubid: vm.publication.id, pageid: pageId}, page => {
                 const index = vm.publication.pages.findIndex(page => page.id === pageId);
                 connectArticles(page, vm.articles);
+                connectAdverts(page, vm.adverts);
                 vm.publication.pages[index] = page;
                 vm.loading = false;
             });
@@ -181,7 +182,7 @@ angular.module('momusApp.controllers')
             });
         }
 
-        function handleRemoteArticleSave(advertId) {
+        function handleRemoteAdvertSave(advertId) {
             vm.loading = true;
             Advert.get({id: advertId}, advert => {
                 vm.adverts.push(advert);
@@ -240,7 +241,9 @@ angular.module('momusApp.controllers')
                         publication.pages.forEach(page => connectArticles(page, vm.articles));
                         vm.loading = false;
                     });
-                    vm.adverts = Advert.query();
+                    vm.adverts = Advert.query({}, ()=>{
+                      publication.pages.forEach(page => connectAdverts(page, vm.adverts));
+                    });
 
                 });
             });
@@ -365,16 +368,12 @@ angular.module('momusApp.controllers')
         }
 
         function editAdvertField(scope, field) {
-          console.log("YOU CLICKED ME");
           if(vm.loading) return;
-
-          console.log(advertEdits[scope.advert.id]);
           advertEdits[scope.advert.id][field] = {
             scope: scope,
             oldValue: scope.advert[field]
           };
           scope.edit[field] = true;
-
         }
 
         function submitArticleField(scope, field, update) {

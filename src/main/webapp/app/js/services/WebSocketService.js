@@ -21,7 +21,7 @@ angular.module('momusApp.services')
 
         function sendChange(pubId, pageId, articleId, advertId, action, editedField) {
             editedField = editedField || "";
-            var change = {action: action, page_id: pageId, article_id: articleId,  edited_field: editedField, date: new Date()};
+            var change = {action: action, page_id: pageId, article_id: articleId, advert_id: advertId,  edited_field: editedField, date: new Date()};
             $stomp.send('/ws/disposition/' + pubId + '/change', change);
             return change;
         }
