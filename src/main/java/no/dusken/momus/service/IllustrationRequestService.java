@@ -1,6 +1,7 @@
 package no.dusken.momus.service;
 
 import no.dusken.momus.authentication.UserDetailsService;
+import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.IllustrationRequest;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.IllustrationRequestRepository;
@@ -28,6 +29,14 @@ public class IllustrationRequestService {
         }
     }
 
+    public IllustrationRequest getRequestById(Long id) {
+        if(!illustrationRequestRepository.exists(id)) {
+            throw new RestException("No illustration request with id=" + id + " was found", 404);
+        }
+
+        return illustrationRequestRepository.findOne(id);
+    }
+
     public List<IllustrationRequest> getMyRequests(List<IllustrationRequest.Status> statuses) {
         Person user = userDetailsService.getLoggedInPerson();
         if(statuses == null) {
@@ -38,6 +47,7 @@ public class IllustrationRequestService {
     }
 
     public IllustrationRequest createInternalRequest(IllustrationRequest request) {
+        request.setId(request.getArticle().getId());
         request.setExternal(false);
         request.setCreated(LocalDateTime.now());
         request.setStatus(IllustrationRequest.Status.PENDING);
@@ -52,9 +62,26 @@ public class IllustrationRequestService {
         return illustrationRequestRepository.saveAndFlush(request);
     }
 
+    public IllustrationRequest updateRequest(Long id, IllustrationRequest request) {
+        IllustrationRequest existing = getRequestById(id);
+
+        existing.setDescription(request.getDescription());
+        existing.setNumberOfIllustrations(request.getNumberOfIllustrations());
+        existing.setNumberOfPages(request.getNumberOfPages());
+        existing.setStatus(IllustrationRequest.Status.PENDING);
+
+        return illustrationRequestRepository.saveAndFlush(existing);
+    }
+
     public void updateStatus(Long id, IllustrationRequest.Status status) {
-        IllustrationRequest request = illustrationRequestRepository.findOne(id);
+        IllustrationRequest request = getRequestById(id);
         request.setStatus(status);
+        illustrationRequestRepository.saveAndFlush(request);
+    }
+
+    public void updateIllustratorComment(Long id, String illustratorComment) {
+        IllustrationRequest request = getRequestById(id);
+        request.setIllustratorComment(illustratorComment);
         illustrationRequestRepository.saveAndFlush(request);
     }
 }

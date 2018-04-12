@@ -16,6 +16,7 @@
                     <th>Antall sider</th>
                     <th>Status</th>
                     <th>Endre status</th>
+                    <th>Skriv kommentar</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -43,6 +44,20 @@
                                 ng-options="k as v.name for (k, v) in vm.statusData"
                                 ng-change="vm.updateStatus(request)">
                         </select>
+                    </td>
+                    <td>
+                        <div ng-show="!editComment" ng-click="vm.editIllustratorComment(this)">
+                            <textwrapper length="20" ng-attr-text="request.illustrator_comment || '[Rediger]'">
+                            </textwrapper>
+                        </div>
+                        <div ng-show="editComment">
+                            <inline-edit
+                                    text="request.illustrator_comment"
+                                    cancel="vm.cancelIllustratorComment(this)"
+                                    save="vm.saveIllustratorComment(this)">
+
+                            </inline-edit>
+                        </div>
                     </td>
                 </tr>
                 </tbody>

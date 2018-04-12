@@ -815,12 +815,12 @@
 
     <changeSet id="47_illustrationrequest" author="Eivind">
         <createTable tableName="illustrationrequest">
-            <column name="id" autoIncrement="true" type="BIGINT">
+            <column name="id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false" />
             </column>
 
             <column name="description" type="TEXT"/>
-            <column name="article_id" type="BIGINT" />
+            <column name="illustratorcomment" type="TEXT"/>
             <column name="numberofillustrations" type="BIGINT" />
             <column name="numberofpages" type="BIGINT" />
             <column name="requester_id" type="BIGINT" />
@@ -832,11 +832,11 @@
         </createTable>
         <addForeignKeyConstraint
                 baseTableName="illustrationrequest"
-                baseColumnNames="article_id"
+                baseColumnNames="id"
                 constraintName="FK_illustrationrequest_article"
                 referencedTableName="article"
                 referencedColumnNames="id"
-                onDelete="SET NULL"
+                onDelete="CASCADE"
                 onUpdate="CASCADE"
         />
         <addForeignKeyConstraint

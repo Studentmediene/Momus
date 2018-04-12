@@ -413,6 +413,96 @@
                 </div>
             </div>
 
+            <!-- Illustration request -->
+            <div class="panel"
+                 ng-class="vm.hasRequestedIllustration() ?
+                    (vm.illustrationRequest.status == 'COMPLETED' ? 'panel-success' : 'panel-warning')
+                    : 'panel-info'">
+                <div class="panel-heading">
+                    <h1 class="panel-title">
+                        <span class="fa fa-paint-brush"></span>
+                        Illustrasjonsforespørsel
+                        <span
+                                ng-if="vm.hasRequestedIllustration()"
+                                class="badge"
+                                style="color: black"
+                                ng-style="{backgroundColor: vm.illustrationRequestStatuses[vm.illustrationRequest.status].color}">
+                            {{vm.illustrationRequestStatuses[vm.illustrationRequest.status].name}}
+                        </span>
+                        <div class="pull-right">
+                            <button
+                                    class="btn btn-default btn-xs"
+                                    ng-show="!vm.hasRequestedIllustration()"
+                                    ng-disabled="requestIllustrationForm.$invalid"
+                                    ng-click="vm.createIllustrationRequest()">
+                                <i class="fa fa-save"></i>
+                                Send
+                            </button>
+                            <button
+                                    class="btn btn-default btn-xs"
+                                    ng-show="vm.hasRequestedIllustration()"
+                                    ng-disabled="requestIllustrationForm.$invalid"
+                                    ng-click="vm.updateIllustrationRequest()">
+                                <i class="fa fa-save"></i>
+                                Oppdater
+                            </button>
+                        </div>
+                    </h1>
+                </div>
+                <div class="panel-body">
+                    <div ng-if="vm.hasRequestedIllustration()">
+                        <span ng-show="vm.illustrationRequest.illustrator_comment">
+                            <strong>Kommentar fra illustratør:</strong>
+                            {{vm.illustrationRequest.illustrator_comment}}
+                        </span>
+                        <hr/>
+                    </div>
+                    <form class="form-horizontal" name="requestIllustrationForm" novalidate>
+                        <div class="form-group" ng-class="{'has-error': requestIllustrationForm.Description.$invalid }">
+                            <label class="col-sm-3 control-label">
+                                Beskrivelse
+                            </label>
+                            <div class="col-sm-9">
+                            <textarea
+                                    name="Description"
+                                    class="form-control input-sm"
+                                    ng-model="vm.illustrationRequest.description"
+                                    required>
+                            </textarea>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': requestIllustrationForm.Illustrations.$invalid }">
+                            <label class="col-sm-3 control-label">
+                                Antall illustrasjoner
+                            </label>
+                            <div class="col-sm-9">
+                                <input
+                                        name="Illustrations"
+                                        type="number"
+                                        min="1"
+                                        class="form-control input-sm"
+                                        ng-model="vm.illustrationRequest.number_of_illustrations"
+                                        required>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': requestIllustrationForm.Pages.$invalid }">
+                            <label class="col-sm-3 control-label">
+                                Antall sider artikkelen går over
+                            </label>
+                            <div class="col-sm-9">
+                                <input
+                                        name="Pages"
+                                        type="number"
+                                        min="1"
+                                        class="form-control input-sm"
+                                        ng-model="vm.illustrationRequest.number_of_pages"
+                                        required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div class="panel panel-warning">
                 <div class="panel-heading">
                     <h1 class="panel-title">

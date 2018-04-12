@@ -24,6 +24,8 @@ angular.module('momusApp.controllers')
         Person,
         Article,
         Publication,
+        IllustrationRequest,
+        illustrationRequestStatuses,
         TitleChanger,
         CookieService,
         MessageModal
@@ -35,6 +37,7 @@ angular.module('momusApp.controllers')
         vm.metaEditMode = false;
         vm.photoTypes = [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}];
         vm.quoteCheckTypes = [{value: false, name: 'I orden'}, {value: true, name: 'Trenger sitatsjekk'}];
+        vm.illustrationRequestStatuses = illustrationRequestStatuses;
 
         vm.requestIllustration = requestIllustration;
         vm.saveNote = saveNote;
@@ -43,6 +46,10 @@ angular.module('momusApp.controllers')
 
         vm.archiveArticle = archiveArticle;
         vm.restoreArticle = restoreArticle;
+
+        vm.createIllustrationRequest = createIllustrationRequest;
+        vm.updateIllustrationRequest = updateIllustrationRequest;
+        vm.hasRequestedIllustration = hasRequestedIllustration;
 
         vm.showHelp = showHelp;
 
@@ -59,15 +66,25 @@ angular.module('momusApp.controllers')
         Article.content(articleId).then(data => { vm.articleContent = data.data; });
 
         CookieService.viewArticle(articleId);
-
-        function requestIllustration() {
-            const modal = $uibModal.open({
-                templateUrl: 'partials/illustrationrequests/requestIllustrationModal.html',
-                controller: 'RequestIllustrationModalCtrl',
-                resolve: {
-                    article: () => vm.article
-                }
+        vm.illustrationRequest = IllustrationRequest.get({id: $routeParams.id},
+            () => {},
+            () => vm.illustrationRequest = {
+                description: "",
+                number_of_illustrations: 1,
+                number_of_pages: 1,
+                article: vm.article
             });
+
+        function createIllustrationRequest() {
+            vm.illustrationRequest = IllustrationRequest.save({}, vm.illustrationRequest);
+        }
+
+        function updateIllustrationRequest() {
+            vm.illustrationRequest = IllustrationRequest.updateRequest({id: vm.illustrationRequest.id}, vm.illustrationRequest);
+        }
+
+        function hasRequestedIllustration() {
+            return !(vm.illustrationRequest.id === null || vm.illustrationRequest.id === undefined);
         }
 
         /* note panel */

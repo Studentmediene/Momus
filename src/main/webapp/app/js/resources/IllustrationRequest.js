@@ -7,14 +7,17 @@ angular.module('momusApp.resources')
                 id: '@id'
             },
             {
+                get: { method: 'GET', bypassInterceptor: true },
                 createExternal: { method: 'POST', params: {id: 'external'} },
                 mine: { method: 'GET', params: {id: 'mine'}, isArray: true },
-                updateStatus: { method: 'PATCH', params: {resource: 'status'}, hasBody: false }
+                updateStatus: { method: 'PATCH', params: {resource: 'status'}, hasBody: false },
+                updateIllustratorComment: { method: 'PATCH', params: {resource: 'illustratorcomment'} },
+                updateRequest: { method: 'PATCH', params: {resource: 'request'} }
             })
     })
     .constant('illustrationRequestStatuses', {
-        PENDING: {color: '#ffcc00', name: 'Venter'},
-        ACCEPTED: {color: '#5cb85c', name: 'Godkjent'},
-        DENIED: {color: '#d9534f', name: 'Avvist'},
-        COMPLETED: {color: '#5bc0de', name: 'Gjort'}
+        PENDING: {color: '#fff76b', name: 'Venter'},
+        ACCEPTED: {color: '#94ff7a', name: 'Godkjent'},
+        DENIED: {color: '#ffd1d1', name: 'Avvist'},
+        COMPLETED: {color: '#d8d3ff', name: 'Gjort'}
     });

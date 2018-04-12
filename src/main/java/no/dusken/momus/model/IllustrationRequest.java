@@ -7,13 +7,15 @@ import java.time.LocalDateTime;
 @Entity
 public class IllustrationRequest {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @JoinColumn(name = "id")
+    @OneToOne(fetch = FetchType.EAGER)
+    private Article article;
 
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Article article;
+    private String illustratorComment;
 
     private int numberOfIllustrations;
 
@@ -33,6 +35,14 @@ public class IllustrationRequest {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    public String getIllustratorComment() {
+        return illustratorComment;
+    }
+
+    public void setIllustratorComment(String illustratorComment) {
+        this.illustratorComment = illustratorComment;
+    }
+
     public enum Status {
         PENDING, ACCEPTED, DENIED, COMPLETED
     }
@@ -41,6 +51,9 @@ public class IllustrationRequest {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
     public String getDescription() {
         return description;
     }

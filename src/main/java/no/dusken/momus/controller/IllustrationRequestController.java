@@ -25,6 +25,11 @@ public class IllustrationRequestController {
         return illustrationRequestService.createExternalRequest(request);
     }
 
+    @GetMapping("/{id}")
+    public @ResponseBody IllustrationRequest getRequestById(@PathVariable Long id) {
+        return illustrationRequestService.getRequestById(id);
+    }
+
     @GetMapping
     @IllustratorAuthorization
     public @ResponseBody List<IllustrationRequest> getRequests(
@@ -38,9 +43,20 @@ public class IllustrationRequestController {
         return illustrationRequestService.getMyRequests(statuses);
     }
 
+    @PatchMapping("/{id}/request")
+    public IllustrationRequest updateRequest(@PathVariable Long id, @RequestBody IllustrationRequest request) {
+        return illustrationRequestService.updateRequest(id, request);
+    }
+
     @PatchMapping("/{id}/status")
     @IllustratorAuthorization
     public void updateStatus(@PathVariable Long id, @RequestParam IllustrationRequest.Status status) {
         illustrationRequestService.updateStatus(id, status);
+    }
+
+    @PatchMapping("/{id}/illustratorcomment")
+    @IllustratorAuthorization
+    public void updateIllustratorComment(@PathVariable Long id, @RequestBody String illustratorComment) {
+        illustrationRequestService.updateIllustratorComment(id, illustratorComment);
     }
 }
