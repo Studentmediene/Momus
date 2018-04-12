@@ -92,7 +92,8 @@ angular.module('momusApp', [
                 templateUrl: 'partials/admin/adminView.html',
                 controller: 'AdminCtrl',
                 title: 'Admin',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                access: ["ROLE_ADMIN"]
             })
             .when('/dev',
             {
@@ -111,10 +112,13 @@ angular.module('momusApp', [
         $httpProvider.interceptors.push('HttpInterceptor');
         $httpProvider.defaults.withCredentials = true;
     }]).
-    run(['$rootScope', 'TitleChanger', ($rootScope, TitleChanger) => {
+    run(['$rootScope', 'TitleChanger', 'PermissionService', ($rootScope, TitleChanger, PermissionService) => {
         // Whenever there is a route change, we try to update the url with the title set in the rootprovider above
         // if there is no title, we clear it
         $rootScope.$on('$routeChangeSuccess', (event, current, previous) => {
+            if(!PermissionService.checkPermission(current.$$route.access || ["ROLE_USER"])) {
+                PermissionService.permissionModal();
+            }
             TitleChanger.setTitle(current.$$route && current.$$route.title || "");
         });
     }]);

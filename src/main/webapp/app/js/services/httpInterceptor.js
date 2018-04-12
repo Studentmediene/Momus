@@ -35,6 +35,8 @@ angular.module('momusApp.services').
                 let errorMessage = '';
                 let showExtras = false;
                 let reloadOnAlertClose = false;
+                let redirectOnAlertClose = false;
+                let redirectLocation = "";
 
                 if (Object.prototype.hasOwnProperty.call(response, 'data') && response.data === null) {
                     errorMessage = '<p>Du har enten vært inaktiv for lenge eller blitt logget ut i en annen fane.</p> ' +
@@ -45,6 +47,8 @@ angular.module('momusApp.services').
                 else if (response.status === 403) {
                     errorMessage = '<p>Du har ikke rettigheter til å gjøre dette</p>' +
                         '<p>Du prøvde å aksessere ' + response.config.url + '</p>';
+                    redirectOnAlertClose = true;
+                    redirectLocation = "/";
                 }
 
                 else if (response.data.error) {
@@ -55,6 +59,8 @@ angular.module('momusApp.services').
                 const redirect = () => {
                     if (reloadOnAlertClose) {
                         $window.location.reload();
+                    } else if(redirectOnAlertClose) {
+                        $window.location.href = redirectLocation;
                     }
                 };
                 MessageModal.error(errorMessage, showExtras, redirect, redirect);

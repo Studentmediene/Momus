@@ -54,7 +54,6 @@ public class NewsController {
     NewsService newsService;
 
     @GetMapping
-    @AdminAuthorization
     public @ResponseBody List<News> getAllNews() {
         return newsRepository.findAll();
     }
@@ -67,7 +66,6 @@ public class NewsController {
     }
 
     @GetMapping("/{newsid}")
-    @AdminAuthorization
     public @ResponseBody News getNews(@PathVariable Long newsid){
         News news = newsRepository.findOne(newsid);
         if(news == null){
