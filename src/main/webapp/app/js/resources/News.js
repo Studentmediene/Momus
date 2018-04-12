@@ -23,6 +23,7 @@ angular.module('momusApp.resources')
             newsid: '@id'
         },
         {
-            save: {method:'POST'}
+            save: {method:'POST'},
+            update : {method: 'PUT'}
         })
 });

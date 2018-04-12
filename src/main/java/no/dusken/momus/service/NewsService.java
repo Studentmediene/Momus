@@ -49,4 +49,13 @@ public class NewsService {
 
     @Autowired
     private NewsRepository newsRepository;
+
+    public News updateNews(News news){
+        news = newsRepository.save(news);
+
+        logger.info("Updated publication {}.", news.getTitle());
+
+        // It seems to be necessary to reaccess the publication or else the releaseDate is not returned in the proper format.
+        return newsRepository.findOne(news.getId());
+    }
 }

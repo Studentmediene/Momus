@@ -66,9 +66,9 @@
 
         <!-- right panel, for editing/new -->
         <div class="col-sm-6">
-            <div class="panel {{vm.editing.id ? 'panel-warning' : 'panel-success'}}">
+            <div class="panel {{vm.editing.id === undefined ? 'panel-success' : 'panel-warning'}}">
                 <div class="panel-heading">
-                    <h4 class="panel-title text-center">{{vm.editing.id ? 'Rediger ' + vm.editing.name : 'Ny utgave'}}</h4>
+                    <h4 class="panel-title text-center">{{vm.editing.id == undefined ? 'Ny utgave' : 'Rediger ' + vm.editing.name }}</h4>
                 </div>
 
                 <div class="panel-body">
@@ -107,7 +107,7 @@
                                 ng-click="vm.saveEditedPublication()" button-loader="vm.isSaving">Lagre
                         </button>
 
-                        <button class="btn btn-default col-xs-4 col-xs-offset-1" ng-show="vm.editing.id"
+                        <button class="btn btn-default col-xs-4 col-xs-offset-1" ng-show="vm.editing.id != undefined"
                                 ng-click="vm.editPublication({})">Avbryt
                         </button>
                     </div>

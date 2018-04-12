@@ -29,6 +29,8 @@
                         <td ng-show="n.new" style="font-weight: bold">{{n.title}}</td>
                         <td ng-show="!n.new">{{n.title}}</td>
 
+                        <td ng-show="n.new" style="font-weight: bold"><span person-widget="n.author">{{n.author.name}}</span></td>
+                        <td ng-show="!n.new"><span person-widget="n.author">{{n.author.name}}</span></td>
 
                         <td width="5%">
                             <i ng-show="!n.show" class="fa fa-arrow-circle-down"></i>
@@ -36,7 +38,7 @@
                         </td>
                     </tr>
                     <tr ng-show="n.show">
-                        <td colspan="3" ng-bind-html="n.text | trustHtml"></td>
+                        <td colspan="4" ng-bind-html="n.content | trustHtml"></td>
                     </tr>
                     </tbody>
                 </table>

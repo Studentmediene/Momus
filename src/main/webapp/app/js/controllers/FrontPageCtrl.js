@@ -26,6 +26,7 @@ angular.module('momusApp.controllers')
         Publication,
         Page,
         Article,
+        News,
         $location,
         $filter
     ) {
@@ -36,7 +37,9 @@ angular.module('momusApp.controllers')
 
         $scope.randomTip();
 
-        $scope.news = TipAndNewsService.getNews();
+        $scope.news = News.query({}, news => {
+            TipAndNewsService.findNew(news);
+        });
 
         // Latest user articles
         $scope.loadingArticles = true;

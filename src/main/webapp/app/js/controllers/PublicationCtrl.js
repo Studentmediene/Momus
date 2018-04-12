@@ -85,7 +85,7 @@ angular.module('momusApp.controllers')
 
         function saveEditedPublication() {
             vm.isSaving = true;
-            if (!vm.editing.id) { // no id means it's a new one
+            if (vm.editing.id === undefined) { // no id means it's a new one
                 const publication = Publication.save({}, vm.editing, function() {
                     vm.publications.push(publication);
                     vm.editPublication(publication);

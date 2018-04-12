@@ -32,23 +32,38 @@ angular.module('momusApp.controllers')
     ) {
         const vm = this;
 
-        vm.saveNews = saveNews;
-
-        vm.new_news = {
-            title : "",
-            content : "",
-            author : ""
-        };
+        vm.saveEditedNews = saveEditedNews;
+        vm.editNews = editNews;
 
         vm.news = News.query({}, news => {
             vm.news = news;
-            console.log(news);
         });
 
-        function saveNews() {
-            Person.me({}, person => {
-                vm.new_news.author = person;
-                News.save({}, vm.new_news);
-            });
-        };
+        function saveEditedNews() {
+            vm.isSaving = true;
+            if (vm.new_news.id == undefined) { // no id means it's a new one
+                Person.me({}, person => {
+                    vm.new_news.author = person;
+                    const news = News.save({}, vm.new_news, function() {
+                        vm.news.push(news);
+                        vm.editNews(news);
+                        vm.isSaving = false;
+                    })
+                });
+            } else { // it's an old one
+                const updatedIndex = vm.news.findIndex(function(news) { return news.id === vm.new_news.id});
+                const updatedNews = News.update({}, vm.new_news, function() {
+                    vm.news[updatedIndex] = updatedNews;
+                    vm.editNews(updatedNews);
+                    vm.isSaving = false;
+                })
+            }
+        }
+
+        function editNews(news) {
+            vm.new_news = angular.copy(news); // always work on a copy
+
+            // clear form errors
+            $scope.newsForm.$setPristine();
+        }
     });

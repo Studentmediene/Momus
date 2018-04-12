@@ -5,7 +5,7 @@ import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -19,7 +19,7 @@ public class News {
 
     private String title;
 
-    private LocalDate date;
+    private Date date;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Person author;
@@ -33,9 +33,9 @@ public class News {
 
     public Long getId() { return id; }
 
-    public LocalDate getDate() { return date; }
+    public Date getDate() { return date; }
 
-    public void setDate( LocalDate date ) { this.date = date; }
+    public void setDate( Date date ) { this.date = date; }
 
     public String getTitle() { return title; }
 

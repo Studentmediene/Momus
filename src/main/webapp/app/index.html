@@ -73,8 +73,8 @@
             <li ng-class="{active: isActive('/info%')}">
                 <a href="#/info"><i class="fa fa-info"></i> Info/nyheter</a>
             </li>
-            <li ng-class="{active: isActive('/admin%')}">
-                <a href="#/admin"><i class="fa fa-rebel"></i>Admin</a>
+            <li ng-class="{active: isActive('/admin%')}" ng-cloak ng-show="user.roles.indexOf('ROLE_ADMIN') != -1">
+                <a href="#/admin"><i class="fa fa-rebel"></i> Admin</a>
             </li>
             <li ng-class="{active: isActive('/dev%')}" ng-cloak ng-show="devmode" class="navbar-dev">
                 <a href="#/dev"><i class="fa fa-cog"></i> Dev</a>
