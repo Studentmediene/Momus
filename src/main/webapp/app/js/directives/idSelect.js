@@ -24,8 +24,7 @@ angular.module('momusApp.directives')
                 items: '=',
                 target: '=',
                 placeholder: '@',
-                show: '@',
-                header: '='
+                show: '@'
             },
             link: (scope, element, attrs) => {
                 const multiple = attrs.hasOwnProperty('multiple');

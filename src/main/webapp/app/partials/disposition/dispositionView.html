@@ -97,22 +97,26 @@
                 <div class="d-table-cell handle" ng-style="vm.columnWidths.page_nr">{{page.page_nr}}</div>
                 <!--Articles (edit mode)-->
                 <div class="d-table-cell" ng-style="{width: vm.articleWidth}" ng-show="editPage">
+                    <div>
+                        <b>Artikler</b>
+                    </div>
                     <id-select multiple class="pull-left" style="width: 90%;"
                                 items="vm.articles"
                                 target="page.articles"
-                                show="name",
-                                header="'Artikler'">
+                                show="name">
                     </id-select>
                     <div class="pull-right">
                         <button ng-click="vm.createArticle(page)" class="btn btn-success" uib-tooltip="Lag ny artikkel">
                             <i class="fa fa-plus"></i> <i class="fa fa-file-text"></i>
                         </button>
                     </div>
+                    <div>
+                        <b>Reklamer</b>
+                    </div>
                     <id-select multiple class="pull-left" style="width: 90%;"
                                 items="vm.adverts"
                                 target="page.adverts"
-                                show="name"
-                                header="'Reklamer'">
+                                show="name">
                     </id-select>
                     <div class="pull-right">
                         <button ng-click="vm.createAdvert(page)" class="btn btn-warning" uib-tooltip="Lag ny reklame">
@@ -205,7 +209,7 @@
                                 ng-show="!edit['photo_status']"
                                 title="Klikk for å redigere"
                             >
-                                <textwrapper length="15" ng-attr-text="article.photo_status || '[Rediger]'"></textwrapper>
+                                <textwrapper length="20" ng-attr-text="article.photo_status || '[Rediger]'"></textwrapper>
                             </div>
                             <!--Edit-->
                             <div class="d-table-cell" ng-style="vm.columnWidths.photo_status" ng-show="edit['photo_status']">
@@ -274,7 +278,7 @@
                             ng-show="!edit['comment']"
                             title="Klikk for å redigere"
                         >
-                            <textwrapper length="15" ng-attr-text="advert.comment || '[Rediger]'"></textwrapper>
+                            <textwrapper length="20" ng-attr-text="advert.comment || '[Rediger]'"></textwrapper>
                         </div>
                         <!--Edit-->
                         <div class="d-table-cell" ng-style="vm.columnWidths.comment" ng-show="edit['comment']">

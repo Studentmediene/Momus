@@ -31,19 +31,19 @@ angular.module('momusApp.services')
         photo_status: {
             scope: 'article',
             part: 0.15,
-            min: 90,
-            calculated: 90
+            min: 100,
+            calculated: 100
         },
         comment: {
             scope: 'article',
             part: 0.2,
-            min: 100,
-            calculated: 100
+            min: 120,
+            calculated: 120
         },
         layout: {scope: 'page', width: 80},
-        done: {scope: 'page', width: 40},
-        edit: {scope: 'page', width: 40},
-        delete: {scope: 'page', width: 40}
+        done: {scope: 'page', width: 30},
+        edit: {scope: 'page', width: 30},
+        delete: {scope: 'page', width: 30}
     };
 
     // Get the width of the entire disposition and article table that is constant
