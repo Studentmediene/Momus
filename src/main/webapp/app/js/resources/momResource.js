@@ -1,7 +1,16 @@
 'use strict';
 
 angular.module('momusApp.resources')
-    .factory('momResource', function($resource, RESOURCE_ACTIONS, $http) {
+    .factory('defaultResourceActions', () => {
+        return () => ({
+            save: {method: 'POST'},
+            get:    {method: 'GET'},
+            query: {method: 'GET', isArray: true},
+            update: {method: 'PUT'},
+            delete: {method: 'DELETE'}
+        });
+    })
+    .factory('momResource', function($resource, defaultResourceActions, $http) {
         return (url, paramDefaults, actions, requestTransform, responseTransform, options) => {
             actions = withDefaultActions(actions);
             actions = withCustomTransforms(actions, requestTransform, responseTransform);
@@ -10,7 +19,7 @@ angular.module('momusApp.resources')
 
         function withDefaultActions(actions) {
             return {
-                ...RESOURCE_ACTIONS,
+                ...defaultResourceActions(),
                 ...actions
             }
         }
@@ -38,11 +47,11 @@ angular.module('momusApp.resources')
         function withDefaultResponseTransform(transform) {
             let defaults = $http.defaults.transformResponse;
             defaults = angular.isArray(defaults) ? defaults : [defaults];
-            return defaults.concat(transform);
+            return [...defaults, transform];
         }
 
         function withDefaultRequestTransform(transform) {
             const defaults = $http.defaults.transformRequest;
-            return [transform].concat(defaults);
+            return [transform, ...defaults];
         }
     });
