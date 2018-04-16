@@ -1,16 +1,7 @@
 'use strict';
 
 angular.module('momusApp.resources')
-    .factory('defaultResourceActions', () => {
-        return () => ({
-            save: {method: 'POST'},
-            get:    {method: 'GET'},
-            query: {method: 'GET', isArray: true},
-            update: {method: 'PUT'},
-            delete: {method: 'DELETE'}
-        });
-    })
-    .factory('momResource', function($resource, defaultResourceActions, $http) {
+    .factory('momResource', function($resource, RESOURCE_ACTIONS, $http) {
         return (url, paramDefaults, actions, requestTransform, responseTransform, options) => {
             actions = withDefaultActions(actions);
             actions = withCustomTransforms(actions, requestTransform, responseTransform);
@@ -19,7 +10,7 @@ angular.module('momusApp.resources')
 
         function withDefaultActions(actions) {
             return {
-                ...defaultResourceActions(),
+                ...RESOURCE_ACTIONS,
                 ...actions
             }
         }
@@ -29,19 +20,15 @@ angular.module('momusApp.resources')
                 .filter(k => !actions[k].skipTransform)
                 .forEach(k => {
                     const action = actions[k];
-                    if(requestTransform){
-                        action.transformRequest = withDefaultRequestTransform(requestTransform);
+                    actions[k] = {
+                        ...action,
+                        transformRequest: withDefaultRequestTransform(requestTransform),
+                        transformResponse: action.isArray ?
+                            withDefaultResponseTransform(items => items.map(responseTransform)) :
+                            withDefaultResponseTransform(responseTransform)
                     }
-
-                    if(responseTransform){
-                        if(action.isArray) {
-                            action.transformResponse = withDefaultResponseTransform(items => items.map(responseTransform))
-                        } else {
-                            action.transformResponse = withDefaultResponseTransform(responseTransform);
-                        }
-                    }
-                });
-            return actions
+            });
+            return actions;
         }
 
         function withDefaultResponseTransform(transform) {
@@ -51,7 +38,8 @@ angular.module('momusApp.resources')
         }
 
         function withDefaultRequestTransform(transform) {
-            const defaults = $http.defaults.transformRequest;
+            let defaults = $http.defaults.transformRequest;
+            defaults = angular.isArray(defaults) ? defaults : [defaults];
             return [transform, ...defaults];
         }
     });
