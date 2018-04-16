@@ -21,13 +21,9 @@ angular.module('momusApp.services')
 
         return {
             checkPermission : function(req) {
-                for(var i = 0; i < req.length; i++) {
-                    if(req.includes(user.roles[i])){
-                        return true;
-                    }
-                }
-                return false;
-
+                return req.some(element => {
+                    return user.roles.includes(element);
+                });
             },
             permissionModal : function() {
                 var redirect = () => {
