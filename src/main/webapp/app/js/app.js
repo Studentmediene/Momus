@@ -104,6 +104,16 @@ angular.module('momusApp', [
         $httpProvider.interceptors.push('HttpInterceptor');
         $httpProvider.defaults.withCredentials = true;
     }]).
+    constant('RESOURCE_ACTIONS', {
+        save: {method: 'POST'},
+        get:    {method: 'GET'},
+        query: {method: 'GET', isArray: true},
+        update: {method: 'PUT'},
+        delete: {method: 'DELETE'}
+    }).
+    config(['$resourceProvider', 'RESOURCE_ACTIONS', ($resourceProvider, RESOURCE_ACTIONS) => {
+        $resourceProvider.defaults.actions = RESOURCE_ACTIONS;
+    }]).
     run(['$rootScope', 'TitleChanger', ($rootScope, TitleChanger) => {
         // Whenever there is a route change, we try to update the url with the title set in the rootprovider above
         // if there is no title, we clear it

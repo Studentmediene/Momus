@@ -23,8 +23,9 @@ import no.dusken.momus.service.ArticleService;
 
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.time.ZonedDateTime;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -68,8 +69,7 @@ public class Article{
     @Fetch(FetchMode.SUBSELECT)
     private Set<Person> photographers;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpdated;
+    private ZonedDateTime lastUpdated;
 
     private String photoStatus;
 
@@ -170,11 +170,11 @@ public class Article{
         this.photographers = photographers;
     }
 
-    public Date getLastUpdated() {
+    public ZonedDateTime getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(Date lastUpdated) {
+    public void setLastUpdated(ZonedDateTime lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 

@@ -28,6 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -98,17 +99,17 @@ public class PublicationServiceTest extends AbstractServiceTest {
     }
 
     /**
-     * Method: {@link PublicationService#getActivePublication(Date)}
+     * Method: {@link PublicationService#getActivePublication(LocalDate)}
      */
     @Test
     public void testGetActivePublication() {
-        publication1.setReleaseDate(new Date(2017, 8, 10)); //Old
-        publication2.setReleaseDate(new Date(2017, 8, 12));
-        publication3.setReleaseDate(new Date(2017, 8, 14));
+        publication1.setReleaseDate(LocalDate.of(2017, 8, 10)); //Old
+        publication2.setReleaseDate(LocalDate.of(2017, 8, 12));
+        publication3.setReleaseDate(LocalDate.of(2017, 8, 14));
 
         doReturn(Arrays.asList(publication2, publication2, publication1)).when(publicationRepository).findAllByOrderByReleaseDateDesc();
 
-        assertEquals(publication2, publicationService.getActivePublication(new Date(2017, 8, 11)));
+        assertEquals(publication2, publicationService.getActivePublication(LocalDate.of(2017, 8, 11)));
     }
 
     @Test

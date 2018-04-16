@@ -31,7 +31,7 @@ angular.module('momusApp.controllers')
         vm.editing = {};
 
         vm.dateOptions = {// Needed for the date picker, always start weeks on a monday
-            'starting-day': 1
+            'startingDay': 1
         };
 
         vm.isInCurrentYear = isInCurrentYear;
@@ -76,6 +76,8 @@ angular.module('momusApp.controllers')
         function editPublication(publication) {
             vm.editing = angular.copy(publication); // always work on a copy
 
+            vm.editing.release_date = new Date(vm.editing.release_date);
+
             // clear form errors
             if (!vm.editing.release_date) {
                 vm.editing.release_date = '';
@@ -85,8 +87,8 @@ angular.module('momusApp.controllers')
 
         function saveEditedPublication() {
             vm.isSaving = true;
-            if (!vm.editing.id) { // no id means it's a new one
-                const publication = Publication.save({}, vm.editing, function() {
+            if (vm.editing.id == null) { // no id means it's a new one
+                const publication = Publication.save({}, vm.editing, function(publication) {
                     vm.publications.push(publication);
                     vm.editPublication(publication);
                     vm.isSaving = false;

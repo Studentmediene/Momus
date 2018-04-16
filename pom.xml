@@ -57,6 +57,7 @@
         <spring-ldap.version>2.0.2.RELEASE</spring-ldap.version>
         <hibernate.version>5.2.10.Final</hibernate.version>
         <jackson-datatype-hibernate5.version>2.9.0</jackson-datatype-hibernate5.version>
+        <jackson-datatype-jsr310.version>2.9.4</jackson-datatype-jsr310.version>
         <commons-dbcp2.version>2.1.1</commons-dbcp2.version>
         <liquibase.version>3.5.3</liquibase.version>
         <google-drive.version>v2-rev277-1.22.0</google-drive.version>
@@ -205,6 +206,12 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-hibernate5</artifactId>
             <version>${jackson-datatype-hibernate5.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson-datatype-jsr310.version}</version>
         </dependency>
 
         <dependency>

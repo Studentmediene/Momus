@@ -26,6 +26,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -259,28 +260,28 @@ public class ArticleServiceTest extends AbstractServiceTest {
         when(articleRevisionRepository.save(any(ArticleRevision.class))).then(returnsFirstArg());
 
         // Test too old previous revision creates new
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, -1);
+        ZonedDateTime c = ZonedDateTime.now();
+        c = c.minusDays(1);
 
-        article1Revision1.setSavedDate(c.getTime());
+        article1Revision1.setSavedDate(c);
         article1Revision1.setStatusChanged(false);
 
         assertTrue(articleServiceSpy.createRevision(article1) != article1Revision1);
 
         // Test young previous revision but changed status creates new
-        c = Calendar.getInstance();
-        c.add(Calendar.HOUR, -1);
+        c = ZonedDateTime.now();
+        c = c.minusHours(1);
 
-        article1Revision1.setSavedDate(c.getTime());
+        article1Revision1.setSavedDate(c);
         article1Revision1.setStatusChanged(true);
 
         assertTrue(articleServiceSpy.createRevision(article1) != article1Revision1);
 
         // Test young previous revision and not changed status reuses old
-        c = Calendar.getInstance();
-        c.add(Calendar.MINUTE, -1);
+        c = ZonedDateTime.now();
+        c = c.minusMinutes(1);
 
-        article1Revision1.setSavedDate(c.getTime());
+        article1Revision1.setSavedDate(c);
         article1Revision1.setStatusChanged(false);
 
         assertTrue(articleServiceSpy.createRevision(article1) == article1Revision1);
