@@ -19,7 +19,6 @@ package no.dusken.momus.model;
 import javax.persistence.*;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 

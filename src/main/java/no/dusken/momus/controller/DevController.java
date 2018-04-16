@@ -100,7 +100,7 @@ public class DevController {
 
         Publication p2 = new Publication();
         p2.setName("UD #2-2018");
-        p1.setReleaseDate(LocalDate.of(2018, 2, 10));
+        p2.setReleaseDate(LocalDate.of(2018, 2, 10));
         p2 = publicationService.savePublication(p2, 50);
 
         Article a1 = new Article();
