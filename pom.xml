@@ -22,7 +22,7 @@
 
     <groupId>no.dusken.momus</groupId>
     <artifactId>momus</artifactId>
-    <version>1.9.2</version>
+    <version>1.9.3</version>
     <packaging>war</packaging>
 
     <!-- Some boilerplate info -->
@@ -301,7 +301,6 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
                 <configuration>
-                    <contextXml>src/main/resources/jetty-context.xml</contextXml>
                     <webAppSourceDirectory>src/main/webapp</webAppSourceDirectory>
                 </configuration>
             </plugin>

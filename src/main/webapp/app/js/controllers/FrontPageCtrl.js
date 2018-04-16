@@ -102,7 +102,7 @@ angular.module('momusApp.controllers')
                 Article.reviewStatusCounts({publicationId: $scope.publication.id}).$promise,
                 Article.reviewStatuses().$promise]
             ).then(data => $scope.reviewstatus = getStatusArrays(...data));
-        });
+        }, () => $scope.noPublication = true);
 
         function getStatusArrays(counts, statuses){
             var status = {statuses: statuses, labels: [], colors: [], counts: []};

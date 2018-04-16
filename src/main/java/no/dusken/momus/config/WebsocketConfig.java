@@ -27,7 +27,6 @@ class WebsocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws/disposition");
         registry.addEndpoint("/ws/disposition").setAllowedOrigins("https://momus.smint.no").withSockJS();
     }
 
@@ -38,15 +37,4 @@ class WebsocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
         converters.add(converter);
         return false;
     }
-
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.setInterceptors(sessionChannelInterceptor());
-    }
-
-    @Bean
-    public ChannelInterceptor sessionChannelInterceptor() {
-        return new SessionChannelInterceptor();
-    }
-
 }

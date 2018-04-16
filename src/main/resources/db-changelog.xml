@@ -718,4 +718,21 @@
             <column name="photo" type="BLOB" />
         </addColumn>
     </changeSet>
+
+    <changeSet id="42_adduserroles" author="Eirik">
+        <createTable tableName="person_roles">
+            <column name="person_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+            <column name="roles" type="VARCHAR(255)" />
+        </createTable>
+        <addForeignKeyConstraint
+                baseTableName="person_roles" baseColumnNames="person_id"
+                constraintName="FK_role_person"
+                referencedTableName="person"
+                referencedColumnNames="id"
+                onDelete="CASCADE"
+                onUpdate="CASCADE"
+        />
+    </changeSet>
 </databaseChangeLog>

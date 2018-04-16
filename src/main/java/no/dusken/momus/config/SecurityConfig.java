@@ -10,11 +10,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.opensaml.saml2.metadata.provider.HTTPMetadataProvider;
 import org.opensaml.xml.parse.StaticBasicParserPool;
 import org.opensaml.xml.parse.XMLParserException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -73,13 +69,17 @@ import no.dusken.momus.authentication.UserDetailsService;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @ComponentScan("org.springframework.security.saml")
 @PropertySource(value = {"classpath:momus.properties","classpath:local.properties"}, ignoreResourceNotFound = true)
+@Profile("!noAuth")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private Environment env;
+    private final Environment env;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
+
+    public SecurityConfig(Environment env, UserDetailsService userDetailsService) {
+        this.env = env;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     public void configure(HttpSecurity http) throws Exception{
@@ -88,7 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class)
             .addFilterAfter(samlFilter(), BasicAuthenticationFilter.class)
             .authorizeRequests()
-            .antMatchers("/api/dev/**").access(env.getProperty("devmode"))
+            .antMatchers("/api/dev/**").access(String.valueOf(env.acceptsProfiles("dev")))
             .antMatchers("/**").fullyAuthenticated()
             .and()
             .exceptionHandling()
@@ -103,7 +103,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+	protected void configure(AuthenticationManagerBuilder auth) {
 		auth.authenticationProvider(samlAuthenticationProvider());
     }
 
@@ -199,7 +199,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new SAMLLogoutProcessingFilter(successLogoutHandler(), new LogoutHandler[]{logoutHandler()});
     }
 
-    @Bean 
+    @Bean
     public SimpleUrlLogoutSuccessHandler successLogoutHandler() {
         SimpleUrlLogoutSuccessHandler handler = new SimpleUrlLogoutSuccessHandler();
         handler.setDefaultTargetUrl("/");

@@ -16,6 +16,7 @@
 
 package no.dusken.momus.controller;
 
+import no.dusken.momus.authentication.UserDetailsServiceDev;
 import no.dusken.momus.ldap.LdapSyncer;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.ArticleService;
@@ -94,13 +95,13 @@ public class DevController {
         List<Person> people = new ArrayList<>(personRepository.findByActiveTrue());
 
         Publication p1 = new Publication();
-        p1.setName("UD #1-2018");
-        p1.setReleaseDate(LocalDate.of(2018, 1, 20));
+        p1.setName("UD #1");
+        p1.setReleaseDate(LocalDate.now().plusDays(7));
         p1 = publicationService.savePublication(p1, 50);
 
         Publication p2 = new Publication();
-        p2.setName("UD #2-2018");
-        p2.setReleaseDate(LocalDate.of(2018, 2, 10));
+        p2.setName("UD #2");
+        p2.setReleaseDate(LocalDate.now().plusDays(14));
         p2 = publicationService.savePublication(p2, 50);
 
         Article a1 = new Article();
@@ -165,6 +166,16 @@ public class DevController {
 
     @GetMapping("/devmode")
     public @ResponseBody boolean isDevmode() {
-        return Boolean.valueOf(env.getProperty("devmode"));
+        return env.acceptsProfiles("dev");
+    }
+
+    @GetMapping("/noauth")
+    public @ResponseBody boolean isNoAuth() {
+        return env.acceptsProfiles("noAuth");
+    }
+
+    @PutMapping("/loggedinuser/{id}")
+    public void setLoggedInUser(@PathVariable Long id) {
+        UserDetailsServiceDev.LOGGED_IN_USER = id;
     }
 }

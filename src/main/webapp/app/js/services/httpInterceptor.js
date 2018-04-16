@@ -42,6 +42,11 @@ angular.module('momusApp.services').
                     reloadOnAlertClose = true;
                 }
 
+                else if (response.status === 403) {
+                    errorMessage = '<p>Du har ikke rettigheter til å gjøre dette</p>' +
+                        '<p>Du prøvde å aksessere ' + response.config.url + '</p>';
+                }
+
                 else if (response.data.error) {
                     errorMessage = response.data.error;
                     showExtras = true;
