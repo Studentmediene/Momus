@@ -31,7 +31,7 @@ angular.module('momusApp.controllers')
         vm.editing = {};
 
         vm.dateOptions = {// Needed for the date picker, always start weeks on a monday
-            'starting-day': 1
+            'startingDay': 1
         };
 
         vm.isInCurrentYear = isInCurrentYear;
