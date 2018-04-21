@@ -17,7 +17,13 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('NavbarCtrl', function ($scope, $location, Person, $http, MessageModal, $rootScope, $window) {
+    .controller('NavbarCtrl', function (
+        $scope,
+        $location,
+        $http,
+        $rootScope,
+        $window,
+        loggedInUser) {
         $scope.devmode = false;
 
         $http.get('/api/dev/devmode', {bypassInterceptor: true}).then(
@@ -25,23 +31,9 @@ angular.module('momusApp.controllers')
             () => $scope.devmode = false
         );
 
-        $scope.user = Person.me();
+        $scope.user = loggedInUser;
 
         $scope.isCollapsed = true;
-
-        /*  Checks if the current path is equal to the provided location
-            If location ends with %, it will count as a wildcard.
-            For instance, /sources% will match /sources/40
-            while         /sources will not match /sources/40
-        */
-        $scope.isActive = function(location) {
-            if(location.substring(location.length - 1) === '%') { // If ending with a wildcard
-                var start = location.substring(0, location.length - 1);
-                return $location.path().substring(0, start.length) === start;
-            }
-
-            return location === $location.path();
-        };
 
         $scope.logout = function() {
             $window.location.href = "/saml/logout";

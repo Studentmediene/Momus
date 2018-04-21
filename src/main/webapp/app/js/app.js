@@ -47,7 +47,10 @@ angular.module('momusApp', [
             .state('root', {
                 resolve: {
                     loggedInUser: Person => Person.me().$promise
-                }
+                },
+                templateUrl: 'partials/nav/navView.html',
+                controller: 'NavbarCtrl',
+                controllerAs: 'vm'
             })
             .state('front', {
                 parent: 'root',
