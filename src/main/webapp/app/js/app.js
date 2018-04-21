@@ -136,10 +136,8 @@ angular.module('momusApp', [
     config(['$resourceProvider', 'RESOURCE_ACTIONS', ($resourceProvider, RESOURCE_ACTIONS) => {
         $resourceProvider.defaults.actions = RESOURCE_ACTIONS;
     }]).
-    run(['$rootScope', 'TitleChanger', ($rootScope, TitleChanger) => {
-        // Whenever there is a route change, we try to update the url with the title set in the rootprovider above
-        // if there is no title, we clear it
-        $rootScope.$on('$routeChangeSuccess', (event, current, previous) => {
-            TitleChanger.setTitle(current.$$route && current.$$route.title || "");
+    run(['$transitions', 'TitleChanger', ($transitions, TitleChanger) => {
+        $transitions.onSuccess({}, transition => {
+            TitleChanger.setTitle(transition.to().title || "")
         });
     }]);
