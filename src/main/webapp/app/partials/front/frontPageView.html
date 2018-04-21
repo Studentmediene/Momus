@@ -298,22 +298,27 @@
             <!--News-->
             <div class="panel panel-info">
                 <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-bullhorn"></i> Nyheter</h1></div>
-                <div style="height:300px; overflow-y: visible">
-                    <table class="table">
-                        <tbody ng-repeat="n in news | orderBy: '-date'">
+                <div>
+                    <table class="table news-table">
+                        <tbody ng-repeat="n in news
+                                                    | orderBy: '-date'
+                                                    | startFrom:(currentPage-1)*pageSize
+                                                    | limitTo: pageSize"
+                        class="news-item">
                         <tr ng-class="{danger: n.new, active:!n.new}" class="interact" ng-click="n.show = !n.show">
-                            <td ng-show="n.new" style="font-weight: bold; width: 40%">{{n.date | date}}</td>
-                            <td ng-show="!n.new" style="width: 40%;">{{n.date | date}}</td>
 
-                            <td ng-show="n.new" style="font-weight: bold">{{n.title}}</td>
-                            <td ng-show="!n.new">{{n.title}}</td>
+                            <td colspan="2">
+                                <span ng-show="n.new" style="font-weight: bold">{{n.title}}</span>
+                                <span ng-show="!n.new">{{n.title}}</span>
 
-                            <td ng-show="n.new" style="font-weight: bold"><span person-widget="n.author">{{n.author.name}}</span></td>
-                            <td ng-show="!n.new"><span person-widget="n.author">{{n.author.name}}</span></td>
-
-                            <td width="5%">
-                                <i ng-show="!n.show" class="fa fa-arrow-circle-down"></i>
-                                <i ng-show="n.show" class="fa fa-arrow-circle-up"></i>
+                                <i ng-show="!n.show" class="fa fa-arrow-circle-down pull-right"></i>
+                                <i ng-show="n.show" class="fa fa-arrow-circle-up pull-right"></i>
+                            </td>
+                        </tr>
+                        <tr ng-show="n.show" class="news-meta">
+                            <td>{{n.date | date}}</td>
+                            <td>
+                                <span class="d-break-word pull-right" person-widget="n.author">{{n.author.name}}</span>
                             </td>
                         </tr>
                         <tr ng-show="n.show">
@@ -321,6 +326,13 @@
                         </tr>
                         </tbody>
                     </table>
+                    <div class="text-center">
+                        <ul uib-pagination direction-links="false"
+                            total-items="news.length"
+                            items-per-page="pageSize"
+                            ng-model="currentPage">
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

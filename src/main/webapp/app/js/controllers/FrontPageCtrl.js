@@ -31,6 +31,8 @@ angular.module('momusApp.controllers')
         $filter
     ) {
 
+        $scope.pageSize = 3;
+
         $scope.randomTip = function() {
             $scope.tip = TipAndNewsService.getRandomTip();
         };

@@ -53,31 +53,31 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">Momus</a>
+        <a class="navbar-brand hidden-sm" href="#">Momus</a>
     </div>
 
     <div class="collapse navbar-collapse" id="navbar-collapse" data-toggle="collapse" data-target="#navbar-collapse.in">
         <ul class="nav navbar-nav">
             <li ng-class="{active: isActive('/front%')}">
-                <a href="#/front"><i class="fa fa-th-large"></i> Front</a>
+                <a href="#/front"><i class="fa fa-th-large hidden-sm"></i> Front</a>
             </li>
             <li ng-class="{active: isActive('/disposisjon%')}">
-                <a href="#/disposisjon"><i class="fa fa-file-text"></i> Disposisjon</a>
+                <a href="#/disposisjon"><i class="fa fa-file-text hidden-sm"></i> Disposisjon</a>
             </li>
             <li ng-class="{active: isActive('/artikler%')}">
-                <a href="#/artikler"><i class="fa fa-pencil"></i> Artikler</a>
+                <a href="#/artikler"><i class="fa fa-pencil hidden-sm"></i> Artikler</a>
             </li>
             <li ng-class="{active: isActive('/utgaver')}">
-                <a href="#/utgaver"><i class="fa fa-list"></i> Utgaver</a>
+                <a href="#/utgaver"><i class="fa fa-list hidden-sm"></i> Utgaver</a>
             </li>
             <li ng-class="{active: isActive('/info%')}">
-                <a href="#/info"><i class="fa fa-info"></i> Info/nyheter</a>
+                <a href="#/info"><i class="fa fa-info hidden-sm"></i> Info/nyheter</a>
             </li>
             <li ng-class="{active: isActive('/admin%')}" ng-cloak ng-show="user.roles.indexOf('ROLE_ADMIN') != -1">
-                <a href="#/admin"><i class="fa fa-rebel"></i> Admin</a>
+                <a href="#/admin"><i class="fa fa-rebel hidden-sm"></i> Admin</a>
             </li>
             <li ng-class="{active: isActive('/dev%')}" ng-cloak ng-show="devmode" class="navbar-dev">
-                <a href="#/dev"><i class="fa fa-cog"></i> Dev</a>
+                <a href="#/dev"><i class="fa fa-cog hidden-sm"></i> Dev</a>
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">

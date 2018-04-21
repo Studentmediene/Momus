@@ -35,6 +35,8 @@ angular.module('momusApp.controllers')
         vm.saveEditedNews = saveEditedNews;
         vm.editNews = editNews;
 
+        vm.pageSize = 5;
+
         vm.news = News.query({}, news => {
             vm.news = news;
         });

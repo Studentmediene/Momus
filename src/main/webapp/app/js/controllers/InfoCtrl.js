@@ -18,6 +18,8 @@
 
 angular.module('momusApp.controllers')
     .controller('InfoCtrl', function($scope, TipAndNewsService, News){
+        $scope.pageSize = 5;
+
         $scope.randomTip = function() {
             $scope.tip = TipAndNewsService.getRandomTip();
         };
