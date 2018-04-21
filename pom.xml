@@ -284,6 +284,21 @@
     </dependencies>
 
     <build>
+        <resources>
+            <!-- Filter our .properties files -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>momus.properties</include>
+                    <include>local.properties</include>
+                </includes>
+            </resource>
+            <!-- Include the rest of the resources -->
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <!-- Configuration of how the project should be compiled -->
             <plugin>
