@@ -32,13 +32,13 @@
                 <li ui-sref-active="active">
                     <a ui-sref="info"><i class="fa fa-info"></i> Info/nyheter</a>
                 </li>
-                <li ui-sref-active="active" ng-cloak ng-show="devmode" class="navbar-dev">
+                <li ui-sref-active="active" ng-cloak ng-show="vm.devmode" class="navbar-dev">
                     <a ui-sref="dev"><i class="fa fa-cog"></i> Dev</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a class="visible-sm" ng-click="logout()">Logg ut <i class="fa fa-power-off"></i></a></li>
-                <li><a class="hidden-sm"  ng-click="logout()">Logg ut <b>{{user.name}}</b> <i class="fa fa-power-off"></i></a></li>
+                <li><a class="visible-sm" ng-click="vm.logout()">Logg ut <i class="fa fa-power-off"></i></a></li>
+                <li><a class="hidden-sm"  ng-click="vm.logout()">Logg ut <b>{{vm.user.name}}</b> <i class="fa fa-power-off"></i></a></li>
             </ul>
         </div>
     </div>

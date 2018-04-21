@@ -18,25 +18,25 @@
 
 angular.module('momusApp.controllers')
     .controller('NavbarCtrl', function (
-        $scope,
-        $location,
         $http,
-        $rootScope,
         $window,
         loggedInUser) {
-        $scope.devmode = false;
+
+        const vm = this;
+
+        vm.isCollapsed = true;
+        vm.devmode = false;
+        vm.user = loggedInUser;
+
+        vm.logout = logout;
 
         $http.get('/api/dev/devmode', {bypassInterceptor: true}).then(
-            response => $scope.devmode = response.data,
-            () => $scope.devmode = false
+            response => vm.devmode = response.data,
+            () => vm.devmode = false
         );
 
-        $scope.user = loggedInUser;
-
-        $scope.isCollapsed = true;
-
-        $scope.logout = function() {
+        function logout() {
             $window.location.href = "/saml/logout";
-        };
+        }
     });
 
