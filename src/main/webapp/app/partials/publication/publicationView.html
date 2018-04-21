@@ -47,8 +47,8 @@
                         >
                             <td>{{publication.name}}</td>
                             <td>{{publication.release_date | date: 'yyyy-MM-dd'}}</td>
-                            <td><a href="#/artikler?publication={{publication.id}}">Se artikler</a></td>
-                            <td><a href="#/disposisjon/{{publication.id}}">Disposisjon</a></td>
+                            <td><a ui-sref="search({publication: publication.id})">Se artikler</a></td>
+                            <td><a ui-sref="disposition({id: publication.id})">Disposisjon</a></td>
                             <td class=""><a class="interact" ng-click="vm.editPublication(publication)">Endre</a></td>
                         </tr>
                         </tbody>

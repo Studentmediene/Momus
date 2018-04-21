@@ -33,6 +33,7 @@ angular.module('momusApp', [
         'momusApp.resources',
         'ngRoute',
         'ngResource',
+        'ui.router',
         'ui.select',
         'ui.bootstrap',
         'ngCookies',
@@ -41,63 +42,81 @@ angular.module('momusApp', [
         'chart.js',
         'ngStomp'
     ]).
-    config(['$routeProvider', $routeProvider => {
-        $routeProvider
-            .when('/front',
-            {
-                    templateUrl: 'partials/front/frontPageView.html',
-                    controller: 'FrontPageCtrl'
+    config(['$stateProvider', ($stateProvider) => {
+        $stateProvider
+            .state('root', {
+                resolve: {
+                    loggedInUser: Person => Person.me().$promise
+                }
             })
-            .when('/artikler',
-            {
+            .state('front', {
+                parent: 'root',
+                url: '/front',
+                templateUrl: 'partials/front/frontPageView.html',
+                controller: 'FrontPageCtrl',
+                controllerAs: 'vm'
+            })
+            .state('search', {
+                parent: 'root',
+                url: '/artikler',
                 templateUrl: 'partials/search/searchView.html',
                 controller: 'SearchCtrl',
+                controllerAs: 'vm',
                 reloadOnSearch: false,
                 title: "Artikkelsøk"
             })
-            .when('/artikler/:id',
-            {
+            .state('article', {
+                parent: 'root',
+                url: '/artikler/:id',
                 templateUrl: 'partials/article/articleView.html',
                 controller: 'ArticleCtrl',
                 controllerAs: 'vm'
             })
-            .when('/artikler/revisjon/:id',
-            {
+            .state('articlerevision', {
+                parent: 'root',
+                url: '/artikler/:id/revisjon',
                 templateUrl: 'partials/article/articleRevisionView.html',
-                controller: 'ArticleRevisionCtrl'
-            })
-            .when('/utgaver',
-            {
-                templateUrl: 'partials/publication/publicationView.html',
-                controller: 'PublicationCtrl',
-                title: 'Utgaver',
+                controller: 'ArticleRevisionCtrl',
                 controllerAs: 'vm'
             })
-            //Disposition
-            .when('/disposisjon/:id?',
-            {
+            .state('disposition', {
+                parent: 'root',
+                url: '/disposisjon/:id',
+                params: {
+                    id: {squash: true, value: null}
+                },
                 templateUrl: 'partials/disposition/dispositionView.html',
                 controller: 'DispositionCtrl',
-                title: 'Disposisjon',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                title: 'Disposisjon'
             })
-            .when('/info',
-            {
+            .state('publications', {
+                parent: 'root',
+                url: '/utgaver',
+                templateUrl: 'partials/publication/publicationView.html',
+                controller: 'PublicationCtrl',
+                controllerAs: 'vm',
+                title: 'Utgaver'
+            })
+            .state('info', {
+                parent: 'root',
+                url: '/info',
                 templateUrl: 'partials/info/infoView.html',
                 controller: 'InfoCtrl',
+                controllerAs: 'vm',
                 title: 'Info'
             })
-            .when('/dev',
-            {
+            .state('dev', {
+                parent: 'root',
+                url: '/dev',
                 templateUrl: 'partials/dev/devView.html',
                 controller: 'DevCtrl',
-                title: 'Dev',
-                controllerAs: 'vm'
-            })
-            .otherwise({redirectTo: 'front'});
-
+                controllerAs: 'vm',
+                title: 'Utviklerinnstillinger'
+            });
     }]).
-    config(['$locationProvider', $locationProvider => {
+    config(['$urlRouterProvider', '$locationProvider', ($urlRouterProvider, $locationProvider) => {
+        $urlRouterProvider.otherwise('/front');
         $locationProvider.hashPrefix('');
     }]).
     config(['$httpProvider', $httpProvider => {

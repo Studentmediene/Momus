@@ -111,9 +111,9 @@
                     <h1 class="panel-title">
                         <span class="fa fa-file-text-o"></span>
                         Mine ti siste artikler
-                        <div class="pull-right">
-                            <a href="#/artikler?persons={{user.id}}">Vis flere</a>
-                        </div>
+                        <span class="pull-right">
+                            <a ui-sref="search({persons: user.id})">Vis flere</a>
+                        </span>
                     </h1>
                 </div>
                 <div class="table-responsive">
@@ -145,7 +145,7 @@
 
                         <tr ng-repeat="article in myArticles | limitTo:10">
                             <td></td>
-                            <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
+                            <td><a ui-sref="article({id: article.id})">{{article.name}}</a></td>
                             <td>{{article.content_length}}</td>
                             <td>
                                 <ul class="list-unstyled">
@@ -197,7 +197,7 @@
                         </tr>
                         <tr ng-repeat="article in recentArticleInfo | orderBy: orderRecentArticles : true">
                             <td><i ng-if="article.archived" class="fa fa-trash-o" uib-tooltip="Artikkelen er arkivert"></i></td>
-                            <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
+                            <td><a ui-sref="article({id: article.id})">{{article.name}}</a></td>
                             <td>{{article.content_length}}</td>
                             <td>
                                 <ul class="list-unstyled">
@@ -262,7 +262,7 @@
                         </tr>
                         <tr ng-repeat="article in favSectionArticles">
                             <td></td>
-                            <td><a href="#/artikler/{{article.id}}">{{article.name}}</a></td>
+                            <td><a ui-sref="article({id: article.id})">{{article.name}}</a></td>
                             <td>{{article.content_length}}</td>
                             <td>
                                 <ul class="list-unstyled">
