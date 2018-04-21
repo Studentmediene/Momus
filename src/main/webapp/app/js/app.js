@@ -46,7 +46,7 @@ angular.module('momusApp', [
         $stateProvider
             .state('root', {
                 resolve: {
-                    loggedInUser: Person => Person.me().$promise
+                    loggedInPerson: Person => Person.me().$promise
                 },
                 templateUrl: 'partials/nav/navView.html',
                 controller: 'NavbarCtrl',
@@ -55,13 +55,51 @@ angular.module('momusApp', [
             .state('front', {
                 parent: 'root',
                 url: '/',
+                resolve: {
+                    myArticles: (Article, loggedInPerson) =>
+                        Article.search({}, {persons: [loggedInPerson.id], page_size: 9}).$promise,
+                    recentArticles: (ViewArticleService, Article) => {
+                        const recents = ViewArticleService.getRecentViews();
+                        return recents.length > 0 ?
+                            Article.multiple({ids: recents}).$promise :
+                            [];
+                    },
+                    favouriteSectionArticles: (Article, loggedInPerson) => {
+                        return loggedInPerson.favouritesection ?
+                            Article.search({}, {section: loggedInPerson.favouritesection.id}).$promise :
+                            [];
+                    },
+                    activePublication: Publication => Publication.active().$promise
+                        .then(pub => pub)
+                        .catch(() => null),
+                    sections: Article => Article.sections().$promise,
+                    statuses: Article => Article.statuses().$promise,
+                    statusCounts: (activePublication, Article) => {
+                        return activePublication ?
+                            Article.statusCounts({publicationId: activePublication.id}).$promise :
+                            [];
+                    },
+                    reviewStatuses: Article => Article.reviewStatuses().$promise,
+                    reviewStatusCounts: (activePublication, Article) => {
+                        return activePublication ?
+                            Article.reviewStatusCounts({publicationId: activePublication.id}).$promise :
+                            [];
+                    },
+                    layoutStatuses: Publication => Publication.layoutStatuses().$promise,
+                    layoutStatusCounts: (activePublication, Page) => {
+                        return activePublication ?
+                            Page.layoutStatusCounts({pubid: activePublication.id}).$promise :
+                            [];
+                    }
+
+                },
                 templateUrl: 'partials/front/frontPageView.html',
                 controller: 'FrontPageCtrl',
                 controllerAs: 'vm'
             })
             .state('search', {
                 parent: 'root',
-                url: '/artikler',
+                url: '/artikler?publication&section&status&persons&page_number&page_size&review&free',
                 templateUrl: 'partials/search/searchView.html',
                 controller: 'SearchCtrl',
                 controllerAs: 'vm',

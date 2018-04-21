@@ -15,33 +15,29 @@
   -->
 
 <div class="container">
-    <div class="row" ng-hide="noPublication">
+    <div class="row" ng-hide="vm.noPublication">
         <div class="col-md-12">
-            <h3>Status {{publication.name}}</h3>
+            <h3>Status {{vm.publication.name}}</h3>
         </div>
     </div>
-    <div class="row" ng-hide="noPublication">
+    <div class="row" ng-hide="vm.noPublication || vm.countTotals(vm.articlestatus.counts) === 0">
         <div class="col-md-4">
             <div class="panel panel-info">
                 <div class="panel-heading">
                     Status artikler
                 </div>
                 <div class="panel-body">
-                    <div ng-if="!isEmptyArray(articlestatus.counts)">
-                        <status-chart ng-hide="isEmptyArray(articlestatus.counts)"
-                                data="articlestatus.counts"
-                                labels="articlestatus.labels"
-                                colours="articlestatus.colors"
-                                status-click="clickArticleStatus(selected)">
-                        </status-chart>
-                    </div>
-
-                    <p ng-show="isEmptyArray(articlestatus.counts)">{{publication.name}} har ingen saker enda!</p>
+                    <status-chart
+                            data="vm.articlestatus.counts"
+                            labels="vm.articlestatus.labels"
+                            colours="vm.articlestatus.colors"
+                            status-click="vm.clickArticleStatus(selected)">
+                    </status-chart>
                 </div>
-                <table ng-hide="isEmptyArray(articlestatus.counts)" class="table">
+                <table class="table">
                     <tr>
                         <td>Totalt</td>
-                        <td>{{countTotals(articlestatus.counts)}}</td>
+                        <td>{{vm.countTotals(vm.articlestatus.counts)}}</td>
                     </tr>
                 </table>
             </div>
@@ -52,24 +48,17 @@
                     Status korrektur
                 </div>
                 <div class="panel-body">
-                    <div ng-if="!isEmptyArray(reviewstatus.counts)">
-                        <div>
-                            <status-chart
-                                    data="reviewstatus.counts"
-                                    labels="reviewstatus.labels"
-                                    colours="reviewstatus.colors"
-                                    status-click="clickReviewStatus(selected)">
-                            </status-chart>
-                        </div>
-                    </div>
-
-                    <p ng-show="isEmptyArray(reviewstatus.counts)">{{publication.name}} har ingen saker enda!</p>
-
+                    <status-chart
+                            data="vm.reviewstatus.counts"
+                            labels="vm.reviewstatus.labels"
+                            colours="vm.reviewstatus.colors"
+                            status-click="vm.clickReviewStatus(selected)">
+                    </status-chart>
                 </div>
-                <table ng-hide="isEmptyArray(reviewstatus.counts)" class="table">
+                <table class="table">
                     <tr>
                         <td>Totalt</td>
-                        <td>{{countTotals(reviewstatus.counts)}}</td>
+                        <td>{{vm.countTotals(vm.reviewstatus.counts)}}</td>
                     </tr>
                 </table>
             </div>
@@ -80,23 +69,17 @@
                     Status layout
                 </div>
                 <div class="panel-body">
-                    <div ng-if="!isEmptyArray(layoutstatus.counts)">
-                        <div>
-                            <status-chart
-                                          data="layoutstatus.counts"
-                                          labels="layoutstatus.labels"
-                                          colours="layoutstatus.colors"
-                                          status-click="clickLayoutStatus(selected)">
-                            </status-chart>
-                        </div>
-                    </div>
-                    <p ng-show="isEmptyArray(layoutstatus.counts)">{{publication.name}} har ingen sider enda!</p>
-
+                    <status-chart
+                                  data="vm.layoutstatus.counts"
+                                  labels="vm.layoutstatus.labels"
+                                  colours="vm.layoutstatus.colors"
+                                  status-click="vm.clickLayoutStatus(selected)">
+                    </status-chart>
                 </div>
-                <table ng-hide="isEmptyArray(layoutstatus.counts)" class="table">
+                <table class="table">
                     <tr>
                         <td>Totalt</td>
-                        <td>{{countTotals(layoutstatus.counts)}}</td>
+                        <td>{{vm.countTotals(vm.layoutstatus.counts)}}</td>
                     </tr>
                 </table>
             </div>
@@ -112,7 +95,7 @@
                         <span class="fa fa-file-text-o"></span>
                         Mine ti siste artikler
                         <span class="pull-right">
-                            <a ui-sref="search({persons: user.id})">Vis flere</a>
+                            <a ui-sref="search({persons: vm.user.id})">Vis flere</a>
                         </span>
                     </h1>
                 </div>
@@ -137,13 +120,13 @@
                             </td>
                         </tr>
 
-                        <tr ng-if="noArticles">
+                        <tr ng-if="vm.myArticles.length <= 0">
                             <td colspan="10" style="text-align: center;">
                                 Du har ikke skrevet noen artikler enda
                             </td>
                         </tr>
 
-                        <tr ng-repeat="article in myArticles | limitTo:10">
+                        <tr ng-repeat="article in vm.myArticles | limitTo:10">
                             <td></td>
                             <td><a ui-sref="article({id: article.id})">{{article.name}}</a></td>
                             <td>{{article.content_length}}</td>
@@ -190,12 +173,12 @@
                             </td>
                         </tr>
 
-                        <tr ng-if="!recentArticles">
+                        <tr ng-if="vm.recentArticles.length <= 0">
                             <td colspan="10" style="text-align: center;">
                                 Du har ikke sett på noen artikler enda
                             </td>
                         </tr>
-                        <tr ng-repeat="article in recentArticleInfo | orderBy: orderRecentArticles : true">
+                        <tr ng-repeat="article in vm.recentArticles">
                             <td><i ng-if="article.archived" class="fa fa-trash-o" uib-tooltip="Artikkelen er arkivert"></i></td>
                             <td><a ui-sref="article({id: article.id})">{{article.name}}</a></td>
                             <td>{{article.content_length}}</td>
@@ -217,15 +200,15 @@
             <div class="panel panel-info">
                 <div class="panel-heading clearfix">
                     <div class="pull-right">
-                        <select id="favsec" class="form-control input-sm" ng-model="user.favouritesection" ng-change="updateFavouriteSection()"
-                                ng-options="s.name for s in sections  | filter:{deleted: false} track by s.id">
+                        <select id="favsec" class="form-control input-sm" ng-model="vm.user.favouritesection" ng-change="vm.updateFavouriteSection()"
+                                ng-options="s.name for s in vm.sections  | filter:{deleted: false} track by s.id">
                         </select>
                     </div>
                     <h1 class="panel-title fav">
                         <i class="fa fa-star"></i>
-                        {{!user.favouritesection ?
+                        {{!vm.user.favouritesection ?
                             "Velg favorittseksjon for å vise de nyeste artiklene derfra" :
-                            "Siste artikler fra din favorittseksjon (" + user.favouritesection.name + ")"
+                            "Siste artikler fra din favorittseksjon (" + vm.user.favouritesection.name + ")"
                         }}
                     </h1>
                 </div>
@@ -244,23 +227,17 @@
                         </thead>
                         <tbody>
 
-                        <tr ng-show="loadingFavourites">
-                            <td colspan="10" style="text-align: center;">
-                                <i class="fa fa-4x fa-spinner fa-spin"></i>
-                            </td>
-                        </tr>
-
-                        <tr ng-show="!loadingFavourites && !user.favouritesection">
+                        <tr ng-show="!vm.user.favouritesection">
                             <td colspan="10" style="text-align: center;">
                                 Du har ikke satt en favorittseksjon
                             </td>
                         </tr>
-                        <tr ng-show="!loadingFavourites && user.favouritesection && favSectionArticles.length == 0">
+                        <tr ng-show="favouriteSectionArticles.length <= 0">
                             <td colspan="10" style="text-align: center;">
                                 Det finnes ingen artikler i denne seksjonen
                             </td>
                         </tr>
-                        <tr ng-repeat="article in favSectionArticles">
+                        <tr ng-repeat="article in vm.favouriteSectionArticles">
                             <td></td>
                             <td><a ui-sref="article({id: article.id})">{{article.name}}</a></td>
                             <td>{{article.content_length}}</td>
@@ -286,13 +263,13 @@
                     <h1 class="panel-title"><i class="fa fa-question-circle"></i> Tilfeldig tips
 
                         <div class="pull-right">
-                            <button class="btn btn-default btn-xs" ng-click="randomTip()" uib-tooltip="Nytt tips">
+                            <button class="btn btn-default btn-xs" ng-click="vm.updateRandomTip()" uib-tooltip="Nytt tips">
                                 <i class="fa fa-refresh"></i>
                             </button>
                         </div>
                     </h1>
                 </div>
-                <div class="panel-body" ng-bind-html="tip | trustHtml"></div>
+                <div class="panel-body" ng-bind-html="vm.tip | trustHtml"></div>
             </div>
 
             <!--News-->
@@ -300,7 +277,7 @@
                 <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-bullhorn"></i> Nyheter</h1></div>
                 <div style="height:300px; overflow-y: auto">
                     <table class="table">
-                        <tbody ng-repeat="n in news | orderBy: '-date'">
+                        <tbody ng-repeat="n in vm.news | orderBy: '-date'">
                         <tr ng-class="{danger: n.new, active:!n.new}" class="interact" ng-click="n.show = !n.show">
                             <td ng-show="n.new" style="font-weight: bold; width: 40%">{{n.date | date}}</td>
                             <td ng-show="!n.new" style="width: 40%;">{{n.date | date}}</td>

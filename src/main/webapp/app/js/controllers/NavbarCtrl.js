@@ -20,13 +20,13 @@ angular.module('momusApp.controllers')
     .controller('NavbarCtrl', function (
         $http,
         $window,
-        loggedInUser) {
+        loggedInPerson) {
 
         const vm = this;
 
         vm.isCollapsed = true;
         vm.devmode = false;
-        vm.user = loggedInUser;
+        vm.user = loggedInPerson;
 
         vm.logout = logout;
 

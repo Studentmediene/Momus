@@ -18,158 +18,85 @@
 
 angular.module('momusApp.controllers')
     .controller('FrontPageCtrl', function (
-        $scope,
-        $q,
-        Person,
+        $state,
         TipAndNewsService,
-        ViewArticleService,
-        Publication,
+        Person,
         Page,
         Article,
-        $location,
-        $filter
+        expandColorCode,
+        loggedInPerson,
+        myArticles,
+        recentArticles,
+        favouriteSectionArticles,
+        sections,
+        statuses,
+        statusCounts,
+        reviewStatuses,
+        reviewStatusCounts,
+        layoutStatuses,
+        layoutStatusCounts,
+        activePublication
     ) {
+        const vm = this;
 
-        $scope.randomTip = function() {
-            $scope.tip = TipAndNewsService.getRandomTip();
-        };
+        vm.user = loggedInPerson;
+        vm.news = TipAndNewsService.getNews();
+        vm.tip = TipAndNewsService.getRandomTip();
+        vm.myArticles = myArticles;
+        vm.recentArticles = recentArticles;
+        vm.favouriteSectionArticles = favouriteSectionArticles;
+        vm.sections = sections;
+        vm.publication = activePublication;
+        vm.noPublication = activePublication == null;
 
-        $scope.randomTip();
-
-        $scope.news = TipAndNewsService.getNews();
-
-        // Latest user articles
-        $scope.loadingArticles = true;
-        Person.me({}, person => {
-            $scope.user = person;
-            $scope.myArticles = Article.search({}, {persons: [$scope.user.id], page_size: 9}, () => {
-                $scope.loadingArticles = false;
-                if($scope.myArticles.length <= 0 ){
-                    $scope.noArticles = true;
-                }
-            });
-            searchForArticlesFromFavoriteSection();
-        });
-
-        // Recently viewed articles
-
-        $scope.recentArticles = ViewArticleService.getRecentViews();
-        if($scope.recentArticles){
-            $scope.loadingRecent = true;
-            $scope.recentArticleInfo = Article.multiple(
-                {ids: $scope.recentArticles},
-                () => $scope.loadingRecent = false
-            );
+        if(!vm.noPublication) {
+            vm.articlestatus = getStatusArrays(statusCounts, statuses);
+            vm.reviewstatus = getStatusArrays(reviewStatusCounts, reviewStatuses);
+            vm.layoutstatus = getStatusArrays(layoutStatusCounts, layoutStatuses);
         }
 
-        $scope.orderRecentArticles = function(item){
-            return [$scope.recentArticles.indexOf(item.id.toString())];
-        };
+        vm.updateRandomTip = () => {vm.tip = TipAndNewsService.getRandomTip()};
+        vm.updateFavouriteSection = updateFavouriteSection;
+        vm.countTotals = countTotals;
+        vm.clickArticleStatus = clickArticleStatus;
+        vm.clickReviewStatus = clickReviewStatus;
+        vm.clickLayoutStatus = clickLayoutStatus;
 
-        var searchForArticlesFromFavoriteSection = function(){
-            if($scope.user.favouritesection){
-                $scope.loadingFavourites = true;
-                $scope.favSectionArticles = Article.search(
-                    {},
-                    {section: $scope.user.favouritesection.id, page_size: 9},
-                    () => $scope.loadingFavourites = false);
-            }
-        };
-
-        $scope.updateFavouriteSection = function(){
-            Person.updateFavouritesection({section: $scope.user.favouritesection.id}, {}, person => {
-                searchForArticlesFromFavoriteSection();
-                $scope.user = person;
-            });
-        };
-
-        $scope.sections = Article.sections();
-
-        // Cake diagrams TODO (Could some of this be put into a service?)
-
-        $scope.publication = Publication.active({}, function() {            
-            $q.all([
-                Article.statusCounts({publicationId: $scope.publication.id}).$promise,
-                Article.statuses().$promise]
-            ).then(data => $scope.articlestatus = getStatusArrays(...data));
-
-            $q.all([
-                Page.layoutStatusCounts({pubid: $scope.publication.id}).$promise,
-                Publication.layoutStatuses().$promise]
-            ).then(data => $scope.layoutstatus = getStatusArrays(...data));
-
-            $q.all([
-                Article.reviewStatusCounts({publicationId: $scope.publication.id}).$promise,
-                Article.reviewStatuses().$promise]
-            ).then(data => $scope.reviewstatus = getStatusArrays(...data));
-        }, () => $scope.noPublication = true);
+        function updateFavouriteSection() {
+            Person.updateFavouritesection({section: vm.user.favouritesection.id});
+            vm.favouriteSectionArticles = Article.search({}, {section: vm.user.favouritesection.id});
+        }
 
         function getStatusArrays(counts, statuses){
-            var status = {statuses: statuses, labels: [], colors: [], counts: []};
-            for(var i = 0; i < statuses.length; i++){
-                status.labels.push(statuses[i].name);
-                status.colors.push(statuses[i].color);
-                status.counts.push(counts[statuses[i].id]);
-            }
-            status.colors = fixShortColorCodes(status.colors);
+            const statusObj = {statuses: statuses, labels: [], colors: [], counts: []};
+            statuses.forEach(status => {
+                const color = status.color;
+                statusObj.labels.push(status.name);
+                statusObj.colors.push(color.length > 4 ? color : expandColorCode(color));
+                statusObj.counts.push(counts[status.id]);
+            });
 
-            return status;
+            return statusObj;
         }
 
-        //TODO: Refactor when we get back to the cake diagrams
-        $scope.isEmptyArray = function(array){
-            if(array === undefined || array === null || array === "" || array === []) {
-                return true;
-            } else {
-                var maxFound = 0;
-                for(var i = 0; i < Object.keys(array).length;i++){
-                    if(array[Object.keys(array)[i]] > maxFound){
-                        maxFound = array[i];
-                    }
-                }
-                return maxFound <= 0;
-            }
-        };
-
-        $scope.countTotals = function(array){
-            if(!$scope.isEmptyArray(array)){
-                return array.reduce(function(x,y){return x+y;}, 0);
+        function countTotals(array){
+            if(array != null){
+                return array.reduce((x,y) => x+y, 0);
             }
             return 0;
-        };
-
-        $scope.clickArticleStatus = function(selected){
-            var id = $filter("filter")($scope.articlestatus.statuses,{name:selected})[0].id;
-            if(id === undefined) {
-                $location.url('artikler');
-            } else {
-                $location.url('artikler?publication=' + $scope.publication.id + '&status=' + id);
-            }
-            $scope.$apply();
-        };
-
-        $scope.clickReviewStatus = function(selected){
-            var id = $filter("filter")($scope.reviewstatus.statuses,{name:selected})[0].id;
-            $location.url('artikler?publication=' + $scope.publication.id + '&review=' + id);
-            $scope.$apply();
-        };
-
-        $scope.clickLayoutStatus = function(selected){
-            $location.url('disposisjon');
-            $scope.$apply();
-        };
-
-        function fixShortColorCodes(colors){
-            return colors.map(function(color) {
-                if(color.length <= 4){
-                    return "#" + color.split("#")[1].split("").map(function(x){return x+x}).join("");
-                }else{
-                    return color;
-                }
-            });
         }
 
-        $scope.$on('$destroy', function() {
-            window.onbeforeunload = undefined;
-        });
+        function clickArticleStatus(selected){
+            const id = vm.articlestatus.statuses.find(status => status.name === selected).id;
+            $state.go('search', {publication: vm.publication.id, status: id});
+        }
+
+        function clickReviewStatus(selected){
+            const id = vm.reviewstatus.statuses.find(status => status.name === selected).id;
+            $state.go('search', {publication: vm.publication.id, review: id});
+        }
+
+        function clickLayoutStatus(selected){
+            $state.go('disposition');
+        }
     });
