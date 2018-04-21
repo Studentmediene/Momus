@@ -31,7 +31,6 @@ angular.module('momusApp', [
         'momusApp.services',
         'momusApp.directives',
         'momusApp.resources',
-        'ngRoute',
         'ngResource',
         'ui.router',
         'ui.select',
