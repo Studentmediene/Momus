@@ -51,7 +51,7 @@ angular.module('momusApp', [
             })
             .state('front', {
                 parent: 'root',
-                url: '/front',
+                url: '/',
                 templateUrl: 'partials/front/frontPageView.html',
                 controller: 'FrontPageCtrl',
                 controllerAs: 'vm'
@@ -116,7 +116,7 @@ angular.module('momusApp', [
             });
     }]).
     config(['$urlRouterProvider', '$locationProvider', ($urlRouterProvider, $locationProvider) => {
-        $urlRouterProvider.otherwise('/front');
+        $urlRouterProvider.otherwise('/');
         $locationProvider.hashPrefix('');
     }]).
     config(['$httpProvider', $httpProvider => {
