@@ -20,20 +20,15 @@ angular.module('momusApp.controllers')
     .controller('NavbarCtrl', function (
         $http,
         $window,
-        loggedInPerson) {
-
+        loggedInPerson,
+        env) {
         const vm = this;
 
         vm.isCollapsed = true;
-        vm.devmode = false;
+        vm.devmode = env.devmode;
         vm.user = loggedInPerson;
 
         vm.logout = logout;
-
-        $http.get('/api/dev/devmode', {bypassInterceptor: true}).then(
-            response => vm.devmode = response.data,
-            () => vm.devmode = false
-        );
 
         function logout() {
             $window.location.href = "/saml/logout";

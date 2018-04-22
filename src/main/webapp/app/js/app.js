@@ -45,7 +45,8 @@ angular.module('momusApp', [
         $stateProvider
             .state('root', {
                 resolve: {
-                    loggedInPerson: Person => Person.me().$promise
+                    loggedInPerson: Person => Person.me().$promise,
+                    env: $http => $http.get('/api/env/all').then(resp => resp.data)
                 },
                 templateUrl: 'partials/nav/navView.html',
                 controller: 'NavbarCtrl',
