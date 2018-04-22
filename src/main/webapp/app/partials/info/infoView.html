@@ -45,6 +45,11 @@
                         <td colspan="4" ng-bind-html="n.content | trustHtml"></td>
                     </tr>
                     </tbody>
+                    <tr ng-show="news.length <= 0" class="text-center">
+                        <td colspan="2">
+                            Det finnes ingen nyheter.
+                        </td>
+                    </tr>
                 </table>
                 <div class="text-center">
                     <ul uib-pagination direction-links="false"

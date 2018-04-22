@@ -28,6 +28,6 @@ angular.module('momusApp.controllers')
 
         //$scope.news = TipAndNewsService.getOldNews();
         $scope.news = News.query({}, news => {
-            TipAndNewsService.findNew(news);
+            news.length > 0 ? TipAndNewsService.findNew(news) : news;
         });
     });

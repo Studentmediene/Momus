@@ -25,7 +25,7 @@
                     <tbody ng-repeat="n in vm.news
                                                     | startFrom:(vm.currentPage-1)*vm.pageSize
                                                     | limitTo:vm.pageSize"
-                    >
+                    class="news-item">
                         <tr ng-click="show = !show" class="interact active">
                             <td colspan="1.5" style="font-weight:bold;">{{n.title}}</td>
                             <td colspan="0.5"><button class="btn btn-success btn-xs" ng-click="vm.editNews(n);$event.stopPropagation();">Rediger</button></td>
@@ -42,6 +42,11 @@
                             <td colspan="5">{{n.content}}</td>
                         </tr>
                     </tbody>
+                    <tr ng-show="vm.news.length <= 0">
+                        <td colspan="2" class="text-center">
+                            Det finnes ingen nyheter.
+                        </td>
+                    </tr>
                 </table>
                 <div class="text-center">
                     <ul uib-pagination direction-links="false"

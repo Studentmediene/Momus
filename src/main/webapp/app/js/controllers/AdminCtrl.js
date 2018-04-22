@@ -25,7 +25,7 @@ angular.module('momusApp.controllers')
         TitleChanger,
         ViewArticleService,
         MessageModal,
-        $routeParams,
+        $stateParams,
         $timeout,
         $templateRequest,
         News

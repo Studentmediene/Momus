@@ -47,8 +47,8 @@
                         >
                             <td>{{publication.name}}</td>
                             <td>{{publication.release_date | date: 'yyyy-MM-dd'}}</td>
-                            <td><a href="#/artikler?publication={{publication.id}}">Se artikler</a></td>
-                            <td><a href="#/disposisjon/{{publication.id}}">Disposisjon</a></td>
+                            <td><a ui-sref="search({publication: publication.id})">Se artikler</a></td>
+                            <td><a ui-sref="disposition({id: publication.id})">Disposisjon</a></td>
                             <td class=""><a class="interact" ng-click="vm.editPublication(publication)">Endre</a></td>
                         </tr>
                         </tbody>
@@ -86,12 +86,19 @@
                             <label for="date">Utgivelsesdato</label>
 
                             <div class="input-group">
-                                <input type="text" id="date" name="date" ng-model="vm.editing.release_date"
-                                       class="form-control" placeholder="ÅÅÅÅ-MM-DD"
-                                       uib-datepicker-popup="yyyy-MM-dd" datepicker-options="vm.dateOptions"
-                                       show-button-bar="false" is-open="opened"
-                                       required>
-
+                                <input type="text"
+                                       id="date"
+                                       name="date"
+                                       ng-model="vm.editing.release_date"
+                                       class="form-control"
+                                       placeholder="ÅÅÅÅ-MM-DD"
+                                       uib-datepicker-popup="yyyy-MM-dd"
+                                       datepicker-options="vm.dateOptions"
+                                       ng-model-options="{timezone: 'utc'}"
+                                       show-button-bar="false"
+                                       is-open="opened"
+                                       required
+                                >
                               <span class="input-group-btn">
                               <button class="btn btn-default" ng-click="$event.stopPropagation(); opened = !opened">
                                   <i class="fa fa-calendar"></i></button>
