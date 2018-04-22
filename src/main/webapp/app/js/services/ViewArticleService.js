@@ -46,7 +46,9 @@ angular.module('momusApp.services')
             },
 
             getRecentViews : function(){
-                return $cookieStore.get("recentlyViewed");
+                const recents = $cookieStore.get("recentlyViewed") || [];
+                recents.reverse(); // We want newest first
+                return recents;
             }
         };
     });

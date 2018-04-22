@@ -31,8 +31,8 @@ angular.module('momusApp', [
         'momusApp.services',
         'momusApp.directives',
         'momusApp.resources',
-        'ngRoute',
         'ngResource',
+        'ui.router',
         'ui.select',
         'ui.bootstrap',
         'ngCookies',
@@ -41,63 +41,123 @@ angular.module('momusApp', [
         'chart.js',
         'ngStomp'
     ]).
-    config(['$routeProvider', $routeProvider => {
-        $routeProvider
-            .when('/front',
-            {
-                    templateUrl: 'partials/front/frontPageView.html',
-                    controller: 'FrontPageCtrl'
+    config(['$stateProvider', ($stateProvider) => {
+        $stateProvider
+            .state('root', {
+                resolve: {
+                    loggedInPerson: Person => Person.me().$promise,
+                    env: $http => $http.get('/api/env/all').then(resp => resp.data)
+                },
+                templateUrl: 'partials/nav/navView.html',
+                controller: 'NavbarCtrl',
+                controllerAs: 'vm'
             })
-            .when('/artikler',
-            {
+            .state('front', {
+                parent: 'root',
+                url: '/',
+                resolve: {
+                    myArticles: (Article, loggedInPerson) =>
+                        Article.search({}, {persons: [loggedInPerson.id], page_size: 9}).$promise,
+                    recentArticles: (ViewArticleService, Article) => {
+                        const recents = ViewArticleService.getRecentViews();
+                        return recents.length > 0 ?
+                            Article.multiple({ids: recents}).$promise :
+                            [];
+                    },
+                    favouriteSectionArticles: (Article, loggedInPerson) => {
+                        return loggedInPerson.favouritesection ?
+                            Article.search({}, {section: loggedInPerson.favouritesection.id}).$promise :
+                            [];
+                    },
+                    activePublication: Publication => Publication.active().$promise
+                        .then(pub => pub)
+                        .catch(() => null),
+                    sections: Article => Article.sections().$promise,
+                    statuses: Article => Article.statuses().$promise,
+                    statusCounts: (activePublication, Article) => {
+                        return activePublication ?
+                            Article.statusCounts({publicationId: activePublication.id}).$promise :
+                            [];
+                    },
+                    reviewStatuses: Article => Article.reviewStatuses().$promise,
+                    reviewStatusCounts: (activePublication, Article) => {
+                        return activePublication ?
+                            Article.reviewStatusCounts({publicationId: activePublication.id}).$promise :
+                            [];
+                    },
+                    layoutStatuses: Publication => Publication.layoutStatuses().$promise,
+                    layoutStatusCounts: (activePublication, Page) => {
+                        return activePublication ?
+                            Page.layoutStatusCounts({pubid: activePublication.id}).$promise :
+                            [];
+                    }
+
+                },
+                templateUrl: 'partials/front/frontPageView.html',
+                controller: 'FrontPageCtrl',
+                controllerAs: 'vm'
+            })
+            .state('search', {
+                parent: 'root',
+                url: '/artikler?publication&section&status&persons&page_number&page_size&review&free',
                 templateUrl: 'partials/search/searchView.html',
                 controller: 'SearchCtrl',
+                controllerAs: 'vm',
                 reloadOnSearch: false,
                 title: "Artikkelsøk"
             })
-            .when('/artikler/:id',
-            {
+            .state('article', {
+                parent: 'root',
+                url: '/artikler/:id',
                 templateUrl: 'partials/article/articleView.html',
                 controller: 'ArticleCtrl',
                 controllerAs: 'vm'
             })
-            .when('/artikler/revisjon/:id',
-            {
+            .state('articlerevision', {
+                parent: 'root',
+                url: '/artikler/:id/revisjon',
                 templateUrl: 'partials/article/articleRevisionView.html',
-                controller: 'ArticleRevisionCtrl'
-            })
-            .when('/utgaver',
-            {
-                templateUrl: 'partials/publication/publicationView.html',
-                controller: 'PublicationCtrl',
-                title: 'Utgaver',
+                controller: 'ArticleRevisionCtrl',
                 controllerAs: 'vm'
             })
-            //Disposition
-            .when('/disposisjon/:id?',
-            {
+            .state('disposition', {
+                parent: 'root',
+                url: '/disposisjon/:id',
+                params: {
+                    id: {squash: true, value: null}
+                },
                 templateUrl: 'partials/disposition/dispositionView.html',
                 controller: 'DispositionCtrl',
-                title: 'Disposisjon',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                title: 'Disposisjon'
             })
-            .when('/info',
-            {
+            .state('publications', {
+                parent: 'root',
+                url: '/utgaver',
+                templateUrl: 'partials/publication/publicationView.html',
+                controller: 'PublicationCtrl',
+                controllerAs: 'vm',
+                title: 'Utgaver'
+            })
+            .state('info', {
+                parent: 'root',
+                url: '/info',
                 templateUrl: 'partials/info/infoView.html',
                 controller: 'InfoCtrl',
+                controllerAs: 'vm',
                 title: 'Info'
             })
-            .when('/dev',
-            {
+            .state('dev', {
+                parent: 'root',
+                url: '/dev',
                 templateUrl: 'partials/dev/devView.html',
                 controller: 'DevCtrl',
-                title: 'Dev',
-                controllerAs: 'vm'
-            })
-            .otherwise({redirectTo: 'front'});
-
+                controllerAs: 'vm',
+                title: 'Utviklerinnstillinger'
+            });
     }]).
-    config(['$locationProvider', $locationProvider => {
+    config(['$urlRouterProvider', '$locationProvider', ($urlRouterProvider, $locationProvider) => {
+        $urlRouterProvider.otherwise('/');
         $locationProvider.hashPrefix('');
     }]).
     config(['$httpProvider', $httpProvider => {
@@ -114,10 +174,8 @@ angular.module('momusApp', [
     config(['$resourceProvider', 'RESOURCE_ACTIONS', ($resourceProvider, RESOURCE_ACTIONS) => {
         $resourceProvider.defaults.actions = RESOURCE_ACTIONS;
     }]).
-    run(['$rootScope', 'TitleChanger', ($rootScope, TitleChanger) => {
-        // Whenever there is a route change, we try to update the url with the title set in the rootprovider above
-        // if there is no title, we clear it
-        $rootScope.$on('$routeChangeSuccess', (event, current, previous) => {
-            TitleChanger.setTitle(current.$$route && current.$$route.title || "");
+    run(['$transitions', 'TitleChanger', ($transitions, TitleChanger) => {
+        $transitions.onSuccess({}, transition => {
+            TitleChanger.setTitle(transition.to().title || "")
         });
     }]);

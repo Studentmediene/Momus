@@ -17,19 +17,19 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('ArticleRevisionCtrl', function($scope, Article, $routeParams, MessageModal, $templateRequest){
+    .controller('ArticleRevisionCtrl', function($scope, Article, $stateParams, MessageModal, $templateRequest){
 
         $scope.diff = "";
         $scope.showDiff = false;
 
-        $scope.revisions = Article.revisions({id: $routeParams.id}, () =>{
+        $scope.revisions = Article.revisions({id: $stateParams.id}, () =>{
             $scope.current = $scope.revisions[0];
             if($scope.revisions.length > 1){
                 $scope.compare = [$scope.revisions[0].id, $scope.revisions[1].id];
             }
         });
 
-        $scope.article = Article.get({id: $routeParams.id});
+        $scope.article = Article.get({id: $stateParams.id});
 
         $scope.gotoRev = function(rev){
             $scope.current = rev;
