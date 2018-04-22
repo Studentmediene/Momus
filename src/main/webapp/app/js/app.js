@@ -90,7 +90,9 @@ angular.module('momusApp', [
                         return activePublication ?
                             Page.layoutStatusCounts({pubid: activePublication.id}).$promise :
                             [];
-                    }
+                    },
+                    news: (News, TipAndNewsService) =>
+                            News.query({}).$promise.then(news => news.length > 0 ? TipAndNewsService.findNew(news) : news)
 
                 },
                 templateUrl: 'partials/front/frontPageView.html',

@@ -16,31 +16,17 @@
 
 package no.dusken.momus.controller;
 
-    import ch.qos.logback.core.net.SyslogOutputStream;
-    import no.dusken.momus.authorization.AdminAuthorization;
-    import no.dusken.momus.authorization.Role;
-    import org.springframework.security.access.prepost.PreAuthorize;
-    import no.dusken.momus.diff.DiffMatchPatch;
-    import no.dusken.momus.diff.DiffUtil;
-    import no.dusken.momus.exceptions.RestException;
-    import no.dusken.momus.model.*;
-    import no.dusken.momus.service.ArticleService;
-    import no.dusken.momus.service.NewsService;
-    import no.dusken.momus.service.indesign.IndesignExport;
-    import no.dusken.momus.service.repository.*;
-    import no.dusken.momus.service.search.ArticleSearchParams;
-    import org.springframework.beans.factory.annotation.Autowired;
-    import org.springframework.security.access.prepost.PreAuthorize;
-    import org.springframework.web.bind.annotation.*;
+import no.dusken.momus.authorization.AdminAuthorization;
+import no.dusken.momus.exceptions.RestException;
+import no.dusken.momus.model.*;
+import no.dusken.momus.service.NewsService;
+import no.dusken.momus.service.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-    import javax.servlet.ServletOutputStream;
-    import javax.servlet.http.HttpServletResponse;
-    import java.io.IOException;
-    import java.time.LocalDate;
-    import java.util.Date;
-    import java.util.List;
-    import java.util.Map;
-    import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.util.List;
 
 
 @RestController
@@ -61,7 +47,7 @@ public class NewsController {
     @PostMapping
     @AdminAuthorization
     public @ResponseBody News saveNews(@RequestBody News news) {
-        news.setDate(new Date());
+        news.setDate(LocalDate.now());
         return newsRepository.save(news);
     }
 

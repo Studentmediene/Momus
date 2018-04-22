@@ -28,15 +28,15 @@
                     class="news-item">
                         <tr ng-click="show = !show" class="interact active">
                             <td colspan="1.5" style="font-weight:bold;">{{n.title}}</td>
-                            <td colspan="0.5"><button class="btn btn-success btn-xs" ng-click="vm.editNews(n);$event.stopPropagation();">Rediger</button></td>
+                            <td colspan="0.5"><button class="btn btn-success btn-xs pull-right" ng-click="vm.editNews(n);$event.stopPropagation();">Rediger</button></td>
                             <td colspan="0.5" width="5%">
                                 <i ng-show="!show" class="fa fa-arrow-circle-down"></i>
                                 <i ng-show="show" class="fa fa-arrow-circle-up"></i>
                             </td>
                         </tr>
                         <tr ng-click="show = !show" class="news-meta interact">
-                            <td><span person-widget="n.author">{{n.author.name}}</span></td>
-                            <td colspan="2">{{n.date | date}}</td>
+                            <td>{{n.date | date: 'yyyy-MM-dd'}}</td>
+                            <td colspan="2"><span class="pull-right" person-widget="n.author">{{n.author.name}}</span></td>
                         </tr>
                         <tr ng-show="show">
                             <td colspan="5">{{n.content}}</td>

@@ -36,7 +36,7 @@ angular.module('momusApp.controllers')
         layoutStatuses,
         layoutStatusCounts,
         activePublication,
-        News
+        news
     ) {
         const vm = this;
 
@@ -48,6 +48,7 @@ angular.module('momusApp.controllers')
         vm.sections = sections;
         vm.publication = activePublication;
         vm.noPublication = activePublication == null;
+        vm.news = news;
 
         if(!vm.noPublication) {
             vm.articlestatus = getStatusArrays(statusCounts, statuses);
@@ -56,10 +57,6 @@ angular.module('momusApp.controllers')
         }
 
         vm.pageSize = 3;
-        vm.news = News.query({}, news => {
-            news.length ? TipAndNewsService.findNew(news) : news;
-        });
-
 
         vm.updateRandomTip = () => {vm.tip = TipAndNewsService.getRandomTip()};
         vm.updateFavouriteSection = updateFavouriteSection;

@@ -293,7 +293,7 @@
                             </td>
                         </tr>
                         <tr ng-show="n.show" class="news-meta">
-                            <td>{{n.date | date}}</td>
+                            <td>{{n.date | date: 'yyyy-MM-dd'}}</td>
                             <td>
                                 <span class="d-break-word pull-right" person-widget="n.author">{{n.author.name}}</span>
                             </td>
