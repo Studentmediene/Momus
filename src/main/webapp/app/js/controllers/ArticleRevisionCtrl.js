@@ -18,38 +18,44 @@
 
 angular.module('momusApp.controllers')
     .controller('ArticleRevisionCtrl', function($scope, Article, $stateParams, MessageModal, $templateRequest){
+        const vm = this;
+        const articleId = $stateParams.id;
 
-        $scope.diff = "";
-        $scope.showDiff = false;
+        vm.diff = '';
+        vm.showDiff = false;
 
-        $scope.revisions = Article.revisions({id: $stateParams.id}, () =>{
-            $scope.current = $scope.revisions[0];
-            if($scope.revisions.length > 1){
-                $scope.compare = [$scope.revisions[0].id, $scope.revisions[1].id];
+        vm.gotoRev = gotoRev;
+        vm.showCompare = showCompare;
+        vm.showHelp = showHelp;
+        vm.getDiffs = getDiffs;
+
+        vm.article = Article.get({id: articleId});
+        vm.revisions = Article.revisions({id: articleId}, () =>{
+            vm.current = vm.revisions[0];
+            if(vm.revisions.length > 1){
+                vm.compare = [vm.revisions[0].id, vm.revisions[1].id];
             }
         });
 
-        $scope.article = Article.get({id: $stateParams.id});
+        function gotoRev(rev){
+            vm.current = rev;
+        }
 
-        $scope.gotoRev = function(rev){
-            $scope.current = rev;
-        };
+        function showCompare(){
+            vm.showDiff = !vm.showDiff;
+            getDiffs();
+        }
 
-        $scope.showCompare = function(){
-            $scope.showDiff = !$scope.showDiff;
-            $scope.getDiffs();
-        };
-
-        $scope.getDiffs = function(){
+        function getDiffs(){
             const diffs = Article.compareRevisions(
-                {id: $scope.article.id, rev1: $scope.compare[0], rev2: $scope.compare[1]},
-                () => $scope.diff = diffs);
-        };
+                {id: vm.article.id, rev1: vm.compare[0], rev2: vm.compare[1]},
+                () => vm.diff = diffs);
+        }
 
-        $scope.showHelp = function(){
+        function showHelp(){
             $templateRequest('partials/templates/help/revisionHelp.html').then(function(template){
                 MessageModal.info(template);
             });
-        };
+        }
 
     });
