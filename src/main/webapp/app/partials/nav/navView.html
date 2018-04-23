@@ -32,7 +32,7 @@
                 <li ui-sref-active="active">
                     <a ui-sref="info"><i class="fa fa-info"></i> Info/nyheter</a>
                 </li>
-                <li ui-sref-active="active"ng-cloak ng-show="user.roles.indexOf('ROLE_ADMIN') != -1">
+                <li ui-sref-active="active"ng-cloak ng-show="vm.user.roles.includes('ROLE_ADMIN')">
                     <a ui-sref="admin"><i class="fa fa-rebel hidden-sm"></i> Admin</a>
                 </li>
                 <li ui-sref-active="active" ng-cloak ng-show="vm.devmode" class="navbar-dev">
