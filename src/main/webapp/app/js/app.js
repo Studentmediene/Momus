@@ -41,7 +41,7 @@ angular.module('momusApp', [
         'chart.js',
         'ngStomp'
     ]).
-    config(['$stateProvider', ($stateProvider) => {
+    config(($stateProvider) => {
         $stateProvider
             .state('root', {
                 resolve: {
@@ -167,15 +167,15 @@ angular.module('momusApp', [
                 controllerAs: 'vm',
                 title: 'Utviklerinnstillinger'
             });
-    }]).
-    config(['$urlRouterProvider', '$locationProvider', ($urlRouterProvider, $locationProvider) => {
+    }).
+    config(($urlRouterProvider, $locationProvider) => {
         $urlRouterProvider.otherwise('/');
         $locationProvider.hashPrefix('');
-    }]).
-    config(['$httpProvider', $httpProvider => {
+    }).
+    config($httpProvider => {
         $httpProvider.interceptors.push('HttpInterceptor');
         $httpProvider.defaults.withCredentials = true;
-    }]).
+    }).
     constant('RESOURCE_ACTIONS', {
         save: {method: 'POST'},
         get:    {method: 'GET'},
@@ -183,11 +183,21 @@ angular.module('momusApp', [
         update: {method: 'PUT'},
         delete: {method: 'DELETE'}
     }).
-    config(['$resourceProvider', 'RESOURCE_ACTIONS', ($resourceProvider, RESOURCE_ACTIONS) => {
+    config(($resourceProvider, RESOURCE_ACTIONS) => {
         $resourceProvider.defaults.actions = RESOURCE_ACTIONS;
-    }]).
-    run(['$transitions', 'TitleChanger', ($transitions, TitleChanger) => {
-        $transitions.onSuccess({}, transition => {
-            TitleChanger.setTitle(transition.to().title || "")
+    }).
+    run(($transitions, TitleChanger, $state, hasPermission, MessageModal) => {
+        $transitions.onEnter({}, transition => {
+            if(!hasPermission(transition.to(), transition.injector().get('loggedInPerson'))) {
+                MessageModal.error("Du har ikke tilgang til denne siden!", false);
+
+                // Redirects to front page or previous state
+                if(transition.from().name === "")
+                    return transition.router.stateService.target('front');
+                else
+                    return false;
+            }
         });
-    }]);
+
+        $transitions.onSuccess({}, transition => TitleChanger.setTitle(transition.to().title || ""));
+    });

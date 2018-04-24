@@ -62,4 +62,7 @@ angular.module('momusApp.services')
     })
     .factory('expandColorCode', function() {
         return color => "#" + color.split("#")[1].split("").map(x => x+x).join("");
+    })
+    .factory('hasPermission', function() {
+        return (state, user) => !state.access || state.access.some(role => user.roles.includes(role));
     });

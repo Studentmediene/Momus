@@ -46,27 +46,25 @@ angular.module('momusApp.services')
                 }]
 
             };
-            $uibModal.open(config);
+            return $uibModal.open(config);
         }
 
 
         return {
             info: function(content, callback) {
-                showModal('info', 'Info', content, callback);
+                return showModal('info', 'Info', content, callback);
             },
 
             success: function(content, callback) {
-                showModal('success', 'Fullført', content, callback);
+                return showModal('success', 'Fullført', content, callback);
             },
 
             error: function(content, showExtras, callback, dismissedCallback) {
-                var extraInfo = "Ved vedvarende feil kontakt oss på momus@smitit.no";
+                const extraInfo = "Ved vedvarende feil kontakt oss på momus@smitit.no";
 
-                if (showExtras) {
-                    content += '</p><p>' + extraInfo;
-                }
+                if (showExtras) content += '</p><p>' + extraInfo;
 
-                showModal('danger', 'Noe gikk feil', content, callback, dismissedCallback);
+                return showModal('danger', 'Noe gikk feil', content, callback, dismissedCallback);
             }
         };
     });
