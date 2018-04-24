@@ -12,6 +12,7 @@ import no.dusken.momus.authentication.UserDetailsServiceImpl;
 import no.dusken.momus.exceptions.ExceptionHandler;
 import no.dusken.momus.mapper.HibernateAwareObjectMapper;
 
+import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.PersonRepository;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.context.annotation.*;
@@ -29,6 +30,8 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -59,6 +62,13 @@ class ApplicationConfig extends WebMvcConfigurerAdapter {
     @Bean(name = "userDetailsService")
     @Profile("noAuth")
     public UserDetailsService userDetailsServiceDev(PersonRepository personRepository) {
+        UserDetailsService userDetailsService = new UserDetailsServiceDev(personRepository);
+
+        // Log in as default user
+        Person loggedIn = userDetailsService.getLoggedInPerson();
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(loggedIn, null, loggedIn.getAuthorities()));
+
         return new UserDetailsServiceDev(personRepository);
     }
 

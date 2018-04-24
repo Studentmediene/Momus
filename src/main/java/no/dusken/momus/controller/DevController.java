@@ -16,6 +16,7 @@
 
 package no.dusken.momus.controller;
 
+import no.dusken.momus.authentication.UserDetailsService;
 import no.dusken.momus.authentication.UserDetailsServiceDev;
 import no.dusken.momus.ldap.LdapSyncer;
 import no.dusken.momus.model.*;
@@ -26,7 +27,10 @@ import no.dusken.momus.service.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -73,6 +77,9 @@ public class DevController {
 
     @Autowired
     private Environment env;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
 
     @Autowired
@@ -175,7 +182,11 @@ public class DevController {
     }
 
     @PutMapping("/loggedinuser/{id}")
+    @Profile("noAuth")
     public void setLoggedInUser(@PathVariable Long id) {
         UserDetailsServiceDev.LOGGED_IN_USER = id;
+        Person loggedIn = userDetailsService.getLoggedInPerson();
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(loggedIn, null, loggedIn.getAuthorities()));
     }
 }
