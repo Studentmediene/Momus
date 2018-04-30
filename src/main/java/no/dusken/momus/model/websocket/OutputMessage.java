@@ -10,7 +10,7 @@ public class OutputMessage {
 	private String editedField;
 	private ZonedDateTime date;
 
-    public OutputMessage(Long pageId, Long articleId, Action action, String editedField, ZonedDateTime date){
+    public OutputMessage(Long pageId, Long articleId, Long advertId, Action action, String editedField, ZonedDateTime date){
         this.pageId = pageId;
         this.articleId = articleId;
         this.advertId = advertId;
