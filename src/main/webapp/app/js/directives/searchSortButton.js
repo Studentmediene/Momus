@@ -32,7 +32,7 @@ angular.module('momusApp.directives').
                 }
 
                 element.on("click", function(){
-                    scope.sortSearch(scope.type, scope.switchDir);
+                    scope.vm.sortSearch(scope.type, scope.switchDir);
                 });
             }
         };
