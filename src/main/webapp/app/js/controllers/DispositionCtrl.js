@@ -19,14 +19,16 @@
 angular.module('momusApp.controllers')
     .controller('DispositionCtrl', function (
         $scope,
-        $routeParams,
-        MessageModal,
+        $stateParams,
+        $interval,
+        $timeout,
         $location,
         $uibModal,
-        $templateRequest,
         $window,
+        $templateRequest,
         uiSortableMultiSelectionMethods,
         $q,
+        MessageModal,
         Publication,
         Page,
         Article,
@@ -34,9 +36,7 @@ angular.module('momusApp.controllers')
         Person,
         WebSocketService,
         DispositionStyleService,
-        $interval,
-        $timeout)
-    {
+    ){
         var vm = this;
         var lastUpdate = {date: new Date()};
         var websocketActive = false;
@@ -232,7 +232,7 @@ angular.module('momusApp.controllers')
 
         function fetchDisposition(){
             vm.loading = true;
-            publicationQuery($routeParams.id)(publication => {
+            publicationQuery($stateParams.id)(publication => {
                 Page.query({pubid: publication.id}, pages => {
                     publication.pages = pages;
                     vm.publication = publication;

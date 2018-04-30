@@ -17,87 +17,57 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('PublicationCtrl', function ($scope, $templateRequest, MessageModal, Publication) {
+    .controller('PublicationCtrl', function ($scope, $templateRequest, MessageModal, Publication, publications) {
         const vm = this;
 
-        vm.publications = [];
+        vm.publications = publications;
 
-        vm.yearOptions = [];
         vm.selectedYear = new Date().getFullYear();
-
         vm.currentPage = 1;
         vm.pageSize = 10;
-
-        vm.editing = {};
-
         vm.dateOptions = {// Needed for the date picker, always start weeks on a monday
-            'starting-day': 1
+            'startingDay': 1
         };
 
+        vm.createYearOptions = createYearOptions;
         vm.isInCurrentYear = isInCurrentYear;
         vm.editPublication = editPublication;
         vm.saveEditedPublication = saveEditedPublication;
 
         vm.showHelp = showHelp;
 
-        getPublications();
-
-        function getPublications() {
-            vm.publications = Publication.query({}, function() {
-                vm.yearOptions = createYearOptions();
-            });
-        }
-
-        function getOldestPublication() {
-            return vm.publications.sort(function(a, b) { return a.release_date > b.release_date; })[0];
-        }
-
         function isInCurrentYear(publication) {
-            if(vm.selectedYear === "Alle"){
-                return true;
-            }
-            else{
-                return publication.release_date && new Date(publication.release_date).getFullYear() === vm.selectedYear;
-            }
+            return vm.selectedYear === 'Alle' || publication.release_date.getFullYear() === vm.selectedYear;
         }
 
         function createYearOptions() {
-            const oldest = getOldestPublication();
-            const sinceYearX = oldest && new Date(oldest.release_date).getFullYear() || 2009;
-            const years = ["Alle"];
-
-            for (let i = new Date().getFullYear(); i >= sinceYearX; i--) {
-                years.push(i);
-            }
-
-            return years;
+            return vm.publications.reduce((years, pub) => {
+                const year = pub.release_date.getFullYear();
+                return years.includes(year) ? years : years.concat(year);
+            }, ["Alle"]);
         }
 
         function editPublication(publication) {
             vm.editing = angular.copy(publication); // always work on a copy
 
-            // clear form errors
-            if (!vm.editing.release_date) {
-                vm.editing.release_date = '';
-            }
-            $scope.publicationForm.$setPristine();
+            $scope.publicationForm.$setPristine(); // clear form errors
         }
 
         function saveEditedPublication() {
             vm.isSaving = true;
-            if (!vm.editing.id) { // no id means it's a new one
-                const publication = Publication.save({}, vm.editing, function() {
+            if (vm.editing.id == null) { // no id means it's a new one
+                Publication.save({}, vm.editing, (publication) => {
                     vm.publications.push(publication);
                     vm.editPublication(publication);
                     vm.isSaving = false;
                 })
             } else { // it's an old one
-                const updatedIndex = vm.publications.findIndex(function(publication) { return publication.id === vm.editing.id});
-                const updatedPublication = Publication.update({}, vm.editing, function() {
-                    vm.publications[updatedIndex] = updatedPublication;
-                    vm.editPublication(updatedPublication);
+                const updatedIndex = vm.publications.findIndex(pub => pub.id === vm.editing.id);
+                vm.editing.$update({}, (updated) => {
+                    vm.publications[updatedIndex] = updated;
+                    editPublication(updated);
                     vm.isSaving = false;
-                })
+                });
             }
         }
 

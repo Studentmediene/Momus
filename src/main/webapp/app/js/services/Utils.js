@@ -59,4 +59,7 @@ angular.module('momusApp.services')
                 .map(e => e[0])
                 .join('')
         }
+    })
+    .factory('expandColorCode', function() {
+        return color => "#" + color.split("#")[1].split("").map(x => x+x).join("");
     });

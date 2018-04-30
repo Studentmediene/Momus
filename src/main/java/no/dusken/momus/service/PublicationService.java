@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -62,12 +63,9 @@ public class PublicationService {
     }
 
     public Publication updatePublication(Publication publication){
-        publication = publicationRepository.save(publication);
-
         logger.info("Updated publication {} with data: {}", publication.getName(), publication);
 
-        // It seems to be necessary to reaccess the publication or else the releaseDate is not returned in the proper format.
-        return publicationRepository.findOne(publication.getId());
+        return publicationRepository.saveAndFlush(publication);
     }
 
     /**
@@ -113,7 +111,7 @@ public class PublicationService {
      *
      * @return Returns the oldest publication that has not been released yet at the time of the date parameter
      */
-    public Publication getActivePublication(Date date){
+    public Publication getActivePublication(LocalDate date){
         List<Publication> publications = publicationRepository.findAllByOrderByReleaseDateDesc();
 
         if(publications.isEmpty()) return null;
@@ -122,7 +120,7 @@ public class PublicationService {
 
         Publication active = publications.get(0);
         for(Publication p : publications.subList(1,publications.size())){
-            if(p.getReleaseDate().before(date)){
+            if(p.getReleaseDate().isBefore(date)){
                 return active;
             }else{
                 active = p;

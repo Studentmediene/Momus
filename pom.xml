@@ -55,8 +55,9 @@
         <spring-data-jpa.version>1.11.6.RELEASE</spring-data-jpa.version>
         <spring-security-saml2.version>1.0.2.RELEASE</spring-security-saml2.version>
         <spring-ldap.version>2.0.2.RELEASE</spring-ldap.version>
-        <hibernate.version>5.2.10.Final</hibernate.version>
+        <hibernate.version>5.2.16.Final</hibernate.version>
         <jackson-datatype-hibernate5.version>2.9.0</jackson-datatype-hibernate5.version>
+        <jackson-datatype-jsr310.version>2.9.4</jackson-datatype-jsr310.version>
         <commons-dbcp2.version>2.1.1</commons-dbcp2.version>
         <liquibase.version>3.5.3</liquibase.version>
         <google-drive.version>v2-rev277-1.22.0</google-drive.version>
@@ -76,6 +77,7 @@
         <hsqldb.version>2.4.0</hsqldb.version>
         <mysql.version>6.0.6</mysql.version>
         <postgresql.version>42.1.4</postgresql.version>
+        <h2.version>1.4.194</h2.version>
 
         <maven-compiler-plugin.version>3.6.2</maven-compiler-plugin.version>
 
@@ -208,6 +210,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson-datatype-jsr310.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
@@ -238,6 +246,13 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -277,6 +292,21 @@
     </dependencies>
 
     <build>
+        <resources>
+            <!-- Filter our .properties files -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>momus.properties</include>
+                    <include>local.properties</include>
+                </includes>
+            </resource>
+            <!-- Include the rest of the resources -->
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <!-- Configuration of how the project should be compiled -->
             <plugin>

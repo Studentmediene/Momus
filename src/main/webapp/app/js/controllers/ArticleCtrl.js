@@ -19,17 +19,19 @@
 angular.module('momusApp.controllers')
     .controller('ArticleCtrl', function (
         $scope,
+        $stateParams,
+        $timeout,
+        $templateRequest,
         Person,
         Article,
         Publication,
         TitleChanger,
         ViewArticleService,
-        MessageModal,
-        $routeParams,
-        $timeout,
-        $templateRequest
+        MessageModal
     ) {
         const vm = this;
+
+        const articleId = $stateParams.id;
 
         vm.metaEditMode = false;
         vm.photoTypes = [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}];
@@ -45,18 +47,18 @@ angular.module('momusApp.controllers')
         vm.showHelp = showHelp;
 
         // Get data
-        vm.persons = Person.query({articleIds: [$routeParams.id]});
+        vm.persons = Person.query({articleIds: [articleId]});
         vm.sections = Article.sections();
         vm.statuses = Article.statuses();
         vm.reviews = Article.reviewStatuses();
         vm.types = Article.types();
-        vm.article = Article.get({id: $routeParams.id}, article => {
+        vm.article = Article.get({id: articleId}, article => {
             TitleChanger.setTitle(article.name);
             vm.uneditedNote = article.note;
         });
-        Article.content($routeParams.id).then(data => { vm.articleContent = data.data; });
+        Article.content(articleId).then(data => { vm.articleContent = data.data; });
 
-        ViewArticleService.viewArticle($routeParams.id);
+        ViewArticleService.viewArticle(articleId);
 
         /* note panel */
         function saveNote () {

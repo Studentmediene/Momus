@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -98,16 +99,12 @@ public class DevController {
 
         Publication p1 = new Publication();
         p1.setName("UD #1");
-        Calendar p1ReleaseDate = new GregorianCalendar();
-        p1ReleaseDate.add(Calendar.DAY_OF_YEAR, 7);
-        p1.setReleaseDate(p1ReleaseDate.getTime());
+        p1.setReleaseDate(LocalDate.now().plusDays(7));
         p1 = publicationService.savePublication(p1, 50);
 
         Publication p2 = new Publication();
         p2.setName("UD #2");
-        Calendar p2ReleaseDate = new GregorianCalendar();
-        p2ReleaseDate.add(Calendar.DAY_OF_YEAR, 14);
-        p2.setReleaseDate(p2ReleaseDate.getTime());
+        p2.setReleaseDate(LocalDate.now().plusDays(14));
         p2 = publicationService.savePublication(p2, 50);
 
         Article a1 = new Article();

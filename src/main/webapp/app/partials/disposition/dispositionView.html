@@ -140,7 +140,7 @@
                             </div>
                             <!--Name-->
                             <div class="d-table-cell" ng-style="vm.columnWidths.name">
-                                <a href="#/artikler/{{article.id}}">{{article.name}}</a>
+                                <a ui-sref="article({id: article.id})">{{article.name}}</a>
                                 <span uib-tooltip="Antall tegn">({{article.content_length}})</span>
                             </div>
                             <!--Section-->

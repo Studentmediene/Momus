@@ -17,7 +17,7 @@
 package no.dusken.momus.model;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 @Entity
 public class ArticleRevision {
@@ -34,8 +34,7 @@ public class ArticleRevision {
     @ManyToOne
     private ArticleStatus status;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date savedDate;
+    private ZonedDateTime savedDate;
 
     private boolean statusChanged;
 
@@ -73,11 +72,11 @@ public class ArticleRevision {
         this.status = status;
     }
 
-    public Date getSavedDate() {
+    public ZonedDateTime getSavedDate() {
         return savedDate;
     }
 
-    public void setSavedDate(Date savedDate) {
+    public void setSavedDate(ZonedDateTime savedDate) {
         this.savedDate = savedDate;
     }
 

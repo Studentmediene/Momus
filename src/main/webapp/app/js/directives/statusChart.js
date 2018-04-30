@@ -29,8 +29,10 @@ angular.module('momusApp.directives')
             },
             link: function(scope, element, attrs) {
                 scope.chartStyle = {cursor: "default"};
-                scope.onClick =  function(e,d) {
-                    scope.statusClick({selected:e[0].label});
+
+                scope.onClick =  function(el) {
+                    if(!el[0]) return;
+                    scope.statusClick({selected:scope.labels[el[0]._index]});
                 };
                 scope.options = {
                     animation: false

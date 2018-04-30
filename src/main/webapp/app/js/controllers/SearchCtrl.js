@@ -21,12 +21,12 @@ angular.module('momusApp.controllers')
         $scope,
         $location,
         $q,
+        $templateRequest,
+        $uibModal,
         Person,
         Publication,
         Article,
-        $uibModal,
-        MessageModal,
-        $templateRequest
+        MessageModal
     ) {
         var pageSize = 100;
 

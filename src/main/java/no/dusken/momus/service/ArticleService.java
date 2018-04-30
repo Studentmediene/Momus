@@ -36,8 +36,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletResponse;
+import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -100,7 +101,7 @@ public class ArticleService {
     }
 
     public Article updateArticle(Article article) {
-        article.setLastUpdated(new Date());
+        article.setLastUpdated(ZonedDateTime.now());
         logger.info("Article with id {} updated, data: {}", article.getId(), article.dump());
         return articleRepository.saveAndFlush(article);
     }
@@ -200,7 +201,7 @@ public class ArticleService {
      */
     public ArticleRevision createRevision(Article article) {
 
-        Date saveDate = new Date();
+        ZonedDateTime saveDate = ZonedDateTime.now();
         ArticleRevision revision = getLastRevision(article);
 
         boolean isStatusChanged = 
@@ -217,7 +218,7 @@ public class ArticleService {
             revision = new ArticleRevision();
         }
         
-        revision.setSavedDate(new Date());
+        revision.setSavedDate(ZonedDateTime.now());
         revision.setStatusChanged(isStatusChanged);
         revision.setContent(article.getContent());
         revision.setArticle(article);
@@ -228,9 +229,8 @@ public class ArticleService {
         return revision;
     }
 
-    private boolean isRevisionTooOld(ArticleRevision revision, Date date) {
-        long timeDiff = date.getTime() - revision.getSavedDate().getTime();
-        return timeDiff > 3 * 60 * 1000;
+    private boolean isRevisionTooOld(ArticleRevision revision, ZonedDateTime date) {
+        return Duration.between(revision.getSavedDate(), date).toMinutes() > 3;
     }
 
     private ArticleRevision getLastRevision(Article article) {
