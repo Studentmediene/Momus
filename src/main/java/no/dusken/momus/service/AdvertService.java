@@ -16,27 +16,17 @@
 
 package no.dusken.momus.service;
 
-import com.google.api.services.drive.model.File;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.*;
-import no.dusken.momus.service.drive.GoogleDriveService;
-import no.dusken.momus.service.indesign.IndesignExport;
-import no.dusken.momus.service.indesign.IndesignGenerator;
 import no.dusken.momus.service.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,9 +37,6 @@ public class AdvertService {
     @Autowired
     private AdvertRepository advertRepository;
 
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     public Advert getAdvertById(Long id) {
         if(!advertRepository.exists(id)) {

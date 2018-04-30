@@ -23,7 +23,6 @@ angular.module('momusApp.resources')
           id: '@id'
         },
         {
-          multiple: { method: 'GET', params: {id: 'multiple'}, isArray: true },
           updateComment: { method: 'PATCH', params: {resource: 'comment'} },
         }
     );

@@ -56,11 +56,6 @@ public class AdvertController {
         return advertService.saveAdvert(advert);
     }
 
-    @GetMapping("/multiple")
-    public @ResponseBody List<Advert> getAdvertByID(@RequestParam(value="ids") List<Long> ids) {
-        return advertService.getAdvertsByIds(ids);
-    }
-
     @PatchMapping("{id}/comment")
     public @ResponseBody Advert updateComment(@PathVariable Long id, @RequestBody String comment){
         return advertService.updateComment(id, comment);
