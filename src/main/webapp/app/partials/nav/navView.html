@@ -12,6 +12,9 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
+            <p ng-show="transitionLoad" class="visible-xs navbar-text transition-load-spinner">
+                <i class="fa fa-circle-o-notch fa-2x fa-spin"></i>
+            </p>
             <a class="navbar-brand" ui-sref="front">Momus</a>
         </div>
 
@@ -37,6 +40,9 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <li ng-show="transitionLoad"><p class="hidden-xs navbar-text transition-load-spinner">
+                    <i class="fa fa-circle-o-notch fa-2x fa-spin"></i>
+                </p></li>
                 <li><a class="visible-sm" ng-click="vm.logout()">Logg ut <i class="fa fa-power-off"></i></a></li>
                 <li><a class="hidden-sm"  ng-click="vm.logout()">Logg ut <b>{{vm.user.name}}</b> <i class="fa fa-power-off"></i></a></li>
             </ul>

@@ -38,6 +38,10 @@
     <!-- endbuild -->
 </head>
 <body>
+<div ng-show="initialLoad" class="initial-load-spinner">
+    <i class="fa fa-circle-o-notch fa-spin fa-5x"></i>
+    <p>Momus laster...</p>
+</div>
 <div ui-view></div>
 </div>
 
