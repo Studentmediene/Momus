@@ -88,13 +88,11 @@ public class PublicationServiceTest extends AbstractServiceTest {
     @Test
     public void testUpdatePublicationMetadata() {
         PublicationService publicationServiceSpy = spy(publicationService);
-        doReturn(publication1).when(publicationRepository).save(publication1);
-        doReturn(publication1).when(publicationRepository).findOne(publication1.getId());
+        doReturn(publication1).when(publicationRepository).saveAndFlush(publication1);
         publication1.setName("justanupdatedpubname");
         publication1 = publicationServiceSpy.updatePublication(publication1);
 
-        verify(publicationRepository, times(1)).save(publication1);
-        verify(publicationRepository, times(1)).findOne(publication1.getId());
+        verify(publicationRepository, times(1)).saveAndFlush(publication1);
         assertEquals("justanupdatedpubname",publication1.getName());
     }
 
