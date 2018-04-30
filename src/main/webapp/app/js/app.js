@@ -208,9 +208,20 @@ angular.module('momusApp', [
     config(['$resourceProvider', 'RESOURCE_ACTIONS', ($resourceProvider, RESOURCE_ACTIONS) => {
         $resourceProvider.defaults.actions = RESOURCE_ACTIONS;
     }]).
-    run(['$transitions', 'TitleChanger', ($transitions, TitleChanger) => {
+    run(['$transitions', '$rootScope', 'TitleChanger', ($transitions, $rootScope, TitleChanger) => {
+        $transitions.onBefore({}, transition => {
+            if(transition.from().name === '')
+                $rootScope.initialLoad = true;
+            else
+                $rootScope.transitionLoad = true;
+        });
         $transitions.onSuccess({}, transition => {
             TitleChanger.setTitle(transition.to().title || "");
+
+            if(transition.from().name === '')
+                $rootScope.initialLoad = false;
+            else
+                $rootScope.transitionLoad = false;
         });
 
         $transitions.onBefore({to: 'search'}, transition => {
