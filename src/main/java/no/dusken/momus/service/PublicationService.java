@@ -63,12 +63,9 @@ public class PublicationService {
     }
 
     public Publication updatePublication(Publication publication){
-        publication = publicationRepository.save(publication);
-
         logger.info("Updated publication {} with data: {}", publication.getName(), publication);
 
-        // It seems to be necessary to reaccess the publication or else the releaseDate is not returned in the proper format.
-        return publicationRepository.findOne(publication.getId());
+        return publicationRepository.saveAndFlush(publication);
     }
 
     /**

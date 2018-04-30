@@ -136,6 +136,9 @@ angular.module('momusApp', [
             .state('publications', {
                 parent: 'root',
                 url: '/utgaver',
+                resolve: {
+                    publications: Publication => Publication.query().$promise
+                },
                 templateUrl: 'partials/publication/publicationView.html',
                 controller: 'PublicationCtrl',
                 controllerAs: 'vm',

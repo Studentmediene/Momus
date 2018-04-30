@@ -40,6 +40,17 @@ angular.module('momusApp.resources')
         function withDefaultRequestTransform(transform) {
             let defaults = $http.defaults.transformRequest;
             defaults = angular.isArray(defaults) ? defaults : [defaults];
-            return [transform, ...defaults];
+
+            // Need to apply the toJSON from the resource, since without it the object won't be serialized properly
+            // The $resolved and $promise properties won't be stripped
+            const fixedTransform = obj => {
+                if(!obj) return obj;
+                const transformed = transform(obj);
+                return {
+                    ...transformed,
+                    toJSON: obj.toJSON
+                };
+            };
+            return [fixedTransform, ...defaults];
         }
     });
