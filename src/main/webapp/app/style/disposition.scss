@@ -83,6 +83,9 @@ $pageAdBackground: #f6f6f6;
     .article-table:not(:first-child) {
         border-top: $articleBorder;
     }
+    .advert-table:not(:first-child) {
+        border-top: $articleBorder;
+    }
 }
 
 .page-done {

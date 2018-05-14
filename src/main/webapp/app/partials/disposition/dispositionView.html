@@ -48,7 +48,7 @@
             <button class="btn btn-primary" ng-click="vm.hideAllButtonRows()">
                 <i class="fa fa-caret-up"></i> Lukke ekstraknapp-rader
             </button>
-            <page-adder 
+            <page-adder
                 max-num-pages="vm.maxNewPages"
                 max-page-pos="vm.publication.pages.length"
                 submit="vm.newPages(newPageAt, numNewPages)">
@@ -77,7 +77,6 @@
                     </div>
                 </div>
                 <div class="d-table-cell" ng-style="vm.columnWidths.layout">Layout</div>
-                <div class="d-table-cell" ng-style="vm.columnWidths.ad">Ads</div>
                 <div class="d-table-cell" ng-style="vm.columnWidths.done"></div>
                 <div class="d-table-cell" ng-style="vm.columnWidths.edit"></div>
                 <div class="d-table-cell" ng-style="vm.columnWidths.delete"></div>
@@ -87,7 +86,7 @@
 
     <div class="row d-table disposition-table" ng-style="vm.offsetDispositionTable()">
         <div ng-model="vm.publication.pages" ui-sortable="vm.sortableOptions">
-            <div 
+            <div
                 class="d-table-row"
                 ng-repeat="page in vm.publication.pages"
                 ng-init="vm.initPageScope(this)"
@@ -98,6 +97,9 @@
                 <div class="d-table-cell handle" ng-style="vm.columnWidths.page_nr">{{page.page_nr}}</div>
                 <!--Articles (edit mode)-->
                 <div class="d-table-cell" ng-style="{width: vm.articleWidth}" ng-show="editPage">
+                    <div>
+                        <b>Artikler</b>
+                    </div>
                     <id-select multiple class="pull-left" style="width: 90%;"
                                 items="vm.articles"
                                 target="page.articles"
@@ -108,17 +110,30 @@
                             <i class="fa fa-plus"></i> <i class="fa fa-file-text"></i>
                         </button>
                     </div>
+                    <div>
+                        <b>Reklamer</b>
+                    </div>
+                    <id-select multiple class="pull-left" style="width: 90%;"
+                                items="vm.adverts"
+                                target="page.adverts"
+                                show="name">
+                    </id-select>
+                    <div class="pull-right">
+                        <button ng-click="vm.createAdvert(page)" class="btn btn-warning" uib-tooltip="Lag ny reklame">
+                            <i class="fa fa-plus"></i> <i class="fa fa-bullhorn"></i>
+                        </button>
+                    </div>
                 </div>
                 <!--Articles (view mode)-->
                 <div class="d-table-cell article-cell" ng-style="{width: vm.articleWidth}" ng-hide="editPage">
                     <div class="d-table article-table" ng-repeat="article in page.articles" ng-init="vm.initArticleScope(this)">
-                        <div class="d-table-row" ng-class="{'page-reklame': page.advertisement, 'page-done': page.done}">
+                        <div class="d-table-row" ng-class="{'page-done': page.done}">
                             <!--Dropdown-arrow-->
                             <div class="d-table-cell" ng-style="vm.columnWidths.dropdown">
-                                <button 
+                                <button
                                     class="btn btn-primary btn-xs"
-                                    data-target="#{{page.page_nr}}-{{article.id}}-button-line" 
-                                    data-toggle="collapse" 
+                                    data-target="#{{page.page_nr}}-{{article.id}}-button-line"
+                                    data-toggle="collapse"
                                 >
                                     <i class="fa fa-arrows-v"></i>
                                 </button>
@@ -129,8 +144,8 @@
                                 <span uib-tooltip="Antall tegn">({{article.content_length}})</span>
                             </div>
                             <!--Section-->
-                            <div 
-                                class="d-table-cell" 
+                            <div
+                                class="d-table-cell"
                                 ng-style="vm.applyColumnWidth('section', {'background': article.section.color})"
                             >
                                     {{article.section.name}}
@@ -162,8 +177,8 @@
                                 </ul>
                             </div>
                             <!--Status-->
-                            <div 
-                                class="d-table-cell" 
+                            <div
+                                class="d-table-cell"
                                 ng-style="vm.applyColumnWidth('status', {'background': article.status.color})"
                             >
                                 <select class="d-dropdown"
@@ -174,7 +189,7 @@
                                 </select>
                             </div>
                             <!--Review-->
-                            <div 
+                            <div
                                 class="d-table-cell"
                                 ng-style="vm.applyColumnWidth('review', {'background':article.review.color})"
                             >
@@ -187,14 +202,14 @@
                             </div>
                             <!--Photostatus-->
                             <!--View-->
-                            <div 
-                                class="d-table-cell" 
-                                ng-style="vm.columnWidths.photo_status" 
-                                ng-click="vm.editArticleField(this, 'photo_status')" 
+                            <div
+                                class="d-table-cell"
+                                ng-style="vm.columnWidths.photo_status"
+                                ng-click="vm.editArticleField(this, 'photo_status')"
                                 ng-show="!edit['photo_status']"
-                                title="Klikk for å redigere" 
+                                title="Klikk for å redigere"
                             >
-                                <textwrapper length="15" ng-attr-text="article.photo_status || '[Rediger]'"></textwrapper>
+                                <textwrapper length="20" ng-attr-text="article.photo_status || '[Rediger]'"></textwrapper>
                             </div>
                             <!--Edit-->
                             <div class="d-table-cell" ng-style="vm.columnWidths.photo_status" ng-show="edit['photo_status']">
@@ -206,12 +221,12 @@
                             </div>
                             <!--Comment-->
                             <!--View-->
-                            <div 
-                                class="d-table-cell" 
-                                ng-style="vm.columnWidths.comment" 
-                                ng-click="vm.editArticleField(this, 'comment')" 
+                            <div
+                                class="d-table-cell"
+                                ng-style="vm.columnWidths.comment"
+                                ng-click="vm.editArticleField(this, 'comment')"
                                 ng-show="!edit['comment']"
-                                title="Klikk for å redigere" 
+                                title="Klikk for å redigere"
                             >
                                 <textwrapper length="15" ng-attr-text="article.comment || '[Rediger]'"></textwrapper>
                             </div>
@@ -236,10 +251,49 @@
                             </div>
                         </div>
                     </div>
+                    <!--Adverts-->
+                    <div class="d-table advert-table" ng-repeat="advert in page.adverts" ng-style="{'background-color':'#FFE96B'}" ng-init="vm.initAdvertScope(this)">
+                      <div class="d-table-row">
+                        <!--Dropdown-arrow-->
+                        <div class="d-table-cell" ng-style="vm.columnWidths.dropdown">
+                            <i class="fa fa-bullhorn"></i>
+                        </div>
+                        <!--Name-->
+                        <div class="d-table-cell" ng-style="vm.columnWidths.name">
+                            {{advert.name}}
+                        </div>
+                        <!--Quick Lazy Fix-->
+                        <div class="d-table-cell" ng-style="vm.columnWidths.section"></div>
+                        <div class="d-table-cell" ng-style="vm.columnWidths.journalists"></div>
+                        <div class="d-table-cell" ng-style="vm.columnWidths.photographers"></div>
+                        <div class="d-table-cell" ng-style="vm.columnWidths.status"></div>
+                        <div class="d-table-cell" ng-style="vm.columnWidths.review"></div>
+                        <div class="d-table-cell" ng-style="vm.columnWidths.photo_status"></div>
+                        <!--Comment-->
+                        <!--View-->
+                        <div
+                            class="d-table-cell"
+                            ng-style="vm.columnWidths.comment"
+                            ng-click="vm.editAdvertField(this, 'comment')"
+                            ng-show="!edit['comment']"
+                            title="Klikk for å redigere"
+                        >
+                            <textwrapper length="20" ng-attr-text="advert.comment || '[Rediger]'"></textwrapper>
+                        </div>
+                        <!--Edit-->
+                        <div class="d-table-cell" ng-style="vm.columnWidths.comment" ng-show="edit['comment']">
+                            <inline-edit text="advert.comment"
+                                            cancel="vm.submitAdvertField(this, 'comment', false)"
+                                            remote-change="remoteChanges['comment']"
+                                            save="vm.submitAdvertField(this, 'comment', true)">
+                            </inline-edit>
+                        </div>
+                      </div>
+                    </div>
                 </div>
                 <!--Layout status-->
-                <div 
-                    class="d-table-cell" 
+                <div
+                    class="d-table-cell"
                     ng-style="vm.applyColumnWidth('layout', {'background': page.layout_status.color})"
                 >
                     <select class="d-dropdown"
@@ -248,15 +302,6 @@
                             ng-options="l.name for l in vm.layoutStatuses track by l.id"
                             ng-disabled="vm.loading">
                     </select>
-                </div>
-                <!--Ad-->
-                <div class="d-table-cell" ng-style="vm.columnWidths.ad">
-                    <span style="cursor: pointer" ng-click="page.advertisement = !page.advertisement; vm.updatePageMeta(page);">
-                        <i class="fa fa-file fa-lg"
-                            ng-class="{'text-danger' : !page.advertisement, 'text-success' : page.advertisement }"
-                            uib-tooltip="Siden inneholder {{!page.advertisement ? 'ikke ' : ''}} reklame">
-                        </i>
-                    </span>
                 </div>
                 <!--Done-->
                 <div class="d-table-cell button" ng-style="vm.columnWidths.done">

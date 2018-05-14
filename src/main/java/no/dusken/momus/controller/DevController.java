@@ -66,6 +66,9 @@ public class DevController {
     private ArticleReviewRepository articleReviewRepository;
 
     @Autowired
+    private AdvertRepository advertRepository;
+
+    @Autowired
     private PublicationRepository publicationRepository;
 
     @Autowired
@@ -161,6 +164,9 @@ public class DevController {
         a5.setPublication(p2);
         articleRepository.save(a5);
 
+        Advert ad1 = new Advert();
+        ad1.setName("iBok");
+        advertRepository.save(ad1);
         return "dummy articles and publications generated";
     }
 
