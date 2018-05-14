@@ -95,6 +95,7 @@ angular.module('momusApp.controllers')
                     break;
                 case(WebSocketService.actions.saveAdvert):
                     handleRemoteAdvertSave(payload.advert_id);
+                    break;
                 case(WebSocketService.actions.updateArticle):
                     handleRemoteArticleUpdate(payload.article_id, payload.edited_field);
                     break;
@@ -178,6 +179,7 @@ angular.module('momusApp.controllers')
             vm.loading = true;
             Article.get({id: articleId}, article => {
                 vm.articles.push(article);
+                articleEdits[articleId] = {};
                 vm.loading = false;
             });
         }
@@ -186,6 +188,7 @@ angular.module('momusApp.controllers')
             vm.loading = true;
             Advert.get({id: advertId}, advert => {
                 vm.adverts.push(advert);
+                advertEdits[advertId] = {};
                 vm.loading = false;
             });
         }
@@ -399,7 +402,7 @@ angular.module('momusApp.controllers')
         }
 
         function createArticle(page){
-            var modal = $uibModal.open({
+            const modal = $uibModal.open({
                 templateUrl: 'partials/article/createArticleModal.html',
                 controller: 'CreateArticleModalCtrl',
                 resolve: {
@@ -410,6 +413,7 @@ angular.module('momusApp.controllers')
                 const article = Article.get({id: id}, () => {
                     page.articles.push(article);
                     vm.articles.push(article);
+                    articleEdits[id] = {};
                     if(websocketActive){
                         lastUpdate = WebSocketService.articleSaved(vm.publication.id, page.id, article.id);
                     }
@@ -418,17 +422,18 @@ angular.module('momusApp.controllers')
         }
 
         function createAdvert(page){
-           var modal = $uibModal.open({
-               templateUrl: 'partials/advert/createAdvertModal.html',
-               controller: 'CreateAdvertModalCtrl'
-           });
-           modal.result.then(id => {
-               const advert = Advert.get({id: id}, () => {
-                   page.adverts.push(advert);
-                   vm.adverts.push(advert);
-                   if(websocketActive){
-                       lastUpdate = WebSocketService.advertSaved(vm.publication.id, page.id, advert.id);
-                   }
+            const modal = $uibModal.open({
+                templateUrl: 'partials/advert/createAdvertModal.html',
+                controller: 'CreateAdvertModalCtrl'
+            });
+            modal.result.then(id => {
+                Advert.get({id: id}, (advert) => {
+                    page.adverts.push(advert);
+                    vm.adverts.push(advert);
+                    advertEdits[id] = {};
+                    if(websocketActive){
+                        lastUpdate = WebSocketService.advertSaved(vm.publication.id, page.id, advert.id);
+                    }
                });
            });
        }
