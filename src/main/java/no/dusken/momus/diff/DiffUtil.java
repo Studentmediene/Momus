@@ -16,11 +16,10 @@
 
 package no.dusken.momus.diff;
 
+import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.ArticleRevision;
 import no.dusken.momus.service.repository.ArticleRevisionRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class DiffUtil {
 
     @Autowired
@@ -36,9 +36,6 @@ public class DiffUtil {
 
     @Autowired
     TagToUnicodeConverter tagToUnicodeConverter;
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
 
     public @ResponseBody LinkedList<DiffMatchPatch.Diff> getDiffList(long art, long oldId, long newId) {
         List<ArticleRevision> revision = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(art);
@@ -133,7 +130,7 @@ public class DiffUtil {
             }
         }
 
-        logger.info("No revision found with id {}", id);
+        log.info("No revision found with id {}", id);
         throw new RestException("No revision with that ID", 400);
     }
 

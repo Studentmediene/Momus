@@ -16,20 +16,18 @@
 
 package no.dusken.momus.service;
 
+import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.model.KeyValue;
 import no.dusken.momus.service.repository.KeyValueRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class KeyValueService {
 
     @Autowired
     KeyValueRepository keyValueRepository;
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Returns the value belonging to the key, or null if key not found
@@ -49,7 +47,7 @@ public class KeyValueService {
             value = defaultValue;
         }
 
-        logger.debug("Value for {} was {}", key, value);
+        log.debug("Value for {} was {}", key, value);
         return value;
     }
 
@@ -77,7 +75,7 @@ public class KeyValueService {
         KeyValue pair = KeyValue.builder().key(key).value(value).build();
         keyValueRepository.save(pair);
 
-        logger.info("Key {} was assigned value {}", key, value);
+        log.info("Key {} was assigned value {}", key, value);
     }
 
     public void setValue(String key, long value) {

@@ -17,13 +17,12 @@
 package no.dusken.momus.service;
 
 
+import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.LayoutStatusRepository;
 import no.dusken.momus.service.repository.PageRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,10 +30,8 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Service
+@Slf4j
 public class PublicationService {
-
-    Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private PublicationRepository publicationRepository;
 
@@ -57,13 +54,13 @@ public class PublicationService {
             newPage.setLayoutStatus(layoutStatusRepository.findByName("Ukjent"));
             pageRepository.save(newPage);
         }
-        logger.info("Created new publication with data: {}", newPublication);
+        log.info("Created new publication with data: {}", newPublication);
 
         return newPublication;
     }
 
     public Publication updatePublication(Publication publication){
-        logger.info("Updated publication {} with data: {}", publication.getName(), publication);
+        log.info("Updated publication {} with data: {}", publication.getName(), publication);
 
         return publicationRepository.saveAndFlush(publication);
     }

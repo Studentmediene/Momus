@@ -24,8 +24,6 @@ import no.dusken.momus.service.PublicationService;
 import no.dusken.momus.service.repository.LayoutStatusRepository;
 import no.dusken.momus.service.repository.PageRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +37,6 @@ import java.util.*;
 @RestController
 @RequestMapping("/publications")
 public class PublicationController {
-    Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private PublicationService publicationService;
 

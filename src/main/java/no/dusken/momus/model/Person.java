@@ -26,7 +26,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.sql.Blob;
 import java.util.Collection;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity

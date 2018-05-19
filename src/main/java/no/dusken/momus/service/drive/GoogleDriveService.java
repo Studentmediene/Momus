@@ -27,12 +27,11 @@ import com.google.api.services.drive.model.Change;
 import com.google.api.services.drive.model.ChangeList;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.Permission;
+import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.service.ArticleService;
 import no.dusken.momus.service.KeyValueService;
 import no.dusken.momus.service.repository.ArticleRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -46,6 +45,7 @@ import java.security.GeneralSecurityException;
 import java.util.*;
 
 @Service
+@Slf4j
 public class GoogleDriveService {
 
     @Value("${drive.syncEnabled}")
@@ -71,16 +71,14 @@ public class GoogleDriveService {
 
     private Drive drive = null;
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
     @PostConstruct
     private void setup() {
         if (!enabled) {
-            logger.info("Not setting up Google Drive");
+            log.info("Not setting up Google Drive");
             return;
         }
 
-        logger.info("Setting up Google Drive");
+        log.info("Setting up Google Drive");
 
 
         GoogleCredential credentials;
@@ -102,7 +100,7 @@ public class GoogleDriveService {
                     .setServiceAccountScopes(scopes)
                     .build();
         } catch (GeneralSecurityException | IOException e) {
-            logger.error("Couldn't create Google Drive credentials: ", e);
+            log.error("Couldn't create Google Drive credentials: ", e);
             return;
         }
 
@@ -110,7 +108,7 @@ public class GoogleDriveService {
                 .setApplicationName(appName)
                 .build();
 
-        logger.info("Successfully set up Google Drive");
+        log.info("Successfully set up Google Drive");
     }
 
 
@@ -124,7 +122,7 @@ public class GoogleDriveService {
             file = createFile(name);
             createPermission(file);
         } catch (IOException e) {
-            logger.error("Couldn't create Google Drive file for article", e);
+            log.error("Couldn't create Google Drive file for article", e);
         }
 
         return file;
@@ -137,7 +135,7 @@ public class GoogleDriveService {
 
         File createdFile = drive.files().insert(insertFile).execute();
 
-        logger.info("Created Google Drive file with id {} for article with name {}", createdFile.getId(), name);
+        log.info("Created Google Drive file with id {} for article with name {}", createdFile.getId(), name);
         return createdFile;
     }
 
@@ -153,7 +151,7 @@ public class GoogleDriveService {
         permission.setWithLink(true);
 
         drive.permissions().insert(file.getId(), permission).execute();
-        logger.info("Created permissions for Google Drive file with id {}", file.getId());
+        log.info("Created permissions for Google Drive file with id {}", file.getId());
     }
 
 
@@ -166,10 +164,10 @@ public class GoogleDriveService {
     @Scheduled(cron = "0 * * * * *")
     public void sync() {
         if (!enabled) {
-            logger.info("Not syncing Google Drive");
+            log.info("Not syncing Google Drive");
             return;
         }
-        logger.debug("Starting Google Drive sync");
+        log.debug("Starting Google Drive sync");
 
         Set<String> modifiedFileIds = findModifiedFileIds();
         if (modifiedFileIds.size() == 0) {
@@ -182,7 +180,7 @@ public class GoogleDriveService {
             articleService.updateArticleContent(article);
         }
 
-        logger.debug("Done syncing, updated {} articles", articles.size());
+        log.debug("Done syncing, updated {} articles", articles.size());
     }
 
     /**
@@ -207,7 +205,7 @@ public class GoogleDriveService {
             for (Change change : changes) {
                 modifiedFileIds.add(change.getFileId());
                 latestChange = change.getId();
-                logger.debug("Change found, id {}, fileid: {}", change.getId(), change.getFileId());
+                log.debug("Change found, id {}, fileid: {}", change.getId(), change.getFileId());
             }
 
             if (latestChange != oldLatestChange) {
@@ -216,7 +214,7 @@ public class GoogleDriveService {
 
 
         } catch (IOException e) {
-            logger.warn("Couldn't get changed file IDs from Google Drive", e); // may happen once in a while, not that interesting
+            log.warn("Couldn't get changed file IDs from Google Drive", e); // may happen once in a while, not that interesting
         }
 
         return modifiedFileIds;
@@ -234,12 +232,12 @@ public class GoogleDriveService {
             InputStream inputStream = drive.getRequestFactory().buildGetRequest(new GenericUrl(downloadUrl)).execute().getContent();
             Scanner s = new java.util.Scanner(inputStream).useDelimiter("\\A");
             String content = s.hasNext() ? s.next() : "";
-            logger.info("Got new content:\n{}", content);
+            log.info("Got new content:\n{}", content);
 
             String convertedContent = googleDocsTextConverter.convert(content);
             article.setContent(convertedContent);
         } catch (IOException e) {
-            logger.error("Couldn't get content for article", e);
+            log.error("Couldn't get content for article", e);
             // Let the content remain as it was
         }
     }

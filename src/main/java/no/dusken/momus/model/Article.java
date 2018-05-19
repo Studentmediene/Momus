@@ -20,13 +20,10 @@ import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import no.dusken.momus.service.ArticleService;
-
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.Set;
 
 @Entity

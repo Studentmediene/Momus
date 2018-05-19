@@ -16,11 +16,10 @@
 
 package no.dusken.momus.service;
 
+import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +29,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class AdvertService {
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private AdvertRepository advertRepository;
@@ -55,12 +53,12 @@ public class AdvertService {
 
     public Advert saveAdvert(Advert advert){
         Advert newAdvert = advertRepository.saveAndFlush(advert);
-        logger.info("Advert with id {} creatd with data: {}", newAdvert.getId(), newAdvert);
+        log.info("Advert with id {} creatd with data: {}", newAdvert.getId(), newAdvert);
         return newAdvert;
     }
 
     public Advert updateAdvert(Advert advert) {
-        logger.info("Advert with id {} updated, data: {}", advert.getId(), advert);
+        log.info("Advert with id {} updated, data: {}", advert.getId(), advert);
         return advertRepository.saveAndFlush(advert);
     }
 

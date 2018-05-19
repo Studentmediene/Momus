@@ -18,17 +18,11 @@ package no.dusken.momus.controller;
 
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.AdvertService;
-import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/advert")
