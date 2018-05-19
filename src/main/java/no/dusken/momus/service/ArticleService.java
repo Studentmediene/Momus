@@ -249,8 +249,8 @@ public class ArticleService {
             html = html.replaceAll(tag," ").replaceAll(tag.substring(0,1)+"/"+tag.substring(1,tag.length()),"");
         }
 
-        // Remove consecutive spaces
-        html = html.replaceAll("\\s+", " ");
+        // Remove consecutive spaces and trim
+        html = html.replaceAll("\\s+", " ").trim();
 
         return html;
     }

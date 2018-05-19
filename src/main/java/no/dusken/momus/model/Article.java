@@ -102,6 +102,4 @@ public class Article {
         this.setRawcontent(rawContent);
         this.setContentLength(rawContent.length());
     }
-
-
 }

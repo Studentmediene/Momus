@@ -236,13 +236,15 @@ public class ArticleServiceTest extends AbstractServiceTest {
         doReturn(new ArticleRevision()).when(articleServiceSpy).createRevision(any(Article.class));
         doReturn(article1).when(articleServiceSpy).updateArticle(article);
 
-        article.setContent("NEW CONTENT for article 1");
+        article.setContent("<p>NEW CONTENT for article 1</p>");
 
         article = articleServiceSpy.updateArticleContent(article);
 
         verify(articleServiceSpy, times(1)).updateArticle(article1);
         verify(articleServiceSpy, times(1)).createRevision(article1);
-        assertEquals("NEW CONTENT for article 1", article.getContent());
+        assertEquals("<p>NEW CONTENT for article 1</p>", article.getContent());
+        assertEquals("new content for article 1", article.getRawcontent());
+        assertEquals(25, article.getContentLength());
     }
 
     /**
