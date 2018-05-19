@@ -44,8 +44,20 @@ public class ArticleQueryBuilderTest extends AbstractServiceTest {
     private ArticleQueryBuilder articleQueryBuilder;
 
     private void initPersonMocks() {
-        person1 = new Person(1L, UUID.randomUUID(),"mts", "Mats Matsessen", "", "", true);
-        person2 = new Person(2L, UUID.randomUUID(), "aaa", "Kåre Kåressen", "", "", true);
+        person1 = Person.builder()
+                .id(1L)
+                .guid(UUID.randomUUID())
+                .username("mts")
+                .name("Mats Matsessen")
+                .active(true)
+                .build();
+        person2 = Person.builder()
+                .id(2L)
+                .guid(UUID.randomUUID())
+                .username("kkr")
+                .name("Kåre Kåressen")
+                .active(true)
+                .build();
 
         when(personRepository.findOne(person1.getId())).thenReturn(person1);
         when(personRepository.findOne(person2.getId())).thenReturn(person2);

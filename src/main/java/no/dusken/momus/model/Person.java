@@ -17,6 +17,7 @@
 package no.dusken.momus.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import no.dusken.momus.authorization.Role;
 import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,6 +30,12 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = {"id"})
+@ToString(of = {"id", "name"})
+@Builder(toBuilder = true)
 public class Person implements UserDetails {
 
     @Id
@@ -50,7 +57,6 @@ public class Person implements UserDetails {
     @ManyToOne(fetch = FetchType.EAGER)
     private Section favouritesection;
 
-
     @JsonIgnore
     @Lob
     private Blob photo;
@@ -58,99 +64,6 @@ public class Person implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Collection<Role> roles;
-
-    public Person() {
-    }
-
-    public Person(Long id) {
-        this.id = id;
-    }
-
-    public Person(Long id, UUID guid, String username, String name, String email, String phoneNumber, boolean active) {
-        this.id = id;
-        this.guid = guid;
-        this.username = username;
-        this.name = name;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.active = active;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public UUID getGuid() {
-        return guid;
-    }
-
-    public void setGuid(UUID guid) {
-        this.guid = guid;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String userName) {
-        this.username = userName;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phone) {
-        this.phoneNumber = phone;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public Section getFavouritesection() {
-        return favouritesection;
-    }
-
-    public void setFavouritesection(Section favouritesection) {
-        this.favouritesection = favouritesection;
-    }
-
-    public Blob getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(Blob photo) {
-        this.photo = photo;
-    }
-
-    public Collection<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
-    }
 
     /*
     The following methods is to implement UserDetails,
@@ -194,30 +107,4 @@ public class Person implements UserDetails {
     }
 
     /* End UserDetails */
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Person person = (Person) o;
-
-        if (id != null ? !id.equals(person.id) : person.id != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
-
-    @Override
-    public String toString() {
-        return "Person{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

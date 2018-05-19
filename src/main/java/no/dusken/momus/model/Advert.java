@@ -15,20 +15,18 @@
  */
 
 package no.dusken.momus.model;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
-import no.dusken.momus.service.ArticleService;
+import lombok.*;
 
 import javax.persistence.*;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Set;
 
 @Entity
-public class Advert{
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(of = {"id"})
+@ToString(of = {"id", "name"})
+@Builder(toBuilder = true)
+public class Advert {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,63 +35,4 @@ public class Advert{
     private String name;
 
     private String comment;
-
-    public Advert() {
-
-    }
-
-    public Advert(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getComment() { return comment; }
-
-    public void setComment(String comment) { this.comment = comment; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Advert advert = (Advert) o;
-
-        if (!id.equals(advert.id)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
-
-
-    @Override
-    public String toString() {
-        return "Advert{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", comment='" + comment + '\'' +
-                '}';
-    }
-
-    public String dump() {
-        return "Advert{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", comment='" + comment + '\'' +
-                '}';
-    }
 }

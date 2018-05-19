@@ -16,14 +16,21 @@
 
 package no.dusken.momus.model;
 
+import lombok.*;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = {"id"})
+@ToString(of = {"id", "name", "color"})
+@Builder(toBuilder = true)
 public class ArticleStatus {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,74 +39,4 @@ public class ArticleStatus {
     private String color;
     private int statusOrder;
     private boolean deleted;
-
-    public ArticleStatus() {
-    }
-
-    public ArticleStatus(Long id, String name, String color) {
-        this(name, color);
-        this.id = id;
-    }
-
-    public ArticleStatus(String name, String color) {
-        this.name = name;
-        this.color = color;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public int getStatusOrder() { return statusOrder; }
-
-    public void setStatusOrder(int statusOrder) { this.statusOrder = statusOrder; }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ArticleStatus that = (ArticleStatus) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
-
-    @Override
-    public String toString() {
-        return "ArticleStatus{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

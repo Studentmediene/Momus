@@ -52,7 +52,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
 
     @Test
     public void testUpdateArticleMetadata() throws Exception {
-        ArticleStatus status = articleStatusRepository.saveAndFlush(new ArticleStatus("Ukjent", "0"));
+        ArticleStatus status = articleStatusRepository.saveAndFlush(ArticleStatus.builder().name("Ukjent").build());
         Article article = new Article();
         article.setName("Artikkel");
         article.setStatus(status);
@@ -123,8 +123,8 @@ public class ArticleControllerTest extends AbstractControllerTest {
 
     @Test
     public void testGetArticleRevisionComparison() throws Exception {
-        ArticleStatus status1 = articleStatusRepository.saveAndFlush(new ArticleStatus("Ukjent", "0"));
-        ArticleStatus status2 = articleStatusRepository.saveAndFlush(new ArticleStatus("Planlagt", "0"));
+        ArticleStatus status1 = articleStatusRepository.saveAndFlush(ArticleStatus.builder().name("Ukjent").build());
+        ArticleStatus status2 = articleStatusRepository.saveAndFlush(ArticleStatus.builder().name("Planlagt").build());
         Article article = new Article();
         article.setName("Artikkel");
         article.setContent("Innhold");
@@ -132,7 +132,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
         article.setJournalists(new HashSet<>());
         article.setPhotographers(new HashSet<>());
         article = articleService.saveArticle(article);
-        Article updatedArticle = new Article(article.getId());
+        Article updatedArticle = Article.builder().id(article.getId()).build();
         updatedArticle.setContent("Nytt innhold");
         article = articleService.updateArticleContent(updatedArticle);
         updatedArticle.setName("Artikkel");

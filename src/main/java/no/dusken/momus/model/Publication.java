@@ -16,6 +16,8 @@
 
 package no.dusken.momus.model;
 
+import lombok.*;
+
 import javax.persistence.*;
 
 import java.time.LocalDate;
@@ -23,6 +25,12 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = {"id"})
+@ToString(of = {"id", "name", "releaseDate"})
+@Builder(toBuilder = true)
 public class Publication {
 
     @Id
@@ -38,72 +46,4 @@ public class Publication {
 
     @OneToMany(mappedBy = "publication")
     private List<Page> pages;
-
-    public Publication() {
-
-    }
-
-    public Publication(Long id) {
-        this.id = id;
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public LocalDate getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(LocalDate releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public Set<Article> getArticles() {
-        return articles;
-    }
-
-    public void setArticles(Set<Article> articles) {
-        this.articles = articles;
-    }
-
-    public List<Page> getPages() {
-        return pages;
-    }
-
-    public void setPages(List<Page> pages) {
-        this.pages = pages;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Publication publication = (Publication) o;
-
-        if (!id.equals(publication.id)) return false;
-
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "Publication{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", releaseDate=" + releaseDate +
-                '}';
-    }
-
-
 }

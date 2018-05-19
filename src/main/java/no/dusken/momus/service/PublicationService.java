@@ -82,7 +82,7 @@ public class PublicationService {
 
         for(Article a : articles){
             journalists.addAll(a.getJournalists());
-            if(a.getUseIllustration()){
+            if(a.isUseIllustration()){
                 illustrators.addAll(a.getPhotographers());
             }else{
                 photographers.addAll(a.getPhotographers());

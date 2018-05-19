@@ -43,7 +43,7 @@ public class IndesignGeneratorTest extends AbstractServiceTest {
 
     @Test
     public void testGenerateFromArticle() {
-        Article article = new Article(1L);
+        Article article = Article.builder().id(1L).build();
 
         /*
         The content should test all kind of elements and some edge cases
@@ -66,12 +66,12 @@ public class IndesignGeneratorTest extends AbstractServiceTest {
         article.setPublication(pub);
 
         Set<Person> journalists = new HashSet<>();
-        journalists.add(new Person(1L, UUID.randomUUID(), "user1", "Mats Matsesen", "mats@mats.mats", "12345678", true));
-        journalists.add(new Person(2L, UUID.randomUUID(), "user1", "Kåre Kål", "lala@lolo.com", "12345678", true));
+        journalists.add(Person.builder().id(0L).name("Mats Matsesen").build());
+        journalists.add(Person.builder().id(1L).name("Kåre Kål").build());
         article.setJournalists(journalists);
 
         Set<Person> photographers = new HashSet<>();
-        photographers.add(new Person(3L, UUID.randomUUID(), "user1", "Einar Einarsen", "einar@lala.org", "12345678", true));
+        photographers.add(Person.builder().name("Einar Einarsen").build());
         article.setPhotographers(photographers);
 
         String expected = "<UNICODE-WIN>\r\n" +
@@ -102,8 +102,7 @@ public class IndesignGeneratorTest extends AbstractServiceTest {
 
     @Test
     public void changesToIllustratorNoJournalists() {
-        Article article = new Article(1L);
-
+        Article article = Article.builder().id(1L).build();
 
         Publication pub = new Publication();
         pub.setName("TestPub");
@@ -114,8 +113,8 @@ public class IndesignGeneratorTest extends AbstractServiceTest {
         article.setJournalists(new HashSet<>());
 
         Set<Person> photographers = new HashSet<>();
-        photographers.add(new Person(3L, UUID.randomUUID(), "user1", "Einar Einarsen", "einar@lala.org", "12345678", true));
-        photographers.add(new Person(10L, UUID.randomUUID(), "user1", "Roy Royce", "einar@lala.org", "12345678", true));
+        photographers.add(Person.builder().id(0L).name("Einar Einarsen").build());
+        photographers.add(Person.builder().id(1L).name("Roy Royce").build());
         article.setPhotographers(photographers);
 
         article.setUseIllustration(true);
@@ -131,14 +130,14 @@ public class IndesignGeneratorTest extends AbstractServiceTest {
 
     @Test
     public void testImageTextIsAdded() {
-        Article article = new Article(1L);
+        Article article = Article.builder().id(1L).build();
         article.setContent("<h1>Min kule tittel!</h1><p>Ingen bildetekst her, plz!</p>");
 
         article.setImageText("Bilde 1 er tatt av Kåre, viser John.\nBilde med grønn fyr viser en grønn fyr.");
 
         article.setJournalists(new HashSet<>());
         Set<Person> photographers = new HashSet<>();
-        photographers.add(new Person(3L, UUID.randomUUID(), "user1", "Einar Einarsen", "einar@lala.org", "12345678", true));
+        photographers.add(Person.builder().name("Einar Einarsen").build());
         article.setPhotographers(photographers);
 
         String expected = "<UNICODE-WIN>\r\n" +
@@ -157,12 +156,12 @@ public class IndesignGeneratorTest extends AbstractServiceTest {
 
     @Test
     public void testExternalAuthors() {
-        Article article = new Article(1L);
+        Article article = Article.builder().id(1L).build();
         article.setContent("<h1>Min kule tittel!</h1>");
 
         article.setJournalists(new HashSet<>());
         Set<Person> photographers = new HashSet<>();
-        photographers.add(new Person(3L, UUID.randomUUID(), "user1", "Einar Einarsen", "einar@lala.org", "12345678", true));
+        photographers.add(Person.builder().name("Einar Einarsen").build());
         article.setPhotographers(photographers);
 
         article.setExternalAuthor("Ekstern Eksternsen");

@@ -96,13 +96,13 @@ public class ArticleService {
 
         Article newArticle = articleRepository.saveAndFlush(article);
 
-        logger.info("Article with id {} created with data: {}", newArticle.getId(), newArticle.dump());
+        logger.info("Article with id {} created with data: {}", newArticle.getId(), newArticle);
         return newArticle;
     }
 
     public Article updateArticle(Article article) {
         article.setLastUpdated(ZonedDateTime.now());
-        logger.info("Article with id {} updated, data: {}", article.getId(), article.dump());
+        logger.info("Article with id {} updated, data: {}", article.getId(), article);
         return articleRepository.saveAndFlush(article);
     }
 
@@ -138,9 +138,9 @@ public class ArticleService {
         existing.setType(article.getType());
         existing.setStatus(article.getStatus());
         existing.setSection(article.getSection());
-        existing.setUseIllustration(article.getUseIllustration());
+        existing.setUseIllustration(article.isUseIllustration());
         existing.setImageText(article.getImageText());
-        existing.setQuoteCheckStatus(article.getQuoteCheckStatus());
+        existing.setQuoteCheckStatus(article.isQuoteCheckStatus());
         existing.setExternalAuthor(article.getExternalAuthor());
         existing.setExternalPhotographer(article.getExternalPhotographer());
         existing.setPhotoStatus(article.getPhotoStatus());

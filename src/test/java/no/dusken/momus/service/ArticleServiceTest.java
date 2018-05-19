@@ -73,50 +73,73 @@ public class ArticleServiceTest extends AbstractServiceTest {
 
     @Before
     public void setUp() {
-        person1 = new Person(2L, UUID.randomUUID(), "mts", "Mats Matsessen", "", "", true);
-        person2 = new Person(3L, UUID.randomUUID(), "aaa", "Kåre Kåressen", "", "", true);
+        person1 = Person.builder()
+                .id(2L)
+                .guid(UUID.randomUUID())
+                .username("mts")
+                .name("Mats Matsessen")
+                .active(true)
+                .build();
+        person2 = Person.builder()
+                .id(3L)
+                .guid(UUID.randomUUID())
+                .username("kkr")
+                .name("Kåre Kåressen")
+                .active(true)
+                .build();
 
-        publication1 = new Publication(1L);
-        publication1.setName("Pub1");
-        publication2 = new Publication(2L);
-        publication2.setName("Pub2");
+        publication1 = Publication.builder()
+                .id(1L)
+                .name("Pub1")
+                .build();
 
-        articleStatus1 = new ArticleStatus(0L, "Skrives", "");
-        articleStatus2 = new ArticleStatus(1L, "Til korrektur", "");
+        publication2 = Publication.builder()
+                .id(2L)
+                .name("Pub2")
+                .build();
 
-        articleReview1 = new ArticleReview(0L, "Ukjent", "");
-        articleReview2 = new ArticleReview(1L, "Ferdig", "");
+        articleStatus1 = ArticleStatus.builder().id(0L).name("Skrives").build();
+        articleStatus2 = ArticleStatus.builder().id(1L).name("Til korrektur").build();
 
-        articleType1 = new ArticleType(0L, "Anmeldelse", "");
-        articleType2 = new ArticleType(1L, "Reportasje", "");
+        articleReview1 = ArticleReview.builder().id(0L).name("Ukjent").build();
+        articleReview2 = ArticleReview.builder().id(1L).name("Ferdig").build();
 
-        section1 = new Section(0L, "Musikk");
-        section2 = new Section(0L, "Forskning");
+        articleType1 = ArticleType.builder().id(0L).name("Anmeldelse").build();
+        articleType2 = ArticleType.builder().id(1L).name("Reportasje").build();
 
-        article1 = new Article(1L);
-        article1.setName("Artikkel 1");
-        article1.setContent("Testinnhold for artikkel 1 yay");
-        article1.setPublication(publication1);
-        article1.setSection(section1);
-        article1.setStatus(articleStatus1);
-        article1.setType(articleType1);
-        article1.setReview(articleReview1);
-        article1.setArchived(false);
+        section1 = Section.builder().id(0L).name("Musikk").build();
+        section2 = Section.builder().id(1L).name("Forskning").build();
 
-        article2 = new Article(2L);
-        article2.setName("Artikkel 2");
-        article2.setContent("Lorem ipsum");
-        article2.setPublication(publication1);
-        article2.setSection(section1);
-        article2.setStatus(articleStatus1);
-        article2.setType(articleType1);
-        article2.setReview(articleReview1);
-        article2.setArchived(false);
+        article1 = Article.builder()
+                .id(1L)
+                .name("Artikkel 1")
+                .content("Testinnhold for artikkel 1 yay")
+                .publication(publication1)
+                .section(section1)
+                .status(articleStatus1)
+                .type(articleType1)
+                .review(articleReview1)
+                .archived(false)
+                .build();
 
-        article1Revision1 = new ArticleRevision(0L);
-        article1Revision1.setArticle(article1);
-        article1Revision1.setContent(article1.getContent());
-        article1Revision1.setStatus(article1.getStatus());
+        article2 = Article.builder()
+                .id(2L)
+                .name("Artikkel 2")
+                .content("Lorem ipsum")
+                .publication(publication1)
+                .section(section1)
+                .status(articleStatus1)
+                .type(articleType1)
+                .review(articleReview1)
+                .archived(false)
+                .build();
+
+        article1Revision1 = ArticleRevision.builder()
+                .id(0L)
+                .article(article1)
+                .content(article1.getContent())
+                .status(article1.getStatus())
+                .build();
 
         when(indesignGenerator.generateFromArticle(article1)).thenReturn(new IndesignExport("meh", "meh"));
         when(articleRepository.exists(longThat(i -> i == 1L || i == 2L ))).thenReturn(true);
@@ -169,7 +192,7 @@ public class ArticleServiceTest extends AbstractServiceTest {
      */
     @Test
     public void testUpdateArticleMetadata() {
-        Article article = new Article(article1.getId());
+        Article article = Article.builder().id(article1.getId()).build();
         ArticleService articleServiceSpy = spy(articleService);
 
         doReturn(article1).when(articleServiceSpy).updateArticle(article);
@@ -207,7 +230,7 @@ public class ArticleServiceTest extends AbstractServiceTest {
      */
     @Test
     public void testUpdateArticleContent() {
-        Article article = new Article(article1.getId());
+        Article article = Article.builder().id(article1.getId()).build();
         ArticleService articleServiceSpy = spy(articleService);
 
         doReturn(new ArticleRevision()).when(articleServiceSpy).createRevision(any(Article.class));
@@ -228,7 +251,7 @@ public class ArticleServiceTest extends AbstractServiceTest {
      */
     @Test
     public void testUpdateArticleContentNoChange() {
-        Article article = new Article(article1.getId());
+        Article article = Article.builder().id(article1.getId()).build();
         article.setContent(article1.getContent());
         ArticleService articleServiceSpy = spy(articleService);
 
@@ -312,6 +335,6 @@ public class ArticleServiceTest extends AbstractServiceTest {
         Article article = articleServiceSpy.updateArchived(article1.getId(), true);
 
         verify(articleServiceSpy, times(1)).updateArticle(article1);
-        assertEquals(true, article.getArchived());
+        assertEquals(true, article.isArchived());
     }
 }

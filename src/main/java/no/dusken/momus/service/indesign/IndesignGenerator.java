@@ -134,7 +134,7 @@ public class IndesignGenerator {
     private void appendByLines(StringBuilder sb, Article article) {
         appendByLine(sb, article.getJournalists(), article.getExternalAuthor(), "Tekst");
 
-        String type = article.getUseIllustration() ? "Illustrasjon" : "Foto";
+        String type = article.isUseIllustration() ? "Illustrasjon" : "Foto";
         appendByLine(sb, article.getPhotographers(), article.getExternalPhotographer(), type);
 
     }

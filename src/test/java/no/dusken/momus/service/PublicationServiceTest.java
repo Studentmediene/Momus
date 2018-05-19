@@ -62,24 +62,13 @@ public class PublicationServiceTest extends AbstractServiceTest {
 
     @Before
     public void before() {
-        publication1 = new Publication(1L);
-        publication1.setName("DUSKEN1");
+        publication1 = Publication.builder().id(1L).name("DUSKEN1").build();
+        publication2 = Publication.builder().id(2L).name("DUSKEN2").build();
+        publication3 = Publication.builder().id(3L).name("DUSKEN3").build();
 
-        publication2 = new Publication(2L);
-        publication2.setName("DUSKEN2");
-
-        publication3 = new Publication(3L);
-        publication3.setName("DUSKEN3");
-
-        page1 = new Page(1L);
-        page1.setPageNr(1);
-        page1.setPublication(publication1);
-        page2 = new Page(2L);
-        page2.setPageNr(2);
-        page2.setPublication(publication1);
-        page3 = new Page(3L);
-        page3.setPageNr(3);        
-        page3.setPublication(publication1);
+        page1 = Page.builder().id(1L).pageNr(1).publication(publication1).build();
+        page2 = Page.builder().id(2L).pageNr(2).publication(publication1).build();
+        page3 = Page.builder().id(3L).pageNr(2).publication(publication1).build();
     }
 
     /**
@@ -135,12 +124,8 @@ public class PublicationServiceTest extends AbstractServiceTest {
     @Test
     public void testSaveTrailingPages() {
         final List<Page> pages = new ArrayList<>(Arrays.asList(page1, page2, page3));
-        Page newPage = new Page(4L);
-        newPage.setPublication(publication1);
-        newPage.setPageNr(2);
-        Page otherNewPage = new Page(5L);
-        newPage.setPublication(publication1);
-        otherNewPage.setPageNr(3);
+        Page newPage = Page.builder().id(4L).publication(publication1).pageNr(2).build();
+        Page otherNewPage = Page.builder().id(5L).pageNr(3).publication(publication1).build();
 
         List<Page> newPages = Arrays.asList(newPage, otherNewPage);
 
@@ -235,21 +220,21 @@ public class PublicationServiceTest extends AbstractServiceTest {
 
     @Test
     public void testGenerateColophon() {
-        Article art = new Article(0L);
+        Article art = Article.builder().id(0L).build();
         art.setJournalists(new HashSet<>(Arrays.asList(
-                new Person(0L, UUID.randomUUID(), "ei", "Eiv", "ei@vi.nd", "4", true),
-                new Person(1L, UUID.randomUUID(), "ch", "Chr", "c@h.ri", "4", true)
+                Person.builder().id(0L).name("Eiv").build(),
+                Person.builder().id(1L).name("Chr").build()
         )));
         art.setUseIllustration(false);
         art.setPhotographers(new HashSet<>(Arrays.asList(
-                new Person(2L, UUID.randomUUID(), "do", "Don", "do@na.ld", "4", true),
-                new Person(3L, UUID.randomUUID(), "ob", "Oba", "o@ba.ma", "4", true)
+                Person.builder().id(2L).name("Don").build(),
+                Person.builder().id(3L).name("Oba").build()
         )));
-        Article art2 = new Article(1L);
+        Article art2 = Article.builder().id(1L).build();
         art2.setUseIllustration(true);
         art2.setJournalists(new HashSet<>());
-        art2.setPhotographers(new HashSet<>(Arrays.asList(
-                new Person(4L, UUID.randomUUID(), "il", "Ill", "ill@us.tr", "4", true)
+        art2.setPhotographers(new HashSet<>(Collections.singletonList(
+                Person.builder().id(4L).name("Ill").build()
         )));
 
         doReturn(Arrays.asList(art, art2)).when(articleRepository).findByPublicationId(publication1.getId());

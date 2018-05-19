@@ -17,12 +17,20 @@
 package no.dusken.momus.model;
 
 
+import lombok.*;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = {"id"})
+@ToString(of = {"id", "name", "color"})
+@Builder(toBuilder = true)
 public class Section {
 
     @Id
@@ -32,39 +40,4 @@ public class Section {
     private String name;
     private String color;
     private boolean deleted;
-
-    public Section(){}
-
-    public Section(Long id, String name) {
-        this(name);
-        this.id = id;
-    }
-
-    public Section(String name) {
-        this.name = name;
-    }
-
-    public Long getId() { return id; }
-
-    public String getName() { return name; }
-
-    public String getColor() {return color;}
-
-    public void setColor(String color) {this.color = color;}
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    @Override
-    public String toString() {
-        return "Section{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

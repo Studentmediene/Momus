@@ -42,7 +42,15 @@ public class PersonMapper implements AttributesMapper<Person> {
         Person person = getPersonIfExists(guid, username);
 
         if (person == null) {
-            person = new Person(findFreeId(), guid, username, name, email, phoneNumber, active);
+            person = Person.builder()
+                    .id(findFreeId())
+                    .guid(guid)
+                    .username(username)
+                    .name(name)
+                    .email(email)
+                    .phoneNumber(phoneNumber)
+                    .active(active)
+                    .build();
         } else {
             person.setGuid(guid);
             person.setUsername(username);

@@ -16,10 +16,18 @@
 
 package no.dusken.momus.model;
 
+import lombok.*;
+
 import javax.persistence.*;
 import java.time.ZonedDateTime;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = {"id"})
+@ToString(of = {"id", "article", "savedDate"})
+@Builder(toBuilder = true)
 public class ArticleRevision {
 
     @Id
@@ -37,59 +45,4 @@ public class ArticleRevision {
     private ZonedDateTime savedDate;
 
     private boolean statusChanged;
-
-    public ArticleRevision() {}
-    
-    public ArticleRevision(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Article getArticle() {
-        return article;
-    }
-
-    public void setArticle(Article article) {
-        this.article = article;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public ArticleStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ArticleStatus status) {
-        this.status = status;
-    }
-
-    public ZonedDateTime getSavedDate() {
-        return savedDate;
-    }
-
-    public void setSavedDate(ZonedDateTime savedDate) {
-        this.savedDate = savedDate;
-    }
-
-    public boolean isStatusChanged() {
-        return statusChanged;
-    }
-
-    public void setStatusChanged(boolean statusChanged) {
-        this.statusChanged = statusChanged;
-    }
-
-    @Override
-    public String toString() {
-        return "ArticleRevision(id=" + this.id + ",article=" + this.article.getId() + ")";
-    }
 }

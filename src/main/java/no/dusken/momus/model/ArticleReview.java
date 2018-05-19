@@ -16,12 +16,20 @@
 
 package no.dusken.momus.model;
 
+import lombok.*;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = {"id"})
+@ToString(of = {"id", "name", "color"})
+@Builder(toBuilder = true)
 public class ArticleReview {
 
     @Id
@@ -31,58 +39,4 @@ public class ArticleReview {
     private String name;
 
     private String color;
-
-    public ArticleReview() {
-    }
-
-    public ArticleReview(Long id, String name, String color) {
-        this(name, color);
-        this.id = id;
-    }
-
-    public ArticleReview(String name, String color) {
-        this.name = name;
-        this.color = color;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getColor() { return color; }
-
-    public void setColor(String color) { this.color = color; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ArticleReview that = (ArticleReview) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
-
-    @Override
-    public String toString() {
-        return "ArticleReview{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }
