@@ -31,15 +31,10 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"id"})
-@ToString(of = {"id", "name", "section", "type", "status"})
+@EqualsAndHashCode(of = "name", callSuper = true)
+@ToString(of = {"name", "section", "type", "status"}, callSuper = true)
 @Builder(toBuilder = true)
-public class Article {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Article extends AbstractEntity {
     private String name;
 
     @JsonIgnore

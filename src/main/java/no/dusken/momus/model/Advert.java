@@ -23,15 +23,10 @@ import javax.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id"})
-@ToString(of = {"id", "name"})
+@EqualsAndHashCode(of = "name", callSuper = true)
+@ToString(of = {"name"}, callSuper = true)
 @Builder(toBuilder = true)
-public class Advert {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Advert extends AbstractEntity {
     private String name;
 
     private String comment;

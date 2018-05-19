@@ -27,10 +27,10 @@ import javax.persistence.Id;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"id"})
-@ToString(of = {"id", "name"})
+@EqualsAndHashCode(of = "name", callSuper = true)
+@ToString(of = {"name"}, callSuper = true)
 @Builder(toBuilder = true)
-public class ArticleType {
+public class ArticleType extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

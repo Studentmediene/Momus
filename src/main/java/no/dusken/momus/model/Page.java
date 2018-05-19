@@ -26,15 +26,10 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"id"})
-@ToString(of = {"id", "pageNr", "publication"})
+@EqualsAndHashCode(of = "pageNr", callSuper = true)
+@ToString(of = {"pageNr", "publication"}, callSuper = true)
 @Builder(toBuilder = true)
-public class Page implements Comparable<Page>, Comparator<Page>{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Page extends AbstractEntity implements Comparable<Page>, Comparator<Page>{
     private int pageNr;
     private String note;
     private boolean advertisement;

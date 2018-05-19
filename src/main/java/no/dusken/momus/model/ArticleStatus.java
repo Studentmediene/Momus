@@ -27,14 +27,10 @@ import javax.persistence.Id;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"id"})
-@ToString(of = {"id", "name", "color"})
+@EqualsAndHashCode(of = "name", callSuper = true)
+@ToString(of = {"name", "color"}, callSuper = true)
 @Builder(toBuilder = true)
-public class ArticleStatus {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class ArticleStatus extends AbstractEntity {
     private String name;
     private String color;
     private int statusOrder;

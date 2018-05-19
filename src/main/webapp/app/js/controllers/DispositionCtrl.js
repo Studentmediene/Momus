@@ -273,7 +273,7 @@ angular.module('momusApp.controllers')
         function newPages(newPageAt, numNewPages){
             const pages = Array.from(new Array(numNewPages), (_, i) => ({
                     page_nr: newPageAt + i + 1,
-                    publication: vm.publication.id,
+                    publication: vm.publication,
                     layout_status: getLayoutStatusByName("Ukjent")
                 })
             );

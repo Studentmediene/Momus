@@ -28,15 +28,10 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"id"})
-@ToString(of = {"id", "name", "releaseDate"})
+@EqualsAndHashCode(of = "name", callSuper = true)
+@ToString(of = {"name", "releaseDate"}, callSuper = true)
 @Builder(toBuilder = true)
-public class Publication {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Publication extends AbstractEntity {
     private String name;
 
     private LocalDate releaseDate;

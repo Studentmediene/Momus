@@ -25,15 +25,10 @@ import java.time.ZonedDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"id"})
-@ToString(of = {"id", "article", "savedDate"})
+@EqualsAndHashCode(of = "savedDate", callSuper = true)
+@ToString(of = {"article", "savedDate"}, callSuper = true)
 @Builder(toBuilder = true)
-public class ArticleRevision {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class ArticleRevision extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Article article;
 

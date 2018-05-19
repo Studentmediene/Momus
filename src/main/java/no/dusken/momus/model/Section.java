@@ -28,15 +28,10 @@ import javax.persistence.Id;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"id"})
-@ToString(of = {"id", "name", "color"})
+@EqualsAndHashCode(callSuper = true)
+@ToString(of = {"name", "color"}, callSuper = true)
 @Builder(toBuilder = true)
-public class Section {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Section extends AbstractEntity {
     private String name;
     private String color;
     private boolean deleted;
