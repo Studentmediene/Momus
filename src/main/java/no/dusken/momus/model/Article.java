@@ -17,6 +17,7 @@
 package no.dusken.momus.model;
 
 import lombok.*;
+import no.dusken.momus.service.ArticleService;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -94,6 +95,13 @@ public class Article {
     private String externalPhotographer;
 
     private boolean archived;
+
+    public void setContent(String content) {
+        this.content = content;
+        String rawContent = ArticleService.createRawContent(this);
+        this.setRawcontent(rawContent);
+        this.setContentLength(rawContent.length());
+    }
 
 
 }
