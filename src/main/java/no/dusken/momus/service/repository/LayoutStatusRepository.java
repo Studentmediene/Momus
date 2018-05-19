@@ -22,5 +22,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LayoutStatusRepository extends JpaRepository<LayoutStatus, Long>{
-    public LayoutStatus findByName(String name);
+    LayoutStatus findByName(String name);
 }

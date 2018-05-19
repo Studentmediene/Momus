@@ -24,10 +24,10 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-/**
+/*
  * A class that generates IndesignExports in their weird XML format.
  * It uses \r\n line endings because that's how InDesign wants it.
- */
+*/
 @Slf4j
 public class IndesignGenerator {
     final Map<String, String> replacements = new LinkedHashMap<>();

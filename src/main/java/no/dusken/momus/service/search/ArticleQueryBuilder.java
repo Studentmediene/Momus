@@ -45,7 +45,7 @@ public class ArticleQueryBuilder {
 
     public ArticleQuery buildQuery(ArticleSearchParams search) {
         List<String> conditions = new ArrayList<>();
-        String fullQuery = "";
+        String fullQuery;
         Map<String, Object> queryParams = new HashMap<>();
 
         if (search.getFree() != null && search.getFree().length() > 0) {

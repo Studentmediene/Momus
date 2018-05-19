@@ -85,7 +85,7 @@ public class GoogleDriveService {
         HttpTransport httpTransport;
         java.io.File keyFile;
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-        List<String> scopes = Arrays.asList("https://www.googleapis.com/auth/drive"); // We want full access
+        List<String> scopes = Collections.singletonList("https://www.googleapis.com/auth/drive"); // We want full access
 
 
         try {

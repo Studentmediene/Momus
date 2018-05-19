@@ -32,8 +32,8 @@ public class GoogleDocsTextConverter {
 
     Pattern body = Pattern.compile("<body.*?>(.*)</body>");
     Pattern css = Pattern.compile("<style type=\"text/css\">(.*)</style>");
-    Pattern italicStyleName = Pattern.compile("\\.([A-Za-z][^{]*?)\\{[^}]*font-style:italic[^}]*\\}");
-    Pattern boldStyleName = Pattern.compile("\\.([A-Za-z][^{]*?)\\{[^}]*font-weight:700[^}]*\\}");
+    Pattern italicStyleName = Pattern.compile("\\.([A-Za-z][^{]*?)\\{[^}]*font-style:italic[^}]*}");
+    Pattern boldStyleName = Pattern.compile("\\.([A-Za-z][^{]*?)\\{[^}]*font-weight:700[^}]*}");
 
 
     Pattern aTags = Pattern.compile("<a[^>]*?></a>");
@@ -105,7 +105,7 @@ public class GoogleDocsTextConverter {
     }
 
     private ArrayList<Pattern> initTitles(){
-        ArrayList<Pattern> hTags = new ArrayList<Pattern>();
+        ArrayList<Pattern> hTags = new ArrayList<>();
         for(int i=1; i<5; i++){
             hTags.add(Pattern.compile("<h" + i + " [^>]*>"));
         }
@@ -125,7 +125,7 @@ public class GoogleDocsTextConverter {
         Matcher boldMatcher = boldStyleName.matcher(css);
 
         int start = 0;
-        ArrayList<Pattern> boldClasses = new ArrayList<Pattern>();
+        ArrayList<Pattern> boldClasses = new ArrayList<>();
         while(boldMatcher.find(start)) {
             boldClasses.add(Pattern.compile("<span class=\"[^\"]*" + boldMatcher.group(1) + "[^\"]*\">(.*?)</span>"));
             start = boldMatcher.start() + 1;

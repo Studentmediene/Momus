@@ -24,12 +24,12 @@ import java.util.List;
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
-    public List<Article> findByPublicationId(Long id);
+    List<Article> findByPublicationId(Long id);
 
-    public List<Article> findByGoogleDriveIdIn(Iterable<String> ids);
+    List<Article> findByGoogleDriveIdIn(Iterable<String> ids);
 
-    public int countByStatusIdAndPublicationId(Long articleStatus, Long id);
+    int countByStatusIdAndPublicationId(Long articleStatus, Long id);
 
-    public int countByReviewIdAndPublicationId(Long articleStatus, Long id);
+    int countByReviewIdAndPublicationId(Long articleStatus, Long id);
 
 }

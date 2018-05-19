@@ -67,8 +67,8 @@ public class PublicationService {
 
     /**
      * Generates a string containing the people who have contributed to a publication
-     * @param pubId
-     * @return
+     * @param pubId Id of the pulication to generate colophon from
+     * @return The generated colophon
      */
     public String generateColophon(Long pubId){
         List<Article> articles = articleRepository.findByPublicationId(pubId);
