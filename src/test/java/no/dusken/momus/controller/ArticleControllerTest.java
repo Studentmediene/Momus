@@ -125,18 +125,22 @@ public class ArticleControllerTest extends AbstractControllerTest {
     public void testGetArticleRevisionComparison() throws Exception {
         ArticleStatus status1 = articleStatusRepository.saveAndFlush(ArticleStatus.builder().name("Ukjent").build());
         ArticleStatus status2 = articleStatusRepository.saveAndFlush(ArticleStatus.builder().name("Planlagt").build());
-        Article article = new Article();
-        article.setName("Artikkel");
-        article.setContent("Innhold");
-        article.setStatus(status1);
-        article.setJournalists(new HashSet<>());
-        article.setPhotographers(new HashSet<>());
+        Article article = Article.builder()
+                .name("Artikkel")
+                .content("Innhold")
+                .status(status1)
+                .journalists(new HashSet<>())
+                .photographers(new HashSet<>())
+                .build();
         article = articleService.saveArticle(article);
-        Article updatedArticle = Article.builder().id(article.getId()).build();
-        updatedArticle.setContent("Nytt innhold");
+
+        Article updatedArticle = Article.builder()
+                .content("Nytt innhold")
+                .name("Artikkel")
+                .status(status2)
+                .build();
+        updatedArticle.setId(article.getId());
         article = articleService.updateArticleContent(updatedArticle);
-        updatedArticle.setName("Artikkel");
-        updatedArticle.setStatus(status2);
         articleService.updateArticleMetadata(article.getId(), updatedArticle);
 
         List<ArticleRevision> revisions = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(article.getId());

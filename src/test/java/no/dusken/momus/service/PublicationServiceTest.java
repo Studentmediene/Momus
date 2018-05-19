@@ -62,13 +62,19 @@ public class PublicationServiceTest extends AbstractServiceTest {
 
     @Before
     public void before() {
-        publication1 = Publication.builder().id(1L).name("DUSKEN1").build();
-        publication2 = Publication.builder().id(2L).name("DUSKEN2").build();
-        publication3 = Publication.builder().id(3L).name("DUSKEN3").build();
+        publication1 = Publication.builder().name("DUSKEN1").build();
+        publication1.setId(1L);
+        publication2 = Publication.builder().name("DUSKEN2").build();
+        publication2.setId(2L);
+        publication3 = Publication.builder().name("DUSKEN3").build();
+        publication3.setId(3L);
 
-        page1 = Page.builder().id(1L).pageNr(1).publication(publication1).build();
-        page2 = Page.builder().id(2L).pageNr(2).publication(publication1).build();
-        page3 = Page.builder().id(3L).pageNr(2).publication(publication1).build();
+        page1 = Page.builder().pageNr(1).publication(publication1).build();
+        page1.setId(0L);
+        page2 = Page.builder().pageNr(2).publication(publication1).build();
+        page2.setId(1L);
+        page3 = Page.builder().pageNr(2).publication(publication1).build();
+        page3.setId(2L);
     }
 
     /**
@@ -124,8 +130,8 @@ public class PublicationServiceTest extends AbstractServiceTest {
     @Test
     public void testSaveTrailingPages() {
         final List<Page> pages = new ArrayList<>(Arrays.asList(page1, page2, page3));
-        Page newPage = Page.builder().id(4L).publication(publication1).pageNr(2).build();
-        Page otherNewPage = Page.builder().id(5L).pageNr(3).publication(publication1).build();
+        Page newPage = Page.builder().publication(publication1).pageNr(2).build();
+        Page otherNewPage = Page.builder().pageNr(3).publication(publication1).build();
 
         List<Page> newPages = Arrays.asList(newPage, otherNewPage);
 
@@ -220,22 +226,21 @@ public class PublicationServiceTest extends AbstractServiceTest {
 
     @Test
     public void testGenerateColophon() {
-        Article art = Article.builder().id(0L).build();
-        art.setJournalists(new HashSet<>(Arrays.asList(
-                Person.builder().id(0L).name("Eiv").build(),
-                Person.builder().id(1L).name("Chr").build()
-        )));
-        art.setUseIllustration(false);
-        art.setPhotographers(new HashSet<>(Arrays.asList(
-                Person.builder().id(2L).name("Don").build(),
-                Person.builder().id(3L).name("Oba").build()
-        )));
-        Article art2 = Article.builder().id(1L).build();
-        art2.setUseIllustration(true);
-        art2.setJournalists(new HashSet<>());
-        art2.setPhotographers(new HashSet<>(Collections.singletonList(
-                Person.builder().id(4L).name("Ill").build()
-        )));
+        Article art = Article.builder()
+                .useIllustration(false)
+                .journalists(new HashSet<>(Arrays.asList(
+                        Person.builder().id(0L).name("Eiv").build(),
+                        Person.builder().id(1L).name("Chr").build())))
+                .photographers(new HashSet<>(Arrays.asList(
+                        Person.builder().id(2L).name("Don").build(),
+                        Person.builder().id(3L).name("Oba").build())))
+                .build();
+
+        Article art2 = Article.builder()
+                .useIllustration(true)
+                .journalists(new HashSet<>())
+                .photographers(Collections.singleton(Person.builder().id(4L).name("Ill").build()))
+                .build();
 
         doReturn(Arrays.asList(art, art2)).when(articleRepository).findByPublicationId(publication1.getId());
 

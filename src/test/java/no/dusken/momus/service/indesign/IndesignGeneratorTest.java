@@ -25,9 +25,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -43,8 +41,6 @@ public class IndesignGeneratorTest extends AbstractServiceTest {
 
     @Test
     public void testGenerateFromArticle() {
-        Article article = Article.builder().id(1L).build();
-
         /*
         The content should test all kind of elements and some edge cases
         Now we test for:
@@ -52,27 +48,21 @@ public class IndesignGeneratorTest extends AbstractServiceTest {
             extra lines at the end of a tag
             a new line inside the html
          */
-
-        article.setContent("<h1>Tittel</h1><h2>Ingress<br></h2><h3>En mellomtittel</h3><p>Et avsnitt</p>\n" +
-                "<p>Enda et avsnitt og dette avsnittet har<br>linjeskift midt inni!<br></p>" +
-                "<h3>En mellomtittel</h3><p>Med et nytt avsnitt</p><ul><li>Med en punktliste</li><li>element 2</li><li>element 3</li></ul>" +
-                "<p>et nytt avsnitt</p><ol><li>Med nummerert liste</li><li>element 2</li></ol>" +
-                "<blockquote>og så et kult sitat</blockquote>" +
-                "<p>og til slutt et avsnitt med <i>utheving</i> og <b>fet skrift</b>, kult?<br></p>");
-        article.setName("Min tittel");
-
-        Publication pub = new Publication();
-        pub.setName("TestPub");
-        article.setPublication(pub);
-
-        Set<Person> journalists = new HashSet<>();
-        journalists.add(Person.builder().id(0L).name("Mats Matsesen").build());
-        journalists.add(Person.builder().id(1L).name("Kåre Kål").build());
-        article.setJournalists(journalists);
-
-        Set<Person> photographers = new HashSet<>();
-        photographers.add(Person.builder().name("Einar Einarsen").build());
-        article.setPhotographers(photographers);
+        Article article = Article.builder()
+                .name("Min tittel")
+                .content("<h1>Tittel</h1><h2>Ingress<br></h2><h3>En mellomtittel</h3><p>Et avsnitt</p>\n" +
+                        "<p>Enda et avsnitt og dette avsnittet har<br>linjeskift midt inni!<br></p>" +
+                        "<h3>En mellomtittel</h3><p>Med et nytt avsnitt</p><ul><li>Med en punktliste</li><li>element 2</li><li>element 3</li></ul>" +
+                        "<p>et nytt avsnitt</p><ol><li>Med nummerert liste</li><li>element 2</li></ol>" +
+                        "<blockquote>og så et kult sitat</blockquote>" +
+                        "<p>og til slutt et avsnitt med <i>utheving</i> og <b>fet skrift</b>, kult?<br></p>")
+                .journalists(new HashSet<>(Arrays.asList(
+                        Person.builder().id(0L).name("Mats Matsesen").build(),
+                        Person.builder().id(1L).name("Kåre Kål").build()
+                )))
+                .photographers(Collections.singleton(Person.builder().name("Einar Einarsen").build()))
+                .publication(Publication.builder().name("TestPub").build())
+                .build();
 
         String expected = "<UNICODE-WIN>\r\n" +
                 "<Version:7.5>\r\n" +
@@ -102,22 +92,16 @@ public class IndesignGeneratorTest extends AbstractServiceTest {
 
     @Test
     public void changesToIllustratorNoJournalists() {
-        Article article = Article.builder().id(1L).build();
-
-        Publication pub = new Publication();
-        pub.setName("TestPub");
-        article.setPublication(pub);
-
-        article.setContent("");
-
-        article.setJournalists(new HashSet<>());
-
-        Set<Person> photographers = new HashSet<>();
-        photographers.add(Person.builder().id(0L).name("Einar Einarsen").build());
-        photographers.add(Person.builder().id(1L).name("Roy Royce").build());
-        article.setPhotographers(photographers);
-
-        article.setUseIllustration(true);
+        Article article = Article.builder()
+                .content("")
+                .useIllustration(true)
+                .journalists(new HashSet<>())
+                .photographers(new HashSet<>(Arrays.asList(
+                        Person.builder().id(0L).name("Einar Einarsen").build(),
+                        Person.builder().id(1L).name("Roy Royce").build()
+                )))
+                .publication(Publication.builder().name("TestPub").build())
+                .build();
 
         String expected = "<UNICODE-WIN>\r\n" +
                 "<Version:7.5>\r\n" +
@@ -130,15 +114,12 @@ public class IndesignGeneratorTest extends AbstractServiceTest {
 
     @Test
     public void testImageTextIsAdded() {
-        Article article = Article.builder().id(1L).build();
-        article.setContent("<h1>Min kule tittel!</h1><p>Ingen bildetekst her, plz!</p>");
-
-        article.setImageText("Bilde 1 er tatt av Kåre, viser John.\nBilde med grønn fyr viser en grønn fyr.");
-
-        article.setJournalists(new HashSet<>());
-        Set<Person> photographers = new HashSet<>();
-        photographers.add(Person.builder().name("Einar Einarsen").build());
-        article.setPhotographers(photographers);
+        Article article = Article.builder()
+                .content("<h1>Min kule tittel!</h1><p>Ingen bildetekst her, plz!</p>")
+                .imageText("Bilde 1 er tatt av Kåre, viser John.\nBilde med grønn fyr viser en grønn fyr.")
+                .journalists(new HashSet<>())
+                .photographers(Collections.singleton(Person.builder().name("Einar Einarsen").build()))
+                .build();
 
         String expected = "<UNICODE-WIN>\r\n" +
                 "<Version:7.5>\r\n" +
@@ -156,16 +137,13 @@ public class IndesignGeneratorTest extends AbstractServiceTest {
 
     @Test
     public void testExternalAuthors() {
-        Article article = Article.builder().id(1L).build();
-        article.setContent("<h1>Min kule tittel!</h1>");
-
-        article.setJournalists(new HashSet<>());
-        Set<Person> photographers = new HashSet<>();
-        photographers.add(Person.builder().name("Einar Einarsen").build());
-        article.setPhotographers(photographers);
-
-        article.setExternalAuthor("Ekstern Eksternsen");
-        article.setExternalPhotographer("Fotogjengen");
+        Article article = Article.builder()
+                .content("<h1>Min kule tittel!</h1>")
+                .journalists(new HashSet<>())
+                .photographers(Collections.singleton(Person.builder().name("Einar Einarsen").build()))
+                .externalAuthor("Ekstern Eksternsen")
+                .externalPhotographer("Fotogjengen")
+                .build();
 
         String expected = "<UNICODE-WIN>\r\n" +
                 "<Version:7.5>\r\n" +
