@@ -28,7 +28,7 @@ import javax.persistence.Id;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(of = {}, callSuper = true)
 @ToString(of = {"name", "color"}, callSuper = true)
 @Builder(toBuilder = true)
 public class Section extends AbstractEntity {

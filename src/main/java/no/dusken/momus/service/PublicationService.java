@@ -156,24 +156,6 @@ public class PublicationService {
         return pageRepository.findByPublicationIdOrderByPageNrAsc(publication.getId());
     }
 
-    public List<Page> updatePage(Page page){
-        List<Page> pages = pageRepository.findByPublicationIdOrderByPageNrAsc(page.getPublication().getId());
-        pages.remove(page); // Make sure we don't change the page of the one to be saved
-        Collections.sort(pages);
-
-
-        for(int i = 0; i < page.getPageNr()-1; i++)
-            pages.get(i).setPageNr(i+1);
-        for(int i = page.getPageNr()-1; i < pages.size(); i++)
-            pages.get(i).setPageNr(i+2);
-
-        pageRepository.save(pages);
-
-        pageRepository.saveAndFlush(page);
-
-        return pageRepository.findByPublicationIdOrderByPageNrAsc(page.getPublication().getId());
-    }
-
 	public Page updatePageMeta(Page page){
 		Page existing = pageRepository.findOne(page.getId());
 		

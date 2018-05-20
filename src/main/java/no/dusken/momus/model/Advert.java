@@ -23,7 +23,7 @@ import javax.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "name", callSuper = true)
+@EqualsAndHashCode(of = {}, callSuper = true)
 @ToString(of = {"name"}, callSuper = true)
 @Builder(toBuilder = true)
 public class Advert extends AbstractEntity {

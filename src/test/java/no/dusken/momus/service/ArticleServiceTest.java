@@ -91,22 +91,32 @@ public class ArticleServiceTest extends AbstractServiceTest {
         publication1 = Publication.builder()
                 .name("Pub1")
                 .build();
+        publication1.setId(0L);
 
         publication2 = Publication.builder()
                 .name("Pub2")
                 .build();
+        publication2.setId(1L);
 
         articleStatus1 = ArticleStatus.builder().name("Skrives").build();
+        articleStatus1.setId(0L);
         articleStatus2 = ArticleStatus.builder().name("Til korrektur").build();
+        articleStatus2.setId(1L);
 
         articleReview1 = ArticleReview.builder().name("Ukjent").build();
+        articleReview1.setId(0L);
         articleReview2 = ArticleReview.builder().name("Ferdig").build();
+        articleReview2.setId(1L);
 
         articleType1 = ArticleType.builder().name("Anmeldelse").build();
+        articleType1.setId(0L);
         articleType2 = ArticleType.builder().name("Reportasje").build();
+        articleType2.setId(1L);
 
         section1 = Section.builder().name("Musikk").build();
+        section1.setId(0L);
         section2 = Section.builder().name("Forskning").build();
+        section2.setId(1L);
 
         article1 = Article.builder()
                 .name("Artikkel 1")

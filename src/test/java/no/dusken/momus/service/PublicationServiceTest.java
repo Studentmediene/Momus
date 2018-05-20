@@ -154,24 +154,6 @@ public class PublicationServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void testUpdatePage() {
-        doReturn(null).when(pageRepository).saveAndFlush(any(Page.class));
-        doReturn(null).when(pageRepository).save(anyList());
-        doReturn(new ArrayList<>(Arrays.asList(page1, page2, page3))
-            .stream()
-            .sorted()
-            .collect(Collectors.toList())).when(pageRepository).findByPublicationIdOrderByPageNrAsc(publication1.getId());
-        
-        page3.setPageNr(2);
-
-        publicationService.updatePage(page3);
-
-        assertEquals(1, page1.getPageNr());
-        assertEquals(2, page3.getPageNr());
-        assertEquals(3, page2.getPageNr());
-    }
-
-    @Test
     public void testUpdateTrailingPages(){
         doReturn(null).when(pageRepository).save(anyList());
         doReturn(new ArrayList<>(Arrays.asList(page1, page2, page3))

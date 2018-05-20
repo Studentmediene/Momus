@@ -25,7 +25,7 @@ import java.time.ZonedDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "savedDate", callSuper = true)
+@EqualsAndHashCode(of = {}, callSuper = true)
 @ToString(of = {"article", "savedDate"}, callSuper = true)
 @Builder(toBuilder = true)
 public class ArticleRevision extends AbstractEntity {

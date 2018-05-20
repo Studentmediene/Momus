@@ -26,7 +26,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "pageNr", callSuper = true)
+@EqualsAndHashCode(of = {}, callSuper = true)
 @ToString(of = {"pageNr", "publication"}, callSuper = true)
 @Builder(toBuilder = true)
 public class Page extends AbstractEntity implements Comparable<Page>, Comparator<Page>{

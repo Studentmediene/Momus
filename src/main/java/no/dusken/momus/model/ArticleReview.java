@@ -27,7 +27,7 @@ import javax.persistence.Id;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "name", callSuper = true)
+@EqualsAndHashCode(of = {}, callSuper = true)
 @ToString(of = {"name", "color"}, callSuper = true)
 @Builder(toBuilder = true)
 public class ArticleReview extends AbstractEntity {

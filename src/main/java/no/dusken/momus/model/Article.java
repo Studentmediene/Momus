@@ -31,7 +31,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "name", callSuper = true)
+@EqualsAndHashCode(of = {}, callSuper = true)
 @ToString(of = {"name", "section", "type", "status"}, callSuper = true)
 @Builder(toBuilder = true)
 public class Article extends AbstractEntity {

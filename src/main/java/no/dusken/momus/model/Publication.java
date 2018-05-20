@@ -28,7 +28,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "name", callSuper = true)
+@EqualsAndHashCode(of = {}, callSuper = true)
 @ToString(of = {"name", "releaseDate"}, callSuper = true)
 @Builder(toBuilder = true)
 public class Publication extends AbstractEntity {

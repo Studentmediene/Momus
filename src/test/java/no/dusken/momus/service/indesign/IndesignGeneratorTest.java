@@ -133,8 +133,6 @@ public class IndesignGeneratorTest extends AbstractServiceTest {
         assertEquals(expected, result.getContent());
     }
 
-
-
     @Test
     public void testExternalAuthors() {
         Article article = Article.builder()
