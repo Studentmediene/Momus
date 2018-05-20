@@ -8,5 +8,8 @@ public enum Action {
     SAVE_PAGE,
     DELETE_PAGE,
     UPDATE_PAGE_METADATA,
-    UPDATE_PAGE_NR
+    UPDATE_PAGE_NR,
+    SAVE,
+    UPDATE,
+    DELETE
 }

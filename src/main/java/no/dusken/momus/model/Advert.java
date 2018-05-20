@@ -15,9 +15,12 @@
  */
 
 package no.dusken.momus.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Arrays;
+import java.util.List;
 
 @Entity
 @Data
@@ -26,8 +29,17 @@ import javax.persistence.*;
 @EqualsAndHashCode(of = {}, callSuper = true)
 @ToString(of = {"name"}, callSuper = true)
 @Builder(toBuilder = true)
-public class Advert extends AbstractEntity {
+public class Advert extends AbstractEntity implements Messageable {
     private String name;
 
     private String comment;
+
+    @Override
+    @JsonIgnore
+    public List<String> getDestinations() {
+        return Arrays.asList(
+                "/ws/adverts",
+                "/ws/adverts/" + id
+        );
+    }
 }

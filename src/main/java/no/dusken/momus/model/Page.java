@@ -16,11 +16,11 @@
 
 package no.dusken.momus.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Comparator;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Data
@@ -29,7 +29,7 @@ import java.util.Set;
 @EqualsAndHashCode(of = {}, callSuper = true)
 @ToString(of = {"pageNr", "publication"}, callSuper = true)
 @Builder(toBuilder = true)
-public class Page extends AbstractEntity implements Comparable<Page>, Comparator<Page>{
+public class Page extends AbstractEntity implements Comparable<Page>, Comparator<Page>, Messageable {
     private int pageNr;
     private String note;
     private boolean advertisement;
@@ -57,5 +57,13 @@ public class Page extends AbstractEntity implements Comparable<Page>, Comparator
     @Override
     public int compare(Page page, Page t1) {
         return page.compareTo(t1);
+    }
+
+    @Override
+    @JsonIgnore
+    public List<String> getDestinations() {
+        return Collections.singletonList(
+                "/ws/publications/" + publication.getId() + "/pages"
+        );
     }
 }

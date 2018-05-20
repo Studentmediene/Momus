@@ -6,6 +6,7 @@ import javax.servlet.ServletRegistration;
 
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
+import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -20,6 +21,7 @@ public class WebInit implements WebApplicationInitializer {
         config.register(ApplicationConfig.class);
         
         servletContext.addListener(new ContextLoaderListener(config));
+        servletContext.addListener(new RequestContextListener());
         ServletRegistration.Dynamic dispatcher = 
             servletContext.addServlet("momusapi", new DispatcherServlet());
 

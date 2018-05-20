@@ -25,6 +25,8 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.ZonedDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -34,7 +36,7 @@ import java.util.Set;
 @EqualsAndHashCode(of = {}, callSuper = true)
 @ToString(of = {"name", "section", "type", "status"}, callSuper = true)
 @Builder(toBuilder = true)
-public class Article extends AbstractEntity {
+public class Article extends AbstractEntity implements Messageable {
     private String name;
 
     @JsonIgnore
@@ -96,5 +98,15 @@ public class Article extends AbstractEntity {
         String rawContent = ArticleService.createRawContent(this);
         this.setRawcontent(rawContent);
         this.setContentLength(rawContent.length());
+    }
+
+    @Override
+    @JsonIgnore
+    public List<String> getDestinations() {
+        return Arrays.asList(
+                "/ws/articles/",
+                "/ws/articles/" + id,
+                "/ws/publications/" + publication.getId() + "/articles"
+        );
     }
 }
