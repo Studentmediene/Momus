@@ -65,6 +65,7 @@
         <javax-servlet.version>3.1.0</javax-servlet.version>
         <jetty.version>9.4.6.v20170531</jetty.version>
         <maven-war-plugin.version>3.1.0</maven-war-plugin.version>
+        <lombok.version>1.16.20</lombok.version>
         
         <junit.version>4.12</junit.version>
         <mockito-core.version>2.8.47</mockito-core.version>
@@ -288,6 +289,14 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>${javax-servlet.version}</version>
+        </dependency>
+
+        <!-- For data classes and reduction of boilerplate, mainly in models -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

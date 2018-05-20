@@ -19,13 +19,13 @@ public class WebSocketController {
 
     @MessageMapping("/disposition/{id}/change")
     @SendTo("/ws/disposition/{id}/changed")
-    public OutputMessage sendChange(Message message, @DestinationVariable Long id) throws Exception {
+    public OutputMessage sendChange(Message message, @DestinationVariable Long id) {
         return new OutputMessage(message.getPageId(), message.getArticleId(), message.getAdvertId(), message.getAction(), message.getEditedField(), message.getDate());
     }
 
     @MessageMapping("/disposition/{id}/user")
     @SendTo("/ws/disposition/{id}/users")
-    public UserEventMessage sendUserEvent(UserEventMessage message, @DestinationVariable Long id) throws Exception {
+    public UserEventMessage sendUserEvent(UserEventMessage message, @DestinationVariable Long id) {
         return message;
     }
 }

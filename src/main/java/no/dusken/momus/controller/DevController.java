@@ -23,8 +23,6 @@ import no.dusken.momus.service.ArticleService;
 import no.dusken.momus.service.PublicationService;
 import no.dusken.momus.service.drive.GoogleDriveService;
 import no.dusken.momus.service.repository.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +37,6 @@ import java.util.*;
 @RestController
 @RequestMapping("/dev")
 public class DevController {
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private SectionRepository sectionRepository;
 

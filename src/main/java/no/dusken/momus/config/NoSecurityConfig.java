@@ -1,7 +1,6 @@
 package no.dusken.momus.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -13,13 +12,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Profile("noAuth")
+@Slf4j
 public class NoSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        logger.info("Auth disabled, not setting up security");
+        log.info("Auth disabled, not setting up security");
         http
                 .csrf().disable()
                 .authorizeRequests()

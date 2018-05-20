@@ -17,13 +17,12 @@
 package no.dusken.momus.service;
 
 
+import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.LayoutStatusRepository;
 import no.dusken.momus.service.repository.PageRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,10 +30,8 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Service
+@Slf4j
 public class PublicationService {
-
-    Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private PublicationRepository publicationRepository;
 
@@ -57,21 +54,21 @@ public class PublicationService {
             newPage.setLayoutStatus(layoutStatusRepository.findByName("Ukjent"));
             pageRepository.save(newPage);
         }
-        logger.info("Created new publication with data: {}", newPublication);
+        log.info("Created new publication with data: {}", newPublication);
 
         return newPublication;
     }
 
     public Publication updatePublication(Publication publication){
-        logger.info("Updated publication {} with data: {}", publication.getName(), publication);
+        log.info("Updated publication {} with data: {}", publication.getName(), publication);
 
         return publicationRepository.saveAndFlush(publication);
     }
 
     /**
      * Generates a string containing the people who have contributed to a publication
-     * @param pubId
-     * @return
+     * @param pubId Id of the pulication to generate colophon from
+     * @return The generated colophon
      */
     public String generateColophon(Long pubId){
         List<Article> articles = articleRepository.findByPublicationId(pubId);
@@ -82,7 +79,7 @@ public class PublicationService {
 
         for(Article a : articles){
             journalists.addAll(a.getJournalists());
-            if(a.getUseIllustration()){
+            if(a.isUseIllustration()){
                 illustrators.addAll(a.getPhotographers());
             }else{
                 photographers.addAll(a.getPhotographers());
@@ -157,24 +154,6 @@ public class PublicationService {
         pageRepository.save(pages);
         
         return pageRepository.findByPublicationIdOrderByPageNrAsc(publication.getId());
-    }
-
-    public List<Page> updatePage(Page page){
-        List<Page> pages = pageRepository.findByPublicationIdOrderByPageNrAsc(page.getPublication().getId());
-        pages.remove(page); // Make sure we don't change the page of the one to be saved
-        Collections.sort(pages);
-
-
-        for(int i = 0; i < page.getPageNr()-1; i++)
-            pages.get(i).setPageNr(i+1);
-        for(int i = page.getPageNr()-1; i < pages.size(); i++)
-            pages.get(i).setPageNr(i+2);
-
-        pageRepository.save(pages);
-
-        pageRepository.saveAndFlush(page);
-
-        return pageRepository.findByPublicationIdOrderByPageNrAsc(page.getPublication().getId());
     }
 
 	public Page updatePageMeta(Page page){

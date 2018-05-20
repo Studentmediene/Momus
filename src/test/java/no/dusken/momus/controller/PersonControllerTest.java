@@ -34,8 +34,24 @@ public class PersonControllerTest extends AbstractControllerTest {
     @Test
     public void getAllPersonsAfterAdd() throws Exception {
         performGetExpectOk("/person").andExpect(jsonPath("$.length()", is(0)));
-        Person eirik = new Person(1L, UUID.randomUUID(), "eirik", "Eirik", "e@smint.no", "0", true);
-        Person eivind = new Person(2L, UUID.randomUUID(), "eivind", "Eivind","ei@smint.no", "0", true);
+        Person eirik = Person.builder()
+                .id(1L)
+                .guid(UUID.randomUUID())
+                .username("eirik")
+                .name("Eirik")
+                .email("e@smint.no")
+                .phoneNumber("0")
+                .active(true)
+                .build();
+        Person eivind = Person.builder()
+                .id(2L)
+                .guid(UUID.randomUUID())
+                .username("eivind")
+                .name("Eivind")
+                .email("ei@smint.no")
+                .phoneNumber("0")
+                .active(true)
+                .build();
         List<Person> users = Arrays.asList(eirik, eivind);
         personRepository.save(users);
         personRepository.flush();
@@ -60,7 +76,7 @@ public class PersonControllerTest extends AbstractControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .param("section", "1"))
                 .andDo(print()).andExpect(status().isNotFound());
-        Section sport = new Section("Sport");
+        Section sport = Section.builder().name("Sport").build();
         sport = sectionRepository.saveAndFlush(sport);
         mockMvc.perform(patch("/person/me/favouritesection")
                 .accept(MediaType.APPLICATION_JSON)
