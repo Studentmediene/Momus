@@ -43,9 +43,9 @@ angular.module('momusApp.resources')
 
             // Need to apply the toJSON from the resource, since without it the object won't be serialized properly
             // The $resolved and $promise properties won't be stripped
-            const fixedTransform = obj => {
+            const fixedTransform = (obj, headers) => {
                 if(!obj) return obj;
-                const transformed = transform(obj);
+                const transformed = transform(obj, headers);
                 return {
                     ...transformed,
                     toJSON: obj.toJSON
