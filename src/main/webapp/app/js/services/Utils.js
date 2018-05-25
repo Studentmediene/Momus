@@ -60,6 +60,15 @@ angular.module('momusApp.services')
                 .join('')
         }
     })
+    .filter('toArray', function() {
+        return obj => Object.keys(obj).map(k => obj[k]);
+    })
+    .factory('toIdLookup', function() {
+        return list => list.reduce((lookup, item) => {
+            lookup[item.id] = item;
+            return lookup;
+        }, {})
+    })
     .factory('expandColorCode', function() {
         return color => "#" + color.split("#")[1].split("").map(x => x+x).join("");
     });

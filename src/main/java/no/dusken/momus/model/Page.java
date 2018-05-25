@@ -16,7 +16,10 @@
 
 package no.dusken.momus.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,26 +30,30 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = {}, callSuper = true)
-@ToString(of = {"pageNr", "publication"}, callSuper = true)
+@ToString(of = {"pageNr"}, callSuper = true)
 @Builder(toBuilder = true)
 public class Page extends AbstractEntity implements Comparable<Page>, Comparator<Page>, Messageable {
-    private int pageNr;
+    @JsonIgnore private int pageNr;
     private String note;
     private boolean advertisement;
     private boolean web;
     private boolean done;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(nullable = false, updatable = false) // Should not be able to change the publication of a page
     private Publication publication;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
+    @JsonIdentityReference(alwaysAsId=true)
     private Set<Article> articles;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
+    @JsonIdentityReference(alwaysAsId=true)
     private Set<Advert> adverts;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private LayoutStatus layoutStatus;
 
     @Override

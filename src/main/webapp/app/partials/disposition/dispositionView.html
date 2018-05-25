@@ -85,25 +85,28 @@
     </div>
 
     <div class="row d-table disposition-table" ng-style="vm.offsetDispositionTable()">
-        <div ng-model="vm.publication.pages" ui-sortable="vm.sortableOptions">
+        <div ng-model="vm.pageOrder" ui-sortable="vm.sortableOptions">
             <div
                 class="d-table-row"
-                ng-repeat="page in vm.publication.pages"
-                ng-init="vm.initPageScope(this)"
+                ng-repeat="pageId in vm.pageOrder"
+                ng-init="page = vm.pagesLookup[pageId]"
                 ng-class="{'page-reklame': page.advertisement, 'page-done': page.done}"
                 ui-sortable-selectable
             >
                 <!--Page number-->
-                <div class="d-table-cell handle" ng-style="vm.columnWidths.page_nr">{{page.page_nr}}</div>
+                <div class="d-table-cell handle" ng-style="vm.columnWidths.page_nr">{{$index + 1}}</div>
                 <!--Articles (edit mode)-->
                 <div class="d-table-cell" ng-style="{width: vm.articleWidth}" ng-show="editPage">
                     <div>
                         <b>Artikler</b>
                     </div>
-                    <id-select multiple class="pull-left" style="width: 90%;"
-                                items="vm.articles"
-                                target="page.articles"
-                                show="name">
+                    <id-select
+                            class="pull-left" style="width: 90%;"
+                            multiple
+                            use-ids
+                            items="vm.publication.articles"
+                            target="page.articles"
+                            show="name">
                     </id-select>
                     <div class="pull-right">
                         <button ng-click="vm.createArticle(page)" class="btn btn-success" uib-tooltip="Lag ny artikkel">
@@ -113,10 +116,14 @@
                     <div>
                         <b>Reklamer</b>
                     </div>
-                    <id-select multiple class="pull-left" style="width: 90%;"
-                                items="vm.adverts"
-                                target="page.adverts"
-                                show="name">
+                    <id-select
+                            class="pull-left" style="width: 90%;"
+                            multiple
+                            use-ids
+                            items="vm.adverts"
+                            target="page.adverts"
+                            show="name"
+                    >
                     </id-select>
                     <div class="pull-right">
                         <button ng-click="vm.createAdvert(page)" class="btn btn-warning" uib-tooltip="Lag ny reklame">
@@ -126,7 +133,11 @@
                 </div>
                 <!--Articles (view mode)-->
                 <div class="d-table-cell article-cell" ng-style="{width: vm.articleWidth}" ng-hide="editPage">
-                    <div class="d-table article-table" ng-repeat="article in page.articles" ng-init="vm.initArticleScope(this)">
+                    <div
+                            class="d-table article-table"
+                            ng-repeat="articleId in page.articles"
+                            ng-init="article = vm.articlesLookup[articleId]"
+                    >
                         <div class="d-table-row" ng-class="{'page-done': page.done}">
                             <!--Dropdown-arrow-->
                             <div class="d-table-cell" ng-style="vm.columnWidths.dropdown">
@@ -252,7 +263,12 @@
                         </div>
                     </div>
                     <!--Adverts-->
-                    <div class="d-table advert-table" ng-repeat="advert in page.adverts" ng-style="{'background-color':'#FFE96B'}" ng-init="vm.initAdvertScope(this)">
+                    <div
+                            class="d-table advert-table"
+                            ng-repeat="advertId in page.adverts"
+                            ng-style="{'background-color':'#FFE96B'}"
+                            ng-init="advert = vm.advertsLookup[advertId]"
+                    >
                       <div class="d-table-row">
                         <!--Dropdown-arrow-->
                         <div class="d-table-cell" ng-style="vm.columnWidths.dropdown">

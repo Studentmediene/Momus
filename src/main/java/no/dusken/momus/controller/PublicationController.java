@@ -16,9 +16,10 @@
 
 package no.dusken.momus.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import no.dusken.momus.exceptions.RestException;
+import no.dusken.momus.mapper.SerializationViews;
 import no.dusken.momus.model.LayoutStatus;
-import no.dusken.momus.model.Page;
 import no.dusken.momus.model.Publication;
 import no.dusken.momus.service.PublicationService;
 import no.dusken.momus.service.repository.LayoutStatusRepository;
@@ -44,12 +45,10 @@ public class PublicationController {
     private PublicationRepository publicationRepository;
 
     @Autowired
-    private PageRepository pageRepository;
-
-    @Autowired
     private LayoutStatusRepository layoutStatusRepository;
 
     @GetMapping
+    @JsonView(SerializationViews.Simple.class)
     public @ResponseBody List<Publication> getAllPublications(){
         return publicationRepository.findAll(new Sort(new Sort.Order(Sort.Direction.DESC, "releaseDate")));
     }
@@ -113,88 +112,5 @@ public class PublicationController {
     @GetMapping("/layoutstatuses")
     public @ResponseBody List<LayoutStatus> getLayoutStatuses(){
         return layoutStatusRepository.findAll();
-    }
-
-    @GetMapping("/{pubid}/pages")
-    public @ResponseBody List<Page> getPagesByPublication(@PathVariable Long pubid) {
-        return pageRepository.findByPublicationIdOrderByPageNrAsc(pubid);
-    }
-
-    @GetMapping("/{pubid}/pages/{pageid}")
-    public @ResponseBody Page getPage(@PathVariable Long pubid, @PathVariable Long pageid){
-        Page page = pageRepository.findOne(pageid);
-        if(page == null){
-            throw new RestException("Page with given id not found", HttpServletResponse.SC_NOT_FOUND);
-        }
-        return page;
-    }
-
-    @PostMapping("/{pubid}/pages")
-    public @ResponseBody List<Page> savePage(@PathVariable Long pubid, @RequestBody Page page){
-        return publicationService.savePage(page);
-    }
-
-    @PostMapping("/{pubid}/pages/list")
-    public @ResponseBody List<Page> savePage(@PathVariable Long pubid, @RequestBody List<Page> pages){
-        int startingPageNr = pages.get(0).getPageNr();
-        for(int i = 0; i < pages.size(); i++) {
-            Page page = pages.get(i);
-            if(page.getId() != null && pageRepository.findOne(page.getId()) == null){
-                throw new RestException("Page with given id already added", HttpServletResponse.SC_BAD_REQUEST);
-            }else if(page.getPageNr() != startingPageNr + i) {
-                throw new RestException("Pages not following each other", HttpServletResponse.SC_BAD_REQUEST);
-            }
-        }
-        return publicationService.saveTrailingPages(pages);
-    }
-
-    @PutMapping("/{pubid}/pages/list")
-    public @ResponseBody List<Page> updateMultiplePages(@PathVariable Long pubid, @RequestBody List<Page> pages){
-
-        // Check that all pages exist and that the pages are following each other
-        int startingPageNr = pages.get(0).getPageNr();
-        for(int i = 0; i < pages.size(); i++) {
-            Page page = pages.get(i);
-            if(pageRepository.findOne(page.getId()) == null){
-                throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
-            }else if(page.getPageNr() != startingPageNr + i) {
-                throw new RestException("Pages not following each other", HttpServletResponse.SC_BAD_REQUEST);
-            }
-        }
-
-        return publicationService.updateTrailingPages(pages);
-    }
-
-	@PatchMapping("/{pubid}/pages/{pageid}/metadata")
-	public @ResponseBody Page updatePageMeta(@RequestBody Page page, @PathVariable String pubid, @PathVariable Long pageid){
-		if(pageRepository.findOne(pageid) == null){
-			throw new RestException("Page with given id not found", HttpServletResponse.SC_NOT_FOUND);
-		}
-		return publicationService.updatePageMeta(page);
-    }
-
-    @DeleteMapping("/{pubid}/pages/{pageid}")
-    public @ResponseBody List<Page> deletePage(@PathVariable Long pubid, @PathVariable Long pageid){
-        Page page = pageRepository.findOne(pageid);
-        if(page == null){
-            throw new RestException("Page with given id not found", HttpServletResponse.SC_BAD_REQUEST);
-        }
-        return publicationService.deletePage(page);
-    }
-
-    @GetMapping("/{pubid}/pages/layoutstatuscounts")
-    public @ResponseBody Map<Long,Integer> getStatusCountsByPubId(@PathVariable Long pubid){
-        List<LayoutStatus> statuses = this.getLayoutStatuses();
-        Map<Long, Integer> map = new HashMap<>();
-        for (LayoutStatus status : statuses) {
-            map.put(status.getId(), this.getStatusCount(status.getName(), pubid));
-        }
-        return map;
-    }
-
-    @GetMapping("/{id}/pages/layoutstatuscounts/{status}")
-    public @ResponseBody int getStatusCount(@PathVariable String status, @PathVariable Long id){
-        Long statusId = layoutStatusRepository.findByName(status).getId();
-        return pageRepository.countByLayoutStatusIdAndPublicationId(statusId, id);
     }
 }

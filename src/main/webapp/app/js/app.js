@@ -38,15 +38,15 @@ angular.module('momusApp', [
         'ngCookies',
         'ui.sortable',
         'ui.sortable.multiselection',
-        'chart.js',
-        'ngStomp'
+        'chart.js'
     ]).
     config(['$stateProvider', ($stateProvider) => {
         $stateProvider
             .state('root', {
                 resolve: {
                     loggedInPerson: Person => Person.me().$promise,
-                    env: $http => $http.get('/api/env/all').then(resp => resp.data)
+                    env: $http => $http.get('/api/env/all').then(resp => resp.data),
+                    _frame: MessagingService => MessagingService.connect()
                 },
                 templateUrl: 'partials/nav/navView.html',
                 controller: 'NavbarCtrl',
@@ -125,6 +125,16 @@ angular.module('momusApp', [
                 url: '/disposisjon/:id',
                 params: {
                     id: {squash: true, value: null}
+                },
+                resolve: {
+                    publication: ($stateParams, Publication) => $stateParams.id == null ?
+                        Publication.active().$promise :
+                        Publication.get({id: $stateParams.id}).$promise,
+                    pageOrder: (publication, Page) => Page.pageOrder({publicationId: publication.id}).$promise,
+                    adverts: Advert => Advert.query().$promise,
+                    articleStatuses: Article => Article.statuses().$promise,
+                    reviewStatuses: Article => Article.reviewStatuses().$promise,
+                    layoutStatuses: Publication => Publication.layoutStatuses().$promise
                 },
                 templateUrl: 'partials/disposition/dispositionView.html',
                 controller: 'DispositionCtrl',
