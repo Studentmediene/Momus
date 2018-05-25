@@ -46,19 +46,19 @@ public class Article extends AbstractEntity implements Messageable {
 
     private String comment;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Section section;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private ArticleStatus status;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private ArticleType type;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private ArticleReview review;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Publication publication;
 
     @ManyToMany(fetch = FetchType.EAGER)

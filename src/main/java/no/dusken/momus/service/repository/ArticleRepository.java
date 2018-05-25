@@ -31,5 +31,4 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     int countByStatusIdAndPublicationId(Long articleStatus, Long id);
 
     int countByReviewIdAndPublicationId(Long articleStatus, Long id);
-
 }

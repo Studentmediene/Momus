@@ -149,6 +149,22 @@ public class ArticleService {
         return updateArticle(existing);
     }
 
+    public Article updateArticleStatus(Long id, Article article) {
+        Article existing = getArticleById(id);
+        ArticleStatus oldStatus = existing.getStatus();
+
+        existing.setStatus(article.getStatus());
+        existing.setComment(article.getComment());
+        existing.setPhotoStatus(article.getPhotoStatus());
+        existing.setReview(article.getReview());
+
+        if (!article.getStatus().equals(oldStatus)) {
+            createRevision(existing);
+        }
+
+        return updateArticle(existing);
+    }
+
     public Article updateNote(Long id, String note) {
         Article article = getArticleById(id);
         article.setNote(note);
@@ -254,5 +270,4 @@ public class ArticleService {
 
         return html;
     }
-
 }

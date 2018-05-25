@@ -17,8 +17,8 @@
 'use strict';
 
 angular.module('momusApp.resources')
-    .factory('Article', ($resource, $http) => {
-        const Article = $resource('/api/article/:id/:resource', 
+    .factory('Article', ($resource, $http, MessagingService) => {
+        const Article = $resource('/api/article/:id/:resource',
             {
                 id: '@id'
             },
@@ -27,7 +27,12 @@ angular.module('momusApp.resources')
                 compareRevisions: { method: 'GET', url: '/api/article/:id/revisions/:rev1/:rev2', isArray: true },
                 multiple: { method: 'GET', params: {id: 'multiple'}, isArray: true },                
                 search: { method: 'POST', params: {id: 'search'}, isArray: true },
-                updateMetadata: { method: 'PATCH', params: {resource: 'metadata'} },
+                updateMetadata: { method: 'PATCH', params: {resource: 'metadata'}, headers: {
+                    'X-MOM-SENDER': MessagingService.getSessionId
+                }},
+                updateStatus: { method: 'PATCH', params: {resource: 'status'}, headers: {
+                    'X-MOM-SENDER': MessagingService.getSessionId
+                }},
                 updateNote: { method: 'PATCH', params: { resource: 'note'} },
                 archive: { method: 'PATCH', params: {resource: 'archived', archived: true}, hasBody: false },
                 restore: { method: 'PATCH', params: {resource: 'archived', archived: false}, hasBody: false },

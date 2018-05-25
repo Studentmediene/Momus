@@ -71,8 +71,13 @@ public class ArticleController {
         return articleService.saveArticle(article);
     }
 
+    @PatchMapping("{id}/status")
+    public @ResponseBody Article updateArticleStatus(@PathVariable Long id, @RequestBody Article article){
+        return articleService.updateArticleStatus(id, article);
+    }
+
     @PatchMapping("{id}/metadata")
-    public @ResponseBody Article updateArticle(@PathVariable Long id, @RequestBody Article article){
+    public @ResponseBody Article updateArticleMetadata(@PathVariable Long id, @RequestBody Article article){
         return articleService.updateArticleMetadata(id, article);
     }
 
