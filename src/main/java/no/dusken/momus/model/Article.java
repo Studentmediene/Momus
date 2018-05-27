@@ -16,6 +16,7 @@
 
 package no.dusken.momus.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import no.dusken.momus.service.ArticleService;
 import org.hibernate.annotations.Fetch;
@@ -24,6 +25,7 @@ import org.hibernate.annotations.FetchMode;
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.lang.reflect.Field;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -59,6 +61,7 @@ public class Article extends AbstractEntity implements Messageable {
     private ArticleReview review;
 
     @ManyToOne
+    @JsonIgnoreProperties(value = {"articles", "pages"})
     private Publication publication;
 
     @ManyToMany(fetch = FetchType.EAGER)
