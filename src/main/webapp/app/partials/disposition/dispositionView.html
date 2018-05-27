@@ -85,11 +85,11 @@
     </div>
 
     <div class="row d-table disposition-table" ng-style="vm.offsetDispositionTable()">
-        <div ng-model="vm.pageOrder" ui-sortable="vm.sortableOptions">
+        <div ng-model="vm.pageOrder.order" ui-sortable="vm.sortableOptions">
             <div
                 class="d-table-row"
-                ng-repeat="pageId in vm.pageOrder"
-                ng-init="page = vm.pagesLookup[pageId]"
+                ng-repeat="pageId in vm.pageOrder.order"
+                alias="vm.pagesLookup[pageId] as page"
                 ng-class="{'page-reklame': page.advertisement, 'page-done': page.done}"
                 ui-sortable-selectable
             >
@@ -136,7 +136,7 @@
                     <div
                             class="d-table article-table"
                             ng-repeat="articleId in page.articles"
-                            ng-init="article = vm.articlesLookup[articleId]"
+                            alias="vm.articlesLookup[articleId] as article"
                     >
                         <div class="d-table-row" ng-class="{'page-done': page.done}">
                             <!--Dropdown-arrow-->
@@ -267,7 +267,7 @@
                             class="d-table advert-table"
                             ng-repeat="advertId in page.adverts"
                             ng-style="{'background-color':'#FFE96B'}"
-                            ng-init="advert = vm.advertsLookup[advertId]"
+                            alias="vm.advertsLookup[advertId] as adverts"
                     >
                       <div class="d-table-row">
                         <!--Dropdown-arrow-->

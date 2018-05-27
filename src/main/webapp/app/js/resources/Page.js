@@ -26,7 +26,7 @@ angular.module('momusApp.resources')
                 saveMultipleEmpty: { method: 'POST', isArray:true, hasBody: false, params: {pageid: 'empty'} },
                 updateMeta: {method: 'PATCH', params: {resource: 'metadata'} },
                 layoutStatusCounts: { method: 'GET', params: {pageid: 'layoutstatuscounts'} },
-                pageOrder: { method: 'GET', isArray: true, params: {pageid: 'page-order'} },
+                pageOrder: { method: 'GET', params: {pageid: 'page-order'} },
                 updatePageOrder: { method: 'PUT', params: {pageid: 'page-order'} },
                 updateContent: { method: 'PUT', params: {resource: 'content'} },
                 updateArticles: { method: 'PUT', params: {resource: 'articles'} },

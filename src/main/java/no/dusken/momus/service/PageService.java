@@ -1,7 +1,9 @@
 package no.dusken.momus.service;
 
+import no.dusken.momus.dto.PageOrder;
 import no.dusken.momus.model.Page;
 import no.dusken.momus.dto.PageContent;
+import no.dusken.momus.model.websocket.Action;
 import no.dusken.momus.service.repository.*;
 import org.springframework.stereotype.Service;
 
@@ -20,29 +22,34 @@ public class PageService {
     private final ArticleRepository articleRepository;
     private final AdvertRepository advertRepository;
 
+    private final MessagingService messagingService;
+
     public PageService(
             PageRepository pageRepository,
             PublicationRepository publicationRepository,
             LayoutStatusRepository layoutStatusRepository,
             ArticleRepository articleRepository,
-            AdvertRepository advertRepository
+            AdvertRepository advertRepository,
+            MessagingService messagingService
     ) {
         this.pageRepository = pageRepository;
         this.publicationRepository = publicationRepository;
         this.layoutStatusRepository = layoutStatusRepository;
         this.articleRepository = articleRepository;
         this.advertRepository = advertRepository;
+        this.messagingService = messagingService;
     }
 
-    public void setPageOrder(List<Long> pageOrder) {
+    public void setPageOrder(PageOrder pageOrder) {
         Integer pageNr = 1;
-        for (Long pageId : pageOrder) {
+        for (Long pageId : pageOrder.getOrder()) {
             pageRepository.updatePageNr(pageNr++, pageId);
         }
+        messagingService.broadcastEntityAction(pageOrder, Action.UPDATE);
     }
 
     public List<Page> createEmptyPagesInPublication(Long publicationId, Integer afterPage, Integer numPages) {
-        List<Long> pageOrder = pageRepository.getPageOrderByPublicationId(publicationId);
+        PageOrder pageOrder = new PageOrder(publicationId, pageRepository.getPageOrderByPublicationId(publicationId));
         List<Page> createdPages = new ArrayList<>();
 
         for (int i = 0; i < numPages; i++) {
@@ -54,7 +61,7 @@ public class PageService {
             newPage = pageRepository.save(newPage);
             createdPages.add(newPage);
 
-            pageOrder.add(afterPage + i, newPage.getId());
+            pageOrder.getOrder().add(afterPage + i, newPage.getId());
         }
         pageRepository.flush();
         setPageOrder(pageOrder);
@@ -68,23 +75,28 @@ public class PageService {
         existing.setLayoutStatus(page.getLayoutStatus());
         existing.setDone(page.isDone());
 
-        return pageRepository.saveAndFlush(existing);
+        Page saved = pageRepository.saveAndFlush(existing);
+        messagingService.broadcastEntityAction(saved, Action.UPDATE);
+        return saved;
     }
 
     public void setContent(Long id, PageContent content) {
         Page existing = pageRepository.findOne(id);
         existing.setArticles(new HashSet<>(articleRepository.findAll(content.getArticles())));
         existing.setAdverts(new HashSet<>(advertRepository.findAll(content.getAdverts())));
-
         pageRepository.saveAndFlush(existing);
+
+        messagingService.broadcastEntityAction(content, Action.UPDATE);
     }
 
     public void delete(Long id) {
         Page page = pageRepository.findOne(id);
-        List<Long> pageOrder = pageRepository.getPageOrderByPublicationId(page.getPublication().getId());
-        pageRepository.delete(id);
 
-        pageOrder.remove(id);
-        setPageOrder(pageOrder);
+        List<Long> order = pageRepository.getPageOrderByPublicationId(page.getPublication().getId());
+        order.remove(id);
+        setPageOrder(new PageOrder(page.getPublication().getId(), order));
+
+        messagingService.broadcastEntityAction(page, Action.DELETE);
+        pageRepository.delete(id);
     }
 }

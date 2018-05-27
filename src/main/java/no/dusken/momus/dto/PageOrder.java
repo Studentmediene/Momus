@@ -1,6 +1,6 @@
 package no.dusken.momus.dto;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import no.dusken.momus.model.Messageable;
@@ -12,16 +12,15 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class PageContent implements Messageable {
+public class PageOrder implements Messageable {
     @JsonProperty private Long publicationId;
-    @JsonProperty private Long pageId;
-    @JsonProperty private List<Long> articles;
-    @JsonProperty private List<Long> adverts;
+    @JsonProperty private List<Long> order;
 
     @Override
+    @JsonIgnore
     public List<String> getDestinations() {
         return Collections.singletonList(
-                "/ws/publications/" + publicationId + "/page-content"
+                "/ws/publications/" + publicationId + "/page-order"
         );
     }
 }

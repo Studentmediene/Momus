@@ -30,6 +30,7 @@ angular.module('momusApp.controllers')
         Page,
         Article,
         Advert,
+        MessagingService,
         DispositionStyleService,
         publication,
         pageOrder,
@@ -84,6 +85,43 @@ angular.module('momusApp.controllers')
         vm.columnWidths = {};
         vm.toolbarStyle = {};
 
+        MessagingService.subscribeToDisposition(publication.id, {
+            page: data => {
+                const {entity, action} = data;
+                switch(action) {
+                    case 'SAVE':
+                        break;
+                    case 'UPDATE':
+                        publication.pages.splice(publication.pages.findIndex(p => p.id === entity.id), 1, entity);
+                        vm.pagesLookup[entity.id] = entity;
+                        break;
+                    case 'DELETE':
+                        publication.pages.splice(publication.pages.findIndex(p => p.id === entity.id), 1);
+                        delete vm.pagesLookup[entity.id];
+                }
+            },
+            article: data => {
+                const {entity, action} = data;
+                switch(action) {
+                    case 'SAVE':
+                        publication.articles.push(entity);
+                        vm.articlesLookup[entity.id] = entity;
+                        break;
+                    case 'UPDATE':
+                        publication.articles.splice(publication.articles.findIndex(a => a.id === entity.id), 1, entity);
+                        vm.articlesLookup[entity.id] = entity;
+                        break;
+                }
+            },
+            pageOrder: data => vm.pageOrder.order = data.entity.order,
+            pageContent: data => {
+                const { page_id, articles, adverts } = data.entity;
+                vm.pagesLookup[page_id].articles = articles;
+                vm.pagesLookup[page_id].adverts = adverts;
+            },
+            after: () => $timeout(() => $scope.$apply())
+        });
+
         function newPages(newPageAt, numNewPages){
             vm.loading = true;
             Page.saveMultipleEmpty({publicationId: publication.id, afterPage: newPageAt, numNewPages: numNewPages}, pages => {
@@ -91,7 +129,7 @@ angular.module('momusApp.controllers')
                     vm.pagesLookup[p.id] = p;
                     publication.pages.push(p);
                 });
-                vm.pageOrder.splice(newPageAt, 0, ...pages.map(p => p.id));
+                pageOrder.order.splice(newPageAt, 0, ...pages.map(p => p.id));
                 vm.loading = false;
             });
         }
@@ -109,7 +147,12 @@ angular.module('momusApp.controllers')
             vm.loading = true;
             Page.updateContent(
                 {pageid: scope.page.id},
-                { articles: scope.page.articles, adverts: scope.page.adverts },
+                {
+                    publication_id: publication.id,
+                    page_id: scope.page.id,
+                    articles: scope.page.articles,
+                    adverts: scope.page.adverts
+                },
                 () => vm.loading = false
             );
             scope.editPage = false;
@@ -118,7 +161,7 @@ angular.module('momusApp.controllers')
         function deletePage(page) {
             if(confirm("Er du sikker på at du vil slette denne siden?")){
                 publication.pages.splice(publication.pages.indexOf(page), 1);
-                pageOrder.splice(pageOrder.indexOf(page.id), 1);
+                pageOrder.order.splice(pageOrder.order.indexOf(page.id), 1);
                 delete vm.pagesLookup[page.id];
                 vm.loading = true;
                 Page.delete({pageid: page.id}, () => vm.loading = false);

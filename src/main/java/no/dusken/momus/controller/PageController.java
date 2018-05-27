@@ -1,6 +1,7 @@
 package no.dusken.momus.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import no.dusken.momus.dto.PageOrder;
 import no.dusken.momus.mapper.SerializationViews;
 import no.dusken.momus.model.LayoutStatus;
 import no.dusken.momus.model.Page;
@@ -40,12 +41,12 @@ public class PageController {
     }
 
     @GetMapping("/page-order")
-    public @ResponseBody List<Long> getPageOrderByPublicationId(@RequestParam Long publicationId) {
-        return pageRepository.getPageOrderByPublicationId(publicationId);
+    public @ResponseBody PageOrder getPageOrderByPublicationId(@RequestParam Long publicationId) {
+        return new PageOrder(publicationId, pageRepository.getPageOrderByPublicationId(publicationId));
     }
 
     @PutMapping("/page-order")
-    public @ResponseBody void setPageOrder(@RequestBody List<Long> pageOrder) {
+    public @ResponseBody void setPageOrder(@RequestBody PageOrder pageOrder) {
         pageService.setPageOrder(pageOrder);
     }
 
@@ -70,7 +71,7 @@ public class PageController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        pageRepository.delete(id);
+        pageService.delete(id);
     }
 
     @GetMapping("/layoutstatuscounts")
