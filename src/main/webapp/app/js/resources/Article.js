@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.resources')
-C    .factory('Article', ($resource, $http) => {
+    .factory('Article', ($resource, $http) => {
         const Article = $resource('/api/article/:id/:resource',
             {
                 id: '@id'

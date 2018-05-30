@@ -24,6 +24,7 @@ angular.module('momusApp.controllers')
         $timeout,
         $uibModal,
         $window,
+        $log,
         $templateRequest,
         uiSortableMultiSelectionMethods,
         MessageModal,
@@ -38,7 +39,8 @@ angular.module('momusApp.controllers')
         articleStatuses,
         reviewStatuses,
         layoutStatuses,
-        toIdLookup
+        toIdLookup,
+        nodeHeight
     ){
         const vm = this;
 
@@ -66,9 +68,6 @@ angular.module('momusApp.controllers')
         vm.createArticle = createArticle;
         vm.createAdvert = createAdvert;
         vm.updateArticle = updateArticle;
-        vm.updateAdvert = updateAdvert;
-        vm.editArticleField = editArticleField;
-        vm.editAdvertField = editAdvertField;
         vm.submitArticleField = submitArticleField;
         vm.submitAdvertField = submitAdvertField;
 
@@ -89,7 +88,9 @@ angular.module('momusApp.controllers')
             page: data => {
                 const {entity, action} = data;
                 switch(action) {
-                    case 'SAVE':
+                    case 'CREATE':
+                        publication.pages.push(entity);
+                        vm.pagesLookup[entity.id] = entity;
                         break;
                     case 'UPDATE':
                         publication.pages.splice(publication.pages.findIndex(p => p.id === entity.id), 1, entity);
@@ -103,7 +104,7 @@ angular.module('momusApp.controllers')
             article: data => {
                 const {entity, action} = data;
                 switch(action) {
-                    case 'SAVE':
+                    case 'CREATE':
                         publication.articles.push(entity);
                         vm.articlesLookup[entity.id] = entity;
                         break;
@@ -113,13 +114,29 @@ angular.module('momusApp.controllers')
                         break;
                 }
             },
+            advert: data => {
+                const {entity, action} = data;
+                switch(action) {
+                    case 'CREATE':
+                        adverts.push(entity);
+                        vm.advertsLookup[entity.id] = entity;
+                        break;
+                    case 'UPDATE':
+                        adverts.splice(adverts.findIndex(a => a.id === entity.id), 1, entity);
+                        vm.advertsLookup[entity.id] = entity;
+                        break;
+                }
+            },
             pageOrder: data => vm.pageOrder.order = data.entity.order,
             pageContent: data => {
                 const { page_id, articles, adverts } = data.entity;
                 vm.pagesLookup[page_id].articles = articles;
                 vm.pagesLookup[page_id].adverts = adverts;
             },
-            after: () => $timeout(() => $scope.$apply())
+            after: data => {
+                $log.debug("Received data:\n", data);
+                $timeout(() => $scope.$apply())
+            }
         });
 
         function newPages(newPageAt, numNewPages){
@@ -168,45 +185,14 @@ angular.module('momusApp.controllers')
             }
         }
 
-        function editArticleField(scope, field) {
-            if(vm.loading) return;
-
-            articleEdits[scope.article.id][field] = {
-                scope: scope,
-                oldValue: scope.article[field]
-            };
-            scope.edit[field] = true;
+        function submitArticleField(article, field, value) {
+            article[field] = value;
+            updateArticle(article);
         }
 
-        function submitArticleField(scope, field, update) {
-            if(update) {
-                updateArticle(scope.article, field);
-            }else {
-                scope.article[field] = articleEdits[scope.article.id][field].oldValue;
-            }
-
-            scope.edit[field] = false;
-            articleEdits[scope.article.id][field] = null;
-        }
-
-        function editAdvertField(scope, field) {
-            if(vm.loading) return;
-            advertEdits[scope.advert.id][field] = {
-                scope: scope,
-                oldValue: scope.advert[field]
-            };
-            scope.edit[field] = true;
-        }
-
-        function submitAdvertField(scope, field, update) {
-          if(update) {
-            updateAdvert(scope.advert, field);
-          } else {
-            scope.advert[field] = advertEdits[scope.advert.id][field].oldValue;
-          }
-
-          scope.edit[field] = false;
-          advertEdits[scope.advert.id][field] = null;
+        function submitAdvertField(advert, field, value) {
+            advert[field] = value;
+            Advert.updateComment({id: advert.id}, JSON.stringify(value));
         }
 
         function createArticle(page){
@@ -225,6 +211,10 @@ angular.module('momusApp.controllers')
                 });
         }
 
+        function updateArticle(article) {
+            Article.updateStatus({}, article);
+        }
+
         function createAdvert(page) {
             $uibModal
                 .open({
@@ -238,16 +228,6 @@ angular.module('momusApp.controllers')
                         page.adverts.push(id);
                     });
                 });
-        }
-
-        function updateArticle(article, editedField){
-            vm.loading = true;
-            Article.updateStatus({id: article.id}, article, () => vm.loading = false);
-        }
-
-        function updateAdvert(advert, editedField){
-          vm.loading = true;
-          Advert.updateComment({id: advert.id}, JSON.stringify(advert.comment), () => vm.loading = false);
         }
 
         function showHelp(){
@@ -278,16 +258,11 @@ angular.module('momusApp.controllers')
 
         vm.sortableOptions = uiSortableMultiSelectionMethods.extendOptions({
             helper: uiSortableMultiSelectionMethods.helper,
-            start: (e, ui) => {
-                //Calculate height of placeholder
-                ui.placeholder[0].style.height = Array.from(ui.helper[0].children).reduce((acc, child) => {
-                    return acc + parseInt($window.getComputedStyle(child).height.replace("px", ""));
-                }, 0) + "px";
-            },
             axis: "y",
             handle: ".handle",
-            stop: () => Page.updatePageOrder({}, vm.pageOrder),
-            placeholder: "d-placeholder"
+            placeholder: "d-placeholder",
+            start: (e, ui) => ui.placeholder[0].style.height = nodeHeight(ui.helper[0]),
+            stop: () => Page.updatePageOrder({}, vm.pageOrder)
         });
 
         updateDispSize();

@@ -71,4 +71,9 @@ angular.module('momusApp.services')
     })
     .factory('expandColorCode', function() {
         return color => "#" + color.split("#")[1].split("").map(x => x+x).join("");
+    })
+    .factory('nodeHeight', function() {
+        return node => Array.from(node.children).reduce((acc, child) => {
+            return acc + parseInt(getComputedStyle(child).height.replace("px", ""));
+        }, 0) + "px";
     });

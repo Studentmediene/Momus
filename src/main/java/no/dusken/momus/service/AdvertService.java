@@ -19,6 +19,7 @@ package no.dusken.momus.service;
 import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Advert;
+import no.dusken.momus.model.websocket.Action;
 import no.dusken.momus.service.repository.AdvertRepository;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +30,12 @@ import javax.servlet.http.HttpServletResponse;
 public class AdvertService {
 
     private final AdvertRepository advertRepository;
+    private final MessagingService messagingService;
 
-    public AdvertService(AdvertRepository advertRepository) {
+
+    public AdvertService(AdvertRepository advertRepository, MessagingService messagingService) {
         this.advertRepository = advertRepository;
+        this.messagingService = messagingService;
     }
 
     public Advert getAdvertById(Long id) {
@@ -44,11 +48,15 @@ public class AdvertService {
     public Advert saveAdvert(Advert advert){
         Advert newAdvert = advertRepository.saveAndFlush(advert);
         log.info("Advert with id {} creatd with data: {}", newAdvert.getId(), newAdvert);
+
+        messagingService.broadcastEntityAction(advert, Action.CREATE);
         return newAdvert;
     }
 
     public Advert updateAdvert(Advert advert) {
         log.info("Advert with id {} updated, data: {}", advert.getId(), advert);
+
+        messagingService.broadcastEntityAction(advert, Action.UPDATE);
         return advertRepository.saveAndFlush(advert);
     }
 

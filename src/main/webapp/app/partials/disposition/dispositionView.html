@@ -216,37 +216,20 @@
                             <div
                                 class="d-table-cell"
                                 ng-style="vm.columnWidths.photo_status"
-                                ng-click="vm.editArticleField(this, 'photo_status')"
-                                ng-show="!edit['photo_status']"
                                 title="Klikk for å redigere"
                             >
-                                <textwrapper length="20" ng-attr-text="article.photo_status || '[Rediger]'"></textwrapper>
-                            </div>
-                            <!--Edit-->
-                            <div class="d-table-cell" ng-style="vm.columnWidths.photo_status" ng-show="edit['photo_status']">
-                                <inline-edit text="article.photo_status"
-                                                cancel="vm.submitArticleField(this, 'photo_status', false)"
-                                                remote-change="remoteChanges['photo_status']"
-                                                save="vm.submitArticleField(this, 'photo_status', true)">
+                                <inline-edit
+                                        placeholder="[Fotostatus]"
+                                        model="article.photo_status"
+                                        on-save="vm.submitArticleField(article, 'photo_status', value)">
                                 </inline-edit>
                             </div>
                             <!--Comment-->
-                            <!--View-->
-                            <div
-                                class="d-table-cell"
-                                ng-style="vm.columnWidths.comment"
-                                ng-click="vm.editArticleField(this, 'comment')"
-                                ng-show="!edit['comment']"
-                                title="Klikk for å redigere"
-                            >
-                                <textwrapper length="15" ng-attr-text="article.comment || '[Rediger]'"></textwrapper>
-                            </div>
-                            <!--Edit-->
-                            <div class="d-table-cell" ng-style="vm.columnWidths.comment" ng-show="edit['comment']">
-                                <inline-edit text="article.comment"
-                                                cancel="vm.submitArticleField(this, 'comment', false)"
-                                                remote-change="remoteChanges['comment']"
-                                                save="vm.submitArticleField(this, 'comment', true)">
+                            <div class="d-table-cell" ng-style="vm.columnWidths.comment">
+                                <inline-edit
+                                        placeholder="[Kommentar]"
+                                        model="article.comment"
+                                        on-save="vm.submitArticleField(article, 'comment', value)">
                                 </inline-edit>
                             </div>
                         </div>
@@ -267,7 +250,7 @@
                             class="d-table advert-table"
                             ng-repeat="advertId in page.adverts"
                             ng-style="{'background-color':'#FFE96B'}"
-                            alias="vm.advertsLookup[advertId] as adverts"
+                            alias="vm.advertsLookup[advertId] as advert"
                     >
                       <div class="d-table-row">
                         <!--Dropdown-arrow-->
@@ -286,24 +269,13 @@
                         <div class="d-table-cell" ng-style="vm.columnWidths.review"></div>
                         <div class="d-table-cell" ng-style="vm.columnWidths.photo_status"></div>
                         <!--Comment-->
-                        <!--View-->
-                        <div
-                            class="d-table-cell"
-                            ng-style="vm.columnWidths.comment"
-                            ng-click="vm.editAdvertField(this, 'comment')"
-                            ng-show="!edit['comment']"
-                            title="Klikk for å redigere"
-                        >
-                            <textwrapper length="20" ng-attr-text="advert.comment || '[Rediger]'"></textwrapper>
-                        </div>
-                        <!--Edit-->
-                        <div class="d-table-cell" ng-style="vm.columnWidths.comment" ng-show="edit['comment']">
-                            <inline-edit text="advert.comment"
-                                            cancel="vm.submitAdvertField(this, 'comment', false)"
-                                            remote-change="remoteChanges['comment']"
-                                            save="vm.submitAdvertField(this, 'comment', true)">
-                            </inline-edit>
-                        </div>
+                          <div class="d-table-cell" ng-style="vm.columnWidths.comment">
+                              <inline-edit
+                                      placeholder="[Kommentar]"
+                                      model="advert.comment"
+                                      on-save="vm.submitAdvertField(advert, 'comment', value)">
+                              </inline-edit>
+                          </div>
                       </div>
                     </div>
                 </div>

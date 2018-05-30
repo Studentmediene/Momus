@@ -20,6 +20,9 @@ angular.module('momusApp.services')
                 subscribe('/ws/publications/' + pubId + '/articles',
                         data => {callbacks.article(data); callbacks.after(data);
                 });
+                subscribe('/ws/adverts',
+                    data => {callbacks.advert(data); callbacks.after(data);
+                    });
                 subscribe('/ws/publications/' + pubId + '/page-order',
                         data => {callbacks.pageOrder(data); callbacks.after(data);
                 });

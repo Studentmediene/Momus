@@ -38,6 +38,7 @@ public class Page extends AbstractEntity implements Comparable<Page>, Comparator
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false) // Should not be able to change the publication of a page
+    @JsonIgnore
     private Publication publication;
 
     @ManyToMany(fetch = FetchType.EAGER)
