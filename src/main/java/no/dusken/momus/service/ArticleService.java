@@ -98,7 +98,7 @@ public class ArticleService {
         Article newArticle = articleRepository.saveAndFlush(article);
         log.info("Article with id {} created with data: {}", newArticle.getId(), newArticle);
 
-        messagingService.broadcastEntityAction(article, Action.SAVE);
+        messagingService.broadcastEntityAction(article, Action.CREATE);
         return newArticle;
     }
 

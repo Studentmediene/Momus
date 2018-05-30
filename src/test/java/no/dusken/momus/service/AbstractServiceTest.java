@@ -37,7 +37,10 @@ import java.util.UUID;
 public abstract class AbstractServiceTest {
 
     @Mock
-    UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
+
+    @Mock
+    protected MessagingService messagingService;
 
     public void userMockSetup() {
         MockitoAnnotations.initMocks(this);
@@ -51,6 +54,7 @@ public abstract class AbstractServiceTest {
                 .active(true)
                 .build();
 
+        doNothing().when(messagingService).broadcastEntityAction(any(), any());
         when(userDetailsService.getLoggedInPerson()).thenReturn(me);
     }
 }

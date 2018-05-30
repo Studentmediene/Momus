@@ -1,8 +1,10 @@
 package no.dusken.momus.service;
 
 import no.dusken.momus.dto.PageOrder;
+import no.dusken.momus.model.LayoutStatus;
 import no.dusken.momus.model.Page;
 import no.dusken.momus.dto.PageContent;
+import no.dusken.momus.model.Publication;
 import no.dusken.momus.model.websocket.Action;
 import no.dusken.momus.service.repository.*;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,6 @@ import java.util.List;
 public class PageService {
 
     private final PageRepository pageRepository;
-    private final PublicationRepository publicationRepository;
     private final LayoutStatusRepository layoutStatusRepository;
     private final ArticleRepository articleRepository;
     private final AdvertRepository advertRepository;
@@ -26,45 +27,39 @@ public class PageService {
 
     public PageService(
             PageRepository pageRepository,
-            PublicationRepository publicationRepository,
             LayoutStatusRepository layoutStatusRepository,
             ArticleRepository articleRepository,
             AdvertRepository advertRepository,
             MessagingService messagingService
     ) {
         this.pageRepository = pageRepository;
-        this.publicationRepository = publicationRepository;
         this.layoutStatusRepository = layoutStatusRepository;
         this.articleRepository = articleRepository;
         this.advertRepository = advertRepository;
         this.messagingService = messagingService;
     }
 
-    public void setPageOrder(PageOrder pageOrder) {
-        Integer pageNr = 1;
-        for (Long pageId : pageOrder.getOrder()) {
-            pageRepository.updatePageNr(pageNr++, pageId);
-        }
-        messagingService.broadcastEntityAction(pageOrder, Action.UPDATE);
-    }
-
     public List<Page> createEmptyPagesInPublication(Long publicationId, Integer afterPage, Integer numPages) {
-        PageOrder pageOrder = new PageOrder(publicationId, pageRepository.getPageOrderByPublicationId(publicationId));
+        List<Long> pageOrder = pageRepository.getPageOrderByPublicationId(publicationId);
         List<Page> createdPages = new ArrayList<>();
+        Publication publication = new Publication();
+        publication.setId(publicationId);
+        LayoutStatus layoutStatus = layoutStatusRepository.findByName("Ukjent");
 
         for (int i = 0; i < numPages; i++) {
             Page newPage = Page.builder()
                     .pageNr(afterPage + i + 1)
-                    .publication(publicationRepository.findOne(publicationId))
-                    .layoutStatus(layoutStatusRepository.findByName("Ukjent"))
+                    .publication(publication)
+                    .layoutStatus(layoutStatus)
                     .build();
             newPage = pageRepository.save(newPage);
             createdPages.add(newPage);
+            messagingService.broadcastEntityAction(newPage, Action.CREATE);
 
-            pageOrder.getOrder().add(afterPage + i, newPage.getId());
+            pageOrder.add(afterPage + i, newPage.getId());
         }
         pageRepository.flush();
-        setPageOrder(pageOrder);
+        setPageOrder(pageOrder, publicationId);
         return createdPages;
     }
 
@@ -80,6 +75,18 @@ public class PageService {
         return saved;
     }
 
+    public void setPageOrder(PageOrder pageOrder) {
+        setPageOrder(pageOrder.getOrder(), pageOrder.getPublicationId());
+    }
+
+    public void setPageOrder(List<Long> pageOrder, Long publicationId) {
+        Integer pageNr = 1;
+        for (Long pageId : pageOrder) {
+            pageRepository.updatePageNr(pageNr++, pageId);
+        }
+        messagingService.broadcastEntityAction(new PageOrder(publicationId, pageOrder), Action.UPDATE);
+    }
+
     public void setContent(Long id, PageContent content) {
         Page existing = pageRepository.findOne(id);
         existing.setArticles(new HashSet<>(articleRepository.findAll(content.getArticles())));
@@ -91,10 +98,11 @@ public class PageService {
 
     public void delete(Long id) {
         Page page = pageRepository.findOne(id);
+        Long publicationId = page.getPublication().getId();
 
-        List<Long> order = pageRepository.getPageOrderByPublicationId(page.getPublication().getId());
+        List<Long> order = pageRepository.getPageOrderByPublicationId(publicationId);
         order.remove(id);
-        setPageOrder(new PageOrder(page.getPublication().getId(), order));
+        setPageOrder(order, publicationId);
 
         messagingService.broadcastEntityAction(page, Action.DELETE);
         pageRepository.delete(id);

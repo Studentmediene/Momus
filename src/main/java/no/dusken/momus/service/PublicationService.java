@@ -41,6 +41,28 @@ public class PublicationService {
     @Autowired
     private ArticleRepository articleRepository;
 
+    /**
+     *
+     * @return Returns the oldest publication that has not been released yet at the time of the date parameter
+     */
+    public Publication getActivePublication(LocalDate date){
+        List<Publication> publications = publicationRepository.findAllByOrderByReleaseDateDesc();
+
+        if(publications.isEmpty()) return null;
+
+        if(publications.size() == 1) return publications.get(0);
+
+        Publication active = publications.get(0);
+        for(Publication p : publications.subList(1,publications.size())){
+            if(p.getReleaseDate().isBefore(date)){
+                return active;
+            }else{
+                active = p;
+            }
+        }
+        return active;
+    }
+
     public Publication savePublication(Publication publication, Integer numEmptyPages){
         Publication newPublication = publicationRepository.saveAndFlush(publication);
 
@@ -94,27 +116,5 @@ public class PublicationService {
             colophonBuilder.append(p.getName()).append("\r\n");
         }
         return colophonBuilder.toString();
-    }
-
-    /**
-     *
-     * @return Returns the oldest publication that has not been released yet at the time of the date parameter
-     */
-    public Publication getActivePublication(LocalDate date){
-        List<Publication> publications = publicationRepository.findAllByOrderByReleaseDateDesc();
-
-        if(publications.isEmpty()) return null;
-
-        if(publications.size() == 1) return publications.get(0);
-
-        Publication active = publications.get(0);
-        for(Publication p : publications.subList(1,publications.size())){
-            if(p.getReleaseDate().isBefore(date)){
-                return active;
-            }else{
-                active = p;
-            }
-        }
-        return active;
     }
 }

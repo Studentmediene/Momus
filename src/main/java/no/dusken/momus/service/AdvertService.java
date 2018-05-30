@@ -18,23 +18,21 @@ package no.dusken.momus.service;
 
 import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.exceptions.RestException;
-import no.dusken.momus.model.*;
-import no.dusken.momus.service.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import no.dusken.momus.model.Advert;
+import no.dusken.momus.service.repository.AdvertRepository;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class AdvertService {
 
-    @Autowired
-    private AdvertRepository advertRepository;
+    private final AdvertRepository advertRepository;
 
+    public AdvertService(AdvertRepository advertRepository) {
+        this.advertRepository = advertRepository;
+    }
 
     public Advert getAdvertById(Long id) {
         if(!advertRepository.exists(id)) {
@@ -42,14 +40,6 @@ public class AdvertService {
         }
         return advertRepository.findOne(id);
     }
-
-    public List<Advert> getAdvertsByIds(List<Long> ids) {
-        if(ids == null) {
-            return new ArrayList<>();
-        }
-        return ids.stream().map(this::getAdvertById).collect(Collectors.toList());
-    }
-
 
     public Advert saveAdvert(Advert advert){
         Advert newAdvert = advertRepository.saveAndFlush(advert);

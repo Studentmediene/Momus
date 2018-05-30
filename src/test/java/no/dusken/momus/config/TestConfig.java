@@ -1,9 +1,8 @@
 package no.dusken.momus.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
+import no.dusken.momus.service.MessagingService;
+import org.mockito.Mockito;
+import org.springframework.context.annotation.*;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import no.dusken.momus.authentication.UserDetailsService;
@@ -17,5 +16,11 @@ public class TestConfig extends WebMvcConfigurerAdapter {
     @Bean(name = "userDetailsService")
     public UserDetailsService userDetailsServiceImpl() {
         return new UserDetailsServiceMock();
+    }
+
+    @Bean
+    @Primary
+    public MessagingService messagingService() {
+        return Mockito.mock(MessagingService.class);
     }
 }

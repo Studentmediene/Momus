@@ -18,8 +18,7 @@ package no.dusken.momus.service;
 
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.ArticleRepository;
-import no.dusken.momus.service.repository.LayoutStatusRepository;
-import no.dusken.momus.service.repository.PageRepository;
+
 import no.dusken.momus.service.repository.PublicationRepository;
 
 import org.junit.Before;
@@ -30,27 +29,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @Transactional
 public class PublicationServiceTest extends AbstractServiceTest {
-    @Mock
-    private PublicationRepository publicationRepository;
-
     @InjectMocks
     private PublicationService publicationService;
 
     @Mock
-    private PageRepository pageRepository;
+    private PublicationRepository publicationRepository;
 
     @Mock
     private ArticleRepository articleRepository;
 
     @Mock
-    private LayoutStatusRepository layoutStatusRepository;
+    private PageService pageService;
 
     private Publication publication1;
     private Publication publication2;
@@ -78,20 +73,6 @@ public class PublicationServiceTest extends AbstractServiceTest {
     }
 
     /**
-     * Method: {@link PublicationService#updatePublication(Publication)}
-     */
-    @Test
-    public void testUpdatePublicationMetadata() {
-        PublicationService publicationServiceSpy = spy(publicationService);
-        doReturn(publication1).when(publicationRepository).saveAndFlush(publication1);
-        publication1.setName("justanupdatedpubname");
-        publication1 = publicationServiceSpy.updatePublication(publication1);
-
-        verify(publicationRepository, times(1)).saveAndFlush(publication1);
-        assertEquals("justanupdatedpubname",publication1.getName());
-    }
-
-    /**
      * Method: {@link PublicationService#getActivePublication(LocalDate)}
      */
     @Test
@@ -107,12 +88,25 @@ public class PublicationServiceTest extends AbstractServiceTest {
 
     @Test
     public void testSavePublication() {
-        doReturn(publication1).when(publicationRepository).save(publication1);
-        doReturn(new LayoutStatus()).when(layoutStatusRepository).findByName("Ukjent");
+        doReturn(publication1).when(publicationRepository).saveAndFlush(publication1);
 
         publicationService.savePublication(publication1, 50);
-        verify(publicationRepository, times(1)).save(publication1);
-        verify(pageRepository, times(50)).save(any(Page.class));
+        verify(publicationRepository, times(1)).saveAndFlush(publication1);
+        verify(pageService, times(1)).createEmptyPagesInPublication(publication1.getId(), 0, 50);
+    }
+
+    /**
+     * Method: {@link PublicationService#updatePublication(Publication)}
+     */
+    @Test
+    public void testUpdatePublicationMetadata() {
+        PublicationService publicationServiceSpy = spy(publicationService);
+        doReturn(publication1).when(publicationRepository).saveAndFlush(publication1);
+        publication1.setName("justanupdatedpubname");
+        publication1 = publicationServiceSpy.updatePublication(publication1);
+
+        verify(publicationRepository, times(1)).saveAndFlush(publication1);
+        assertEquals("justanupdatedpubname",publication1.getName());
     }
 
     @Test
