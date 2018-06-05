@@ -29,11 +29,11 @@
     </div>
     <div class="row d-toolbar" scroll-trigger="d-toolbar-attach" ng-style="vm.toolbarStyle">
         <div id="online-users" style="min-height: 40px">
-            <div ng-repeat="user in vm.connectedUsers" style="margin: 5px">
+            <div ng-repeat="user in usersHere" style="margin: 5px">
                 <user-avatar
-                        uib-tooltip="{{user.user.name}} redigerer denne disposisjonen"
+                        uib-tooltip="{{user.name}} redigerer denne disposisjonen"
                         tooltip-placement="bottom"
-                        user="user.user"
+                        user="user"
                         size="30">
                 </user-avatar>
             </div>

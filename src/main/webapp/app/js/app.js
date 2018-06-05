@@ -45,7 +45,20 @@ angular.module('momusApp', [
         $stateProvider
             .state('root', {
                 resolve: {
-                    loggedInPerson: Person => Person.me().$promise,
+                    loggedInPerson: (Person, env, $http) => {
+                        if(env.noAuth) {
+                            return $http.get('/api/dev/loginstate').then(r => {
+                                if(r.data)
+                                    return Person.me().$promise;
+                                else
+                                    return $http.post('/api/dev/login', JSON.stringify('eivigri'))
+                                        .then(() => Person.me().$promise);
+
+                            });
+                        }else {
+                            return Person.me().$promise;
+                        }
+                    },
                     env: $http => $http.get('/api/env/all').then(resp => resp.data)
                 },
                 templateUrl: 'partials/nav/navView.html',
