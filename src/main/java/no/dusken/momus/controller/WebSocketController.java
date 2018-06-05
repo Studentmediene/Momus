@@ -1,31 +1,38 @@
 package no.dusken.momus.controller;
 
-import no.dusken.momus.model.websocket.Message;
-import no.dusken.momus.model.websocket.OutputMessage;
+import no.dusken.momus.model.Person;
 import no.dusken.momus.model.websocket.UserEventMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.user.SimpUser;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.security.Principal;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 public class WebSocketController {
 
-    @Autowired
-    SimpMessagingTemplate simpMessagingTemplate;
+    private final SimpUserRegistry userRegistry;
 
-    @MessageMapping("/disposition/{id}/change")
-    @SendTo("/ws/disposition/{id}/changed")
-    public OutputMessage sendChange(Message message, @DestinationVariable Long id) {
-        return new OutputMessage(message.getPageId(), message.getArticleId(), message.getAdvertId(), message.getAction(), message.getEditedField(), message.getDate());
+    public WebSocketController(SimpUserRegistry userRegistry) {
+        this.userRegistry = userRegistry;
     }
 
-    @MessageMapping("/disposition/{id}/user")
-    @SendTo("/ws/disposition/{id}/users")
-    public UserEventMessage sendUserEvent(UserEventMessage message, @DestinationVariable Long id) {
+    @MessageMapping("/users")
+    @SendTo("/ws/user")
+    public UserEventMessage sendUserEvent(UserEventMessage message, Principal user) {
         return message;
+    }
+
+    @GetMapping("/users")
+    public @ResponseBody Set<String> getLoggedInUsers() {
+        return userRegistry.getUsers().stream().map(SimpUser::getName).collect(Collectors.toSet());
     }
 }
