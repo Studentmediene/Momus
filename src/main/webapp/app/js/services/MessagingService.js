@@ -1,5 +1,5 @@
 angular.module('momusApp.services')
-    .service('MessagingService', function($q, $interval, $location, $http, $transitions) {
+    .service('MessagingService', function(Person, $q, $interval, $location, $http, $transitions) {
         let session;
 
         class Session {
@@ -35,7 +35,7 @@ angular.module('momusApp.services')
 
             subscribe(endpoint, callback, global) {
                 const sub = session.stomp.subscribe(endpoint, res => {
-                    if (res.headers['message-sender'] === sessionId)
+                    if (res.headers['message-sender'] === this.id)
                         return;
 
                     const data = JSON.parse(res.body);
@@ -89,18 +89,15 @@ angular.module('momusApp.services')
             _getStates() {
                 if(!this.isConnected()) return;
 
-                $http.get('/api/users?state=' + $location.path()).then(res => {
-                    const newUsers = res.data;
-                    // splice instead of replace object so watches can listen to updates
-                    this.users.splice(0, this.users.length, ...newUsers);
+                Person.loggedIn({state: $location.path()}, activeUsers => {
+                    this.users.splice(0, this.users.length, ...activeUsers);
                 });
             }
 
             _updateState() {
                 if(!this.isConnected()) return;
 
-                $http.put('/api/users/' + this.id + '?state=' + $location.path(), "")
-                    .then(() => this._getStates())
+                Person.updateSessionState({id: this.id, state: $location.path()}, () => this._getStates());
             }
 
             static generateSessionId() {
