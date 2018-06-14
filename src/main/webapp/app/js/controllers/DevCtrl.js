@@ -1,40 +1,29 @@
 angular.module('momusApp.controllers')
-    .controller('DevCtrl', function ($scope, $http, $location, $window, Person) {
+    .controller('DevCtrl', function ($scope, $http, $location, $window, Person, loggedInPerson, env) {
+        if(!env.devmode) {
+            $location.url('/front');
+        }
+
         const vm = this;
+
+        vm.noAuth = env.noAuth;
+        vm.selectedUser = loggedInPerson;
+        vm.persons = Person.query();
 
         vm.generateData = generateData;
         vm.setLoggedInUser = setLoggedInUser;
 
-        Person.me({}, (user) => {
-            vm.selectedUser = user;
-        });
-        vm.persons = Person.query();
-
-        // Redirect back to front page if not in devmode
-        $http.get('/api/dev/devmode', {bypassInterceptor: true}).then(
-            response => {
-                if(!response.data){
-                    $location.url('/front');
-                }else {
-                    $http.get('/api/dev/noauth').then(
-                        (response) => { vm.noAuth = response.data; }
-                    )
-                }
-            },
-            () => $location.url('/front')
-        );
-
         function generateData() {
             vm.generating = true;
-            $http.post('/api/dev/generatedata').then(
-                () => vm.generating = false
-            );
+            $http.post('/api/dev/generatedata').then(() => vm.generating = false);
         }
 
-        function setLoggedInUser(id) {
+        function setLoggedInUser(username) {
             vm.settingUser = true;
-            $http.put('/api/dev/loggedinuser/' + id).then(
-                () => $window.location.reload()
-            )
+            $http.post('/api/dev/logout', "").then(r => {
+                $http.post('/api/dev/login', JSON.stringify(username)).then(
+                    () => $window.location.reload()
+                );
+            });
         }
     });

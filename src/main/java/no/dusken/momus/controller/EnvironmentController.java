@@ -23,6 +23,7 @@ public class EnvironmentController {
         Map<String, Object> values = new HashMap<>();
         values.put("version", env.getProperty("momus.version"));
         values.put("devmode", env.acceptsProfiles("dev"));
+        values.put("noAuth", env.acceptsProfiles("noAuth"));
         return values;
     }
 }

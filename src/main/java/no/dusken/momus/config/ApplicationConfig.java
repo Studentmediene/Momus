@@ -58,8 +58,8 @@ class ApplicationConfig extends WebMvcConfigurerAdapter {
 
     @Bean(name = "userDetailsService")
     @Profile("noAuth")
-    public UserDetailsService userDetailsServiceDev(PersonRepository personRepository) {
-        return new UserDetailsServiceDev(personRepository);
+    public UserDetailsService userDetailsServiceDev() {
+        return new UserDetailsServiceDev();
     }
 
     @Bean(name = "userDetailsService")
