@@ -122,7 +122,7 @@ angular.module('momusApp', [
                     free: {type: 'string'},
                     persons: {type: 'int', array: true},
                     page_number: {type: 'int', value: 1},
-                    page_size: {type: 'int', value: 3},
+                    page_size: {type: 'int', value: 10},
                     archived: {type: 'bool'}
                 },
                 resolve: {
@@ -222,7 +222,7 @@ angular.module('momusApp', [
         $resourceProvider.defaults.actions = RESOURCE_ACTIONS;
     }]).
     run(['$transitions', '$rootScope', 'TitleChanger', ($transitions, $rootScope, TitleChanger) => {
-        $transitions.onBefore({}, transition => {
+        $transitions.onStart({}, transition => {
             if(transition.from().name === '')
                 $rootScope.initialLoad = true;
             else
@@ -237,7 +237,7 @@ angular.module('momusApp', [
                 $rootScope.transitionLoad = false;
         });
 
-        $transitions.onBefore({to: 'search'}, transition => {
+        $transitions.onStart({to: 'search'}, transition => {
             const {['#']: _, ...params} = transition.params();
             // Do default search if we come from another state and no parameters are specified or their default value
             if(
