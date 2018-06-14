@@ -25,7 +25,6 @@ import org.hibernate.annotations.FetchMode;
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.lang.reflect.Field;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;

@@ -20,8 +20,6 @@ package no.dusken.momus.service;
 import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.ArticleRepository;
-import no.dusken.momus.service.repository.LayoutStatusRepository;
-import no.dusken.momus.service.repository.PageRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

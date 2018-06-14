@@ -23,7 +23,6 @@ import no.dusken.momus.model.LayoutStatus;
 import no.dusken.momus.model.Publication;
 import no.dusken.momus.service.PublicationService;
 import no.dusken.momus.service.repository.LayoutStatusRepository;
-import no.dusken.momus.service.repository.PageRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
