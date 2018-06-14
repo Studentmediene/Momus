@@ -16,25 +16,21 @@
 
 package no.dusken.momus.service.indesign;
 
+import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.Person;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
-/**
+/*
  * A class that generates IndesignExports in their weird XML format.
  * It uses \r\n line endings because that's how InDesign wants it.
- */
+*/
+@Slf4j
 public class IndesignGenerator {
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
     final Map<String, String> replacements = new LinkedHashMap<>();
-
 
     /*
     TODO: Lister, <i>, m-dash, unicode problemer? byline
@@ -110,7 +106,7 @@ public class IndesignGenerator {
 
         String fileName = createFileName(article);
 
-        logger.info("Generated InDesign file for article id {} with content\n{}", article.getId(), text);
+        log.info("Generated InDesign file for article id {} with content\n{}", article.getId(), text);
 
         return new IndesignExport(fileName, text);
     }
@@ -134,7 +130,7 @@ public class IndesignGenerator {
     private void appendByLines(StringBuilder sb, Article article) {
         appendByLine(sb, article.getJournalists(), article.getExternalAuthor(), "Tekst");
 
-        String type = article.getUseIllustration() ? "Illustrasjon" : "Foto";
+        String type = article.isUseIllustration() ? "Illustrasjon" : "Foto";
         appendByLine(sb, article.getPhotographers(), article.getExternalPhotographer(), type);
 
     }

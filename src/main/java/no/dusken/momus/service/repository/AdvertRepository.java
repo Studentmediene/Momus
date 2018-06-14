@@ -14,25 +14,14 @@
  * limitations under the License.
  */
 
-package no.dusken.momus.model;
+package no.dusken.momus.service.repository;
+
+import no.dusken.momus.model.Advert;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
 
-import lombok.*;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(of = {}, callSuper = true)
-@ToString(of = {"name", "color"}, callSuper = true)
-@Builder(toBuilder = true)
-public class Section extends AbstractEntity {
-    private String name;
-    private String color;
-    private boolean deleted;
 }

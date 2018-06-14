@@ -38,7 +38,7 @@ public abstract class AbstractControllerTest {
     @Before
     public void setup() {
         mockMvc = webAppContextSetup(webApplicationContext).build();
-        Person me = new Person(1L);
+        Person me = Person.builder().id(1L).build();
         personRepository.saveAndFlush(me);
         internalSetup();
     }

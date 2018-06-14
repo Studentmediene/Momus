@@ -41,14 +41,16 @@ public abstract class AbstractServiceTest {
 
     public void userMockSetup() {
         MockitoAnnotations.initMocks(this);
-        Person me = new Person(
-                1L,
-                UUID.randomUUID(),
-                "ei",
-                "Eivind",
-                "ei@vi.nd",
-                "12345678",
-                true);
+        Person me = Person.builder()
+                .id(1L)
+                .guid(UUID.randomUUID())
+                .username("ei")
+                .name("Eivind")
+                .email("ei@vi.nd")
+                .phoneNumber("12345678")
+                .active(true)
+                .build();
+
         when(userDetailsService.getLoggedInPerson()).thenReturn(me);
     }
 }

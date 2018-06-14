@@ -7,6 +7,7 @@ import no.dusken.momus.model.websocket.Action;
 public class Message {
 	private Long pageId;
 	private Long articleId;
+	private Long advertId;
 	private Action action;
 	private String editedField;
 	private ZonedDateTime date;
@@ -30,6 +31,10 @@ public class Message {
 	public void setPageId(Long pageId) {
 		this.pageId = pageId;
 	}
+
+	public Long getAdvertId() { return advertId; }
+
+	public void setAdvertId(Long advertId) { this.advertId = advertId; }
 
 	public Long getArticleId() {
 		return articleId;

@@ -22,6 +22,7 @@
     "grunt-ng-annotate": "^3.0.0",
     "grunt-rev": "^0.1.0",
     "grunt-usemin": "^3.1.1",
+    "grunt-sass": "^2.1.0",
     "jasmine-core": "^2.8.0",
     "karma": "^1.7.1",
     "karma-jasmine": "^1.1.0",
@@ -32,12 +33,10 @@
     "phantomjs-prebuilt": "^2.1.15",
     "requirejs": "^2.3.5",
     "time-grunt": "^1.4.0",
-    "concurrently": "^3.5.0"
+    "concurrently": "^3.5.0",
+    "node-sass": "^4.9.0"
   },
   "scripts": {
     "start": "concurrently \"mvn jetty:run\" \"grunt dev\""
-  },
-  "dependencies": {
-    "grunt-sass": "^2.0.0"
   }
 }

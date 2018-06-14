@@ -17,11 +17,11 @@
 'use strict';
 
 angular.module('momusApp.services')
-    .service('ViewArticleService', function ($cookieStore) {
+    .service('ViewArticleService', function ($cookies) {
         return {
 
             checkRecentlyViewed: function(articleId){
-                var currentViewed = $cookieStore.get("recentlyViewed");
+                var currentViewed = $cookies.getObject("recentlyViewed");
                 var duplicateIndex = currentViewed.indexOf(articleId);
 
                 while(duplicateIndex >= 0) {
@@ -36,17 +36,17 @@ angular.module('momusApp.services')
             },
 
             viewArticle : function(articleId){
-                if($cookieStore.get("recentlyViewed")) {
+                if($cookies.getObject("recentlyViewed")) {
                     var updated = this.checkRecentlyViewed(articleId);
-                    $cookieStore.put("recentlyViewed", updated);
+                    $cookies.putObject("recentlyViewed", updated);
                 } else {
-                    $cookieStore.put("recentlyViewed", [articleId]);
+                    $cookies.putObject("recentlyViewed", [articleId]);
                 }
 
             },
 
             getRecentViews : function(){
-                const recents = $cookieStore.get("recentlyViewed") || [];
+                const recents = $cookies.getObject("recentlyViewed") || [];
                 recents.reverse(); // We want newest first
                 return recents;
             }

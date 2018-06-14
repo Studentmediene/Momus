@@ -16,17 +16,19 @@
 
 package no.dusken.momus.controller;
 
-import no.dusken.momus.authentication.UserDetailsServiceDev;
+import no.dusken.momus.config.MockToken;
 import no.dusken.momus.ldap.LdapSyncer;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.ArticleService;
 import no.dusken.momus.service.PublicationService;
 import no.dusken.momus.service.drive.GoogleDriveService;
 import no.dusken.momus.service.repository.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -39,8 +41,6 @@ import java.util.*;
 @RestController
 @RequestMapping("/dev")
 public class DevController {
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private SectionRepository sectionRepository;
 
@@ -66,6 +66,9 @@ public class DevController {
     private ArticleReviewRepository articleReviewRepository;
 
     @Autowired
+    private AdvertRepository advertRepository;
+
+    @Autowired
     private PublicationRepository publicationRepository;
 
     @Autowired
@@ -74,6 +77,8 @@ public class DevController {
     @Autowired
     private Environment env;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     LdapSyncer ldapSyncer;
@@ -161,6 +166,9 @@ public class DevController {
         a5.setPublication(p2);
         articleRepository.save(a5);
 
+        Advert ad1 = new Advert();
+        ad1.setName("iBok");
+        advertRepository.save(ad1);
         return "dummy articles and publications generated";
     }
 
@@ -174,8 +182,19 @@ public class DevController {
         return env.acceptsProfiles("noAuth");
     }
 
-    @PutMapping("/loggedinuser/{id}")
-    public void setLoggedInUser(@PathVariable Long id) {
-        UserDetailsServiceDev.LOGGED_IN_USER = id;
+    @PostMapping("/login")
+    public void login(@RequestBody String user) {
+        Authentication token = authenticationManager.authenticate(new MockToken(user));
+        SecurityContextHolder.getContext().setAuthentication(token);
+    }
+
+    @PostMapping("/logout")
+    public void logout() {
+        SecurityContextHolder.getContext().setAuthentication(null);
+    }
+
+    @GetMapping("/loginstate")
+    public boolean isLoggedIn() {
+        return !SecurityContextHolder.getContext().getAuthentication().getClass().equals(AnonymousAuthenticationToken.class);
     }
 }

@@ -25,5 +25,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ArticleRevisionRepository extends JpaRepository<ArticleRevision, Long> {
 
-    public List<ArticleRevision> findByArticleIdOrderBySavedDateDesc(Long id);
+    List<ArticleRevision> findByArticleIdOrderBySavedDateDesc(Long id);
 }

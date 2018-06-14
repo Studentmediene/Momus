@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package no.dusken.momus.model;
+'use strict';
 
+angular.module('momusApp.controllers')
+    .controller('CreateAdvertModalCtrl', function($scope, $uibModalInstance, Advert){
+        $scope.advert = {
+            name: "",
+            comment: ""
+        };
+        $scope.createAdvert = function () {
+            $scope.creating = true;
+            Advert.save({}, $scope.advert, advert => {
+                $scope.creating = false;
+                $uibModalInstance.close(advert.id);
+            });
+        };
 
-import lombok.*;
+        $scope.cancel = function(){
+            $uibModalInstance.dismiss('cancel');
+        };
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(of = {}, callSuper = true)
-@ToString(of = {"name", "color"}, callSuper = true)
-@Builder(toBuilder = true)
-public class Section extends AbstractEntity {
-    private String name;
-    private String color;
-    private boolean deleted;
-}
+    });

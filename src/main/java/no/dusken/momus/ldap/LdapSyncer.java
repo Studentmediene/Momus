@@ -16,11 +16,10 @@
 
 package no.dusken.momus.ldap;
 
+import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.authorization.Role;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.PersonRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -36,9 +35,8 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class LdapSyncer {
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private final int PAGE_SIZE = 1000;
 
@@ -65,10 +63,10 @@ public class LdapSyncer {
     @Scheduled(cron = "0 0 2 * * *")
     public void sync() {
         if (!enabled) {
-            logger.info("Not syncing, it is disabled");
+            log.info("Not syncing, it is disabled");
             return;
         }
-        logger.info("Starting LDAP sync");
+        log.info("Starting LDAP sync");
 
         long start = System.currentTimeMillis();
 
@@ -76,7 +74,7 @@ public class LdapSyncer {
 
         long end = System.currentTimeMillis();
         long timeUsed = end - start;
-        logger.info("Done syncing from LDAP, it took {}ms", timeUsed);
+        log.info("Done syncing from LDAP, it took {}ms", timeUsed);
     }
 
     @PostConstruct
@@ -92,11 +90,11 @@ public class LdapSyncer {
         List<Person> inactivePersons = searchForPersons("Sluttede", false);
         List<Person> tempLeavePersons = searchForPersons("Permisjon", false);
 
-        logger.info("Number of users from LDAP: {}",
+        log.info("Number of users from LDAP: {}",
                 activePersons.size() + inactivePersons.size() + tempLeavePersons.size());
-        logger.info("Number of active: {}", activePersons.size());
-        logger.info("Number of inactive: {}", inactivePersons.size());
-        logger.info("Number of people on temporary leave: {}", tempLeavePersons.size());
+        log.info("Number of active: {}", activePersons.size());
+        log.info("Number of inactive: {}", inactivePersons.size());
+        log.info("Number of people on temporary leave: {}", tempLeavePersons.size());
 
         List<Person> allPersons = personRepository.findAll();
 
@@ -108,7 +106,7 @@ public class LdapSyncer {
                     personRepository.saveAndFlush(person);
                 })
                 .count();
-        logger.info("Made {} people inactive after syncing", inactivated);
+        log.info("Made {} people inactive after syncing", inactivated);
     }
 
     /**
