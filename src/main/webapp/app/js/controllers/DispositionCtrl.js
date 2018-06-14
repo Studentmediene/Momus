@@ -72,7 +72,6 @@ angular.module('momusApp.controllers')
         vm.submitArticleField = submitArticleField;
         vm.submitAdvertField = submitAdvertField;
 
-        vm.expandAllButtonRows = () => angular.element(".extra-button-line").collapse("show");
         vm.hideAllButtonRows = () => angular.element(".extra-button-line").collapse("hide");
 
         vm.showHelp = showHelp;
