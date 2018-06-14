@@ -112,11 +112,42 @@ angular.module('momusApp', [
             })
             .state('search', {
                 parent: 'root',
-                url: '/artikler?publication&section&status&persons&page_number&page_size&review&free',
+                url: '/artikler?defaultSearch&publication&section&status&review&free&persons&page_number&page_size&archived',
+                params: {
+                    defaultSearch: {type: 'bool'},
+                    publication: {type: 'int'},
+                    section: {type: 'int'},
+                    status: {type: 'int'},
+                    review: {type: 'int'},
+                    free: {type: 'string'},
+                    persons: {type: 'int', array: true},
+                    page_number: {type: 'int', value: 1},
+                    page_size: {type: 'int', value: 10},
+                    archived: {type: 'bool'}
+                },
+                resolve: {
+                    activePublication: Publication => Publication.active().$promise
+                        .then(pub => pub)
+                        .catch(() => null),
+                    publications: Publication => Publication.query().$promise,
+                    persons: Person => Person.query().$promise,
+                    sections: Article => Article.sections().$promise,
+                    statuses: Article => Article.statuses().$promise,
+                    reviews: Article => Article.reviewStatuses().$promise,
+                    searchParams: ($state, $stateParams, activePublication) => {
+                        const {['#']: _, ['defaultSearch']: defaultSearch, ...searchParams} = $stateParams;
+
+                        if(defaultSearch) {
+                            searchParams.publication = activePublication.id;
+                        }
+                        return searchParams;
+                    },
+                    results: (Article, searchParams) => Article.search({}, searchParams).$promise
+                },
                 templateUrl: 'partials/search/searchView.html',
                 controller: 'SearchCtrl',
                 controllerAs: 'vm',
-                reloadOnSearch: false,
+                reloadOnSearch: true,
                 title: "Artikkelsøk"
             })
             .state('article', {
@@ -191,14 +222,12 @@ angular.module('momusApp', [
         $resourceProvider.defaults.actions = RESOURCE_ACTIONS;
     }]).
     run(['$transitions', '$rootScope', 'TitleChanger', ($transitions, $rootScope, TitleChanger) => {
-
-        $transitions.onBefore({}, transition => {
+        $transitions.onStart({}, transition => {
             if(transition.from().name === '')
                 $rootScope.initialLoad = true;
             else
                 $rootScope.transitionLoad = true;
         });
-
         $transitions.onSuccess({}, transition => {
             TitleChanger.setTitle(transition.to().title || "");
 
@@ -207,4 +236,16 @@ angular.module('momusApp', [
             else
                 $rootScope.transitionLoad = false;
         });
+
+        $transitions.onStart({to: 'search'}, transition => {
+            const {['#']: _, ...params} = transition.params();
+            // Do default search if we come from another state and no parameters are specified or their default value
+            if(
+                transition.from().name !== 'search' &&
+                !Object.keys(params).some(p => params[p] !== transition.to().params[p].value)
+            ){
+                return transition.router.stateService.target(transition.to(), {defaultSearch: true});
+            }
+
+        })
     }]);
