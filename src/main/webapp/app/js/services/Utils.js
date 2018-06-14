@@ -76,4 +76,11 @@ angular.module('momusApp.services')
         return node => Array.from(node.children).reduce((acc, child) => {
             return acc + parseInt(getComputedStyle(child).height.replace("px", ""));
         }, 0) + "px";
+    })
+    .factory('autoBind', function() {
+        return object => Object.getOwnPropertyNames(object).forEach(prop => {
+            if(typeof prop === 'function') {
+                object[prop] = object[prop].bind(object);
+            }
+        });
     });

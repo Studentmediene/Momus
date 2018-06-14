@@ -1,5 +1,5 @@
 angular.module('momusApp.services')
-    .service('MessagingService', function(Person, $q, $interval, $location, $http, $transitions) {
+    .service('MessagingService', function($q, $interval, $location, $http, $transitions, Person, autoBind) {
         let session;
 
         class Session {
@@ -14,11 +14,7 @@ angular.module('momusApp.services')
                     new SockJS('/api/ws', null, { sessionId: () => this.id }),
                     {debug: false});
 
-                Object.getOwnPropertyNames(this).forEach(prop => {
-                    if(typeof prop === 'function') {
-                        this[prop] = this[prop].bind(this);
-                    }
-                });
+                autoBind(this);
             }
 
             connect() {
