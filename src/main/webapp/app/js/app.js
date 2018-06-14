@@ -59,7 +59,7 @@ angular.module('momusApp', [
                         }
                     },
                     env: $http => $http.get('/api/env/all').then(resp => resp.data),
-                    _frame: MessagingService => MessagingService.connect()
+                    session: (loggedInPerson, MessagingService) => MessagingService.createSession(loggedInPerson)
                 },
                 templateUrl: 'partials/nav/navView.html',
                 controller: 'NavbarCtrl',
@@ -200,11 +200,9 @@ angular.module('momusApp', [
     config(['$resourceProvider', 'RESOURCE_ACTIONS', ($resourceProvider, RESOURCE_ACTIONS) => {
         $resourceProvider.defaults.actions = RESOURCE_ACTIONS;
     }]).
-    run(['$transitions', '$rootScope', 'TitleChanger', 'MessagingService', ($transitions, $rootScope, TitleChanger, MessagingService) => {
+    run(['$transitions', '$rootScope', 'TitleChanger', ($transitions, $rootScope, TitleChanger) => {
 
         $transitions.onBefore({}, transition => {
-            MessagingService.unsubscribeFromAll();
-
             if(transition.from().name === '')
                 $rootScope.initialLoad = true;
             else
@@ -219,7 +217,4 @@ angular.module('momusApp', [
             else
                 $rootScope.transitionLoad = false;
         });
-    }])
-    .run(['$http', 'MessagingService', ($http, MessagingService) => {
-        $http.defaults.headers.common['X-MOM-SENDER'] = MessagingService.getSessionId;
     }]);

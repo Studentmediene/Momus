@@ -40,13 +40,14 @@ angular.module('momusApp.controllers')
         reviewStatuses,
         layoutStatuses,
         toIdLookup,
-        nodeHeight
+        nodeHeight,
+        session
     ){
         const vm = this;
 
         vm.maxNewPages = 100;
 
-        vm.connectedUsers = {};
+        vm.presentUsers = session.getPresentUsers();
 
         vm.publication = publication;
         vm.adverts = adverts;
@@ -84,7 +85,7 @@ angular.module('momusApp.controllers')
         vm.columnWidths = {};
         vm.toolbarStyle = {};
 
-        MessagingService.subscribeToDisposition(publication.id, {
+        session.subscribeToDisposition(publication.id, {
             page: data => {
                 const {entity, action} = data;
                 switch(action) {
