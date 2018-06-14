@@ -43,7 +43,10 @@
                         <option class="" value="">
                             Alle statuser
                         </option>
-                        <option ng-repeat="status in vm.statuses | filter:{deleted: false} | orderBy:'status_order'" value="{{ status.id }}" style="background: #0f0">
+                        <option
+                                ng-repeat="status in vm.statuses | filter:{deleted: false} | orderBy:'status_order'"
+                                ng-value="status.id"
+                        >
                             {{ status.name }}
                         </option>
                     </select>
@@ -58,7 +61,7 @@
                         <option value="">
                             Alle redaksjoner
                         </option>
-                        <option ng-repeat="section in vm.sections | filter:{deleted: false}" value="{{ section.id }}">
+                        <option ng-repeat="section in vm.sections | filter:{deleted: false}" ng-value="section.id">
                             {{ section.name }}
                         </option>
                     </select>
@@ -73,7 +76,7 @@
                         <option value="">
                             Alle korrekturstatuser
                         </option>
-                        <option ng-repeat="review in vm.reviews" value="{{ review.id }}">
+                        <option ng-repeat="review in vm.reviews" ng-value="review.id">
                             {{ review.name }}
                         </option>
                     </select>
