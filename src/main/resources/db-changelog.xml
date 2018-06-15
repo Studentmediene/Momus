@@ -736,20 +736,20 @@
         />
     </changeSet>
     <changeSet id="42_addnews" author="Christoffer">
-        <createTable tableName="news">
+        <createTable tableName="newsitem">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" />
             </column>
             <column name="title" type="VARCHAR(255)" />
-            <column name="date" type="DATE" />
+            <column name="date" type="DATETIME" />
             <column name="content" type="TEXT" />
             <column name="author_id" type="BIGINT">
                 <constraints nullable="false" />
             </column>
         </createTable>
         <addForeignKeyConstraint
-            baseTableName="news" baseColumnNames="author_id"
-            constraintName="FK_news_person"
+            baseTableName="newsitem" baseColumnNames="author_id"
+            constraintName="FK_newsitem_person"
             referencedTableName="person"
             referencedColumnNames="id"
         />

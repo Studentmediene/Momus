@@ -92,7 +92,7 @@ angular.module('momusApp', [
                             [];
                     },
                     news: (News, TipAndNewsService) =>
-                            News.query({}).$promise.then(news => news.length > 0 ? TipAndNewsService.findNew(news) : news)
+                            News.query({}).$promise
 
                 },
                 templateUrl: 'partials/front/frontPageView.html',
@@ -147,6 +147,10 @@ angular.module('momusApp', [
             .state('info', {
                 parent: 'root',
                 url: '/info',
+                resolve: {
+                    news: (News) =>
+                        News.query({}).$promise
+                },
                 templateUrl: 'partials/info/infoView.html',
                 controller: 'InfoCtrl',
                 controllerAs: 'vm',
@@ -156,9 +160,12 @@ angular.module('momusApp', [
             {
                 parent: 'root',
                 url: '/admin',
+                resolve: {
+                    news: News => News.query().$promise
+                },
                 templateUrl: 'partials/admin/adminView.html',
                 controller: 'AdminCtrl',
-                title: 'Admin',
+                title: 'Adminpanel',
                 controllerAs: 'vm',
                 access: ["ROLE_ADMIN"]
             })

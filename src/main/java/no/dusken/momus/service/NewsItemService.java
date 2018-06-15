@@ -23,19 +23,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 @Service
-public class NewsService {
+public class NewsItemService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private NewsRepository newsRepository;
+    private NewsItemRepository newsItemRepository;
 
-    public News updateNews(News news){
-        news = newsRepository.save(news);
+    public NewsItem updateNewsItem(NewsItem newsItem){
+        newsItem = newsItemRepository.save(newsItem);
 
-        logger.info("Updated publication {}.", news.getTitle());
+        logger.info("Updated newsItem {}.", newsItem.getTitle());
 
-        // It seems to be necessary to reaccess the publication or else the releaseDate is not returned in the proper format.
-        return newsRepository.findOne(news.getId());
+        return newsItem;
     }
 }

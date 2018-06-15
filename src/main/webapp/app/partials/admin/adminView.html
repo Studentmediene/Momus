@@ -23,6 +23,7 @@
                 </div>
                 <table class="table">
                     <tbody ng-repeat="n in vm.news
+                                                    | orderBy: '-date'
                                                     | startFrom:(vm.currentPage-1)*vm.pageSize
                                                     | limitTo:vm.pageSize"
                     class="news-item">

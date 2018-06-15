@@ -17,8 +17,11 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('InfoCtrl', function($scope, TipAndNewsService, News){
+    .controller('InfoCtrl', function($scope, TipAndNewsService, News, news){
         $scope.pageSize = 5;
+        $scope.currentPage = 1;
+
+        $scope.news = news;
 
         $scope.randomTip = function() {
             $scope.tip = TipAndNewsService.getRandomTip();
@@ -26,8 +29,4 @@ angular.module('momusApp.controllers')
 
         $scope.randomTip();
 
-        //$scope.news = TipAndNewsService.getOldNews();
-        $scope.news = News.query({}, news => {
-            news.length > 0 ? TipAndNewsService.findNew(news) : news;
-        });
     });

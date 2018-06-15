@@ -57,6 +57,7 @@ angular.module('momusApp.controllers')
         }
 
         vm.pageSize = 3;
+        vm.currentPage = 1;
 
         vm.updateRandomTip = () => {vm.tip = TipAndNewsService.getRandomTip()};
         vm.updateFavouriteSection = updateFavouriteSection;

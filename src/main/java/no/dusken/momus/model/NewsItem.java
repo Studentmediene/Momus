@@ -1,17 +1,17 @@
 package no.dusken.momus.model;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 @Entity
-public class News {
+public class NewsItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
 
-    private LocalDate date;
+    private ZonedDateTime date;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Person author;
@@ -19,9 +19,9 @@ public class News {
     private String content;
 
 
-    public News ( ) { }
+    public NewsItem ( ) { }
 
-    public News( Long id ) {
+    public NewsItem( Long id ) {
         this.id = id;
     }
 
@@ -29,11 +29,11 @@ public class News {
         return id;
     }
 
-    public LocalDate getDate() {
+    public ZonedDateTime getDate() {
         return date;
     }
 
-    public void setDate( LocalDate date ) {
+    public void setDate( ZonedDateTime date ) {
         this.date = date;
     }
 

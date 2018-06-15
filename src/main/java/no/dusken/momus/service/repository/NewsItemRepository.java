@@ -16,11 +16,11 @@
 
 package no.dusken.momus.service.repository;
 
-import no.dusken.momus.model.News;
+import no.dusken.momus.model.NewsItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface NewsRepository extends JpaRepository<News, Long> {
+public interface NewsItemRepository extends JpaRepository<NewsItem, Long> {
 
 }

@@ -23,7 +23,30 @@ angular.module('momusApp.resources')
             newsid: '@id'
         },
         {
-            save: {method:'POST'},
-            update : {method: 'PUT'}
-        })
+            query: {method:'GET', isArray: true, transformResponse:newsResponseTransform},
+            save: {method:'POST', transformRequest: newsRequestTransform},
+            update: {method:'PUT', transformRequest: newsRequestTransform}
+        },
+        newsResponseTransform,
+        newsRequestTransform
+    );
 });
+
+function newsResponseTransform(news) {
+    if(!news) return news;
+    var dateThreshold = new Date(new Date().setDate(new Date().getDate() - 14));
+    return angular.fromJson(news).map((newsItem, i) => {
+        var new_date = new Date(newsItem.date);
+        return {
+        ...newsItem,
+        date: new_date
+    }});
+}
+
+function newsRequestTransform(newsItem) {
+    if(!newsItem || !('date' in newsItem)) return angular.toJson(newsItem);
+    return angular.toJson({
+        ...newsItem,
+        date: newsItem.date.toISOString()
+    });
+}
