@@ -25,13 +25,13 @@ import java.util.List;
 @Repository
 public interface PageRepository extends JpaRepository<Page, Long> {
 
-    public List<Page> findByPublicationId(Long id);
+    List<Page> findByPublicationId(Long id);
 
-    public List<Page> findByPublicationIdOrderByPageNrAsc(Long id);
+    List<Page> findByPublicationIdOrderByPageNrAsc(Long id);
 
-    public void deleteByPublicationId(Long id);
+    void deleteByPublicationId(Long id);
 
-    public int countByLayoutStatusIdAndPublicationId(Long status, Long id);
+    int countByLayoutStatusIdAndPublicationId(Long status, Long id);
 
 
 }

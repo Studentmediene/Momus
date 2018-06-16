@@ -16,13 +16,21 @@
 
 package no.dusken.momus.model;
 
+import lombok.*;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class ArticleType {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = {}, callSuper = true)
+@ToString(of = {"name"}, callSuper = true)
+@Builder(toBuilder = true)
+public class ArticleType extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,58 +40,4 @@ public class ArticleType {
     private String description;
     private int typeOrder;
     private boolean deleted;
-
-    public ArticleType() {
-    }
-
-    public ArticleType(Long id, String name, String description) {
-        this(name, description);
-        this.id = id;
-    }
-
-    public ArticleType(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getTypeOrder(){ return typeOrder; }
-
-    public void setTypeOrder(int typeOrder) { this.typeOrder = typeOrder; }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    @Override
-    public String toString() {
-        return "ArticleType{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

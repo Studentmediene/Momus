@@ -16,17 +16,20 @@
 
 package no.dusken.momus.model;
 
+import lombok.*;
+
 import javax.persistence.*;
 import java.util.Comparator;
 import java.util.Set;
 
 @Entity
-public class Page implements Comparable<Page>, Comparator<Page>{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = {}, callSuper = true)
+@ToString(of = {"pageNr", "publication"}, callSuper = true)
+@Builder(toBuilder = true)
+public class Page extends AbstractEntity implements Comparable<Page>, Comparator<Page>{
     private int pageNr;
     private String note;
     private boolean advertisement;
@@ -40,83 +43,11 @@ public class Page implements Comparable<Page>, Comparator<Page>{
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Article> articles;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Advert> adverts;
+
     @ManyToOne(fetch = FetchType.EAGER)
     private LayoutStatus layoutStatus;
-
-    public Page(){
-
-    }
-
-    public Page(Long id){
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public int getPageNr() {
-        return pageNr;
-    }
-
-    public void setPageNr(int pageNr) {
-        this.pageNr = pageNr;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public void setAdvertisement(boolean advertisement){
-        this.advertisement = advertisement;
-    }
-    public boolean isAdvertisement() {
-        return this.advertisement;
-    }
-
-    public void setWeb(boolean web) {this.web = web;}
-    public boolean isWeb() { return this.web; }
-
-    public boolean isDone() {
-        return done;
-    }
-
-    public void setDone(boolean done) {
-        this.done = done;
-    }
-
-    public Set<Article> getArticles() {
-        return articles;
-    }
-
-    public void setArticles(Set<Article> articles) {
-        this.articles = articles;
-    }
-
-    public Publication getPublication() {
-        return publication;
-    }
-
-    public void setPublication(Publication publication) {
-        this.publication = publication;
-    }
-
-    public LayoutStatus getLayoutStatus() {
-        return layoutStatus;
-    }
-
-    public void setLayoutStatus(LayoutStatus layoutStatus) {
-        this.layoutStatus = layoutStatus;
-    }
-
-    @Override
-    public String toString() {
-        return publication.getId() + " page: " + pageNr;
-    }
 
     @Override
     public int compareTo(Page page) {
@@ -126,17 +57,5 @@ public class Page implements Comparable<Page>, Comparator<Page>{
     @Override
     public int compare(Page page, Page t1) {
         return page.compareTo(t1);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Page page = (Page) o;
-
-        if (!id.equals(page.id)) return false;
-
-        return true;
     }
 }

@@ -20,149 +20,67 @@ angular.module('momusApp.controllers')
     .controller('SearchCtrl', function (
         $scope,
         $location,
-        $q,
         $templateRequest,
         $uibModal,
-        Person,
-        Publication,
+        $state,
+        $stateParams,
         Article,
-        MessageModal
+        MessageModal,
+        activePublication,
+        publications,
+        persons,
+        sections,
+        statuses,
+        reviews,
+        searchParams,
+        results
     ) {
-        var pageSize = 100;
+        const vm = this;
 
-        $scope.data = [];
-        $scope.hasNextPage = false;
-        $scope.defaultSearch = {
-            free: '',
-            status: '',
-            review: '',
-            persons: [],
-            section: '',
-            publication: '',
-            page_number: 1,
-            page_size: pageSize,
-            archived: false
-        };
+        vm.publications = publications;
+        vm.persons = persons;
+        vm.sections = sections;
+        vm.statuses = statuses;
+        vm.reviews = reviews;
+        vm.hasNextPage = results.length > searchParams.page_size;
+        vm.results = vm.hasNextPage ? results.slice(0, results.length-1) : results;
+        vm.searchParams = searchParams;
+        vm.articleSortReverse = false;
+        vm.articleSortType = "[publication.release_date,section.name]";
 
-        $scope.articleSortReverse = false;
-        $scope.articleSortType = "[publication.release_date,section.name]";
-        $scope.search = angular.copy($scope.defaultSearch);
+        vm.createArticle = createArticle;
+        vm.sortSearch = sortSearch;
+        vm.search = search;
+        vm.showHelp = showHelp;
 
-        // Get stuff from the server
-        $q.all([Person.query().$promise, Publication.query().$promise]).then(function (data) {
-            $scope.persons = data[0];
-            $scope.publications = data[1];
-            if (updateSearchParametersFromUrl()) { // If the URL contained a search
-                search();
-            } else if ($scope.publications.length > 0) { // default search on the newest publication
-                var active = Publication.active({}, function(){
-                    $scope.search.publication = active.id;
-                    $location.search('publication', $scope.search.publication).replace();
-                    search();
-                });
-            }
-        });
-
-        $scope.sections = Article.sections();
-        $scope.statuses = Article.statuses();
-        $scope.reviews = Article.reviewStatuses();
-
-        $scope.$on('$routeUpdate', function () { // when going back/forward
-            updateSearchParametersFromUrl();
-
-            if ($scope.data) { // if we're not doing a search, trigger one
-                search();
-            }
-        });
-
-
-        /**
-         * Iterates over the $scope.search object and tries to read the
-         * corresponding values from the URL, if any is present the function will return true
-         */
-        function updateSearchParametersFromUrl() {
-            var urlSearch = $location.search();
-            var aValueWasSet = false;
-
-            $scope.search = angular.copy($scope.defaultSearch);
-
-            for (var key in $scope.search) {
-                var value = urlSearch[key];
-
-                if (value) {
-                    $scope.search[key] = value;
-                    aValueWasSet = true;
-                }
-            }
-
-            if (typeof $scope.search.persons == "string") {
-                // convert persons to array, as if it's only one value it will look like a string
-                $scope.search.persons = [$scope.search.persons];
-            }
-
-            return aValueWasSet;
-        }
-
-
-        function rememberSearchState() {
-            var newValues = $scope.search;
-            for (var key in newValues) {
-                var value = newValues[key];
-
-                $location.search(key, value ? value : null);
-            }
-        }
-
-
-        $scope.searchFunc = function (pageDelta) {
+        function search(pageDelta) {
             if (pageDelta) {
-                $scope.search.page_number = parseInt($scope.search.page_number, 10) + pageDelta; // parse, as suddenly it's a string!
+                vm.searchParams.page_number = parseInt(vm.searchParams.page_number, 10) + pageDelta; // parse, as suddenly it's a string!
             }
-
-            rememberSearchState();
-            search();
-        };
-
-
-        function search() {
-            $scope.data = null;
-            $scope.loading = true;
-            $scope.noArticles = false;
-
-            const articles = Article.search({}, $scope.search, () => {
-                $scope.hasNextPage = (articles.length > pageSize); // search always returns one too many
-                $scope.data = articles.slice(0, pageSize);
-                $scope.loading = false;
-                if ($scope.data.length <= 0) {
-                    $scope.noArticles = true;
-                }
-            });
+            $state.go('.', vm.searchParams, {inherit: false});
         }
 
-        $scope.sortSearch = function(type, switchDir){
-            if($scope.articleSortType != type){
-                $scope.articleSortReverse = switchDir;
-                $scope.articleSortType = type;
+        function sortSearch(type, switchDir){
+            if(vm.articleSortType != type){
+                vm.articleSortReverse = switchDir;
+                vm.articleSortType = type;
             } else {
-                $scope.articleSortReverse = !$scope.articleSortReverse;
+                vm.articleSortReverse = !vm.articleSortReverse;
             }
 
             $scope.$apply();
-        };
+        }
 
-        $scope.createArticle = function(){
-            var modal = $uibModal.open({
+        function createArticle() {
+            $uibModal.open({
                 templateUrl: 'partials/article/createArticleModal.html',
                 controller: 'CreateArticleModalCtrl'
-            });
-            modal.result.then(function(id){
-                $location.url('artikler/' + id);
-            });
-        };
+            }).result.then(id => $state.go('article', {id: id}));
+        }
 
-        $scope.showHelp = function(){
+        function showHelp() {
             $templateRequest("partials/templates/help/searchHelp.html").then(function(template){
                 MessageModal.info(template);
             });
-        };
+        }
     });

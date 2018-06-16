@@ -190,3 +190,19 @@ td > ul, td > ol {
 .news-meta td {
     padding: 4px 8px !important;
 }
+
+.initial-load-spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    text-align: center;
+}
+
+.transition-load-spinner {
+    margin-top: 10px;
+    margin-bottom: auto;
+    &.visible-xs {
+        margin-right: 10px;
+        float: right;
+    }
+}

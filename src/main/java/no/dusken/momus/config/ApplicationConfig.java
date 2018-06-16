@@ -61,15 +61,8 @@ class ApplicationConfig extends WebMvcConfigurerAdapter {
 
     @Bean(name = "userDetailsService")
     @Profile("noAuth")
-    public UserDetailsService userDetailsServiceDev(PersonRepository personRepository) {
-        UserDetailsService userDetailsService = new UserDetailsServiceDev(personRepository);
-
-        // Log in as default user
-        Person loggedIn = userDetailsService.getLoggedInPerson();
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(loggedIn, null, loggedIn.getAuthorities()));
-
-        return new UserDetailsServiceDev(personRepository);
+    public UserDetailsService userDetailsServiceDev() {
+        return new UserDetailsServiceDev();
     }
 
     @Bean(name = "userDetailsService")

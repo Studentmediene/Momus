@@ -45,7 +45,7 @@ public class KeyValueServiceTest extends AbstractServiceTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        keyValue1 = new KeyValue("DAKEY", "2342");
+        keyValue1 = KeyValue.builder().key("DAKEY").value("2342").build();
     }
 
     @Test
