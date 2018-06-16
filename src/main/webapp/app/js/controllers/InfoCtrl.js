@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('InfoCtrl', function($scope, TipAndNewsService, News, news){
+    .controller('InfoCtrl', function($scope, TipAndNewsService, news){
         $scope.pageSize = 5;
         $scope.currentPage = 1;
 

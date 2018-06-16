@@ -91,8 +91,8 @@ angular.module('momusApp', [
                             Page.layoutStatusCounts({pubid: activePublication.id}).$promise :
                             [];
                     },
-                    news: (News, TipAndNewsService) =>
-                            News.query({}).$promise
+                    news: (NewsItem) =>
+                            NewsItem.query({}).$promise
 
                 },
                 templateUrl: 'partials/front/frontPageView.html',
@@ -179,8 +179,8 @@ angular.module('momusApp', [
                 parent: 'root',
                 url: '/info',
                 resolve: {
-                    news: (News) =>
-                        News.query({}).$promise
+                    news: (NewsItem) =>
+                        NewsItem.query({}).$promise
                 },
                 templateUrl: 'partials/info/infoView.html',
                 controller: 'InfoCtrl',
@@ -192,7 +192,7 @@ angular.module('momusApp', [
                 parent: 'root',
                 url: '/admin',
                 resolve: {
-                    news: News => News.query().$promise
+                    news: NewsItem => NewsItem.query().$promise
                 },
                 templateUrl: 'partials/admin/adminView.html',
                 controller: 'AdminCtrl',

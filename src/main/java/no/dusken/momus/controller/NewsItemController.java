@@ -30,8 +30,8 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/news")
-public class NewsController {
+@RequestMapping("/newsitem")
+public class NewsItemController {
 
     @Autowired
     NewsItemRepository newsItemRepository;

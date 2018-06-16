@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.services')
-    .service('TipAndNewsService', function (News) {
+    .service('TipAndNewsService', function (NewsItem) {
         var randomTips = [
             // General
             '<h4>Mobil/tablet</h4><p>Momus fungerer bra på mobile enheter.</p>',

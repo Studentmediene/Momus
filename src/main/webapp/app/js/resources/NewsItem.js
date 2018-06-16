@@ -17,36 +17,30 @@
 'use strict';
 
 angular.module('momusApp.resources')
-    .factory('News', $resource => {
-    return $resource('/api/news/:newsid/:resource',
+    .factory('NewsItem', momResource => {
+    return momResource('/api/newsitem/:newsitemid/:resource',
         {
-            newsid: '@id'
+            newsitemid: '@id'
         },
-        {
-            query: {method:'GET', isArray: true, transformResponse:newsResponseTransform},
-            save: {method:'POST', transformRequest: newsRequestTransform},
-            update: {method:'PUT', transformRequest: newsRequestTransform}
-        },
-        newsResponseTransform,
-        newsRequestTransform
+        {},
+        newsItemRequestTransform,
+        newsItemResponseTransform
     );
 });
 
-function newsResponseTransform(news) {
-    if(!news) return news;
+function newsItemResponseTransform(newsItem) {
+    if(!newsItem) return newsItem;
     var dateThreshold = new Date(new Date().setDate(new Date().getDate() - 14));
-    return angular.fromJson(news).map((newsItem, i) => {
-        var new_date = new Date(newsItem.date);
-        return {
+    return {
         ...newsItem,
-        date: new_date
-    }});
+        date: new Date(newsItem.date)
+    };
 }
 
-function newsRequestTransform(newsItem) {
-    if(!newsItem || !('date' in newsItem)) return angular.toJson(newsItem);
-    return angular.toJson({
+function newsItemRequestTransform(newsItem) {
+    if(!newsItem || newsItem.date == undefined) return newsItem;
+    return {
         ...newsItem,
         date: newsItem.date.toISOString()
-    });
+    };
 }
