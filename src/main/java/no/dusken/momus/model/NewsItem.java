@@ -1,10 +1,18 @@
 package no.dusken.momus.model;
 
+import lombok.*;
+
 import javax.persistence.*;
 import java.time.ZonedDateTime;
 
 @Entity
-public class NewsItem {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = {}, callSuper = true)
+@ToString(of = {"title", "date", "author"}, callSuper = true)
+@Builder(toBuilder = true)
+public class NewsItem extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,46 +26,4 @@ public class NewsItem {
 
     private String content;
 
-
-    public NewsItem ( ) { }
-
-    public NewsItem( Long id ) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public ZonedDateTime getDate() {
-        return date;
-    }
-
-    public void setDate( ZonedDateTime date ) {
-        this.date = date;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle( String title ) {
-        this.title = title;
-    }
-
-    public Person getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Person author) {
-        this.author = author;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent( String content ) {
-        this.content = content;
-    }
 }

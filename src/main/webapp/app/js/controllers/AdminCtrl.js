@@ -36,7 +36,6 @@ angular.module('momusApp.controllers')
 
         vm.saveEditedNews = saveEditedNews;
         vm.editNews = editNews;
-        vm.loggedInPerson = loggedInPerson;
         vm.news = news;
 
         vm.pageSize = 5;
@@ -45,9 +44,8 @@ angular.module('momusApp.controllers')
         function saveEditedNews() {
             vm.isSaving = true;
             if (vm.new_news.id == undefined) { // no id means it's a new one
-                vm.new_news.author = vm.loggedInPerson.toJSON();
+                vm.new_news.author = loggedInPerson;
                 const newsItem = NewsItem.save({}, vm.new_news, function(data) {
-                    newsItem.date = new Date(newsItem.date);
                     vm.news.push(newsItem);
                     vm.editNews(newsItem);
                     vm.isSaving = false;
