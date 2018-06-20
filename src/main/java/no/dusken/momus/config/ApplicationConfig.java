@@ -6,16 +6,13 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 
 import com.google.common.collect.ImmutableMap;
-import no.dusken.momus.authentication.UserDetailsService;
-import no.dusken.momus.authentication.UserDetailsServiceDev;
-import no.dusken.momus.authentication.UserDetailsServiceImpl;
-import no.dusken.momus.exceptions.ExceptionHandler;
-import no.dusken.momus.mapper.HibernateAwareObjectMapper;
 
-import no.dusken.momus.model.Person;
-import no.dusken.momus.service.repository.PersonRepository;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
@@ -30,8 +27,6 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -39,6 +34,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
 
 import liquibase.integration.spring.SpringLiquibase;
+import no.dusken.momus.authentication.UserDetailsService;
+import no.dusken.momus.authentication.UserDetailsServiceDev;
+import no.dusken.momus.authentication.UserDetailsServiceImpl;
+import no.dusken.momus.exceptions.ExceptionHandler;
+import no.dusken.momus.mapper.HibernateAwareObjectMapper;
+import no.dusken.momus.service.repository.PersonRepository;
 
 @Configuration
 @EnableWebMvc

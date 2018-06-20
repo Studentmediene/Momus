@@ -9,6 +9,7 @@ npm-debug.log
 .settings
 .classpath
 .project
+.factorypath
 org.eclipse*
 .vscode/
 *.swo

@@ -16,24 +16,44 @@
 
 package no.dusken.momus.controller;
 
-import no.dusken.momus.config.MockToken;
-import no.dusken.momus.ldap.LdapSyncer;
-import no.dusken.momus.model.*;
-import no.dusken.momus.service.ArticleService;
-import no.dusken.momus.service.PublicationService;
-import no.dusken.momus.service.drive.GoogleDriveService;
-import no.dusken.momus.service.repository.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
-import java.util.*;
+import no.dusken.momus.config.MockToken;
+import no.dusken.momus.ldap.LdapSyncer;
+import no.dusken.momus.model.Advert;
+import no.dusken.momus.model.Article;
+import no.dusken.momus.model.ArticleReview;
+import no.dusken.momus.model.ArticleStatus;
+import no.dusken.momus.model.ArticleType;
+import no.dusken.momus.model.Person;
+import no.dusken.momus.model.Publication;
+import no.dusken.momus.model.Section;
+import no.dusken.momus.service.PublicationService;
+import no.dusken.momus.service.repository.AdvertRepository;
+import no.dusken.momus.service.repository.ArticleRepository;
+import no.dusken.momus.service.repository.ArticleReviewRepository;
+import no.dusken.momus.service.repository.ArticleStatusRepository;
+import no.dusken.momus.service.repository.ArticleTypeRepository;
+import no.dusken.momus.service.repository.PersonRepository;
+import no.dusken.momus.service.repository.SectionRepository;
 
 /**
  * Dev only, not accessible when live
@@ -44,9 +64,6 @@ import java.util.*;
 public class DevController {
     @Autowired
     private SectionRepository sectionRepository;
-
-    @Autowired
-    private ArticleService articleService;
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -68,12 +85,6 @@ public class DevController {
 
     @Autowired
     private AdvertRepository advertRepository;
-
-    @Autowired
-    private PublicationRepository publicationRepository;
-
-    @Autowired
-    private GoogleDriveService driveService;
 
     @Autowired
     private Environment env;
