@@ -18,6 +18,9 @@ package no.dusken.momus.service.repository;
 
 import no.dusken.momus.model.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,11 +30,16 @@ public interface PageRepository extends JpaRepository<Page, Long> {
 
     List<Page> findByPublicationId(Long id);
 
+    @Query("select page.id from Page page where page.publication.id = :pubId order by page.pageNr asc")
+    List<Long> getPageOrderByPublicationId(@Param("pubId") Long pubId);
+
     List<Page> findByPublicationIdOrderByPageNrAsc(Long id);
+
+    @Modifying
+    @Query("update Page p set p.pageNr = :pageNr where p.id = :pageId")
+    void updatePageNr(@Param("pageNr") Integer pageNr, @Param("pageId") Long pageId);
 
     void deleteByPublicationId(Long id);
 
     int countByLayoutStatusIdAndPublicationId(Long status, Long id);
-
-
 }

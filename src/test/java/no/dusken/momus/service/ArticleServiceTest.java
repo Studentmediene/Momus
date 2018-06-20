@@ -235,6 +235,32 @@ public class ArticleServiceTest extends AbstractServiceTest {
     }
 
     /**
+     * Method: {@link ArticleService#updateArticleStatus(Long, Article)}
+     */
+    @Test
+    public void testUpdateArticleStatus() {
+        Article article = Article.builder()
+                .name("Updated name")
+                .comment("my cool comment")
+                .status(articleStatus2)
+                .review(articleReview2)
+                .build();
+        article.setId(article1.getId());
+
+        ArticleService articleServiceSpy = spy(articleService);
+        doReturn(article1).when(articleServiceSpy).updateArticle(article);
+        doReturn(new ArticleRevision()).when(articleServiceSpy).createRevision(article);
+
+        article = articleServiceSpy.updateArticleStatus(article.getId(), article);
+
+        verify(articleServiceSpy, times(1)).createRevision(article1);
+        verify(articleServiceSpy, times(1)).updateArticle(article1);
+        assertEquals("my cool comment", article.getComment());
+        assertEquals(articleStatus2.getName(), article.getStatus().getName());
+        assertEquals(articleReview2.getName(), article.getReview().getName());
+    }
+
+    /**
      * Method: {@link ArticleService#updateArticleContent(Article)}
      */
     @Test

@@ -20,8 +20,6 @@ package no.dusken.momus.service;
 import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.ArticleRepository;
-import no.dusken.momus.service.repository.LayoutStatusRepository;
-import no.dusken.momus.service.repository.PageRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,24 +34,38 @@ public class PublicationService {
     private PublicationRepository publicationRepository;
 
     @Autowired
-    private PageRepository pageRepository;
+    private PageService pageService;
 
     @Autowired
     private ArticleRepository articleRepository;
 
-    @Autowired
-    private LayoutStatusRepository layoutStatusRepository;
+    /**
+     *
+     * @return Returns the oldest publication that has not been released yet at the time of the date parameter
+     */
+    public Publication getActivePublication(LocalDate date){
+        List<Publication> publications = publicationRepository.findAllByOrderByReleaseDateDesc();
+
+        if(publications.isEmpty()) return null;
+
+        if(publications.size() == 1) return publications.get(0);
+
+        Publication active = publications.get(0);
+        for(Publication p : publications.subList(1,publications.size())){
+            if(p.getReleaseDate().isBefore(date)){
+                return active;
+            }else{
+                active = p;
+            }
+        }
+        return active;
+    }
 
     public Publication savePublication(Publication publication, Integer numEmptyPages){
-        Publication newPublication = publicationRepository.save(publication);
-        newPublication = publicationRepository.findOne(newPublication.getId());
-        for(int i = 0; i < numEmptyPages; i++){
-            Page newPage = new Page();
-            newPage.setPageNr(i + 1);
-            newPage.setPublication(newPublication);
-            newPage.setLayoutStatus(layoutStatusRepository.findByName("Ukjent"));
-            pageRepository.save(newPage);
-        }
+        Publication newPublication = publicationRepository.saveAndFlush(publication);
+
+        pageService.createEmptyPagesInPublication(newPublication.getId(), 0, numEmptyPages);
+
         log.info("Created new publication with data: {}", newPublication);
 
         return newPublication;
@@ -102,106 +114,5 @@ public class PublicationService {
             colophonBuilder.append(p.getName()).append("\r\n");
         }
         return colophonBuilder.toString();
-    }
-
-    /**
-     *
-     * @return Returns the oldest publication that has not been released yet at the time of the date parameter
-     */
-    public Publication getActivePublication(LocalDate date){
-        List<Publication> publications = publicationRepository.findAllByOrderByReleaseDateDesc();
-
-        if(publications.isEmpty()) return null;
-
-        if(publications.size() == 1) return publications.get(0);
-
-        Publication active = publications.get(0);
-        for(Publication p : publications.subList(1,publications.size())){
-            if(p.getReleaseDate().isBefore(date)){
-                return active;
-            }else{
-                active = p;
-            }
-        }
-        return active;
-    }
-
-    public List<Page> savePage(Page page){
-        List<Page> pages = pageRepository.findByPublicationIdOrderByPageNrAsc(page.getPublication().getId());
-        Collections.sort(pages);
-
-        for(int i = page.getPageNr()-1; i < pages.size(); i++) {
-            pages.get(i).setPageNr(i+2);
-        }
-
-        pageRepository.save(pages);
-        
-        pageRepository.saveAndFlush(page);
-        
-        return pageRepository.findByPublicationIdOrderByPageNrAsc(page.getPublication().getId());
-    }
-
-    public List<Page> saveTrailingPages(List<Page> pages){
-        Publication publication = pages.get(0).getPublication();
-        List<Page> existingPages = pageRepository.findByPublicationIdOrderByPageNrAsc(publication.getId());
-        Collections.sort(existingPages);
-
-        for(int i = pages.get(0).getPageNr()-1; i < existingPages.size(); i++) {
-            existingPages.get(i).setPageNr(i + pages.size() + 1);
-        }
-
-        pageRepository.save(existingPages);
-        pageRepository.save(pages);
-        
-        return pageRepository.findByPublicationIdOrderByPageNrAsc(publication.getId());
-    }
-
-	public Page updatePageMeta(Page page){
-		Page existing = pageRepository.findOne(page.getId());
-		
-		existing.setNote(page.getNote());
-		existing.setAdverts(page.getAdverts());
-		existing.setAdvertisement(page.isAdvertisement());
-		existing.setWeb(page.isWeb());
-		existing.setDone(page.isDone());
-		existing.setArticles(page.getArticles());
-		existing.setLayoutStatus(page.getLayoutStatus());
-		
-		return pageRepository.saveAndFlush(existing);
-	}
-
-    /**
-     * Updates pages that are following each other. Undefined behavior if there are gaps!
-     */
-    public List<Page> updateTrailingPages(List<Page> pages) {
-        Publication publication = pages.get(0).getPublication();
-        List<Page> otherPages = pageRepository.findByPublicationIdOrderByPageNrAsc(publication.getId());
-        otherPages.removeAll(pages);
-        Collections.sort(otherPages);
-
-        for(int i = 0; i < pages.get(0).getPageNr()-1;i++)
-            otherPages.get(i).setPageNr(i+1);
-        for(int i = pages.get(0).getPageNr()-1; i < otherPages.size(); i++)
-            otherPages.get(i).setPageNr(i+1+pages.size());
-
-        pageRepository.save(otherPages);
-        pageRepository.save(pages);
-
-        return pageRepository.findByPublicationIdOrderByPageNrAsc(publication.getId());        
-    }
-
-    public List<Page> deletePage(Page page){
-        Publication publication = page.getPublication();
-        List<Page> pages = pageRepository.findByPublicationIdOrderByPageNrAsc(publication.getId());
-        Collections.sort(pages);
-
-        for(int i = page.getPageNr()-1; i < pages.size(); i++) {
-            pages.get(i).setPageNr(i);
-        }
-
-        pageRepository.save(pages);
-        pageRepository.delete(page);
-
-        return pageRepository.findByPublicationIdOrderByPageNrAsc(publication.getId());                
     }
 }

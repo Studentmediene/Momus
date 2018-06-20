@@ -25,6 +25,7 @@ angular.module('momusApp.resources')
             {
                 me: { method: 'GET' , params: {id: 'me'}, cache: true },
                 updateFavouritesection: {method: 'PATCH', params: {id: 'me', resource: 'favouritesection'}, hasBody: false },
-                loggedIn: { method: 'GET', params: {resource: 'loggedin'}, isArray: true }
+                loggedIn: { method: 'GET', params: {resource: 'loggedin'}, isArray: true },
+                updateSessionState: {method: 'PUT', url: '/api/person/sessions/:id', hasBody: false }
             })
     });

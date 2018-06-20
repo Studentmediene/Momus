@@ -20,6 +20,7 @@ import com.google.api.services.drive.model.File;
 import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.*;
+import no.dusken.momus.model.websocket.Action;
 import no.dusken.momus.service.drive.GoogleDriveService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
@@ -60,6 +61,9 @@ public class ArticleService {
     @Autowired
     private ArticleQueryBuilder articleQueryBuilder;
 
+    @Autowired
+    private MessagingService messagingService;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -93,12 +97,16 @@ public class ArticleService {
 
         Article newArticle = articleRepository.saveAndFlush(article);
         log.info("Article with id {} created with data: {}", newArticle.getId(), newArticle);
+
+        messagingService.broadcastEntityAction(article, Action.CREATE);
         return newArticle;
     }
 
     public Article updateArticle(Article article) {
         article.setLastUpdated(ZonedDateTime.now());
         log.info("Article with id {} updated, data: {}", article.getId(), article);
+
+        messagingService.broadcastEntityAction(article, Action.UPDATE);
         return articleRepository.saveAndFlush(article);
     }
 
@@ -139,6 +147,22 @@ public class ArticleService {
         existing.setQuoteCheckStatus(article.isQuoteCheckStatus());
         existing.setExternalAuthor(article.getExternalAuthor());
         existing.setExternalPhotographer(article.getExternalPhotographer());
+        existing.setPhotoStatus(article.getPhotoStatus());
+        existing.setReview(article.getReview());
+
+        if (!article.getStatus().equals(oldStatus)) {
+            createRevision(existing);
+        }
+
+        return updateArticle(existing);
+    }
+
+    public Article updateArticleStatus(Long id, Article article) {
+        Article existing = getArticleById(id);
+        ArticleStatus oldStatus = existing.getStatus();
+
+        existing.setStatus(article.getStatus());
+        existing.setComment(article.getComment());
         existing.setPhotoStatus(article.getPhotoStatus());
         existing.setReview(article.getReview());
 
@@ -254,5 +278,4 @@ public class ArticleService {
 
         return html;
     }
-
 }

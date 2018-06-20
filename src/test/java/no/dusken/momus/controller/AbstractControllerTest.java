@@ -72,6 +72,12 @@ public abstract class AbstractControllerTest {
                 .content(content);
     }
 
+    public RequestBuilder buildDelete(String url) {
+        return delete(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
+    }
+
     public ResultActions performPutExpectOk(String url, String content) throws Exception {
         return mockMvc.perform(buildPut(url, content))
                 .andDo(print())
@@ -92,6 +98,12 @@ public abstract class AbstractControllerTest {
 
     public ResultActions performPostExpectOk(String url, String content) throws Exception {
         return mockMvc.perform(buildPost(url, content))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    public ResultActions performDeleteExpectOk(String url) throws Exception {
+        return mockMvc.perform(buildDelete(url))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

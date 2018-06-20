@@ -29,7 +29,7 @@
     </div>
     <div class="row d-toolbar" scroll-trigger="d-toolbar-attach" ng-style="vm.toolbarStyle">
         <div id="online-users" style="min-height: 40px">
-            <div ng-repeat="user in usersHere" style="margin: 5px">
+            <div ng-repeat="user in vm.presentUsers track by user.id" style="margin: 5px">
                 <user-avatar
                         uib-tooltip="{{user.name}} redigerer denne disposisjonen"
                         tooltip-placement="bottom"
@@ -40,13 +40,10 @@
         </div>
         <div class="button-group">
             <a class="btn btn-primary" href="/api/publications/{{vm.publication.id}}/colophon">
-                <i class="fa fa-file-text-o"/> Generer kolofon
+                <i class="fa fa-file-text-o"></i> Generer kolofon
             </a>
-            <button class="btn btn-primary" ng-click="vm.expandAllButtonRows()">
-                <i class="fa fa-caret-down"></i> Åpne ekstraknapp-rader
-            </button>
             <button class="btn btn-primary" ng-click="vm.hideAllButtonRows()">
-                <i class="fa fa-caret-up"></i> Lukke ekstraknapp-rader
+                <i class="fa fa-caret-up"></i> Lukk ekstraknapp-rader
             </button>
             <page-adder
                 max-num-pages="vm.maxNewPages"
@@ -85,38 +82,41 @@
     </div>
 
     <div class="row d-table disposition-table" ng-style="vm.offsetDispositionTable()">
-        <div ng-model="vm.publication.pages" ui-sortable="vm.sortableOptions">
+        <div ng-model="vm.pageOrder.order" ui-sortable="vm.sortableOptions">
             <div
                 class="d-table-row"
-                ng-repeat="page in vm.publication.pages"
-                ng-init="vm.initPageScope(this)"
-                ng-class="{'page-reklame': page.advertisement, 'page-done': page.done}"
+                ng-repeat="pageId in vm.pageOrder.order"
+                alias="vm.pagesLookup[pageId] as page"
+                ng-class="{'page-done': page.done}"
                 ui-sortable-selectable
             >
                 <!--Page number-->
-                <div class="d-table-cell handle" ng-style="vm.columnWidths.page_nr">{{page.page_nr}}</div>
-                <!--Articles (edit mode)-->
+                <div class="d-table-cell handle" ng-style="vm.columnWidths.page_nr">{{$index + 1}}</div>
+                <!--Edit mode -->
                 <div class="d-table-cell" ng-style="{width: vm.articleWidth}" ng-show="editPage">
-                    <div>
-                        <b>Artikler</b>
-                    </div>
-                    <id-select multiple class="pull-left" style="width: 90%;"
-                                items="vm.articles"
-                                target="page.articles"
-                                show="name">
+                    <div><b>Artikler</b></div>
+                    <id-select
+                            class="pull-left" style="width: 90%;"
+                            multiple
+                            use-ids
+                            items="vm.publication.articles"
+                            target="page.articles"
+                            show="name">
                     </id-select>
                     <div class="pull-right">
                         <button ng-click="vm.createArticle(page)" class="btn btn-success" uib-tooltip="Lag ny artikkel">
                             <i class="fa fa-plus"></i> <i class="fa fa-file-text"></i>
                         </button>
                     </div>
-                    <div>
-                        <b>Reklamer</b>
-                    </div>
-                    <id-select multiple class="pull-left" style="width: 90%;"
-                                items="vm.adverts"
-                                target="page.adverts"
-                                show="name">
+                    <div><b>Reklamer</b></div>
+                    <id-select
+                            class="pull-left" style="width: 90%;"
+                            multiple
+                            use-ids
+                            items="vm.adverts"
+                            target="page.adverts"
+                            show="name"
+                    >
                     </id-select>
                     <div class="pull-right">
                         <button ng-click="vm.createAdvert(page)" class="btn btn-warning" uib-tooltip="Lag ny reklame">
@@ -124,9 +124,13 @@
                         </button>
                     </div>
                 </div>
-                <!--Articles (view mode)-->
+                <!-- View mode (articles) -->
                 <div class="d-table-cell article-cell" ng-style="{width: vm.articleWidth}" ng-hide="editPage">
-                    <div class="d-table article-table" ng-repeat="article in page.articles" ng-init="vm.initArticleScope(this)">
+                    <div
+                            class="d-table article-table"
+                            ng-repeat="articleId in page.articles"
+                            alias="vm.articlesLookup[articleId] as article"
+                    >
                         <div class="d-table-row" ng-class="{'page-done': page.done}">
                             <!--Dropdown-arrow-->
                             <div class="d-table-cell" ng-style="vm.columnWidths.dropdown">
@@ -205,37 +209,20 @@
                             <div
                                 class="d-table-cell"
                                 ng-style="vm.columnWidths.photo_status"
-                                ng-click="vm.editArticleField(this, 'photo_status')"
-                                ng-show="!edit['photo_status']"
                                 title="Klikk for å redigere"
                             >
-                                <textwrapper length="20" ng-attr-text="article.photo_status || '[Rediger]'"></textwrapper>
-                            </div>
-                            <!--Edit-->
-                            <div class="d-table-cell" ng-style="vm.columnWidths.photo_status" ng-show="edit['photo_status']">
-                                <inline-edit text="article.photo_status"
-                                                cancel="vm.submitArticleField(this, 'photo_status', false)"
-                                                remote-change="remoteChanges['photo_status']"
-                                                save="vm.submitArticleField(this, 'photo_status', true)">
+                                <inline-edit
+                                        placeholder="[Fotostatus]"
+                                        model="article.photo_status"
+                                        on-save="vm.submitArticleField(article, 'photo_status', value)">
                                 </inline-edit>
                             </div>
                             <!--Comment-->
-                            <!--View-->
-                            <div
-                                class="d-table-cell"
-                                ng-style="vm.columnWidths.comment"
-                                ng-click="vm.editArticleField(this, 'comment')"
-                                ng-show="!edit['comment']"
-                                title="Klikk for å redigere"
-                            >
-                                <textwrapper length="15" ng-attr-text="article.comment || '[Rediger]'"></textwrapper>
-                            </div>
-                            <!--Edit-->
-                            <div class="d-table-cell" ng-style="vm.columnWidths.comment" ng-show="edit['comment']">
-                                <inline-edit text="article.comment"
-                                                cancel="vm.submitArticleField(this, 'comment', false)"
-                                                remote-change="remoteChanges['comment']"
-                                                save="vm.submitArticleField(this, 'comment', true)">
+                            <div class="d-table-cell" ng-style="vm.columnWidths.comment">
+                                <inline-edit
+                                        placeholder="[Kommentar]"
+                                        model="article.comment"
+                                        on-save="vm.submitArticleField(article, 'comment', value)">
                                 </inline-edit>
                             </div>
                         </div>
@@ -251,8 +238,13 @@
                             </div>
                         </div>
                     </div>
-                    <!--Adverts-->
-                    <div class="d-table advert-table" ng-repeat="advert in page.adverts" ng-style="{'background-color':'#FFE96B'}" ng-init="vm.initAdvertScope(this)">
+                    <!--View mode (adverts)-->
+                    <div
+                            class="d-table advert-table"
+                            ng-repeat="advertId in page.adverts"
+                            ng-style="{'background-color':'#FFE96B'}"
+                            alias="vm.advertsLookup[advertId] as advert"
+                    >
                       <div class="d-table-row">
                         <!--Dropdown-arrow-->
                         <div class="d-table-cell" ng-style="vm.columnWidths.dropdown">
@@ -270,24 +262,13 @@
                         <div class="d-table-cell" ng-style="vm.columnWidths.review"></div>
                         <div class="d-table-cell" ng-style="vm.columnWidths.photo_status"></div>
                         <!--Comment-->
-                        <!--View-->
-                        <div
-                            class="d-table-cell"
-                            ng-style="vm.columnWidths.comment"
-                            ng-click="vm.editAdvertField(this, 'comment')"
-                            ng-show="!edit['comment']"
-                            title="Klikk for å redigere"
-                        >
-                            <textwrapper length="20" ng-attr-text="advert.comment || '[Rediger]'"></textwrapper>
-                        </div>
-                        <!--Edit-->
-                        <div class="d-table-cell" ng-style="vm.columnWidths.comment" ng-show="edit['comment']">
-                            <inline-edit text="advert.comment"
-                                            cancel="vm.submitAdvertField(this, 'comment', false)"
-                                            remote-change="remoteChanges['comment']"
-                                            save="vm.submitAdvertField(this, 'comment', true)">
-                            </inline-edit>
-                        </div>
+                          <div class="d-table-cell" ng-style="vm.columnWidths.comment">
+                              <inline-edit
+                                      placeholder="[Kommentar]"
+                                      model="advert.comment"
+                                      on-save="vm.submitAdvertField(advert, 'comment', value)">
+                              </inline-edit>
+                          </div>
                       </div>
                     </div>
                 </div>

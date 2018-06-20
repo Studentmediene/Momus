@@ -1,30 +1,38 @@
-<div style="position: absolute; overflow: visible;">
-    <div class="input-group" style="width: 200px">
-        <textarea class="form-control custom-control inline-textarea input-sm" ng-model="text"></textarea>
-    </div>
+<div>
+    <textwrapper
+            length="20"
+            ng-attr-text="vm.value || '[Rediger]'"
+            ng-show="!vm.isEditing" ng-click="vm.isEditing = true">
 
-    <div style="display: flex;">
-        <div class="btn-group" style="flex-grow: 1;">
-            <button class="btn btn-warning" ng-click="cancel()" style="border-top-left-radius: 0px;">
-                <i class="fa fa-times"></i>
-            </button>
-            <button class="btn btn-success" ng-click="save()" style="border-top-right-radius: 0px;">
-                <i class="fa fa-save"></i>
-            </button>
+    </textwrapper>
+    <div ng-show="vm.isEditing" style="position: absolute; overflow: visible;">
+        <div class="input-group" style="width: 200px">
+            <textarea class="form-control custom-control inline-textarea input-sm" ng-model="vm.value"></textarea>
         </div>
 
-        <div
-            uib-tooltip-template="'partials/templates/inlineEditRemoteTooltip.html'"
-            tooltip-append-to-body="true"
-        >
-            <button
-                ng-show="remoteChange"
-                class="btn btn-danger" 
-                style="border-top-right-radius: 0px; border-top-left-radius: 0px;"
-                ng-click="applyRemoteChange()"
+        <div style="display: flex;">
+            <div class="btn-group" style="flex-grow: 1;">
+                <button class="btn btn-warning" ng-click="vm.cancel()" style="border-top-left-radius: 0px;">
+                    <i class="fa fa-times"></i>
+                </button>
+                <button class="btn btn-success" ng-click="vm.save()" style="border-top-right-radius: 0px;">
+                    <i class="fa fa-save"></i>
+                </button>
+            </div>
+
+            <div
+                    uib-tooltip-template="'partials/templates/inlineEditRemoteTooltip.html'"
+                    tooltip-append-to-body="true"
             >
-                <i class="fa fa-exclamation"></i>
-            </button>
+                <button
+                        ng-show="vm.outsideChange != null"
+                        class="btn btn-danger"
+                        style="border-top-right-radius: 0px; border-top-left-radius: 0px;"
+                        ng-click="vm.applyOutsideChange()"
+                >
+                    <i class="fa fa-exclamation"></i>
+                </button>
+            </div>
         </div>
     </div>
 </div>

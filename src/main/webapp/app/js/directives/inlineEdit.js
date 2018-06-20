@@ -14,26 +14,52 @@
  * limitations under the License.
  */
 
-// Directive that can be used for inline editing for a field
+// Component that can be used for inline editing for a field
 
 'use strict';
 
-angular.module('momusApp.directives').
-    directive( 'inlineEdit', function() {
-        return {
-            restrict: 'E',
-            templateUrl: 'partials/templates/inlineEdit.html',
-            scope:{
-                text: '=',
-                remoteChange: '=',
-                save: '&',
-                cancel: '&'
-            },
-            link: scope => {
-                scope.applyRemoteChange = () => {
-                    scope.text = scope.remoteChange;
-                    scope.remoteChange = null;
-                };
-            }
-        };
-});
+/* @ngInject */
+class InlineEditController {
+    $onInit() {
+        this.isEditing = false;
+        this.value = this.model;
+        this.outsideChange = null;
+    }
+
+    $onChanges(changes) {
+        const newModel = changes.model.currentValue;
+        if(this.isEditing) {
+            this.outsideChange = newModel;
+        } else {
+            this.value = newModel;
+        }
+    }
+
+    applyOutsideChange() {
+        this.value = this.outsideChange;
+        this.outsideChange = null;
+    }
+
+    save() {
+        this.isEditing = false;
+        this.onSave({value: this.value});
+    }
+
+    cancel() {
+        this.isEditing = false;
+        this.onCancel();
+    }
+}
+
+angular.module('momusApp.directives')
+    .component('inlineEdit', {
+        templateUrl: 'partials/templates/inlineEdit.html',
+        bindings: {
+            placeholder: '@',
+            model: '<',
+            onSave: '&',
+            onCancel: '&',
+        },
+        controllerAs: 'vm',
+        controller: InlineEditController
+    });

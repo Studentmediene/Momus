@@ -16,37 +16,44 @@
 
 package no.dusken.momus.model;
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Comparator;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = {}, callSuper = true)
-@ToString(of = {"pageNr", "publication"}, callSuper = true)
+@ToString(of = {"pageNr"}, callSuper = true)
 @Builder(toBuilder = true)
-public class Page extends AbstractEntity implements Comparable<Page>, Comparator<Page>{
-    private int pageNr;
+public class Page extends AbstractEntity implements Comparable<Page>, Comparator<Page>, Messageable {
+    @JsonIgnore private int pageNr;
     private String note;
     private boolean advertisement;
     private boolean web;
     private boolean done;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(nullable = false, updatable = false) // Should not be able to change the publication of a page
+    @JsonIgnore
     private Publication publication;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
+    @JsonIdentityReference(alwaysAsId=true)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Set<Article> articles;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
+    @JsonIdentityReference(alwaysAsId=true)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Set<Advert> adverts;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private LayoutStatus layoutStatus;
 
     @Override
@@ -57,5 +64,13 @@ public class Page extends AbstractEntity implements Comparable<Page>, Comparator
     @Override
     public int compare(Page page, Page t1) {
         return page.compareTo(t1);
+    }
+
+    @Override
+    @JsonIgnore
+    public List<String> getDestinations() {
+        return Collections.singletonList(
+                "/ws/publications/" + publication.getId() + "/pages"
+        );
     }
 }

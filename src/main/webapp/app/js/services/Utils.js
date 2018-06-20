@@ -60,9 +60,30 @@ angular.module('momusApp.services')
                 .join('')
         }
     })
+    .filter('toArray', function() {
+        return obj => Object.keys(obj).map(k => obj[k]);
+    })
+    .factory('toIdLookup', function() {
+        return list => list.reduce((lookup, item) => {
+            lookup[item.id] = item;
+            return lookup;
+        }, {})
+    })
     .factory('expandColorCode', function() {
         return color => "#" + color.split("#")[1].split("").map(x => x+x).join("");
     })
     .factory('hasPermission', function() {
         return (state, user) => !state.access || state.access.some(role => user.roles.includes(role));
+    })
+    .factory('nodeHeight', function() {
+        return node => Array.from(node.children).reduce((acc, child) => {
+            return acc + parseInt(getComputedStyle(child).height.replace("px", ""));
+        }, 0) + "px";
+    })
+    .factory('autoBind', function() {
+        return object => Object.getOwnPropertyNames(object).forEach(prop => {
+            if(typeof prop === 'function') {
+                object[prop] = object[prop].bind(object);
+            }
+        });
     });

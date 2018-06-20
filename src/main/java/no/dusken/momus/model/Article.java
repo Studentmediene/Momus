@@ -16,6 +16,7 @@
 
 package no.dusken.momus.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import no.dusken.momus.service.ArticleService;
 import org.hibernate.annotations.Fetch;
@@ -25,6 +26,8 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.ZonedDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -34,7 +37,7 @@ import java.util.Set;
 @EqualsAndHashCode(of = {}, callSuper = true)
 @ToString(of = {"name", "section", "type", "status"}, callSuper = true)
 @Builder(toBuilder = true)
-public class Article extends AbstractEntity {
+public class Article extends AbstractEntity implements Messageable {
     private String name;
 
     @JsonIgnore
@@ -44,19 +47,20 @@ public class Article extends AbstractEntity {
 
     private String comment;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Section section;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private ArticleStatus status;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private ArticleType type;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private ArticleReview review;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
+    @JsonIgnoreProperties(value = {"articles", "pages"})
     private Publication publication;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -96,5 +100,15 @@ public class Article extends AbstractEntity {
         String rawContent = ArticleService.createRawContent(this);
         this.setRawcontent(rawContent);
         this.setContentLength(rawContent.length());
+    }
+
+    @Override
+    @JsonIgnore
+    public List<String> getDestinations() {
+        return Arrays.asList(
+                "/ws/articles/",
+                "/ws/articles/" + id,
+                "/ws/publications/" + publication.getId() + "/articles"
+        );
     }
 }

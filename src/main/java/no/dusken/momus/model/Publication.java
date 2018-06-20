@@ -16,11 +16,16 @@
 
 package no.dusken.momus.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.*;
+import no.dusken.momus.mapper.SerializationViews;
 
 import javax.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -31,14 +36,27 @@ import java.util.Set;
 @EqualsAndHashCode(of = {}, callSuper = true)
 @ToString(of = {"name", "releaseDate"}, callSuper = true)
 @Builder(toBuilder = true)
-public class Publication extends AbstractEntity {
+public class Publication extends AbstractEntity implements Messageable {
     private String name;
 
     private LocalDate releaseDate;
 
-    @OneToMany(mappedBy = "publication", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "publication", fetch = FetchType.EAGER)
+    @JsonView(SerializationViews.Full.class)
+    @JsonIgnoreProperties(value = "publication")
     private Set<Article> articles;
 
-    @OneToMany(mappedBy = "publication")
+    @OneToMany(mappedBy = "publication", fetch = FetchType.EAGER)
+    @JsonView(SerializationViews.Full.class)
+    @JsonIgnoreProperties(value = "publication")
     private List<Page> pages;
+
+    @Override
+    @JsonIgnore
+    public List<String> getDestinations() {
+        return Arrays.asList(
+                "/ws/publications",
+                "/ws/publications/" + id
+        );
+    }
 }

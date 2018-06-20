@@ -18,8 +18,7 @@ package no.dusken.momus.service;
 
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.ArticleRepository;
-import no.dusken.momus.service.repository.LayoutStatusRepository;
-import no.dusken.momus.service.repository.PageRepository;
+
 import no.dusken.momus.service.repository.PublicationRepository;
 
 import org.junit.Before;
@@ -30,27 +29,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @Transactional
 public class PublicationServiceTest extends AbstractServiceTest {
-    @Mock
-    private PublicationRepository publicationRepository;
-
     @InjectMocks
     private PublicationService publicationService;
 
     @Mock
-    private PageRepository pageRepository;
+    private PublicationRepository publicationRepository;
 
     @Mock
     private ArticleRepository articleRepository;
 
     @Mock
-    private LayoutStatusRepository layoutStatusRepository;
+    private PageService pageService;
 
     private Publication publication1;
     private Publication publication2;
@@ -78,20 +73,6 @@ public class PublicationServiceTest extends AbstractServiceTest {
     }
 
     /**
-     * Method: {@link PublicationService#updatePublication(Publication)}
-     */
-    @Test
-    public void testUpdatePublicationMetadata() {
-        PublicationService publicationServiceSpy = spy(publicationService);
-        doReturn(publication1).when(publicationRepository).saveAndFlush(publication1);
-        publication1.setName("justanupdatedpubname");
-        publication1 = publicationServiceSpy.updatePublication(publication1);
-
-        verify(publicationRepository, times(1)).saveAndFlush(publication1);
-        assertEquals("justanupdatedpubname",publication1.getName());
-    }
-
-    /**
      * Method: {@link PublicationService#getActivePublication(LocalDate)}
      */
     @Test
@@ -106,104 +87,26 @@ public class PublicationServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void testSavePage() {
-        final List<Page> pages = new ArrayList<>(Arrays.asList(page1, page2, page3));
-        final Page newPage = new Page();
-        newPage.setPublication(publication1);
-        newPage.setPageNr(2);
-        doAnswer((answer) -> {
-            pages.add(newPage);
-            return null;
-        }).when(pageRepository).saveAndFlush(any(Page.class));
-        doReturn(null).when(pageRepository).save(anyList());
-
-        doReturn(pages.stream().sorted().collect(Collectors.toList())).when(pageRepository).findByPublicationIdOrderByPageNrAsc(publication1.getId());
-
-        publicationService.savePage(newPage);
-
-        assertEquals(1, page1.getPageNr());
-        assertEquals(2, newPage.getPageNr());
-        assertEquals(3, page2.getPageNr());
-        assertEquals(4, page3.getPageNr());
-    }
-
-    @Test
-    public void testSaveTrailingPages() {
-        final List<Page> pages = new ArrayList<>(Arrays.asList(page1, page2, page3));
-        Page newPage = Page.builder().publication(publication1).pageNr(2).build();
-        Page otherNewPage = Page.builder().pageNr(3).publication(publication1).build();
-
-        List<Page> newPages = Arrays.asList(newPage, otherNewPage);
-
-        doReturn(null).when(pageRepository).save(anyList());
-
-        doAnswer((answer) -> {
-            pages.addAll(newPages);
-            return null;
-        }).when(pageRepository).save(newPages);
-
-        doReturn(pages.stream().sorted().collect(Collectors.toList())).when(pageRepository).findByPublicationIdOrderByPageNrAsc(publication1.getId());
-
-        publicationService.saveTrailingPages(Arrays.asList(newPage, otherNewPage));
-
-        assertEquals(1, page1.getPageNr());
-        assertEquals(2, newPage.getPageNr());
-        assertEquals(3, otherNewPage.getPageNr());
-        assertEquals(4, page2.getPageNr());
-        assertEquals(5, page3.getPageNr());
-    }
-
-    @Test
-    public void testUpdateTrailingPages(){
-        doReturn(null).when(pageRepository).save(anyList());
-        doReturn(new ArrayList<>(Arrays.asList(page1, page2, page3))
-            .stream()
-            .sorted()
-            .collect(Collectors.toList())).when(pageRepository).findByPublicationIdOrderByPageNrAsc(publication1.getId());
-        
-        page1.setPageNr(2);
-        page2.setPageNr(3);
-        publicationService.updateTrailingPages(Arrays.asList(page1, page2));
-
-        assertEquals(1, page3.getPageNr());
-        assertEquals(2, page1.getPageNr());
-        assertEquals(3, page2.getPageNr());
-    }
-
-    @Test
-    public void testDeletePage(){
-        doReturn(new ArrayList<>(Arrays.asList(page1, page2, page3))).when(pageRepository).findByPublicationIdOrderByPageNrAsc(publication1.getId());
-
-        publicationService.deletePage(page2);
-        assertEquals(1, page1.getPageNr());
-        assertEquals(2, page3.getPageNr());
-    }
-
-    @Test
-    public void testUpdatePageMetadata() {
-        doReturn(page1).when(pageRepository).saveAndFlush(page1);
-        doReturn(page1).when(pageRepository).findOne(page1.getId());
-
-        page1.setNote("vader is lukes father");
-        page1.setWeb(true);
-        page1.setAdvertisement(false);
-
-        Page page = publicationService.updatePageMeta(page1);
-
-        verify(pageRepository, times(1)).saveAndFlush(page1);
-        assertEquals("vader is lukes father", page.getNote());
-        assertEquals(true, page.isWeb());
-        assertEquals(false, page.isAdvertisement());
-    }
-
-    @Test
     public void testSavePublication() {
-        doReturn(publication1).when(publicationRepository).save(publication1);
-        doReturn(new LayoutStatus()).when(layoutStatusRepository).findByName("Ukjent");
+        doReturn(publication1).when(publicationRepository).saveAndFlush(publication1);
 
         publicationService.savePublication(publication1, 50);
-        verify(publicationRepository, times(1)).save(publication1);
-        verify(pageRepository, times(50)).save(any(Page.class));
+        verify(publicationRepository, times(1)).saveAndFlush(publication1);
+        verify(pageService, times(1)).createEmptyPagesInPublication(publication1.getId(), 0, 50);
+    }
+
+    /**
+     * Method: {@link PublicationService#updatePublication(Publication)}
+     */
+    @Test
+    public void testUpdatePublicationMetadata() {
+        PublicationService publicationServiceSpy = spy(publicationService);
+        doReturn(publication1).when(publicationRepository).saveAndFlush(publication1);
+        publication1.setName("justanupdatedpubname");
+        publication1 = publicationServiceSpy.updatePublication(publication1);
+
+        verify(publicationRepository, times(1)).saveAndFlush(publication1);
+        assertEquals("justanupdatedpubname",publication1.getName());
     }
 
     @Test
