@@ -1,0 +1,13 @@
+<span class="uk-button-group uk-margin-small-top">
+    <span class="uk-button uk-button-primary uk-disabled">{{ vm.label }}</span>
+    <div 
+        class="boolean-widget-icon" 
+        ng-class="{'done': vm.value, 'not-done': !vm.value}"
+        ng-click="vm.onClick()"
+        role="button"
+        tabindex="0"
+        ng-keypress="vm.onKeyPress($event)"
+    >
+        <i class="fas fa-fw" ng-class="{'fa-check': vm.value, 'fa-times': !vm.value}"></i>
+    </div>    
+</span>

@@ -1,0 +1,65 @@
+@import "./variables.scss";
+@import "uikit/src/scss/uikit.scss";
+
+.initial-load-spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    text-align: center;
+}
+
+.button-edit {
+    background-color: $global-edit-background;
+    color: black;
+    border: 1px solid transparent;
+    &:hover, &:focus {
+        background-color: darken($global-edit-background, 5%);
+    }
+}
+
+.button-new {
+    background-color: $global-new-background;
+    border: 1px solid transparent;
+
+    &:hover, &:focus {
+        background-color: darken($global-new-background, 5%);
+    }
+}
+
+.button-xs {
+    padding: 0 5px;
+    line-height: 18px;
+    font-size: 0.65rem;
+}
+
+.form-label-text {
+    text-transform: uppercase;
+}
+
+.form-label-small-text {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+}
+
+.list-no-margin {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.visible-print {
+    display: none;
+    @media print {
+        display: block;
+    }
+}
+
+.hidden-print {
+    @media print {
+        display: none;
+    }
+}
+
+textarea {
+    width: 100%;
+    min-height: 100px;
+}

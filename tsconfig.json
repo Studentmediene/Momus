@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./webapp",
+    "rootDir": "./webapp/",
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "module": "es6",
+    "target": "es5",
+    "allowJs": true,
+    "noEmitHelpers": true,
+    "importHelpers": true,
+    "lib": [
+        "es2017",
+        "dom"
+    ],
+    "typeRoots": [
+        "./node_modules/@types",
+        "./"
+    ],
+    "types": ["uikit", "angular", "angular-resource", "node", "typings"]
+  },
+  "files": [
+      "./webapp/app.ts"
+  ]
+}

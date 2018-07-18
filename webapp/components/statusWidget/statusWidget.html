@@ -1,0 +1,13 @@
+<span class="uk-button-group uk-margin-small-top">
+    <span class="uk-button uk-button-primary uk-disabled">{{ vm.label }}</span>
+    <span class="uk-form-control">
+        <select
+            class="uk-select" 
+            ng-model="vm.selected"
+            ng-change="vm.onSelectChange()"
+            ng-options="s.name for s in vm.statuses | orderBy:'status_order' track by s.id "
+            ng-style="{'background-color': vm.selected.color}"
+        >
+        </select>
+    </span>    
+</span>

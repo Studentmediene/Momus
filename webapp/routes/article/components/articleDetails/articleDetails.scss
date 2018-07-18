@@ -1,0 +1,32 @@
+@import "../../../../variables.scss";
+
+.image-text-textarea {
+    min-width: 100%;
+    min-height: 50px;
+}
+
+.comment-panel {
+    > * {
+        font-size: 0.8em;
+        background-color: $alert-primary-background;
+    }
+
+    label {
+        font-weight: bold;
+    }
+}
+
+.imagetext-panel {
+    > * {
+        font-size: 0.8em;
+    }
+    
+    label {
+        display: none;
+    }
+
+    textarea {
+        min-width: 100%;
+        min-height: 100px;
+    }
+}

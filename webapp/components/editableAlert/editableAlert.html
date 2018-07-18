@@ -1,0 +1,19 @@
+<div uk-alert class="{{'uk-alert-' + vm.type + ' editable-alert'}}">
+    <button class="uk-button uk-button-small button-edit" ng-click="vm.edit()" ng-hide="vm.isEditing">
+        <i class="fas fa-pencil-alt"></i>
+    </button>
+    <span class="uk-button-group" ng-show="vm.isEditing">
+        <button class="uk-button uk-button-small uk-button-secondary" ng-click="vm.cancel()">
+            <i class="fas fa-times"></i>
+        </button>
+        <button class="uk-button uk-button-small uk-button-primary" ng-click="vm.save()">
+            <i class="fas fa-save"></i>
+        </button>
+    </span>
+    
+    <strong>{{ vm.label }}:</strong> 
+    <span ng-hide="vm.isEditing">
+        {{ vm.model }}
+    </span>
+    <input ng-show="vm.isEditing" class="uk-input uk-form-small" type="text" ng-model="vm.model">
+</div>

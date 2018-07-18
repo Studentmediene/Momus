@@ -1,0 +1,65 @@
+@import "../../variables.scss";
+
+.panel {
+    border: solid 1px white;
+    &.primary {
+        border-color: $global-primary-background;
+    }
+
+    &.edit {
+        border-color: $global-edit-background;
+    }
+
+    &.new {
+        border-color: $global-new-background;
+    }
+}
+
+.panel-heading {
+    padding: 10px;
+    display: flex;
+    > h5 {
+        flex-grow: 1;
+        color: white;
+        margin: 0;
+    }
+
+    .collapse-button {
+        padding: 0 5px;
+        cursor: pointer;
+    }
+
+    .collapse-icon {
+        color: white;
+
+        transition: transform 0.1s linear;
+
+        &.upside-down {
+            transform: rotate(180deg);
+        }
+    }
+
+    &.primary {
+        background: $global-primary-background;
+    }
+
+    &.edit {
+        background: $global-edit-background;
+        > h5 { color: black; }
+    }
+
+    &.new {
+        background: $global-new-background;
+        > h5 { color: black; }
+    }
+}
+
+.panel-body {
+    &.with-padding {
+        padding: 10px;
+    }
+
+    &.collapsed {
+        display: none;
+    }
+}

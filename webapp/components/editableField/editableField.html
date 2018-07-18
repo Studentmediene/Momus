@@ -1,0 +1,78 @@
+<label class="uk-text-small form-label-text">
+    {{vm.label}}
+</label>
+<button class="uk-button button-xs uk-button-primary" ng-click="vm.edit()" ng-hide="vm.isEditing">
+    <i class="fas fa-fw fa-pencil-alt"></i>
+</button>
+<button class="uk-button button-xs uk-button-secondary" ng-click="vm.cancel()" ng-show="vm.isEditing">
+    <i class="fas fa-fw fa-times"></i>
+</button>
+<button class="uk-button button-xs uk-button-primary" ng-click="vm.save()" ng-show="vm.isEditing">
+    <i class="fas fa-fw fa-save"></i>
+</button>
+
+<div class="uk-margin-bottom">
+    <div ng-if="vm.type === 'select'">
+        <div ng-if="vm.hasCustomValueMarkup && !vm.isEditing" ng-transclude="customValueMarkup"></div>
+        <div ng-if="!vm.hasCustomValueMarkup && !vm.isEditing">
+            <span>{{ vm.value[vm.valueLabel] }}</span>
+        </div>
+        <span ng-show="vm.isEditing">
+            <select
+                class="uk-select uk-form-small" 
+                ng-model="vm.value"
+                ng-change="vm.onChange(vm.value)"
+                ng-options="item[vm.valueLabel] for item in vm.pool track by item.id "
+            >
+            </select>
+        </span>
+    </div>
+    
+    <div ng-if="vm.type === 'multiselect'">
+        <div ng-if="vm.hasCustomValueMarkup && !vm.isEditing" ng-transclude="customValueMarkup"></div>
+        <ul ng-if="!vm.hasCustomValueMarkup && !vm.isEditing" class="uk-list list-no-margin">
+            <li ng-repeat="item in vm.value">
+                <span>{{ item[vm.valueLabel] }}</span>
+            </li>
+        </ul>
+    
+        <span ng-show="vm.isEditing">
+            <multiselect-dropdown 
+                items="vm.pool" 
+                selected="vm.value" 
+                label="vm.valueLabel"
+                on-change="vm.onChange(selected)">
+            </multiselect-dropdown>
+        </span>
+    </div>
+    
+    <div ng-if="vm.type === 'text'">
+        <div ng-if="vm.hasCustomValueMarkup && !vm.isEditing" ng-transclude="customValueMarkup"></div>
+        <div ng-if="!vm.hasCustomValueMarkup && !vm.isEditing" class="uk-list list-no-margin">
+            {{ vm.value }}
+        </div>
+        <span ng-show="vm.isEditing">
+            <input
+                class="uk-input uk-form-small"
+                ng-model="vm.value"
+                ng-change="vm.onChange(vm.value)"
+            >
+        </span>
+    </div>
+
+    <div ng-if="vm.type === 'textarea'">
+        <div ng-if="vm.hasCustomValueMarkup && !vm.isEditing" ng-transclude="customValueMarkup"></div>
+        <div ng-if="!vm.hasCustomValueMarkup && !vm.isEditing" class="uk-list list-no-margin">
+            <span style="white-space: pre-wrap">{{ vm.value }}</span>
+        </div>
+        <span ng-show="vm.isEditing">
+            <textarea
+                class="uk-textarea uk-form-small"
+                ng-model="vm.value"
+                ng-change="vm.onChange(vm.value)"
+            >
+            </textarea>
+        </span>
+    </div>
+
+</div>

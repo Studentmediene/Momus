@@ -1,0 +1,25 @@
+@import "../../variables.scss";
+
+.boolean-widget-icon {
+    display: flex; padding: 0 10px;
+    border: 1px solid $global-border;
+    cursor: pointer;
+    transition: border-color 0.1s linear, background-color 0.1s linear;
+
+    &:hover, &:focus {
+        border-color: $global-primary-background;
+        outline: none;
+    }
+
+    &.done {
+        background-color: $global-new-background;
+    }
+    &.not-done {
+        background-color: $global-danger-background;
+        color: white;
+    }
+
+    > i {
+        align-self: center;
+    }
+}

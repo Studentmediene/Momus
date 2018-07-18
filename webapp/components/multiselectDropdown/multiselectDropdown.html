@@ -1,0 +1,28 @@
+<div class="multiselect-dropdown">
+    <div class="multiselect-dropdown-list">
+        <div ng-repeat="p in vm.selected" class="multiselect-dropdown-label">
+            <span class="uk-label">
+                {{ p[vm.label] }} 
+                <i class="fas fa-times" ng-click="vm.onUnselect(p)"></i>
+            </span>
+        </div>
+        <div class="multiselect-dropdown-input">
+            <input 
+                type="text"
+                ng-focus="vm.onInputFocus()"
+                ng-blur="vm.onInputBlur($event)"
+                ng-model="vm.searchText"
+            >
+        </div>
+    </div>
+    <div class="multiselect-dropdown-drop" ng-style="{ display: vm.showDropdown ? 'block' : 'none'}">
+        <div
+            class="multiselect-dropdown-dropitem"
+            ng-repeat="p in vm.items | filter:vm.notSelected | filter:vm.searchText track by p.id"
+            ng-mousedown="vm.onListMousedown()"
+            ng-click="vm.onSelect(p)"
+        >
+            <span>{{ p[vm.label] }}</span>
+        </div>
+    </div>
+</div>

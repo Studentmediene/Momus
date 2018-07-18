@@ -1,0 +1,36 @@
+@import '../../variables.scss';
+
+.uk-active {
+    background: $global-background;
+}
+
+.uk-navbar-nav > li {
+    &:hover, &:focus-within {
+        > a > span {
+            border-bottom: solid 1px white;
+        }
+    }
+    > a > span  {
+        border-bottom: solid 1px transparent;
+        //border-bottom: solid 1px transparent;
+        transition: border-bottom-color .2s ease-in-out;
+    }
+}
+
+.navbar-dev {
+    background: pink !important;
+}
+
+.uk-logo {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+@media(max-width: $breakpoint-medium) {
+    // .uk-logo {
+    //     display: none !important;
+    // }
+    .uk-navbar-nav > li > a > span > i {
+        display: none !important;
+    }
+}
