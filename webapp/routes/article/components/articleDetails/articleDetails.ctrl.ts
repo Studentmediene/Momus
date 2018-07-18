@@ -5,6 +5,7 @@ import { ArticleResource } from 'resources/article.resource';
 import { Article } from 'models/Article';
 import { ArticleStatus, ReviewStatus } from 'models/Statuses';
 import { Person } from 'models/Person';
+import { Publication } from 'models/Publication';
 
 /* @ngInject */
 export default class ArticleDetailsCtrl implements angular.IController {
@@ -13,6 +14,8 @@ export default class ArticleDetailsCtrl implements angular.IController {
 
     public article: Article;
     public articleContent: string;
+
+    public publications: Publication[];
 
     public savingNote: boolean;
     public uneditedNote: string;

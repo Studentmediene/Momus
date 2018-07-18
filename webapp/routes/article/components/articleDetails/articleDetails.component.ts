@@ -18,5 +18,6 @@ export default angular
             reviews: '<',
             statuses: '<',
             persons: '<',
+            publications: '<',
         },
     });

@@ -7,6 +7,7 @@ import { StateProvider, $InjectorLike, StateParams } from '@uirouter/angularjs';
 import { ArticleResource } from '../../resources/article.resource';
 import { PersonResource } from '../../resources/person.resource';
 import { Article } from '../../models/Article';
+import { PublicationResource } from 'resources/publication.resource';
 
 const routeModule = angular
     .module('momusApp.routes.article', [
@@ -51,6 +52,8 @@ const routeModule = angular
                     statuses: (articleResource: ArticleResource) => articleResource.statuses().$promise,
                     persons: (personResource: PersonResource, article: Article) =>
                         personResource.query({articleIds: [article.id]}).$promise,
+                    publications: (publicationResource: PublicationResource) =>
+                        publicationResource.query(),
                 },
             });
     });

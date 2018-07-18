@@ -17,7 +17,7 @@
     ],
     "typeRoots": [
         "./node_modules/@types",
-        "./"
+        "./webapp"
     ],
     "types": ["uikit", "angular", "angular-resource", "node", "typings"]
   },

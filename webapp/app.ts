@@ -6,6 +6,7 @@ import 'uikit';
 
 import constants from './app.constants';
 import components from './components/app.components';
+import services from './services/app.services';
 import routes, { setRoutes } from './routes/app.routes';
 import resources from './resources/app.resources';
 import filters from './app.filters';
@@ -18,6 +19,7 @@ angular
     .module('momusApp', [
         constants.name,
         filters.name,
+        services.name,
         resources.name,
         components.name,
         routes.name,
