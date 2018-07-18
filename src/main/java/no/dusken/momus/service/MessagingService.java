@@ -23,13 +23,22 @@ public class MessagingService {
 
     public void broadcastEntityAction(Messageable entity, Action action) {
         log.debug("Broadcasting {} and action {}", entity, action);
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        String messageId = attributes.getRequest().getHeader("X-MOM-SENDER");
+
+        String messageId = getMessageIdFromRequest();
 
         HashMap<String, Object> headers = new HashMap<>();
         headers.put("message-sender", messageId);
         entity.getDestinations().forEach(destination ->
                 messagingTemplate.convertAndSend(destination, new EntityMessage(entity, action), headers)
         );
+    }
+
+    private String getMessageIdFromRequest() {
+        try {
+            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+            return attributes.getRequest().getHeader("X-MOM-SENDER");
+        } catch(IllegalStateException e) {
+            return "";
+        }
     }
 }
