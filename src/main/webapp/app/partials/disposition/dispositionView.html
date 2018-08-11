@@ -95,33 +95,38 @@
                 <!--Edit mode -->
                 <div class="d-table-cell" ng-style="{width: vm.articleWidth}" ng-show="editPage">
                     <div><b>Artikler</b></div>
-                    <id-select
+                    <div class="d-article-input">
+                        <id-select
                             class="pull-left" style="width: 90%;"
                             multiple
                             use-ids
                             items="vm.publication.articles"
                             target="page.articles"
                             show="name">
-                    </id-select>
-                    <div class="pull-right">
-                        <button ng-click="vm.createArticle(page)" class="btn btn-success" uib-tooltip="Lag ny artikkel">
-                            <i class="fa fa-plus"></i> <i class="fa fa-file-text"></i>
-                        </button>
+                        </id-select>
+                        <div>
+                            <button ng-click="vm.createArticle(page)" class="btn btn-success" uib-tooltip="Lag ny artikkel">
+                                <i class="fa fa-plus"></i> <i class="fa fa-file-text"></i>
+                            </button>
+                        </div>
+                        
                     </div>
                     <div><b>Reklamer</b></div>
-                    <id-select
+                    <div class="d-article-input">
+                        <id-select
                             class="pull-left" style="width: 90%;"
                             multiple
                             use-ids
                             items="vm.adverts"
                             target="page.adverts"
                             show="name"
-                    >
-                    </id-select>
-                    <div class="pull-right">
-                        <button ng-click="vm.createAdvert(page)" class="btn btn-warning" uib-tooltip="Lag ny reklame">
-                            <i class="fa fa-plus"></i> <i class="fa fa-bullhorn"></i>
-                        </button>
+                        >
+                        </id-select>
+                        <div>
+                            <button ng-click="vm.createAdvert(page)" class="btn btn-warning" uib-tooltip="Lag ny reklame">
+                                <i class="fa fa-plus"></i> <i class="fa fa-bullhorn"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <!-- View mode (articles) -->

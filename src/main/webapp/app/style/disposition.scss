@@ -145,3 +145,12 @@ $pageAdBackground: #f6f6f6;
     display: table-cell;
     vertical-align: top;
 }
+
+.d-article-input {
+    display: flex;
+    align-items: center;
+
+    id-select {
+        margin-right: 5px;
+    }
+}
