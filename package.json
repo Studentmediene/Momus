@@ -4,12 +4,14 @@
   "scripts": {
     "build": "webpack-cli -p",
     "start:dev": "webpack-dev-server",
-    "build-visualizer": "webpack-cli -p --visualizer"
+    "build-visualizer": "webpack-cli -p --visualizer",
+    "lint": "tslint --project 'tsconfig.json' --format 'stylish'",
+    "lint:fix": "tslint --fix"
   },
   "devDependencies": {
-    "@types/angular": "~1.6.48",
+    "@types/angular": "~1.6.49",
     "@types/angular-resource": "~1.5.14",
-    "@types/node": "^10.5.2",
+    "@types/node": "^10.5.7",
     "@types/uikit": "^2.27.6",
     "clean-webpack-plugin": "~0.1.19",
     "copy-webpack-plugin": "~4.5.2",
@@ -23,21 +25,21 @@
     "ng-annotate-loader": "~0.6.1",
     "ng-annotate-patched": "1.7.0",
     "node-sass": "~4.9.2",
-    "sass-loader": "~7.0.3",
-    "style-loader": "~0.21.0",
+    "sass-loader": "~7.1.0",
+    "style-loader": "~0.22.1",
     "ts-loader": "^4.4.2",
-    "typescript": "^2.9.2",
+    "typescript": "~3.0.1",
     "uglifyjs-webpack-plugin": "~1.2.7",
-    "webpack": "~4.16.1",
-    "webpack-cli": "~3.0.8",
-    "webpack-dev-server": "~3.1.4",
+    "webpack": "~4.16.5",
+    "webpack-cli": "~3.1.0",
+    "webpack-dev-server": "~3.1.5",
     "webpack-visualizer-plugin": "~0.1.11"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "~5.1.1",
-    "@uirouter/angularjs": "~1.0.18",
-    "angular": "~1.7.2",
-    "angular-resource": "~1.7.2",
-    "uikit": "~3.0.0-rc.9"
+    "@fortawesome/fontawesome-free": "~5.2.0",
+    "@uirouter/angularjs": "~1.0.19",
+    "angular": "~1.7.3",
+    "angular-resource": "~1.7.3",
+    "uikit": "~3.0.0-rc.11"
   }
 }

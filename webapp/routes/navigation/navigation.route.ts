@@ -4,7 +4,7 @@ import NavigationCtrl from './navigation.ctrl';
 import { Person } from '../../models/Person';
 import { StateProvider, StateService } from '@uirouter/angularjs';
 
-export interface INavItem {
+export interface NavItem {
     stateName: string;
     icon: string;
     name: string;
@@ -20,7 +20,7 @@ export default angular
                 user: (loggedInUser: Person) => loggedInUser,
                 navItems: ($state: StateService) => $state.get()
                     .filter((state) => state.data && state.data.nav)
-                    .map((state): INavItem => ({stateName: state.name, ...state.data.nav})),
+                    .map((state): NavItem => ({stateName: state.name, ...state.data.nav})),
             },
         });
     })

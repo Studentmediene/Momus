@@ -35,7 +35,7 @@ function publicationRequestTransform(publication: Publication): PublicationSeria
     }
     return {
         ...publication,
-        release_date: publication.release_date.toISOString()
+        release_date: publication.release_date.toISOString(),
     };
 }
 
