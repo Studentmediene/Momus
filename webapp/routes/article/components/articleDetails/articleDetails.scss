@@ -30,3 +30,17 @@
         min-height: 100px;
     }
 }
+
+.status-detail {
+    .uk-button-group {
+        display: flex;
+    }
+
+    .uk-button {
+        width: 35%;
+    }
+
+    .uk-form-control {
+        flex-grow: 1;
+    }
+}

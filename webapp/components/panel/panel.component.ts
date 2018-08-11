@@ -10,11 +10,14 @@ class PanelCtrl {
     public title: string;
     public noBodyPadding: boolean;
     public type: PanelType;
+    public collapsible: boolean;
     public isCollapsed: boolean = false;
 
     public $onInit() {
         this.noBodyPadding = this.noBodyPadding || false;
         this.type = this.type || 'primary';
+
+        this.isCollapsed = this.collapsible != null;
     }
 
     public toggleCollapse() {

@@ -33,6 +33,7 @@
 
 <div class="hidden-print">
     <h1>{{vm.article.name}}</h1>
+    <span>{{vm.article.section.name}}, {{vm.article.type.name}}</span>
 
     <div uk-alert class="uk-alert-warning" ng-show="vm.article.archived">
         <p>
@@ -43,47 +44,11 @@
     
     <!-- Status bar and buttons -->
     <div>
-        <div uk-margin>
-                <status-widget 
-                label="'Seksjon'"
-                selected="vm.article.section"
-                statuses="vm.sections"
-            >
-            </status-widget>
-            <status-widget 
-                label="'Type'"
-                selected="vm.article.type"
-                statuses="vm.types"
-            >
-        </div>
-        <div uk-margin class="uk-margin-small-top">
-            <status-widget 
-                label="'Status'"
-                selected="vm.article.status"
-                statuses="vm.statuses"
-                on-change="vm.onStatusChange(status)"
-            >
-            </status-widget>
-            <status-widget 
-                label="'Korrektur'"
-                selected="vm.article.review"
-                statuses="vm.reviews"
-                on-change="vm.onReviewStatusChange(status)"
-            >
-            </status-widget>
-            <boolean-widget 
-                label="'Sitatsjekk'"
-                value="vm.article.quote_check_status"
-                on-change="vm.onQuoteCheckStatusChange(value)"
-            >
-            </boolean-widget>
-        </div>
-        
         <div uk-margin class="uk-margin-top uk-margin-bottom">
             <a 
                 href="https://docs.google.com/document/d/{{vm.article.google_drive_id}}/edit"
                 target="_blank"
-                class="uk-button uk-button-primary"
+                class="uk-button button-edit"
             >
                 <span class="fas fa-edit"></span>
                 Rediger i Google Docs
@@ -141,7 +106,33 @@
                     on-save="vm.onCommentSave(value)">
                 </editable-field>
             </panel>
-             <panel icon="'fas fa-users'" type="'primary'" header="'Bildetekster'" collapsible class="imagetext-panel">
+            <div class="status-detail">
+                <status-widget 
+                    label="'Status'"
+                    selected="vm.article.status"
+                    statuses="vm.statuses"
+                    on-change="vm.onStatusChange(status)"
+                >
+                </status-widget>
+            </div>
+            <div class="status-detail uk-margin-small-top">
+                <status-widget 
+                    label="'Korrektur'"
+                    selected="vm.article.review"
+                    statuses="vm.reviews"
+                    on-change="vm.onReviewStatusChange(status)"
+                >
+                </status-widget>
+            </div>
+            <div class="status-detail uk-margin-small-top uk-margin-bottom">
+                <boolean-widget 
+                    label="'Sitatsjekk'"
+                    value="vm.article.quote_check_status"
+                    on-change="vm.onQuoteCheckStatusChange(value)"
+                >
+                </boolean-widget>
+            </div>
+            <panel icon="'fas fa-images'" type="'primary'" header="'Bildetekster'" collapsible class="imagetext-panel">
                 <editable-field
                     type="textarea"
                     label="'Bildetekster'"
@@ -224,29 +215,30 @@
 
                 <editable-field
                     type="select"
+                    label="'Seksjon'"
+                    value="vm.article.section"
+                    value-label="name"
+                    pool="vm.sections"
+                    on-save="">
+                </editable-field>
+
+                <editable-field
+                    type="select"
+                    label="'Type'"
+                    value="vm.article.type"
+                    value-label="name"
+                    pool="vm.types"
+                    on-save="">
+                </editable-field>
+
+                <editable-field
+                    type="select"
                     label="'Utgave'"
                     value="vm.article.publication"
                     value-label="name"
                     pool="vm.publications"
                     on-save="">
                 </editable-field>
-            </panel>
-            <panel icon="'fas fa-list'" header="'Notater'" type="'edit'">
-                <extra-header-content>
-                    <button 
-                        class="uk-button uk-button-primary button-xs"
-                        ng-click="vm.saveNote()"
-                    >
-                        <i class="fa fa-save"></i> Lagre
-                    </button>
-                </extra-header-content>
-                <div>
-                    <textarea
-                            id="noteArea"
-                            class="uk-textarea"
-                            ng-model="vm.article.note">
-                    </textarea>
-                </div>
             </panel>
         </div>
     </div>
