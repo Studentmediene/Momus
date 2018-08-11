@@ -22,6 +22,7 @@
 // use this if you want to recursively match all subfolders:
 // 'test/spec/**/*.js'
 
+const sass = require('node-sass');
 
 module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
@@ -206,6 +207,7 @@ module.exports = function (grunt) {
         },
         sass: {
             options: {
+                implementation: sass,
                 sourceMap: true,
                 outputStyle: 'expanded'
             },
