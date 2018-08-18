@@ -114,7 +114,7 @@
                     <button
                         type="submit"
                         id="searchSubmit"
-                        class="uk-button uk-button-primary"
+                        class="uk-button uk-button-primary uk-width-1-1"
                     >
                         Søk
                     </button>
@@ -208,10 +208,10 @@
                             ng-class="{'uk-text-danger': article.quote_check_status, 'uk-text-success': !article.quote_check_status}">
                         </i>
                     </td>
-                    <td style="background-color: {{article.status.color}};">
+                    <td ng-style="{'background-color': article.status.color}">
                         {{ article.status.name }}
                     </td>
-                    <td style="background: {{article.section.color}};">
+                    <td ng-style="{'background-color': article.section.color}">
                         {{ article.section.name }}
                     </td>
                     <td>
