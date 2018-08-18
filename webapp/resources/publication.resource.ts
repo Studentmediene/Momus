@@ -1,5 +1,5 @@
 import { Publication, PublicationSerial } from '../models/Publication';
-import { MomResourceFactory } from '../services/momResource';
+import { MomResourceFactory } from 'services/momResource.factory';
 import { LayoutStatus } from 'models/Statuses';
 
 /* @ngInject */

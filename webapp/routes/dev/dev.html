@@ -1,1 +1,25 @@
-Dev mode engaged
+<p>
+    <button
+            class="uk-button uk-button-primary"
+            ng-click="vm.generateData()"
+    >
+        Generate dummy articles and publications
+    </button>
+</p>
+<p ng-if="vm.env.noAuth">
+    <span class="uk-button-group">
+        <span
+                class="uk-button uk-button-primary"
+                ng-click="vm.setLoggedInUser(vm.selectedUser.username)"
+        >
+            Set logged in user
+        </span>
+        <select-dropdown
+            items="vm.persons"
+            ng-model="vm.selectedUser"
+            label="'name'"
+            unclearable
+        >
+        </select-dropdown>
+    </span>
+</p>

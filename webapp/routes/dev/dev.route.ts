@@ -1,12 +1,15 @@
 import * as angular from 'angular';
+import { StateProvider } from '@uirouter/angularjs';
 
 import { Environment } from '../../app.types';
 
-import DevCtrl from './dev.ctrl';
-import { StateProvider } from '@uirouter/angularjs';
+import devPage from './dev.component';
+import { PersonResource } from 'resources/person.resource';
 
 const routeModule = angular
-    .module('momusApp.routes.dev', [])
+    .module('momusApp.routes.dev', [
+        devPage.name,
+    ])
     .config(($stateProvider: StateProvider) => {
         $stateProvider.state('dev', {
             parent: 'root',
@@ -20,12 +23,10 @@ const routeModule = angular
                     class: 'navbar-dev',
                 },
             },
+            resolve: {
+                persons: (personResource: PersonResource) => personResource.query().$promise,
+            },
         });
-    })
-    .component('devPage', {
-        template: require('./dev.html'),
-        controller: DevCtrl,
-        controllerAs: 'vm',
     });
 
 export default {

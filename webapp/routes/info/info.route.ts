@@ -1,11 +1,14 @@
 import * as angular from 'angular';
 
-import InfoCtrl from './info.ctrl';
 import { Environment } from '../../app.types';
 import { StateProvider } from '@uirouter/angularjs';
 
+import infoPage from './info.component';
+
 const routeModule = angular
-    .module('momusApp.routes.info', [])
+    .module('momusApp.routes.info', [
+        infoPage.name,
+    ])
     .config(($stateProvider: StateProvider) => {
         $stateProvider
             .state('info', {
@@ -19,11 +22,6 @@ const routeModule = angular
                     },
                 },
             });
-    })
-    .component('infoPage', {
-        controller: InfoCtrl,
-        controllerAs: 'vm',
-        template: require('./info.html'),
     });
 
 export default {

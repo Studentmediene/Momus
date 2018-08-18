@@ -2,7 +2,7 @@ import * as angular from 'angular';
 
 import './panel.scss';
 
-type PanelType = 'primary' | 'new' | 'edit';
+type PanelType = 'primary' | 'new' | 'edit' | 'danger';
 
 /* @ngInject */
 class PanelCtrl {

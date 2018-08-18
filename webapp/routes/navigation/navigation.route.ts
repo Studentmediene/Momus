@@ -1,8 +1,9 @@
 import * as angular from 'angular';
-
-import NavigationCtrl from './navigation.ctrl';
-import { Person } from '../../models/Person';
 import { StateProvider, StateService } from '@uirouter/angularjs';
+
+import { Person } from '../../models/Person';
+
+import navigation from './navigation.component';
 
 export interface NavItem {
     stateName: string;
@@ -11,7 +12,9 @@ export interface NavItem {
 }
 
 export default angular
-    .module('momusApp.routes.navigation', [])
+    .module('momusApp.routes.navigation', [
+        navigation.name,
+    ])
     .config(($stateProvider: StateProvider) => {
         $stateProvider.state('root', {
             component: 'navigation',
@@ -23,13 +26,4 @@ export default angular
                     .map((state): NavItem => ({stateName: state.name, ...state.data.nav})),
             },
         });
-    })
-    .component('navigation', {
-        bindings: {
-            user: '<',
-            navItems: '<',
-        },
-        controller: NavigationCtrl,
-        controllerAs: 'vm',
-        template: require('./navigation.html'),
     });

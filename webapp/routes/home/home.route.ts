@@ -1,13 +1,16 @@
 import * as angular from 'angular';
 
-import HomeCtrl from './home.ctrl';
 import { Environment } from '../../app.types';
 import { StateProvider } from '@uirouter/angularjs';
 import { ArticleResource } from '../../resources/article.resource';
 import { Person } from '../../models/Person';
 
+import homePage from './home.component';
+
 const routeModule = angular
-    .module('momusApp.routes.home', [])
+    .module('momusApp.routes.home', [
+        homePage.name,
+    ])
     .config(($stateProvider: StateProvider) => {
         $stateProvider.state('home', {
             parent: 'root',
@@ -25,15 +28,6 @@ const routeModule = angular
                     articleResource.search({}, {persons: [loggedInUser.id], page_size: 9}).$promise,
             },
         });
-    })
-    .component('homePage', {
-        bindings: {
-            user: '<',
-            myArticles: '<',
-        },
-        template: require('./home.html'),
-        controller: HomeCtrl,
-        controllerAs: 'vm',
     });
 
 export default {

@@ -2,6 +2,7 @@
 
 .select-dropdown {
     position: relative;
+    background-color: white;
 }
 .select-dropdown-item {
     border: 1px solid $global-border;
@@ -18,6 +19,8 @@
     > span {
         cursor: pointer;
         flex-grow: 1;
+        margin-left: 5px;
+        margin-right: 5px;
     }
 
     > .clear {
@@ -29,12 +32,12 @@
 .select-dropdown-drop {
     position: absolute;
     border: 1px solid $global-primary-background;
-    border-top: none;
     background-color: white;
-    left: 0;
+    box-sizing: border-box;
     right: 0;
     overflow-y: scroll;
     z-index: 1000;
+    max-height: 200px;    
 
     .select-dropdown-dropitem {
         cursor: pointer;

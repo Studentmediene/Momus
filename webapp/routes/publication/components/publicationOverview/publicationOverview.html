@@ -1,0 +1,101 @@
+<div uk-grid>
+    <!-- left panel -->
+    <div class="uk-width-1-2@m">
+        <panel icon="'fas fa-newspaper'" header="'Utgaver'" no-body-padding="true" type="'primary'">
+            <extra-header-content>
+                <select-dropdown
+                    ng-model="vm.selectedYear"
+                    items="vm.yearOptions"
+                    placeholder="År"
+                >
+                </select-dropdown>
+            </extra-header-content>
+            <table class="uk-table uk-table-hover uk-table-striped">
+                <thead>
+                    <tr>
+                        <th>Navn</th>
+                        <th>Utgivelsesdato</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="publication in vm.publications 
+                                | filter:vm.isInCurrentYear 
+                                | orderBy:'release_date':true
+                                | startFrom:(vm.currentPage-1)*vm.pageSize 
+                                | limitTo:vm.pageSize"
+                >
+                    <td>{{publication.name}}</td>
+                    <td>{{publication.release_date | date: 'yyyy-MM-dd'}}</td>
+                    <td><a ui-sref="article.search({publication: publication.id})">Se artikler</a></td>
+                    <td><a ui-sref="publication.disposition({id: publication.id})">Disposisjon</a></td>
+                    <td class=""><a class="interact" ng-click="vm.editPublication(publication)">Endre</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </panel>
+    </div>
+
+    <!-- right panel, for editing/new -->
+    <div class="uk-width-1-2@m">
+        <panel
+            icon="'fas fa-edit'"
+            header="vm.editing.id != null ? 'Rediger ' + vm.editing.name : 'Ny utgave'"
+            type="vm.editing.id != null ? 'primary' : 'new'"
+        >
+            <form
+                class="uk-form-stacked"
+                name="vm.publicationForm"
+                ng-submit="vm.saveEditedPublication()"
+            >
+                <!-- name input -->
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="name">Navn</label>
+                    <div class="uk-form-controls">
+                        <input
+                            type="text"
+                            name="name"
+                            ng-model="vm.editing.name"
+                            ng-class="{'uk-form-danger': vm.publicationForm.name.$invalid}"
+                            class="uk-input"
+                            required
+                        >
+                    </div>
+                </div>
+                <!-- date input with selector -->
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="date">Utgivelsesdato</label>
+                    <div class="uk-form-controls">
+                        <input
+                            type="date"
+                            name="date"
+                            ng-model="vm.editing.release_date"
+                            ng-class="{'uk-form-danger': vm.publicationForm.date.$invalid}"
+                            class="uk-input"
+                            placeholder="ÅÅÅÅ-MM-DD"
+                            required
+                        >
+                    </div>
+                </div>
+                <div class="uk-margin">
+                    <button
+                        type="submit"
+                        class="uk-button uk-button-primary"
+                        ng-disabled="vm.publicationForm.$invalid"
+                    >
+                        Lagre
+                    </button>
+                    <button
+                        type="button"
+                        class="uk-button uk-button-secondary"
+                        ng-click="vm.editing = {}"
+                    >
+                        Avbryt
+                    </button>
+                </div>
+            </form>
+        </panel>
+    </div>
+</div>

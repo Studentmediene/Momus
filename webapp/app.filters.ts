@@ -9,4 +9,10 @@ export default angular
             .filter((e, i, a) => i === 0 || i === a.length - 1)
             .map((e) => e[0])
             .join(''),
-    );
+    )
+    .filter('startFrom', () => {
+        return (list: any[], start: number) => {
+            start = +start;
+            return list.slice(start);
+        };
+    });

@@ -4,18 +4,18 @@ import { Model } from '../../models/Model';
 
 import './selectDropdown.scss';
 
+type ItemType = Model | number | string;
 /* @ngInject */
 class SelectDropdownCtrl implements angular.IController {
     public ngModel: angular.INgModelController;
-    public viewModel: Model;
+    public viewModel: ItemType;
     public required: string;
 
-    public items: Model[];
+    public items: ItemType[];
     public label: string;
     public placeholder: string;
     public showDropdown: boolean = false;
     public shouldUnfocus: boolean = true;
-    public onChange: (selected: { selected: Model }) => void;
 
     private $timeout: angular.ITimeoutService;
 
@@ -28,7 +28,7 @@ class SelectDropdownCtrl implements angular.IController {
             this.viewModel = this.ngModel.$viewValue;
         };
 
-        this.ngModel.$validators.req = (modelValue: Model, viewValue: Model) => {
+        this.ngModel.$validators.req = (modelValue: ItemType, viewValue: ItemType) => {
             const val = modelValue || viewValue;
             return !this.required || val != null;
         };
@@ -60,12 +60,12 @@ class SelectDropdownCtrl implements angular.IController {
         this.shouldUnfocus = true;
     }
 
-    public onSelect(p: Model) {
+    public onSelect(p: ItemType) {
         this.setModel(p);
         this.showDropdown = false;
     }
 
-    private setModel(value: Model) {
+    private setModel(value: ItemType) {
         this.ngModel.$setViewValue(value);
         this.ngModel.$render();
         this.ngModel.$validate();

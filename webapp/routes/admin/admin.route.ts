@@ -1,11 +1,14 @@
 import * as angular from 'angular';
 
-import AdminCtrl from './admin.ctrl';
 import { Environment } from '../../app.types';
 import { StateProvider } from '@uirouter/angularjs';
 
+import adminPage from 'routes/admin/admin.component';
+
 const routeModule = angular
-    .module('momusApp.routes.admin', [])
+    .module('momusApp.routes.admin', [
+        adminPage.name,
+    ])
     .config(($stateProvider: StateProvider) => {
         $stateProvider.state('admin', {
             parent: 'root',
@@ -19,14 +22,6 @@ const routeModule = angular
                 },
             },
         });
-    })
-    .component('adminPage', {
-        bindings: {
-            user: '<',
-        },
-        template: require('./admin.html'),
-        controller: AdminCtrl,
-        controllerAs: 'vm',
     });
 
 export default {

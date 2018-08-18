@@ -12,5 +12,11 @@ declare module 'angular' {
         interface IResourceOptions {
             actions?: IActionHash
         }
+
+        interface IResource<T> {
+            $update(): IPromise<T>;
+            $update(params?: Object, success?: Function, error?: Function): IPromise<T>;
+            $update(success: Function, error?: Function): IPromise<T>;
+        }
     }
 }

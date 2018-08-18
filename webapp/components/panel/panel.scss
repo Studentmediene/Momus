@@ -13,11 +13,16 @@
     &.new {
         border-color: $global-new-background;
     }
+
+    &.danger {
+        border-color: $global-danger-background;
+    }
 }
 
 .panel-heading {
     padding: 10px;
     display: flex;
+    align-items: center;
     > h5 {
         flex-grow: 1;
         color: white;
@@ -51,6 +56,11 @@
     &.new {
         background: $global-new-background;
         > h5 { color: black; }
+    }
+
+    &.danger {
+        background: $global-danger-background;
+        > h5 { color: white; }
     }
 }
 
