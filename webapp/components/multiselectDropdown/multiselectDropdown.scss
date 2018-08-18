@@ -27,6 +27,8 @@
 
     .multiselect-dropdown-input {
         flex-grow: 1;
+        display: flex;
+        align-items: center;
         > input {
             background: transparent;
             border: none;
@@ -51,7 +53,7 @@
     .multiselect-dropdown-dropitem {
         cursor: pointer;
         padding: 0 10px;
-        &:hover {
+        &.hovered {
             background-color: lightgrey;
         }
     }

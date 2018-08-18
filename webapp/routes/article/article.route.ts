@@ -3,11 +3,19 @@ import * as angular from 'angular';
 import articleDetails from './components/articleDetails/articleDetails.component';
 import articleSearch from './components/articleSearch/articleSearch.component';
 import { Environment } from '../../app.types';
-import { StateProvider, $InjectorLike, StateParams } from '@uirouter/angularjs';
+import {
+    StateProvider,
+    $InjectorLike,
+    StateParams,
+    TransitionService,
+    Transition,
+} from '@uirouter/angularjs';
 import { ArticleResource } from '../../resources/article.resource';
 import { PersonResource } from '../../resources/person.resource';
 import { Article } from '../../models/Article';
+import { createArticleSearchParams, ArticleSearchParams } from '../../models/ArticleSearchParams';
 import { PublicationResource } from 'resources/publication.resource';
+import { Publication } from 'models/Publication';
 
 const routeModule = angular
     .module('momusApp.routes.article', [
@@ -27,12 +35,56 @@ const routeModule = angular
                 },
             })
             .state('article.search', {
-                url: '/artikler',
+                url: `/artikler?
+                    defaultSearch&
+                    publication&
+                    section&
+                    status&
+                    review&
+                    free&
+                    persons&
+                    page_number&
+                    page_size&
+                    archived`,
+                params: {
+                    defaultSearch: {type: 'bool'},
+                    publication: {type: 'int'},
+                    section: {type: 'int'},
+                    status: {type: 'int'},
+                    review: {type: 'int'},
+                    free: {type: 'string'},
+                    persons: {type: 'int', array: true},
+                    page_number: {type: 'int', value: 1},
+                    page_size: {type: 'int', value: 10},
+                    archived: {type: 'bool'},
+                },
                 component: 'articleSearch',
                 data: {
                     title: 'Artikkelsøk',
                     nav: false,
                 },
+                resolve: {
+                    activePublication: (publicationResource: PublicationResource) =>
+                        publicationResource.active().$promise
+                            .then((pub) => pub)
+                            .catch(() => null),
+                    publications: (publicationResource: PublicationResource) =>
+                        publicationResource.query().$promise,
+                    persons: (personResource: PersonResource) =>
+                        personResource.query().$promise,
+                    sections: (articleResource: ArticleResource) =>
+                        articleResource.sections().$promise,
+                    statuses: (articleResource: ArticleResource) =>
+                        articleResource.statuses().$promise,
+                    reviews: (articleResource: ArticleResource) =>
+                        articleResource.reviewStatuses().$promise,
+                    types: (articleResource: ArticleResource) =>
+                        articleResource.types().$promise,
+                    searchParams: createArticleSearchParams,
+                    results: (articleResource: ArticleResource, searchParams: ArticleSearchParams) =>
+                        articleResource.search({}, searchParams.stringify()).$promise,
+                },
+                reloadOnSearch: true,
             })
             .state('article.details', {
                 url: '/artikler/:id',
@@ -56,6 +108,19 @@ const routeModule = angular
                         publicationResource.query(),
                 },
             });
+    })
+    .run(($transitions: TransitionService) => {
+        $transitions.onStart({to: 'article.search'}, (transition: Transition) => {
+            const {['#']: _, ...params} = transition.params();
+            // Do default search if we come from another state and no parameters are specified or their default value
+            if (
+                transition.from().name !== 'search' &&
+                !Object.keys(params).some((p) => params[p] !== transition.to().params[p].value)
+            ) {
+                return transition.router.stateService.target(transition.to(), {defaultSearch: true});
+            }
+
+        });
     });
 
 export default {

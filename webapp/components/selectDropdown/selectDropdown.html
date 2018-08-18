@@ -1,0 +1,28 @@
+<div class="select-dropdown">
+    <div
+        class="select-dropdown-item"
+        ng-class="{'uk-form-danger': vm.required != null && vm.selected == null}"
+        >
+        <span
+            tabindex="0"
+            ng-focus="vm.onFocus()"
+            ng-blur="vm.onBlur()"
+            ng-class="{'uk-text-muted': vm.showPlaceholder }"
+        >
+            {{ vm.showPlaceholder ? vm.placeholder : vm.selected[vm.label] }}
+        </span>
+        <i ng-show="vm.selected != null && vm.unclearable == null" class="clear fas fa-times" ng-click="vm.clear($event)"></i>
+        <i class="fas fa-caret-down"></i>
+    </div>
+    <div class="select-dropdown-drop" ng-style="{ display: vm.showDropdown ? 'block' : 'none'}">
+        <div
+            class="select-dropdown-dropitem"
+            ng-repeat="p in vm.items track by p.id"
+            ng-mousedown="vm.onListMousedown()"
+            ng-mouseup="vm.onListMouseup()"
+            ng-click="vm.onSelect(p)"
+        >
+            <span>{{ p[vm.label] }}</span>
+        </div>
+    </div>
+</div>

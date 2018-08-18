@@ -1,5 +1,10 @@
-<div class="multiselect-dropdown">
+<div class="multiselect-dropdown" ng-keypress="vm.onKeypress($event)">
     <div class="multiselect-dropdown-list">
+        <span
+            class="uk-text-muted"
+        >
+            {{ vm.showPlaceholder ? vm.placeholder : '&nbsp;' }}
+        </span>
         <div ng-repeat="p in vm.selected" class="multiselect-dropdown-label">
             <span class="uk-label">
                 {{ p[vm.label] }} 
@@ -12,15 +17,20 @@
                 ng-focus="vm.onInputFocus()"
                 ng-blur="vm.onInputBlur($event)"
                 ng-model="vm.searchText"
+                ng-change="vm.onSearchChange()"
             >
+            <i class="fas fa-caret-down"></i>
         </div>
     </div>
-    <div class="multiselect-dropdown-drop" ng-style="{ display: vm.showDropdown ? 'block' : 'none'}">
+    <div id="multidrop-list" class="multiselect-dropdown-drop" ng-style="{ display: vm.showDropdown ? 'block' : 'none'}">
         <div
             class="multiselect-dropdown-dropitem"
-            ng-repeat="p in vm.items | filter:vm.notSelected | filter:vm.searchText track by p.id"
+            ng-repeat="p in vm.items | filter:vm.notSelected | filter:vm.searchText as filteredItems track by p.id"
             ng-mousedown="vm.onListMousedown()"
+            ng-mouseup="vm.onListMouseup()"
             ng-click="vm.onSelect(p)"
+            ng-mouseenter="vm.listIndex = $index"
+            ng-class="{hovered: vm.listIndex === $index}"
         >
             <span>{{ p[vm.label] }}</span>
         </div>

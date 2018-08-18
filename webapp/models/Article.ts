@@ -2,6 +2,7 @@ import { Model } from './Model';
 import { ArticleStatus, ReviewStatus } from './Statuses';
 import { Person } from './Person';
 import { Section } from './Section';
+import { Publication } from 'models/Publication';
 
 interface TestModel {
     id: number;
@@ -16,10 +17,11 @@ export interface Article extends ng.resource.IResource<Article>, TestModel {
     comment: string;
     content: string;
     image_text: string;
-    content_length: number;
+    content_length?: number;
     note: string;
     status: ArticleStatus;
     type: ArticleType;
+    publication: Publication;
     journalists: Person[];
     external_author: string;
     photographers: Person[];

@@ -1,0 +1,46 @@
+@import "../../variables.scss";
+
+.select-dropdown {
+    position: relative;
+}
+.select-dropdown-item {
+    border: 1px solid $global-border;
+    &:focus-within {
+        border-color: $global-primary-background;
+    }
+    transition: border-color 0.1s linear;
+
+    padding: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    > span {
+        cursor: pointer;
+        flex-grow: 1;
+    }
+
+    > .clear {
+        margin-right: 5px;
+        cursor: pointer;
+    }
+}
+
+.select-dropdown-drop {
+    position: absolute;
+    border: 1px solid $global-primary-background;
+    border-top: none;
+    background-color: white;
+    left: 0;
+    right: 0;
+    overflow-y: scroll;
+    z-index: 1000;
+
+    .select-dropdown-dropitem {
+        cursor: pointer;
+        padding: 0 10px;
+        &:hover {
+            background-color: lightgrey;
+        }
+    }
+}

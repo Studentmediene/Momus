@@ -23,6 +23,9 @@ node_modules/
 src/main/webapp/app/libs/
 src/main/filters/local.properties
 src/main/resources/local.properties
+src/main/resources/cert.pem
+src/main/resources/key.der
+src/main/resources/key.pem
 
 # build folders
 target/

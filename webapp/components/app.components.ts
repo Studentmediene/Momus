@@ -7,9 +7,11 @@ import personWidget from './personWidget/personWidget.component';
 import statusWidget from './statusWidget/statusWidget.component';
 import booleanWidget from './booleanWidget/booleanWidget.component';
 import textwrapper from './textwrapper/textwrapper.component';
+import selectDropdown from './selectDropdown/selectDropdown.component';
 import multiselectDropdown from './multiselectDropdown/multiselectDropdown.component';
 import editableAlert from './editableAlert/editableAlert.component';
 import editableField from './editableField/editableField.component';
+import newArticleModal from './newArticleModal/newArticleModal.component';
 
 export default angular
     .module('momusApp.components', [
@@ -20,7 +22,9 @@ export default angular
         inlineEdit.name,
         textwrapper.name,
         panel.name,
+        selectDropdown.name,
         multiselectDropdown.name,
         editableAlert.name,
         editableField.name,
+        newArticleModal.name,
     ]);
