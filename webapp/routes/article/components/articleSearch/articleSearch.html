@@ -223,20 +223,27 @@
             </table>
         </div>
     </panel>
-
-    <div class="text-center">
-        <button class="btn btn btn-info"
-                ng-disabled="vm.searchParams.page_number <= 1"
-                ng-click="vm.search(-1)">
-            <i class="fa fa-angle-left"/>
-        </button>
-        <b style="display: inline-block; width: 30px">
-            {{ vm.searchParams.page_number }}
-        </b>
-        <button class="btn btn btn-info"
-                ng-disabled="!vm.hasNextPage"
-                ng-click="vm.search(1)">
-            <i class="fa fa-angle-right"/>
-        </button>
-    </div>
+    <ul class="uk-pagination uk-flex-center">
+        <li>
+            <span
+                style="cursor: pointer;"
+                ng-click="vm.search(-1)"
+                ng-class="{'uk-disabled': vm.searchParams.page_number === 0}"
+            >
+                <span uk-pagination-previous></span>
+            </span>
+        </li>
+        <li class="uk-active">
+            <span>{{vm.searchParams.page_number + 1}}</span>
+        </li>
+        <li>
+            <span
+                style="cursor: pointer;"
+                ng-click="vm.search(1)"
+                ng-class="{'uk-disabled': !vm.hasNextPage}"
+            >
+                <span uk-pagination-next ng-click="vm.search(1)"></span>
+            </span>
+        </li>
+    </ul>
 </div>

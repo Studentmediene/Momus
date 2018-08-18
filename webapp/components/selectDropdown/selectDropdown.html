@@ -7,7 +7,7 @@
             tabindex="0"
             ng-focus="vm.onFocus()"
             ng-blur="vm.onBlur()"
-            ng-class="{'uk-text-muted': vm.showPlaceholder }"
+            ng-class="{'uk-text-muted': vm.viewModel == null && !vm.showDropdown }"
         >
             {{ vm.viewModel == null && !vm.showDropdown ? vm.placeholder : vm.viewModel[vm.label] }}
         </span>

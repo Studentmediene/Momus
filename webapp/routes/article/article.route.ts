@@ -54,7 +54,7 @@ const routeModule = angular
                     review: {type: 'int'},
                     free: {type: 'string'},
                     persons: {type: 'int', array: true},
-                    page_number: {type: 'int', value: 1},
+                    page_number: {type: 'int', value: 0},
                     page_size: {type: 'int', value: 10},
                     archived: {type: 'bool'},
                 },

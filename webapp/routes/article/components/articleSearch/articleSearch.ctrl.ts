@@ -5,18 +5,22 @@ import { OpenNewArticleModalFactory } from 'components/newArticleModal/newArticl
 import { Publication } from 'models/Publication';
 import { Person } from 'models/Person';
 import { Section } from 'models/Section';
-import { ArticleType } from 'models/Article';
+import { ArticleType, Article } from 'models/Article';
 
 /* @ngInject */
 export default class ArticleSearchCtrl implements angular.IController {
     public searchParams: ArticleSearchParams;
     public articleSortType: string = '[publication.release_date,section.name]';
     public articleSortReverse: boolean = false;
+
+    public results: Article[];
     public activePublication: Publication;
     public persons: Person[];
     public publications: Publication[];
     public sections: Section[];
     public types: ArticleType[];
+
+    public hasNextPage: boolean;
 
     private $scope: angular.IScope;
     private $state: StateService;
@@ -32,6 +36,10 @@ export default class ArticleSearchCtrl implements angular.IController {
         this.$state = $state;
 
         this.openNewArticleModal = openNewArticleModal;
+    }
+
+    public $onInit() {
+        this.hasNextPage = this.results.length > this.searchParams.page_size;
     }
 
     public search(pageDelta: number) {
@@ -60,9 +68,7 @@ export default class ArticleSearchCtrl implements angular.IController {
             sections: this.sections,
             types: this.types,
         })
-            .then((article) => {
-                console.log(article);
-        });
+            .then((article) => this.$state.go('article.details', {id: article.id }));
     }
 
     // public showHelp() {

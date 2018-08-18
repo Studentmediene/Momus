@@ -39,9 +39,9 @@
         <span ng-show="vm.isEditing">
             <multiselect-dropdown 
                 items="vm.pool" 
-                selected="vm.value" 
+                ng-model="vm.value" 
                 label="vm.valueLabel"
-                on-change="vm.onChange(selected)">
+            >
             </multiselect-dropdown>
         </span>
     </div>

@@ -10,6 +10,7 @@ export default angular.module('momusApp.routes.article.articleSearch', [])
         controllerAs: 'vm',
         template: require('./articleSearch.html'),
         bindings: {
+            results: '<',
             activePublication: '<',
             publications: '<',
             persons: '<',
@@ -17,7 +18,6 @@ export default angular.module('momusApp.routes.article.articleSearch', [])
             statuses: '<',
             reviews: '<',
             searchParams: '<',
-            results: '<',
             types: '<',
         },
 });
