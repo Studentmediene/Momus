@@ -61,6 +61,7 @@
         <commons-dbcp2.version>2.1.1</commons-dbcp2.version>
         <liquibase.version>3.5.3</liquibase.version>
         <google-drive.version>v2-rev277-1.22.0</google-drive.version>
+        <adal4j.version>1.6.1</adal4j.version>
         <commons-lang3.version>3.6</commons-lang3.version>
         <javax-servlet.version>3.1.0</javax-servlet.version>
         <jetty.version>9.4.6.v20170531</jetty.version>
@@ -276,6 +277,12 @@
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-drive</artifactId>
             <version>${google-drive.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>adal4j</artifactId>
+            <version>${adal4j.version}</version>
         </dependency>
 
         <dependency>
