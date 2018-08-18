@@ -1,11 +1,14 @@
 <div class="multiselect-dropdown" ng-keypress="vm.onKeypress($event)">
-    <div class="multiselect-dropdown-list">
+    <div
+        class="multiselect-dropdown-list"
+        ng-class="{'uk-form-danger': vm.ngModel.$invalid}"
+    >
         <span
             class="uk-text-muted"
         >
-            {{ vm.showPlaceholder ? vm.placeholder : '&nbsp;' }}
+            {{ (!vm.isAnySelected() && !vm.showDropdown) ? vm.placeholder : '&nbsp;' }}
         </span>
-        <div ng-repeat="p in vm.selected" class="multiselect-dropdown-label">
+        <div ng-repeat="p in vm.viewModel" class="multiselect-dropdown-label">
             <span class="uk-label">
                 {{ p[vm.label] }} 
                 <i class="fas fa-times" ng-click="vm.onUnselect(p)"></i>

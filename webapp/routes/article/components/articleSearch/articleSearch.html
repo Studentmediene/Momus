@@ -30,8 +30,12 @@
                     <label class="sr-only" for="searchFree">
                         Fritekst
                     </label>
-                    <input class="uk-input" id="searchFree" ng-model="vm.searchParams.free"
-                            placeholder="Fritekst">
+                    <input
+                        class="uk-input"
+                        id="searchFree"
+                        ng-model="vm.searchParams.free"
+                        placeholder="Fritekst"
+                    >
                 </div>
 
                 <!-- Section search -->
@@ -41,10 +45,9 @@
                     </label>
                     <select-dropdown
                         items="vm.sections"
-                        selected="vm.searchParams.section"
+                        ng-model="vm.searchParams.section"
                         label="'name'"
                         placeholder="Redaksjon"
-                        on-change="vm.searchParams.section = selected"
                     >
                     </select-dropdown>
                 </div>
@@ -56,10 +59,9 @@
                     </label>
                     <select-dropdown
                         items="vm.statuses"
-                        selected="vm.searchParams.status"
+                        ng-model="vm.searchParams.status"
                         label="'name'"
                         placeholder="Status"
-                        on-change="vm.searchParams.status = selected"
                     >
                     </select-dropdown>
                 </div>
@@ -71,10 +73,9 @@
                     </label>
                     <select-dropdown
                         items="vm.reviews"
-                        selected="vm.searchParams.review"
+                        ng-model="vm.searchParams.review"
                         label="'name'"
                         placeholder="Korrektur"
-                        on-change="vm.searchParams.review = selected"
                     >
                     </select-dropdown>
                 </div>
@@ -86,10 +87,9 @@
                     </label>
                     <select-dropdown
                         items="vm.publications"
-                        selected="vm.searchParams.publication"
+                        ng-model="vm.searchParams.publication"
                         label="'name'"
                         placeholder="Utgave"
-                        on-change="vm.searchParams.publication = selected"
                     >
                     </select-dropdown>
                 </div>
@@ -101,10 +101,9 @@
                     </label>
                     <multiselect-dropdown
                         items="vm.persons"
-                        selected="vm.searchParams.persons"
+                        ng-model="vm.searchParams.persons"
                         label="'name'"
                         placeholder="Personer"
-                        on-change="vm.searchParams.persons = selected"
                     >
                     </multiselect-dropdown>
                 </div>

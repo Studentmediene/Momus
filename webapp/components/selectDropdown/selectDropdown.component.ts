@@ -6,11 +6,13 @@ import './selectDropdown.scss';
 
 /* @ngInject */
 class SelectDropdownCtrl implements angular.IController {
+    public ngModel: angular.INgModelController;
+    public viewModel: Model;
+    public required: string;
+
     public items: Model[];
-    public selected: Model;
     public label: string;
     public placeholder: string;
-    public showPlaceholder: boolean = false;
     public showDropdown: boolean = false;
     public shouldUnfocus: boolean = true;
     public onChange: (selected: { selected: Model }) => void;
@@ -22,12 +24,18 @@ class SelectDropdownCtrl implements angular.IController {
     }
 
     public $onInit() {
-        this.showPlaceholder = this.selected == null;
+        this.ngModel.$render = () => {
+            this.viewModel = this.ngModel.$viewValue;
+        };
+
+        this.ngModel.$validators.req = (modelValue: Model, viewValue: Model) => {
+            const val = modelValue || viewValue;
+            return !this.required || val != null;
+        };
     }
 
     public clear($event: MouseEvent) {
-        this.onChange({ selected: null });
-        this.showPlaceholder = true;
+        this.setModel(null);
         $event.stopPropagation();
     }
 
@@ -41,7 +49,6 @@ class SelectDropdownCtrl implements angular.IController {
         }
         this.$timeout(100).then(() => {
             this.showDropdown = false;
-            this.showPlaceholder = this.selected == null;
         });
     }
 
@@ -54,10 +61,14 @@ class SelectDropdownCtrl implements angular.IController {
     }
 
     public onSelect(p: Model) {
-        this.selected = p;
-        this.onChange({ selected: p });
-        this.showPlaceholder = false;
+        this.setModel(p);
         this.showDropdown = false;
+    }
+
+    private setModel(value: Model) {
+        this.ngModel.$setViewValue(value);
+        this.ngModel.$render();
+        this.ngModel.$validate();
     }
 }
 
@@ -69,11 +80,12 @@ export default angular
         template: require('./selectDropdown.html'),
         bindings: {
             items: '<',
-            selected: '<',
             label: '<',
             placeholder: '@',
-            onChange: '&',
             unclearable: '@',
             required: '@',
+        },
+        require: {
+            ngModel: 'ngModel',
         },
     });

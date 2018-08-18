@@ -43,10 +43,9 @@
                     <div class="uk-form-controls">
                         <multiselect-dropdown
                             items="vm.persons"
-                            selected="vm.article.journalists"
+                            ng-model="vm.article.journalists"
                             label="'name'"
                             placeholder=""
-                            on-change="vm.article.journalists = selected"
                         >
                         </multiselect-dropdown>
                     </div>
@@ -82,12 +81,11 @@
                         {{vm.article.use_illustration ? 'Illustratører' : 'Fotografer'}}
                     </label>
                     <div class="uk-form-controls">
-                            <multiselect-dropdown
+                        <multiselect-dropdown
                             items="vm.persons"
-                            selected="vm.article.photographers"
+                            ng-model="vm.article.photographers"
                             label="'name'"
                             placeholder=""
-                            on-change="vm.article.photographers = selected"
                         >
                         </multiselect-dropdown>
                     </div>
@@ -123,9 +121,8 @@
                     <div class="uk-form-controls">
                         <select-dropdown
                             items="vm.publications"
-                            selected="vm.article.publication"
+                            ng-model="vm.article.publication"
                             label="'name'"
-                            on-change="vm.article.publication = selected"
                             unclearable
                             required
                         ></select-dropdown>
@@ -138,10 +135,9 @@
                     <div class="uk-form-controls">
                         <select-dropdown
                             items="vm.sections"
-                            selected="vm.article.section"
+                            ng-model="vm.article.section"
                             label="'name'"
                             placeholder="Seksjon"
-                            on-change="vm.article.section = selected"
                             unclearable
                             required
                         >
@@ -156,9 +152,8 @@
                     <div class="uk-form-controls">
                         <select-dropdown
                             items="vm.types"
-                            selected="vm.article.type"
+                            ng-model="vm.article.type"
                             label="'name'"
-                            on-change="vm.article.type = selected"
                             placeholder="Type"
                             unclearable
                             required
@@ -171,7 +166,7 @@
                         <button
                             class="uk-button uk-button-primary"
                             ng-click="vm.create()"
-                            ng-disabled="!vm.isArticleValid()"
+                            ng-disabled="createArticleForm.$invalid"
                         >
                             <span>Opprett artikkel</span>
                         </button>

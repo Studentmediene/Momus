@@ -10,13 +10,15 @@ interface Scope extends angular.IScope {
 }
 /* @ngInject */
 class MultiselectDropdownCtrl implements angular.IController {
+    public ngModel: angular.INgModelController;
+    public viewModel: ItemType[];
+
+    public required: string;
     public items: ItemType[];
-    public selected: ItemType[];
     public label: string;
     public placeholder: string;
     public onChange: (selected: { selected: ItemType[] }) => void;
 
-    public showPlaceholder: boolean = false;
     public showDropdown: boolean = false;
     public searchText: string = '';
     public isModel: boolean;
@@ -26,23 +28,27 @@ class MultiselectDropdownCtrl implements angular.IController {
 
     private $timeout: angular.ITimeoutService;
     private $scope: Scope;
-    private $element: JQuery<HTMLElement>;
 
-    constructor($element: JQuery<HTMLElement>, $timeout: angular.ITimeoutService, $scope: Scope) {
+    constructor($timeout: angular.ITimeoutService, $scope: Scope) {
         this.$timeout = $timeout;
         this.$scope = $scope;
-        this.$element = $element;
 
         this.notSelected = this.notSelected.bind(this);
         this.onUnselect = this.onUnselect.bind(this);
     }
 
     public $onInit() {
-        this.showPlaceholder = this.selected == null || this.selected.length === 0;
+        this.ngModel.$render = () => {
+            this.viewModel = this.ngModel.$viewValue;
+        };
+
+        this.ngModel.$validators.req = (modelValue: ItemType[], viewValue: ItemType[]) => {
+            const val = modelValue || viewValue;
+            return !this.required || (val != null && val.length > 0);
+        };
     }
 
     public onInputFocus() {
-        this.showPlaceholder = false;
         this.showDropdown = true;
     }
 
@@ -50,7 +56,6 @@ class MultiselectDropdownCtrl implements angular.IController {
         this.$timeout(100).then(() => {
             if (this.shouldUnfocus) {
                 this.showDropdown = false;
-                this.showPlaceholder = this.selected == null || this.selected.length === 0;
                 this.searchText = '';
             }
         });
@@ -101,39 +106,49 @@ class MultiselectDropdownCtrl implements angular.IController {
     }
 
     public onSelect(item: ItemType) {
-        this.showPlaceholder = false;
-        this.selected = (this.selected || []).concat(item);
+        this.setModel((this.ngModel.$viewValue || []).concat(item));
         this.shouldUnfocus = true;
         this.showDropdown = false;
         this.searchText = '';
-        this.onChange({ selected: this.selected });
     }
 
     public onUnselect(item: ItemType) {
-        this.selected = this.selected.filter((e) => {
-            switch (typeof item) {
-                case 'string':
-                case 'number':
-                    return e !== item;
-                case 'object':
-                    return (<Model> e).id !== (<Model> item).id;
-            }
-        });
-        this.showPlaceholder = this.selected.length === 0;
-        this.onChange({ selected: this.selected });
+        this.setModel(
+            this.ngModel.$viewValue.filter((e: ItemType) => {
+                switch (typeof item) {
+                    case 'string':
+                    case 'number':
+                        return e !== item;
+                    case 'object':
+                        return (<Model> e).id !== (<Model> item).id;
+                }
+            }),
+        );
     }
 
     public notSelected(item: ItemType): boolean {
-        if (this.selected == null) {
+        if (!this.isAnySelected()) {
             return true;
         }
+        const model = this.ngModel.$viewValue;
         switch (typeof item) {
             case 'string':
             case 'number':
-                return !this.selected.includes(item);
+                return !model.includes(item);
             case 'object':
-                return !this.selected.find((e) => (<Model> e).id === (<Model> item).id);
+                return !model.find((e: ItemType) => (<Model> e).id === (<Model> item).id);
         }
+    }
+
+    public isAnySelected() {
+        const model = this.ngModel.$viewValue;
+        return model != null && model.length > 0;
+    }
+
+    private setModel(value: ItemType[]) {
+        this.ngModel.$setViewValue(value);
+        this.ngModel.$render();
+        this.ngModel.$validate();
     }
 }
 
@@ -143,11 +158,13 @@ export default angular
         controller: MultiselectDropdownCtrl,
         controllerAs: 'vm',
         template: require('./multiselectDropdown.html'),
+        require: {
+            ngModel: 'ngModel',
+        },
         bindings: {
             items: '<',
-            selected: '<',
             label: '<',
             placeholder: '@',
-            onChange: '&',
+            required: '@',
         },
     });

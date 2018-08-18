@@ -5,6 +5,7 @@
 }
 .multiselect-dropdown-list {
     border: 1px solid $global-border;
+
     &:focus-within {
         border-color: $global-primary-background;
     }
