@@ -1,28 +1,34 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { BaseHrefWebpackPlugin } = require('base-href-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const Visualizer = require('webpack-visualizer-plugin');
-const webpack = require('webpack');
 const path = require('path');
 
 const root = __dirname;
 const dev = path.join(root, 'webapp');
-const dist = path.join(root, 'dist');
+const outRoot = path.join(root, 'src/main/webapp');
 
 const isprod = process.argv.indexOf('-p') !== -1;
 const visualize = process.argv.indexOf('--visualizer') !== -1;
+const isbeta = process.argv.indexOf('--beta') !== -1;
+
+const publicPath = isbeta ? '/beta/' : '/';
+const filepath = path.join(outRoot, publicPath);
 
 const commonPlugins = [
     // Injects bundles into the index file
     new HtmlWebpackPlugin({
-        template: path.join(dev, 'index.html')
-    })
+        template: path.join(dev, 'index.html'),
+        favicon: path.join(dev, 'favicon.ico'),
+    }),
+    new BaseHrefWebpackPlugin({ baseHref: publicPath })
 ];
 
 const prodPlugins = [
     new CleanWebpackPlugin([
-        dist
+        filepath
     ]),
     new MiniCssExtractPlugin({
         filename: '[name]-[contenthash].css'
@@ -39,7 +45,7 @@ const plugins = commonPlugins.concat(isprod ? prodPlugins : []);
 if (visualize) plugins.push(new Visualizer());
 
 const devServer = {
-    contentBase: dist,
+    contentBase: filepath,
     port: 8081,
     historyApiFallback: true,
     proxy: {
@@ -57,7 +63,8 @@ module.exports = {
         main: path.join(dev, 'app.ts')
     },
     output: {
-        path: dist,
+        publicPath,
+        path: filepath,
         filename: '[name]-[chunkhash].js',
         chunkFilename: '[name]-[chunkhash].js'
     },
