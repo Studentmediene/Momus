@@ -3,7 +3,10 @@ import * as ngresource from 'angular-resource';
 
 import personResourceFactory from './person.resource';
 import articleResourceFactory from './article.resource';
+import advertResourceFactory from './advert.resource';
 import publicationResourceFactory from './publication.resource';
+import pageResourceFactory from './page.resource';
+import newsItemResourceFactory from './newsItem.resource';
 
 export default angular
     .module('momusApp.resources', [
@@ -24,4 +27,7 @@ export default angular
     })
     .factory('personResource', personResourceFactory)
     .factory('articleResource', articleResourceFactory)
-    .factory('publicationResource', publicationResourceFactory);
+    .factory('advertResource', advertResourceFactory)
+    .factory('publicationResource', publicationResourceFactory)
+    .factory('pageResource', pageResourceFactory)
+    .factory('newsItemResource', newsItemResourceFactory);
