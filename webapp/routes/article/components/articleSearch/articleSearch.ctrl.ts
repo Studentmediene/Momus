@@ -1,7 +1,7 @@
 import * as angular from 'angular';
 import { ArticleSearchParams } from 'models/ArticleSearchParams';
 import { StateService } from '@uirouter/core';
-import { OpenNewArticleModalFactory } from 'components/newArticleModal/newArticleModal.component';
+import { OpenNewArticleModal } from 'components/newArticleModal/newArticleModal.component';
 import { Publication } from 'models/Publication';
 import { Person } from 'models/Person';
 import { Section } from 'models/Section';
@@ -25,12 +25,12 @@ export default class ArticleSearchCtrl implements angular.IController {
     private $scope: angular.IScope;
     private $state: StateService;
 
-    private openNewArticleModal: OpenNewArticleModalFactory;
+    private openNewArticleModal: OpenNewArticleModal;
 
     constructor(
         $scope: angular.IScope,
         $state: StateService,
-        openNewArticleModal: OpenNewArticleModalFactory,
+        openNewArticleModal: OpenNewArticleModal,
     ) {
         this.$scope = $scope;
         this.$state = $state;

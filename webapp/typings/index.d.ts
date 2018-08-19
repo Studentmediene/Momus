@@ -9,6 +9,7 @@ declare module 'angular' {
             skipTransform?: boolean;
             bypassInterceptor?: boolean;
         }
+
         interface IResourceOptions {
             actions?: IActionHash
         }
@@ -18,5 +19,9 @@ declare module 'angular' {
             $update(params?: Object, success?: Function, error?: Function): IPromise<T>;
             $update(success: Function, error?: Function): IPromise<T>;
         }
+    }
+
+    export interface IRequestConfig {
+        bypassInterceptor?: boolean;
     }
 }

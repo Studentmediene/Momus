@@ -1,7 +1,6 @@
 import * as angular from 'angular';
 
 import { Environment } from '../../app.types';
-import PublicationDispositionCtrl from './publicationDisposition/publicationDisposition.ctrl';
 import { StateProvider } from '@uirouter/angularjs';
 import { PublicationResource } from 'resources/publication.resource';
 

@@ -38,6 +38,7 @@
     overflow-y: scroll;
     z-index: 1000;
     max-height: 200px;    
+    min-width: 100%;
 
     .select-dropdown-dropitem {
         cursor: pointer;

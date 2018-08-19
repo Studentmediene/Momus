@@ -7,8 +7,9 @@ import './newArticleModal.scss';
 import { ArticleResource } from 'resources/article.resource';
 import { Person } from 'models/Person';
 import { Section } from 'models/Section';
+import { OpenModal, ModalInput } from 'services/openModal.factory';
 
-interface ModalInput {
+interface ArticleModalInput extends ModalInput {
     publication: Publication;
     publications: Publication[];
     persons: Person[];
@@ -16,53 +17,7 @@ interface ModalInput {
     types: ArticleType[];
 }
 
-interface ModalScope extends angular.IScope, ModalInput {
-    onFinished: (createdArticle: Article) => void;
-    onCanceled: () => void;
-}
-
-export type OpenNewArticleModalFactory =
-    ({ publication, persons }: ModalInput) =>
-    Promise<Article>;
-
-/* @ngInject */
-function openNewArticleModalFactory(
-    $rootScope: angular.IRootScopeService,
-    $compile: angular.ICompileService,
-): OpenNewArticleModalFactory {
-    return ({ persons, publication, publications, sections, types }) => {
-        return new Promise((resolve, reject) => {
-            const html = `
-            <new-article-modal
-                publication="publication"
-                publications="publications"
-                persons="persons"
-                sections="sections"
-                types="types"
-                on-finished="onFinished(article)"
-                on-canceled="onCanceled()">
-            </new-article-modal>`;
-            const scope: ModalScope = <ModalScope> $rootScope.$new(true);
-            scope.publication = publication;
-            scope.publications = publications;
-            scope.persons = persons;
-            scope.sections = sections;
-            scope.types = types;
-
-            const element = $compile(html)(scope);
-            scope.onFinished = (createdArticle) => {
-                element.remove();
-                resolve(createdArticle);
-            };
-            scope.onCanceled = () => {
-                element.remove();
-                reject();
-            };
-
-            angular.element(document.body).append(element);
-        });
-    };
-}
+export type OpenNewArticleModal = (input: ArticleModalInput) => Promise<Article>;
 
 /* @ngInject */
 class NewArticleModalCtrl implements angular.IController {
@@ -70,7 +25,7 @@ class NewArticleModalCtrl implements angular.IController {
     public publication: Publication;
     public publications: Publication[];
 
-    public onFinished: ({ article }: { article: Article }) => void;
+    public onFinished: ({ value }: { value: Article }) => void;
 
     private articleResource: ArticleResource;
 
@@ -102,7 +57,7 @@ class NewArticleModalCtrl implements angular.IController {
 
     public create() {
         this.article.$save({}, (article: Article) => {
-            this.onFinished({ article });
+            this.onFinished({ value: article });
         });
     }
 
@@ -121,7 +76,9 @@ class NewArticleModalCtrl implements angular.IController {
 
 export default angular
     .module('momusApp.components.newArticleModal', [])
-    .factory('openNewArticleModal', openNewArticleModalFactory)
+    .factory('openNewArticleModal', (openModal: OpenModal<ArticleModalInput, Article>) => (
+        (inputs: ArticleModalInput) => openModal('newArticleModal', inputs)
+    ))
     .component('newArticleModal', {
         template: require('./newArticleModal.html'),
         controller: NewArticleModalCtrl,
