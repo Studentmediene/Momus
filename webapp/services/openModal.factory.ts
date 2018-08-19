@@ -18,7 +18,7 @@ export interface ModalScope<T extends ModalInput, U> extends angular.IScope, Mod
 export type OpenModal<T extends object, U> = (component: string, inputs: T) => Promise<U>;
 
 /* @ngInject */
-export default function openNewModal<T extends ModalInput, U>(
+export default function openModal<T extends ModalInput, U>(
     $rootScope: angular.IRootScopeService,
     $compile: angular.ICompileService,
 ) {
@@ -47,7 +47,6 @@ export default function openNewModal<T extends ModalInput, U>(
 
             const htmlTemplate = createHtmlTemplate(component, inputs, callbacks);
             const element = $compile(htmlTemplate)(scope);
-
             angular.element(document.body).append(element);
         });
     };
@@ -66,5 +65,10 @@ function createHtmlTemplate<T extends ModalInput>(component: string, inputs: T, 
         `${camelcaseToDashcase(onFinishedName)}="${onFinishedName}(value)"`,
         `${camelcaseToDashcase(onCanceledName)}="${onCanceledName}()"`,
     ].join(' ');
-    return `<${componentDash} ${attributes}></${componentDash}>`;
+    return `
+        <div class="modal" ng-click="onCanceled()">
+            <div class="modal-content">
+                <${componentDash} ${attributes}></${componentDash}>
+            </div>
+        </div>`;
 }
