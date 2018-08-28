@@ -13,6 +13,7 @@
     "@types/angular-resource": "~1.5.14",
     "@types/node": "^10.7.1",
     "@types/uikit": "^2.27.6",
+    "@types/sockjs-client": "~1.1.0",
     "base-href-webpack-plugin": "^2.0.0",
     "clean-webpack-plugin": "~0.1.19",
     "copy-webpack-plugin": "~4.5.2",
@@ -41,6 +42,8 @@
     "@uirouter/angularjs": "~1.0.20",
     "angular": "~1.7.3",
     "angular-resource": "~1.7.3",
-    "uikit": "~3.0.0-rc.11"
+    "uikit": "~3.0.0-rc.11",
+    "webstomp-client": "~1.2.4",
+    "sockjs-client": "~1.1.5"
   }
 }

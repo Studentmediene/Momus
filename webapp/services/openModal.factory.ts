@@ -1,11 +1,11 @@
 import * as angular from 'angular';
 import { camelcaseToDashcase } from 'utils';
 
-export interface ModalInput extends Object {
+export interface ModalInput {
     [key: string]: any;
 }
 
-interface ModalCallbacks extends Object {
+interface ModalCallbacks {
     onFinished: (value: any) => void;
     onCanceled: () => void;
     // tslint:disable-next-line:ban-types

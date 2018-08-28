@@ -1,0 +1,150 @@
+$pageBorder: solid #CCCCCC 1px;
+$articleBorder: solid #ececec 1px;
+
+$headerBackground: #f6f6f6;
+
+$pageDoneBackground:#DDFFCB;
+$pageAdBackground: #f6f6f6;
+
+#disposition {
+    font-size: 75%;
+}
+
+.d-loading-spinner {
+    position: fixed;
+    top: 64px;
+    left: 50%;
+    z-index: 200;
+}
+
+.d-toolbar {
+    width: 100%;
+    z-index: 100;
+    background: $headerBackground;
+    border-left: $pageBorder;
+    border-right: $pageBorder;
+    border-top: $pageBorder;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    box-sizing: border-box;
+
+    .button-group {
+        display: flex;
+        flex-direction: row;
+
+        > * {
+            margin: 5px;
+        }
+
+        page-adder {
+            flex-grow: 1;
+        }
+    }
+
+    #online-users {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-content: center;
+    }
+
+    .headers {
+        border-top: $pageBorder;
+    }
+}
+
+.d-toolbar-attach {
+    position: fixed;
+    top: 50px;
+    border-bottom: $pageBorder;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.disposition-table {
+    position: absolute;
+
+    > div > .d-table-row {
+        > .d-table-cell {
+            border-top: $pageBorder;
+            border-right: $pageBorder;
+            box-sizing: border-box;
+        }
+
+        > .d-table-cell:first-child {
+            border-left: $pageBorder;
+        }
+    }
+
+    .d-table-row > .d-table-cell:not(.article-cell) {
+        padding: 3px;
+    }
+}
+
+/* Should not draw border on first child as it is drawn by the outer table */
+.article-cell {
+    .article-table:not(:first-child) {
+        border-top: $articleBorder;
+    }
+    .advert-table:not(:first-child) {
+        border-top: $articleBorder;
+    }
+}
+
+.page-done {
+    background: $pageDoneBackground !important; //Want this to override ad color
+}
+
+.page-ad {
+    background: $pageAdBackground;
+}
+
+.d-break-word {
+    word-wrap:break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
+.d-dropdown {
+    background: rgba(255,255,255,0.5);
+    outline: 0;
+    border: $pageBorder;
+}
+
+.ui-sortable-helper {
+    opacity:0.7;
+}
+
+.d-placeholder {
+    background-color: #99ff99;
+}
+
+.handle {
+    text-align: center;
+    cursor: move;
+}
+
+.ui-sortable-selected {
+    .handle {
+        border-left:3px solid #F00 !important;
+    }
+}
+
+.d-table {
+    display: block;
+}
+
+.d-table-header {
+    display: table-cell;
+}
+
+.d-table-row {
+    display: table-row;
+}
+
+.d-table-cell {
+    display: table-cell;
+    vertical-align: top;
+}

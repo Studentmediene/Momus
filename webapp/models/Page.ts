@@ -5,8 +5,8 @@ import { LayoutStatus } from './Statuses';
 
 export interface Page extends ng.resource.IResource<Page>, Model {
     done: boolean;
-    articles: Article[];
-    adverts: Advert[];
+    articles: number[];
+    adverts: number[];
     layout_tatus: LayoutStatus[];
 }
 
@@ -18,6 +18,6 @@ export interface PageOrder {
 export interface PageContent {
     page_id: number;
     publication_id: number;
-    articles: Article[];
-    adverts: Advert[];
+    articles: number[];
+    adverts: number[];
 }

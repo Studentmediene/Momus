@@ -4,6 +4,7 @@ import { StateProvider, StateService } from '@uirouter/angularjs';
 import { Person } from '../../models/Person';
 
 import navigation from './navigation.component';
+import { SessionService } from 'services/session.service';
 
 export interface NavItem {
     stateName: string;
@@ -21,6 +22,10 @@ export default angular
             abstract: true,
             resolve: {
                 user: (loggedInUser: Person) => loggedInUser,
+                session: (loggedInUser: Person, sessionService: SessionService) => {
+                    const session = sessionService.createForUser(loggedInUser);
+                    return session.connect().then(() => session);
+                },
                 navItems: ($state: StateService) => $state.get()
                     .filter((state) => state.data && state.data.nav)
                     .map((state): NavItem => ({stateName: state.name, ...state.data.nav})),

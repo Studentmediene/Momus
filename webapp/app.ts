@@ -10,6 +10,7 @@ import services from './services/app.services';
 import routes, { setRoutes } from './routes/app.routes';
 import resources from './resources/app.resources';
 import filters from './app.filters';
+import directives from './app.directives';
 import { Person } from './models/Person';
 import { Env, Environment } from './app.types';
 
@@ -21,6 +22,7 @@ angular
         filters.name,
         services.name,
         resources.name,
+        directives.name,
         components.name,
         routes.name,
     ]);

@@ -50,5 +50,5 @@ export interface PublicationResource extends ng.resource.IResourceClass<Publicat
         params?: {},
         success?: (layoutStatuses: LayoutStatus[]) => void,
         error?: (err: any) => void,
-    ): void;
+    ): LayoutStatus[];
 }

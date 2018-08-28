@@ -13,6 +13,8 @@ export default function personResourceFactory($resource: ng.resource.IResourceSe
                 params: {id: 'me', resource: 'favouritesection'},
                 hasBody: false,
             },
+            loggedIn: { method: 'GET', params: {resource: 'loggedin'}, isArray: true },
+            updateSessionState: {method: 'PUT', url: '/api/person/sessions/:id', hasBody: false },
         });
 }
 
@@ -25,6 +27,18 @@ export interface PersonResource extends ng.resource.IResourceClass<Person> {
 
     updateFavouritesection(
         params: {section: number},
+        success?: () => void,
+        error?: (err: any) => void,
+    ): void;
+
+    loggedIn(
+        params: {state: string},
+        success?: (active: Person[]) => void,
+        error?: (err: any) => void,
+    ): Person[];
+
+    updateSessionState(
+        params: {id: string, state: string},
         success?: () => void,
         error?: (err: any) => void,
     ): void;

@@ -6,6 +6,11 @@ import { PublicationResource } from 'resources/publication.resource';
 
 import publicationOverview from './components/publicationOverview/publicationOverview.component';
 import publicationDisposition from './components/publicationDisposition/publicationDisposition.component';
+import { PageResource } from 'resources/page.resource';
+import { Publication } from 'models/Publication';
+import { AdvertResource } from 'resources/advert.resource';
+import { ArticleResource } from 'resources/article.resource';
+import { Session } from 'services/session.service';
 
 const routeModule = angular
     .module('momusApp.routes.publication', [
@@ -17,6 +22,7 @@ const routeModule = angular
             .state('publication', {
                 parent: 'root',
                 redirectTo: 'publication.overview',
+                abstract: true,
             })
             .state('publication.overview', {
                 url: '/utgaver',
@@ -39,7 +45,18 @@ const routeModule = angular
                     id: {value: 'aktiv'},
                 },
                 resolve: {
-                    persons: ($http: angular.IHttpService) => $http.get('api/person'),
+                    publication: (publicationResource: PublicationResource) =>
+                        publicationResource.active().$promise,
+                    pageOrder: (pageResource: PageResource, publication: Publication) =>
+                        pageResource.pageOrder({ publicationId: publication.id }).$promise,
+                    adverts: (advertResource: AdvertResource) =>
+                        advertResource.query().$promise,
+                    articleStatuses: (articleResource: ArticleResource) =>
+                        articleResource.statuses().$promise,
+                    reviewStatuses: (articleResource: ArticleResource) =>
+                        articleResource.reviewStatuses().$promise,
+                    layoutStatuses: (publicationResource: PublicationResource) =>
+                        publicationResource.layoutStatuses().$promise,
                 },
                 data: {
                     nav: {

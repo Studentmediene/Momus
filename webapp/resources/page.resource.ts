@@ -43,7 +43,7 @@ export interface PageResource extends ng.resource.IResourceClass<Page> {
         params: {publicationId: number},
         success?: (order: PageOrder) => void,
         error?: errFunc,
-    ): PageOrder;
+    ): ng.resource.IResource<PageOrder>;
 
     updatePageOrder(
         params: {},
