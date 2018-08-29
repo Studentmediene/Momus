@@ -10,12 +10,15 @@ class SelectDropdownCtrl implements angular.IController {
     public ngModel: angular.INgModelController;
     public viewModel: ItemType;
     public required: string;
+    public onChange: ({ value }: {value: ItemType}) => void;
 
     public items: ItemType[];
     public label: string;
     public placeholder: string;
     public showDropdown: boolean = false;
     public shouldUnfocus: boolean = true;
+
+    public listIndex: number = 0;
 
     private $timeout: angular.ITimeoutService;
 
@@ -65,10 +68,44 @@ class SelectDropdownCtrl implements angular.IController {
         this.showDropdown = false;
     }
 
+    public onKeypress(evt: KeyboardEvent) {
+        const e = (<HTMLElement> evt.currentTarget).getElementsByClassName('select-dropdown-drop')[0];
+        if (this.showDropdown) {
+            let child;
+            switch (evt.key) {
+                case 'ArrowUp':
+                    this.listIndex = this.listIndex === 0
+                        ? this.listIndex
+                        : this.listIndex - 1;
+                    child = e.children[this.listIndex];
+                    child.scrollIntoView({block: 'nearest'});
+                    break;
+                case 'ArrowDown':
+                    this.listIndex = this.listIndex === this.items.length - 1
+                        ? this.listIndex
+                        : this.listIndex + 1;
+                    child = e.children[this.listIndex];
+                    child.scrollIntoView({block: 'nearest'});
+                    evt.preventDefault();
+                    break;
+                case 'Enter':
+                    this.onSelect(this.items[this.listIndex]);
+                    evt.preventDefault();
+                    break;
+                case 'Escape':
+                    this.onBlur();
+            }
+        }
+    }
+
     private setModel(value: ItemType) {
         this.ngModel.$setViewValue(value);
         this.ngModel.$render();
         this.ngModel.$validate();
+
+        if (this.onChange != null) {
+            this.onChange({ value });
+        }
     }
 }
 
@@ -84,6 +121,7 @@ export default angular
             placeholder: '@',
             unclearable: '@',
             required: '@',
+            onChange: '&',
         },
         require: {
             ngModel: 'ngModel',

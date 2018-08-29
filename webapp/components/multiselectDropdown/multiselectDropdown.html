@@ -25,7 +25,7 @@
             <i class="fas fa-caret-down"></i>
         </div>
     </div>
-    <div id="multidrop-list" class="multiselect-dropdown-drop" ng-style="{ display: vm.showDropdown ? 'block' : 'none'}">
+    <div class="multiselect-dropdown-drop" ng-style="{ display: vm.showDropdown ? 'block' : 'none'}">
         <div
             class="multiselect-dropdown-dropitem"
             ng-repeat="p in vm.items | filter:vm.notSelected | filter:vm.searchText as filteredItems track by p.id"

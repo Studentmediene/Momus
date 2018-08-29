@@ -43,7 +43,7 @@
     .select-dropdown-dropitem {
         cursor: pointer;
         padding: 0 10px;
-        &:hover {
+        &.hover {
             background-color: lightgrey;
         }
     }

@@ -66,7 +66,7 @@ class MultiselectDropdownCtrl implements angular.IController {
     }
 
     public onKeypress(evt: KeyboardEvent) {
-        const e = document.getElementById('multidrop-list');
+        const e = (<HTMLElement> evt.currentTarget).getElementsByClassName('multiselect-dropdown-drop')[0];
         if (this.showDropdown) {
             let child;
             switch (evt.key) {

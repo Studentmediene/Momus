@@ -1,12 +1,12 @@
-<div class="select-dropdown">
+<div class="select-dropdown" ng-keypress="vm.onKeypress($event)">
     <div
         class="select-dropdown-item"
         ng-class="{'uk-form-danger': vm.ngModel.$invalid}"
+        tabindex="0"
+        ng-focus="vm.onFocus()"
+        ng-blur="vm.onBlur()"
         >
         <span
-            tabindex="0"
-            ng-focus="vm.onFocus()"
-            ng-blur="vm.onBlur()"
             ng-class="{'uk-text-muted': vm.viewModel == null && !vm.showDropdown }"
         >
             {{ vm.viewModel == null ? vm.placeholder : (vm.label ? vm.viewModel[vm.label] : vm.viewModel) }}
@@ -21,6 +21,8 @@
             ng-mousedown="vm.onListMousedown()"
             ng-mouseup="vm.onListMouseup()"
             ng-click="vm.onSelect(p)"
+            ng-mouseenter="vm.listIndex = $index"
+            ng-class="{hover: vm.listIndex === $index}"
         >
             <span>{{ vm.label ? p[vm.label] : p }}</span>
         </div>
