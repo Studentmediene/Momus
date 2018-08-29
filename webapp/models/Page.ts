@@ -1,6 +1,4 @@
 import { Model } from './Model';
-import { Article } from './Article';
-import { Advert } from './Advert';
 import { LayoutStatus } from './Statuses';
 
 export interface Page extends ng.resource.IResource<Page>, Model {

@@ -1,7 +1,7 @@
 import * as angular from 'angular';
 
 import { Environment } from '../../app.types';
-import { StateProvider } from '@uirouter/angularjs';
+import { StateProvider, StateParams } from '@uirouter/angularjs';
 import { PublicationResource } from 'resources/publication.resource';
 
 import publicationOverview from './components/publicationOverview/publicationOverview.component';
@@ -45,8 +45,10 @@ const routeModule = angular
                     id: {value: 'aktiv'},
                 },
                 resolve: {
-                    publication: (publicationResource: PublicationResource) =>
-                        publicationResource.active().$promise,
+                    publication: ($stateParams: StateParams, publicationResource: PublicationResource) =>
+                        $stateParams.id === 'aktiv' ?
+                            publicationResource.active().$promise :
+                            publicationResource.get({id: $stateParams.id}).$promise,
                     pageOrder: (pageResource: PageResource, publication: Publication) =>
                         pageResource.pageOrder({ publicationId: publication.id }).$promise,
                     adverts: (advertResource: AdvertResource) =>
