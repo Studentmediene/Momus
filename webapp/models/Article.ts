@@ -13,6 +13,7 @@ export interface ArticleType extends ng.resource.IResource<ArticleType>, Model {
 }
 
 export interface Article extends ng.resource.IResource<Article>, TestModel {
+    [index: string]: any;
     name: string;
     comment: string;
     content: string;

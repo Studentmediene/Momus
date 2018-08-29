@@ -229,15 +229,15 @@ export default class PublicationDispositionCtrl implements angular.IController {
         }
     }
 
-    // public submitArticleField(article: Article, field: string, value: any) {
-    //     article[field] = value;
-    //     this.updateArticle(article);
-    // }
+    public submitArticleField(article: Article, field: string, value: any) {
+        article[field] = value;
+        this.updateArticle(article);
+    }
 
-    // public submitAdvertField(advert: Advert, field: string, value: any) {
-    //     advert[field] = value;
-    //     this.advertResource.updateComment({id: advert.id}, JSON.stringify(value));
-    // }
+    public submitAdvertComment(advert: Advert, value: string) {
+        advert.comment = value;
+        this.advertResource.updateComment({id: advert.id}, JSON.stringify(value));
+    }
 
     public createArticle(page: Page) {
         this.openNewArticleModal({
