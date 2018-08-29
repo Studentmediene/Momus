@@ -14,6 +14,7 @@ import {
 } from 'routes/publication/components/publicationDisposition/publicationDisposition.component';
 import { OpenNewArticleModal } from 'components/newArticleModal/newArticleModal.component';
 import { toIdLookup } from 'utils';
+import { OpenNewAdvertModal } from 'components/newAdvertModal/newAdvertModal.component';
 
 interface PageScope extends angular.IScope {
     newArticles: Article[];
@@ -48,6 +49,7 @@ export default class PublicationDispositionCtrl implements angular.IController {
     private getDispWidth: GetDispWidth;
 
     private openNewArticleModal: OpenNewArticleModal;
+    private openNewAdvertModal: OpenNewAdvertModal;
 
     private $scope: angular.IScope;
     private $timeout: angular.ITimeoutService;
@@ -64,12 +66,14 @@ export default class PublicationDispositionCtrl implements angular.IController {
         advertResource: AdvertResource,
         getDispWidth: GetDispWidth,
         openNewArticleModal: OpenNewArticleModal,
+        openNewAdvertModal: OpenNewAdvertModal,
     ) {
         this.pageResource = pageResource;
         this.advertResource = advertResource;
         this.articleResource = articleResource;
         this.getDispWidth = getDispWidth;
         this.openNewArticleModal = openNewArticleModal;
+        this.openNewAdvertModal = openNewAdvertModal;
 
         this.$scope = $scope;
         this.$timeout = $timeout;
@@ -242,7 +246,7 @@ export default class PublicationDispositionCtrl implements angular.IController {
             publications: [this.publication],
             sections: [],
             types: [],
-        }).then((article: Article) => {
+        }).then((article) => {
             this.articlesLookup[article.id] = article;
             this.publication.articles.push(article);
             page.articles.push(article.id);
@@ -254,18 +258,12 @@ export default class PublicationDispositionCtrl implements angular.IController {
     }
 
     public createAdvert(page: Page) {
-        // $uibModal
-        //     .open({
-        //         templateUrl: 'partials/advert/createAdvertModal.html',
-        //         controller: 'CreateAdvertModalCtrl',
-        //     }).result
-        //     .then(id => {
-        //         advertResource.get({id: id}, advert => {
-        //             this.advertsLookup[id] = advert;
-        //             adverts.push(advert);
-        //             page.adverts.push(id);
-        //         });
-        //     });
+        this.openNewAdvertModal()
+            .then((advert) => {
+                this.advertsLookup[advert.id] = advert;
+                this.adverts.push(advert);
+                page.adverts.push(advert.id);
+            });
     }
 
     // public showHelp(){

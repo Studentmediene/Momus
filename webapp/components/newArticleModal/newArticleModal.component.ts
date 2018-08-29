@@ -3,7 +3,6 @@ import * as angular from 'angular';
 import { Publication } from '../../models/Publication';
 import { Article, ArticleType } from 'models/Article';
 
-import './newArticleModal.scss';
 import { ArticleResource } from 'resources/article.resource';
 import { Person } from 'models/Person';
 import { Section } from 'models/Section';
@@ -63,14 +62,6 @@ class NewArticleModalCtrl implements angular.IController {
 
     public modalClick(evt: MouseEvent) {
         evt.stopPropagation();
-    }
-
-    public isArticleValid() {
-        return this.article.name != null
-            && this.article.name !== ''
-            && this.article.type != null
-            && this.article.section != null
-            && this.article.publication != null;
     }
 }
 

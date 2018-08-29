@@ -12,6 +12,7 @@ import multiselectDropdown from './multiselectDropdown/multiselectDropdown.compo
 import editableAlert from './editableAlert/editableAlert.component';
 import editableField from './editableField/editableField.component';
 import newArticleModal from './newArticleModal/newArticleModal.component';
+import newAdvertModal from './newAdvertModal/newAdvertModal.component';
 import messageModal from './messageModal/messageModal.component';
 
 export default angular
@@ -28,5 +29,6 @@ export default angular
         editableAlert.name,
         editableField.name,
         newArticleModal.name,
+        newAdvertModal.name,
         messageModal.name,
     ]);
