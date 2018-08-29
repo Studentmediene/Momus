@@ -30,12 +30,11 @@
     <div id="toolbar" uk-sticky="offset: 50; cls-active: d-toolbar-attach" class="d-toolbar">
         <div id="online-users" style="min-height: 40px">
             <div ng-repeat="user in vm.presentUsers track by user.id" style="margin: 5px">
-                <user-avatar
-                        uib-tooltip="{{user.name}} redigerer denne disposisjonen"
-                        tooltip-placement="bottom"
-                        user="user"
-                        size="30">
-                </user-avatar>
+                <person-avatar
+                    user="user"
+                    size="30"
+                    uk-tooltip="title: {{user.name}} redigerer denne disposisjonen; pos: top">
+                </person-avatar>
             </div>
         </div>
         <div class="button-group">
@@ -95,33 +94,35 @@
                 <!--Edit mode -->
                 <div class="d-table-cell" ng-style="{width: vm.articleWidth}" ng-show="editPage">
                     <div><b>Artikler</b></div>
-                    <id-select
-                            class="pull-left" style="width: 90%;"
-                            multiple
-                            use-ids
+                    <div class="d-article-input">
+                        <multiselect-dropdown
+                            ng-model="newArticles"
                             items="vm.publication.articles"
-                            target="page.articles"
-                            show="name">
-                    </id-select>
-                    <div class="pull-right">
-                        <button ng-click="vm.createArticle(page)" class="btn btn-success" uib-tooltip="Lag ny artikkel">
-                            <i class="fa fa-plus"></i> <i class="fa fa-file-text"></i>
-                        </button>
+                            label="'name'"
+                            placeholder="Artikler"
+                        >
+                        </multiselect-dropdown>
+                        <div>
+                            <button ng-click="vm.createArticle(page)" class="uk-button button-new" uib-tooltip="Lag ny artikkel">
+                                <i class="fas fa-plus"></i> <i class="fas fa-file"></i>
+                            </button>
+                        </div>
+                        
                     </div>
                     <div><b>Reklamer</b></div>
-                    <id-select
-                            class="pull-left" style="width: 90%;"
-                            multiple
-                            use-ids
+                    <div class="d-article-input">
+                        <multiselect-dropdown
+                            ng-model="newAdverts"
                             items="vm.adverts"
-                            target="page.adverts"
-                            show="name"
-                    >
-                    </id-select>
-                    <div class="pull-right">
-                        <button ng-click="vm.createAdvert(page)" class="btn btn-warning" uib-tooltip="Lag ny reklame">
-                            <i class="fa fa-plus"></i> <i class="fa fa-bullhorn"></i>
-                        </button>
+                            label="'name'"
+                            placeholder="Reklamer"
+                        >
+                        </multiselect-dropdown>
+                        <div>
+                            <button ng-click="vm.createAdvert(page)" class="uk-button button-edit" uib-tooltip="Lag ny reklame">
+                                <i class="fas fa-plus"></i> <i class="fas fa-bullhorn"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <!-- View mode (articles) -->
@@ -139,12 +140,12 @@
                                     data-target="#{{page.page_nr}}-{{article.id}}-button-line"
                                     data-toggle="collapse"
                                 >
-                                    <i class="fas fa-arrows-v"></i>
+                                    <i class="fas fa-arrows-alt-v"></i>
                                 </button>
                             </div>
                             <!--Name-->
                             <div class="d-table-cell" ng-style="vm.columnWidths.name">
-                                <a ui-sref="article({id: article.id})">{{article.name}}</a>
+                                <a ui-sref="article.details({id: article.id})">{{article.name}}</a>
                                 <span uib-tooltip="Antall tegn">({{article.content_length}})</span>
                             </div>
                             <!--Section-->
@@ -156,7 +157,7 @@
                             </div>
                             <!--Journalists-->
                             <div class="d-table-cell" ng-style="vm.columnWidths.journalists">
-                                <ul class="list-unstyled">
+                                <ul class="uk-list list-no-margin">
                                     <li ng-repeat="person in article.journalists">
                                         <span person-widget="person" class="d-break-word">
                                             {{person.name}}
@@ -169,7 +170,7 @@
                             </div>
                             <!--Photographers-->
                             <div class="d-table-cell" ng-style="vm.columnWidths.photographers">
-                                <ul class="list-unstyled">
+                                <ul class="uk-list list-no-margin">
                                     <li ng-repeat="person in article.photographers">
                                         <span person-widget="person">
                                             {{person.name}}
@@ -185,24 +186,29 @@
                                 class="d-table-cell"
                                 ng-style="vm.applyColumnWidth('status', {'background': article.status.color})"
                             >
-                                <select class="d-dropdown"
-                                        ng-model="article.status"
-                                        ng-change="vm.updateArticle(article)"
-                                        ng-options="s.name for s in vm.articleStatuses track by s.id"
-                                        ng-disabled="vm.loading">
-                                </select>
+                                <select-dropdown
+                                    ng-model="article.status"
+                                    items="vm.articleStatuses"
+                                    label="'name'"
+                                    on-change="vm.updateArticle(article)"
+                                    placeholder="Status"
+                                    unclearable
+                                >
                             </div>
                             <!--Review-->
                             <div
                                 class="d-table-cell"
                                 ng-style="vm.applyColumnWidth('review', {'background':article.review.color})"
                             >
-                                <select class="d-dropdown"
-                                        ng-model="article.review"
-                                        ng-change="vm.updateArticle(article)"
-                                        ng-options="s.name for s in vm.reviewStatuses track by s.id"
-                                        ng-disabled="vm.loading">
-                                </select>
+                                <select-dropdown
+                                    ng-model="article.review"
+                                    items="vm.reviewStatuses"
+                                    label="'name'"
+                                    on-change="vm.updateArticle(article)"
+                                    placeholder="Korr."
+                                    unclearable
+                                >
+                                </select-dropdown>
                             </div>
                             <!--Photostatus-->
                             <!--View-->
@@ -226,13 +232,13 @@
                                 </inline-edit>
                             </div>
                         </div>
-                        <div class="collapse extra-button-line" id="{{page.page_nr}}-{{article.id}}-button-line">
+                        <div ng-show="false" class="extra-button-line" id="{{page.page_nr}}-{{article.id}}-button-line">
                             <div style="margin: 5px">
-                                <a href="/api/article/{{article.id}}/indesignfile" class="btn btn-primary btn-xs">
-                                    <i class="fa fa-file-text-o"></i>InDesign fil
+                                <a href="/api/article/{{article.id}}/indesignfile" class="uk-button uk-button-primary button-xs">
+                                    <i class="fas fa-file"></i>InDesign fil
                                 </a>
-                                <a href="https://docs.google.com/document/d/{{article.google_drive_id}}/edit" target="_blank" class="btn btn-success btn-xs">
-                                    <span class="fa fa-pencil"></span>
+                                <a href="https://docs.google.com/document/d/{{article.google_drive_id}}/edit" target="_blank" class="uk-button button-edit  button-xs">
+                                    <i class="fas fa-edit"></i>
                                     Rediger i Google Docs
                                 </a>
                             </div>
@@ -248,7 +254,7 @@
                       <div class="d-table-row">
                         <!--Dropdown-arrow-->
                         <div class="d-table-cell" ng-style="vm.columnWidths.dropdown">
-                            <i class="fa fa-bullhorn"></i>
+                            <i class="fas fa-bullhorn"></i>
                         </div>
                         <!--Name-->
                         <div class="d-table-cell" ng-style="vm.columnWidths.name">
@@ -277,12 +283,13 @@
                     class="d-table-cell"
                     ng-style="vm.applyColumnWidth('layout', {'background': page.layout_status.color})"
                 >
-                    <select class="d-dropdown"
-                            ng-model="page.layout_status"
-                            ng-change="vm.updatePageMeta(page)"
-                            ng-options="l.name for l in vm.layoutStatuses track by l.id"
-                            ng-disabled="vm.loading">
-                    </select>
+                    <select-dropdown
+                        ng-model="page.layout_status"
+                        on-change="vm.updatePageMeta(page)"
+                        items="vm.layoutStatuses"
+                        label="'name'"
+                        unclearable
+                    >
                 </div>
                 <!--Done-->
                 <div class="d-table-cell button" ng-style="vm.columnWidths.done">

@@ -5,9 +5,7 @@ import { AdvertResource } from 'resources/advert.resource';
 import { Publication } from 'models/Publication';
 import { PageOrder, Page } from 'models/Page';
 import { Advert } from 'models/Advert';
-import { ArticleStatus, ReviewStatus, LayoutStatus } from 'models/Statuses';
 import { Article } from 'models/Article';
-import { Model } from 'models/Model';
 import { Session } from 'services/session.service';
 import { Person } from 'models/Person';
 import {
@@ -17,11 +15,9 @@ import {
 import { OpenNewArticleModal } from 'components/newArticleModal/newArticleModal.component';
 import { toIdLookup } from 'utils';
 
-// interface ArticleScope extends angular.IScope {
-
-// }
-
 interface PageScope extends angular.IScope {
+    newArticles: Article[];
+    newAdverts: Advert[];
     page: Page;
     editPage: boolean;
 }
@@ -30,6 +26,7 @@ interface PageScope extends angular.IScope {
 export default class PublicationDispositionCtrl implements angular.IController {
     public maxNewPages: number = 100;
     public publication: Publication;
+    public adverts: Advert[];
     public pageOrder: PageOrder;
     public session: Session;
 
@@ -82,7 +79,7 @@ export default class PublicationDispositionCtrl implements angular.IController {
     public $onInit() {
         this.pagesLookup = toIdLookup(this.publication.pages);
         this.articlesLookup = toIdLookup(this.publication.articles);
-        // this.advertsLookup = toIdLookup(adverts);
+        this.advertsLookup = toIdLookup(this.adverts);
 
         this.presentUsers = this.session.getPresentUsers();
 
@@ -97,11 +94,11 @@ export default class PublicationDispositionCtrl implements angular.IController {
                         break;
                     case 'UPDATE':
                         this.publication.pages.splice(
-                            this.publication.pages.findIndex(p => p.id === entity.id), 1, entity);
+                            this.publication.pages.findIndex((p) => p.id === entity.id), 1, entity);
                         this.pagesLookup[entity.id] = entity;
                         break;
                     case 'DELETE':
-                        this.publication.pages.splice(this.publication.pages.findIndex(p => p.id === entity.id), 1);
+                        this.publication.pages.splice(this.publication.pages.findIndex((p) => p.id === entity.id), 1);
                         delete this.pagesLookup[entity.id];
                 }
             },
@@ -114,7 +111,7 @@ export default class PublicationDispositionCtrl implements angular.IController {
                         break;
                     case 'UPDATE':
                         this.publication.articles.splice(
-                            this.publication.articles.findIndex(a => a.id === entity.id), 1, entity);
+                            this.publication.articles.findIndex((a) => a.id === entity.id), 1, entity);
                         this.articlesLookup[entity.id] = entity;
                         break;
                 }
@@ -139,8 +136,7 @@ export default class PublicationDispositionCtrl implements angular.IController {
                 this.pagesLookup[page_id].adverts = adverts;
             },
             after: (data) => {
-                // this.$log.debug('Received data:\n', data);
-                // $timeout(() => $scope.$apply());
+                this.$timeout(() => this.$scope.$apply());
             },
         });
 
@@ -196,9 +192,15 @@ export default class PublicationDispositionCtrl implements angular.IController {
 
     public editPage(scope: PageScope) {
         scope.editPage = true;
+        scope.newAdverts = scope.page.adverts.map((aid) => this.advertsLookup[aid]);
+        scope.newArticles = scope.page.articles.map((aid) => this.articlesLookup[aid]);
     }
 
     public submitPage(scope: PageScope) {
+        scope.page.articles = scope.newArticles.map((a) => a.id);
+
+        scope.page.adverts = scope.newAdverts.map((a) => a.id);
+
         this.loading = true;
         this.pageResource.updateContent(
             {pageid: scope.page.id},
