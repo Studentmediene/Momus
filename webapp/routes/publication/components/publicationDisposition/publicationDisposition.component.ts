@@ -68,7 +68,7 @@ export default angular.module('momusApp.routes.publication.publicationDispositio
                 min: 80,
                 calculated: 80,
             },
-            status: {scope: 'article', width: 120},
+            status: {scope: 'article', width: 130},
             review: {scope: 'article', width: 100},
             photo_status: {
                 scope: 'article',
@@ -82,7 +82,7 @@ export default angular.module('momusApp.routes.publication.publicationDispositio
                 min: 120,
                 calculated: 120,
             },
-            layout: {scope: 'page', width: 80},
+            layout: {scope: 'page', width: 90},
             done: {scope: 'page', width: 30},
             edit: {scope: 'page', width: 30},
             delete: {scope: 'page', width: 30},
@@ -109,7 +109,7 @@ export default angular.module('momusApp.routes.publication.publicationDispositio
                 .filter((key) => columnWidthTemplates[key].part)
                 .forEach((key) => {
                     const column = columnWidthTemplates[key];
-                    const width = windowWidth > 992 ? column.part * widthLeft : column.min;
+                    const width = windowWidth > 992 ? Math.floor(column.part * widthLeft) : column.min;
                     column.calculated = width;
                     if (column.scope === 'article') {
                         articleWidth += width;
