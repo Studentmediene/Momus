@@ -20,7 +20,7 @@
         <div class="col-xs-12">
             <div class="alert alert-danger">
                 <p>
-                    <i class="fa fa-exclamation-circle fa-2"></i>
+                    <i class="fas fa-exclamation-circle fa-2"></i>
                     <strong> Artikkelen er arkivert.</strong> Den vil ikke vises i søk.
                 </p>
             </div>
@@ -78,30 +78,30 @@
         <div class="col-xs-12">
             <div class="btn-row">
                 <a href="https://docs.google.com/document/d/{{vm.article.google_drive_id}}/edit" target="_blank" class="btn btn-success">
-                    <span class="fa fa-pencil"></span>
+                    <span class="fas fa-pencil-alt"></span>
                     Rediger i Google Docs
                 </a>
 
                 <a ui-sref="articlerevision({id:vm.article.id})" class="btn btn-primary">
-                    <i class="fa fa-file-text-o"></i>
+                    <i class="fas fa-file-alt"></i>
                     Historikk
                 </a>
 
                 <a href="/api/article/{{vm.article.id}}/indesignfile" class="btn btn-primary">
-                    <i class="fa fa-file-text-o"></i>
+                    <i class="fas fa-file-alt"></i>
                     InDesign fil
                 </a>
 
                 <span ng-hide="vm.article.archived">
                     <a ng-click="vm.archiveArticle()" class="btn btn-danger">
-                        <i class="fa fa-trash-o"></i>
+                        <i class="fas fa-trash"></i>
                         Arkiver artikkelen
                     </a>
                 </span>
 
                 <span ng-show="vm.article.archived">
                     <a ng-click="vm.restoreArticle()" class="btn btn-success" uib-tooltip="Gjenopprett artikkelen så den vil vises i søk">
-                        <i class="fa fa-plus"></i>
+                        <i class="fas fa-plus"></i>
                         Gjenopprett
                     </a>
                 </span>
@@ -118,7 +118,7 @@
             <div id="content-panel" class="panel panel-primary">
                 <div class="panel-heading">
                     <h1 class="panel-title">
-                        <span class="fa fa-file-text-o"></span>
+                        <span class="fas fa-file-alt"></span>
                         Tekst
                     </h1>
                 </div>
@@ -137,7 +137,7 @@
             <div id="meta-panel" class="panel panel-info">
                 <div class="panel-heading">
                     <h1 class="panel-title">
-                        <span class="fa fa-tag"></span>
+                        <span class="fas fa-tag"></span>
                         Detaljer
                         <span class="pull-right">
                             <button class="btn btn-xs btn-info" ng-show="vm.metaEditMode" ng-click="vm.cancelMeta()">
@@ -286,8 +286,8 @@
 
                             <div class="col-sm-8" ng-hide="vm.metaEditMode">
                                 <p class="form-control-static">
-                                    <span ng-show="vm.article.use_illustration"><i class="fa fa-paint-brush"> </i> Illustrasjon</span>
-                                    <span ng-show="!vm.article.use_illustration"><i class="fa fa-camera"> </i> Foto</span>
+                                    <span ng-show="vm.article.use_illustration"><i class="fas fa-paint-brush"> </i> Illustrasjon</span>
+                                    <span ng-show="!vm.article.use_illustration"><i class="fas fa-camera"> </i> Foto</span>
 
                                 </p>
                             </div>
@@ -403,14 +403,14 @@
             <div class="panel panel-warning">
                 <div class="panel-heading">
                     <h1 class="panel-title">
-                        <span class="fa fa-list"></span>
+                        <span class="fas fa-list"></span>
                         Artikkel-notater
                         <div class="pull-right">
                             <button class="btn btn-default btn-xs"
                                     ng-disabled="vm.article.note === vm.uneditedNote"
                                     ng-click="vm.saveNote()"
                                     button-loader="vm.savingNote">
-                                <i class="fa fa-save"></i>
+                                <i class="fas fa-save"></i>
                                 Lagre
                             </button>
                         </div>

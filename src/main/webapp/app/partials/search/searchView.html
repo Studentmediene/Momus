@@ -17,7 +17,7 @@
 <div class="container">
     <div style="margin-bottom: 5px;">
         <a ng-click="vm.createArticle()" class="btn btn-primary">
-            <i class="fa fa-plus-circle"></i> Opprett ny artikkel
+            <i class="fas fa-plus-circle"></i> Opprett ny artikkel
         </a>
         <a ng-click="vm.showHelp()" class="btn btn-success">Hjelp?</a>
     </div>
@@ -161,7 +161,7 @@
                 <tbody>
                 <tr ng-if="loading">
                     <td colspan="10" style="text-align: center;">
-                        <i class="fa fa-4x fa-spinner fa-spin"></i>
+                        <i class="fas fa-4x fa-spinner fa-spin"></i>
                     </td>
                 </tr>
                 <tr ng-if="noArticles">
@@ -171,7 +171,7 @@
                 </tr>
                 <tr ng-repeat="article in vm.results | orderBy:vm.articleSortType:vm.articleSortReverse">
                     <td class="search-article-name break-word">
-                        <i ng-if="article.archived" class="fa fa-trash-o" uib-tooltip="Artikkelen er arkivert"></i>
+                        <i ng-if="article.archived" class="fas fa-trash" uib-tooltip="Artikkelen er arkivert"></i>
                         <a ui-sref="article({id: article.id})">
                             {{ article.name }}
                         </a>
@@ -183,7 +183,7 @@
                     <td class="contributors">
                         <div ng-if="article.journalists.length">
                             <ul class="list-unstyled list-inline">
-                                <li><i class="fa fa-pencil" uib-tooltip="Journalister"></i></li>
+                                <li><i class="fas fa-pencil" uib-tooltip="Journalister"></i></li>
                                 <li ng-repeat="person in article.journalists">
                                     <span person-widget="person">{{person.name}}</span>
                                 </li>
@@ -192,7 +192,7 @@
                         </div>
                         <div ng-if="article.photographers.length">
                             <ul class="list-unstyled list-inline">
-                                <li><i class="fa fa-{{article.use_illustration ? 'paint-brush' : 'camera'}} d-inline-block" uib-tooltip="{{article.use_illustration ? 'Illustratører' : 'Fotografer'}}"></i></li>
+                                <li><i class="fas fa-{{article.use_illustration ? 'paint-brush' : 'camera'}} d-inline-block" uib-tooltip="{{article.use_illustration ? 'Illustratører' : 'Fotografer'}}"></i></li>
                                 <li ng-repeat="person in article.photographers">
                                     <span person-widget="person">{{person.name}}</span>
                                 </li>
@@ -201,7 +201,7 @@
                         </div>
                         <div ng-if="article.graphics.length">
                             <ul class="list-unstyled list-inline" style="display:inline-block">
-                                <li><i class="fa fa-object-group" uib-tooltip="Grafikere"></i></li>
+                                <li><i class="fas fa-object-group" uib-tooltip="Grafikere"></i></li>
                                 <li ng-repeat="person in article.graphics">
                                     <span person-widget="person">{{person.name}}</span>
                                 </li>
@@ -220,10 +220,10 @@
 
                     <td>{{ article.content_length }}</td>
                     <td style="white-space: nowrap">
-                        <i class="fa fa-user fa-lg" uib-tooltip="{{article.image_text ? 'Bildetekst er satt' : 'Bildetekst er ikke satt'}}"
+                        <i class="fas fa-user fa-lg" uib-tooltip="{{article.image_text ? 'Bildetekst er satt' : 'Bildetekst er ikke satt'}}"
                            ng-class="{'text-danger': !article.image_text || article.image_text.length == 0, 'text-success': article.image_text.length > 0}"></i>
 
-                        <i class="fa fa-quote-right fa-lg" uib-tooltip="{{article.quote_check_status ? 'Sitatsjekk er ikke i orden' : 'Sitatetsjekk er i orden'}}"
+                        <i class="fas fa-quote-right fa-lg" uib-tooltip="{{article.quote_check_status ? 'Sitatsjekk er ikke i orden' : 'Sitatetsjekk er i orden'}}"
                            ng-class="{'text-danger': article.quote_check_status, 'text-success': !article.quote_check_status}"></i>
                     </td>
                     <td class="break-word" style="background-color: {{article.status.color}}; padding: 3px;">
@@ -247,7 +247,7 @@
         <button class="btn btn btn-info"
                 ng-disabled="vm.searchParams.page_number <= 1"
                 ng-click="vm.search(-1)">
-            <i class="fa fa-angle-left"/>
+            <i class="fas fa-angle-left"/>
         </button>
         <b style="display: inline-block; width: 30px">
             {{ vm.searchParams.page_number }}
@@ -255,7 +255,7 @@
         <button class="btn btn btn-info"
                 ng-disabled="!vm.hasNextPage"
                 ng-click="vm.search(1)">
-            <i class="fa fa-angle-right"/>
+            <i class="fas fa-angle-right"/>
         </button>
     </div>
 

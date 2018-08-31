@@ -19,7 +19,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-info">
-                <div class="panel-heading"><h1 class="panel-title"><i class="fa fa-bullhorn"></i> Nyheter</h1></div>
+                <div class="panel-heading"><h1 class="panel-title"><i class="fas fa-bullhorn"></i> Nyheter</h1></div>
                 <table class="table">
                     <tbody ng-repeat="n in news | orderBy: '-date'
                                                 | startFrom:(currentPage-1)*pageSize
@@ -31,8 +31,8 @@
                             <span ng-show="n.new" style="font-weight: bold">{{n.title}}</span>
                             <span ng-show="!n.new">{{n.title}}</span>
 
-                            <i ng-show="!n.show" class="fa fa-arrow-circle-down pull-right"></i>
-                            <i ng-show="n.show" class="fa fa-arrow-circle-up pull-right"></i>
+                            <i ng-show="!n.show" class="fas fa-arrow-circle-down pull-right"></i>
+                            <i ng-show="n.show" class="fas fa-arrow-circle-up pull-right"></i>
                         </td>
                     </tr>
                     <tr ng-show="n.show" class="news-meta">
@@ -63,7 +63,7 @@
         <div class="col-md-6">
             <div class="panel panel-warning">
                 <div class="panel-heading">
-                    <h1 class="panel-title"><i class="fa fa-question-circle"></i> Hjelp?
+                    <h1 class="panel-title"><i class="fas fa-question-circle"></i> Hjelp?
                     </h1>
                 </div>
                 <div class="panel-body">
@@ -73,7 +73,7 @@
             </div>
             <div class="panel panel-danger">
                 <div class="panel-heading">
-                    <h1 class="panel-title"><i class="fa fa-bug"></i> Bugs? Forslag?
+                    <h1 class="panel-title"><i class="fas fa-bug"></i> Bugs? Forslag?
                     </h1>
                 </div>
                 <div class="panel-body">

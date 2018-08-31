@@ -22,7 +22,7 @@
 
 <div id="disposition" class="container" ng-hide="vm.noPublication">
     <div ng-show="vm.loading" class="d-loading-spinner">
-        <i class="fa fa-circle-o-notch fa-spin fa-4x"></i>
+        <i class="fas fa-circle-notch fa-spin fa-4x"></i>
     </div>
     <div class="row d-title">
         <h1>Disposisjon for {{vm.publication.name}}</h1>
@@ -40,10 +40,10 @@
         </div>
         <div class="button-group">
             <a class="btn btn-primary" href="/api/publications/{{vm.publication.id}}/colophon">
-                <i class="fa fa-file-text-o"></i> Generer kolofon
+                <i class="fas fa-file-alt"></i> Generer kolofon
             </a>
             <button class="btn btn-primary" ng-click="vm.hideAllButtonRows()">
-                <i class="fa fa-caret-up"></i> Lukk ekstraknapp-rader
+                <i class="fas fa-caret-up"></i> Lukk ekstraknapp-rader
             </button>
             <page-adder
                 max-num-pages="vm.maxNewPages"
@@ -107,7 +107,7 @@
                         </id-select>
                         <div>
                             <button ng-click="vm.createArticle(page)" class="btn btn-success" uib-tooltip="Lag ny artikkel">
-                                <i class="fa fa-plus"></i> <i class="fa fa-file-text"></i>
+                                <i class="fas fa-plus"></i> <i class="fas fa-file-alt"></i>
                             </button>
                         </div>
                         
@@ -125,7 +125,7 @@
                         </id-select>
                         <div>
                             <button ng-click="vm.createAdvert(page)" class="btn btn-warning" uib-tooltip="Lag ny reklame">
-                                <i class="fa fa-plus"></i> <i class="fa fa-bullhorn"></i>
+                                <i class="fas fa-plus"></i> <i class="fas fa-bullhorn"></i>
                             </button>
                         </div>
                     </div>
@@ -145,7 +145,7 @@
                                     data-target="#{{page.page_nr}}-{{article.id}}-button-line"
                                     data-toggle="collapse"
                                 >
-                                    <i class="fa fa-arrows-v"></i>
+                                    <i class="fas fa-arrows-alt-v"></i>
                                 </button>
                             </div>
                             <!--Name-->
@@ -244,10 +244,10 @@
                         <div class="collapse extra-button-line" id="{{page.page_nr}}-{{article.id}}-button-line">
                             <div style="margin: 5px">
                                 <a href="/api/article/{{article.id}}/indesignfile" class="btn btn-primary btn-xs">
-                                    <i class="fa fa-file-text-o"></i>InDesign fil
+                                    <i class="fas fa-file-alt"></i>InDesign fil
                                 </a>
                                 <a href="https://docs.google.com/document/d/{{article.google_drive_id}}/edit" target="_blank" class="btn btn-success btn-xs">
-                                    <span class="fa fa-pencil"></span>
+                                    <span class="fas fa-pencil-alt"></span>
                                     Rediger i Google Docs
                                 </a>
                             </div>
@@ -263,7 +263,7 @@
                       <div class="d-table-row">
                         <!--Dropdown-arrow-->
                         <div class="d-table-cell" ng-style="vm.columnWidths.dropdown">
-                            <i class="fa fa-bullhorn"></i>
+                            <i class="fas fa-bullhorn"></i>
                         </div>
                         <!--Name-->
                         <div class="d-table-cell" ng-style="vm.columnWidths.name">
@@ -302,7 +302,7 @@
                 <!--Done-->
                 <div class="d-table-cell button" ng-style="vm.columnWidths.done">
                     <span style="cursor: pointer" ng-click="page.done = !page.done; vm.updatePageMeta(page);">
-                        <i class="fa fa-check fa-lg"
+                        <i class="fas fa-check fa-lg"
                             ng-class="{'text-danger' : !page.done, 'text-success' : page.done }"
                             uib-tooltip="Siden er {{!page.done ? 'ikke ' : ''}} helt ferdig">
                         </i>
@@ -311,16 +311,16 @@
                 <!--Edit-->
                 <div class="d-table-cell button" ng-style="vm.columnWidths.edit">
                     <button ng-click="vm.editPage(this)" class="btn btn-warning btn-xs pull-right" ng-hide="editPage">
-                        <i class="fa fa-pencil"></i>
+                        <i class="fas fa-pencil-alt"></i>
                     </button>
                     <button ng-click="vm.submitPage(this)" class="btn btn-success pull-right btn-xs" ng-show="editPage">
-                        <i class="fa fa-save"></i>
+                        <i class="fas fa-save"></i>
                     </button>
                 </div>
                 <!--Delete-->
                 <div class="d-table-cell button" ng-style="vm.columnWidths.delete">
                     <button ng-click="vm.deletePage(page)" class="btn btn-danger pull-right btn-xs">
-                        <i class="fa fa-trash-o"></i>
+                        <i class="fas fa-trash"></i>
                     </button>
                 </div>
             </div>
