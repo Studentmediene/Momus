@@ -1,4 +1,5 @@
-<%--
+<!doctype html>
+<!--
   ~ Copyright 2016 Studentmediene i Trondheim AS
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +13,19 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
-  --%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
+  -->
+
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <title ng-bind="pageTitle">Momus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 <body>
-<div>
-    Det skjedde noe feil! Prøv igjen, og hvis det fortsetter send e-post til <a href="mailto:momus@smitit.no">momus@smitit.no</a>
+<div ng-show="initialLoad" class="initial-load-spinner">
+    <p><i class="fas fa-circle-notch fa-spin fa-5x"></i></p>
+    <p>Momus laster...</p>
 </div>
+<div ui-view></div>
 </body>
 </html>

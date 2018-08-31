@@ -18,7 +18,7 @@
 
 angular.module('momusApp.resources')
     .factory('Publication', (momResource) => {
-        return momResource('/api/publications/:id/:projection',
+        return momResource('/api/publications/:id',
             {
                 id: '@id'
             },

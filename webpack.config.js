@@ -1,5 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { BaseHrefWebpackPlugin } = require('base-href-webpack-plugin');
+const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
@@ -7,7 +9,7 @@ const Visualizer = require('webpack-visualizer-plugin');
 const path = require('path');
 
 const root = __dirname;
-const dev = path.join(root, 'webapp');
+const dev = path.join(root, 'src/main/webapp/app');
 const outRoot = path.join(root, 'src/main/webapp');
 
 const isprod = process.argv.indexOf('-p') !== -1;
@@ -21,15 +23,23 @@ const commonPlugins = [
     // Injects bundles into the index file
     new HtmlWebpackPlugin({
         template: path.join(dev, 'index.html'),
-        favicon: path.join(dev, 'favicon.ico'),
+        //favicon: path.join(dev, 'favicon.ico'),
     }),
-    new BaseHrefWebpackPlugin({ baseHref: publicPath })
+    new BaseHrefWebpackPlugin({ baseHref: publicPath }),
+    new webpack.ProvidePlugin({
+        $: "jquery",
+        jQuery: "jquery",
+        "window.jQuery": "jquery"
+    }),
+    new CopyWebpackPlugin([
+        { from: path.join(dev, "partials"), to: path.join(filepath, "partials") },
+    ]),
 ];
 
 const prodPlugins = [
-    new CleanWebpackPlugin([
-        filepath
-    ]),
+    // new CleanWebpackPlugin([
+    //     filepath
+    // ]),
     new MiniCssExtractPlugin({
         filename: '[name]-[contenthash].css'
     }),
@@ -60,7 +70,7 @@ const devServer = {
 
 module.exports = {
     entry: {
-        main: path.join(dev, 'app.ts')
+        main: path.join(dev, 'js/app.js')
     },
     output: {
         publicPath,
@@ -92,6 +102,19 @@ module.exports = {
                 test: /\.ts$/,
                 include: dev,
                 use: ['ng-annotate-loader?ngAnnotate=ng-annotate-patched','ts-loader']
+            }, {
+                test: /\.js$/,
+                include: dev,
+                use: [
+                    'ng-annotate-loader?ngAnnotate=ng-annotate-patched', 
+                    {
+                        loader:'babel-loader',
+                        options: {
+                            presets: ['@babel/preset-env'],
+                            plugins: [require('@babel/plugin-proposal-object-rest-spread')],
+                        }
+                    }
+                ]
             }, {
                 test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
                 use: [{ loader: 'file-loader' }]
