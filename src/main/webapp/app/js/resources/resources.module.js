@@ -1,0 +1,1 @@
+export default angular.module('momusApp.resources', []);

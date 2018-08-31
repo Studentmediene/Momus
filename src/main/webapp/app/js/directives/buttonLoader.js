@@ -39,8 +39,8 @@ angular.module('momusApp.directives').
 
 
                 if (showIcons) {
-                    spinner = '<i class="fa fa-spinner fa-spin"></i> ';
-                    check = '<i class="fa fa-check"></i> ';
+                    spinner = '<i class="fas fa-spinner fa-spin"></i> ';
+                    check = '<i class="fas fa-check"></i> ';
                 }
 
 

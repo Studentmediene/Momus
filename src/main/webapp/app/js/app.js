@@ -16,21 +16,45 @@
 
 'use strict';
 
-// Define the modules
-angular.module('momusApp.controllers', []);
-angular.module('momusApp.filters', []);
-angular.module('momusApp.services', []);
-angular.module('momusApp.directives', []);
-angular.module('momusApp.resources', []);
+import 'jquery';
+import 'jquery-ui';
+import 'bootstrap';
 
+import 'angular';
+import 'angular-resource';
+import 'angular-cookies';
+import '@uirouter/angularjs';
+import 'angular-ui-bootstrap';
 
-// Declare app level module which depends on filters, and services
+import 'chartjs';
+import 'angular-chart.js';
+
+import 'ui-select';
+import 'angular-ui-sortable';
+import 'angular-ui-sortable-multiselection';
+
+// Import css
+import 'bootstrap/dist/css/bootstrap.css';
+import '@fortawesome/fontawesome-free/css/fontawesome.css';
+import '@fortawesome/fontawesome-free/css/solid.css';
+
+import 'ui-select/dist/select.css'
+import 'select2-bootstrap-theme/dist/select2-bootstrap.css';
+
+import '../style/app.scss';
+
+import resources from './resources';
+import services from './services';
+import directives from './directives';
+import controllers from './controllers';
+
+// Declare app level module
+/* @ngInject */
 angular.module('momusApp', [
-        'momusApp.controllers',
-        'momusApp.filters',
-        'momusApp.services',
-        'momusApp.directives',
-        'momusApp.resources',
+        services.name,
+        resources.name,
+        directives.name,
+        controllers.name,
         'ngResource',
         'ui.router',
         'ui.select',

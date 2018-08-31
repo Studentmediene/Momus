@@ -1,3 +1,6 @@
+import SockJS from 'sockjs-client';
+import webstomp from 'webstomp-client';
+
 angular.module('momusApp.services')
     .service('MessagingService', function($q, $interval, $location, $http, $transitions, Person, autoBind) {
         let session;
