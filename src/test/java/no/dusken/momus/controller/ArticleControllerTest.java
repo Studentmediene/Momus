@@ -52,7 +52,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
 
     @Test
     public void testUpdateArticleMetadata() throws Exception {
-        ArticleStatus status = articleStatusRepository.saveAndFlush(new ArticleStatus("Ukjent", "0"));
+        ArticleStatus status = articleStatusRepository.saveAndFlush(ArticleStatus.builder().name("Ukjent").build());
         Article article = new Article();
         article.setName("Artikkel");
         article.setStatus(status);
@@ -123,20 +123,24 @@ public class ArticleControllerTest extends AbstractControllerTest {
 
     @Test
     public void testGetArticleRevisionComparison() throws Exception {
-        ArticleStatus status1 = articleStatusRepository.saveAndFlush(new ArticleStatus("Ukjent", "0"));
-        ArticleStatus status2 = articleStatusRepository.saveAndFlush(new ArticleStatus("Planlagt", "0"));
-        Article article = new Article();
-        article.setName("Artikkel");
-        article.setContent("Innhold");
-        article.setStatus(status1);
-        article.setJournalists(new HashSet<>());
-        article.setPhotographers(new HashSet<>());
+        ArticleStatus status1 = articleStatusRepository.saveAndFlush(ArticleStatus.builder().name("Ukjent").build());
+        ArticleStatus status2 = articleStatusRepository.saveAndFlush(ArticleStatus.builder().name("Planlagt").build());
+        Article article = Article.builder()
+                .name("Artikkel")
+                .content("Innhold")
+                .status(status1)
+                .journalists(new HashSet<>())
+                .photographers(new HashSet<>())
+                .build();
         article = articleService.saveArticle(article);
-        Article updatedArticle = new Article(article.getId());
-        updatedArticle.setContent("Nytt innhold");
+
+        Article updatedArticle = Article.builder()
+                .content("Nytt innhold")
+                .name("Artikkel")
+                .status(status2)
+                .build();
+        updatedArticle.setId(article.getId());
         article = articleService.updateArticleContent(updatedArticle);
-        updatedArticle.setName("Artikkel");
-        updatedArticle.setStatus(status2);
         articleService.updateArticleMetadata(article.getId(), updatedArticle);
 
         List<ArticleRevision> revisions = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(article.getId());

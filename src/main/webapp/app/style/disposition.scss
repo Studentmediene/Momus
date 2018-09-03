@@ -83,6 +83,9 @@ $pageAdBackground: #f6f6f6;
     .article-table:not(:first-child) {
         border-top: $articleBorder;
     }
+    .advert-table:not(:first-child) {
+        border-top: $articleBorder;
+    }
 }
 
 .page-done {
@@ -141,4 +144,13 @@ $pageAdBackground: #f6f6f6;
 .d-table-cell {
     display: table-cell;
     vertical-align: top;
+}
+
+.d-article-input {
+    display: flex;
+    align-items: center;
+
+    id-select {
+        margin-right: 5px;
+    }
 }

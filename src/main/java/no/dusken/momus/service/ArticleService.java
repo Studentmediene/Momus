@@ -17,8 +17,10 @@
 package no.dusken.momus.service;
 
 import com.google.api.services.drive.model.File;
+import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.*;
+import no.dusken.momus.model.websocket.Action;
 import no.dusken.momus.service.drive.GoogleDriveService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
@@ -26,8 +28,6 @@ import no.dusken.momus.service.repository.*;
 import no.dusken.momus.service.search.ArticleQuery;
 import no.dusken.momus.service.search.ArticleQueryBuilder;
 import no.dusken.momus.service.search.ArticleSearchParams;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -36,17 +36,16 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletResponse;
+import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ArticleService {
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private ArticleRepository articleRepository;
 
@@ -61,6 +60,9 @@ public class ArticleService {
 
     @Autowired
     private ArticleQueryBuilder articleQueryBuilder;
+
+    @Autowired
+    private MessagingService messagingService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -94,14 +96,17 @@ public class ArticleService {
         }
 
         Article newArticle = articleRepository.saveAndFlush(article);
+        log.info("Article with id {} created with data: {}", newArticle.getId(), newArticle);
 
-        logger.info("Article with id {} created with data: {}", newArticle.getId(), newArticle.dump());
+        messagingService.broadcastEntityAction(article, Action.CREATE);
         return newArticle;
     }
 
     public Article updateArticle(Article article) {
-        article.setLastUpdated(new Date());
-        logger.info("Article with id {} updated, data: {}", article.getId(), article.dump());
+        article.setLastUpdated(ZonedDateTime.now());
+        log.info("Article with id {} updated, data: {}", article.getId(), article);
+
+        messagingService.broadcastEntityAction(article, Action.UPDATE);
         return articleRepository.saveAndFlush(article);
     }
 
@@ -113,7 +118,7 @@ public class ArticleService {
         if (newContent.equals(oldContent)) {
             // Inserting comments in the Google Docs triggers a change, but the content we see is the same.
             // So it would look weird having multiple revisions without any changes.
-            logger.info("No changes made to content of article with id {}, not updating it", article.getId());
+            log.info("No changes made to content of article with id {}, not updating it", article.getId());
             return existing;
         }
 
@@ -137,11 +142,27 @@ public class ArticleService {
         existing.setType(article.getType());
         existing.setStatus(article.getStatus());
         existing.setSection(article.getSection());
-        existing.setUseIllustration(article.getUseIllustration());
+        existing.setUseIllustration(article.isUseIllustration());
         existing.setImageText(article.getImageText());
-        existing.setQuoteCheckStatus(article.getQuoteCheckStatus());
+        existing.setQuoteCheckStatus(article.isQuoteCheckStatus());
         existing.setExternalAuthor(article.getExternalAuthor());
         existing.setExternalPhotographer(article.getExternalPhotographer());
+        existing.setPhotoStatus(article.getPhotoStatus());
+        existing.setReview(article.getReview());
+
+        if (!article.getStatus().equals(oldStatus)) {
+            createRevision(existing);
+        }
+
+        return updateArticle(existing);
+    }
+
+    public Article updateArticleStatus(Long id, Article article) {
+        Article existing = getArticleById(id);
+        ArticleStatus oldStatus = existing.getStatus();
+
+        existing.setStatus(article.getStatus());
+        existing.setComment(article.getComment());
         existing.setPhotoStatus(article.getPhotoStatus());
         existing.setReview(article.getReview());
 
@@ -182,9 +203,9 @@ public class ArticleService {
 
         long end = System.currentTimeMillis();
         long timeUsed = end - start;
-        logger.debug("Time spent on search: {}ms", timeUsed);
+        log.debug("Time spent on search: {}ms", timeUsed);
         if (timeUsed > 800) {
-            logger.warn("Time spent on search high ({}ms), params were: {}", timeUsed, params);
+            log.warn("Time spent on search high ({}ms), params were: {}", timeUsed, params);
         }
 
         return resultList;
@@ -200,7 +221,7 @@ public class ArticleService {
      */
     public ArticleRevision createRevision(Article article) {
 
-        Date saveDate = new Date();
+        ZonedDateTime saveDate = ZonedDateTime.now();
         ArticleRevision revision = getLastRevision(article);
 
         boolean isStatusChanged = 
@@ -217,20 +238,19 @@ public class ArticleService {
             revision = new ArticleRevision();
         }
         
-        revision.setSavedDate(new Date());
+        revision.setSavedDate(ZonedDateTime.now());
         revision.setStatusChanged(isStatusChanged);
         revision.setContent(article.getContent());
         revision.setArticle(article);
         revision.setStatus(article.getStatus());
 
         revision = articleRevisionRepository.save(revision);
-        logger.info("Saved revision for article(id:{}) with id: {}", article.getId(), revision.getId());
+        log.info("Saved revision for article(id:{}) with id: {}", article.getId(), revision.getId());
         return revision;
     }
 
-    private boolean isRevisionTooOld(ArticleRevision revision, Date date) {
-        long timeDiff = date.getTime() - revision.getSavedDate().getTime();
-        return timeDiff > 3 * 60 * 1000;
+    private boolean isRevisionTooOld(ArticleRevision revision, ZonedDateTime date) {
+        return Duration.between(revision.getSavedDate(), date).toMinutes() > 3;
     }
 
     private ArticleRevision getLastRevision(Article article) {
@@ -253,10 +273,9 @@ public class ArticleService {
             html = html.replaceAll(tag," ").replaceAll(tag.substring(0,1)+"/"+tag.substring(1,tag.length()),"");
         }
 
-        // Remove consecutive spaces
-        html = html.replaceAll("\\s+", " ");
+        // Remove consecutive spaces and trim
+        html = html.replaceAll("\\s+", " ").trim();
 
         return html;
     }
-
 }

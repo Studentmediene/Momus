@@ -16,14 +16,12 @@
 
 package no.dusken.momus.service.search;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import no.dusken.momus.service.repository.PersonRepository;
-import no.dusken.momus.service.search.ArticleQuery;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,9 +29,8 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class ArticleQueryBuilder {
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
     public static final String baseQuery = 
         "select a from Article a " + 
         "left join a.status status " + 
@@ -48,7 +45,7 @@ public class ArticleQueryBuilder {
 
     public ArticleQuery buildQuery(ArticleSearchParams search) {
         List<String> conditions = new ArrayList<>();
-        String fullQuery = "";
+        String fullQuery;
         Map<String, Object> queryParams = new HashMap<>();
 
         if (search.getFree() != null && search.getFree().length() > 0) {
@@ -111,7 +108,7 @@ public class ArticleQueryBuilder {
 
         fullQuery += " " + baseOrder;
 
-        logger.debug("Search query: {}", fullQuery);
+        log.debug("Search query: {}", fullQuery);
 
         return new ArticleQuery(fullQuery, queryParams);
     }

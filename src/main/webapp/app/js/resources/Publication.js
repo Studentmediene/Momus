@@ -17,14 +17,32 @@
 'use strict';
 
 angular.module('momusApp.resources')
-    .factory('Publication', $resource => {
-        return $resource('/api/publications/:id', 
+    .factory('Publication', (momResource) => {
+        return momResource('/api/publications/:id',
             {
                 id: '@id'
             },
             {
                 active: { method: 'GET', params: {id: 'active'}, bypassInterceptor: true },
-                update: { method: 'PUT'},
-                layoutStatuses: { method: 'GET', isArray: true, params: {id: 'layoutstatuses'}, cache: true }
-            });
+                layoutStatuses: { method: 'GET', isArray: true, params: {id: 'layoutstatuses'}, cache: true, skipTransform: true}
+            },
+            publicationRequestTransform,
+            publicationResponseTransform
+        );
     });
+
+function publicationResponseTransform(publication) {
+    if(!publication) return publication;
+    return {
+        ...publication,
+        release_date: new Date(publication.release_date)
+    }
+}
+
+function publicationRequestTransform(publication) {
+    if(!publication) return publication;
+    return {
+        ...publication,
+        release_date: publication.release_date.toISOString()
+    }
+}

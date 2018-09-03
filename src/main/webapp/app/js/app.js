@@ -31,83 +31,250 @@ angular.module('momusApp', [
         'momusApp.services',
         'momusApp.directives',
         'momusApp.resources',
-        'ngRoute',
         'ngResource',
+        'ui.router',
         'ui.select',
         'ui.bootstrap',
         'ngCookies',
         'ui.sortable',
         'ui.sortable.multiselection',
-        'chart.js',
-        'ngStomp'
+        'chart.js'
     ]).
-    config(['$routeProvider', $routeProvider => {
-        $routeProvider
-            .when('/front',
-            {
-                    templateUrl: 'partials/front/frontPageView.html',
-                    controller: 'FrontPageCtrl'
+    config(($stateProvider) => {
+        $stateProvider
+            .state('root', {
+                resolve: {
+                    loggedInPerson: Person => Person.me().$promise,
+                    env: $http => $http.get('/api/env/all').then(resp => resp.data),
+                    session: (loggedInPerson, MessagingService) => MessagingService.createSession(loggedInPerson)
+                },
+                templateUrl: 'partials/nav/navView.html',
+                controller: 'NavbarCtrl',
+                controllerAs: 'vm'
             })
-            .when('/artikler',
-            {
+            .state('front', {
+                parent: 'root',
+                url: '/',
+                resolve: {
+                    myArticles: (Article, loggedInPerson) =>
+                        Article.search({}, {persons: [loggedInPerson.id], page_size: 9}).$promise,
+                    recentArticles: (ViewArticleService, Article) => {
+                        const recents = ViewArticleService.getRecentViews();
+                        return recents.length > 0 ?
+                            Article.multiple({ids: recents}).$promise :
+                            [];
+                    },
+                    favouriteSectionArticles: (Article, loggedInPerson) => {
+                        return loggedInPerson.favouritesection ?
+                            Article.search({}, {section: loggedInPerson.favouritesection.id}).$promise :
+                            [];
+                    },
+                    activePublication: Publication => Publication.active().$promise
+                        .then(pub => pub)
+                        .catch(() => null),
+                    sections: Article => Article.sections().$promise,
+                    statuses: Article => Article.statuses().$promise,
+                    statusCounts: (activePublication, Article) => {
+                        return activePublication ?
+                            Article.statusCounts({publicationId: activePublication.id}).$promise :
+                            [];
+                    },
+                    reviewStatuses: Article => Article.reviewStatuses().$promise,
+                    reviewStatusCounts: (activePublication, Article) => {
+                        return activePublication ?
+                            Article.reviewStatusCounts({publicationId: activePublication.id}).$promise :
+                            [];
+                    },
+                    layoutStatuses: Publication => Publication.layoutStatuses().$promise,
+                    layoutStatusCounts: (activePublication, Page) => {
+                        return activePublication ?
+                            Page.layoutStatusCounts({pubid: activePublication.id}).$promise :
+                            [];
+                    },
+                    news: (NewsItem) =>
+                            NewsItem.query({}).$promise
+
+                },
+                templateUrl: 'partials/front/frontPageView.html',
+                controller: 'FrontPageCtrl',
+                controllerAs: 'vm'
+            })
+            .state('search', {
+                parent: 'root',
+                url: '/artikler?defaultSearch&publication&section&status&review&free&persons&page_number&page_size&archived',
+                params: {
+                    defaultSearch: {type: 'bool'},
+                    publication: {type: 'int'},
+                    section: {type: 'int'},
+                    status: {type: 'int'},
+                    review: {type: 'int'},
+                    free: {type: 'string'},
+                    persons: {type: 'int', array: true},
+                    page_number: {type: 'int', value: 1},
+                    page_size: {type: 'int', value: 10},
+                    archived: {type: 'bool'}
+                },
+                resolve: {
+                    activePublication: Publication => Publication.active().$promise
+                        .then(pub => pub)
+                        .catch(() => null),
+                    publications: Publication => Publication.query().$promise,
+                    persons: Person => Person.query().$promise,
+                    sections: Article => Article.sections().$promise,
+                    statuses: Article => Article.statuses().$promise,
+                    reviews: Article => Article.reviewStatuses().$promise,
+                    searchParams: ($state, $stateParams, activePublication) => {
+                        const {['#']: _, ['defaultSearch']: defaultSearch, ...searchParams} = $stateParams;
+
+                        if(defaultSearch) {
+                            searchParams.publication = activePublication.id;
+                        }
+                        return searchParams;
+                    },
+                    results: (Article, searchParams) => Article.search({}, searchParams).$promise
+                },
                 templateUrl: 'partials/search/searchView.html',
                 controller: 'SearchCtrl',
-                reloadOnSearch: false,
+                controllerAs: 'vm',
+                reloadOnSearch: true,
                 title: "Artikkelsøk"
             })
-            .when('/artikler/:id',
-            {
+            .state('article', {
+                parent: 'root',
+                url: '/artikler/:id',
                 templateUrl: 'partials/article/articleView.html',
                 controller: 'ArticleCtrl',
                 controllerAs: 'vm'
             })
-            .when('/artikler/revisjon/:id',
-            {
+            .state('articlerevision', {
+                parent: 'root',
+                url: '/artikler/:id/revisjon',
                 templateUrl: 'partials/article/articleRevisionView.html',
-                controller: 'ArticleRevisionCtrl'
-            })
-            .when('/utgaver',
-            {
-                templateUrl: 'partials/publication/publicationView.html',
-                controller: 'PublicationCtrl',
-                title: 'Utgaver',
+                controller: 'ArticleRevisionCtrl',
                 controllerAs: 'vm'
             })
-            //Disposition
-            .when('/disposisjon/:id?',
-            {
+            .state('disposition', {
+                parent: 'root',
+                url: '/disposisjon/:id',
+                params: {
+                    id: {squash: true, value: null}
+                },
+                resolve: {
+                    publication: ($stateParams, Publication) => $stateParams.id == null ?
+                        Publication.active().$promise :
+                        Publication.get({id: $stateParams.id}).$promise,
+                    pageOrder: (publication, Page) => Page.pageOrder({publicationId: publication.id}).$promise,
+                    adverts: Advert => Advert.query().$promise,
+                    articleStatuses: Article => Article.statuses().$promise,
+                    reviewStatuses: Article => Article.reviewStatuses().$promise,
+                    layoutStatuses: Publication => Publication.layoutStatuses().$promise
+                },
                 templateUrl: 'partials/disposition/dispositionView.html',
                 controller: 'DispositionCtrl',
-                title: 'Disposisjon',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                title: 'Disposisjon'
             })
-            .when('/info',
-            {
+            .state('publications', {
+                parent: 'root',
+                url: '/utgaver',
+                resolve: {
+                    publications: Publication => Publication.query().$promise
+                },
+                templateUrl: 'partials/publication/publicationView.html',
+                controller: 'PublicationCtrl',
+                controllerAs: 'vm',
+                title: 'Utgaver'
+            })
+            .state('info', {
+                parent: 'root',
+                url: '/info',
+                resolve: {
+                    news: (NewsItem) =>
+                        NewsItem.query({}).$promise
+                },
                 templateUrl: 'partials/info/infoView.html',
                 controller: 'InfoCtrl',
+                controllerAs: 'vm',
                 title: 'Info'
             })
-            .when('/dev',
+            .state('admin',
             {
+                parent: 'root',
+                url: '/admin',
+                resolve: {
+                    news: NewsItem => NewsItem.query().$promise
+                },
+                templateUrl: 'partials/admin/adminView.html',
+                controller: 'AdminCtrl',
+                title: 'Adminpanel',
+                controllerAs: 'vm',
+                access: ["ROLE_ADMIN"]
+            })
+            .state('dev', {
+                parent: 'root',
+                url: '/dev',
                 templateUrl: 'partials/dev/devView.html',
                 controller: 'DevCtrl',
-                title: 'Dev',
-                controllerAs: 'vm'
-            })
-            .otherwise({redirectTo: 'front'});
-
-    }]).
-    config(['$locationProvider', $locationProvider => {
+                controllerAs: 'vm',
+                title: 'Utviklerinnstillinger'
+            });
+    }).
+    config(($urlRouterProvider, $locationProvider) => {
+        $urlRouterProvider.otherwise('/');
         $locationProvider.hashPrefix('');
-    }]).
-    config(['$httpProvider', $httpProvider => {
+    }).
+    config($httpProvider => {
         $httpProvider.interceptors.push('HttpInterceptor');
         $httpProvider.defaults.withCredentials = true;
-    }]).
-    run(['$rootScope', 'TitleChanger', ($rootScope, TitleChanger) => {
-        // Whenever there is a route change, we try to update the url with the title set in the rootprovider above
-        // if there is no title, we clear it
-        $rootScope.$on('$routeChangeSuccess', (event, current, previous) => {
-            TitleChanger.setTitle(current.$$route && current.$$route.title || "");
+    }).
+    constant('RESOURCE_ACTIONS', {
+        save: {method: 'POST'},
+        get:    {method: 'GET'},
+        query: {method: 'GET', isArray: true},
+        update: {method: 'PUT'},
+        delete: {method: 'DELETE'}
+    }).
+    config(($resourceProvider, RESOURCE_ACTIONS) => {
+        $resourceProvider.defaults.actions = RESOURCE_ACTIONS;
+    }).
+    run(($transitions, TitleChanger, $state, $rootScope, hasPermission, MessageModal) => {
+        $transitions.onStart({}, transition => {
+            if(transition.from().name === '')
+                $rootScope.initialLoad = true;
+            else
+                $rootScope.transitionLoad = true;
         });
-    }]);
+
+        $transitions.onEnter({}, transition => {
+            if(!hasPermission(transition.to(), transition.injector().get('loggedInPerson'))) {
+                MessageModal.error("Du har ikke tilgang til denne siden!", false);
+
+                // Redirects to front page or previous state
+                if(transition.from().name === "")
+                    return transition.router.stateService.target('front');
+                else
+                    return false;
+            }
+        });
+
+        $transitions.onSuccess({}, transition => {
+            TitleChanger.setTitle(transition.to().title || "");
+
+            if(transition.from().name === '')
+                $rootScope.initialLoad = false;
+            else
+                $rootScope.transitionLoad = false;
+        });
+
+        $transitions.onStart({to: 'search'}, transition => {
+            const {['#']: _, ...params} = transition.params();
+            // Do default search if we come from another state and no parameters are specified or their default value
+            if(
+                transition.from().name !== 'search' &&
+                !Object.keys(params).some(p => params[p] !== transition.to().params[p].value)
+            ){
+                return transition.router.stateService.target(transition.to(), {defaultSearch: true});
+            }
+
+        })
+    });

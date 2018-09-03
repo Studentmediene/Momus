@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.services')
-    .service('TipAndNewsService', function () {
+    .service('TipAndNewsService', function (NewsItem) {
         var randomTips = [
             // General
             '<h4>Mobil/tablet</h4><p>Momus fungerer bra på mobile enheter.</p>',
@@ -141,20 +141,26 @@ angular.module('momusApp.services')
             }
         ];
 
-        var dateThreshold = new Date(new Date().setDate(new Date().getDate() - 14));
+        var findNew = function(news) {
+            var dateThreshold = new Date(new Date().setDate(new Date().getDate() - 14));
 
-        for (var i = 0; i < news.length; i++) {
-            news[i].new = news[i].date >= dateThreshold;
-            news[i].show = news[i].new;
-        }
-        news[0].show = true;
+            for (var i = 0; i < news.length; i++) {
+                news[i].new = news[i].date >= dateThreshold;
+                news[i].show = news[i].new;
+            }
+            news[0].show = true;
+            return news;
+        };
 
         return {
             getRandomTip: function () {
                 return randomTips[Math.floor(Math.random() * randomTips.length)];
             },
-            getNews: function () {
-                return news;
+            getOldNews: function () {
+                return findNew(news);
+            },
+            findNew: function (news) {
+                return findNew(news);
             }
         };
     });

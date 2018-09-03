@@ -18,53 +18,23 @@ package no.dusken.momus.model;
 
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
-public class Section {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = {}, callSuper = true)
+@ToString(of = {"name", "color"}, callSuper = true)
+@Builder(toBuilder = true)
+public class Section extends AbstractEntity {
     private String name;
     private String color;
     private boolean deleted;
-
-    public Section(){}
-
-    public Section(Long id, String name) {
-        this(name);
-        this.id = id;
-    }
-
-    public Section(String name) {
-        this.name = name;
-    }
-
-    public Long getId() { return id; }
-
-    public String getName() { return name; }
-
-    public String getColor() {return color;}
-
-    public void setColor(String color) {this.color = color;}
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    @Override
-    public String toString() {
-        return "Section{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

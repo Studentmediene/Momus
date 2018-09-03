@@ -17,12 +17,16 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('InfoCtrl', function($scope, TipAndNewsService){
+    .controller('InfoCtrl', function($scope, TipAndNewsService, news){
+        $scope.pageSize = 5;
+        $scope.currentPage = 1;
+
+        $scope.news = news;
+
         $scope.randomTip = function() {
             $scope.tip = TipAndNewsService.getRandomTip();
         };
 
         $scope.randomTip();
 
-        $scope.news = TipAndNewsService.getNews();
     });

@@ -9,8 +9,11 @@ import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.velocity.app.VelocityEngine;
 import org.opensaml.saml2.metadata.provider.HTTPMetadataProvider;
 import org.opensaml.xml.parse.StaticBasicParserPool;
-import org.opensaml.xml.parse.XMLParserException;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -196,7 +199,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public SAMLLogoutProcessingFilter samlLogoutProcessingFilter() {
-        return new SAMLLogoutProcessingFilter(successLogoutHandler(), new LogoutHandler[]{logoutHandler()});
+        return new SAMLLogoutProcessingFilter(successLogoutHandler(), logoutHandler());
     }
 
     @Bean
@@ -241,7 +244,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public SAMLProcessorImpl processor() throws XMLParserException {
+    public SAMLProcessorImpl processor() {
         return new SAMLProcessorImpl(Arrays.asList(
             redirectBinding(), 
             postBinding(), 
@@ -285,29 +288,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public HTTPPostBinding postBinding() throws XMLParserException {
+    public HTTPPostBinding postBinding() {
         return new HTTPPostBinding(parserPool(), velocityEngine());
     }
 
     @Bean
-    public HTTPArtifactBinding artifactBinding() throws XMLParserException {
+    public HTTPArtifactBinding artifactBinding() {
         ArtifactResolutionProfileImpl profile = new ArtifactResolutionProfileImpl(httpClient());
         profile.setProcessor(new SAMLProcessorImpl(soapBinding()));
         return new HTTPArtifactBinding(parserPool(), velocityEngine(), profile);
     }
 
     @Bean
-    public HTTPRedirectDeflateBinding redirectBinding() throws XMLParserException {
+    public HTTPRedirectDeflateBinding redirectBinding() {
         return new HTTPRedirectDeflateBinding(parserPool());
     }
 
     @Bean
-    public HTTPSOAP11Binding soapBinding() throws XMLParserException{
+    public HTTPSOAP11Binding soapBinding() {
         return new HTTPSOAP11Binding(parserPool());
     }
 
     @Bean
-    public HTTPPAOS11Binding paosBinding() throws XMLParserException{
+    public HTTPPAOS11Binding paosBinding() {
         return new HTTPPAOS11Binding(parserPool());
     }
 
@@ -332,7 +335,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean(initMethod = "initialize")
-    public StaticBasicParserPool parserPool() throws XMLParserException {
+    public StaticBasicParserPool parserPool() {
         return new StaticBasicParserPool();
     }
 

@@ -173,3 +173,36 @@ td > ul, td > ol {
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
     display: none !important;
 }
+
+.news-table {
+    margin-bottom:0;
+}
+
+.news-item {
+    border:solid #ddd;
+    border-width:0 0 1px 0;
+}
+
+.news-meta {
+    font-style:italic;
+}
+
+.news-meta td {
+    padding: 4px 8px !important;
+}
+
+.initial-load-spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    text-align: center;
+}
+
+.transition-load-spinner {
+    margin-top: 10px;
+    margin-bottom: auto;
+    &.visible-xs {
+        margin-right: 10px;
+        float: right;
+    }
+}

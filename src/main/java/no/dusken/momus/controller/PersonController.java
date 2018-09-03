@@ -24,8 +24,12 @@ import no.dusken.momus.service.PersonService;
 import no.dusken.momus.service.repository.PersonRepository;
 import no.dusken.momus.service.repository.SectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.socket.messaging.SessionConnectedEvent;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -103,4 +107,29 @@ public class PersonController {
                 sectionRepository.findOne(section));
     }
 
+    @GetMapping("/loggedin/all")
+    public @ResponseBody Set<Person> getAllActivePersons() {
+        return personService.getAllLoggedInPersons();
+    }
+
+    @GetMapping("/loggedin")
+    public @ResponseBody Set<Person> getActivePersonsAtState(@RequestParam String state) {
+        return personService.getLoggedInPersonsAtState(state);
+    }
+
+    @PutMapping("/sessions/{sessid}")
+    public void setStateOfSession(@PathVariable String sessid, @RequestParam String state) {
+        personService.setStateForSession(sessid, state);
+    }
+
+    @EventListener
+    public void handleSessionStart(SessionConnectedEvent connectedEvent) {
+        String sessionId = StompHeaderAccessor.wrap(connectedEvent.getMessage()).getSessionId();
+        personService.startSessionForPerson(sessionId, connectedEvent.getUser().getName());
+    }
+
+    @EventListener
+    public void handleSessionEnd(SessionDisconnectEvent disconnectEvent) {
+        personService.endSession(disconnectEvent.getSessionId());
+    }
 }

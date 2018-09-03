@@ -31,17 +31,16 @@ angular.module('momusApp.services')
         photo_status: {
             scope: 'article',
             part: 0.15,
-            min: 90,
-            calculated: 90
+            min: 100,
+            calculated: 100
         },
         comment: {
             scope: 'article',
             part: 0.2,
-            min: 100,
-            calculated: 100
+            min: 120,
+            calculated: 120
         },
         layout: {scope: 'page', width: 80},
-        ad: {scope: 'page', width: 30},
         done: {scope: 'page', width: 30},
         edit: {scope: 'page', width: 30},
         delete: {scope: 'page', width: 30}
@@ -53,7 +52,7 @@ angular.module('momusApp.services')
         .reduce(([dispSize, articleSize],key) => {
             const colWidth = columnWidthTemplates[key].width;
             return [
-                dispSize + colWidth, 
+                dispSize + colWidth,
                 articleSize + (columnWidthTemplates[key].scope === 'article' ? colWidth : 0)
             ];
         }, [0, 0]
@@ -76,7 +75,7 @@ angular.module('momusApp.services')
                     }
                     dispWidth += width;
                 });
-            
+
             const columnWidths = {};
             Object.keys(columnWidthTemplates)
                 .forEach(key => {
@@ -88,7 +87,7 @@ angular.module('momusApp.services')
                         maxWidth: columnWidth,
                     };
                 });
-            
+
             return {
                 columnWidths: columnWidths,
                 articleWidth: articleWidth,

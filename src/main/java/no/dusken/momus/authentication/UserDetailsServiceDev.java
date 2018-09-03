@@ -1,25 +1,29 @@
 package no.dusken.momus.authentication;
 
 import no.dusken.momus.model.Person;
-import no.dusken.momus.service.repository.PersonRepository;
+import no.dusken.momus.config.MockToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.saml.SAMLCredential;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
 
-public class UserDetailsServiceDev implements UserDetailsService{
-
-    public static long LOGGED_IN_USER = 0L;
-
-    private final PersonRepository personRepository;
+public class UserDetailsServiceDev implements UserDetailsService {
 
     @Autowired
-    public UserDetailsServiceDev(PersonRepository personRepository) {
-        this.personRepository = personRepository;
-    }
+    private AuthenticationManager authenticationManager;
 
     @Override
     public Person getLoggedInPerson() {
-        return personRepository.findOne(LOGGED_IN_USER);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getClass().equals(AnonymousAuthenticationToken.class)) {
+            authentication = authenticationManager.authenticate(new MockToken("eivigri"));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+
+        return (Person) authentication.getPrincipal();
     }
 
     @Override

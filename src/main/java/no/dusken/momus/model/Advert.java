@@ -15,45 +15,31 @@
  */
 
 package no.dusken.momus.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Arrays;
+import java.util.List;
 
 @Entity
-public class Note {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(of = {}, callSuper = true)
+@ToString(of = {"name"}, callSuper = true)
+@Builder(toBuilder = true)
+public class Advert extends AbstractEntity implements Messageable {
+    private String name;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String comment;
 
-    private String content;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    private Person owner;
-
-    public Note() {}
-
-    public Note(Long id) {
-        this.id = id;
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Person getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Person owner) {
-        this.owner = owner;
+    @Override
+    @JsonIgnore
+    public List<String> getDestinations() {
+        return Arrays.asList(
+                "/ws/adverts",
+                "/ws/adverts/" + id
+        );
     }
 }

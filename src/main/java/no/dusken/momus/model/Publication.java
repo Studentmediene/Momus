@@ -16,95 +16,47 @@
 
 package no.dusken.momus.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
+import lombok.*;
+import no.dusken.momus.mapper.SerializationViews;
+
 import javax.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-public class Publication {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = {}, callSuper = true)
+@ToString(of = {"name", "releaseDate"}, callSuper = true)
+@Builder(toBuilder = true)
+public class Publication extends AbstractEntity implements Messageable {
     private String name;
 
-    @Temporal(TemporalType.DATE)
-    private Date releaseDate;
+    private LocalDate releaseDate;
 
-    @OneToMany(mappedBy = "publication", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "publication", fetch = FetchType.EAGER)
+    @JsonView(SerializationViews.Full.class)
+    @JsonIgnoreProperties(value = "publication")
     private Set<Article> articles;
 
-    @OneToMany(mappedBy = "publication")
+    @OneToMany(mappedBy = "publication", fetch = FetchType.EAGER)
+    @JsonView(SerializationViews.Full.class)
+    @JsonIgnoreProperties(value = "publication")
     private List<Page> pages;
 
-    public Publication() {
-
-    }
-
-    public Publication(Long id) {
-        this.id = id;
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Date getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(Date releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public Set<Article> getArticles() {
-        return articles;
-    }
-
-    public void setArticles(Set<Article> articles) {
-        this.articles = articles;
-    }
-
-    public List<Page> getPages() {
-        return pages;
-    }
-
-    public void setPages(List<Page> pages) {
-        this.pages = pages;
-    }
-
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Publication publication = (Publication) o;
-
-        if (!id.equals(publication.id)) return false;
-
-        return true;
+    @JsonIgnore
+    public List<String> getDestinations() {
+        return Arrays.asList(
+                "/ws/publications",
+                "/ws/publications/" + id
+        );
     }
-
-    @Override
-    public String toString() {
-        return "Publication{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", releaseDate=" + releaseDate +
-                '}';
-    }
-
-
 }

@@ -28,11 +28,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
-    public Person findByUsername(String username);
+    Person findByUsername(String username);
 
-    public Person findByGuid(UUID guid);
+    Person findByGuid(UUID guid);
 
-    public Set<Person> findByActiveTrue();
+    Set<Person> findByActiveTrue();
 
-    public List<Person> findFirstByOrderByIdDesc();
+    List<Person> findFirstByOrderByIdDesc();
 }

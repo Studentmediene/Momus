@@ -37,18 +37,24 @@ import java.util.UUID;
 public abstract class AbstractServiceTest {
 
     @Mock
-    UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
+
+    @Mock
+    protected MessagingService messagingService;
 
     public void userMockSetup() {
         MockitoAnnotations.initMocks(this);
-        Person me = new Person(
-                1L,
-                UUID.randomUUID(),
-                "ei",
-                "Eivind",
-                "ei@vi.nd",
-                "12345678",
-                true);
+        Person me = Person.builder()
+                .id(1L)
+                .guid(UUID.randomUUID())
+                .username("ei")
+                .name("Eivind")
+                .email("ei@vi.nd")
+                .phoneNumber("12345678")
+                .active(true)
+                .build();
+
+        doNothing().when(messagingService).broadcastEntityAction(any(), any());
         when(userDetailsService.getLoggedInPerson()).thenReturn(me);
     }
 }

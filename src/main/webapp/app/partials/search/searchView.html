@@ -16,21 +16,21 @@
 
 <div class="container">
     <div style="margin-bottom: 5px;">
-        <a ng-click="createArticle()" class="btn btn-primary">
+        <a ng-click="vm.createArticle()" class="btn btn-primary">
             <i class="fa fa-plus-circle"></i> Opprett ny artikkel
         </a>
-        <a ng-click="showHelp()" class="btn btn-success">Hjelp?</a>
+        <a ng-click="vm.showHelp()" class="btn btn-success">Hjelp?</a>
     </div>
 
     <div class="well well-sm" id="articleSearchInterface">
-        <form role="form" ng-submit="searchFunc()">
+        <form role="form" ng-submit="vm.search()">
             <div class="row">
                 <!-- Free search -->
                 <div class="col-sm-3">
                     <label class="sr-only" for="searchFree">
                         Fritekst
                     </label>
-                    <input class="form-control" id="searchFree" ng-model="search.free"
+                    <input class="form-control" id="searchFree" ng-model="vm.searchParams.free"
                            placeholder="Fritekst">
                 </div>
 
@@ -39,11 +39,14 @@
                     <label class="sr-only" for="searchStatus">
                         Status
                     </label>
-                    <select class="form-control" id="searchStatus" ui-select2 ng-model="search.status" placeholder="Status">
+                    <select class="form-control" id="searchStatus" ui-select2 ng-model="vm.searchParams.status" placeholder="Status">
                         <option class="" value="">
                             Alle statuser
                         </option>
-                        <option ng-repeat="status in statuses | filter:{deleted: false} | orderBy:'status_order'" value="{{ status.id }}" style="background: #0f0">
+                        <option
+                                ng-repeat="status in vm.statuses | filter:{deleted: false} | orderBy:'status_order'"
+                                ng-value="status.id"
+                        >
                             {{ status.name }}
                         </option>
                     </select>
@@ -54,11 +57,11 @@
                     <label class="sr-only" for="searchSection">
                         Redaksjon
                     </label>
-                    <select class="form-control" id="searchSection" ui-select2 ng-model="search.section">
+                    <select class="form-control" id="searchSection" ui-select2 ng-model="vm.searchParams.section">
                         <option value="">
                             Alle redaksjoner
                         </option>
-                        <option ng-repeat="section in sections | filter:{deleted: false}" value="{{ section.id }}">
+                        <option ng-repeat="section in vm.sections | filter:{deleted: false}" ng-value="section.id">
                             {{ section.name }}
                         </option>
                     </select>
@@ -69,11 +72,11 @@
                     <label class="sr-only" for="searchReview">
                         Korrektur
                     </label>
-                    <select class="form-control" id="searchReview" ui-select2 ng-model="search.review">
+                    <select class="form-control" id="searchReview" ui-select2 ng-model="vm.searchParams.review">
                         <option value="">
                             Alle korrekturstatuser
                         </option>
-                        <option ng-repeat="review in reviews" value="{{ review.id }}">
+                        <option ng-repeat="review in vm.reviews" ng-value="review.id">
                             {{ review.name }}
                         </option>
                     </select>
@@ -88,8 +91,8 @@
                             use-ids
                             id="searchPublication"
                             placeholder="Utgaver"
-                            items="publications"
-                            target="search.publication"
+                            items="vm.publications"
+                            target="vm.searchParams.publication"
                             show="name">
                     </id-select>
                 </div>
@@ -104,8 +107,8 @@
                             placeholder="Personer"
                             multiple
                             use-ids
-                            items="persons"
-                            target="search.persons"
+                            items="vm.persons"
+                            target="vm.searchParams.persons"
                             show="name">
                     </id-select>
                 </div>
@@ -121,7 +124,7 @@
         </form>
     </div>
 
-    <div ng-if="search.archived" class="alert alert-danger">
+    <div ng-if="vm.searchParams.archived" class="alert alert-danger">
         Du søker nå kun i arkiverte artikler
     </div>
 
@@ -167,10 +170,10 @@
                         Ingen artikler stemmer med søket
                     </td>
                 </tr>
-                <tr ng-repeat="article in data | orderBy:articleSortType:articleSortReverse">
+                <tr ng-repeat="article in vm.results | orderBy:vm.articleSortType:vm.articleSortReverse">
                     <td class="search-article-name break-word">
                         <i ng-if="article.archived" class="fa fa-trash-o" uib-tooltip="Artikkelen er arkivert"></i>
-                        <a href="#/artikler/{{ article.id }}">
+                        <a ui-sref="article({id: article.id})">
                             {{ article.name }}
                         </a>
                     </td>
@@ -235,16 +238,16 @@
 
     <div class="text-center">
         <button class="btn btn btn-info"
-                ng-disabled="search.page_number <= 1"
-                ng-click="searchFunc(-1)">
+                ng-disabled="vm.searchParams.page_number <= 1"
+                ng-click="vm.search(-1)">
             <i class="fa fa-angle-left"/>
         </button>
         <b style="display: inline-block; width: 30px">
-            {{ search.page_number }}
+            {{ vm.searchParams.page_number }}
         </b>
         <button class="btn btn btn-info"
-                ng-disabled="!hasNextPage"
-                ng-click="searchFunc(1)">
+                ng-disabled="!vm.hasNextPage"
+                ng-click="vm.search(1)">
             <i class="fa fa-angle-right"/>
         </button>
     </div>

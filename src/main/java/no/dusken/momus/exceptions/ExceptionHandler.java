@@ -16,8 +16,7 @@
 
 package no.dusken.momus.exceptions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -31,9 +30,8 @@ import javax.servlet.http.HttpServletResponse;
  * All exceptions while processing a request will be sent to this handler.
  * Will make a proper http response out of it, can log it here etc.
  */
+@Slf4j
 public class ExceptionHandler implements HandlerExceptionResolver {
-
-    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse response, Object o, Exception e) {
@@ -56,6 +54,6 @@ public class ExceptionHandler implements HandlerExceptionResolver {
     }
 
     private void logException(Exception e) {
-        logger.error("Exceptionhandler caught:", e);
+        log.error("Exceptionhandler caught:", e);
     }
 }

@@ -16,20 +16,44 @@
 
 package no.dusken.momus.controller;
 
-import no.dusken.momus.authentication.UserDetailsServiceDev;
-import no.dusken.momus.ldap.LdapSyncer;
-import no.dusken.momus.model.*;
-import no.dusken.momus.service.ArticleService;
-import no.dusken.momus.service.PublicationService;
-import no.dusken.momus.service.drive.GoogleDriveService;
-import no.dusken.momus.service.repository.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import no.dusken.momus.config.MockToken;
+import no.dusken.momus.ldap.LdapSyncer;
+import no.dusken.momus.model.Advert;
+import no.dusken.momus.model.Article;
+import no.dusken.momus.model.ArticleReview;
+import no.dusken.momus.model.ArticleStatus;
+import no.dusken.momus.model.ArticleType;
+import no.dusken.momus.model.Person;
+import no.dusken.momus.model.Publication;
+import no.dusken.momus.model.Section;
+import no.dusken.momus.service.PublicationService;
+import no.dusken.momus.service.repository.AdvertRepository;
+import no.dusken.momus.service.repository.ArticleRepository;
+import no.dusken.momus.service.repository.ArticleReviewRepository;
+import no.dusken.momus.service.repository.ArticleStatusRepository;
+import no.dusken.momus.service.repository.ArticleTypeRepository;
+import no.dusken.momus.service.repository.PersonRepository;
+import no.dusken.momus.service.repository.SectionRepository;
 
 /**
  * Dev only, not accessible when live
@@ -38,13 +62,8 @@ import java.util.*;
 @RestController
 @RequestMapping("/dev")
 public class DevController {
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private SectionRepository sectionRepository;
-
-    @Autowired
-    private ArticleService articleService;
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -65,14 +84,13 @@ public class DevController {
     private ArticleReviewRepository articleReviewRepository;
 
     @Autowired
-    private PublicationRepository publicationRepository;
-
-    @Autowired
-    private GoogleDriveService driveService;
+    private AdvertRepository advertRepository;
 
     @Autowired
     private Environment env;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     LdapSyncer ldapSyncer;
@@ -95,16 +113,12 @@ public class DevController {
 
         Publication p1 = new Publication();
         p1.setName("UD #1");
-        Calendar p1ReleaseDate = new GregorianCalendar();
-        p1ReleaseDate.add(Calendar.DAY_OF_YEAR, 7);
-        p1.setReleaseDate(p1ReleaseDate.getTime());
+        p1.setReleaseDate(LocalDate.now().plusDays(7));
         p1 = publicationService.savePublication(p1, 50);
 
         Publication p2 = new Publication();
         p2.setName("UD #2");
-        Calendar p2ReleaseDate = new GregorianCalendar();
-        p2ReleaseDate.add(Calendar.DAY_OF_YEAR, 14);
-        p2.setReleaseDate(p2ReleaseDate.getTime());
+        p2.setReleaseDate(LocalDate.now().plusDays(14));
         p2 = publicationService.savePublication(p2, 50);
 
         Article a1 = new Article();
@@ -164,6 +178,9 @@ public class DevController {
         a5.setPublication(p2);
         articleRepository.save(a5);
 
+        Advert ad1 = new Advert();
+        ad1.setName("iBok");
+        advertRepository.save(ad1);
         return "dummy articles and publications generated";
     }
 
@@ -177,8 +194,19 @@ public class DevController {
         return env.acceptsProfiles("noAuth");
     }
 
-    @PutMapping("/loggedinuser/{id}")
-    public void setLoggedInUser(@PathVariable Long id) {
-        UserDetailsServiceDev.LOGGED_IN_USER = id;
+    @PostMapping("/login")
+    public void login(@RequestBody String user) {
+        Authentication token = authenticationManager.authenticate(new MockToken(user));
+        SecurityContextHolder.getContext().setAuthentication(token);
+    }
+
+    @PostMapping("/logout")
+    public void logout() {
+        SecurityContextHolder.getContext().setAuthentication(null);
+    }
+
+    @GetMapping("/loginstate")
+    public boolean isLoggedIn() {
+        return !SecurityContextHolder.getContext().getAuthentication().getClass().equals(AnonymousAuthenticationToken.class);
     }
 }

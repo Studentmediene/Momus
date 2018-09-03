@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package no.dusken.momus.service.repository;
+'use strict';
 
-import no.dusken.momus.model.Note;
-import no.dusken.momus.model.Person;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public interface NoteRepository extends JpaRepository<Note, Long> {
-
-    public Note findByOwner(Person owner);
-
-    public Note findByOwner_Id(Long owner);
-
-}
+angular.module('momusApp.resources')
+    .factory('Advert', $resource => {
+      return $resource('/api/advert/:id/:resource',
+        {
+          id: '@id'
+        },
+        {
+          updateComment: { method: 'PATCH', params: {resource: 'comment'} },
+        }
+    );
+  });

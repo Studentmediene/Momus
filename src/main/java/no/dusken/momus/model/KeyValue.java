@@ -16,6 +16,8 @@
 
 package no.dusken.momus.model;
 
+import lombok.*;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -24,6 +26,12 @@ import javax.persistence.Id;
  * A class made for storing simple values in the database
  */
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = {"key"})
+@ToString(of = {"key", "value"})
+@Builder
 public class KeyValue {
 
     @Id
@@ -32,36 +40,4 @@ public class KeyValue {
 
     @Column(name = "val") // key and value is reserved word in SQL...
     String value;
-
-    public KeyValue() {
-    }
-
-    public KeyValue(String key, String value) {
-        this.key = key;
-        this.value = value;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return "KeyValue{" +
-                "key='" + key + '\'' +
-                ", value='" + value + '\'' +
-                '}';
-    }
 }
