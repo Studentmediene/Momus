@@ -1,6 +1,6 @@
 {
-  "name": "Momus",
-  "version": "1.9.3",
+  "name": "momus",
+  "version": "1.10.0",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
