@@ -2,8 +2,8 @@
 
 # clean the project
 rm -rf src/main/resources/local.properties
-rm -rf src/main/webapp/dist
-rm -rf src/main/webapp/app/libs
+rm -rf webapp/dist
+rm -rf webapp-beta/dist
 rm -rf node_modules
 rm -rf target
 
@@ -14,7 +14,7 @@ cp /srv/momus/Momuslive-6b43d0b81c8e.p12 src/main/resources/googlekey.p12
 
 # install frontend dependencies
 npm install
-bower install
 
-# build frontent
-grunt build
+# build frontend
+npm run build
+npm run build:beta
