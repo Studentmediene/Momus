@@ -1,6 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const { BaseHrefWebpackPlugin } = require('base-href-webpack-plugin');
 const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -9,37 +8,35 @@ const Visualizer = require('webpack-visualizer-plugin');
 const path = require('path');
 
 const root = __dirname;
-const dev = path.join(root, 'src/main/webapp/app');
-const outRoot = path.join(root, 'src/main/webapp');
+const dev = root;
+const out = path.join(root, 'dist');
 
 const isprod = process.argv.indexOf('-p') !== -1;
 const visualize = process.argv.indexOf('--visualizer') !== -1;
-const isbeta = process.argv.indexOf('--beta') !== -1;
 
-const publicPath = isbeta ? '/beta/' : '/';
-const filepath = path.join(outRoot, publicPath);
+const assetsPath = path.join(out, 'assets/');
 
 const commonPlugins = [
     // Injects bundles into the index file
     new HtmlWebpackPlugin({
         template: path.join(dev, 'index.html'),
-        //favicon: path.join(dev, 'favicon.ico'),
+        favicon: path.join(dev, 'favicon.ico'),
+        filename: path.join(out, 'index.html'),
     }),
-    new BaseHrefWebpackPlugin({ baseHref: publicPath }),
     new webpack.ProvidePlugin({
         $: "jquery",
         jQuery: "jquery",
         "window.jQuery": "jquery"
     }),
     new CopyWebpackPlugin([
-        { from: path.join(dev, "partials"), to: path.join(filepath, "partials") },
+        { from: path.join(dev, "partials"), to: path.join(out, "partials") },
     ]),
 ];
 
 const prodPlugins = [
-    // new CleanWebpackPlugin([
-    //     filepath
-    // ]),
+    new CleanWebpackPlugin([
+        out
+    ]),
     new MiniCssExtractPlugin({
         filename: '[name]-[contenthash].css'
     }),
@@ -55,7 +52,7 @@ const plugins = commonPlugins.concat(isprod ? prodPlugins : []);
 if (visualize) plugins.push(new Visualizer());
 
 const devServer = {
-    contentBase: filepath,
+    contentBase: out,
     port: 8081,
     historyApiFallback: true,
     proxy: {
@@ -73,8 +70,7 @@ module.exports = {
         main: path.join(dev, 'js/app.js')
     },
     output: {
-        publicPath,
-        path: filepath,
+        path: assetsPath,
         filename: '[name]-[chunkhash].js',
         chunkFilename: '[name]-[chunkhash].js'
     },
@@ -99,10 +95,6 @@ module.exports = {
                 include: dev,
                 loader: 'html-loader'
             }, {
-                test: /\.ts$/,
-                include: dev,
-                use: ['ng-annotate-loader?ngAnnotate=ng-annotate-patched','ts-loader']
-            }, {
                 test: /\.js$/,
                 include: dev,
                 use: [
@@ -125,7 +117,7 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: [ '.ts', '.js', '.html' ],
+        extensions: [ '.js', '.html' ],
         modules: [
             dev,
             "node_modules"

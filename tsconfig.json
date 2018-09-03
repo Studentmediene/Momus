@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": "./webapp",
-    "rootDir": "./webapp/",
-    "outDir": "./dist/",
+    "baseUrl": "./webapp-beta",
+    "rootDir": "./webapp-beta/",
+    "outDir": "./webapp-beta/dist/",
     "noImplicitAny": true,
     "sourceMap": true,
     "module": "commonjs",
@@ -16,11 +16,11 @@
     ],
     "typeRoots": [
         "./node_modules/@types",
-        "./webapp"
+        "./webapp-beta"
     ],
     "types": ["uikit", "angular", "angular-resource", "node", "typings"]
   },
   "files": [
-      "./webapp/app.ts"
+      "./webapp-beta/app.ts"
   ]
 }

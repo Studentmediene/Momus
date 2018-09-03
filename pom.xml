@@ -345,7 +345,13 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
                 <configuration>
-                    <webAppSourceDirectory>src/main/webapp</webAppSourceDirectory>
+                    <webApp>
+                        <resourceBases>
+                            <resourceBase>webapp/dist</resourceBase>
+                            <resourceBase>webapp-beta/dist</resourceBase>
+                            <resourceBase>src/main/webapp</resourceBase>
+                        </resourceBases>
+                    </webApp>
                 </configuration>
             </plugin>
             <!-- Control how the application is built -->
@@ -360,10 +366,11 @@
 
                     <failOnMissingWebXml>false</failOnMissingWebXml>
 
-                    <!-- include the content of the dist folder built by grunt -->
+                    <!-- include the content of the dist folders built by webpack -->
                     <webResources>
                         <resource>
-                            <directory>src/main/webapp/dist</directory>
+                            <directory>webapp/dist</directory>
+                            <directory>webapp-beta/dist</directory>
                         </resource>
                     </webResources>
                 </configuration>
@@ -384,5 +391,4 @@
             </plugin> 
         </plugins>
     </build>
-
 </project>

@@ -30,6 +30,8 @@ src/main/resources/key.pem
 # build folders
 target/
 src/main/webapp/dist/
+webapp/dist
+webapp-beta/dist
 bin/
 
 **/*.css
