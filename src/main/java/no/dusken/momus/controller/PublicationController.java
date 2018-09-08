@@ -93,6 +93,12 @@ public class PublicationController {
         return active;
     }
 
+    @GetMapping("/active/simple")
+    @JsonView(SerializationViews.Simple.class)
+    public @ResponseBody Publication getSimpleActivePublication() {
+        return getActivePublication();
+    }
+
     @GetMapping("/{pubid}/colophon")
     public @ResponseBody void getColophon(@PathVariable Long pubid, HttpServletResponse response) throws IOException {
 

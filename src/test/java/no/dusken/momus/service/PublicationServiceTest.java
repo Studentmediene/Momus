@@ -81,9 +81,10 @@ public class PublicationServiceTest extends AbstractServiceTest {
         publication2.setReleaseDate(LocalDate.of(2017, 8, 12));
         publication3.setReleaseDate(LocalDate.of(2017, 8, 14));
 
-        doReturn(Arrays.asList(publication2, publication2, publication1)).when(publicationRepository).findAllByOrderByReleaseDateDesc();
+        LocalDate date = LocalDate.of(2017, 8, 11);
+        doReturn(publication2).when(publicationRepository).findFirstByReleaseDateAfterOrderByReleaseDate(any());
 
-        assertEquals(publication2, publicationService.getActivePublication(LocalDate.of(2017, 8, 11)));
+        assertEquals(publication2, publicationService.getActivePublication(date));
     }
 
     @Test

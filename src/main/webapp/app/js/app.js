@@ -69,7 +69,7 @@ angular.module('momusApp', [
                             Article.search({}, {section: loggedInPerson.favouritesection.id}).$promise :
                             [];
                     },
-                    activePublication: Publication => Publication.active().$promise
+                    activePublication: Publication => Publication.active({projection: 'simple'}).$promise
                         .then(pub => pub)
                         .catch(() => null),
                     sections: Article => Article.sections().$promise,
