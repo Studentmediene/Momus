@@ -16,7 +16,6 @@
 
 package no.dusken.momus.controller;
 
-import no.dusken.momus.dto.FullPublication;
 import no.dusken.momus.dto.SimplePublication;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.LayoutStatus;
@@ -82,8 +81,8 @@ public class PublicationController {
     }
 
     @GetMapping("/active")
-    public FullPublication getActivePublication(){
-        FullPublication active = publicationService.getActivePublication(LocalDate.now());
+    public Publication getActivePublication(){
+        Publication active = publicationService.getActivePublication(LocalDate.now());
         if(active == null) {
             throw new RestException("No active publication found", HttpServletResponse.SC_NOT_FOUND);
         }
