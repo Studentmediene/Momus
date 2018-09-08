@@ -16,13 +16,18 @@
 
 package no.dusken.momus.service.repository;
 
+import no.dusken.momus.dto.SimplePublication;
 import no.dusken.momus.model.Publication;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PublicationRepository extends JpaRepository<Publication, Long> {
-    List<Publication> findAllByOrderByReleaseDateDesc();
+    List<SimplePublication> findAllByOrderByReleaseDateDesc();
+
+    <T> T findFirstByReleaseDateAfterOrderByReleaseDate(LocalDate date, Class<T> projection);
 }

@@ -72,20 +72,6 @@ public class PublicationServiceTest extends AbstractServiceTest {
         page3.setId(2L);
     }
 
-    /**
-     * Method: {@link PublicationService#getActivePublication(LocalDate)}
-     */
-    @Test
-    public void testGetActivePublication() {
-        publication1.setReleaseDate(LocalDate.of(2017, 8, 10)); //Old
-        publication2.setReleaseDate(LocalDate.of(2017, 8, 12));
-        publication3.setReleaseDate(LocalDate.of(2017, 8, 14));
-
-        doReturn(Arrays.asList(publication2, publication2, publication1)).when(publicationRepository).findAllByOrderByReleaseDateDesc();
-
-        assertEquals(publication2, publicationService.getActivePublication(LocalDate.of(2017, 8, 11)));
-    }
-
     @Test
     public void testSavePublication() {
         doReturn(publication1).when(publicationRepository).saveAndFlush(publication1);

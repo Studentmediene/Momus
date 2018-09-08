@@ -18,9 +18,7 @@ package no.dusken.momus.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonView;
 import lombok.*;
-import no.dusken.momus.mapper.SerializationViews;
 
 import javax.persistence.*;
 
@@ -42,12 +40,10 @@ public class Publication extends AbstractEntity implements Messageable {
     private LocalDate releaseDate;
 
     @OneToMany(mappedBy = "publication", fetch = FetchType.EAGER)
-    @JsonView(SerializationViews.Full.class)
     @JsonIgnoreProperties(value = "publication")
     private Set<Article> articles;
 
     @OneToMany(mappedBy = "publication", fetch = FetchType.EAGER)
-    @JsonView(SerializationViews.Full.class)
     @JsonIgnoreProperties(value = "publication")
     private List<Page> pages;
 

@@ -18,6 +18,8 @@ package no.dusken.momus.service;
 
 
 import lombok.extern.slf4j.Slf4j;
+import no.dusken.momus.dto.FullPublication;
+import no.dusken.momus.dto.SimplePublication;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
@@ -25,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -43,22 +46,12 @@ public class PublicationService {
      *
      * @return Returns the oldest publication that has not been released yet at the time of the date parameter
      */
-    public Publication getActivePublication(LocalDate date){
-        List<Publication> publications = publicationRepository.findAllByOrderByReleaseDateDesc();
+    public FullPublication getActivePublication(LocalDate date){
+        return publicationRepository.findFirstByReleaseDateAfterOrderByReleaseDate(date.minus(1, ChronoUnit.DAYS), FullPublication.class);
+    }
 
-        if(publications.isEmpty()) return null;
-
-        if(publications.size() == 1) return publications.get(0);
-
-        Publication active = publications.get(0);
-        for(Publication p : publications.subList(1,publications.size())){
-            if(p.getReleaseDate().isBefore(date)){
-                return active;
-            }else{
-                active = p;
-            }
-        }
-        return active;
+    public SimplePublication getActiveSimplePublication(LocalDate date) {
+        return publicationRepository.findFirstByReleaseDateAfterOrderByReleaseDate(date.minus(1, ChronoUnit.DAYS), SimplePublication.class);
     }
 
     public Publication savePublication(Publication publication, Integer numEmptyPages){
