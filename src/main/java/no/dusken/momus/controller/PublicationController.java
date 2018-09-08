@@ -16,16 +16,15 @@
 
 package no.dusken.momus.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
+import no.dusken.momus.dto.FullPublication;
+import no.dusken.momus.dto.SimplePublication;
 import no.dusken.momus.exceptions.RestException;
-import no.dusken.momus.mapper.SerializationViews;
 import no.dusken.momus.model.LayoutStatus;
 import no.dusken.momus.model.Publication;
 import no.dusken.momus.service.PublicationService;
 import no.dusken.momus.service.repository.LayoutStatusRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
@@ -47,13 +46,12 @@ public class PublicationController {
     private LayoutStatusRepository layoutStatusRepository;
 
     @GetMapping
-    @JsonView(SerializationViews.Simple.class)
-    public @ResponseBody List<Publication> getAllPublications(){
-        return publicationRepository.findAll(new Sort(new Sort.Order(Sort.Direction.DESC, "releaseDate")));
+    public List<SimplePublication> getAllPublications(){
+        return publicationRepository.findAllByOrderByReleaseDateDesc();
     }
 
     @PostMapping
-    public @ResponseBody Publication savePublication(
+    public Publication savePublication(
             @RequestBody Publication publication,
             @RequestParam(required = false, defaultValue = "50") Integer numEmptyPages
     ) {
@@ -68,7 +66,7 @@ public class PublicationController {
     }
 
     @GetMapping("/{pubid}")
-    public @ResponseBody Publication getPublicationById(@PathVariable Long pubid){
+    public Publication getPublicationById(@PathVariable Long pubid){
         if(!publicationRepository.exists(pubid)){
             throw new RestException("Publication with given id not found", HttpServletResponse.SC_NOT_FOUND);
         }
@@ -76,7 +74,7 @@ public class PublicationController {
     }
 
     @PutMapping("/{pubid}")
-    public @ResponseBody Publication updatePublication(@RequestBody Publication publication, @PathVariable Long pubid) {
+    public Publication updatePublication(@RequestBody Publication publication, @PathVariable Long pubid) {
         if(!publicationRepository.exists(pubid)){
             throw new RestException("Publication with given id not found", HttpServletResponse.SC_NOT_FOUND);
         }
@@ -84,8 +82,8 @@ public class PublicationController {
     }
 
     @GetMapping("/active")
-    public @ResponseBody Publication getActivePublication(){
-        Publication active = publicationService.getActivePublication(LocalDate.now());
+    public FullPublication getActivePublication(){
+        FullPublication active = publicationService.getActivePublication(LocalDate.now());
         if(active == null) {
             throw new RestException("No active publication found", HttpServletResponse.SC_NOT_FOUND);
         }
@@ -94,13 +92,17 @@ public class PublicationController {
     }
 
     @GetMapping("/active/simple")
-    @JsonView(SerializationViews.Simple.class)
-    public @ResponseBody Publication getSimpleActivePublication() {
-        return getActivePublication();
+    public SimplePublication getSimpleActivePublication() {
+        SimplePublication active = publicationService.getActiveSimplePublication(LocalDate.now());
+        if(active == null) {
+            throw new RestException("No active publication found", HttpServletResponse.SC_NOT_FOUND);
+        }
+
+        return active;
     }
 
     @GetMapping("/{pubid}/colophon")
-    public @ResponseBody void getColophon(@PathVariable Long pubid, HttpServletResponse response) throws IOException {
+    public void getColophon(@PathVariable Long pubid, HttpServletResponse response) throws IOException {
 
         response.addHeader(
                 "Content-Disposition",
@@ -115,7 +117,7 @@ public class PublicationController {
     }
 
     @GetMapping("/layoutstatuses")
-    public @ResponseBody List<LayoutStatus> getLayoutStatuses(){
+    public List<LayoutStatus> getLayoutStatuses(){
         return layoutStatusRepository.findAll();
     }
 }

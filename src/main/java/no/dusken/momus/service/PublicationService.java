@@ -18,6 +18,8 @@ package no.dusken.momus.service;
 
 
 import lombok.extern.slf4j.Slf4j;
+import no.dusken.momus.dto.FullPublication;
+import no.dusken.momus.dto.SimplePublication;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
@@ -44,8 +46,12 @@ public class PublicationService {
      *
      * @return Returns the oldest publication that has not been released yet at the time of the date parameter
      */
-    public Publication getActivePublication(LocalDate date){
-        return publicationRepository.findFirstByReleaseDateAfterOrderByReleaseDate(date.minus(1, ChronoUnit.DAYS));
+    public FullPublication getActivePublication(LocalDate date){
+        return publicationRepository.findFirstByReleaseDateAfterOrderByReleaseDate(date.minus(1, ChronoUnit.DAYS), FullPublication.class);
+    }
+
+    public SimplePublication getActiveSimplePublication(LocalDate date) {
+        return publicationRepository.findFirstByReleaseDateAfterOrderByReleaseDate(date.minus(1, ChronoUnit.DAYS), SimplePublication.class);
     }
 
     public Publication savePublication(Publication publication, Integer numEmptyPages){
