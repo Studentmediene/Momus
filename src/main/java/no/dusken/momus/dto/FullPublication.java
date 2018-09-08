@@ -1,5 +1,6 @@
 package no.dusken.momus.dto;
 
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -15,5 +16,5 @@ public interface FullPublication extends SimplePublication {
 
     @JsonProperty
     @JsonIgnoreProperties(value = "publication")
-    Set<Page> getPages();
+    List<Page> getPages();
 }
