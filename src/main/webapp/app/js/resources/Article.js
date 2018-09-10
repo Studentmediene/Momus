@@ -23,6 +23,7 @@ angular.module('momusApp.resources')
                 id: '@id'
             },
             {
+                lastArticlesOfUser: { method: 'GET', params: {}, isArray: true },
                 revisions: { method: 'GET', params: {resource: 'revisions'}, isArray: true },
                 compareRevisions: { method: 'GET', url: '/api/article/:id/revisions/:rev1/:rev2', isArray: true },
                 multiple: { method: 'GET', params: {id: 'multiple'}, isArray: true },                

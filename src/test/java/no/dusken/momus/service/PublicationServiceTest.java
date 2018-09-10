@@ -27,7 +27,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
