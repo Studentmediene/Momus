@@ -57,7 +57,7 @@ angular.module('momusApp', [
                 url: '/',
                 resolve: {
                     myArticles: (Article, loggedInPerson) =>
-                        Article.search({}, {persons: [loggedInPerson.id], page_size: 9}).$promise,
+                        Article.lastArticlesOfUser({userId: loggedInPerson.id}).$promise,
                     recentArticles: (ViewArticleService, Article) => {
                         const recents = ViewArticleService.getRecentViews();
                         return recents.length > 0 ?

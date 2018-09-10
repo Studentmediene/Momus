@@ -17,7 +17,12 @@
 package no.dusken.momus.service.repository;
 
 import no.dusken.momus.model.Article;
+import no.dusken.momus.model.Person;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
@@ -25,6 +30,9 @@ import java.util.List;
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     List<Article> findByPublicationId(Long id);
+
+    @Query("select a from Article a where :person member of a.journalists or :person member of a.photographers order by a.lastUpdated desc")
+    List<Article> findByJournalistsOrPhotographersContains(@Param("person") Person person, Pageable pageable);
 
     List<Article> findByGoogleDriveIdIn(Iterable<String> ids);
 

@@ -24,6 +24,8 @@ import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.repository.*;
 import no.dusken.momus.service.search.ArticleSearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
@@ -60,6 +62,14 @@ public class ArticleController {
 
     @Autowired
     private ArticleRevisionRepository articleRevisionRepository;
+
+    @Autowired
+    private PersonRepository personRepository;
+
+    @GetMapping
+    public List<Article> getLastArticlesForUser(@RequestParam Long userId, Pageable query) {
+        return articleRepository.findByJournalistsOrPhotographersContains(personRepository.findOne(userId), new PageRequest(0, 10));
+    }
 
     @GetMapping("/{id}")
     public @ResponseBody Article getArticleByID(@PathVariable Long id) {
