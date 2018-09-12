@@ -13,6 +13,7 @@ import editableAlert from './editableAlert/editableAlert.component';
 import editableField from './editableField/editableField.component';
 import newArticleModal from './newArticleModal/newArticleModal.component';
 import newAdvertModal from './newAdvertModal/newAdvertModal.component';
+import newsPanel from './newsPanel/newsPanel.component';
 import messageModal from './messageModal/messageModal.component';
 
 export default angular
@@ -30,5 +31,6 @@ export default angular
         editableField.name,
         newArticleModal.name,
         newAdvertModal.name,
+        newsPanel.name,
         messageModal.name,
     ]);

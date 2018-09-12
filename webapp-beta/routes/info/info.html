@@ -15,44 +15,7 @@
   -->
 <div uk-grid>
     <div class="uk-width-1-2@m">
-        <panel
-            icon="'fas fa-bullhorn'"
-            header="'Nyheter'"
-            no-body-padding="true"
-            type="'primary'"
-            >
-            <table class="uk-table">
-                <tbody ng-repeat="n in vm.news | orderBy: '-date'
-                                            | startFrom:(currentPage-1)*vm.pageSize
-                                            | limitTo:vm.pageSize"
-                class="news-item">
-                <tr ng-class="{danger: n.new, active:!n.new}" class="interact" ng-click="n.show = !n.show">
-
-                    <td colspan="2">
-                        <span ng-show="n.new" style="font-weight: bold">{{n.title}}</span>
-                        <span ng-show="!n.new">{{n.title}}</span>
-
-                        <i ng-show="!n.show" class="fa fa-arrow-circle-down pull-right"></i>
-                        <i ng-show="n.show" class="fa fa-arrow-circle-up pull-right"></i>
-                    </td>
-                </tr>
-                <tr ng-show="n.show" class="news-meta">
-                    <td>{{n.date | date: 'yyyy-MM-dd'}}</td>
-                    <td>
-                        <span class="d-break-word pull-right" person-widget="n.author">{{n.author.name}}</span>
-                    </td>
-                </tr>
-                <tr ng-show="n.show">
-                    <td colspan="4" ng-bind-html="n.content | trustHtml"></td>
-                </tr>
-                </tbody>
-                <tr ng-show="news.length <= 0" class="text-center">
-                    <td colspan="2">
-                        Det finnes ingen nyheter.
-                    </td>
-                </tr>
-            </table>
-        </panel>
+        <news-panel news="vm.news"></news-panel>
     </div>
     <div class="uk-width-1-2@m">
         <panel

@@ -25,6 +25,7 @@ export default angular.module('momusApp.routes.home.homePage', [])
         bindings: {
             user: '<',
             myArticles: '<',
+            news: '<',
         },
         template: require('./home.html'),
         controller: HomeCtrl,

@@ -6,6 +6,7 @@ import { ArticleResource } from '../../resources/article.resource';
 import { Person } from '../../models/Person';
 
 import homePage from './home.component';
+import { NewsItemResource } from 'resources/newsItem.resource';
 
 const routeModule = angular
     .module('momusApp.routes.home', [
@@ -25,7 +26,9 @@ const routeModule = angular
             },
             resolve: {
                 myArticles: (articleResource: ArticleResource, loggedInUser: Person) =>
-                    articleResource.search({}, {persons: [loggedInUser.id], page_size: 9}).$promise,
+                    articleResource.lastArticlesForPerson({ userId: loggedInUser.id }).$promise,
+                news: (newsItemResource: NewsItemResource) =>
+                    newsItemResource.query().$promise,
             },
         });
     });

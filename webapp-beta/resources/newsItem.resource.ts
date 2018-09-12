@@ -1,6 +1,7 @@
 import { NewsItem } from '../models/NewsItem';
 import { MomResourceFactory } from '../services/momResource.factory';
 
+/* @ngInject */
 export default function newsItemResourceFactory(
     momResource: MomResourceFactory<NewsItem>,
 ): NewsItemResource {

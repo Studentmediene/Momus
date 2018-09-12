@@ -1,0 +1,32 @@
+<panel header="'Nyheter'" icon="'fas fa-bullhorn'" no-body-padding="true">
+    <table ng-show="vm.news.length > 0" class="uk-table news-table">
+        <tbody ng-repeat="n in vm.news
+                                    | orderBy: '-date'
+                                    | startFrom:(vm.currentPage-1)*vm.pageSize
+                                    | limitTo: vm.pageSize"
+        class="news-item">
+        <tr ng-class="{danger: n.new, active:!n.new}" class="interact" ng-click="n.show = !n.show">
+
+            <td colspan="2">
+                <span ng-show="n.new" style="font-weight: bold">{{n.title}}</span>
+                <span ng-show="!n.new">{{n.title}}</span>
+
+                <i ng-show="!n.show" class="fas fa-arrow-circle-down pull-right"></i>
+                <i ng-show="n.show" class="fas fa-arrow-circle-up pull-right"></i>
+            </td>
+        </tr>
+        <tr ng-show="n.show" class="news-meta">
+            <td>{{n.date | date: 'yyyy-MM-dd'}}</td>
+            <td>
+                <span class="d-break-word pull-right" person-widget="n.author">{{n.author.name}}</span>
+            </td>
+        </tr>
+        <tr ng-show="n.show">
+            <td colspan="4" ng-bind-html="n.content | trustHtml"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div style="width: 100%" class="uk-text-center" ng-show="vm.news.length === 0">
+        Det finnes ingen nyheter
+    </div>
+</panel>
