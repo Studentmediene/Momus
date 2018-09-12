@@ -13,6 +13,7 @@ const out = path.join(root, 'dist');
 const isprod = process.argv.indexOf('-p') !== -1;
 const visualize = process.argv.indexOf('--visualizer') !== -1;
 const isbeta = process.argv.indexOf('--beta') !== -1;
+const isDevServer = process.argv.find(v => v.includes('webpack-dev-server'));
 
 const publicPath = isbeta ? '/beta/' : '/';
 const indexPath = path.join(out, publicPath);
@@ -23,7 +24,7 @@ const commonPlugins = [
     new HtmlWebpackPlugin({
         template: path.join(dev, 'index.html'),
         favicon: path.join(dev, 'favicon.ico'),
-        filename: path.join(indexPath, 'index.html'),
+        filename: !isDevServer ? path.join(indexPath, 'index.html') : 'index.html',
     }),
     new BaseHrefWebpackPlugin({ baseHref: publicPath })
 ];
