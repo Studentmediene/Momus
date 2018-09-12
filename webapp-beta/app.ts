@@ -14,7 +14,7 @@ import directives from './app.directives';
 import { Person } from './models/Person';
 import { Env, Environment } from './app.types';
 
-import './app.scss';
+import './style/app.scss';
 
 angular
     .module('momusApp', [
