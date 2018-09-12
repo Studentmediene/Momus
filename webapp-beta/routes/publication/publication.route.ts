@@ -10,7 +10,6 @@ import { PageResource } from 'resources/page.resource';
 import { Publication } from 'models/Publication';
 import { AdvertResource } from 'resources/advert.resource';
 import { ArticleResource } from 'resources/article.resource';
-import { Session } from 'services/session.service';
 
 const routeModule = angular
     .module('momusApp.routes.publication', [

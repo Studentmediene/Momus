@@ -15,6 +15,7 @@ export default function articleResourceFactory(
             id: '@id',
         },
         {
+            lastArticlesForPerson: { method: 'GET', isArray: true },
             revisions: { method: 'GET', params: {resource: 'revisions'}, isArray: true },
             compareRevisions: { method: 'GET', url: '/api/article/:id/revisions/:rev1/:rev2', isArray: true },
             multiple: { method: 'GET', params: {id: 'multiple'}, isArray: true },
@@ -42,6 +43,12 @@ type errFunc = (err: any) => void;
 
 export interface ArticleResource extends ng.resource.IResourceClass<Article> {
     content: (id: number) => IPromise<IHttpResponse<string>>;
+
+    lastArticlesForPerson(
+        params: {userId: number},
+        success?: (articles: Article[]) => void,
+        error?: errFunc,
+    ): Article[];
 
     revisions(
         params: {id: number},
