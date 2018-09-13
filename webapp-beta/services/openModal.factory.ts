@@ -15,7 +15,7 @@ interface ModalCallbacks {
 export interface ModalScope<T extends ModalInput, U> extends angular.IScope, ModalInput, ModalCallbacks {
 }
 
-export type OpenModal<T extends object, U> = (component: string, inputs: T) => Promise<U>;
+export type OpenModal<T extends object, U> = (component: string, inputs: T, cancellable?: boolean) => Promise<U>;
 
 /* @ngInject */
 export default function openModal<T extends ModalInput, U>(
@@ -25,6 +25,7 @@ export default function openModal<T extends ModalInput, U>(
     return (
         component: string,
         inputs: T,
+        cancellable: boolean = true,
     )  => {
         return new Promise((resolve, reject) => {
             const scope: ModalScope<T, U> = <ModalScope<T, U>> $rootScope.$new(true);
@@ -34,6 +35,9 @@ export default function openModal<T extends ModalInput, U>(
                     resolve(value);
                 },
                 onCanceled: () => {
+                    if (!cancellable) {
+                        return;
+                    }
                     element.remove();
                     reject();
                 },

@@ -47,16 +47,20 @@ export default function momResourceFactory(
                 actions[k] = {
                     ...action,
                     transformRequest: withDefaultRequestTransform(requestTransform),
-                    transformResponse: action.isArray
-                        ? withDefaultResponseTransform(
-                            <T>(items: T[], headers: angular.IHttpHeadersGetter, status: number) =>
-                                items.map((item) => responseTransform(item, headers, status),
-                            ),
-                        )
-                        : withDefaultResponseTransform(responseTransform),
+                    transformResponse: withDefaultResponseTransform(action.isArray
+                        ? arrayTransformer(responseTransform)
+                        : responseTransform),
                 };
         });
         return actions;
+    }
+
+    function arrayTransformer(transformer: angular.IHttpResponseTransformer) {
+        return <T>(items: T[], headers: angular.IHttpHeadersGetter, status: number) => (
+            status !== 200
+                ? transformer(items, headers, status)
+                : items.map((item) => transformer(item, headers, status))
+        );
     }
 
     function withDefaultResponseTransform(

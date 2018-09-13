@@ -13,6 +13,7 @@ import filters from './app.filters';
 import directives from './app.directives';
 import { Person } from './models/Person';
 import { Env, Environment } from './app.types';
+import httpInterceptorFactory from './services/httpInterceptor.factory';
 
 import './style/app.scss';
 
@@ -25,7 +26,10 @@ angular
         directives.name,
         components.name,
         routes.name,
-    ]);
+    ])
+    .config(($httpProvider: angular.IHttpProvider) => {
+        $httpProvider.interceptors.push(httpInterceptorFactory);
+    });
 /*
  Since the pages visible on the app is dependent on the environment and the logged in user,
  we fetch this and set the active routes before bootstrapping the application

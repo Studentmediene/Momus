@@ -1,6 +1,9 @@
-<div class="modal-header">
+<div class="modal-header" ng-class="{danger: vm.type === 'Error'}">
     <h3>{{ vm.header }}</h3>
 </div>
 <div class="modal-body">
-    <p>{{ vm.message }}</p>
+    <p ng-bind-html="vm.message | trustHtml"></p>
+    <button class="uk-button uk-button-primary" ng-click="vm.onFinished()">
+        OK
+    </button>
 </div>

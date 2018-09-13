@@ -13,4 +13,5 @@ export interface RootScope extends ng.IScope {
     initialLoad: boolean;
     transitionLoad: boolean;
     pageTitle: string;
+    messageModalOpen: boolean;
 }
