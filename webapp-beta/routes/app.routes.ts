@@ -13,7 +13,15 @@ import article from './article/article.route';
 import publication from './publication/publication.route';
 import info from './info/info.route';
 
-type NextStateTitleFactory = (transition: Transition) => string;
+function getNextStateTitle(transition: Transition) {
+    const newState = transition.to();
+    const { title } = newState.data;
+    switch (typeof title) {
+        case 'string': return title + ' - Momus';
+        case 'function': return title(transition.injector()) + ' - Momus';
+        default: return 'Momus';
+    }
+}
 
 /*
 The application only loads the route modules that should be visible
@@ -43,18 +51,7 @@ export default angular
         $urlRouterProvider.otherwise('/');
         $locationProvider.html5Mode(true);
     })
-    .factory('getNextStateTitle', (): NextStateTitleFactory => {
-        return (transition: Transition): string  => {
-            const newState = transition.to();
-            const title = newState.data.title;
-            switch (typeof title) {
-            case 'string': return title + ' - Momus';
-            case 'function': return title(transition.injector()) + ' - Momus';
-            default: return 'Momus';
-            }
-        };
-    })
-    .run(($transitions: TransitionService, $rootScope: RootScope, getNextStateTitle: NextStateTitleFactory) => {
+    .run(($transitions: TransitionService, $rootScope: RootScope) => {
         $transitions.onSuccess({}, (transition) => { $rootScope.pageTitle = getNextStateTitle(transition); });
 
         const initialStateMatcher = (state: StateObject) => state.name === '^';
