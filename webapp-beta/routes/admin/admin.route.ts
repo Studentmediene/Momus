@@ -4,6 +4,7 @@ import { Environment } from '../../app.types';
 import { StateProvider } from '@uirouter/angularjs';
 
 import adminPage from 'routes/admin/admin.component';
+import { NewsItemResource } from 'resources/newsItem.resource';
 
 const routeModule = angular
     .module('momusApp.routes.admin', [
@@ -20,6 +21,9 @@ const routeModule = angular
                     name: 'Admin',
                     icon: 'fas fa-wrench',
                 },
+            },
+            resolve: {
+                news: (newsItemResource: NewsItemResource) => newsItemResource.query().$promise,
             },
         });
     });
