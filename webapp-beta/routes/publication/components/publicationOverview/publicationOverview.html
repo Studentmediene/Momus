@@ -29,9 +29,9 @@
                 >
                     <td>{{publication.name}}</td>
                     <td>{{publication.release_date | date: 'yyyy-MM-dd'}}</td>
-                    <td><a ui-sref="article.search({publication: publication.id})">Se artikler</a></td>
+                    <td><a ui-sref="article.search({publication: publication.id})">Artikler</a></td>
                     <td><a ui-sref="publication.disposition({id: publication.id})">Disposisjon</a></td>
-                    <td class=""><a class="interact" ng-click="vm.editPublication(publication)">Endre</a></td>
+                    <td><a class="interact" ng-click="vm.editPublication(publication)">Endre</a></td>
                 </tr>
                 </tbody>
             </table>

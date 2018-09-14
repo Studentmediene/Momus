@@ -67,7 +67,7 @@ class PersonWidgetCtrl implements angular.IController {
     }
 
     public close() {
-        if(this.popupElement == null) {
+        if (this.popupElement == null) {
             return;
         }
         this.popupElement.remove();
@@ -84,9 +84,7 @@ export default angular
         controller: PersonWidgetCtrl,
         controllerAs:  'vm',
         template: `
-            <span class="person-widget-text" ng-click="vm.open($event)">
-                {{vm.person.name}}
-            </span>`,
+            <span class="person-widget-text" ng-click="vm.open($event)">{{vm.person.name}}</span>`,
         transclude: true,
     })
     .component('personWidgetPopup', {
@@ -98,4 +96,4 @@ export default angular
         },
         template: require('./personWidgetPopup.html'),
         controllerAs: 'vm',
-    })
+    });
