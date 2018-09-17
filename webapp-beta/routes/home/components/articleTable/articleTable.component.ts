@@ -7,10 +7,11 @@ export default angular.module('momusApp.routes.home.articleTable', [])
         },
         template: // html
         `
-        <table class="uk-table uk-table-striped uk-table-small">
+        <table class="uk-table uk-table-striped uk-table-small" style="font-size: 80%">
             <thead>
                 <tr>
                     <th>Navn</th>
+                    <th>Journalister</th>
                     <th>Redaksjon</th>
                     <th>Status</th>
                     <th>Utgave</th>
@@ -21,6 +22,14 @@ export default angular.module('momusApp.routes.home.articleTable', [])
                     <td>
                         <a ui-sref="article.details({id: article.id})">{{ article.name }}</a>
                         <span title="Antall tegn"> ({{ article.content_length }})</span>
+                    </td>
+                    <td>
+                        <ul class="uk-list person-list">
+                            <li ng-repeat="person in article.journalists">
+                                <person-widget person="person"></person-widget>
+                            </li>
+                            <li><i uk-tooltip="Ekstern">{{article.external_author}}</i></li>
+                        </ul>
                     </td>
                     <td ng-style="{'background-color': article.section.color}">
                         {{ article.section.name }}

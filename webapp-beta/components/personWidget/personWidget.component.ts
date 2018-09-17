@@ -83,8 +83,11 @@ export default angular
         },
         controller: PersonWidgetCtrl,
         controllerAs:  'vm',
-        template: `
-            <span class="person-widget-text" ng-click="vm.open($event)">{{vm.person.name}}</span>`,
+        template: // html
+        `
+        <span class="person-widget-text" ng-click="vm.open($event)">
+            {{vm.person.name}}
+        </span>`,
         transclude: true,
     })
     .component('personWidgetPopup', {

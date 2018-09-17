@@ -105,3 +105,9 @@ textarea {
         padding: 20px;
     }
 }
+
+.person-list {
+    > li {
+        margin-top: 0 !important;
+    }
+}
