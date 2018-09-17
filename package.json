@@ -15,6 +15,7 @@
     "@babel/preset-env": "^7.0.0",
     "@types/angular": "~1.6.50",
     "@types/angular-resource": "~1.5.14",
+    "@types/angular-cookies": "~1.4.5",
     "@types/node": "^10.9.4",
     "@types/uikit": "^2.27.6",
     "@types/sockjs-client": "~1.1.0",

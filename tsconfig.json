@@ -18,7 +18,7 @@
         "./node_modules/@types",
         "./webapp-beta"
     ],
-    "types": ["uikit", "angular", "angular-resource", "node", "typings"]
+    "types": ["uikit", "angular", "angular-resource", "angular-cookies", "node", "typings"]
   },
   "files": [
       "./webapp-beta/app.ts"
