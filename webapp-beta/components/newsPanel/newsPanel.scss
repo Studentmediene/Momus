@@ -6,6 +6,7 @@
         padding: 5px 5px 0 5px;
         align-items: center;
         background: $global-muted-background;
+        cursor: pointer;
         
         .news-title {
             font-weight: bold;
@@ -22,6 +23,7 @@
         font-style: italic;
         border-bottom: 1px solid lightgrey;
         background: $global-muted-background;
+        cursor: pointer;
     }
 
     .news-content {
