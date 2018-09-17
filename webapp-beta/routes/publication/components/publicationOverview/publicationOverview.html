@@ -1,6 +1,6 @@
 <div uk-grid>
     <!-- left panel -->
-    <div class="uk-width-1-2@m">
+    <div class="uk-width-3-5@m">
         <panel icon="'fas fa-newspaper'" header="'Utgaver'" no-body-padding="true" type="'primary'">
             <extra-header-content>
                 <select-dropdown
@@ -15,31 +15,54 @@
                     <tr>
                         <th>Navn</th>
                         <th>Utgivelsesdato</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th class="uk-table-shrink"></th>
+                        <th class="uk-table-shrink"></th>
+                        <th class="uk-table-shrink"></th>
                     </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="publication in vm.publications 
                                 | filter:vm.isInCurrentYear 
                                 | orderBy:'release_date':true
-                                | startFrom:(vm.currentPage-1)*vm.pageSize 
+                                | startFrom:(vm.currentPage)*vm.pageSize 
                                 | limitTo:vm.pageSize"
                 >
                     <td>{{publication.name}}</td>
-                    <td>{{publication.release_date | date: 'yyyy-MM-dd'}}</td>
+                    <td>{{publication.release_date | date: 'dd/MM/yyyy'}}</td>
                     <td><a ui-sref="article.search({publication: publication.id})">Artikler</a></td>
                     <td><a ui-sref="publication.disposition({id: publication.id})">Disposisjon</a></td>
                     <td><a class="interact" ng-click="vm.editPublication(publication)">Endre</a></td>
                 </tr>
                 </tbody>
             </table>
+            <ul class="uk-pagination uk-flex-center" ng-hide="vm.news.length === 0">
+                <li>
+                    <span
+                        style="cursor: pointer;"
+                        ng-click="vm.currentPage = vm.currentPage - 1"
+                        ng-class="{'uk-disabled': vm.currentPage === 0}"
+                    >
+                        <span uk-pagination-previous></span>
+                    </span>
+                </li>
+                <li class="uk-active">
+                    <span>{{vm.currentPage + 1}}</span>
+                </li>
+                <li>
+                    <span
+                        style="cursor: pointer;"
+                        ng-click="vm.currentPage = vm.currentPage + 1"
+                        ng-class="{'uk-disabled': !vm.hasNextPage()}"
+                    >
+                        <span uk-pagination-next></span>
+                    </span>
+                </li>
+            </ul>
         </panel>
     </div>
 
     <!-- right panel, for editing/new -->
-    <div class="uk-width-1-2@m">
+    <div class="uk-width-2-5@m">
         <panel
             icon="'fas fa-edit'"
             header="vm.editing.id != null ? 'Rediger ' + vm.editing.name : 'Ny utgave'"
