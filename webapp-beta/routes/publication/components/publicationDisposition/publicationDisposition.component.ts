@@ -46,9 +46,9 @@ export default angular.module('momusApp.routes.publication.publicationDispositio
     .factory('getDispWidth', () => {
         const columnWidthTemplates: ColumnWidthTemplates = {
             page_nr:
-                {scope: 'page', width: 20},
+                {scope: 'page', width: 25},
             dropdown:
-                {scope: 'article', width: 25},
+                {scope: 'article', width: 20},
             name: {
                 scope: 'article',
                 part: 0.25,
