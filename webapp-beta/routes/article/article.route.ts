@@ -15,7 +15,7 @@ import { PersonResource } from '../../resources/person.resource';
 import { Article } from '../../models/Article';
 import { createArticleSearchParams, ArticleSearchParams } from '../../models/ArticleSearchParams';
 import { PublicationResource } from 'resources/publication.resource';
-import { Publication } from 'models/Publication';
+import CookieService from 'services/cookies.service';
 
 const routeModule = angular
     .module('momusApp.routes.article', [
@@ -106,6 +106,9 @@ const routeModule = angular
                         personResource.query({articleIds: [article.id]}).$promise,
                     publications: (publicationResource: PublicationResource) =>
                         publicationResource.query(),
+                },
+                onEnter: (cookieService: CookieService, article: Article) => {
+                    cookieService.addToRecentArticles(article);
                 },
             });
     })

@@ -63,7 +63,7 @@ export interface ArticleResource extends ng.resource.IResourceClass<Article> {
     ): object[];
 
     multiple(
-        params: {ids: string[]},
+        params: {ids: number[]},
         success?: (articles: Article[]) => void,
         error?: errFunc,
     ): Article[];

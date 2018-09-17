@@ -46,15 +46,15 @@ export const createArticleSearchParams = (
 };
 
 export class ArticleSearchParams {
-    public publication: Publication;
-    public section: Section;
-    public status: ArticleStatus;
-    public review: ReviewStatus;
-    public free: string;
-    public persons: Person[];
+    public publication?: Publication;
+    public section?: Section;
+    public status?: ArticleStatus;
+    public review?: ReviewStatus;
+    public free?: string;
+    public persons?: Person[];
     public page_number: number;
     public page_size: number;
-    public archived: boolean;
+    public archived?: boolean;
 
     public stringify() {
         return {
