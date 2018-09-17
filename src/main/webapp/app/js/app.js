@@ -66,7 +66,13 @@ angular.module('momusApp', [
                     },
                     favouriteSectionArticles: (Article, loggedInPerson) => {
                         return loggedInPerson.favouritesection ?
-                            Article.search({}, {section: loggedInPerson.favouritesection.id}).$promise :
+                            Article.search(
+                                {}, 
+                                {
+                                    section: loggedInPerson.favouritesection.id,
+                                    page_number: 1,
+                                    page_size: 9,
+                                }).$promise :
                             [];
                     },
                     activePublication: Publication => Publication.active({projection: 'simple'}).$promise
