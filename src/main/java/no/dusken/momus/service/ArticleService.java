@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.*;
 import no.dusken.momus.model.websocket.Action;
-import no.dusken.momus.service.drive.GoogleDriveService;
+import no.dusken.momus.service.remotedocument.drive.GoogleDriveService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
 import no.dusken.momus.service.repository.*;

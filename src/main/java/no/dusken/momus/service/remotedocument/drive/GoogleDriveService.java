@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package no.dusken.momus.service.drive;
+package no.dusken.momus.service.remotedocument.drive;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;

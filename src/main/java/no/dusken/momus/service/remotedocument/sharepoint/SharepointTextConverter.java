@@ -1,54 +1,35 @@
-/*
- * Copyright 2016 Studentmediene i Trondheim AS
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package no.dusken.momus.service.drive;
-
-import org.apache.commons.text.StringEscapeUtils;
-import org.springframework.stereotype.Service;
+package no.dusken.momus.service.remotedocument.sharepoint;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Converts content from a Google Drive Document
- * to our representation
- */
-@Service
-public class GoogleDocsTextConverter {
+import org.apache.commons.text.StringEscapeUtils;
 
-    Pattern body = Pattern.compile("<body.*?>(.*)</body>");
+public class SharepointTextConverter {
+    Pattern body = Pattern.compile("<body.*?><div.*?>(.*)</div></body>");
     Pattern css = Pattern.compile("<style type=\"text/css\">(.*)</style>");
-    Pattern italicStyleName = Pattern.compile("\\.([A-Za-z][^{]*?)\\{[^}]*font-style:italic[^}]*}");
-    Pattern boldStyleName = Pattern.compile("\\.([A-Za-z][^{]*?)\\{[^}]*font-weight:700[^}]*}");
-
+    Pattern boldAndItalicsStyle = Pattern.compile("<span[^>]*style=\"[^\"]*font-weight:bold;font-style:italic[^>]*>([^<]*)</span>");
+    Pattern italicStyle = Pattern.compile("<span[^>]*style=\"[^\"]*font-style:italic[^>]*>([^<]*)</span>");
+    Pattern boldStyle = Pattern.compile("<span[^>]*style=\"[^\"]*font-weight:bold[^>]*>([^<]*)</span>");
 
     Pattern aTags = Pattern.compile("<a[^>]*?></a>");
     Pattern classes = Pattern.compile(" class=\".*?\"");
     Pattern spans = Pattern.compile("</?span.*?>");
-    Pattern emptyP = Pattern.compile("<p>\\s?</p>");
+    Pattern empty = Pattern.compile("<[pbi]>\\s?</[pbi]>");
 
-    ArrayList<Pattern> hTags = initTitles();
+    List<Pattern> hTags = initTitles();
 
     Pattern dashes = Pattern.compile("--");
     Pattern inlineComments = Pattern.compile("<sup>.*?</sup>");
     Pattern spaces = Pattern.compile("&nbsp;");
     Pattern comments = Pattern.compile("<div><p>.*?</p></div>");
 
-    Pattern lists = Pattern.compile(" start=\".*?\"");
+    Pattern title = Pattern.compile("<p [^>]*class=\"[^\"]*Heading1[^>]*>([^<]*)</p>");
+    Pattern preamble = Pattern.compile("<p [^>]*class=\"[^\"]*Heading2[^>]*>([^<]*)</p>");
+    Pattern subtitle = Pattern.compile("<p [^>]*class=\"[^\"]*Heading3[^>]*>([^<]*)</p>");
+    Pattern lists = Pattern.compile("<p [^>]*class=\"[^\"]*ListParagraph[^>]*>([^<]*)</p>");
 
     Pattern table = Pattern.compile("<table[^>]*?>.*?</table>");
     Pattern img = Pattern.compile("<img.*?>");
@@ -62,23 +43,15 @@ public class GoogleDocsTextConverter {
     Pattern unicodeToGt = Pattern.compile(gtUnicode);
 
     public String convert(String input) {
-        String body = extractBody(input);
-        String css = extractCss(input);
+        String out = extractBody(input);
 
-        String out;
-
-        out = findItalicsAndBold(body, css);
-
-        out = removeEmptyATags(out);
-        out = removeClasses(out);
-        out = removeSpans(out);
-        out = removeComments(out);
-        out = removeInvalidContent(out);
-        out = removeListAttributes(out);
-        out = removeEmptyPTags(out);
+        out = findItalicsAndBold(out);
         out = unescapeHtml(out);
+        out = removeSpans(out);
         out = replaceTitles(out);
-        out = replaceDashes(out);
+        out = removeEmptyTags(out);
+        out = removeListAttributes(out);
+        out = removeClasses(out);
 
         return out;
     }
@@ -104,8 +77,8 @@ public class GoogleDocsTextConverter {
         return  in;
     }
 
-    private ArrayList<Pattern> initTitles(){
-        ArrayList<Pattern> hTags = new ArrayList<>();
+    private List<Pattern> initTitles(){
+        List<Pattern> hTags = new ArrayList<>();
         for(int i=1; i<5; i++){
             hTags.add(Pattern.compile("<h" + i + " [^>]*>"));
         }
@@ -120,43 +93,21 @@ public class GoogleDocsTextConverter {
      *
      * The classnames change each time, so need to dynamicall find it and change the span to <i> or <b>
      */
-    private String findItalicsAndBold(String body, String css) {
-        Matcher italicsMatcher = italicStyleName.matcher(css);
-        Matcher boldMatcher = boldStyleName.matcher(css);
+    private String findItalicsAndBold(String body) {
+        Matcher spanMatcherBoldAndItalics = boldAndItalicsStyle.matcher(body);
+        body = spanMatcherBoldAndItalics.replaceAll("<b><i>$1</i></b>");
 
-        int start = 0;
-        ArrayList<Pattern> boldClasses = new ArrayList<>();
-        while(boldMatcher.find(start)) {
-            boldClasses.add(Pattern.compile("<span class=\"[^\"]*" + boldMatcher.group(1) + "[^\"]*\">(.*?)</span>"));
-            start = boldMatcher.start() + 1;
-        }
+        Matcher spanMatcherBold = boldStyle.matcher(body);
+        body = spanMatcherBold.replaceAll("<b>$1</b>");
 
-        start = 0;
-        while (italicsMatcher.find(start)) {
-            Pattern italicClasses = Pattern.compile("<span class=\"[^\"]*" + italicsMatcher.group(1) + "[^\"]*\">(.*?)</span>");
-            Matcher spanMatcherItalics = italicClasses.matcher(body);
-            
-            StringBuffer sb = new StringBuffer();
-            while(spanMatcherItalics.find()) {
-                boolean italicbold = false;
-                int boldStart = 0;
-                for(Pattern boldClass : boldClasses) {
-                    Matcher spanMatcherBold = boldClass.matcher(spanMatcherItalics.group());
-                    if(spanMatcherBold.matches()) {
-                        italicbold = true;
-                    }
-                }
-                String replaceString = italicbold ? "<i><b>$1</b></i>" : "<i>$1</i>";
-                spanMatcherItalics.appendReplacement(sb, replaceString);
-            }
-            body = spanMatcherItalics.appendTail(sb).toString();
-            start = italicsMatcher.start() + 1;
-        }
+        Matcher spanMatcherItalics = italicStyle.matcher(body);
+        body = spanMatcherItalics.replaceAll("<i>$1</i>");
 
-        for (Pattern boldClass : boldClasses) {
-            Matcher spanMatcherBold = boldClass.matcher(body);
-            body = spanMatcherBold.replaceAll("<b>$1</b>");
-        }
+        Matcher uselessBold = Pattern.compile("</b><b>").matcher(body);
+        body = uselessBold.replaceAll("");
+
+        Matcher uselessItalic = Pattern.compile("</i><i>").matcher(body);
+        body = uselessItalic.replaceAll("");
 
         return body;
     }
@@ -183,19 +134,24 @@ public class GoogleDocsTextConverter {
      * Removing ids from header tags
      */
     private String replaceTitles(String in){
-        String out = in;
-        for(int i = 0; i < 4; i++){
-            Matcher m = hTags.get(i).matcher(out);
-            out = m.replaceAll("<h" + (i + 1) + ">");
-        }
+        Matcher h1 = title.matcher(in);
+        String out = h1.replaceAll("<h1>$1</h1>");
+
+        Matcher h2 = preamble.matcher(out);
+        out = h2.replaceAll("<h2>$1</h2>");
+
+        Matcher h3 = subtitle.matcher(out);
+        out = h3.replaceAll("<h3>$1</h3>");
+
         return out;
+
     }
 
     /**
      * In case someone likes to have much space between their paragraphs..
      */
-    private String removeEmptyPTags(String in) {
-        Matcher m = emptyP.matcher(in);
+    private String removeEmptyTags(String in) {
+        Matcher m = empty.matcher(in);
         return m.replaceAll("");
     }
 

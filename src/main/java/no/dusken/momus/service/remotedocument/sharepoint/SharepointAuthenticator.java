@@ -1,4 +1,4 @@
-package no.dusken.momus.service.sharepoint;
+package no.dusken.momus.service.remotedocument.sharepoint;
 
 import java.io.File;
 import java.io.FileInputStream;

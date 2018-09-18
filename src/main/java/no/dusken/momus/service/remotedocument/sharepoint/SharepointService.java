@@ -1,4 +1,4 @@
-package no.dusken.momus.service.sharepoint;
+package no.dusken.momus.service.remotedocument.sharepoint;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,12 +30,13 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
-import no.dusken.momus.service.sharepoint.models.DriveItem;
-import no.dusken.momus.service.sharepoint.models.DriveItemChildren;
+import no.dusken.momus.service.remotedocument.RemoteDocumentService;
+import no.dusken.momus.service.remotedocument.sharepoint.models.DriveItem;
+import no.dusken.momus.service.remotedocument.sharepoint.models.DriveItemChildren;
 
 @Slf4j
 @Service
-public class SharepointService {
+public class SharepointService implements RemoteDocumentService {
 
     @Value("${sharepoint.syncEnabled}")
     private boolean enabled;
@@ -154,6 +155,10 @@ public class SharepointService {
         String html = out.toString();
         
         return this.textConverter.convert(html);
+    }
+
+    public String getServiceName() {
+        return "SHAREPOINT";
     }
 
     private RestTemplate setupRestTemplate(String authToken) {

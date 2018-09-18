@@ -1,4 +1,4 @@
-package no.dusken.momus.service.sharepoint.models;
+package no.dusken.momus.service.remotedocument.sharepoint.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -12,6 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Entity {
-    private User user;
+public class User {
+    private String id;
+    private String displayName;
 }

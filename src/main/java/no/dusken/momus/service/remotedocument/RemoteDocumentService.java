@@ -6,7 +6,7 @@ public interface RemoteDocumentService {
     /**
      * @return The ID of the created document
      */
-    String createDocument(String name);
+    RemoteDocument createDocument(String name);
 
     String getServiceName();
 }
