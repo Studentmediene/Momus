@@ -3,7 +3,6 @@ package no.dusken.momus.service.sharepoint;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.cert.CertificateFactory;
@@ -18,6 +17,7 @@ import com.microsoft.aad.adal4j.AuthenticationContext;
 import com.microsoft.aad.adal4j.AuthenticationResult;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -36,18 +36,18 @@ public class SharepointAuthenticator {
     @Value("${sharepoint.resource}")
     private String RESOURCE;
 
-    private PrivateKey getPrivate(String filename) throws Exception {
-        byte[] keyBytes = Files.readAllBytes(Paths.get(filename));
+    private PrivateKey getPrivate(File file) throws Exception {
+        byte[] keyBytes = Files.readAllBytes(file.toPath());
 
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory kf = KeyFactory.getInstance("RSA");
         return kf.generatePrivate(spec);
     }
 
-    private X509Certificate getCertificate(String filename) throws Exception {
+    private X509Certificate getCertificate(File file) throws Exception {
         CertificateFactory fact = CertificateFactory.getInstance("X.509");
 
-        FileInputStream f = new FileInputStream(new File(filename));
+        FileInputStream f = new FileInputStream(file);
 
         X509Certificate cer = (X509Certificate) fact.generateCertificate(f);
 
@@ -55,8 +55,8 @@ public class SharepointAuthenticator {
     }
 
     private AsymmetricKeyCredential getCredentials() throws Exception {
-        PrivateKey priv = getPrivate("/home/egrimstad/studentmediene/Momus/src/main/resources/key.der");
-        X509Certificate cert = getCertificate("/home/egrimstad/studentmediene/Momus/src/main/resources/cert.pem");        
+        PrivateKey priv = getPrivate(new ClassPathResource("key.der").getFile());
+        X509Certificate cert = getCertificate(new ClassPathResource("cert.pem").getFile());        
         return AsymmetricKeyCredential.create(CLIENT_ID, priv, cert);
     }
 
