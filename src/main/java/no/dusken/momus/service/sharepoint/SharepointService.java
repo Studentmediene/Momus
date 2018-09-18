@@ -36,6 +36,10 @@ import no.dusken.momus.service.sharepoint.models.DriveItemChildren;
 @Slf4j
 @Service
 public class SharepointService {
+
+    @Value("${sharepoint.syncEnabled}")
+    private boolean enabled;
+
     @Value("${sharepoint.resource}")
     private String RESOURCE;
 
@@ -61,11 +65,18 @@ public class SharepointService {
 
     @PostConstruct
     public void setup() {
+        if (!enabled) {
+            log.info("Not setting up Sharepoint");
+            return;
+        }
+
+        log.info("Setting up Sharepoint");
+
         AuthenticationResult authToken;
         try {
             authToken = sharepointAuthenticator.getAccessToken();
         } catch (Exception e) {
-            log.error("Failed to authenticate with SharePoint {}", e);
+            log.error("Failed to authenticate with Sharepoint {}", e);
             return;
         }
 

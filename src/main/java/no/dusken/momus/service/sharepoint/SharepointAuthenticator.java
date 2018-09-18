@@ -71,7 +71,7 @@ public class SharepointAuthenticator {
         Future<AuthenticationResult> future = context.acquireToken(RESOURCE, credentials, null);
         result = future.get();
 
-        log.info("SharePoint authentication successful!");
+        log.info("Sharepoint authentication successful!");
 
         return result;
     }
