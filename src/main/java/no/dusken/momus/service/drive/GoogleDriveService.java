@@ -164,7 +164,6 @@ public class GoogleDriveService {
     @Scheduled(cron = "0 * * * * *")
     public void sync() {
         if (!enabled) {
-            log.info("Not syncing Google Drive");
             return;
         }
         log.debug("Starting Google Drive sync");

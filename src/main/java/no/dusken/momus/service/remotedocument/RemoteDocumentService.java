@@ -9,6 +9,4 @@ public interface RemoteDocumentService {
     String createDocument(String name);
 
     String getServiceName();
-
-    String 
 }
