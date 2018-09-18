@@ -31,6 +31,8 @@ import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.service.ArticleService;
 import no.dusken.momus.service.KeyValueService;
+import no.dusken.momus.service.remotedocument.RemoteDocument;
+import no.dusken.momus.service.remotedocument.RemoteDocumentService;
 import no.dusken.momus.service.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,7 +48,7 @@ import java.util.*;
 
 @Service
 @Slf4j
-public class GoogleDriveService {
+public class GoogleDriveService implements RemoteDocumentService {
 
     @Value("${drive.syncEnabled}")
     private boolean enabled;
@@ -72,7 +74,7 @@ public class GoogleDriveService {
     private Drive drive = null;
 
     @PostConstruct
-    private void setup() {
+    public void setup() {
         if (!enabled) {
             log.info("Not setting up Google Drive");
             return;
@@ -116,7 +118,7 @@ public class GoogleDriveService {
      * Creates a new Google Document for the name
      * and returns the file. Returns null if an error occurred
      */
-    public File createDocument(String name) {
+    public RemoteDocument createDocument(String name) {
         File file = null;
         try {
             file = createFile(name);
@@ -125,7 +127,7 @@ public class GoogleDriveService {
             log.error("Couldn't create Google Drive file for article", e);
         }
 
-        return file;
+        return new GoogleDocument(file);
     }
 
     private File createFile(String name) throws IOException {
@@ -180,6 +182,10 @@ public class GoogleDriveService {
         }
 
         log.debug("Done syncing, updated {} articles", articles.size());
+    }
+
+    public String getServiceName() {
+        return "GOOGLE_DRIVE";
     }
 
     /**

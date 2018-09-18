@@ -16,11 +16,11 @@
 
 package no.dusken.momus.service;
 
-import com.google.api.services.drive.model.File;
 import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.*;
 import no.dusken.momus.model.websocket.Action;
+import no.dusken.momus.service.remotedocument.RemoteDocument;
 import no.dusken.momus.service.remotedocument.drive.GoogleDriveService;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
@@ -86,7 +86,7 @@ public class ArticleService {
 
     public Article saveArticle(Article article) {
         if(driveEnabled) {
-            File document = googleDriveService.createDocument(article.getName());
+            RemoteDocument document = googleDriveService.createDocument(article.getName());
 
             if (document == null) {
                 throw new RestException("Couldn't create article, Google Docs failed", 500);

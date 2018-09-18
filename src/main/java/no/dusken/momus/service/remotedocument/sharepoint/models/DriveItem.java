@@ -2,6 +2,7 @@ package no.dusken.momus.service.remotedocument.sharepoint.models;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Getter;
@@ -23,4 +24,9 @@ public class DriveItem implements RemoteDocument {
     private LocalDate lastModifiedDateTime;
     private FileResource file;
     private FolderResource folder;
+
+    @JsonIgnore
+    public String getUrl() {
+        return webUrl;
+    }
 }

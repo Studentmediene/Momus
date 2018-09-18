@@ -68,15 +68,6 @@ public class SharepointTextConverter {
         return in;
     }
 
-    private String extractCss(String in) {
-        Matcher m = css.matcher(in);
-
-        if (m.find()) {
-            return m.group(1);
-        }
-        return  in;
-    }
-
     private List<Pattern> initTitles(){
         List<Pattern> hTags = new ArrayList<>();
         for(int i=1; i<5; i++){
@@ -110,14 +101,6 @@ public class SharepointTextConverter {
         body = uselessItalic.replaceAll("");
 
         return body;
-    }
-
-    /**
-     * Remove <a name=*></a> stuff google inserts everywhere
-     */
-    private String removeEmptyATags(String in) {
-        Matcher m = aTags.matcher(in);
-        return m.replaceAll("");
     }
 
     private String removeClasses(String in) {
@@ -156,52 +139,11 @@ public class SharepointTextConverter {
     }
 
     /**
-     * Comments inserted should be removed as they don't belong to the text
-     * A comment adds a <sup>-reference to the text, and then the comment
-     * itself at the bottom
-     */
-    private String removeComments(String in) {
-        Matcher m = inlineComments.matcher(in);
-        String out = m.replaceAll("");
-
-        // Spaces inside a marked text are written as &nbsp;
-        m = spaces.matcher(out);
-        out = m.replaceAll(" ");
-
-        m = comments.matcher(out);
-        out = m.replaceAll("");
-
-        return out;
-    }
-
-    /**
      * Removes some stuff from the lists
      */
     private String removeListAttributes(String in) {
         Matcher m = lists.matcher(in);
         return m.replaceAll("");
-    }
-
-    /**
-     * Removes images and tables, should possibly remove more stuff
-     * but try to keep the contents, not just the formatting.
-     */
-    private String removeInvalidContent(String in) {
-        Matcher m = table.matcher(in);
-        String out = m.replaceAll("");
-
-        m = img.matcher(out);
-        out = m.replaceAll(" ");
-
-        return out;
-    }
-
-    /*
-     * Replaces "--" with an en-dash
-     */
-    private String replaceDashes(String in) {
-        Matcher m = dashes.matcher(in);
-        return m.replaceAll("–");
     }
 
     /**
