@@ -63,6 +63,7 @@
         <google-drive.version>v2-rev277-1.22.0</google-drive.version>
         <adal4j.version>1.6.1</adal4j.version>
         <commons-text.version>1.4</commons-text.version>
+        <xdocreport.version>1.0.6</xdocreport.version>
         <javax-servlet.version>3.1.0</javax-servlet.version>
         <jetty.version>9.4.6.v20170531</jetty.version>
         <maven-war-plugin.version>3.1.0</maven-war-plugin.version>
@@ -289,6 +290,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
             <version>${commons-text.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.opensagres.xdocreport</groupId>
+            <artifactId>org.apache.poi.xwpf.converter.xhtml</artifactId>
+            <version>1.0.6</version>
         </dependency>
 
         <!-- Only for the redirect in index.jsp ... -->

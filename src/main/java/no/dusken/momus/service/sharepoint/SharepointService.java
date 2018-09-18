@@ -1,96 +1,167 @@
 package no.dusken.momus.service.sharepoint;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.KeyFactory;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import com.microsoft.aad.adal4j.AsymmetricKeyCredential;
-import com.microsoft.aad.adal4j.AuthenticationContext;
 import com.microsoft.aad.adal4j.AuthenticationResult;
 
+import org.apache.poi.xwpf.converter.xhtml.XHTMLConverter;
+import org.apache.poi.xwpf.converter.xhtml.XHTMLOptions;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.ClientHttpRequestExecution;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
+import no.dusken.momus.service.sharepoint.models.DriveItem;
+import no.dusken.momus.service.sharepoint.models.DriveItemChildren;
 
-@Service
 @Slf4j
+@Service
 public class SharepointService {
+    @Value("${sharepoint.resource}")
+    private String RESOURCE;
 
-    private final static String AUTHORITY = "https://login.microsoftonline.com/studentmediene.onmicrosoft.com";
-    private final static String CLIENT_ID = "a5e54487-6604-4d06-8085-1898b53aebdb";
-    private final static String RESOURCE = "https://studentmediene.onmicrosoft.com/595e473b-6688-4fe5-a2dc-24506734f207";
+    @Value("${sharepoint.siteid}")
+    private String SITE_ID;
 
-    private static PrivateKey getPrivate(String filename) throws Exception {
-        byte[] keyBytes = Files.readAllBytes(Paths.get(filename));
+    @Value("${sharepoint.driveid}")
+    private String DRIVE_ID;
 
-        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
-        return kf.generatePrivate(spec);
-    }
+    private final String DRIVE_URL = "{resource}/v1.0/drives/{driveId}";
+    private final String ITEM_URL = DRIVE_URL + "/items/{itemId}";
+    private final String CHILDREN_URL = ITEM_URL + "/children";
+    private final String CONTENT_URL = ITEM_URL + "/content";
 
-    private static X509Certificate getCertificate(String filename) throws Exception {    
-        CertificateFactory fact = CertificateFactory.getInstance("X.509");
+    private RestTemplate restTemplate;
 
-        FileInputStream f = new FileInputStream(new File(filename));
+    private SharepointAuthenticator sharepointAuthenticator;
+    private SharepointTextConverter textConverter;
 
-        X509Certificate cer = (X509Certificate) fact.generateCertificate(f);
-
-        return cer;
-    }
-
-    private static AsymmetricKeyCredential getCredentials() throws Exception {
-        PrivateKey priv = getPrivate("/home/egrimstad/studentmediene/Momus/src/main/resources/key.der");
-        X509Certificate cert = getCertificate("/home/egrimstad/studentmediene/Momus/src/main/resources/cert.pem");        
-        return AsymmetricKeyCredential.create(CLIENT_ID, priv, cert);
+    public SharepointService(SharepointAuthenticator sharepointAuthenticator) {
+        this.sharepointAuthenticator = sharepointAuthenticator;
     }
 
     @PostConstruct
     public void setup() {
-        log.info("Setting up Sharepoint integration");
-
-        AuthenticationContext context;
-        AuthenticationResult result;
-        ExecutorService service;
-        
+        AuthenticationResult authToken;
         try {
-            service = Executors.newFixedThreadPool(1);
-            context = new AuthenticationContext(AUTHORITY, true, service);
-            AsymmetricKeyCredential credentials = getCredentials();
-            Future<AuthenticationResult> future = context.acquireToken(RESOURCE, credentials, null);
-
-            result = future.get();
+            authToken = sharepointAuthenticator.getAccessToken();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Failed to authenticate with SharePoint {}", e);
             return;
         }
 
-        try {
-            URL url = new URL("https://studentmediene.sharepoint.com/site/_api/web/lists");
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            con.setRequestProperty("Authorization", "Bearer " + result.getAccessToken());
+        this.restTemplate = setupRestTemplate(authToken.getAccessToken());
+        this.textConverter = new SharepointTextConverter();
+    }
 
-            System.out.println(con.getRepon);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public DriveItem getRootDriveItem() {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("itemId", "root");
+        return this.restTemplate.getForObject(ITEM_URL, DriveItem.class, parameters);
+    }
+
+    public DriveItem getByItemId(String itemId) {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("itemId", itemId);
+        return this.restTemplate.getForObject(ITEM_URL, DriveItem.class, parameters);
+    }
+
+    public List<DriveItem> getChildren(DriveItem item) {
+        if(item.getFolder() == null) {
+            throw new IllegalArgumentException(
+                String.format("Can't get children of an item %s, it is not a folder", item.getName())
+            );
         }
+        log.info("Getting children for item {}", item.getId());
+
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("itemId", item.getId());
+        DriveItemChildren children = this.restTemplate.getForObject(
+            CHILDREN_URL,
+            DriveItemChildren.class,
+            parameters
+        );
+        return children.getValue();
+    }
+
+    public DriveItem createDocument(String name) {
+        log.info("Creating sharepoint file with name {}", name);
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("itemId", "root");
+
+        String req = "{\"name\": \"" + name + ".docx\",\"file\": {}}";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>(req, headers);
+
+        try {
+            return this.restTemplate.postForObject(
+                CHILDREN_URL,
+                entity,
+                DriveItem.class,
+                parameters
+            );
+        } catch(HttpClientErrorException e) {
+            if(e.getStatusCode().equals(HttpStatus.CONFLICT)) {
+                String newName = name + "_new";
+                log.info("Naming conflict of new file {}, giving new name {}", name, newName);
+                return createDocument(newName);
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    public String getItemContentAsHtml(DriveItem item) throws IOException {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("itemId", item.getId());
+        Resource res = this.restTemplate.getForObject(CONTENT_URL, Resource.class, parameters);
+        XWPFDocument doc = new XWPFDocument(res.getInputStream());
+        OutputStream out = new ByteArrayOutputStream();
+
+        XHTMLConverter.getInstance().convert(doc, out, XHTMLOptions.create());
+        String html = out.toString();
+        
+        return this.textConverter.convert(html);
+    }
+
+    private RestTemplate setupRestTemplate(String authToken) {
+        RestTemplate rest = new RestTemplate();
+
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("driveId", DRIVE_ID);
+        parameters.put("resource", RESOURCE);
+        rest.setDefaultUriVariables(parameters);
+        rest.setInterceptors(Collections.singletonList(new ClientHttpRequestInterceptor(){
+        
+            @Override
+            public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+                    throws IOException {
+                request.getHeaders().set("Authorization", "Bearer " + authToken);
+                return execution.execute(request, body);
+            }
+        }));
+
+        return rest;
     }
 }
