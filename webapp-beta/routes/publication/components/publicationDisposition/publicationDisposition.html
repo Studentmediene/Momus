@@ -41,7 +41,11 @@
             <a class="uk-button uk-button-primary uk-button-small" href="/api/publications/{{vm.publication.id}}/colophon">
                 <i class="fas fa-file-alt"></i> Generer kolofon
             </a>
-            <button class="uk-button uk-button-primary uk-button-small" ng-click="vm.hideAllButtonRows()">
+            <button
+                class="uk-button uk-button-primary uk-button-small"
+                ng-click="vm.hideAllButtonRows()"
+                ng-disabled="vm.openButtonRows.length === 0"
+            >
                 <i class="fas fa-caret-up"></i> Lukk ekstraknapp-rader
             </button>
             <page-adder
@@ -109,13 +113,13 @@
                         </div>
                         
                     </div>
-                    <div><b>Reklamer</b></div>
+                    <div><b>Annonser</b></div>
                     <div class="d-article-input">
                         <multiselect-dropdown
                             ng-model="newAdverts"
                             items="vm.adverts"
                             label="'name'"
-                            placeholder="Reklamer"
+                            placeholder="Annonser"
                         >
                         </multiselect-dropdown>
                         <div>
@@ -137,7 +141,7 @@
                                 <div class="d-table-cell" ng-style="vm.columnWidths.dropdown">
                                     <button
                                         class="uk-button uk-button-primary button-xs"
-                                        ng-click="showButtons = !showButtons"
+                                        ng-click="vm.toggleButtonRow(this)"
                                     >
                                         <i class="fas fa-arrows-alt-v"></i>
                                     </button>
@@ -230,7 +234,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div ng-show="showButtons" class="extra-button-line">
+                        <div ng-show="showButtonRow" class="extra-button-line">
                             <a href="/api/article/{{article.id}}/indesignfile" class="uk-button uk-button-primary button-xs">
                                 <i class="fas fa-file"></i>
                                 InDesign fil

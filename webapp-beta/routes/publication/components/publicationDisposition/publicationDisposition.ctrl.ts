@@ -23,6 +23,10 @@ interface PageScope extends angular.IScope {
     editPage: boolean;
 }
 
+interface ArticleScope extends angular.IScope {
+    showButtonRow: boolean;
+}
+
 /* @ngInject */
 export default class PublicationDispositionCtrl implements angular.IController {
     public maxNewPages: number = 100;
@@ -42,6 +46,8 @@ export default class PublicationDispositionCtrl implements angular.IController {
     public pagesLookup: { [index: number]: Page };
     public articlesLookup: { [index: number]: Article };
     public advertsLookup: { [index: number]: Advert };
+
+    public openButtonRows: ArticleScope[];
 
     private pageResource: PageResource;
     private articleResource: ArticleResource;
@@ -78,6 +84,8 @@ export default class PublicationDispositionCtrl implements angular.IController {
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.$window = $window;
+
+        this.openButtonRows = [];
     }
 
     public $onInit() {
@@ -121,17 +129,17 @@ export default class PublicationDispositionCtrl implements angular.IController {
                 }
             },
             onAdvert: (data) => {
-                // const {entity, action} = data;
-                // switch (action) {
-                //     case 'CREATE':
-                //         adverts.push(entity);
-                //         this.advertsLookup[entity.id] = entity;
-                //         break;
-                //     case 'UPDATE':
-                //         adverts.splice(adverts.findIndex(a => a.id === entity.id), 1, entity);
-                //         this.advertsLookup[entity.id] = entity;
-                //         break;
-                // }
+                const {entity, action} = data;
+                switch (action) {
+                    case 'CREATE':
+                        this.adverts.push(entity);
+                        this.advertsLookup[entity.id] = entity;
+                        break;
+                    case 'UPDATE':
+                        this.adverts.splice(this.adverts.findIndex((a) => a.id === entity.id), 1, entity);
+                        this.advertsLookup[entity.id] = entity;
+                        break;
+                }
             },
             onPageOrder: (data) => this.pageOrder.order = data.entity.order,
             onPageContent: (data) => {
@@ -139,7 +147,7 @@ export default class PublicationDispositionCtrl implements angular.IController {
                 this.pagesLookup[page_id].articles = articles;
                 this.pagesLookup[page_id].adverts = adverts;
             },
-            after: (data) => {
+            after: () => {
                 this.$timeout(() => this.$scope.$apply());
             },
         });
@@ -165,8 +173,19 @@ export default class PublicationDispositionCtrl implements angular.IController {
         });
     }
 
+    public toggleButtonRow(articleScope: ArticleScope) {
+        if (articleScope.showButtonRow) {
+            articleScope.showButtonRow = false;
+            this.openButtonRows.splice(this.openButtonRows.indexOf(articleScope), 1);
+        } else {
+            articleScope.showButtonRow = true;
+            this.openButtonRows.push(articleScope);
+        }
+    }
+
     public hideAllButtonRows() {
-        // angular.element('.extra-button-line').collapse('hide');
+        this.openButtonRows.forEach((scope) => scope.showButtonRow = false);
+        this.openButtonRows = [];
     }
 
     public applyColumnWidth(column: string, extra = {}) {
