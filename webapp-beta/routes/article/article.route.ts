@@ -2,6 +2,7 @@ import * as angular from 'angular';
 
 import articleDetails from './components/articleDetails/articleDetails.component';
 import articleSearch from './components/articleSearch/articleSearch.component';
+import articleRevisions from './components/articleRevisions/articleRevisions.component';
 import { Environment } from '../../app.types';
 import {
     StateProvider,
@@ -21,6 +22,7 @@ const routeModule = angular
     .module('momusApp.routes.article', [
         articleDetails.name,
         articleSearch.name,
+        articleRevisions.name,
     ])
     .config(($stateProvider: StateProvider) => {
         $stateProvider
@@ -86,9 +88,9 @@ const routeModule = angular
                 },
                 reloadOnSearch: true,
             })
-            .state('article.details', {
+            .state('article.single', {
                 url: '/artikler/:id',
-                component: 'articleDetails',
+                redirectTo: 'article.single.details',
                 data: {
                     title: (injector: $InjectorLike) => injector.get('article').name,
                     nav: false,
@@ -98,6 +100,12 @@ const routeModule = angular
                         articleResource.get({ id: $stateParams.id }).$promise,
                     articleContent: (article: Article, articleResource: ArticleResource) =>
                         articleResource.content(article.id).then((data) => data.data),
+                },
+            })
+            .state('article.single.details', {
+                url: '/detaljer',
+                component: 'articleDetails',
+                resolve: {
                     sections: (articleResource: ArticleResource) => articleResource.sections().$promise,
                     types: (articleResource: ArticleResource) => articleResource.types().$promise,
                     reviews: (articleResource: ArticleResource) => articleResource.reviewStatuses().$promise,
@@ -109,6 +117,18 @@ const routeModule = angular
                 },
                 onEnter: (cookieService: CookieService, article: Article) => {
                     cookieService.addToRecentArticles(article);
+                },
+            })
+            .state('article.single.revisions', {
+                url: '/revisjoner',
+                component: 'articleRevisions',
+                data: {
+                    title: (injector: $InjectorLike) => injector.get('article').name,
+                    nav: false,
+                },
+                resolve: {
+                    revisions: (article: Article, articleResource: ArticleResource) =>
+                        articleResource.revisions({id: article.id}).$promise,
                 },
             });
     })

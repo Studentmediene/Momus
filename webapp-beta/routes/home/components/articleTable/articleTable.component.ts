@@ -20,7 +20,7 @@ export default angular.module('momusApp.routes.home.articleTable', [])
             <tbody>
                 <tr ng-repeat="article in vm.articles">
                     <td>
-                        <a ui-sref="article.details({id: article.id})">{{ article.name }}</a>
+                        <a ui-sref="article.single({id: article.id})">{{ article.name }}</a>
                         <span title="Antall tegn"> ({{ article.content_length }})</span>
                     </td>
                     <td>

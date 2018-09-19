@@ -1,5 +1,5 @@
 import { Article, ArticleType } from '../models/Article';
-import { ArticleRevision } from '../models/ArticleRevision';
+import { ArticleRevision, RevisionDiff } from '../models/ArticleRevision';
 import { IPromise, IHttpResponse } from 'angular';
 import { ArticleStatus } from '../models/Statuses';
 import { ReviewStatus } from '../models/Statuses';
@@ -57,10 +57,10 @@ export interface ArticleResource extends ng.resource.IResourceClass<Article> {
     ): ArticleRevision[];
 
     compareRevisions(
-        params: {rev1: number, rev2: number},
+        params: {id: number, rev1: number, rev2: number},
         success?: (diffs: object[]) => void,
         error?: errFunc,
-    ): object[];
+    ): RevisionDiff[];
 
     multiple(
         params: {ids: number[]},

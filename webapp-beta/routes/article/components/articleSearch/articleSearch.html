@@ -162,7 +162,7 @@
                 <tr ng-repeat="article in vm.results | orderBy:vm.articleSortType:vm.articleSortReverse">
                     <td>
                         <i ng-if="article.archived" class="fa fa-trash-o" uk-tooltip="Artikkelen er arkivert"></i>
-                        <a ui-sref="article.details({id: article.id})">
+                        <a ui-sref="article.single({id: article.id})">
                             {{ article.name }}
                         </a>
                     </td>

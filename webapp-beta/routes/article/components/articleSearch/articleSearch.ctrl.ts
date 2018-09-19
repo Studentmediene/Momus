@@ -68,7 +68,7 @@ export default class ArticleSearchCtrl implements angular.IController {
             sections: this.sections,
             types: this.types,
         })
-            .then((article) => this.$state.go('article.details', {id: article.id }));
+            .then((article) => this.$state.go('article.single', {id: article.id }));
     }
 
     // public showHelp() {
