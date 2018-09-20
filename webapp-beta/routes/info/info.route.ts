@@ -4,6 +4,7 @@ import { Environment } from '../../app.types';
 import { StateProvider } from '@uirouter/angularjs';
 
 import infoPage from './info.component';
+import { NewsItemResource } from 'resources/newsItem.resource';
 
 const routeModule = angular
     .module('momusApp.routes.info', [
@@ -20,6 +21,9 @@ const routeModule = angular
                         name: 'Info',
                         icon: 'fas fa-info-circle',
                     },
+                },
+                resolve: {
+                    news: (newsItemResource: NewsItemResource) => newsItemResource.query().$promise,
                 },
             });
     });

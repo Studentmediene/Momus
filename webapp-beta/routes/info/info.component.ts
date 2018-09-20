@@ -13,4 +13,7 @@ export default angular.module('momusApp.routes.info.infoPage', [])
         controller: InfoCtrl,
         controllerAs: 'vm',
         template: require('./info.html'),
+        bindings: {
+            news: '<',
+        },
     });

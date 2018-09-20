@@ -98,8 +98,8 @@ const routeModule = angular
                 resolve: {
                     article: ($stateParams: StateParams, articleResource: ArticleResource) =>
                         articleResource.get({ id: $stateParams.id }).$promise,
-                    articleContent: (article: Article, articleResource: ArticleResource) =>
-                        articleResource.content(article.id).then((data) => data.data),
+                    articleContent: ($stateParams: StateParams, articleResource: ArticleResource) =>
+                        articleResource.content($stateParams.id).then((data) => data.data),
                 },
             })
             .state('article.single.details', {
