@@ -98,7 +98,6 @@
                             ng-model="vm.editing.release_date"
                             ng-class="{'uk-form-danger': vm.publicationForm.date.$invalid}"
                             class="uk-input"
-                            placeholder="ÅÅÅÅ-MM-DD"
                             required
                         >
                     </div>
@@ -108,6 +107,7 @@
                         type="submit"
                         class="uk-button uk-button-primary"
                         ng-disabled="vm.publicationForm.$invalid"
+                        button-loading="vm.isSaving"
                     >
                         Lagre
                     </button>
