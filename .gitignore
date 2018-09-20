@@ -5,7 +5,6 @@
 .idea/
 atlassian-ide-plugin.xml
 npm-debug.log
-
 .settings
 .classpath
 .project
@@ -30,10 +29,16 @@ src/main/resources/key.pem
 # build folders
 target/
 src/main/webapp/dist/
-webapp/dist
-webapp-beta/dist
 bin/
 
+# When running jetty locally it expects the dist folders to exist
+# The .gitkeep file ensures they do, but everything else should be ignored
+webapp/dist/**
+!webapp/dist/.gitkeep
+webapp-beta/dist/**
+!webapp-beta/dist/.gitkeep
+
+# sass output
 **/*.css
 **/*.css.map
 

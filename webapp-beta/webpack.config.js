@@ -30,9 +30,10 @@ const commonPlugins = [
 ];
 
 const prodPlugins = [
-    new CleanWebpackPlugin([
-        out
-    ]),
+    new CleanWebpackPlugin(
+        [out],
+        {exclude: '.gitkeep'}
+    ),
     new MiniCssExtractPlugin({
         filename: `${isbeta ? 'beta-' : ''}[name]-[contenthash].css`
     }),
