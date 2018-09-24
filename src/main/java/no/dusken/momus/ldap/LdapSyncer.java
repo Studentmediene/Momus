@@ -95,18 +95,6 @@ public class LdapSyncer {
         log.info("Number of active: {}", activePersons.size());
         log.info("Number of inactive: {}", inactivePersons.size());
         log.info("Number of people on temporary leave: {}", tempLeavePersons.size());
-
-        List<Person> allPersons = personRepository.findAll();
-
-        long inactivated = allPersons.stream()
-                .filter(Person::isActive)
-                .filter(person -> !activePersons.contains(person))
-                .peek(person -> {
-                    person.setActive(false);
-                    personRepository.saveAndFlush(person);
-                })
-                .count();
-        log.info("Made {} people inactive after syncing", inactivated);
     }
 
     /**
