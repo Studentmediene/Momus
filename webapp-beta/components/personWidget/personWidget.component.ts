@@ -22,9 +22,9 @@ class PersonWidgetCtrl implements angular.IController {
     private $transitions: TransitionService;
 
     constructor(
-        $compile: angular.ICompileService, 
-        $rootScope: angular.IRootScopeService, 
-        $transitions: TransitionService
+        $compile: angular.ICompileService,
+        $rootScope: angular.IRootScopeService,
+        $transitions: TransitionService,
     ) {
         this.$compile = $compile;
         this.$rootScope = $rootScope;
@@ -39,7 +39,7 @@ class PersonWidgetCtrl implements angular.IController {
         });
         this.$transitions.onSuccess({}, () => {
             this.close();
-        })
+        });
     }
 
     public open(event: MouseEvent) {
@@ -59,7 +59,7 @@ class PersonWidgetCtrl implements angular.IController {
         scope.y = elementPos.top;
         scope.onClose = () => {
             this.close();
-        }
+        };
 
         const element = this.$compile(template)(scope);
         angular.element(document.body).append(element);

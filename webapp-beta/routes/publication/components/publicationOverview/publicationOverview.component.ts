@@ -81,4 +81,3 @@ export default angular.module('momusApp.routes.publication.publicationOverview',
             publications: '<',
         },
     });
-
