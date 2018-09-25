@@ -5,12 +5,13 @@ import '@fortawesome/fontawesome-free/css/solid.css';
 import 'uikit';
 
 import constants from './app.constants';
-import components from './components/app.components';
-import services from './services/app.services';
-import routes, { setRoutes } from './routes/app.routes';
-import resources from './resources/app.resources';
 import filters from './app.filters';
+import services from './services/app.services';
+import resources from './resources/app.resources';
 import directives from './app.directives';
+import components from './components/app.components';
+import routes, { setRoutes } from './routes/app.routes';
+
 import { Person } from './models/Person';
 import { Env, Environment } from './app.types';
 import httpInterceptorFactory from './services/httpInterceptor.factory';

@@ -5,13 +5,13 @@ import { Transition, TransitionService, StateObject } from '@uirouter/core';
 import constants from '../app.constants';
 
 import { Environment, RootScope } from '../app.types';
-import home from './home/home.route';
 import navigation from './navigation/navigation.route';
-import dev from './dev/dev.route';
-import admin from './admin/admin.route';
+import home from './home/home.route';
 import article from './article/article.route';
 import publication from './publication/publication.route';
 import info from './info/info.route';
+import admin from './admin/admin.route';
+import dev from './dev/dev.route';
 
 function getNextStateTitle(transition: Transition) {
     const newState = transition.to();
