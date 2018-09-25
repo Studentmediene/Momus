@@ -2,8 +2,6 @@ import * as angular from 'angular';
 import uirouter, { UrlRouterProvider } from '@uirouter/angularjs';
 import { Transition, TransitionService, StateObject } from '@uirouter/core';
 
-import constants from '../app.constants';
-
 import { Environment, RootScope } from '../app.types';
 import navigation from './navigation/navigation.route';
 import home from './home/home.route';
@@ -23,29 +21,10 @@ function getNextStateTitle(transition: Transition) {
     }
 }
 
-/*
-The application only loads the route modules that should be visible
-given the logged in user and environment
-*/
-export function setRoutes(env: Environment) {
-    const routes = [
-        home,
-        article,
-        publication,
-        info,
-        admin,
-        dev,
-    ];
-
-    routes.filter((route) => route.shouldLoadRoute(env))
-        .forEach((route) => angular.module('momusApp.routes').requires.push(route.module.name));
-}
-
-export default angular
+const routesModule = angular
     .module('momusApp.routes', [
         uirouter,
         navigation.name,
-        constants.name,
     ])
     .config(($urlRouterProvider: UrlRouterProvider, $locationProvider: angular.ILocationProvider) => {
         $urlRouterProvider.otherwise('/');
@@ -61,3 +40,23 @@ export default angular
         $transitions.onBefore({from: (s) => !initialStateMatcher(s)}, () => { $rootScope.transitionLoad = true; });
         $transitions.onSuccess({from: (s) => !initialStateMatcher(s)}, () => { $rootScope.transitionLoad = false; });
     });
+
+/*
+The application only loads the route modules that should be visible
+given the logged in user and environment
+*/
+export function setRoutes(env: Environment) {
+    const routes = [
+        home,
+        article,
+        publication,
+        info,
+        admin,
+        dev,
+    ];
+
+    routes.filter((route) => route.shouldLoadRoute(env))
+        .forEach((route) => routesModule.requires.push(route.module.name));
+}
+
+export default routesModule;

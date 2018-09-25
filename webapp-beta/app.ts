@@ -4,7 +4,6 @@ import '@fortawesome/fontawesome-free/css/fontawesome.css';
 import '@fortawesome/fontawesome-free/css/solid.css';
 import 'uikit';
 
-import constants from './app.constants';
 import filters from './app.filters';
 import services from './services/app.services';
 import resources from './resources/app.resources';
@@ -18,9 +17,8 @@ import httpInterceptorFactory from './services/httpInterceptor.factory';
 
 import './style/app.scss';
 
-angular
+const app = angular
     .module('momusApp', [
-        constants.name,
         filters.name,
         services.name,
         resources.name,
@@ -37,7 +35,7 @@ angular
  */
 function initApp() {
     loadInitData().then((env) => {
-        angular.module(constants.name)
+        angular.module(app.name)
             .constant('loggedInUser', env.loggedInUser)
             .constant('env', env.env);
         setRoutes(env);
@@ -46,7 +44,7 @@ function initApp() {
 }
 
 function bootstrap() {
-    angular.element(window.document).ready(() => angular.bootstrap(window.document, ['momusApp'], {strictDi: true}));
+    angular.element(window.document).ready(() => angular.bootstrap(window.document, [app.name], {strictDi: true}));
 }
 
 async function loadInitData(): Promise<Environment> {
