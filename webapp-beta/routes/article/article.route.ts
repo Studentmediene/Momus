@@ -84,7 +84,7 @@ const routeModule = angular
                         articleResource.types().$promise,
                     searchParams: createArticleSearchParams,
                     results: (articleResource: ArticleResource, searchParams: ArticleSearchParams) =>
-                        articleResource.search({}, searchParams.stringify()).$promise,
+                        articleResource.search({}, searchParams.stringify()),
                 },
                 reloadOnSearch: true,
             })

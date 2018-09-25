@@ -1,5 +1,6 @@
 .result-table {
     font-size: 80%;
+    margin-top: 0 !important; // Override uikit
     td, th {
         padding: 5px 6px !important;
     }

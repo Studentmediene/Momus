@@ -35,7 +35,7 @@ const app = angular
  */
 function initApp() {
     loadInitData().then((env) => {
-        angular.module(app.name)
+        app
             .constant('loggedInUser', env.loggedInUser)
             .constant('env', env.env);
         setRoutes(env);
