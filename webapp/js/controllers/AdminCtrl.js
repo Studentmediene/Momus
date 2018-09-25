@@ -19,15 +19,6 @@
 angular.module('momusApp.controllers')
     .controller('AdminCtrl', function (
         $scope,
-        Person,
-        Article,
-        Publication,
-        TitleChanger,
-        ViewArticleService,
-        MessageModal,
-        $stateParams,
-        $timeout,
-        $templateRequest,
         loggedInPerson,
         NewsItem,
         news

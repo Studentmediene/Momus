@@ -45,11 +45,11 @@ function buttonLoadingDirective($timeout: angular.ITimeoutService): angular.IDir
                 ? loadedText
                 : `<i class="fas fa-check"></i> ${loadedText}`;
 
-            scope.$watch('buttonLoading', (isLoading: boolean) => {
-                if (isLoading) {
+            scope.$watch('buttonLoading', (isLoading: boolean, prevIsLoading: boolean) => {
+                if (isLoading && !prevIsLoading) {
                     el.html(loadingHtml);
                     el.attr('disabled', 'true');
-                } else {
+                } else if (!isLoading && prevIsLoading) {
                     el.html(loadedHtml);
                     $timeout(() => {
                         el.attr('disabled', null);

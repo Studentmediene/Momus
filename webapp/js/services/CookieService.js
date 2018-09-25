@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.services')
-    .service('ViewArticleService', function ($cookies) {
+    .service('CookieService', function ($cookies) {
         return {
 
             checkRecentlyViewed: function(articleId){
@@ -49,6 +49,9 @@ angular.module('momusApp.services')
                 const recents = $cookies.getObject("recentlyViewed") || [];
                 recents.reverse(); // We want newest first
                 return recents;
-            }
+            },
+
+            getUseBeta: () => $cookies.get("useBeta") === "true",
+            setUseBeta: (useBeta) => $cookies.put("useBeta", useBeta),
         };
     });

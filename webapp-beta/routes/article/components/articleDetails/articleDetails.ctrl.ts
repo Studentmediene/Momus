@@ -36,8 +36,6 @@ export default class ArticleDetailsCtrl implements angular.IController {
             }
             return true;
         });
-
-        // ViewArticleService.viewArticle(articleId);
     }
 
     public $onInit() {

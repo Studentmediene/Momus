@@ -64,6 +64,15 @@ angular.module('momusApp', [
         'ui.sortable.multiselection',
         'chart.js'
     ]).
+    run((CookieService, $http, $window) => {
+        const useBeta = CookieService.getUseBeta();
+        $http.get('/api/env/all').then(res => {
+            const env = res.data;
+            if(!env.devmode && useBeta) {
+                $window.location.href = "/beta";
+            }
+        });
+    }).
     config(($stateProvider) => {
         $stateProvider
             .state('root', {
@@ -82,8 +91,8 @@ angular.module('momusApp', [
                 resolve: {
                     myArticles: (Article, loggedInPerson) =>
                         Article.search({}, {persons: [loggedInPerson.id], page_size: 9}).$promise,
-                    recentArticles: (ViewArticleService, Article) => {
-                        const recents = ViewArticleService.getRecentViews();
+                    recentArticles: (CookieService, Article) => {
+                        const recents = CookieService.getRecentViews();
                         return recents.length > 0 ?
                             Article.multiple({ids: recents}).$promise :
                             [];

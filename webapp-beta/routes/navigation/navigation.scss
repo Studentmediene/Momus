@@ -34,3 +34,18 @@
         display: none !important;
     }
 }
+
+.beta-icon {
+    text-decoration: none !important;
+    flex-direction: column;
+    align-items: end !important;
+
+    .uk-logo {
+        margin-bottom: -10px;
+    }
+
+    .beta-label {
+        font-weight: bold;
+        color: $global-edit-background;
+    }
+}

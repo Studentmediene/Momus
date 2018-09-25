@@ -18,4 +18,7 @@ export default angular.module('momusApp.services', [
         tips[Math.floor(Math.random() * tips.length)]
     ))
     .service('sessionService', sessionService)
-    .service('cookieService', CookieService);
+    .service('cookieService', CookieService)
+    .config(($cookiesProvider: {defaults: ng.cookies.ICookiesOptions}) => {
+        $cookiesProvider.defaults.path = '/';
+    });

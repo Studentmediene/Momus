@@ -6,6 +6,6 @@ import './MessagingService';
 import './TipAndNewsService';
 import './TitleChanger';
 import './Utils';
-import './ViewArticleService';
+import './CookieService';
 
 export default services;

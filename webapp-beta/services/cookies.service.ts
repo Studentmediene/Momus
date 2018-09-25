@@ -3,6 +3,8 @@ import { Article } from 'models/Article';
 const RECENT_ARTICLES_STORE = 'recentlyViewed';
 const RECENT_ARTICLES_LENGTH = 5;
 
+const USE_BETA_STORE = 'useBeta';
+
 /* @ngInject */
 export default class CookieService {
     private $cookies: ng.cookies.ICookiesService;
@@ -34,6 +36,14 @@ export default class CookieService {
             return [];
         }
         return <number[]> store;
+    }
+
+    public getUseBeta() {
+        return this.$cookies.get(USE_BETA_STORE) === 'true';
+    }
+
+    public setUseBeta(useBeta: boolean) {
+        this.$cookies.put(USE_BETA_STORE, useBeta.toString());
     }
 
     private updateRecentArticlesInStore(newStore: number[]) {

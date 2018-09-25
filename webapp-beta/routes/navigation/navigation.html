@@ -3,7 +3,10 @@
         <div class="uk-container">
             <div class="uk-navbar" uk-navbar>
                 <div class="uk-navbar-left">
-                    <a ui-sref="home" class="uk-navbar-item uk-logo">Momus</a>
+                    <a ui-sref="home" class="uk-navbar-item beta-icon">
+                        <span class="uk-logo">Momus</span>
+                        <span class="beta-label">beta</span>
+                    </a>
                     <ul class="uk-navbar-nav">
                         <li ng-repeat="nav in ::vm.navItems" ui-sref-active="uk-active" class="{{::nav.class}}">
                             <a ui-sref="{{::nav.stateName}}">

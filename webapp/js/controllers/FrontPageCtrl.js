@@ -19,9 +19,10 @@
 angular.module('momusApp.controllers')
     .controller('FrontPageCtrl', function (
         $state,
+        $window,
         TipAndNewsService,
+        CookieService,
         Person,
-        Page,
         Article,
         expandColorCode,
         loggedInPerson,
@@ -65,6 +66,7 @@ angular.module('momusApp.controllers')
         vm.clickArticleStatus = clickArticleStatus;
         vm.clickReviewStatus = clickReviewStatus;
         vm.clickLayoutStatus = clickLayoutStatus;
+        vm.useBeta = useBeta;
 
         function updateFavouriteSection() {
             Person.updateFavouritesection({section: vm.user.favouritesection.id});
@@ -102,5 +104,10 @@ angular.module('momusApp.controllers')
 
         function clickLayoutStatus(selected){
             $state.go('disposition');
+        }
+
+        function useBeta() {
+            CookieService.setUseBeta(true);
+            $window.location.reload();
         }
     });

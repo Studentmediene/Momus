@@ -20,13 +20,12 @@ angular.module('momusApp.controllers')
     .controller('ArticleCtrl', function (
         $scope,
         $stateParams,
-        $timeout,
         $templateRequest,
         Person,
         Article,
         Publication,
         TitleChanger,
-        ViewArticleService,
+        CookieService,
         MessageModal
     ) {
         const vm = this;
@@ -58,7 +57,7 @@ angular.module('momusApp.controllers')
         });
         Article.content(articleId).then(data => { vm.articleContent = data.data; });
 
-        ViewArticleService.viewArticle(articleId);
+        CookieService.viewArticle(articleId);
 
         /* note panel */
         function saveNote () {
