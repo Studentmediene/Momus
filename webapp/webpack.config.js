@@ -10,11 +10,13 @@ const path = require('path');
 const root = __dirname;
 const dev = root;
 const out = path.join(root, 'dist');
+const publicPath = '/';
+const assets = 'assets/'; // Folder for all js/css and other assets
+const partials = 'partials/'; // HTML templates
 
 const isprod = process.argv.indexOf('-p') !== -1;
 const visualize = process.argv.indexOf('--visualizer') !== -1;
 
-const assetsPath = path.join(out, 'assets/');
 
 const commonPlugins = [
     // Injects bundles into the index file
@@ -29,16 +31,17 @@ const commonPlugins = [
         "window.jQuery": "jquery"
     }),
     new CopyWebpackPlugin([
-        { from: path.join(dev, "partials"), to: path.join(out, "partials") },
+        { from: path.join(dev, partials), to: path.join(out, partials) },
     ]),
 ];
 
 const prodPlugins = [
-    new CleanWebpackPlugin([
-        out
-    ]),
+    new CleanWebpackPlugin(
+        [out],
+        {exclude: '.gitkeep'}
+    ),
     new MiniCssExtractPlugin({
-        filename: '[name]-[contenthash].css'
+        filename: path.join(assets, '/[name]-[contenthash].css')
     }),
     new UglifyJsPlugin({
         uglifyOptions: {
@@ -52,7 +55,7 @@ const plugins = commonPlugins.concat(isprod ? prodPlugins : []);
 if (visualize) plugins.push(new Visualizer());
 
 const devServer = {
-    contentBase: out,
+    publicPath: publicPath,
     port: 8081,
     historyApiFallback: true,
     proxy: {
@@ -70,9 +73,10 @@ module.exports = {
         main: path.join(dev, 'js/app.js')
     },
     output: {
-        path: assetsPath,
-        filename: '[name]-[chunkhash].js',
-        chunkFilename: '[name]-[chunkhash].js'
+        path: out,
+        publicPath: publicPath,
+        filename: path.join(assets, '[name]-[chunkhash].js'),
+        chunkFilename: path.join(assets, '[name]-[chunkhash].js'),
     },
     devtool: isprod ? false : 'inline-source-map',
     module: {
@@ -109,7 +113,7 @@ module.exports = {
                 ]
             }, {
                 test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
-                use: [{ loader: 'file-loader' }]
+                use: [{ loader: 'file-loader', options: {outputPath: assets }}]
             }, {
                 test: /ui-sortable/,
                 use: ['imports-loader?$UI=jquery-ui/ui/widgets/sortable']

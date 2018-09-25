@@ -33,9 +33,9 @@ bin/
 
 # When running jetty locally it expects the dist folders to exist
 # The .gitkeep file ensures they do, but everything else should be ignored
-webapp/dist/**
+webapp/dist/**/*
 !webapp/dist/.gitkeep
-webapp-beta/dist/**
+webapp-beta/dist/**/*
 !webapp-beta/dist/.gitkeep
 
 # sass output
