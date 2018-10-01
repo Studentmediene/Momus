@@ -21,6 +21,8 @@
                             <a href="#"><span><person-avatar user="vm.user" size="40"></person-avatar></span></a>
                             <div uk-dropdown="delay-hide:100; pos: bottom-right; offset: 0;">
                                 <ul class="uk-nav uk-navbar-dropdown-nav">
+                                    <li class="uk-nav-header">{{ vm.user.name }}</li>
+                                    <li class="uk-nav-divider"></li>
                                     <li>
                                         <a href="/api/logout">
                                             <i class="fas fa-power-off"></i> 
