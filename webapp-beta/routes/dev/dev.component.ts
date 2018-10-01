@@ -29,7 +29,7 @@ class DevCtrl implements angular.IController {
     public setLoggedInUser(username: string) {
         this.$http.post('/api/dev/logout', null).then(() => {
             this.$http.post('/api/dev/login', JSON.stringify(username)).then(
-                () => this.$window.location.reload(),
+                () => this.$window.location.href = '/',
             );
         });
     }

@@ -33,4 +33,7 @@ export default angular
         newAdvertModal.name,
         newsPanel.name,
         messageModal.name,
-    ]);
+    ])
+    .component('loadingSpinner', {
+        template: '<i class="fas fa-circle-notch fa-4x fa-spin"></i>',
+    });

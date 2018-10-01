@@ -25,3 +25,11 @@ export function nodeHeight(node: HTMLElement) {
         return acc + parseInt(getComputedStyle(child).height.replace('px', ''), 10);
     }, 0) + 'px';
 }
+
+// The array needs to have the $resolved property since it is used
+// to determine when the data has returned from the server normally
+export function emptyArrayResponse<T>() {
+    const res: T[] = [];
+    res.$resolved = true;
+    return res;
+}

@@ -1,7 +1,5 @@
 import * as angular from 'angular';
 
-import { Person } from '../../models/Person';
-import { Article } from '../../models/Article';
 import { IController } from 'angular';
 import { RandomTip } from 'services/app.services';
 import { Tip } from 'services/tips';
@@ -9,8 +7,6 @@ import CookieService from 'services/cookies.service';
 
 /* @ngInject */
 class HomeCtrl implements IController {
-    public user: Person;
-    public myArticles: Article[];
 
     public randomTip: RandomTip;
     public tip: Tip;

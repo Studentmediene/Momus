@@ -7,10 +7,27 @@
 <div uk-grid>
     <div class="uk-width-2-3@m">
         <panel icon="'fas fa-file-alt'" header="'Dine siste artikler'" no-body-padding="true" type="'primary'">
-            <article-table articles="vm.myArticles"></article-table>
+            <!-- Loading -->
+            <div
+                ng-show="!vm.myArticles.$resolved"
+                class="uk-text-center uk-padding-small"
+            >
+                <loading-spinner></loading-spinner>
+            </div>
+            <div ng-show="vm.myArticles.$resolved">
+                <article-table articles="vm.myArticles"></article-table>
+            </div>
         </panel>
         <panel icon="'fas fa-clock'" header="'Sist viste artikler'" no-body-padding="true" type="'primary'">
-            <article-table articles="vm.lastViewedArticles"></article-table>
+            <div
+                ng-show="!vm.lastViewedArticles.$resolved"
+                class="uk-text-center uk-padding-small"
+            >
+                <loading-spinner></loading-spinner>
+            </div>
+            <div ng-show="vm.lastViewedArticles.$resolved">
+                <article-table articles="vm.lastViewedArticles"></article-table>
+            </div>
         </panel>
         <panel icon="'fas fa-star'" header="'Siste artikler fra din favorittredaksjon'" no-body-padding="true" type="'new'">
             <extra-header-content>
@@ -22,7 +39,21 @@
                     on-change="">
                 </select-dropdown>
             </extra-header-content>
-            <article-table articles="vm.favouritesectionArticles"></article-table>
+            <div
+                ng-show="vm.user.favouritesection == null"
+                class="uk-text-center uk-padding-small"
+            >
+                Sett en favorittseksjon for å se siste artikler derfra
+            </div>
+            <div
+                ng-show="!vm.favouritesectionArticles.$resolved"
+                class="uk-text-center uk-padding-small"
+            >
+                <loading-spinner></loading-spinner>
+            </div>
+            <div ng-show="vm.user.favouritesection != null && vm.favouritesectionArticles.$resolved">
+                <article-table articles="vm.favouritesectionArticles"></article-table>
+            </div>
         </panel>
     </div>
     <div class="uk-width-1-3@m">

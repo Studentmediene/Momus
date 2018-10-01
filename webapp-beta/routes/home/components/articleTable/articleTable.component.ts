@@ -4,10 +4,20 @@ export default angular.module('momusApp.routes.home.articleTable', [])
     .component('articleTable', {
         bindings: {
             articles: '<',
+            emptyText: '@',
         },
         template: // html
         `
-        <table class="uk-table uk-table-striped uk-table-small" style="font-size: 80%">
+        <div
+            ng-show="vm.articles.length === 0"
+            class="uk-text-center uk-padding-small"
+        >
+            Ingen artikler
+        </div>
+        <table
+            ng-show="vm.articles.length > 0"
+            class="uk-table uk-table-striped uk-table-small"
+            style="font-size: 80%; margin-top: 0">
             <thead>
                 <tr>
                     <th>Navn</th>
