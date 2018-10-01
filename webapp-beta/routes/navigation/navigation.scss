@@ -22,6 +22,7 @@
 }
 
 .uk-logo {
+    transition: color 0.1s linear;
     font-weight: bold;
     text-transform: uppercase;
 }
@@ -36,9 +37,11 @@
 }
 
 .beta-icon {
+    position: relative;
     text-decoration: none !important;
     flex-direction: column;
     align-items: end !important;
+    z-index: 1;
 
     .uk-logo {
         margin-bottom: -10px;
@@ -47,5 +50,30 @@
     .beta-label {
         font-weight: bold;
         color: $global-edit-background;
+    }
+
+    &:hover {
+        .uk-logo {
+            color: white;
+        }
+        &:after {
+            opacity: 0.5;
+        }
+    }
+
+    &:after {
+        content: "";
+        background: url('/favicon.ico');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        opacity: 0.2;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: -1;
+        transition: opacity 0.1s linear;
     }
 }
