@@ -1,21 +1,40 @@
 <div class="hidden-print uk-sticky" uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
     <nav class="uk-navbar-container">
+        <momus-logo hide-background align="center" class="uk-hidden@m uk-visible@s"></momus-logo>
         <div class="uk-container">
             <div class="uk-navbar" uk-navbar>
                 <div class="uk-navbar-left">
-                    <a ui-sref="home" class="uk-navbar-item beta-icon">
-                        <span class="uk-logo">Momus</span>
-                        <span class="beta-label">beta</span>
-                    </a>
-                    <ul class="uk-navbar-nav">
+                    <momus-logo class="uk-hidden@s"></momus-logo>
+                    <momus-logo class="uk-visible@m"></momus-logo>
+                    <ul class="uk-navbar-nav uk-visible@s">
                         <li ng-repeat="nav in ::vm.navItems" ui-sref-active="uk-active" class="{{::nav.class}}">
                             <a ui-sref="{{::nav.stateName}}">
-                                <span><i class="{{::nav.icon}}"></i> {{::nav.name}}</span>
+                                <span>
+                                    <i class="{{::nav.icon}} uk-visible@m"></i>
+                                    <span> {{::nav.name}}</span>
+                                </span>
                             </a>
                         </li>
                     </ul>
                 </div>
                 <div class="uk-navbar-right">
+                    <ul class="uk-navbar-nav uk-hidden@s">
+                        <li>
+                            <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+                            <div id="navbardropdown" class="menu-dropdown" uk-navbar="dropbar: true">
+                                <ul class="uk-nav uk-navbar-dropdown-nav uk-nav-default">
+                                    <li ng-repeat="nav in ::vm.navItems" ui-sref-active="uk-active" class="{{::nav.class}}">
+                                        <a ui-sref="{{::nav.stateName}}">
+                                            <span>
+                                                <i class="{{::nav.icon}}"></i>
+                                                <span> {{::nav.name}}</span>
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
                     <ul class="uk-navbar-nav">
                         <li>
                             <a href="#"><span><person-avatar user="vm.user" size="40"></person-avatar></span></a>

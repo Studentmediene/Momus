@@ -21,30 +21,17 @@
     background: pink !important;
 }
 
-.uk-logo {
-    transition: color 0.1s linear;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-@media(max-width: $breakpoint-medium) {
-    // .uk-logo {
-    //     display: none !important;
-    // }
-    .uk-navbar-nav > li > a > span > i {
-        display: none !important;
-    }
-}
-
-.beta-icon {
+.momus-logo {
     position: relative;
     text-decoration: none !important;
     flex-direction: column;
-    align-items: end !important;
     z-index: 1;
 
     .uk-logo {
         margin-bottom: -10px;
+        transition: color 0.1s linear;
+        font-weight: bold;
+        text-transform: uppercase;
     }
 
     .beta-label {
@@ -61,7 +48,7 @@
         }
     }
 
-    &:after {
+    .logo-bg {
         content: "";
         background: url('/favicon.ico');
         background-size: cover;
@@ -76,4 +63,10 @@
         z-index: -1;
         transition: opacity 0.1s linear;
     }
+}
+
+.menu-dropdown {
+    position: fixed !important;
+    left: 0px !important;
+    right: 0px !important;
 }
