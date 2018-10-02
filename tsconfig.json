@@ -16,9 +16,9 @@
     ],
     "typeRoots": [
         "./node_modules/@types",
-        "./webapp-beta"
+        "./webapp-beta/typings"
     ],
-    "types": ["uikit", "angular", "angular-resource", "angular-cookies", "node", "typings"]
+    "types": ["angular", "angular-resource", "angular-cookies", "node", "momus", "uikit"]
   },
   "files": [
       "./webapp-beta/app.ts"
