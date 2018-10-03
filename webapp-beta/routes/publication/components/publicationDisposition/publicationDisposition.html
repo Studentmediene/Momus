@@ -15,7 +15,7 @@
   -->
 
 <div ng-if="vm.noPublication">
-    <div class="d-title">
+    <div>
         <h1>Ingen utgaver funnet.</h1>
     </div>
 </div>
@@ -24,10 +24,8 @@
     <div ng-show="vm.loading" class="d-loading-spinner">
         <i class="fa fa-circle-o-notch fa-spin fa-4x"></i>
     </div>
-    <div id="title" class="d-title">
-        <h1>Disposisjon for {{vm.publication.name}}</h1>
-    </div>
     <div id="toolbar" uk-sticky="offset: 50; cls-active: d-toolbar-attach" class="d-toolbar">
+        <h3 class="d-title uk-text-uppercase">Disposisjon for <b>{{vm.publication.name}}</b></h3>
         <div id="online-users" style="min-height: 40px">
             <div ng-repeat="user in vm.presentUsers track by user.id" style="margin: 5px">
                 <person-avatar
@@ -84,24 +82,21 @@
         </div>
     </div>
 
-    <div class="row d-table disposition-table">
-        <div ng-model="vm.pageOrder.order">
-            <div ng-repeat="pageId in vm.pageOrder.order">
-                <disposition-page
-                    number="$index + 1"
-                    page="vm.pagesLookup[pageId]"
-                    publication="vm.publication"
-                    column-widths="vm.columnWidths"
-                    article-width="vm.articleWidth"
-                    adverts="vm.adverts"
-                    articles-lookup="vm.articlesLookup"
-                    adverts-lookup="vm.advertsLookup"
-                    layout-statuses="vm.layoutStatuses"
-                    article-statuses="vm.articleStatuses"
-                    review-statuses="vm.reviewStatuses"
-                >
-                </disposition-page>
-            </div>
-        </div>
+    <div class="d-table disposition-table">
+        <disposition-page
+            ng-repeat="pageId in vm.pageOrder.order"
+            number="$index + 1"
+            page="vm.pagesLookup[pageId]"
+            publication="vm.publication"
+            column-widths="vm.columnWidths"
+            article-width="vm.articleWidth"
+            adverts="vm.adverts"
+            articles-lookup="vm.articlesLookup"
+            adverts-lookup="vm.advertsLookup"
+            layout-statuses="vm.layoutStatuses"
+            article-statuses="vm.articleStatuses"
+            review-statuses="vm.reviewStatuses"
+        >
+        </disposition-page>
     </div>
 </div>

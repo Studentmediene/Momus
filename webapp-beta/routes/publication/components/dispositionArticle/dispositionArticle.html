@@ -3,7 +3,7 @@
     <div class="d-table-cell" ng-style="vm.columnWidths.dropdown">
         <button
             class="uk-button uk-button-primary button-xs"
-            ng-click="vm.toggleButtonRow(this)"
+            ng-click="vm.toggleButtonRow()"
         >
             <i class="fas fa-arrows-alt-v"></i>
         </button>
@@ -18,7 +18,7 @@
         class="d-table-cell"
         ng-style="vm.applyColumnWidth('section', {'background': vm.article.section.color})"
     >
-            {{vm.article.section.name}}
+        {{vm.article.section.name}}
     </div>
     <!--Journalists-->
     <div class="d-table-cell" ng-style="vm.columnWidths.journalists">
@@ -74,7 +74,6 @@
         </select-dropdown>
     </div>
     <!--Photostatus-->
-    <!--View-->
     <div
         class="d-table-cell"
         ng-style="vm.columnWidths.photo_status"
@@ -95,7 +94,7 @@
         </inline-edit>
     </div>
 </div>
-<div ng-show="showButtonRow" class="extra-button-line">
+<div ng-show="vm.showButtonRow" class="extra-button-line">
     <a href="/api/article/{{vm.article.id}}/indesignfile" class="uk-button uk-button-primary button-xs">
         <i class="fas fa-file"></i>
         InDesign fil

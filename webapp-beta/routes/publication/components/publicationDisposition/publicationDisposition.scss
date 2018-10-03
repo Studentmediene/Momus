@@ -12,6 +12,12 @@ $pageAdBackground: #f6f6f6;
     font-size: 75%;
 }
 
+.d-title {
+    padding: 5px;
+    margin-bottom: 0;
+    border-bottom: $pageBorder;
+}
+
 .d-loading-spinner {
     position: fixed;
     top: 64px;
@@ -26,8 +32,6 @@ $pageAdBackground: #f6f6f6;
     border-left: $pageBorder;
     border-right: $pageBorder;
     border-top: $pageBorder;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
     box-sizing: border-box;
 
     .button-group {
@@ -69,57 +73,40 @@ $pageAdBackground: #f6f6f6;
 
     disposition-page {
         display: block;
+        border-top: $pageBorder;
 
-        > .d-table-row {
-            > .d-table-cell {
-                border-top: $pageBorder;
-                border-right: $pageBorder;
-                box-sizing: border-box;
-
-                &:first-child {
-                    border-left: $pageBorder;
-                }
+        > .d-table-row > .d-table-cell {
+            &:first-child {
+                border-left: $pageBorder;
             }
+            border-right: $pageBorder;
         }
-    }
 
-    > div > .d-table-row:last-child {
-        > .d-table-cell {
+        .d-table-row > .d-table-cell:not(.article-cell) {
+            padding: 3px;
+            box-sizing: border-box;
+        }
+
+        &:last-child {
             border-bottom: $pageBorder;
         }
     }
 
     disposition-article {
         display: block;
+        &:not(:first-child) {
+            border-top: $articleBorder;
+        }
     }
 
     disposition-advert {
         display: block;
         background: $global-edit-background;
     }
-
-
-    .d-table-row > .d-table-cell:not(.article-cell) {
-        padding: 3px;
-        box-sizing: border-box;
-    }
-}
-
-/* Should not draw border on first child as it is drawn by the outer table */
-.article-cell {
-    box-sizing: border-box;
-    height: 100%;
-    >:not(:first-child) {
-        border-top: $articleBorder;
-    }
 }
 
 .page-done {
     background: $pageDoneBackground !important; //Want this to override ad color
-}
-
-.page-ad {
-    background: $pageAdBackground;
 }
 
 .d-break-word {

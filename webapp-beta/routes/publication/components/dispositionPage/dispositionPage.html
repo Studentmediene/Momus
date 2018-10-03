@@ -1,7 +1,4 @@
-<div
-    class="d-table-row"
-    ng-class="{'page-done': vm.page.done}"
->
+<div class="d-table-row" ng-class="{'page-done': vm.page.done}">
     <!--Page number-->
     <div class="d-table-cell handle" ng-style="vm.columnWidths.page_nr">{{vm.number}}</div>
 
@@ -40,7 +37,7 @@
         </div>
     </div>
 
-    <!-- View mode (articles) -->
+    <!-- View mode -->
     <div class="d-table-cell article-cell" ng-style="{width: vm.articleWidth + 'px'}" ng-hide="vm.editing">
         <div class="d-table">
             <disposition-article
@@ -50,9 +47,6 @@
                 review-statuses="vm.reviewStatuses"
                 column-widths="vm.columnWidths"
             ></disposition-article>
-        </div>
-        <!--View mode (adverts)-->
-        <div class="d-table">
             <disposition-advert
                 ng-repeat="advertId in vm.page.adverts"
                 advert="vm.advertsLookup[advertId]"
@@ -60,6 +54,7 @@
             ></disposition-advert>          
         </div>
     </div>
+
     <!--Layout status-->
     <div
         class="d-table-cell"
@@ -73,17 +68,19 @@
             unclearable
         ></select-dropdown>
     </div>
+
     <!--Done-->
-    <div class="d-table-cell button" ng-style="vm.columnWidths.done">
-        <span style="cursor: pointer" ng-click="vm.page.done = !page.done; vm.updatePageMeta(page);">
+    <div class="d-table-cell" ng-style="vm.columnWidths.done">
+        <span style="cursor: pointer" ng-click="vm.page.done = !vm.page.done; vm.updatePageMeta();">
             <i class="fas fa-check fa-lg"
-                ng-class="{'uk-text-danger' : !page.done, 'uk-text-success' : page.done }"
-                uib-tooltip="Siden er {{!page.done ? 'ikke ' : ''}} helt ferdig">
+                ng-class="{'uk-text-danger' : !vm.page.done, 'uk-text-success' : vm.page.done }"
+                uib-tooltip="Siden er {{!vm.page.done ? 'ikke ' : ''}} helt ferdig">
             </i>
         </span>
     </div>
+
     <!--Edit-->
-    <div class="d-table-cell button" ng-style="vm.columnWidths.edit">
+    <div class="d-table-cell" ng-style="vm.columnWidths.edit">
         <button ng-click="vm.editPage(this)" class="uk-button button-edit button-xs" ng-hide="vm.editing">
             <i class="fas fa-edit"></i>
         </button>
@@ -91,8 +88,9 @@
             <i class="fas fa-save"></i>
         </button>
     </div>
+
     <!--Delete-->
-    <div class="d-table-cell button" ng-style="vm.columnWidths.delete">
+    <div class="d-table-cell" ng-style="vm.columnWidths.delete">
         <button ng-click="vm.deletePage(page)" class="uk-button uk-button-danger button-xs">
             <i class="fas fa-trash"></i>
         </button>

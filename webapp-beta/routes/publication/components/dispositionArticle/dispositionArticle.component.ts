@@ -6,6 +6,7 @@ import { ColumnWidths } from '../publicationDisposition/getColumnWidths';
 class DispositionArticleCtrl implements angular.IController {
     public article: Article;
 
+    public showButtonRow: boolean = false;
     public columnWidths: ColumnWidths;
 
     private articleResource: ArticleResource;
@@ -24,6 +25,10 @@ class DispositionArticleCtrl implements angular.IController {
 
     public submitField(field: string, value: any) {
         this.article[field] = value;
+    }
+
+    public toggleButtonRow() {
+        this.showButtonRow = !this.showButtonRow;
     }
 }
 
