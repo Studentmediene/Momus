@@ -7,6 +7,7 @@ export default function personResourceFactory($resource: ng.resource.IResourceSe
             id: '@id',
         },
         {
+            query: { method: 'GET', isArray: true, cache: true },
             me: { method: 'GET', params: {id: 'me'}, cache: true },
             updateFavouritesection: {
                 method: 'PATCH',

@@ -1,0 +1,100 @@
+<div
+    class="d-table-row"
+    ng-class="{'page-done': vm.page.done}"
+>
+    <!--Page number-->
+    <div class="d-table-cell handle" ng-style="vm.columnWidths.page_nr">{{vm.number}}</div>
+
+    <!--Edit mode -->
+    <div class="d-table-cell" ng-style="{width: vm.articleWidth + 'px'}" ng-show="vm.editing">
+        <div><b>Artikler</b></div>
+        <div class="d-article-input">
+            <multiselect-dropdown
+                ng-model="vm.newArticles"
+                items="vm.publication.articles"
+                label="'name'"
+                placeholder="Artikler"
+            >
+            </multiselect-dropdown>
+            <div>
+                <button ng-click="vm.createArticle(page)" class="uk-button button-new" uk-tooltip="Lag ny artikkel">
+                    <i class="fas fa-plus"></i> <i class="fas fa-file"></i>
+                </button>
+            </div>
+            
+        </div>
+        <div><b>Annonser</b></div>
+        <div class="d-article-input">
+            <multiselect-dropdown
+                ng-model="vm.newAdverts"
+                items="vm.adverts"
+                label="'name'"
+                placeholder="Annonser"
+            >
+            </multiselect-dropdown>
+            <div>
+                <button ng-click="vm.createAdvert(page)" class="uk-button button-edit" uk-tooltip="Lag ny reklame">
+                    <i class="fas fa-plus"></i> <i class="fas fa-bullhorn"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View mode (articles) -->
+    <div class="d-table-cell article-cell" ng-style="{width: vm.articleWidth + 'px'}" ng-hide="vm.editing">
+        <div class="d-table">
+            <disposition-article
+                ng-repeat="articleId in vm.page.articles"
+                article="vm.articlesLookup[articleId]"
+                article-statuses="vm.articleStatuses"
+                review-statuses="vm.reviewStatuses"
+                column-widths="vm.columnWidths"
+            ></disposition-article>
+        </div>
+        <!--View mode (adverts)-->
+        <div class="d-table">
+            <disposition-advert
+                ng-repeat="advertId in vm.page.adverts"
+                advert="vm.advertsLookup[advertId]"
+                column-widths="vm.columnWidths"
+            ></disposition-advert>          
+        </div>
+    </div>
+    <!--Layout status-->
+    <div
+        class="d-table-cell"
+        ng-style="vm.applyColumnWidth('layout', {'background': page.layout_status.color})"
+    >
+        <select-dropdown
+            ng-model="vm.page.layout_status"
+            on-change="vm.updatePageMeta(page)"
+            items="vm.layoutStatuses"
+            label="'name'"
+            unclearable
+        ></select-dropdown>
+    </div>
+    <!--Done-->
+    <div class="d-table-cell button" ng-style="vm.columnWidths.done">
+        <span style="cursor: pointer" ng-click="vm.page.done = !page.done; vm.updatePageMeta(page);">
+            <i class="fas fa-check fa-lg"
+                ng-class="{'uk-text-danger' : !page.done, 'uk-text-success' : page.done }"
+                uib-tooltip="Siden er {{!page.done ? 'ikke ' : ''}} helt ferdig">
+            </i>
+        </span>
+    </div>
+    <!--Edit-->
+    <div class="d-table-cell button" ng-style="vm.columnWidths.edit">
+        <button ng-click="vm.editPage(this)" class="uk-button button-edit button-xs" ng-hide="vm.editing">
+            <i class="fas fa-edit"></i>
+        </button>
+        <button ng-click="vm.submitPage(this)" class="uk-button button-new button-xs" ng-show="vm.editing">
+            <i class="fas fa-save"></i>
+        </button>
+    </div>
+    <!--Delete-->
+    <div class="d-table-cell button" ng-style="vm.columnWidths.delete">
+        <button ng-click="vm.deletePage(page)" class="uk-button uk-button-danger button-xs">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+</div>
