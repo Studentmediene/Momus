@@ -69,4 +69,20 @@
     position: fixed !important;
     left: 0px !important;
     right: 0px !important;
+    padding: 10px 0 !important;
+    background: $global-primary-background !important;
+
+    li {
+        padding: 0px 10px;
+
+        > a {
+            color: white !important;
+        }
+
+        &.uk-active {
+            > a {
+                color: $global-primary-background !important;
+            }
+        }
+    }
 }

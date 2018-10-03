@@ -6,8 +6,6 @@ import { TransitionService } from '@uirouter/core';
 import * as UIKit from 'uikit';
 
 class NavigationCtrl implements angular.IController {
-    private navDropdown: any;
-
     private $transitions: TransitionService;
 
     constructor($transitions: TransitionService) {
@@ -15,7 +13,6 @@ class NavigationCtrl implements angular.IController {
     }
     public $postLink() {
         const navDropdown = UIKit.dropdown('#navbardropdown', {offset: 0, mode: 'click', delayHide: 0});
-        this.navDropdown = navDropdown;
 
         this.$transitions.onBefore({}, () => {
             navDropdown.hide();
