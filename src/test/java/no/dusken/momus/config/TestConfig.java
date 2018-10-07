@@ -1,6 +1,9 @@
 package no.dusken.momus.config;
 
 import no.dusken.momus.service.MessagingService;
+import no.dusken.momus.service.remote.RemoteDocumentServiceMock;
+import no.dusken.momus.service.remotedocument.RemoteDocumentService;
+
 import org.mockito.Mockito;
 import org.springframework.context.annotation.*;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -22,5 +25,11 @@ public class TestConfig extends WebMvcConfigurerAdapter {
     @Primary
     public MessagingService messagingService() {
         return Mockito.mock(MessagingService.class);
+    }
+
+    @Bean
+    @Primary
+    public RemoteDocumentService remoteDocumentService() {
+        return new RemoteDocumentServiceMock();
     }
 }

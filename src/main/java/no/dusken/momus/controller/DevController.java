@@ -129,7 +129,7 @@ public class DevController {
         a1.setReview(articleReviews.get(random.nextInt(articleReviews.size())));
         a1.setJournalists(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a1.setPhotographers(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
-        a1.setGoogleDriveId("19MklrX5aiYHtdpSuiz_fNr7BfalpJH11O-Q6RdONSa0");
+        a1.setRemoteId("19MklrX5aiYHtdpSuiz_fNr7BfalpJH11O-Q6RdONSa0");
         a1.setNote("<p>Notat her</p>");
         a1.setPublication(p1);
         articleRepository.save(a1);
@@ -147,7 +147,7 @@ public class DevController {
                 ))
         );
         a2.setPhotographers(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
-        a2.setGoogleDriveId("1i8Bq6UYswttJYjAkEf5yRvZV-zPlzTSzW835wUq8s5s");
+        a2.setRemoteId("1i8Bq6UYswttJYjAkEf5yRvZV-zPlzTSzW835wUq8s5s");
         a2.setNote("<p>Notat her</p>");
         a2.setPublication(p1);
         articleRepository.save(a2);
@@ -160,7 +160,7 @@ public class DevController {
         a3.setReview(articleReviews.get(random.nextInt(articleReviews.size())));
         a3.setJournalists(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a3.setUseIllustration(true);
-        a3.setGoogleDriveId("1pVVqfVaAUeyyia3X3JYwrv9HXgg-9Flud_GURBsoShg");
+        a3.setRemoteId("1pVVqfVaAUeyyia3X3JYwrv9HXgg-9Flud_GURBsoShg");
         a3.setNote("<p>Notat her</p>");
         a3.setPublication(p1);
         articleRepository.save(a3);
@@ -173,7 +173,7 @@ public class DevController {
         a5.setReview(articleReviews.get(random.nextInt(articleReviews.size())));
         a5.setJournalists(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a5.setPhotographers(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
-        a5.setGoogleDriveId("1DPb-IoPNbvkookwOupfT1oaPydrRG8FPUGs97eRUFWc");
+        a5.setRemoteId("1DPb-IoPNbvkookwOupfT1oaPydrRG8FPUGs97eRUFWc");
         a5.setNote("<p>Notat her</p>");
         a5.setPublication(p2);
         articleRepository.save(a5);

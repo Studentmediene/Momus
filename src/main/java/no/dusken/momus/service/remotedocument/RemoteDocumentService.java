@@ -1,6 +1,9 @@
 package no.dusken.momus.service.remotedocument;
 
 public interface RemoteDocumentService {
+    enum ServiceName {
+        GOOGLE_DRIVE, SHAREPOINT, MOCK
+    }
     void setup();
 
     /**
@@ -8,5 +11,5 @@ public interface RemoteDocumentService {
      */
     RemoteDocument createDocument(String name);
 
-    String getServiceName();
+    ServiceName getServiceName();
 }

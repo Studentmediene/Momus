@@ -17,6 +17,8 @@
 package no.dusken.momus.service.drive;
 
 import no.dusken.momus.service.AbstractServiceTest;
+import no.dusken.momus.service.remotedocument.drive.GoogleDocsTextConverter;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

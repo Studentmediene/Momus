@@ -135,12 +135,11 @@ public class ArticleControllerTest extends AbstractControllerTest {
         article = articleService.saveArticle(article);
 
         Article updatedArticle = Article.builder()
-                .content("Nytt innhold")
                 .name("Artikkel")
                 .status(status2)
                 .build();
         updatedArticle.setId(article.getId());
-        article = articleService.updateArticleContent(updatedArticle);
+        article = articleService.updateArticleContent(article.getId(), "Nytt innhold");
         articleService.updateArticleMetadata(article.getId(), updatedArticle);
 
         List<ArticleRevision> revisions = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(article.getId());

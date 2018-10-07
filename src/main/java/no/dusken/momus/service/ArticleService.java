@@ -16,26 +16,6 @@
 
 package no.dusken.momus.service;
 
-import lombok.extern.slf4j.Slf4j;
-import no.dusken.momus.exceptions.RestException;
-import no.dusken.momus.model.*;
-import no.dusken.momus.model.websocket.Action;
-import no.dusken.momus.service.remotedocument.RemoteDocument;
-import no.dusken.momus.service.remotedocument.drive.GoogleDriveService;
-import no.dusken.momus.service.indesign.IndesignExport;
-import no.dusken.momus.service.indesign.IndesignGenerator;
-import no.dusken.momus.service.repository.*;
-import no.dusken.momus.service.search.ArticleQuery;
-import no.dusken.momus.service.search.ArticleQueryBuilder;
-import no.dusken.momus.service.search.ArticleSearchParams;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.servlet.http.HttpServletResponse;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -43,32 +23,58 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
+import no.dusken.momus.exceptions.RestException;
+import no.dusken.momus.model.Article;
+import no.dusken.momus.model.ArticleRevision;
+import no.dusken.momus.model.ArticleStatus;
+import no.dusken.momus.model.websocket.Action;
+import no.dusken.momus.service.indesign.IndesignExport;
+import no.dusken.momus.service.indesign.IndesignGenerator;
+import no.dusken.momus.service.remotedocument.RemoteDocument;
+import no.dusken.momus.service.remotedocument.RemoteDocumentService;
+import no.dusken.momus.service.repository.ArticleRepository;
+import no.dusken.momus.service.repository.ArticleRevisionRepository;
+import no.dusken.momus.service.search.ArticleQuery;
+import no.dusken.momus.service.search.ArticleQueryBuilder;
+import no.dusken.momus.service.search.ArticleSearchParams;
+
 @Service
 @Slf4j
 public class ArticleService {
-    @Autowired
     private ArticleRepository articleRepository;
-
-    @Autowired
     private ArticleRevisionRepository articleRevisionRepository;
-
-    @Autowired
     private IndesignGenerator indesignGenerator;
-
-    @Autowired
-    private GoogleDriveService googleDriveService;
-
-    @Autowired
     private ArticleQueryBuilder articleQueryBuilder;
+    private MessagingService messagingService;
 
     @Autowired
-    private MessagingService messagingService;
+    private RemoteDocumentService remoteDocumentService;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Value("${drive.syncEnabled}")
-    private boolean driveEnabled;
+    public ArticleService(
+        ArticleRepository articleRepository,
+        ArticleRevisionRepository articleRevisionRepository,
+        IndesignGenerator indesignGenerator,
+        ArticleQueryBuilder articleQueryBuilder,
+        MessagingService messagingService
+        ) {
+            this.articleRepository = articleRepository;
+            this.articleRevisionRepository = articleRevisionRepository;
+            this.indesignGenerator = indesignGenerator;
+            this.articleQueryBuilder = articleQueryBuilder;
+            this.messagingService = messagingService;
+        }
 
     public Article getArticleById(Long id) {
         if(!articleRepository.exists(id)) {
@@ -85,15 +91,14 @@ public class ArticleService {
     }
 
     public Article saveArticle(Article article) {
-        if(driveEnabled) {
-            RemoteDocument document = googleDriveService.createDocument(article.getName());
+        RemoteDocument document = remoteDocumentService.createDocument(article.getName());
 
-            if (document == null) {
-                throw new RestException("Couldn't create article, Google Docs failed", 500);
-            }
-
-            article.setGoogleDriveId(document.getId());
+        if (document == null) {
+            throw new RestException("Couldn't create article, Google Docs failed", 500);
         }
+
+        article.setRemoteId(document.getId());
+        article.setRemoteUrl(document.getUrl());
 
         Article newArticle = articleRepository.saveAndFlush(article);
         log.info("Article with id {} created with data: {}", newArticle.getId(), newArticle);
@@ -110,19 +115,18 @@ public class ArticleService {
         return articleRepository.saveAndFlush(article);
     }
 
-    public Article updateArticleContent(Article article) {
-        Article existing = articleRepository.findOne(article.getId());
-        String newContent = article.getContent();
+    public Article updateArticleContent(Long id, String content) {
+        Article existing = articleRepository.findOne(id);
         String oldContent = existing.getContent();
 
-        if (newContent.equals(oldContent)) {
+        if (content.equals(oldContent)) {
             // Inserting comments in the Google Docs triggers a change, but the content we see is the same.
             // So it would look weird having multiple revisions without any changes.
-            log.info("No changes made to content of article with id {}, not updating it", article.getId());
+            log.info("No changes made to content of article with id {}, not updating it", id);
             return existing;
         }
 
-        existing.setContent(newContent);
+        existing.setContent(content);
 
         createRevision(existing);
 

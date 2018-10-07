@@ -34,7 +34,9 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     @Query("select a from Article a where :person member of a.journalists or :person member of a.photographers order by a.lastUpdated desc")
     List<Article> findByJournalistsOrPhotographersContains(@Param("person") Person person, Pageable pageable);
 
-    List<Article> findByGoogleDriveIdIn(Iterable<String> ids);
+    Article findByRemoteId(String id);
+
+    List<Article> findByRemoteIdIn(Iterable<String> ids);
 
     int countByStatusIdAndPublicationId(Long articleStatus, Long id);
 

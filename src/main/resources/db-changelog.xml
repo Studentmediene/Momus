@@ -789,4 +789,27 @@
             referencedColumnNames="id"
         />
     </changeSet>
+
+    <changeSet id="45" author="Eivind">
+        <addColumn tableName="article">
+            <column name="remoteid" type="VARCHAR(255)" />
+        </addColumn>
+        <addColumn tableName="article">
+            <column name="remoteservicename" type="VARCHAR(255)" value="GOOGLE_DRIVE" />
+        </addColumn>
+        <addColumn tableName="article">
+            <column name="remoteurl" type="VARCHAR(255)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="46" author="Eivind">
+        <sql>
+            UPDATE article
+            SET remoteid=googledriveid, remoteurl='https://docs.google.com/document/d/'||googledriveid||'/edit'
+            WHERE remoteservicename='GOOGLE_DRIVE'
+        </sql>
+    </changeSet>
+    <changeSet id="47" author="Eivind">
+        <dropColumn columnName="googledriveid" tableName="article" />
+    </changeSet>
 </databaseChangeLog>

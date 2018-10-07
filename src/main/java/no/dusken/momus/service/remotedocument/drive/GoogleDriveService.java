@@ -46,8 +46,8 @@ import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.util.*;
 
-@Service
 @Slf4j
+@Service
 public class GoogleDriveService implements RemoteDocumentService {
 
     @Value("${drive.syncEnabled}")
@@ -175,17 +175,17 @@ public class GoogleDriveService implements RemoteDocumentService {
             return;
         }
 
-        List<Article> articles = articleRepository.findByGoogleDriveIdIn(modifiedFileIds);
+        List<Article> articles = articleRepository.findByRemoteIdIn(modifiedFileIds);
         for (Article article : articles) {
             updateContentFromDrive(article);
-            articleService.updateArticleContent(article);
+            articleService.updateArticleContent(article.getId(), article.getContent());
         }
 
         log.debug("Done syncing, updated {} articles", articles.size());
     }
 
-    public String getServiceName() {
-        return "GOOGLE_DRIVE";
+    public ServiceName getServiceName() {
+        return ServiceName.GOOGLE_DRIVE;
     }
 
     /**
@@ -230,7 +230,7 @@ public class GoogleDriveService implements RemoteDocumentService {
      * it to the googleDocsTextConverter
      */
     private void updateContentFromDrive(Article article) {
-        String downloadUrl = "https://docs.google.com/feeds/download/documents/export/Export?id=" + article.getGoogleDriveId() + "&exportFormat=html";
+        String downloadUrl = "https://docs.google.com/feeds/download/documents/export/Export?id=" + article.getRemoteId() + "&exportFormat=html";
 
         try {
             // Read data, small hack to convert the stream to a string

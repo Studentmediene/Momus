@@ -19,6 +19,8 @@ package no.dusken.momus.service;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
+import no.dusken.momus.service.remotedocument.RemoteDocument;
+import no.dusken.momus.service.remotedocument.RemoteDocumentService;
 import no.dusken.momus.service.repository.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +46,9 @@ public class ArticleServiceTest extends AbstractServiceTest {
 
     @Mock
     private IndesignGenerator indesignGenerator;
+
+    @Mock
+    private RemoteDocumentService remoteDocumentService;
 
     @InjectMocks
     private ArticleService articleService;
@@ -154,6 +159,18 @@ public class ArticleServiceTest extends AbstractServiceTest {
         when(articleRepository.findOne(article1.getId())).thenReturn(article1);
         when(articleRepository.findOne(article2.getId())).thenReturn(article2);
         when(articleRepository.saveAndFlush(any(Article.class))).then(returnsFirstArg());
+        when(remoteDocumentService.createDocument(any(String.class))).thenReturn(new RemoteDocument(){
+        
+            @Override
+            public String getUrl() {
+                return null;
+            }
+        
+            @Override
+            public String getId() {
+                return null;
+            }
+        });
     }
 
     /**
@@ -265,19 +282,16 @@ public class ArticleServiceTest extends AbstractServiceTest {
      */
     @Test
     public void testUpdateArticleContent() {
-        Article article = Article.builder().content("<p>NEW CONTENT for article 1</p>").build();
-        article.setId(article1.getId());
-
         ArticleService articleServiceSpy = spy(articleService);
         doReturn(new ArticleRevision()).when(articleServiceSpy).createRevision(any(Article.class));
 
-        article = articleServiceSpy.updateArticleContent(article);
+        articleServiceSpy.updateArticleContent(article1.getId(), "<p>NEW CONTENT for article 1</p>");
 
         verify(articleServiceSpy, times(1)).updateArticle(article1);
         verify(articleServiceSpy, times(1)).createRevision(article1);
-        assertEquals("<p>NEW CONTENT for article 1</p>", article.getContent());
-        assertEquals("new content for article 1", article.getRawcontent());
-        assertEquals(25, article.getContentLength());
+        assertEquals("<p>NEW CONTENT for article 1</p>", article1.getContent());
+        assertEquals("new content for article 1", article1.getRawcontent());
+        assertEquals(25, article1.getContentLength());
     }
 
     /**
@@ -286,11 +300,9 @@ public class ArticleServiceTest extends AbstractServiceTest {
      */
     @Test
     public void testUpdateArticleContentNoChange() {
-        Article article = Article.builder().content(article1.getContent()).build();
-        article.setId(article1.getId());
         ArticleService articleServiceSpy = spy(articleService);
 
-        articleServiceSpy.updateArticleContent(article);
+        articleServiceSpy.updateArticleContent(article1.getId(), article1.getContent());
 
         verify(articleServiceSpy, times(0)).updateArticle(article1);
         verify(articleServiceSpy, times(0)).createRevision(article1);

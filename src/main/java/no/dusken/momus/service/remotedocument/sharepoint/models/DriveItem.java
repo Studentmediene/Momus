@@ -24,6 +24,7 @@ public class DriveItem implements RemoteDocument {
     private LocalDate lastModifiedDateTime;
     private FileResource file;
     private FolderResource folder;
+    private Object deleted;
 
     @JsonIgnore
     public String getUrl() {

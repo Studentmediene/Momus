@@ -19,6 +19,8 @@ package no.dusken.momus.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import no.dusken.momus.service.ArticleService;
+import no.dusken.momus.service.remotedocument.RemoteDocumentService;
+
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -40,12 +42,28 @@ import java.util.Set;
 public class Article extends AbstractEntity implements Messageable {
     private String name;
 
+    private String remoteId;
+
+    private String remoteUrl;
+
+    @Enumerated(EnumType.STRING)
+    private RemoteDocumentService.ServiceName remoteServiceName;
+
     @JsonIgnore
     private String content;
+
+    @JsonIgnore
+    private String rawcontent;
+
+    private int contentLength;
+
+    private String imageText;
 
     private String note;
 
     private String comment;
+
+    private ZonedDateTime lastUpdated;
 
     @ManyToOne
     private Section section;
@@ -59,6 +77,10 @@ public class Article extends AbstractEntity implements Messageable {
     @ManyToOne
     private ArticleReview review;
 
+    private boolean quoteCheckStatus;
+
+    private String photoStatus;
+
     @ManyToOne
     @JsonIgnoreProperties(value = {"articles", "pages"})
     private Publication publication;
@@ -68,30 +90,17 @@ public class Article extends AbstractEntity implements Messageable {
     @Fetch(FetchMode.SUBSELECT)
     private Set<Person> journalists;
 
+    private String externalAuthor;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "article_photographer")
     @Fetch(FetchMode.SUBSELECT)
     private Set<Person> photographers;
 
-    private ZonedDateTime lastUpdated;
-
-    private String photoStatus;
-
-    private String googleDriveId;
-
-    @JsonIgnore
-    private String rawcontent;
-
-    private int contentLength;
+    private String externalPhotographer;
 
     /** If the article is assigned illustrator(s), not photographer(s) */
     private boolean useIllustration;
-
-    private String imageText;
-    private boolean quoteCheckStatus;
-
-    private String externalAuthor;
-    private String externalPhotographer;
 
     private boolean archived;
 
