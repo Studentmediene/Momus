@@ -172,6 +172,7 @@ public class GoogleDriveService implements RemoteDocumentService {
 
         Set<String> modifiedFileIds = findModifiedFileIds();
         if (modifiedFileIds.size() == 0) {
+            log.debug("Sync finished, no changes");
             return;
         }
 
@@ -237,7 +238,7 @@ public class GoogleDriveService implements RemoteDocumentService {
             InputStream inputStream = drive.getRequestFactory().buildGetRequest(new GenericUrl(downloadUrl)).execute().getContent();
             Scanner s = new java.util.Scanner(inputStream).useDelimiter("\\A");
             String content = s.hasNext() ? s.next() : "";
-            log.info("Got new content:\n{}", content);
+            log.debug("Got new content:\n{}", content);
 
             String convertedContent = googleDocsTextConverter.convert(content);
             article.setContent(convertedContent);

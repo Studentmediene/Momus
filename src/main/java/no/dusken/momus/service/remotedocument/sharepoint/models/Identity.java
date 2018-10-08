@@ -12,9 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ItemDelta {
+public class Identity {
     private String id;
-    private String name;
-    private Object file;
-    private Object deleted;
+    private String displayName;
 }

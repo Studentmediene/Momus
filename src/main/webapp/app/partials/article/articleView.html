@@ -79,7 +79,12 @@
             <div class="btn-row">
                 <a href="{{vm.article.remote_url}}" target="_blank" class="btn btn-success">
                     <span class="fa fa-pencil"></span>
-                    Rediger i Google Docs
+                    <span ng-if="vm.article.remote_service_name === 'GOOGLE_DRIVE'">
+                        Rediger i Google Docs
+                    </span>
+                    <span ng-if="vm.article.remote_service_name === 'SHAREPOINT'">
+                        Rediger i Sharepoint
+                    </span>
                 </a>
 
                 <a ui-sref="articlerevision({id:vm.article.id})" class="btn btn-primary">

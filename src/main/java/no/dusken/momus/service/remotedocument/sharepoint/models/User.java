@@ -15,4 +15,9 @@ import lombok.ToString;
 public class User {
     private String id;
     private String displayName;
+    private String userPrincipalName;
+
+    public String getUsername() {
+        return userPrincipalName.replace("@smint.no", "");
+    }
 }

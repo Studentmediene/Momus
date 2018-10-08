@@ -10,6 +10,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -20,31 +23,41 @@ import org.apache.poi.xwpf.converter.xhtml.XHTMLOptions;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.model.Article;
+import no.dusken.momus.model.Person;
 import no.dusken.momus.service.ArticleService;
 import no.dusken.momus.service.KeyValueService;
+import no.dusken.momus.service.PersonService;
 import no.dusken.momus.service.remotedocument.RemoteDocumentService;
+import no.dusken.momus.service.remotedocument.sharepoint.models.DeltaItem;
 import no.dusken.momus.service.remotedocument.sharepoint.models.DriveItem;
 import no.dusken.momus.service.remotedocument.sharepoint.models.DriveItemChildren;
 import no.dusken.momus.service.remotedocument.sharepoint.models.ItemDeltaList;
+import no.dusken.momus.service.remotedocument.sharepoint.models.User;
 import no.dusken.momus.service.repository.ArticleRepository;
+import no.dusken.momus.service.repository.PersonRepository;
 
 @Slf4j
-@Service
+@Service("remoteDocumentService")
 public class SharepointService implements RemoteDocumentService {
 
     @Value("${sharepoint.syncEnabled}")
@@ -57,17 +70,20 @@ public class SharepointService implements RemoteDocumentService {
     private String SITE_ID;
 
     @Value("${sharepoint.driveid}")
-    private String DRIVE_ID;
+    private String ARTICLES_DRIVE_ID;
 
     private Map<String, String> defaultParameters;
 
     private boolean isInitialized = false;
 
-    private final String DRIVE_URL = "{resource}/v1.0/drives/{driveId}";
-    private final String ITEM_URL = DRIVE_URL + "/items/{itemId}";
-    private final String CHILDREN_URL = ITEM_URL + "/children";
-    private final String CONTENT_URL = ITEM_URL + "/content";
+    private final String ROOT_URL = "{resource}/v1.0";
+    private final String DRIVE_URL = ROOT_URL + "/drives/{driveId}";
+    private final String ARTICLE_ITEM_URL = DRIVE_URL + "/items/{itemId}";
+    private final String CREATE_ARTICLE_URL = DRIVE_URL + "/items/root:/{fileName}:/content";
+    private final String ARTICLE_CONTENT_URL = DRIVE_URL + "/items/{itemId}/content";
     private final String DELTA_URL_NO_TOKEN = DRIVE_URL + "/root/delta";
+
+    private final String USER_URL = ROOT_URL + "/users/{userId}";
 
     private final String DELTA_URL_KEY = "SHAREPOINT_DELTA_URL";
 
@@ -83,6 +99,9 @@ public class SharepointService implements RemoteDocumentService {
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    private PersonRepository personRepository;
 
     public SharepointService(
         SharepointAuthenticator sharepointAuthenticator,
@@ -106,7 +125,8 @@ public class SharepointService implements RemoteDocumentService {
         log.info("Setting up Sharepoint");
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("driveId", DRIVE_ID);
+        parameters.put("siteId", SITE_ID);
+        parameters.put("driveId", ARTICLES_DRIVE_ID);
         parameters.put("resource", RESOURCE);
 
         this.defaultParameters = parameters;
@@ -127,6 +147,7 @@ public class SharepointService implements RemoteDocumentService {
         sync();
     }
 
+    @Scheduled(cron = "30 * * * * *")
     public void sync() {
         if(!enabled) {
             return;
@@ -134,61 +155,37 @@ public class SharepointService implements RemoteDocumentService {
         log.debug("Starting Sharepoint sync");
 
         try {
-            List<DriveItem> deltas = getDeltas();
-            applyDeltas(deltas);
+            Set<DeltaItem> deltas = getDeltas();
+            if(deltas.size() == 0) {
+                log.info("No changes from Sharepoint");
+            } else {
+                log.info("Got deltas: {}", deltas.size());
+                applyDeltas(deltas);
+            }
         } catch (URISyntaxException e) {
             log.error("Could not get deltas from Sharepoint", e);
         }
+
+        log.debug("Sharepoint sync finished");
     }
 
-    public DriveItem getRootDriveItem() {
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("itemId", "root");
-        return this.restTemplate.getForObject(ITEM_URL, DriveItem.class, parameters);
+    public ServiceName getServiceName() {
+        return ServiceName.SHAREPOINT;
     }
 
-    public DriveItem getByItemId(String itemId) {
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("itemId", itemId);
-        return this.restTemplate.getForObject(ITEM_URL, DriveItem.class, parameters);
-    }
-
-    public List<DriveItem> getChildren(DriveItem item) {
-        if(item.getFolder() == null) {
-            throw new IllegalArgumentException(
-                String.format("Can't get children of an item %s, it is not a folder", item.getName())
-            );
-        }
-        log.info("Getting children for item {}", item.getId());
-
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("itemId", item.getId());
-        DriveItemChildren children = this.restTemplate.getForObject(
-            CHILDREN_URL,
-            DriveItemChildren.class,
-            parameters
-        );
-        return children.getValue();
-    }
-
-    public DriveItem createDocument(String name) {
+    public DriveItem createDocument(String name) throws IOException {
         log.info("Creating sharepoint file with name {}", name);
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("itemId", "root");
+        parameters.put("fileName", name + ".docx");
 
-        String req = "{\"name\": \"" + name + ".docx\",\"file\": {}}";
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>(req, headers);
-
+        headers.setContentType(MediaType.TEXT_PLAIN);
+        PathResource resource = new PathResource(new ClassPathResource("sharepoint-template.docx").getFile().getPath());
+        HttpEntity<PathResource> entity = new HttpEntity<>(resource, headers);
         try {
-            return this.restTemplate.postForObject(
-                CHILDREN_URL,
-                entity,
-                DriveItem.class,
-                parameters
-            );
+            ResponseEntity<DriveItem> resp = this.restTemplate.exchange(CREATE_ARTICLE_URL, HttpMethod.PUT, entity, DriveItem.class, parameters);
+            return resp.getBody();
         } catch(HttpClientErrorException e) {
             if(e.getStatusCode().equals(HttpStatus.CONFLICT)) {
                 String newName = name + "_new";
@@ -200,67 +197,90 @@ public class SharepointService implements RemoteDocumentService {
         }
     }
 
-    public String getItemContentAsHtml(DriveItem item) throws IOException {
-        log.debug(item.getId());
+    private String getItemContentAsHtml(DriveItem item) throws IOException {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("itemId", item.getId());
-        Resource res = this.restTemplate.getForObject(CONTENT_URL, Resource.class, parameters);
+        Resource res = this.restTemplate.getForObject(ARTICLE_CONTENT_URL, Resource.class, parameters);
         XWPFDocument doc = new XWPFDocument(res.getInputStream());
         OutputStream out = new ByteArrayOutputStream();
 
         XHTMLConverter.getInstance().convert(doc, out, XHTMLOptions.create());
         String html = out.toString();
-        
+
         return this.textConverter.convert(html);
     }
 
-    public ServiceName getServiceName() {
-        return ServiceName.SHAREPOINT;
+    private DriveItem getDriveItem(String id) {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("itemId", id);
+        DriveItem res = this.restTemplate.getForObject(ARTICLE_ITEM_URL, DriveItem.class, parameters);
+        return res;
     }
 
-    private List<DriveItem> getDeltas() throws URISyntaxException {
+    private User getUser(String id) {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("userId", id);
+        User res = this.restTemplate.getForObject(USER_URL, User.class, parameters);
+        return res;
+    }
+
+    private Set<DeltaItem> getDeltas() throws URISyntaxException {
         String deltaLink = keyValueService.getValue(DELTA_URL_KEY);
         URI url = this.restTemplate.getUriTemplateHandler().expand(DELTA_URL_NO_TOKEN, this.defaultParameters);
         if(deltaLink != null) {
             url = new URI(deltaLink);
         }
         
-        ItemDeltaList deltaList;
-        List<DriveItem> deltas = new ArrayList<>();
+        List<DeltaItem> deltas = new ArrayList<>();
+        String nextDeltaLink;
 
-        do {
-            log.debug("URL: {} ", url);
-            deltaList = this.restTemplate.getForObject(url, ItemDeltaList.class);
+        while(true) {
+            ItemDeltaList deltaList = this.restTemplate.getForObject(url, ItemDeltaList.class);
             deltas.addAll(deltaList.getValue());
-            if (deltaList.getNextLink() != null) {
-                url = new URI(deltaList.getNextLink());
+
+            // We have reached the end of the current delta set, so store link to next delta and break
+            if(deltaList.getNextLink() == null) {
+                nextDeltaLink = deltaList.getDeltaLink();
+                break;
             }
-        } while(deltaList.getNextLink() != null);
+            url = new URI(deltaList.getNextLink());
+        }
 
-        log.debug("Got deltas: {} nextLink: {} deltaLink: {}", deltaList.getValue().size(), deltaList.getNextLink(), deltaList.getDeltaLink());
+        if(deltas.size() == 0) {
+            return Collections.emptySet();
+        }
 
-        keyValueService.setValue(DELTA_URL_KEY, deltaList.getDeltaLink());
+        // Store the link for next sync
+        keyValueService.setValue(DELTA_URL_KEY, nextDeltaLink);
 
-        return deltaList.getValue();
+        // We only want the valid deltas for us, which means no folders, not deleted
+        // And we also only need one delta per changed article for every sync, so we make it a set.
+        Set<DeltaItem> validDeltas = deltas.stream()
+                .filter(item -> item.getFolder() == null && item.getDeleted() == null)
+                .collect(Collectors.toSet());
+
+        return validDeltas;
     }
 
-    private void applyDeltas(List<DriveItem> deltas) {
+    private void applyDeltas(Set<DeltaItem> deltas) {
         deltas.forEach(delta -> {
             try {
-                if(delta.getDeleted() != null) {
-                    log.debug("Item {} was deleted", delta.getName());
-                    return;
-                }
-                String content = getItemContentAsHtml(delta);
-                Article article = articleRepository.findByRemoteId(delta.getId());
+                DriveItem item = getDriveItem(delta.getId());
+                String content = getItemContentAsHtml(item);
+                Article article = articleRepository.findByRemoteId(item.getId());
                 if(article == null) {
+                    log.debug("Item {} was not found in the database, skipping", item.getName());
                     return;
                 }
-                articleService.updateArticleContent(article.getId(), content);
+                User u = getUser(item.getLastModifiedBy().getUser().getId());
+                Person dbPerson = personRepository.findByUsername(u.getUsername());
+                log.debug("Article {} was changed by: {}", item.getName(), dbPerson);
+                articleService.updateArticleContent(article.getId(), content, dbPerson);
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (HttpClientErrorException e) {
+                log.error("Error applying delta {} {}", delta, e.getStatusCode());
             }
-
         });
     }
 

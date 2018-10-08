@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ItemDeltaList {
-    private List<DriveItem> value;
+    private List<DeltaItem> value;
 
     @JsonProperty("@odata.nextLink")
     private String nextLink;

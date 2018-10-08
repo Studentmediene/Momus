@@ -8,6 +8,11 @@ import java.util.regex.Pattern;
 import org.apache.commons.text.StringEscapeUtils;
 
 public class SharepointTextConverter {
+
+    private final String titleStyleName = "Tittel";
+    private final String preambleStyleName = "Ingress";
+    private final String subtitleStyleName = "Mellomtittel";
+
     Pattern body = Pattern.compile("<body.*?><div.*?>(.*)</div></body>");
     Pattern css = Pattern.compile("<style type=\"text/css\">(.*)</style>");
     Pattern boldAndItalicsStyle = Pattern.compile("<span[^>]*style=\"[^\"]*font-weight:bold;font-style:italic[^>]*>([^<]*)</span>");
@@ -26,9 +31,9 @@ public class SharepointTextConverter {
     Pattern spaces = Pattern.compile("&nbsp;");
     Pattern comments = Pattern.compile("<div><p>.*?</p></div>");
 
-    Pattern title = Pattern.compile("<p [^>]*class=\"[^\"]*Heading1[^>]*>([^<]*)</p>");
-    Pattern preamble = Pattern.compile("<p [^>]*class=\"[^\"]*Heading2[^>]*>([^<]*)</p>");
-    Pattern subtitle = Pattern.compile("<p [^>]*class=\"[^\"]*Heading3[^>]*>([^<]*)</p>");
+    Pattern title = Pattern.compile("<p [^>]*class=\"[^\"]*" + titleStyleName + "[^>]*>([^<]*)</p>");
+    Pattern preamble = Pattern.compile("<p [^>]*class=\"[^\"]*" + preambleStyleName + "[^>]*>([^<]*)</p>");
+    Pattern subtitle = Pattern.compile("<p [^>]*class=\"[^\"]*" + subtitleStyleName + "[^>]*>([^<]*)</p>");
     Pattern lists = Pattern.compile("<p [^>]*class=\"[^\"]*ListParagraph[^>]*>([^<]*)</p>");
 
     Pattern table = Pattern.compile("<table[^>]*?>.*?</table>");
