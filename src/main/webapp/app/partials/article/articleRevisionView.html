@@ -32,6 +32,7 @@
                             <th ng-show="vm.showDiff" colspan="2">Sammenlign</th>
                             <th>Dato</th>
                             <th>Status</th>
+                            <th>Ansvarlig</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -49,6 +50,7 @@
                             <td>
                                 <span style="background-color: {{rev.status.color}}; padding: 3px;">{{ rev.status.name }}</span>
                             </td>
+                            <td><span person-widget="rev.responsible">{{ rev.responsible && rev.responsible.name }}</span></td>
                         </tr>
                         </tbody>
                     </table>

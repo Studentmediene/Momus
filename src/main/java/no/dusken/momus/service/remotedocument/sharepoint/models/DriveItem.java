@@ -32,4 +32,12 @@ public class DriveItem implements RemoteDocument {
     public String getUrl() {
         return webUrl;
     }
+
+    @JsonIgnore
+    public String getLastModifiedUserId() {
+        if(lastModifiedBy.getUser() == null) {
+            return null;
+        }
+        return lastModifiedBy.getUser().getId();
+    }
 }
