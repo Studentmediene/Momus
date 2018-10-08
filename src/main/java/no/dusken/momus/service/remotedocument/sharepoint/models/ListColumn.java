@@ -12,15 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User {
-    private String id;
-    private String displayName;
-    private String userPrincipalName;
-
-    public String getUsername() {
-        if(userPrincipalName == null) {
-            return null;
-        }
-        return userPrincipalName.replace("@smint.no", "");
-    }
+public class ListColumn {
+    private String name;
+    private String description;
 }

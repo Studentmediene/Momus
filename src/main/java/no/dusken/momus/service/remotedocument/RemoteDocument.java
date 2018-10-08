@@ -5,4 +5,6 @@ public interface RemoteDocument {
 
     String getUrl();
 
+    RemoteDocumentService.ServiceName getRemoteServiceName();
+
 }

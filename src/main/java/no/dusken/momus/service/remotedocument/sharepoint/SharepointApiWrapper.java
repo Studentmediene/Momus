@@ -28,10 +28,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -40,6 +42,8 @@ import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.service.remotedocument.sharepoint.models.DeltaItem;
 import no.dusken.momus.service.remotedocument.sharepoint.models.DriveItem;
 import no.dusken.momus.service.remotedocument.sharepoint.models.ItemDeltaList;
+import no.dusken.momus.service.remotedocument.sharepoint.models.ListItemFields;
+import no.dusken.momus.service.remotedocument.sharepoint.models.SpList;
 import no.dusken.momus.service.remotedocument.sharepoint.models.User;
 
 @Slf4j
@@ -49,12 +53,16 @@ public class SharepointApiWrapper {
 
     private final String ROOT_URL = "{resource}/v1.0";
     private final String DRIVE_URL = ROOT_URL + "/drives/{driveId}";
-    private final String ARTICLE_ITEM_URL = DRIVE_URL + "/items/{itemId}";
+    private final String ARTICLE_ITEM_URL = DRIVE_URL + "/items/{itemId}?expand=listItem";
     private final String CREATE_ARTICLE_URL = DRIVE_URL + "/items/root:/{fileName}:/content";
     private final String ARTICLE_CONTENT_URL = DRIVE_URL + "/items/{itemId}/content";
     private final String DELTA_URL_NO_TOKEN = DRIVE_URL + "/root/delta";
 
     private final String USER_URL = ROOT_URL + "/users/{userId}";
+
+    private final String LISTS_URL = ROOT_URL + "/sites/{siteId}/lists";
+    private final String LIST_URL = LISTS_URL + "/{listId}?select=id&expand=columns(select=name)";
+    private final String PATCH_ITEM_URL = LISTS_URL + "/{listId}/items/{itemId}/fields";
 
     private AuthenticationResult authToken;
 
@@ -66,9 +74,10 @@ public class SharepointApiWrapper {
         this.authenticator = authenticator;
 
         Map<String, String> defaultParams = new HashMap<>();
-        defaultParams.put("siteId", env.getProperty("sharepoint.siteId"));
+        defaultParams.put("siteId", env.getProperty("sharepoint.siteid"));
         defaultParams.put("driveId", env.getProperty("sharepoint.driveid"));
         defaultParams.put("resource", env.getProperty("sharepoint.resource"));
+        defaultParams.put("listId", env.getProperty("sharepoint.listid"));
         this.defaultParams = defaultParams;
         this.restTemplate = setupRestTemplate(defaultParams);
 
@@ -84,6 +93,13 @@ public class SharepointApiWrapper {
         parameters.put("itemId", id);
         DriveItem res = this.restTemplate.getForObject(ARTICLE_ITEM_URL, DriveItem.class, parameters);
         return res;
+    }
+
+    public SpList getArticlesList() {
+        Map<String, String> parameters = new HashMap<>();
+        SpList list = this.restTemplate.getForObject(LIST_URL, SpList.class, parameters);
+        log.debug("{}", list);
+        return list;
     }
 
     public DriveItem createDocument(String name) throws IOException {
@@ -114,6 +130,17 @@ public class SharepointApiWrapper {
         parameters.put("userId", id);
         User res = this.restTemplate.getForObject(USER_URL, User.class, parameters);
         return res;
+    }
+
+    public void setMomusLink(DriveItem item, String text) {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("itemId", item.getListItem().getId());
+
+        String req = "{\"" + ListItemFields.MOMUSLINK_FIELD_NAME + "\": \"" + text + "\"}";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>(req, headers);
+        this.restTemplate.patchForObject(PATCH_ITEM_URL, entity, String.class, parameters);
     }
 
     public String getItemContentAsHtml(DriveItem item) throws IOException {
@@ -169,6 +196,12 @@ public class SharepointApiWrapper {
         RestTemplate rest = new RestTemplate();
 
         rest.setDefaultUriVariables(defaultParams);
+
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(10000);
+        requestFactory.setReadTimeout(10000);
+
+        rest.setRequestFactory(requestFactory);
         rest.setInterceptors(Collections.singletonList(new ClientHttpRequestInterceptor(){
         
             @Override

@@ -104,11 +104,14 @@ public class ArticleService {
             throw new RestException("Couldn't create article, Remote services failed", 500);
         }
 
-        article.setRemoteServiceName(remoteDocumentService.getServiceName());
+        article.setRemoteServiceName(document.getRemoteServiceName());
         article.setRemoteId(document.getId());
         article.setRemoteUrl(document.getUrl());
 
         Article newArticle = articleRepository.saveAndFlush(article);
+
+        remoteDocumentService.addRemoteMetadata(article);
+
         log.info("Article with id {} created with data: {}", newArticle.getId(), newArticle);
 
         messagingService.broadcastEntityAction(article, Action.CREATE);

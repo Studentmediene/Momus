@@ -1,5 +1,7 @@
 package no.dusken.momus.service.remotedocument.sharepoint.models;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Getter;
@@ -12,15 +14,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User {
+public class SpList {
     private String id;
-    private String displayName;
-    private String userPrincipalName;
-
-    public String getUsername() {
-        if(userPrincipalName == null) {
-            return null;
-        }
-        return userPrincipalName.replace("@smint.no", "");
-    }
+    private List<ListColumn> columns;
 }

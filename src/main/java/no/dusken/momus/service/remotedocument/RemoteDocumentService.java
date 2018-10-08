@@ -2,6 +2,8 @@ package no.dusken.momus.service.remotedocument;
 
 import java.io.IOException;
 
+import no.dusken.momus.model.Article;
+
 public interface RemoteDocumentService {
     enum ServiceName {
         GOOGLE_DRIVE, SHAREPOINT, MOCK
@@ -13,6 +15,8 @@ public interface RemoteDocumentService {
      * @throws IOException
      */
     RemoteDocument createDocument(String name) throws IOException;
+
+    void addRemoteMetadata(Article article);
 
     ServiceName getServiceName();
 }

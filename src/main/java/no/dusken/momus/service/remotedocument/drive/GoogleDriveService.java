@@ -247,4 +247,9 @@ public class GoogleDriveService implements RemoteDocumentService {
             // Let the content remain as it was
         }
     }
+
+    @Override
+    public void addRemoteMetadata(Article article) {
+        // Nothing here
+    }
 }

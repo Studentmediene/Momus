@@ -1,6 +1,7 @@
 package no.dusken.momus.service.remotedocument.sharepoint.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,15 +13,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User {
-    private String id;
-    private String displayName;
-    private String userPrincipalName;
+public class ListItemFields {
+    public static final String MOMUSLINK_FIELD_NAME = "MomusLink";
 
-    public String getUsername() {
-        if(userPrincipalName == null) {
-            return null;
-        }
-        return userPrincipalName.replace("@smint.no", "");
-    }
+    private String id;
+    @JsonProperty(MOMUSLINK_FIELD_NAME)
+    private String momusLink;
 }

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import no.dusken.momus.service.remotedocument.RemoteDocument;
+import no.dusken.momus.service.remotedocument.RemoteDocumentService.ServiceName;
 
 @Getter
 @Setter
@@ -27,6 +28,7 @@ public class DriveItem implements RemoteDocument {
     private FileResource file;
     private FolderResource folder;
     private Object deleted;
+    private ListItem listItem;
 
     @JsonIgnore
     public String getUrl() {
@@ -40,4 +42,10 @@ public class DriveItem implements RemoteDocument {
         }
         return lastModifiedBy.getUser().getId();
     }
+
+    @Override
+    @JsonIgnore
+    public ServiceName getRemoteServiceName() {
+        return ServiceName.SHAREPOINT;
+	}
 }

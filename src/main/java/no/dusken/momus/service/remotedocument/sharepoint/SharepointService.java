@@ -2,12 +2,14 @@ package no.dusken.momus.service.remotedocument.sharepoint;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -39,6 +41,7 @@ public class SharepointService implements RemoteDocumentService {
     private final SharepointApiWrapper apiWrapper;
     private final KeyValueService keyValueService;
     private final PersonRepository personRepository;
+    private final Environment env;
 
     @Autowired
     private ArticleService articleService;
@@ -49,10 +52,12 @@ public class SharepointService implements RemoteDocumentService {
     public SharepointService(
         KeyValueService keyValueService,
         PersonRepository personRepository,
-        SharepointApiWrapper apiWrapper) {
+        SharepointApiWrapper apiWrapper,
+        Environment env) {
         this.keyValueService = keyValueService;
         this.personRepository = personRepository;
         this.apiWrapper = apiWrapper;
+        this.env = env;
     }
 
     @PostConstruct
@@ -80,6 +85,18 @@ public class SharepointService implements RemoteDocumentService {
 
     public DriveItem createDocument(String name) throws IOException {
         return apiWrapper.createDocument(name);
+    }
+
+    public void addRemoteMetadata(Article article) {
+        DriveItem item = apiWrapper.getDriveItem(article.getRemoteId());
+        String link = "";
+        if(Arrays.asList(env.getActiveProfiles()).contains("dev")) {
+            link += "http://localhost:8080";
+        } else {
+            link += "https://momus.smint.no";
+        }
+        link += "/#/artikler/" + article.getId();
+        apiWrapper.setMomusLink(item, link);
     }
 
     @Scheduled(cron = "30 * * * * *")
@@ -127,7 +144,7 @@ public class SharepointService implements RemoteDocumentService {
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (HttpClientErrorException e) {
-                log.error("Error applying delta {} {}", delta, e.getStatusCode());
+                log.error("Error applying delta {} {} {}", delta, e.getStatusCode(), e.getResponseBodyAsString());
             }
         });
     }
