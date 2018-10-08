@@ -49,7 +49,7 @@ public class AdvertService {
 
     public Advert createAdvert(Advert advert){
         Advert newAdvert = advertRepository.saveAndFlush(advert);
-        log.info("Advert with id {} creatd with data: {}", newAdvert.getId(), newAdvert);
+        log.info("Advert with id {} created with data: {}", newAdvert.getId(), newAdvert);
 
         messagingService.broadcastEntityAction(advert, Action.CREATE);
         return newAdvert;
