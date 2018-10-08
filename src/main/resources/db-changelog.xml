@@ -812,4 +812,16 @@
     <changeSet id="47" author="Eivind">
         <dropColumn columnName="googledriveid" tableName="article" />
     </changeSet>
+
+    <changeSet id="48" author="Eivind">
+        <addColumn tableName="articlerevision">
+            <column name="responsible_id" type="BIGINT" />
+        </addColumn>
+        <addForeignKeyConstraint
+            baseTableName="articlerevision" baseColumnNames="responsible_id"
+            constraintName="FK_articlerevision_person"
+            referencedTableName="person"
+            referencedColumnNames="id"
+        />
+    </changeSet>
 </databaseChangeLog>

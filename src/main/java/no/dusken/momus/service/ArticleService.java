@@ -16,6 +16,7 @@
 
 package no.dusken.momus.service;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleRevision;
 import no.dusken.momus.model.ArticleStatus;
+import no.dusken.momus.model.Person;
 import no.dusken.momus.model.websocket.Action;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
@@ -91,12 +93,18 @@ public class ArticleService {
     }
 
     public Article saveArticle(Article article) {
-        RemoteDocument document = remoteDocumentService.createDocument(article.getName());
+        RemoteDocument document;
+        try {
+            document = remoteDocumentService.createDocument(article.getName());
+        } catch (IOException e) {
+            throw new RestException("Couldn't create article, Remote services failed", 500);
+		}
 
         if (document == null) {
-            throw new RestException("Couldn't create article, Google Docs failed", 500);
+            throw new RestException("Couldn't create article, Remote services failed", 500);
         }
 
+        article.setRemoteServiceName(remoteDocumentService.getServiceName());
         article.setRemoteId(document.getId());
         article.setRemoteUrl(document.getUrl());
 
@@ -116,6 +124,10 @@ public class ArticleService {
     }
 
     public Article updateArticleContent(Long id, String content) {
+        return updateArticleContent(id, content, null);
+    }
+
+    public Article updateArticleContent(Long id, String content, Person responsible) {
         Article existing = articleRepository.findOne(id);
         String oldContent = existing.getContent();
 
@@ -128,7 +140,7 @@ public class ArticleService {
 
         existing.setContent(content);
 
-        createRevision(existing);
+        createRevision(existing, responsible);
 
         return updateArticle(existing);
     }
@@ -219,11 +231,15 @@ public class ArticleService {
         return indesignGenerator.generateFromArticle(getArticleById(id));
     }
 
+    public ArticleRevision createRevision(Article article) {
+        return createRevision(article, null);
+    }
+
     /**
      * Either returns a new revision or reuses the last one.
      * Should be reused if: Last revision is less than three minutes old and was not for a status change
      */
-    public ArticleRevision createRevision(Article article) {
+    public ArticleRevision createRevision(Article article, Person responsible) {
 
         ZonedDateTime saveDate = ZonedDateTime.now();
         ArticleRevision revision = getLastRevision(article);
@@ -247,6 +263,9 @@ public class ArticleService {
         revision.setContent(article.getContent());
         revision.setArticle(article);
         revision.setStatus(article.getStatus());
+        if(responsible != null) {
+            revision.setResponsible(responsible);
+        }
 
         revision = articleRevisionRepository.save(revision);
         log.info("Saved revision for article(id:{}) with id: {}", article.getId(), revision.getId());

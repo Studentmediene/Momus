@@ -40,4 +40,7 @@ public class ArticleRevision extends AbstractEntity {
     private ZonedDateTime savedDate;
 
     private boolean statusChanged;
+
+    @ManyToOne
+    private Person responsible;
 }
