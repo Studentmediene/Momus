@@ -24,7 +24,6 @@ import no.dusken.momus.service.remotedocument.RemoteDocumentService;
 import no.dusken.momus.service.remotedocument.sharepoint.models.DeltaItem;
 import no.dusken.momus.service.remotedocument.sharepoint.models.DriveItem;
 import no.dusken.momus.service.remotedocument.sharepoint.models.ItemDeltaList;
-import no.dusken.momus.service.remotedocument.sharepoint.models.User;
 import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.PersonRepository;
 

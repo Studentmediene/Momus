@@ -28,6 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.*;
 
@@ -77,7 +78,7 @@ public class ArticleServiceTest extends AbstractServiceTest {
     private Section section2;
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         person1 = Person.builder()
                 .id(2L)
                 .guid(UUID.randomUUID())

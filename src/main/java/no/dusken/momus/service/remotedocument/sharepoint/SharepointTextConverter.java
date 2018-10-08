@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.text.StringEscapeUtils;
 
 public class SharepointTextConverter {
-
     private final String titleStyleName = "Tittel";
     private final String preambleStyleName = "Ingress";
     private final String subtitleStyleName = "Mellomtittel";
@@ -81,14 +80,6 @@ public class SharepointTextConverter {
         return hTags;
     }
 
-    /**
-     * Bold and italics are not marked with tags in GDocs, instead it is applied with CSS.
-     * For instance:
-     * .c1{font-weight:bold}
-     * lalala <span class="c1">bold</span>
-     *
-     * The classnames change each time, so need to dynamicall find it and change the span to <i> or <b>
-     */
     private String findItalicsAndBold(String body) {
         Matcher spanMatcherBoldAndItalics = boldAndItalicsStyle.matcher(body);
         body = spanMatcherBoldAndItalics.replaceAll("<b><i>$1</i></b>");

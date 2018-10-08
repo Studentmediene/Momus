@@ -16,12 +16,12 @@
 
 package no.dusken.momus.service.remotedocument.drive;
 
-import org.apache.commons.text.StringEscapeUtils;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.text.StringEscapeUtils;
+import org.springframework.stereotype.Service;
 
 /**
  * Converts content from a Google Drive Document
@@ -139,7 +139,6 @@ public class GoogleDocsTextConverter {
             StringBuffer sb = new StringBuffer();
             while(spanMatcherItalics.find()) {
                 boolean italicbold = false;
-                int boldStart = 0;
                 for(Pattern boldClass : boldClasses) {
                     Matcher spanMatcherBold = boldClass.matcher(spanMatcherItalics.group());
                     if(spanMatcherBold.matches()) {
