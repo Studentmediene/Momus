@@ -7,6 +7,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -41,6 +43,7 @@ import no.dusken.momus.service.remotedocument.sharepoint.models.ItemDeltaList;
 import no.dusken.momus.service.remotedocument.sharepoint.models.User;
 
 @Slf4j
+@Service
 public class SharepointApiWrapper {
     private final Map<String, String> defaultParams;
 
@@ -53,17 +56,27 @@ public class SharepointApiWrapper {
 
     private final String USER_URL = ROOT_URL + "/users/{userId}";
 
+    private AuthenticationResult authToken;
+
+    private final SharepointAuthenticator authenticator;
     private final SharepointTextConverter textConverter;
     private final RestTemplate restTemplate;
     
-    public SharepointApiWrapper(AuthenticationResult auth, Environment env) {
+    public SharepointApiWrapper(SharepointAuthenticator authenticator, Environment env) {
+        this.authenticator = authenticator;
+
         Map<String, String> defaultParams = new HashMap<>();
         defaultParams.put("siteId", env.getProperty("sharepoint.siteId"));
         defaultParams.put("driveId", env.getProperty("sharepoint.driveid"));
         defaultParams.put("resource", env.getProperty("sharepoint.resource"));
         this.defaultParams = defaultParams;
-        this.restTemplate = setupRestTemplate(auth.getAccessToken());
+        this.restTemplate = setupRestTemplate(defaultParams);
+
         this.textConverter = new SharepointTextConverter();
+    }
+
+    public void authenticate() throws Exception {
+        this.authToken = this.authenticator.getAccessToken();
     }
 
     public DriveItem getDriveItem(String id) {
@@ -152,16 +165,28 @@ public class SharepointApiWrapper {
         return deltaList;
     }
 
-    private RestTemplate setupRestTemplate(String authToken) {
+    private RestTemplate setupRestTemplate(Map<String, String> defaultParams) {
         RestTemplate rest = new RestTemplate();
 
-        rest.setDefaultUriVariables(this.defaultParams);
+        rest.setDefaultUriVariables(defaultParams);
         rest.setInterceptors(Collections.singletonList(new ClientHttpRequestInterceptor(){
         
             @Override
             public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
                     throws IOException {
-                request.getHeaders().set("Authorization", "Bearer " + authToken);
+                // If we have no token, we just try to execute, though it will probably fail. Just let it
+                if(authToken == null) {
+                    return execution.execute(request, body);
+                }
+                // Our token has expired, so we refresh it!
+                if(authToken.getExpiresOnDate().before(new Date())) {
+                    try {
+                        authToken = authenticator.refreshToken(authToken);
+                    } catch (Exception e) {
+                        log.error("Failed to refresh Sharepoint token {}", e);
+                    }
+                }
+                request.getHeaders().set("Authorization", "Bearer " + SharepointApiWrapper.this.authToken.getAccessToken());
                 return execution.execute(request, body);
             }
         }));

@@ -25,8 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class SharepointAuthenticator {
-
-
     @Value("${sharepoint.authority}")
     private String AUTHORITY;
 
@@ -35,6 +33,8 @@ public class SharepointAuthenticator {
 
     @Value("${sharepoint.resource}")
     private String RESOURCE;
+
+    private AuthenticationContext context;
 
     private PrivateKey getPrivate(File file) throws Exception {
         byte[] keyBytes = Files.readAllBytes(file.toPath());
@@ -67,12 +67,25 @@ public class SharepointAuthenticator {
         
         service = Executors.newFixedThreadPool(1);
         context = new AuthenticationContext(AUTHORITY, true, service);
+        this.context = context;
         AsymmetricKeyCredential credentials = getCredentials();
         Future<AuthenticationResult> future = context.acquireToken(RESOURCE, credentials, null);
         result = future.get();
 
-        log.info("Sharepoint authentication successful!");
+        log.info("Sharepoint authentication successful! Token expires at {}", result.getExpiresOnDate());
 
         return result;
+    }
+
+    public AuthenticationResult refreshToken(AuthenticationResult prev) throws Exception {
+        log.info("Refreshing Sharepoint access token");
+        if(context == null) {
+            throw new IllegalStateException("Auth context not initialized. Cannot refresh");
+        }
+
+        Future<AuthenticationResult> future = context.acquireTokenByRefreshToken(prev.getRefreshToken(), getCredentials(), null);
+        AuthenticationResult res = future.get();
+        log.info("Got new token, expires at {}", res.getExpiresOnDate());
+        return res;
     }
 }

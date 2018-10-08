@@ -6,11 +6,8 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import com.microsoft.aad.adal4j.AuthenticationResult;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -32,16 +29,15 @@ import no.dusken.momus.service.repository.PersonRepository;
 public class SharepointService implements RemoteDocumentService {
     private final String DELTA_URL_KEY = "SHAREPOINT_DELTA_URL";
 
-    @Value("${sharepoint.syncEnabled}")
+    @Value("${sharepoint.enabled}")
     private boolean enabled;
 
-    private boolean isInitialized = false;
 
-    private SharepointApiWrapper apiWrapper;
+    @Value("${sharepoint.sync}")
+    private boolean shouldSync;
 
-    private final SharepointAuthenticator sharepointAuthenticator;
+    private final SharepointApiWrapper apiWrapper;
     private final KeyValueService keyValueService;
-    private final Environment env;
     private final PersonRepository personRepository;
 
     @Autowired
@@ -51,14 +47,12 @@ public class SharepointService implements RemoteDocumentService {
     private ArticleRepository articleRepository;
 
     public SharepointService(
-        SharepointAuthenticator sharepointAuthenticator,
         KeyValueService keyValueService,
-        Environment env,
-        PersonRepository personRepository) {
-        this.sharepointAuthenticator = sharepointAuthenticator;
+        PersonRepository personRepository,
+        SharepointApiWrapper apiWrapper) {
         this.keyValueService = keyValueService;
-        this.env = env;
         this.personRepository = personRepository;
+        this.apiWrapper = apiWrapper;
     }
 
     @PostConstruct
@@ -68,24 +62,14 @@ public class SharepointService implements RemoteDocumentService {
             return;
         }
 
-        if(isInitialized) {
-            log.info("Sharepoint already initialized!");
-            return;
-        }
-
         log.info("Setting up Sharepoint");
 
-        AuthenticationResult authToken;
         try {
-            authToken = sharepointAuthenticator.getAccessToken();
+            apiWrapper.authenticate();
         } catch (Exception e) {
-            log.error("Failed to authenticate with Sharepoint {}", e);
+            log.error("Failed to authenticate with Sharepoint! {}", e);
             return;
         }
-
-        this.apiWrapper = new SharepointApiWrapper(authToken, env);
-
-        isInitialized = true;
 
         sync();
     }
@@ -100,7 +84,7 @@ public class SharepointService implements RemoteDocumentService {
 
     @Scheduled(cron = "30 * * * * *")
     public void sync() {
-        if(!enabled) {
+        if(!shouldSync) {
             return;
         }
         log.debug("Starting Sharepoint sync");
