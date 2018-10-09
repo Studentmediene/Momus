@@ -89,14 +89,14 @@ public class SharepointService implements RemoteDocumentService {
 
     public void addRemoteMetadata(Article article) {
         DriveItem item = apiWrapper.getDriveItem(article.getRemoteId());
-        String link = "";
+        StringBuilder link = new StringBuilder();
         if(Arrays.asList(env.getActiveProfiles()).contains("dev")) {
-            link += "http://localhost:8080";
+            link.append("http://localhost:8080");
         } else {
-            link += "https://momus.smint.no";
+            link.append("https://momus.smint.no");
         }
-        link += "/#/artikler/" + article.getId();
-        apiWrapper.setMomusLink(item, link);
+        link.append("/#/artikler/").append(article.getId());
+        apiWrapper.setMomusLink(item, link.toString());
     }
 
     @Scheduled(cron = "30 * * * * *")
