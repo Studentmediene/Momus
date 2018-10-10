@@ -19,6 +19,7 @@
 angular.module('momusApp.controllers')
     .controller('AdminCtrl', function (
         $scope,
+        ArticleType,
         loggedInPerson,
         NewsItem,
         news
