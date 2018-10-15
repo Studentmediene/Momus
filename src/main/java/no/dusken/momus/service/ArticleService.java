@@ -120,10 +120,11 @@ public class ArticleService {
 
     public Article updateArticle(Article article) {
         article.setLastUpdated(ZonedDateTime.now());
-        log.info("Article with id {} updated, data: {}", article.getId(), article);
+        Article updated = articleRepository.saveAndFlush(article);
 
+        log.info("Article with id {} updated, data: {}", article.getId(), article);
         messagingService.broadcastEntityAction(article, Action.UPDATE);
-        return articleRepository.saveAndFlush(article);
+        return updated;
     }
 
     public Article updateArticleContent(Long id, String content) {

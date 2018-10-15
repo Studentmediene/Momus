@@ -59,6 +59,13 @@ angular.module('momusApp.services')
                 });
             }
 
+            subscribeToArticle(articleId, onChange) {
+                this.subscribe(
+                    '/ws/articles/' + articleId,
+                    data => {onChange(data)}
+                );
+            }
+
             isConnected() {
                 return this.stomp.connected;
             }

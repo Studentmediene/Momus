@@ -27,7 +27,8 @@ angular.module('momusApp.controllers')
         Publication,
         TitleChanger,
         ViewArticleService,
-        MessageModal
+        MessageModal,
+        session
     ) {
         const vm = this;
 
@@ -59,6 +60,11 @@ angular.module('momusApp.controllers')
         Article.content(articleId).then(data => { vm.articleContent = data.data; });
 
         ViewArticleService.viewArticle(articleId);
+
+        // Update article content on remote update
+        session.subscribeToArticle(articleId, () => {
+            Article.content(articleId).then(data => { vm.articleContent = data.data });
+        })
 
         /* note panel */
         function saveNote () {
