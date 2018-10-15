@@ -16,5 +16,7 @@ import lombok.ToString;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SpList {
     private String id;
+    private String name;
     private List<ListColumn> columns;
+    private DriveItem drive;
 }

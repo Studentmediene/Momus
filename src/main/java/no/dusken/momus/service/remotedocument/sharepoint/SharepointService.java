@@ -71,9 +71,9 @@ public class SharepointService implements RemoteDocumentService {
         log.info("Setting up Sharepoint");
 
         try {
-            apiWrapper.authenticate();
+            apiWrapper.setup();
         } catch (Exception e) {
-            log.error("Failed to authenticate with Sharepoint! {}", e);
+            log.error("Failed to setup/authenticate Sharepoint! {}", e);
             return;
         }
 
@@ -89,7 +89,7 @@ public class SharepointService implements RemoteDocumentService {
     }
 
     public void addRemoteMetadata(Article article) {
-        DriveItem item = apiWrapper.getDriveItem(article.getRemoteId());
+        DriveItem item = apiWrapper.getArticleDriveItem(article.getRemoteId());
         StringBuilder link = new StringBuilder();
         if(Arrays.asList(env.getActiveProfiles()).contains("dev")) {
             link.append("http://localhost:8080");
@@ -148,12 +148,15 @@ public class SharepointService implements RemoteDocumentService {
                     return;
                 }
 
-                DriveItem item = apiWrapper.getDriveItem(delta.getId());
+                DriveItem item = apiWrapper.getArticleDriveItem(delta.getId());
                 String content = apiWrapper.getItemContentAsHtml(item);
 
-                String username = apiWrapper.getUser(item.getLastModifiedUserId()).getUsername();
-                Person dbPerson = personRepository.findByUsername(username);
-                log.debug("Article {} was changed by: {}", item.getName(), dbPerson);
+                Person dbPerson = null;
+                if(item.getLastModifiedUserId() != null) {
+                    String username = apiWrapper.getUser(item.getLastModifiedUserId()).getUsername();
+                    dbPerson = personRepository.findByUsername(username);
+                    log.debug("Article {} was changed by: {}", item.getName(), dbPerson);
+                }
                 articleService.updateArticleContent(article.getId(), content, dbPerson);
             } catch (IOException e) {
                 e.printStackTrace();

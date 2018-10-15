@@ -53,15 +53,16 @@ public class SharepointApiWrapper {
 
     private final String ROOT_URL = "{resource}/v1.0";
     private final String DRIVE_URL = ROOT_URL + "/drives/{driveId}";
-    private final String ARTICLE_ITEM_URL = DRIVE_URL + "/items/{itemId}?expand=listItem";
-    private final String CREATE_ARTICLE_URL = DRIVE_URL + "/items/root:/{fileName}:/content";
-    private final String ARTICLE_CONTENT_URL = DRIVE_URL + "/items/{itemId}/content";
-    private final String DELTA_URL_NO_TOKEN = DRIVE_URL + "/root/delta";
-
-    private final String USER_URL = ROOT_URL + "/users/{userId}";
-
     private final String LISTS_URL = ROOT_URL + "/sites/{siteId}/lists";
-    private final String LIST_URL = LISTS_URL + "/{listId}?select=id&expand=columns(select=name)";
+
+    private final String GET_ARTICLE_ITEM_URL = DRIVE_URL + "/items/{itemId}?expand=listItem";
+    private final String CREATE_ARTICLE_URL = DRIVE_URL + "/items/root:/{fileName}:/content";
+    private final String GET_ARTICLE_CONTENT_URL = DRIVE_URL + "/items/{itemId}/content";
+    private final String DELTA_URL_NO_TOKEN = DRIVE_URL + "/root/delta";
+    private final String GET_USER_URL = ROOT_URL + "/users/{userId}";
+
+
+    private final String GET_LIST_URL = LISTS_URL + "/{listId}?expand=drive";
     private final String PATCH_ITEM_URL = LISTS_URL + "/{listId}/items/{itemId}/fields";
 
     private AuthenticationResult authToken;
@@ -74,31 +75,38 @@ public class SharepointApiWrapper {
         this.authenticator = authenticator;
 
         Map<String, String> defaultParams = new HashMap<>();
-        defaultParams.put("siteId", env.getProperty("sharepoint.siteid"));
-        defaultParams.put("driveId", env.getProperty("sharepoint.driveid"));
         defaultParams.put("resource", env.getProperty("sharepoint.resource"));
-        defaultParams.put("listId", env.getProperty("sharepoint.listid"));
+        defaultParams.put("siteId", env.getProperty("sharepoint.siteid"));
+        defaultParams.put("listId", env.getProperty(("sharepoint.articlelistid")));
         this.defaultParams = defaultParams;
         this.restTemplate = setupRestTemplate(defaultParams);
 
         this.textConverter = new SharepointTextConverter();
     }
 
-    public void authenticate() throws Exception {
+    public void setup() throws Exception {
+        this.authenticate();
+        SpList articleList = getArticleList();
+
+        defaultParams.put("driveId", articleList.getDrive().getId());
+
+        this.restTemplate.setDefaultUriVariables(defaultParams);
+    }
+
+    private void authenticate() throws Exception {
         this.authToken = this.authenticator.getAccessToken();
     }
 
-    public DriveItem getDriveItem(String id) {
+    public DriveItem getArticleDriveItem(String id) {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("itemId", id);
-        DriveItem res = this.restTemplate.getForObject(ARTICLE_ITEM_URL, DriveItem.class, parameters);
+        DriveItem res = this.restTemplate.getForObject(GET_ARTICLE_ITEM_URL, DriveItem.class, parameters);
         return res;
     }
 
-    public SpList getArticlesList() {
+    public SpList getArticleList() {
         Map<String, String> parameters = new HashMap<>();
-        SpList list = this.restTemplate.getForObject(LIST_URL, SpList.class, parameters);
-        log.debug("{}", list);
+        SpList list = this.restTemplate.getForObject(GET_LIST_URL, SpList.class, parameters);
         return list;
     }
 
@@ -128,7 +136,7 @@ public class SharepointApiWrapper {
     public User getUser(String id) {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("userId", id);
-        User res = this.restTemplate.getForObject(USER_URL, User.class, parameters);
+        User res = this.restTemplate.getForObject(GET_USER_URL, User.class, parameters);
         return res;
     }
 
@@ -146,7 +154,7 @@ public class SharepointApiWrapper {
     public String getItemContentAsHtml(DriveItem item) throws IOException {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("itemId", item.getId());
-        Resource res = this.restTemplate.getForObject(ARTICLE_CONTENT_URL, Resource.class, parameters);
+        Resource res = this.restTemplate.getForObject(GET_ARTICLE_CONTENT_URL, Resource.class, parameters);
         XWPFDocument doc = new XWPFDocument(res.getInputStream());
         OutputStream out = new ByteArrayOutputStream();
 
@@ -207,6 +215,7 @@ public class SharepointApiWrapper {
             @Override
             public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
                     throws IOException {
+                log.debug("Executing {} to {}", request.getMethod(), request.getURI());
                 // If we have no token, we just try to execute, though it will probably fail. Just let it
                 if(authToken == null) {
                     return execution.execute(request, body);

@@ -80,8 +80,6 @@ public class SharepointAuthenticator {
 
         log.info("Sharepoint authentication successful! Token expires at {}", result.getExpiresOnDate());
 
-        log.debug("Refresh token: {}", result.getRefreshToken());
-
         return result;
     }
 
