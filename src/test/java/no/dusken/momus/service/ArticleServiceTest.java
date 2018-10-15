@@ -19,8 +19,10 @@ package no.dusken.momus.service;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.indesign.IndesignExport;
 import no.dusken.momus.service.indesign.IndesignGenerator;
+import no.dusken.momus.service.remote.RemoteDocumentMock;
 import no.dusken.momus.service.remotedocument.RemoteDocument;
 import no.dusken.momus.service.remotedocument.RemoteDocumentService;
+import no.dusken.momus.service.remotedocument.RemoteDocumentService.ServiceName;
 import no.dusken.momus.service.repository.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -160,18 +162,12 @@ public class ArticleServiceTest extends AbstractServiceTest {
         when(articleRepository.findOne(article1.getId())).thenReturn(article1);
         when(articleRepository.findOne(article2.getId())).thenReturn(article2);
         when(articleRepository.saveAndFlush(any(Article.class))).then(returnsFirstArg());
-        when(remoteDocumentService.createDocument(any(String.class))).thenReturn(new RemoteDocument(){
-        
-            @Override
-            public String getUrl() {
-                return null;
-            }
-        
-            @Override
-            public String getId() {
-                return null;
-            }
+        when(articleRevisionRepository.save(any(ArticleRevision.class))).thenAnswer(ans -> {
+            ArticleRevision rev = (ArticleRevision) ans.getArguments()[0];
+            rev.setId(1L);
+            return rev;
         });
+        when(remoteDocumentService.createDocument(any(String.class))).thenReturn(new RemoteDocumentMock());
     }
 
     /**
@@ -284,12 +280,11 @@ public class ArticleServiceTest extends AbstractServiceTest {
     @Test
     public void testUpdateArticleContent() {
         ArticleService articleServiceSpy = spy(articleService);
-        doReturn(new ArticleRevision()).when(articleServiceSpy).createRevision(any(Article.class));
 
         articleServiceSpy.updateArticleContent(article1.getId(), "<p>NEW CONTENT for article 1</p>");
 
         verify(articleServiceSpy, times(1)).updateArticle(article1);
-        verify(articleServiceSpy, times(1)).createRevision(article1);
+        verify(articleServiceSpy, times(1)).createRevision(article1, null);
         assertEquals("<p>NEW CONTENT for article 1</p>", article1.getContent());
         assertEquals("new content for article 1", article1.getRawcontent());
         assertEquals(25, article1.getContentLength());
