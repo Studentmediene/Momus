@@ -59,6 +59,7 @@
         <jackson-datatype-hibernate5.version>2.9.5</jackson-datatype-hibernate5.version>
         <jackson-datatype-jsr310.version>2.9.5</jackson-datatype-jsr310.version>
         <commons-dbcp2.version>2.1.1</commons-dbcp2.version>
+        <apache-httpclient.version>4.4.1</apache-httpclient.version>
         <liquibase.version>3.5.3</liquibase.version>
         <google-drive.version>v2-rev277-1.22.0</google-drive.version>
         <adal4j.version>1.6.1</adal4j.version>
@@ -234,7 +235,7 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.4.1</version>
+            <version>${apache-httpclient.version}</version>
         </dependency>
 
         <dependency>
@@ -301,7 +302,7 @@
         <dependency>
             <groupId>fr.opensagres.xdocreport</groupId>
             <artifactId>org.apache.poi.xwpf.converter.xhtml</artifactId>
-            <version>1.0.6</version>
+            <version>${xdocreport.version}</version>
         </dependency>
 
         <!-- Only for the redirect in index.jsp ... -->

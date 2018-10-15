@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -108,8 +109,21 @@ public class SharepointService implements RemoteDocumentService {
 
         try {
             String deltaLink = keyValueService.getValue(DELTA_URL_KEY);
-
-            ItemDeltaList deltas = apiWrapper.getDeltas(deltaLink);
+            ItemDeltaList deltas;
+            try {
+                deltas = apiWrapper.getDeltas(deltaLink);
+            } catch(HttpClientErrorException e) {
+                if(e.getStatusCode() == HttpStatus.GONE) {
+                    // This happens sometimes. We reset the delta link and re-add all deltas. Might be inefficient, but should not happen often
+                    log.warn("Sharepoint reported 410 Gone on delta link, resetting and resyncing");
+                    keyValueService.setValue(DELTA_URL_KEY, null);
+                    sync();
+                    return;
+                } else {
+                    log.warn("Sharepoint failed to get delta, with code {}", e.getStatusCode());
+                    return;
+                }
+            }
             if(deltas == null) {
                 log.info("No changes from Sharepoint");
             } else {

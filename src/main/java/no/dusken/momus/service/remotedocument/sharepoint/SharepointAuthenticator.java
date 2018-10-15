@@ -37,7 +37,7 @@ public class SharepointAuthenticator {
     @Value("${sharepoint.certfile}")
     private String CERT_FILE;
 
-    @Value("${sharepoint.key}")
+    @Value("${sharepoint.keyfile}")
     private String KEY_FILE;
 
     private AuthenticationContext context;
