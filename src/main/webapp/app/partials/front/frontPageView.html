@@ -256,6 +256,27 @@
             </div>
         </div>
         <div class="col-md-4">
+            <!--Quick search-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h1 class="panel-title"><i class="fa fa-arrow-right"></i> Hurtigsøk
+                    </h1>
+                </div>
+                <div class="panel-body">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Søk etter artikler..." ng-model="searchText">
+                        <span class="input-group-btn">
+                            <a
+                                class="btn btn-primary"
+                                type="button"
+                                ui-sref="search({free: searchText})"
+                                ng-disabled="searchText == null || searchText === ''">
+                                Søk!
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </div>
 
             <!--Tips-->
             <div class="panel panel-info">
