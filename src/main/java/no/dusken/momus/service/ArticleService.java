@@ -53,6 +53,12 @@ public class ArticleService {
     private ArticleRevisionRepository articleRevisionRepository;
 
     @Autowired
+    private ArticleStatusRepository articleStatusRepository;
+
+    @Autowired
+    private ArticleReviewRepository articleReviewRepository;
+
+    @Autowired
     private IndesignGenerator indesignGenerator;
 
     @Autowired
@@ -94,6 +100,9 @@ public class ArticleService {
 
             article.setGoogleDriveId(document.getId());
         }
+
+        if(article.getStatus() == null) { article.setStatus(articleStatusRepository.findOne(2L)); }
+        if(article.getReview() == null) { article.setReview(articleReviewRepository.findOne(1L)); }
 
         Article newArticle = articleRepository.saveAndFlush(article);
         log.info("Article with id {} created with data: {}", newArticle.getId(), newArticle);
