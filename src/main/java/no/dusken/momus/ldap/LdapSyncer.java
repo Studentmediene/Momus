@@ -18,6 +18,7 @@ package no.dusken.momus.ldap;
 
 import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.authorization.Role;
+import no.dusken.momus.ldap.PersonMapper.Status;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,10 +86,10 @@ public class LdapSyncer {
     }
 
     public void syncAllPersonsFromLdap() {
-        List<Person> activePersons = searchForPersons("Brukere", true);
+        List<Person> activePersons = searchForPersons(Status.ACTIVE.getBase(), true);
 
-        List<Person> inactivePersons = searchForPersons("Sluttede", false);
-        List<Person> tempLeavePersons = searchForPersons("Permisjon", false);
+        List<Person> inactivePersons = searchForPersons(Status.INACTIVE.getBase(), false);
+        List<Person> tempLeavePersons = searchForPersons(Status.TEMP_LEAVE.getBase(), false);
 
         log.info("Number of users from LDAP: {}",
                 activePersons.size() + inactivePersons.size() + tempLeavePersons.size());
@@ -102,8 +103,7 @@ public class LdapSyncer {
      * @param active Whether or not the user should be flagged as active
      * @return A list of the found persons
      */
-    private List<Person> searchForPersons(String ou, final boolean active){
-        String base = String.format("ou=%s", ou);
+    private List<Person> searchForPersons(String base, final boolean active){
         // For pagination
         PagedResultsDirContextProcessor processor = new PagedResultsDirContextProcessor(PAGE_SIZE, null);
 
@@ -123,5 +123,4 @@ public class LdapSyncer {
 
         return persons;
     }
-
 }

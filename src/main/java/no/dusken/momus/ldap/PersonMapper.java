@@ -5,6 +5,8 @@ import no.dusken.momus.model.Person;
 import no.dusken.momus.service.repository.PersonRepository;
 import org.springframework.ldap.core.AttributesMapper;
 
+import lombok.Getter;
+
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import java.sql.Blob;
@@ -92,5 +94,18 @@ public class PersonMapper implements AttributesMapper<Person> {
             lastId++;
         }
         return lastId;
+    }
+
+    @Getter
+    enum Status {
+        ACTIVE("OU=Brukere"),
+        INACTIVE("OU=Sluttede"),
+        TEMP_LEAVE("OU=Permisjon,OU=Brukere");
+
+        Status(String base) {
+            this.base = base;
+        }
+
+        private final String base;
     }
 }
