@@ -219,7 +219,7 @@ public class SharepointApiWrapper {
                         log.error("Failed to refresh Sharepoint token {}", e);
                     }
                 }
-                request.getHeaders().set("Authorization", "Bearer " + SharepointApiWrapper.this.authToken.getAccessToken());
+                request.getHeaders().set("Authorization", "Bearer " + authToken.getAccessToken());
                 return execution.execute(request, body);
             }
         }));

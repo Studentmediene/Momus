@@ -80,6 +80,8 @@ public class SharepointAuthenticator {
 
         log.info("Sharepoint authentication successful! Token expires at {}", result.getExpiresOnDate());
 
+        log.debug("Refresh token: {}", result.getRefreshToken());
+
         return result;
     }
 
@@ -89,7 +91,8 @@ public class SharepointAuthenticator {
             throw new IllegalStateException("Auth context not initialized. Cannot refresh");
         }
 
-        Future<AuthenticationResult> future = context.acquireTokenByRefreshToken(prev.getRefreshToken(), getCredentials(), null);
+        AsymmetricKeyCredential credentials = getCredentials();
+        Future<AuthenticationResult> future = context.acquireToken(RESOURCE, credentials, null);
         AuthenticationResult res = future.get();
         log.info("Got new token, expires at {}", res.getExpiresOnDate());
         return res;
