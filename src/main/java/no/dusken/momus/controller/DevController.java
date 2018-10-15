@@ -47,6 +47,7 @@ import no.dusken.momus.model.Person;
 import no.dusken.momus.model.Publication;
 import no.dusken.momus.model.Section;
 import no.dusken.momus.service.PublicationService;
+import no.dusken.momus.service.remotedocument.RemoteDocumentService.ServiceName;
 import no.dusken.momus.service.repository.AdvertRepository;
 import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.ArticleReviewRepository;
@@ -129,7 +130,9 @@ public class DevController {
         a1.setReview(articleReviews.get(random.nextInt(articleReviews.size())));
         a1.setJournalists(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a1.setPhotographers(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
-        a1.setRemoteId("19MklrX5aiYHtdpSuiz_fNr7BfalpJH11O-Q6RdONSa0");
+        a1.setRemoteId("01VYG7SSZ47VKUOTCTK5D3LV2GHFCQJRKW");
+        a1.setRemoteServiceName(ServiceName.SHAREPOINT);
+        a1.setRemoteUrl("https://studentmediene.sharepoint.com/:w:/r/sites/momus-sp/_layouts/15/Doc.aspx?sourcedoc=%7B4755FD3C-534C-4757-B5D7-46394504C556%7D&file=Lorem%20Ipsum.docx&action=default&mobileredirect=true");
         a1.setNote("<p>Notat her</p>");
         a1.setPublication(p1);
         articleRepository.save(a1);
@@ -147,7 +150,9 @@ public class DevController {
                 ))
         );
         a2.setPhotographers(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
-        a2.setRemoteId("1i8Bq6UYswttJYjAkEf5yRvZV-zPlzTSzW835wUq8s5s");
+        a2.setRemoteId("01VYG7SS6CX4IPQ5MWZBEIQSRTIVI7LQLL");
+        a2.setRemoteUrl("https://studentmediene.sharepoint.com/:w:/r/sites/momus-sp/_layouts/15/Doc.aspx?sourcedoc=%7BF810BFC2-9675-48C8-884A-334551F5C16B%7D&file=Bacon%20Ipsum.docx&action=default&mobileredirect=true");
+        a2.setRemoteServiceName(ServiceName.SHAREPOINT);
         a2.setNote("<p>Notat her</p>");
         a2.setPublication(p1);
         articleRepository.save(a2);
@@ -161,6 +166,8 @@ public class DevController {
         a3.setJournalists(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a3.setUseIllustration(true);
         a3.setRemoteId("1pVVqfVaAUeyyia3X3JYwrv9HXgg-9Flud_GURBsoShg");
+        a3.setRemoteServiceName(ServiceName.GOOGLE_DRIVE);
+        a3.setRemoteUrl("https://docs.google.com/document/d/" + a3.getRemoteId() + "/edit");
         a3.setNote("<p>Notat her</p>");
         a3.setPublication(p1);
         articleRepository.save(a3);
@@ -174,6 +181,8 @@ public class DevController {
         a5.setJournalists(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a5.setPhotographers(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a5.setRemoteId("1DPb-IoPNbvkookwOupfT1oaPydrRG8FPUGs97eRUFWc");
+        a5.setRemoteServiceName(ServiceName.GOOGLE_DRIVE);
+        a5.setRemoteUrl("https://docs.google.com/document/d/" + a5.getRemoteId() + "/edit");
         a5.setNote("<p>Notat her</p>");
         a5.setPublication(p2);
         articleRepository.save(a5);
