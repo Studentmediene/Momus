@@ -789,4 +789,12 @@
             referencedColumnNames="id"
         />
     </changeSet>
+
+    <changeSet id="45_changereview" author="Christoffer">
+        <update tableName="articlereview">
+            <column name="name">Skal leses</column>
+            <column name="color">#EEE</column>
+            <where>id=1</where>
+        </update>
+    </changeSet>
 </databaseChangeLog>
