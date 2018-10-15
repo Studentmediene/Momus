@@ -34,6 +34,12 @@ public class SharepointAuthenticator {
     @Value("${sharepoint.resource}")
     private String RESOURCE;
 
+    @Value("${sharepoint.certfile}")
+    private String CERT_FILE;
+
+    @Value("${sharepoint.key}")
+    private String KEY_FILE;
+
     private AuthenticationContext context;
 
     private PrivateKey getPrivate(File file) throws Exception {
@@ -55,8 +61,8 @@ public class SharepointAuthenticator {
     }
 
     private AsymmetricKeyCredential getCredentials() throws Exception {
-        PrivateKey priv = getPrivate(new ClassPathResource("key.der").getFile());
-        X509Certificate cert = getCertificate(new ClassPathResource("cert.pem").getFile());        
+        PrivateKey priv = getPrivate(new ClassPathResource(KEY_FILE).getFile());
+        X509Certificate cert = getCertificate(new ClassPathResource(CERT_FILE).getFile());        
         return AsymmetricKeyCredential.create(CLIENT_ID, priv, cert);
     }
 

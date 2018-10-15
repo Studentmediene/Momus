@@ -22,9 +22,8 @@ node_modules/
 .tmp/
 src/main/webapp/app/libs/
 src/main/resources/local.properties
-src/main/resources/key.der
-src/main/resources/key.pem
-src/main/resources/cert.pem
+src/main/resources/spkey.der
+src/main/resources/spcert.pem
 
 # build folders
 target/
