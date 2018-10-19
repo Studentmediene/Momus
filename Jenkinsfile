@@ -32,16 +32,19 @@ node {
         }
 
         stage("Prebuild") {
-            withCredentials([file(
-                credentialsId: 'momus-local-properties',
-                variable: 'localProperties'
-            )]) {
+            withCredentials([
+                file(
+                    credentialsId: "momus-local-properties",
+                    variable: "localProperties"
+                ),
+                file(
+                    credentialsId: "momus-gdrive-credentials",
+                    variable: 'googleKey'
+                )
+            ]) {
                 sh "cp ${localProperties} ${WORKSPACE}/src/main/resources/local.properties"
+                sh "cp ${googleKey} ${WORKSPACE}/src/main/resources/googlekey.p12"
             }
-
-            withCredentials([file(
-                credentialsId: ''
-            )])
         }
 
         stage("Build app") {
