@@ -1,8 +1,14 @@
 pipeline {
     agent any
+    options { skipDefaultCheckout() }
+
+    environment {
+        momusWar = 'target/momus-*.war'
+        testReports = 'target/surefire-reports/*.xml'
+    }
 
     stages {
-        stage("Checkout") {
+        stage('Checkout') {
             steps {
                 checkout scm
             }
@@ -29,7 +35,7 @@ pipeline {
             }
         }
 
-        stage("Test backend") {
+        stage('Test backend') {
             agent {
                 docker {
                     reuseNode true
@@ -39,11 +45,17 @@ pipeline {
             }
 
             steps {
-                sh "mvn test"
+                sh 'mvn test'
+            }
+
+            post {
+                always {
+                    junit testReports
+                }
             }
         }
 
-        stage("Prebuild") {
+        stage('Prebuild') {
             environment {
                 localProperties = credentials('momus-local-properties')
                 googleKey = credentials('momus-gdrive-credentials')
@@ -56,7 +68,7 @@ pipeline {
 
         }
 
-        stage("Build app") {
+        stage('Build app') {
             agent {
                 docker {
                     reuseNode true
@@ -66,82 +78,63 @@ pipeline {
             }
 
             steps {
-                sh ("mvn -Pprod -DskipTests install")
+                sh 'mvn -DskipTests install'
+            }
+        }
+
+        stage('Deploy') {
+            when {
+                branch 'master'
+            }
+
+            environment {
+                serverHost = 'java.smint.no'
+                serverWarDir = '/home/jenkins/momus'
+                identityFile = credentials('jenkins-ssh-key')
+            }
+
+            steps {
+                sh "scp -i ${identityFile} -o StrictHostKeyChecking=no ${momusWar} ${serverHost}:${serverWarDir}"
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts 'target/momus*.war'
-            junit 'target/surefire-reports/*.xml'
+            script {
+                if(BRANCH_NAME == 'master') {
+                    archiveArtifacts momusWar
+                }
+
+                if(BRANCH_NAME == 'master' || BRANCH_NAME == 'develop') {
+                    notifyTeams(currentBuild)
+                }
+            }
         }
     }
-
 }
-// node {
 
-//     stage("Checkout") {
-//         checkout scm
-//     }
+def notifyTeams(currentBuild) {
+    def url = 'https://outlook.office.com/webhook/18a676a7-fd27-4e0a-8b81-fd91abd9692a@c845b8fa-0078-426b-8679-0da9f5eb0eed/JenkinsCI/d103706acbc94615aac713a658615647/9f437a56-fe33-4eb8-b7eb-6bfdf3ac4f70'
+    def status
+    def color
 
-//     docker.image("node:9.5").inside {
-//         withEnv([
-//             /*
-//             Set home to our current directory because we do not have
-//             permission in the default directory
-//             */
-//             "HOME=.",
-//         ]) {
-//             stage("Install frontend dependencies") {
-//                 sh "npm install bower"
+    switch (currentBuild.currentResult) {
+        case 'SUCCESS':
+            color = '00f000'
+            status = 'succeded'
+            break
 
-//                 sh "npm install"
-//                 sh "./node_modules/.bin/bower install --config.interactive=false"
-//             }
+        case 'UNSTABLE':
+            color = 'fff000'
+            status = 'is unstable'
+            break
 
-//             stage("Build frontend") {
-//                 sh "npm run build"
-//             }
-//         }
-//     }
+        case 'FAILURE':
+            color = 'd00000'
+            status = 'failed'
+            break
+    }
 
-//     docker.image("maven:3.5-jdk-8-alpine").inside("-v $HOME/.m2:/root/.m2") {
-//         stage("Test backend") {
-//             sh "mvn test"
-//             junit 'target/surefire-reports/*.xml'
-//         }
-
-//         stage("Prebuild") {
-//             withCredentials([
-//                 file(
-//                     credentialsId: "momus-local-properties",
-//                     variable: "localProperties"
-//                 ),
-//                 file(
-//                     credentialsId: "momus-gdrive-credentials",
-//                     variable: 'googleKey'
-//                 )
-//             ]) {
-//                 sh "cp ${localProperties} ${WORKSPACE}/src/main/resources/local.properties"
-//                 sh "cp ${googleKey} ${WORKSPACE}/src/main/resources/googlekey.p12"
-//             }
-//         }
-
-//         stage("Build app") {
-//             sh ("mvn -Pprod -DskipTests install")
-//         }
-//     }
-
-//     if (env.BRANCH_NAME == "master" && (currentBuild.result == 'SUCCESS')) {
-//         stage("Deploy") {
-//             withCredentials([sshUserPrivateKey(
-//                 credentialsId: "jenkins-ssh-key",
-//                 keyFileVariable: "identityFile"
-//             )]) {
-//                 sh ("scp -i ${identityFile} -o StrictHostKeyChecking=no " +
-//                     "target/momus.war java.smint.no:/home/jenkins/momus")
-//             }
-//         }
-//     }
-// }
+    office365ConnectorSend message: 'Build ' + status, status: currentBuild.currentResult, color: color, webhookUrl: url
+}
