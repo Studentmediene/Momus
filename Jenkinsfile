@@ -29,6 +29,7 @@ node {
     docker.image("maven:3.5-jdk-8-alpine").inside("-v $HOME/.m2:/root/.m2") {
         stage("Test backend") {
             sh "mvn test"
+            junit 'target/surefire-reports/*.xml'
         }
 
         stage("Prebuild") {
