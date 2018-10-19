@@ -14,14 +14,14 @@ node {
             "HOME=.",
         ]) {
             stage("Install frontend dependencies") {
-                sh "npm install grunt-cli bower"
+                sh "npm install bower"
 
                 sh "npm install"
                 sh "./node_modules/.bin/bower install --config.interactive=false"
             }
 
             stage("Build frontend") {
-                sh "./node_modules/.bin/grunt build"
+                sh "npm run build"
             }
         }
     }

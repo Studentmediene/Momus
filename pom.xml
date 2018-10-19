@@ -75,6 +75,7 @@
         <tomcat-embed-websocket.version>9.0.12</tomcat-embed-websocket.version>
         <logback-classic.version>1.2.3</logback-classic.version>
         <janino.version>3.0.10</janino.version>
+        <maven-surefire.version>2.22.1</maven-surefire.version>
 
         <mysql.version>6.0.6</mysql.version>
         <postgresql.version>42.2.5</postgresql.version>
@@ -349,6 +350,20 @@
                     </webResources>
                 </configuration>
             </plugin>
+
+            <!-- Teest reporting -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit4</artifactId>
+                        <version>${maven-surefire.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin> 
         </plugins>
     </build>
 
