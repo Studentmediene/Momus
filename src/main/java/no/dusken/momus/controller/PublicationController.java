@@ -33,7 +33,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 @RestController
-@RequestMapping("/publications")
+@RequestMapping("/api/publications")
 public class PublicationController {
     @Autowired
     private PublicationService publicationService;

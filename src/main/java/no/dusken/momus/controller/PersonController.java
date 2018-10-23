@@ -39,7 +39,7 @@ import java.util.*;
 
 @RestController
 @Transactional
-@RequestMapping("/person")
+@RequestMapping("/api/person")
 public class PersonController {
 
     @Autowired

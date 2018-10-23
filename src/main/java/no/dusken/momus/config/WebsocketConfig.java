@@ -18,13 +18,13 @@ class WebsocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/ws");
-        config.setApplicationDestinationPrefixes("/ws");
+        config.enableSimpleBroker("/api/ws");
+        config.setApplicationDestinationPrefixes("/api/ws");
     }
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").setAllowedOrigins("https://momus.smint.no").withSockJS();
+        registry.addEndpoint("/api/ws").setAllowedOrigins("https://momus.smint.no").withSockJS();
     }
 
     @Override

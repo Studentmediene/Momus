@@ -8,7 +8,7 @@ angular.module('momusApp.directives')
                 user: '=',
                 size: '='
             },
-            templateUrl: 'partials/templates/userAvatar.html',
+            templateUrl: 'assets/partials/templates/userAvatar.html',
             link: (scope, el) => {
                 scope.showSvg = false;
                 const randomColors = [

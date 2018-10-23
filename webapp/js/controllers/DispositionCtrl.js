@@ -231,7 +231,7 @@ angular.module('momusApp.controllers')
         }
 
         function showHelp(){
-            $templateRequest('partials/templates/help/dispHelp.html').then(template => {
+            $templateRequest('assets/partials/templates/help/dispHelp.html').then(template => {
                 MessageModal.info(template);
             });
         }

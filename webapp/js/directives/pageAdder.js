@@ -4,7 +4,7 @@ angular.module('momusApp.directives').
     directive('pageAdder', function(){
         return {
             restrict: 'E',
-            templateUrl: 'partials/templates/pageAdder.html',
+            templateUrl: 'assets/partials/templates/pageAdder.html',
             scope: {
                 submit: '&',
                 maxNumPages: '=',

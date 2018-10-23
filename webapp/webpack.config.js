@@ -23,7 +23,7 @@ const commonPlugins = [
     new HtmlWebpackPlugin({
         template: path.join(dev, 'index.html'),
         favicon: path.join(dev, 'favicon.ico'),
-        filename: path.join(out, 'index.html'),
+        filename: path.join(out, path.join(assets, 'index.html')),
     }),
     new webpack.ProvidePlugin({
         $: "jquery",
@@ -31,7 +31,7 @@ const commonPlugins = [
         "window.jQuery": "jquery"
     }),
     new CopyWebpackPlugin([
-        { from: path.join(dev, partials), to: path.join(out, partials) },
+        { from: path.join(dev, partials), to: path.join(path.join(out, assets), partials) },
     ]),
 ];
 

@@ -11,12 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/env")
+@RequestMapping("/api/env")
 public class EnvironmentController {
 
     @Autowired
     private Environment env;
-
 
     @GetMapping("/all")
     public @ResponseBody Map<String, Object> allEnv() {

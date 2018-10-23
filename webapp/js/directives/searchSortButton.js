@@ -21,7 +21,7 @@ angular.module('momusApp.directives').
         return {
             restrict: 'A',
             scope:true,
-            templateUrl:"partials/templates/searchSortButton.html",
+            templateUrl:"assets/partials/templates/searchSortButton.html",
             transclude:true,
             link: function(scope, element, attrs){
                 scope.type = attrs.searchSortButton;

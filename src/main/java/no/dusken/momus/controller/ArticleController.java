@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/article")
+@RequestMapping("/api/article")
 public class ArticleController {
 
     @Autowired
