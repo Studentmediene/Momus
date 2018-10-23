@@ -23,7 +23,7 @@ const commonPlugins = [
     new HtmlWebpackPlugin({
         template: path.join(dev, 'index.html'),
         favicon: path.join(dev, 'favicon.ico'),
-        filename: path.join(path.join(out, isbeta ? '/assets/beta/' : '/assets/'), 'index.html'),
+        filename: path.join(path.join(out, isbeta ? '/assets/beta/' : '/'), 'index.html'),
     }),
     new BaseHrefWebpackPlugin({ baseHref: indexPath })
 ];

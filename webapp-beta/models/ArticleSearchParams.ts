@@ -66,6 +66,7 @@ export class ArticleSearchParams {
             page_number: this.page_number,
             page_size: this.page_size,
             archived: this.archived,
+            free: this.free,
         };
     }
 }
