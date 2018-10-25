@@ -81,7 +81,7 @@ angular.module('momusApp', [
                     env: $http => $http.get('/api/env/all').then(resp => resp.data),
                     session: (loggedInPerson, MessagingService) => MessagingService.createSession(loggedInPerson)
                 },
-                templateUrl: 'assets/partials/nav/navView.html',
+                templateUrl: '/assets/partials/nav/navView.html',
                 controller: 'NavbarCtrl',
                 controllerAs: 'vm'
             })
@@ -134,7 +134,7 @@ angular.module('momusApp', [
                             NewsItem.query({}).$promise
 
                 },
-                templateUrl: 'assets/partials/front/frontPageView.html',
+                templateUrl: '/assets/partials/front/frontPageView.html',
                 controller: 'FrontPageCtrl',
                 controllerAs: 'vm'
             })
@@ -172,7 +172,7 @@ angular.module('momusApp', [
                     },
                     results: (Article, searchParams) => Article.search({}, searchParams).$promise
                 },
-                templateUrl: 'assets/partials/search/searchView.html',
+                templateUrl: '/assets/partials/search/searchView.html',
                 controller: 'SearchCtrl',
                 controllerAs: 'vm',
                 reloadOnSearch: true,
@@ -181,14 +181,14 @@ angular.module('momusApp', [
             .state('article', {
                 parent: 'root',
                 url: '/artikler/:id',
-                templateUrl: 'assets/partials/article/articleView.html',
+                templateUrl: '/assets/partials/article/articleView.html',
                 controller: 'ArticleCtrl',
                 controllerAs: 'vm'
             })
             .state('articlerevision', {
                 parent: 'root',
                 url: '/artikler/:id/revisjon',
-                templateUrl: 'assets/partials/article/articleRevisionView.html',
+                templateUrl: '/assets/partials/article/articleRevisionView.html',
                 controller: 'ArticleRevisionCtrl',
                 controllerAs: 'vm'
             })
@@ -208,7 +208,7 @@ angular.module('momusApp', [
                     reviewStatuses: Article => Article.reviewStatuses().$promise,
                     layoutStatuses: Publication => Publication.layoutStatuses().$promise
                 },
-                templateUrl: 'assets/partials/disposition/dispositionView.html',
+                templateUrl: '/assets/partials/disposition/dispositionView.html',
                 controller: 'DispositionCtrl',
                 controllerAs: 'vm',
                 title: 'Disposisjon'
@@ -219,7 +219,7 @@ angular.module('momusApp', [
                 resolve: {
                     publications: Publication => Publication.query().$promise
                 },
-                templateUrl: 'assets/partials/publication/publicationView.html',
+                templateUrl: '/assets/partials/publication/publicationView.html',
                 controller: 'PublicationCtrl',
                 controllerAs: 'vm',
                 title: 'Utgaver'
@@ -231,7 +231,7 @@ angular.module('momusApp', [
                     news: (NewsItem) =>
                         NewsItem.query({}).$promise
                 },
-                templateUrl: 'assets/partials/info/infoView.html',
+                templateUrl: '/assets/partials/info/infoView.html',
                 controller: 'InfoCtrl',
                 controllerAs: 'vm',
                 title: 'Info'
@@ -243,7 +243,7 @@ angular.module('momusApp', [
                 resolve: {
                     news: NewsItem => NewsItem.query().$promise
                 },
-                templateUrl: 'assets/partials/admin/adminView.html',
+                templateUrl: '/assets/partials/admin/adminView.html',
                 controller: 'AdminCtrl',
                 title: 'Adminpanel',
                 controllerAs: 'vm',
@@ -252,7 +252,7 @@ angular.module('momusApp', [
             .state('dev', {
                 parent: 'root',
                 url: '/dev',
-                templateUrl: 'assets/partials/dev/devView.html',
+                templateUrl: '/assets/partials/dev/devView.html',
                 controller: 'DevCtrl',
                 controllerAs: 'vm',
                 title: 'Utviklerinnstillinger'

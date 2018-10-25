@@ -79,7 +79,7 @@ angular.module('momusApp.controllers')
         }
 
         function showHelp() {
-            $templateRequest("assets/partials/templates/help/searchHelp.html").then(function(template){
+            $templateRequest("/assets/partials/templates/help/searchHelp.html").then(function(template){
                 MessageModal.info(template);
             });
         }

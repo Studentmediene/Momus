@@ -28,7 +28,7 @@ angular.module('momusApp.directives').
             scope:{
                 pw_person : '=personWidget'
             },
-            templateUrl: 'assets/partials/templates/personWidget.html',
+            templateUrl: '/assets/partials/templates/personWidget.html',
             transclude: true,
             link: (scope, element, attrs) => {
                 scope.isVisible = false;

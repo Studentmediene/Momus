@@ -120,7 +120,7 @@ export default class ArticleDetailsCtrl implements angular.IController {
     }
 
     public showHelp() {
-        // $templateRequest('assets/partials/templates/help/articleHelp.html').then(function(template) {
+        // $templateRequest('/assets/partials/templates/help/articleHelp.html').then(function(template) {
         //     MessageModal.info(template);
         // });
     }

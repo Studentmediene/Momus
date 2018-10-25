@@ -53,7 +53,7 @@ class InlineEditController {
 
 angular.module('momusApp.directives')
     .component('inlineEdit', {
-        templateUrl: 'assets/partials/templates/inlineEdit.html',
+        templateUrl: '/assets/partials/templates/inlineEdit.html',
         bindings: {
             placeholder: '@',
             model: '<',

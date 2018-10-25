@@ -20,7 +20,7 @@ angular.module('momusApp.directives')
     .directive('statusChart', function() {
         return {
             restrict: 'E',
-            templateUrl: 'assets/partials/templates/statusChart.html',
+            templateUrl: '/assets/partials/templates/statusChart.html',
             scope: {
                 data: '=',
                 labels: '=',
