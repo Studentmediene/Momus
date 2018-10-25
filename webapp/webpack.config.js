@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { BaseHrefWebpackPlugin } = require('base-href-webpack-plugin');
 const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -14,6 +15,7 @@ const publicPath = '/';
 const assets = 'assets/'; // Folder for all js/css and other assets
 const partials = 'partials/'; // HTML templates
 
+const isDevServer = process.argv.some(v => v.includes('webpack-dev-server'));
 const isprod = process.argv.indexOf('-p') !== -1;
 const visualize = process.argv.indexOf('--visualizer') !== -1;
 
@@ -23,7 +25,7 @@ const commonPlugins = [
     new HtmlWebpackPlugin({
         template: path.join(dev, 'index.html'),
         favicon: path.join(dev, 'favicon.ico'),
-        filename: path.join(out, path.join(assets, 'index.html')),
+        filename: path.join(out, isDevServer ? 'index.html' : path.join(assets, 'index.html')),
     }),
     new webpack.ProvidePlugin({
         $: "jquery",
@@ -33,6 +35,7 @@ const commonPlugins = [
     new CopyWebpackPlugin([
         { from: path.join(dev, partials), to: path.join(path.join(out, assets), partials) },
     ]),
+    new BaseHrefWebpackPlugin({ baseHref: '/' })
 ];
 
 const prodPlugins = [

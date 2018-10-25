@@ -261,6 +261,7 @@ angular.module('momusApp', [
     config(($urlRouterProvider, $locationProvider) => {
         $urlRouterProvider.otherwise('/');
         $locationProvider.hashPrefix('');
+        $locationProvider.html5Mode(true);
     }).
     config($httpProvider => {
         $httpProvider.interceptors.push('HttpInterceptor');
