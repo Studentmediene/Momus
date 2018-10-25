@@ -51,9 +51,12 @@
 
 
     <!-- Hide the info/debug from these frameworks even if the log level is lower as it's a lot of spam!-->
-    <logger name="org.springframework" level="WARN" />
     <logger name="org.hibernate" level="WARN" />
 
+    <logger name="liquibase" level="INFO" />
+    <logger name="liquibase.executor" level="WARN" />
+
+    <logger name="org.springframework" level="WARN" />
     <logger name="org.springframework.security" level="WARN"/>
     <logger name="org.springframework.security.saml" level="INFO"/>
     <logger name="org.opensaml" level="INFO"/>
