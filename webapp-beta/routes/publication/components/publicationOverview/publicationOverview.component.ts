@@ -9,7 +9,7 @@ class PublicationOverviewCtrl implements angular.IController {
     public pageSize: number = 10;
 
     public editing: Publication;
-    public isSaving: boolean = false;
+    public savePromise: angular.IPromise<any>;
 
     public yearOptions: number[];
 
@@ -52,20 +52,17 @@ class PublicationOverviewCtrl implements angular.IController {
     }
 
     public saveEditedPublication() {
-        this.isSaving = true;
         if (this.editing.id == null) { // no id means it's a new one
-            this.publicationResource.save({}, this.editing, (publication: Publication) => {
+            this.savePromise = this.publicationResource.save({}, this.editing, (publication: Publication) => {
                 this.publications.push(publication);
                 this.editPublication(publication);
-                this.isSaving = false;
                 this.yearOptions = this.createYearOptions();
-            });
+            }).$promise;
         } else { // it's an old one
             const updatedIndex = this.publications.findIndex((pub) => pub.id === this.editing.id);
-            this.editing.$update({}, (updated: Publication) => {
+            this.savePromise = this.editing.$update({}, (updated: Publication) => {
                 this.publications[updatedIndex] = updated;
                 this.editPublication(updated);
-                this.isSaving = false;
                 this.yearOptions = this.createYearOptions();
             });
         }

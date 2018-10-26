@@ -7,11 +7,11 @@ import CookieService from 'services/cookies.service';
 
 /* @ngInject */
 class HomeCtrl implements IController {
-
     public randomTip: RandomTip;
     public tip: Tip;
     public cookieService: CookieService;
     public $window: angular.IWindowService;
+    public $timeout: angular.ITimeoutService;
 
     constructor(randomTip: RandomTip, cookieService: CookieService, $window: angular.IWindowService) {
         this.randomTip = randomTip;

@@ -17,12 +17,14 @@ function aliasDirective(): angular.IDirective {
 }
 
 interface ButtonLoadingScope extends angular.IScope {
-    buttonLoading: boolean;
+    buttonLoading: Promise<any> | angular.IPromise<any>;
+    ngDisabled?: boolean;
 }
 
 interface ButtonLoadingAttrs extends angular.IAttributes {
     loadingText?: string;
     loadedText?: string;
+    errorText?: string;
     hideLoadingIcons?: boolean;
 }
 
@@ -32,6 +34,7 @@ function buttonLoadingDirective($timeout: angular.ITimeoutService): angular.IDir
         restrict: 'A',
         scope: {
             buttonLoading: '<',
+            ngDisabled: '<',
         },
         link: (scope: ButtonLoadingScope, el, attrs: ButtonLoadingAttrs) => {
             const originalHtml = el.html();
@@ -45,17 +48,38 @@ function buttonLoadingDirective($timeout: angular.ITimeoutService): angular.IDir
                 ? loadedText
                 : `<i class="fas fa-check"></i> ${loadedText}`;
 
-            scope.$watch('buttonLoading', (isLoading: boolean, prevIsLoading: boolean) => {
-                if (isLoading && !prevIsLoading) {
-                    el.html(loadingHtml);
-                    el.attr('disabled', 'true');
-                } else if (!isLoading && prevIsLoading) {
-                    el.html(loadedHtml);
-                    $timeout(() => {
-                        el.attr('disabled', null);
-                        el.html(originalHtml);
-                    }, 1000);
+            const errorText = attrs.errorText || 'Feil';
+            const errorHtml = attrs.hideLoadingIcons
+                ? errorText
+                : `<i class="fas fa-check"></i> ${errorText}`;
+
+            scope.$watch('buttonLoading', (newPromise: Promise<any>, oldPromise: Promise<any>) => {
+                if (newPromise == null) {
+                    return;
                 }
+                el.html(loadingHtml);
+                el.attr('disabled', 'true');
+                newPromise
+                    .then(() => {
+                        el.html(loadedHtml);
+                        $timeout(() => {
+                            el.html(originalHtml);
+                            el.removeAttr('disabled');
+                            if (scope.ngDisabled) {
+                                el.attr('disabled', scope.ngDisabled.toString());
+                            }
+                        }, 1000);
+                    })
+                    .catch(() => {
+                        el.html(errorHtml);
+                        $timeout(() => {
+                            el.html(originalHtml);
+                            el.removeAttr('disabled');
+                            if (scope.ngDisabled) {
+                                el.attr('disabled', scope.ngDisabled.toString());
+                            }
+                        }, 1000);
+                    });
             });
         },
     };

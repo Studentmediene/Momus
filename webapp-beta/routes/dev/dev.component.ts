@@ -6,6 +6,9 @@ class DevCtrl implements angular.IController {
     public env: Env;
     public selectedUser: Person;
 
+    public generating: angular.IPromise<any>;
+    public settingUser: angular.IPromise<any>;
+
     private $http: angular.IHttpService;
     private $window: angular.IWindowService;
 
@@ -23,11 +26,11 @@ class DevCtrl implements angular.IController {
     }
 
     public generateData() {
-        this.$http.post('/api/dev/generatedata', null);
+        this.generating = this.$http.post('/api/dev/generatedata', null);
     }
 
     public setLoggedInUser(username: string) {
-        this.$http.post('/api/dev/logout', null).then(() => {
+        this.settingUser = this.$http.post('/api/dev/logout', null).then(() => {
             this.$http.post('/api/dev/login', JSON.stringify(username)).then(
                 () => this.$window.location.href = '/',
             );
