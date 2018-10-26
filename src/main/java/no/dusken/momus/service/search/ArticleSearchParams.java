@@ -108,7 +108,7 @@ public class ArticleSearchParams {
 
     @JsonIgnore
     public int getStartOfPage() {
-        return pageSize * (pageNumber - 1);
+        return pageSize * pageNumber;
     }
 
 }
