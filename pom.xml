@@ -349,6 +349,7 @@
                         <resourceBases>
                             <resourceBase>webapp/dist</resourceBase>
                             <resourceBase>webapp-beta/dist</resourceBase>
+                            <!-- Must be included for WEB-INF -->
                             <resourceBase>src/main/webapp</resourceBase>
                         </resourceBases>
                     </webApp>

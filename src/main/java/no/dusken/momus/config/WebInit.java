@@ -21,20 +21,20 @@ public class WebInit implements WebApplicationInitializer {
         config.register(ApplicationConfig.class);
 
         servletContext.addListener(new ContextLoaderListener(config));
-		servletContext.addListener(new RequestContextListener());
+        servletContext.addListener(new RequestContextListener());
 
-		ServletRegistration.Dynamic dispatcher = 
-			servletContext.addServlet("momusapi", new DispatcherServlet());
-		dispatcher.setAsyncSupported(true);
-		dispatcher.setLoadOnStartup(1);
-		dispatcher.addMapping("/");
+        ServletRegistration.Dynamic dispatcher =  servletContext
+            .addServlet("momusapi", new DispatcherServlet());
+        dispatcher.setAsyncSupported(true);
+        dispatcher.setLoadOnStartup(1);
+        dispatcher.addMapping("/");
 
         // Add security to the servlet
         FilterRegistration.Dynamic securityFilter = servletContext
-				.addFilter("springSecurityFilterChain", DelegatingFilterProxy.class);
+            .addFilter("springSecurityFilterChain", DelegatingFilterProxy.class);
 
         securityFilter.setAsyncSupported(true);
         securityFilter.addMappingForUrlPatterns(null, false, "/*");
-	}
+    }
 
 } 
