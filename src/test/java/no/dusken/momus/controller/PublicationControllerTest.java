@@ -34,18 +34,18 @@ public class PublicationControllerTest extends AbstractControllerTest {
 
     @Test
     public void getAllPublications() throws Exception {
-        performGetExpectOk("/publications").andExpect(jsonPath("$.length()", is(2)));
+        performGetExpectOk("/api/publications").andExpect(jsonPath("$.length()", is(2)));
     }
 
     @Test
     public void getPublicationById() throws Exception {
-        performGetExpectOk("/publications/" + pub1.getId()).andExpect(jsonPath("$.name", is("UD")));
+        performGetExpectOk("/api/publications/" + pub1.getId()).andExpect(jsonPath("$.name", is("UD")));
     }
 
     @Test
     public void savePublication() throws Exception {
         performPostExpectOk(
-                "/publications",
+                "/api/publications",
                 TestUtil.toJsonString(Publication.builder().name("UD3").releaseDate(LocalDate.now().plusDays(20)).build()));
 
         assert publicationRepository.findAll().size() == 3;
@@ -56,7 +56,7 @@ public class PublicationControllerTest extends AbstractControllerTest {
         Publication newPub1 = Publication.builder().name("UDUD").releaseDate(pub1.getReleaseDate()).build();
         newPub1.setId(pub1.getId());
 
-        performPutExpectOk("/publications/" + pub1.getId(), TestUtil.toJsonString(newPub1));
+        performPutExpectOk("/api/publications/" + pub1.getId(), TestUtil.toJsonString(newPub1));
 
         newPub1 = publicationRepository.findOne(pub1.getId());
 
@@ -65,6 +65,6 @@ public class PublicationControllerTest extends AbstractControllerTest {
 
     @Test
     public void getActive() throws Exception {
-        performGetExpectOk("/publications/active").andExpect(jsonPath("$.id", is(pub1.getId().intValue())));
+        performGetExpectOk("/api/publications/active").andExpect(jsonPath("$.id", is(pub1.getId().intValue())));
     }
 }
