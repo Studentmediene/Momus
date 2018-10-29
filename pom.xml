@@ -315,10 +315,17 @@
             <filter>src/main/filters/local.properties</filter>
         </filters>
         <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
             <!-- Filter our .properties files -->
             <resource>
                 <filtering>true</filtering>
                 <directory>src/main/resources</directory>
+                <includes>
+                    <include>momus.properties</include>
+                </includes>
             </resource>
         </resources>
         <plugins>

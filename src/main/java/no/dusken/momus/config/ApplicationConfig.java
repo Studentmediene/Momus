@@ -1,5 +1,6 @@
 package no.dusken.momus.config;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -34,6 +35,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
 
 import liquibase.integration.spring.SpringLiquibase;
+import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.authentication.UserDetailsService;
 import no.dusken.momus.authentication.UserDetailsServiceDev;
 import no.dusken.momus.authentication.UserDetailsServiceImpl;
@@ -50,12 +52,14 @@ import no.dusken.momus.service.repository.PersonRepository;
 @ComponentScan(basePackages = "no.dusken.momus")
 @EnableJpaRepositories(basePackages = "no.dusken.momus.service.repository")
 @PropertySource("classpath:momus.properties")
+@Slf4j
 class ApplicationConfig extends WebMvcConfigurerAdapter {
 
     private final Environment env;
 
     public ApplicationConfig(Environment env) {
         this.env = env;
+        log.info("Active spring profiles: {}", Arrays.toString(env.getActiveProfiles()));
     }
 
     @Bean(name = "userDetailsService")
