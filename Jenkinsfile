@@ -62,7 +62,7 @@ pipeline {
             }
 
             steps {
-                sh "cp ${localProperties} ${WORKSPACE}/src/main/resources/local.properties"
+                sh "cp ${localProperties} ${WORKSPACE}/src/main/filters/local.properties"
                 sh "cp ${googleKey} ${WORKSPACE}/src/main/resources/googlekey.p12"
             }
 
