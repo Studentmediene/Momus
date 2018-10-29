@@ -32,3 +32,4 @@ bin/
 **/*.css.map
 
 package-lock.json
+yarn.lock
