@@ -126,5 +126,52 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Artikkeltyper
+                </div>
+                <table class="table">
+                        <tbody ng-repeat="a in vm.articleTypes" class="article-type">
+                                <tr>
+                                    <td colspan="1.5">{{a.name}}</td>
+                                    <td colspan="0.5">{{a.description}}</td>
+                                    <td colspan="0.5"><button class="btn btn-success btn-xs pull-right" ng-click="vm.editArticleType(a);$event.stopPropagation();">Rediger</button></td>
+                                </tr>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+                <div class="panel {{vm.new_articleType.id == undefined ? 'panel-success' : 'panel-warning'}}">
+                    <div class="panel-heading">
+                        <h4 class="panel-title text-center">{{vm.new_articleType.id === undefined ? 'Ny artikkeltype' : 'Rediger ' + vm.new_articleType.name}}</h4>
+                    </div>
+                    <div class="panel-body">
+                            <form name="articleTypeForm" novalidate>
+                                <div class="form-group"
+                                    ng-class="{'has-error' : articleTypeForm.name.$invalid && articleTypeForm.name.$dirty}">
+                                    <label for="name">Navn</label>
+                                    <input type="text" name="name" id="name" class="form-control" ng-model="vm.new_articleType.name" required>
+                                </div>
+                                <div class="form-group"
+                                    ng-class="{'has-error' : articleTypeForm.description.$invalid && articleTypeForm.description.$dirty}">
+                                    <label for="description">Beskrivelse</label>
+                                    <textarea name="description" id="description" class="form-control" ng-model="vm.new_articleType.description" required></textarea>
+                                </div>
+                                <!-- buttons -->
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary col-xs-4" ng-disabled="articleTypeForm.$invalid"
+                                            ng-click="vm.saveEditedArticleType()" button-loader="vm.isSaving">Lagre
+                                    </button>
+        
+                                    <button class="btn btn-default col-xs-4 col-xs-offset-1" ng-show="vm.new_articleType.id != undefined"
+                                            ng-click="vm.editArticleType({})">Avbryt
+                                    </button>
+                                </div>
+                            </form>
+                    </div>
+                </div>
+        </div>
     </row>
 </div>

@@ -17,14 +17,14 @@
 'use strict';
 
 angular.module('momusApp.resources')
-    .factory('ArticleType', ($resource, $http) => {
-        const ArticleType = $resource('/api/articletype/:id/:resource',
+    .factory('ArticleType', $resource => {
+        return $resource('/api/articletype/:id/:resource',
             {
                 id: '@id'
             },
             {
                 updateName: { method: 'PATCH', params: {resource: 'name'} },
                 updateDescription: { method: 'PATCH', params: {resource: 'description'} },
-                delete: { method: 'PATCH', params: {resource: 'deleted', deleted: true} },
+                updateDeleted: { method: 'PATCH', params: {resource: 'deleted'} },
             });
     });

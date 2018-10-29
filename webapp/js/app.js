@@ -248,7 +248,8 @@ angular.module('momusApp', [
                 parent: 'root',
                 url: '/admin',
                 resolve: {
-                    news: NewsItem => NewsItem.query().$promise
+                    news: NewsItem => NewsItem.query().$promise, 
+                    articleTypes: ArticleType => ArticleType.query().$promise
                 },
                 templateUrl: '/assets/partials/admin/adminView.html',
                 controller: 'AdminCtrl',
