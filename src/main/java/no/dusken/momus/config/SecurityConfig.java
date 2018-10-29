@@ -237,7 +237,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         SAMLContextProviderLB contextProvider = new SAMLContextProviderLB();
         contextProvider.setScheme(env.getProperty("saml.scheme"));
         contextProvider.setServerName(env.getProperty("saml.serverurl"));
-        contextProvider.setServerPort(Integer.parseInt(env.getProperty("saml.port")));
         contextProvider.setIncludeServerPortInRequestURL(false);
         contextProvider.setContextPath("/");
         return contextProvider;

@@ -49,9 +49,7 @@ import no.dusken.momus.service.repository.PersonRepository;
 @EnableSpringDataWebSupport
 @ComponentScan(basePackages = "no.dusken.momus")
 @EnableJpaRepositories(basePackages = "no.dusken.momus.service.repository")
-@PropertySource(
-        value = {"classpath:momus.properties", "classpath:local.properties"},
-        ignoreResourceNotFound = true)
+@PropertySource("classpath:momus.properties")
 class ApplicationConfig extends WebMvcConfigurerAdapter {
 
     private final Environment env;
