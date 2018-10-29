@@ -26,6 +26,7 @@
     </div>
     <div id="toolbar" uk-sticky="offset: 50; cls-active: d-toolbar-attach" class="d-toolbar">
         <h3 class="d-title uk-text-uppercase">Disposisjon for <b>{{vm.publication.name}}</b></h3>
+        <p>OBS: I betaen går det foreløpig ikke an å flytte sider rundt!</p>
         <div id="online-users" style="min-height: 40px">
             <div ng-repeat="user in vm.presentUsers track by user.id" style="margin: 5px">
                 <person-avatar
@@ -82,9 +83,10 @@
         </div>
     </div>
 
-    <div class="d-table disposition-table">
+    <div class="d-table disposition-table" as-sortable="vm.sortable" ng-model="vm.pageOrder.order">
         <disposition-page
             ng-repeat="pageId in vm.pageOrder.order"
+            as-sortable-item
             number="$index + 1"
             page="vm.pagesLookup[pageId]"
             publication="vm.publication"

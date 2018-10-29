@@ -1,6 +1,6 @@
 <div class="d-table-row" ng-class="{'page-done': vm.page.done}">
     <!--Page number-->
-    <div class="d-table-cell handle" ng-style="vm.columnWidths.page_nr">{{vm.number}}</div>
+    <div class="d-table-cell handle" as-sortable-item-handle ng-style="vm.columnWidths.page_nr">{{vm.number}}</div>
 
     <!--Edit mode -->
     <div class="d-table-cell" ng-style="{width: vm.articleWidth + 'px'}" ng-show="vm.editing">

@@ -49,6 +49,12 @@ export default class PublicationDispositionCtrl implements angular.IController {
     private $timeout: angular.ITimeoutService;
     private $window: angular.IWindowService;
 
+    private sortable: any = {
+        itemMoved: (e: any) => {
+            console.log(e);
+        },
+    };
+
     constructor(
         $scope: angular.IScope,
         $timeout: angular.ITimeoutService,
