@@ -19,7 +19,7 @@
 angular.module('momusApp.controllers')
     .controller('AdminCtrl', function (
         $scope,
-        ArticleType,
+        articleTypes,
         loggedInPerson,
         NewsItem,
         news
@@ -29,6 +29,10 @@ angular.module('momusApp.controllers')
         vm.saveEditedNews = saveEditedNews;
         vm.editNews = editNews;
         vm.news = news;
+
+        vm.saveEditedArticleType = saveEditedArticleType;
+        vm.editArticleType = editArticleType;
+        vm.articleTypes = articleTypes;
 
         vm.pageSize = 5;
         vm.currentPage = 1;
@@ -58,5 +62,20 @@ angular.module('momusApp.controllers')
 
             // clear form errors
             $scope.newsForm.$setPristine();
+        }
+
+        function saveEditedArticleType() {
+            vm.isSaving = true;
+            if (vm.new_articleType.id == undefined) {
+                const articleType = ArticleType.save({}, vm.new_articleType, function(data) {
+                    vm.articleType.push(articleType)
+                })
+            }
+        }
+
+        function editArticleType(articleType) {
+            vm.new_articleType = angular.copy(articleType);
+
+            $scope.articleTypeForm.$setPristine();
         }
     });
