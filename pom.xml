@@ -82,12 +82,27 @@
         <h2.version>1.4.194</h2.version>
 
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
-
     </properties>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <build.profile.id>dev</build.profile.id>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <build.profile.id>prod</build.profile.id>
+            </properties>
+        </profile>
+    </profiles>
 
     <!-- Add the dependencies to be downloaded here -->
-
     <dependencies>
         <!-- Spring Framework -->
         <dependency>
@@ -295,19 +310,22 @@
     </dependencies>
 
     <build>
+        <filters>
+            <filter>src/main/filters/${build.profile.id}.properties</filter>
+            <filter>src/main/filters/local.properties</filter>
+        </filters>
         <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
             <!-- Filter our .properties files -->
             <resource>
-                <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <directory>src/main/resources</directory>
                 <includes>
                     <include>momus.properties</include>
-                    <include>local.properties</include>
                 </includes>
-            </resource>
-            <!-- Include the rest of the resources -->
-            <resource>
-                <directory>src/main/resources</directory>
             </resource>
         </resources>
         <plugins>
