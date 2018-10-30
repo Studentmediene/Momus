@@ -14,6 +14,18 @@ pipeline {
             }
         }
 
+	    stage('Set up environment') {
+            environment {
+                localProperties = credentials('momus-local-properties')
+                googleKey = credentials('momus-gdrive-credentials')
+            }
+
+            steps {
+                sh "cp ${localProperties} ${WORKSPACE}/src/main/filters/local.properties"
+                sh "cp ${googleKey} ${WORKSPACE}/src/main/resources/googlekey.p12"
+            }
+        }
+
         stage('Build frontend') {
             agent {
                 docker {
@@ -53,19 +65,6 @@ pipeline {
                     junit testReports
                 }
             }
-        }
-
-        stage('Prebuild') {
-            environment {
-                localProperties = credentials('momus-local-properties')
-                googleKey = credentials('momus-gdrive-credentials')
-            }
-
-            steps {
-                sh "cp ${localProperties} ${WORKSPACE}/src/main/filters/local.properties"
-                sh "cp ${googleKey} ${WORKSPACE}/src/main/resources/googlekey.p12"
-            }
-
         }
 
         stage('Build app') {
