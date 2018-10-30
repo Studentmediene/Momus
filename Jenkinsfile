@@ -77,7 +77,7 @@ pipeline {
             }
 
             steps {
-                sh 'mvn -DskipTests install'
+                sh 'mvn -Pprod -DskipTests install'
             }
         }
 
