@@ -212,8 +212,8 @@
                     <h1 class="panel-title fav">
                         <i class="fas fa-star"></i>
                         {{!vm.user.favouritesection ?
-                            "Velg favorittseksjon for å vise de nyeste artiklene derfra" :
-                            "Siste artikler fra din favorittseksjon (" + vm.user.favouritesection.name + ")"
+                            "Velg favorittredaksjon for å vise de nyeste artiklene derfra" :
+                            "Siste artikler fra din favorittredaksjon (" + vm.user.favouritesection.name + ")"
                         }}
                     </h1>
                 </div>
@@ -234,12 +234,12 @@
 
                         <tr ng-show="!vm.user.favouritesection">
                             <td colspan="10" style="text-align: center;">
-                                Du har ikke satt en favorittseksjon
+                                Du har ikke satt en favorittredaksjon
                             </td>
                         </tr>
                         <tr ng-show="favouriteSectionArticles.length <= 0">
                             <td colspan="10" style="text-align: center;">
-                                Det finnes ingen artikler i denne seksjonen
+                                Det finnes ingen artikler i denne redaksjonen
                             </td>
                         </tr>
                         <tr ng-repeat="article in vm.favouriteSectionArticles">

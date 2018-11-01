@@ -35,7 +35,7 @@
                     ng-model="vm.user.favouritesection"
                     items="vm.sections"
                     label="'name'"
-                    placeholder="Favorittseksjon"
+                    placeholder="Favorittredaksjon"
                     on-change="">
                 </select-dropdown>
             </extra-header-content>
@@ -43,7 +43,7 @@
                 ng-show="vm.user.favouritesection == null"
                 class="uk-text-center uk-padding-small"
             >
-                Sett en favorittseksjon for å se siste artikler derfra
+                Sett en favorittredaksjon for å se siste artikler derfra
             </div>
             <div
                 ng-show="!vm.favouritesectionArticles.$resolved"

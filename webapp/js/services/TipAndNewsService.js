@@ -107,8 +107,8 @@ angular.module('momusApp.services')
             text: "<p>Første versjon av disposisjonsvisningen er nå ute og klar for å bli testet. Klikk <a href='#/disposition'>her</a> for å se hvordan det ser ut!</p>"
         },{
             date: new Date(2015, 8, 13),
-            title: "Favorittseksjon, sortering i artikkelsøk",
-            text: "<p>Kan nå velge favorittseksjon, og få de nyeste artiklene herifra på forsiden. Man kan også sortere artikkelsøket på de forskjellige kolonnene. Det er også lagt til støtte for å vise fulle kommentarer i artikkelsøket.</p>"
+            title: "Favorittredaksjon, sortering i artikkelsøk",
+            text: "<p>Kan nå velge favorittredaksjon, og få de nyeste artiklene herifra på forsiden. Man kan også sortere artikkelsøket på de forskjellige kolonnene. Det er også lagt til støtte for å vise fulle kommentarer i artikkelsøket.</p>"
         },{
             date: new Date(2015, 7, 30),
             title: "Forsidetabeller, artikkelside",
