@@ -25,7 +25,7 @@ public class IllustrationRequestService {
         if(statuses == null) {
             return illustrationRequestRepository.findAll();
         } else {
-            return illustrationRequestRepository.getAllByStatusIn(statuses);
+            return illustrationRequestRepository.findByStatusIn(statuses);
         }
     }
 
@@ -40,9 +40,9 @@ public class IllustrationRequestService {
     public List<IllustrationRequest> getMyRequests(List<IllustrationRequest.Status> statuses) {
         Person user = userDetailsService.getLoggedInPerson();
         if(statuses == null) {
-            return illustrationRequestRepository.getAllByRequester(user);
+            return illustrationRequestRepository.findByRequesterId(user.getId());
         } else {
-            return illustrationRequestRepository.getAllByStatusInAndRequester(statuses, user);
+            return illustrationRequestRepository.findByStatusInAndRequesterId(statuses, user.getId());
         }
     }
 

@@ -24,10 +24,10 @@ public class IllustrationRequest {
     private Long id;
 
     @JoinColumn(name = "id")
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     private Article article;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Person requester;
 
     private String description;
