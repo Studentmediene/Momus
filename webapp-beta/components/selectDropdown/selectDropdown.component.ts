@@ -79,6 +79,7 @@ class SelectDropdownCtrl implements angular.IController {
                         : this.listIndex - 1;
                     child = e.children[this.listIndex];
                     child.scrollIntoView({block: 'nearest'});
+                    evt.preventDefault();
                     break;
                 case 'ArrowDown':
                     this.listIndex = this.listIndex === this.items.length - 1

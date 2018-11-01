@@ -49,7 +49,11 @@ class MultiselectDropdownCtrl implements angular.IController {
     }
 
     public onInputFocus() {
+        if (this.showDropdown === true) {
+            return;
+        }
         this.showDropdown = true;
+        this.$timeout(() => this.$scope.$apply());
     }
 
     public onInputBlur() {
@@ -67,30 +71,44 @@ class MultiselectDropdownCtrl implements angular.IController {
 
     public onKeypress(evt: KeyboardEvent) {
         const e = (<HTMLElement> evt.currentTarget).getElementsByClassName('multiselect-dropdown-drop')[0];
-        if (this.showDropdown) {
-            let child;
-            switch (evt.key) {
-                case 'ArrowUp':
-                    this.listIndex = this.listIndex === 0
-                        ? this.listIndex
-                        : this.listIndex - 1;
-                    child = e.children[this.listIndex];
-                    child.scrollIntoView({block: 'nearest'});
+        let child;
+        let shouldFocus = true;
+        switch (evt.key) {
+            case 'ArrowUp':
+                this.listIndex = this.listIndex === 0
+                    ? this.listIndex
+                    : this.listIndex - 1;
+                child = e.children[this.listIndex];
+                child.scrollIntoView({block: 'nearest'});
+                break;
+            case 'ArrowDown':
+                this.listIndex = this.listIndex === this.$scope.filteredItems.length - 1
+                    ? this.listIndex
+                    : this.listIndex + 1;
+                child = e.children[this.listIndex];
+                child.scrollIntoView({block: 'nearest'});
+                break;
+            case 'Enter':
+                if (!this.showDropdown) {
                     break;
-                case 'ArrowDown':
-                    this.listIndex = this.listIndex === this.$scope.filteredItems.length - 1
-                        ? this.listIndex
-                        : this.listIndex + 1;
-                    child = e.children[this.listIndex];
-                    child.scrollIntoView({block: 'nearest'});
+                }
+                this.onSelect(this.$scope.filteredItems[this.listIndex]);
+                evt.preventDefault();
+                break;
+            case 'Backspace':
+                if (this.searchText.length > 0 || this.ngModel.$viewValue.length === 0) {
                     break;
-                case 'Enter':
-                    this.onSelect(this.$scope.filteredItems[this.listIndex]);
-                    evt.preventDefault();
-                    break;
-                case 'Escape':
-                    this.onInputBlur();
-            }
+                }
+                this.onUnselect(this.ngModel.$viewValue[this.ngModel.$viewValue.length - 1]);
+                break;
+            case 'Escape':
+                this.onInputBlur();
+                shouldFocus = false;
+                break;
+
+        }
+        if (shouldFocus) {
+            this.onInputFocus();
         }
     }
 
