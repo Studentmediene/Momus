@@ -167,6 +167,7 @@ class ApplicationConfig extends WebMvcConfigurationSupport {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/assets/**").addResourceLocations("/assets/");
+        registry.addResourceHandler("/favicon.ico").addResourceLocations("/favicon.ico");
         registry.setOrder(0);
     }
 
