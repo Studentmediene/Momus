@@ -12,7 +12,9 @@ class SelectDropdownCtrl implements angular.IController {
     public required: string;
     public onChange: ({ value }: {value: ItemType}) => void;
 
+    public hasItemMarkup: boolean;
     public items: ItemType[];
+    public sortKey: string;
     public label: string;
     public placeholder: string;
     public showDropdown: boolean = false;
@@ -20,13 +22,16 @@ class SelectDropdownCtrl implements angular.IController {
 
     public listIndex: number = 0;
 
+    private $transclude: angular.ITranscludeFunction;
     private $timeout: angular.ITimeoutService;
 
-    constructor($timeout: angular.ITimeoutService) {
+    constructor($timeout: angular.ITimeoutService, $transclude: angular.ITranscludeFunction) {
         this.$timeout = $timeout;
+        this.$transclude = $transclude;
     }
 
     public $onInit() {
+        this.hasItemMarkup = this.$transclude.isSlotFilled('itemMarkup');
         this.ngModel.$render = () => {
             this.viewModel = this.ngModel.$viewValue;
         };
@@ -119,6 +124,7 @@ export default angular
         bindings: {
             items: '<',
             label: '<',
+            sortKey: '<',
             placeholder: '@',
             unclearable: '@',
             required: '@',
@@ -126,5 +132,8 @@ export default angular
         },
         require: {
             ngModel: 'ngModel',
+        },
+        transclude: {
+            itemMarkup: '?itemMarkup',
         },
     });

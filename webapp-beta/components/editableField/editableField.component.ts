@@ -11,10 +11,14 @@ class EditableFieldCtrl implements angular.IController {
     public oldValue: any;
     public hasCustomValueMarkup: boolean;
 
+    private $transclude: angular.ITranscludeFunction;
+
+    constructor($transclude: angular.ITranscludeFunction) {
+        this.$transclude = $transclude;
+    }
+
     public $onInit() {
-        this.hasCustomValueMarkup =
-            this.hasCustomValueMarkupString === '' ||
-            this.hasCustomValueMarkupString === 'true';
+        this.hasCustomValueMarkup = this.$transclude.isSlotFilled('customValueMarkup');
     }
 
     public edit() {
@@ -44,7 +48,6 @@ export default angular.module('momusApp.components.editableField', [])
             label: '<',
             value: '<',
             valueLabel: '@',
-            hasCustomValueMarkupString: '@hasCustomValueMarkup',
             pool: '<?',
             onSave: '&',
         },

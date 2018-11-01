@@ -42,7 +42,7 @@
 
     .select-dropdown-dropitem {
         cursor: pointer;
-        padding: 0 10px;
+        white-space: nowrap;
         &.hover {
             background-color: lightgrey;
         }

@@ -89,7 +89,7 @@ class MultiselectDropdownCtrl implements angular.IController {
                 child.scrollIntoView({block: 'nearest'});
                 break;
             case 'Enter':
-                if (!this.showDropdown) {
+                if (!this.showDropdown || this.$scope.filteredItems.length === 0) {
                     break;
                 }
                 this.onSelect(this.$scope.filteredItems[this.listIndex]);

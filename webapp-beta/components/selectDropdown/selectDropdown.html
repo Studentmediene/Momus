@@ -4,6 +4,7 @@
         ng-class="{'uk-form-danger': vm.ngModel.$invalid}"
         tabindex="0"
         ng-focus="vm.onFocus()"
+        ng-click="vm.onFocus()"
         ng-blur="vm.onBlur()"
         >
         <span
@@ -17,14 +18,17 @@
     <div class="select-dropdown-drop" ng-style="{ display: vm.showDropdown ? 'block' : 'none'}">
         <div
             class="select-dropdown-dropitem"
-            ng-repeat="p in vm.items track by (p.id != null ? p.id : p)"
+            ng-repeat="value in vm.items track by (value.id != null ? value.id : value)"
             ng-mousedown="vm.onListMousedown()"
             ng-mouseup="vm.onListMouseup()"
-            ng-click="vm.onSelect(p)"
+            ng-click="vm.onSelect(value)"
             ng-mouseenter="vm.listIndex = $index"
             ng-class="{hover: vm.listIndex === $index}"
         >
-            <span>{{ vm.label ? p[vm.label] : p }}</span>
+            <span ng-if="!vm.hasItemMarkup" style="padding: 0 10px">
+                {{ vm.label ? value[vm.label] : value }}
+            </span>
+            <span ng-if="vm.hasItemMarkup" ng-transclude="itemMarkup"></span>
         </div>
     </div>
 </div>

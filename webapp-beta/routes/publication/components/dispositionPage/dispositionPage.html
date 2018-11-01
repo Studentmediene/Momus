@@ -58,7 +58,7 @@
     <!--Layout status-->
     <div
         class="d-table-cell"
-        ng-style="vm.applyColumnWidth('layout', {'background': page.layout_status.color})"
+        ng-style="vm.applyColumnWidth('layout', {'background': vm.page.layout_status.color})"
     >
         <select-dropdown
             ng-model="vm.page.layout_status"
@@ -66,7 +66,13 @@
             items="vm.layoutStatuses"
             label="'name'"
             unclearable
-        ></select-dropdown>
+        >
+            <item-markup>
+                <span class="status-dropdown-item" style="background-color: {{$parent.value.color}}">
+                    {{$parent.value.name}}
+                </span>
+            </item-markup>
+        </select-dropdown>
     </div>
 
     <!--Done-->

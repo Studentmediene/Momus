@@ -47,7 +47,7 @@
     <!--Status-->
     <div
         class="d-table-cell"
-        ng-style="vm.applyColumnWidth('status', {'background': article.status.color})"
+        ng-style="vm.applyColumnWidth('status', {'background': vm.article.status.color})"
     >
         <select-dropdown
             ng-model="vm.article.status"
@@ -57,11 +57,17 @@
             placeholder="Status"
             unclearable
         >
+            <item-markup>
+                <span class="status-dropdown-item" style="background-color: {{$parent.value.color}}">
+                    {{$parent.value.name}}
+                </span>
+            </item-markup>
+        </select-dropdown>
     </div>
     <!--Review-->
     <div
         class="d-table-cell"
-        ng-style="vm.applyColumnWidth('review', {'background':article.review.color})"
+        ng-style="vm.applyColumnWidth('review', {'background': vm.article.review.color})"
     >
         <select-dropdown
             ng-model="vm.article.review"
@@ -71,6 +77,11 @@
             placeholder="Korr."
             unclearable
         >
+            <item-markup>
+                <span class="status-dropdown-item" style="background-color: {{$parent.value.color}}">
+                    {{$parent.value.name}}
+                </span>
+            </item-markup>
         </select-dropdown>
     </div>
     <!--Photostatus-->
