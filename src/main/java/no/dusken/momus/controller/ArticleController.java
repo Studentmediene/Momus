@@ -25,7 +25,6 @@ import no.dusken.momus.service.repository.*;
 import no.dusken.momus.service.search.ArticleSearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;

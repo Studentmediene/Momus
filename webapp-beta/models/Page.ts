@@ -10,7 +10,7 @@ export interface Page extends ng.resource.IResource<Page>, Model {
 
 export interface PageOrder {
     publication_id: number;
-    order: number[];
+    order: Array<{id: number}>;
 }
 
 export interface PageContent {

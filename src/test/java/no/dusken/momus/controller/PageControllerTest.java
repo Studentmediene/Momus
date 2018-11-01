@@ -1,6 +1,7 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.dto.PageContent;
+import no.dusken.momus.dto.PageId;
 import no.dusken.momus.dto.PageOrder;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.AdvertService;
@@ -58,12 +59,12 @@ public class PageControllerTest extends AbstractControllerTest {
 
     @Test
     public void setPageOrder() throws Exception {
-        List<Long> pageOrder = pageRepository.getPageOrderByPublicationId(publication.getId());
+        List<PageId> pageOrder = pageRepository.getPageOrderByPublicationId(publication.getId());
         Collections.shuffle(pageOrder);
 
         performPutExpectOk("/api/pages/page-order", TestUtil.toJsonString(new PageOrder(publication.getId(), pageOrder)));
 
-        List<Long> updatedPageOrder = pageRepository.getPageOrderByPublicationId(publication.getId());
+        List<PageId> updatedPageOrder = pageRepository.getPageOrderByPublicationId(publication.getId());
 
         assert updatedPageOrder.equals(pageOrder);
     }

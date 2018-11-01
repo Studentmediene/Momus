@@ -7,9 +7,7 @@ import { Advert } from 'models/Advert';
 import { Article } from 'models/Article';
 import { Session } from 'services/session.service';
 import { Person } from 'models/Person';
-import { OpenNewArticleModal } from 'components/newArticleModal/newArticleModal.component';
 import { toIdLookup } from 'utils';
-import { OpenNewAdvertModal } from 'components/newAdvertModal/newAdvertModal.component';
 
 import getDispWidth, { ColumnWidths } from './getColumnWidths';
 
@@ -42,33 +40,19 @@ export default class PublicationDispositionCtrl implements angular.IController {
     private pageResource: PageResource;
     private advertResource: AdvertResource;
 
-    private openNewArticleModal: OpenNewArticleModal;
-    private openNewAdvertModal: OpenNewAdvertModal;
-
     private $scope: angular.IScope;
     private $timeout: angular.ITimeoutService;
     private $window: angular.IWindowService;
-
-    private sortable: any = {
-        itemMoved: (e: any) => {
-            console.log(e);
-        },
-    };
 
     constructor(
         $scope: angular.IScope,
         $timeout: angular.ITimeoutService,
         $window: angular.IWindowService,
-        // MessageModal,
         pageResource: PageResource,
         advertResource: AdvertResource,
-        openNewArticleModal: OpenNewArticleModal,
-        openNewAdvertModal: OpenNewAdvertModal,
     ) {
         this.pageResource = pageResource;
         this.advertResource = advertResource;
-        this.openNewArticleModal = openNewArticleModal;
-        this.openNewAdvertModal = openNewAdvertModal;
 
         this.$scope = $scope;
         this.$timeout = $timeout;
@@ -153,6 +137,10 @@ export default class PublicationDispositionCtrl implements angular.IController {
         });
     }
 
+    public onDrop(index: number, item: any, external: any, type: any) {
+        console.log('dropped ', index, item);
+    }
+
     public toggleButtonRow(articleScope: ArticleScope) {
         if (articleScope.showButtonRow) {
             articleScope.showButtonRow = false;
@@ -183,15 +171,19 @@ export default class PublicationDispositionCtrl implements angular.IController {
                 this.pagesLookup[p.id] = p;
                 this.publication.pages.push(p);
             });
-            this.pageOrder.order.splice(newPageAt, 0, ...pages.map((p) => p.id));
+            this.pageOrder.order.splice(newPageAt, 0, ...pages.map((p) => ({id: p.id})));
             this.loading = false;
         });
+    }
+
+    public updatePageOrder() {
+        this.pageResource.updatePageOrder({}, this.pageOrder);
     }
 
     public deletePage(page: Page) {
         if (confirm('Er du sikker på at du vil slette denne siden?')) {
             this.publication.pages.splice(this.publication.pages.indexOf(page), 1);
-            this.pageOrder.order.splice(this.pageOrder.order.indexOf(page.id), 1);
+            this.pageOrder.order.splice(this.pageOrder.order.findIndex((p) => p.id === page.id), 1);
             delete this.pagesLookup[page.id];
             this.loading = true;
             this.pageResource.delete({pageid: page.id}, () => this.loading = false);

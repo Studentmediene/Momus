@@ -1,6 +1,6 @@
 import * as angular from 'angular';
 
-import 'ng-sortable';
+import 'angular-drag-and-drop-lists';
 
 import PublicationDispositionCtrl from './publicationDisposition.ctrl';
 
@@ -11,7 +11,7 @@ import dispositionAdvert from '../dispositionAdvert/dispositionAdvert.component'
 import './publicationDisposition.scss';
 
 export default angular.module('momusApp.routes.publication.publicationDisposition', [
-    'as.sortable',
+    'dndLists',
     dispositionPage.name,
     dispositionArticle.name,
     dispositionAdvert.name,

@@ -68,8 +68,19 @@ $pageAdBackground: #f6f6f6;
 }
 
 .disposition-table {
-    position: absolute;
+    padding: 0;
+    margin-top: 0;
     padding-bottom: 100px;
+
+    .dndPlaceholder {
+        display: block;
+        min-height: 40px;
+        background-color: #ddd;
+    }
+
+    .dndDraggingSource {
+        display: none !important;
+    }
 
     disposition-page {
         display: block;
