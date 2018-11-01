@@ -70,7 +70,11 @@ angular.module('momusApp.controllers')
 
         function updateFavouriteSection() {
             Person.updateFavouritesection({section: vm.user.favouritesection.id});
-            vm.favouriteSectionArticles = Article.search({}, {section: vm.user.favouritesection.id});
+            vm.favouriteSectionArticles = Article.search({}, {
+                section: vm.user.favouritesection.id,
+                page_number: 1,
+                page_size: 9,
+            });
         }
 
         function getStatusArrays(counts, statuses){
