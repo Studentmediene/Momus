@@ -59,8 +59,8 @@ angular.module('momusApp.controllers')
             vm.layoutstatus = getStatusArrays(layoutStatusCounts, layoutStatuses);
         }
 
-        $scope.requests = IllustrationRequest.mine();
-        $scope.illustrationRequestStatuses = illustrationRequestStatuses;
+        vm.requests = IllustrationRequest.mine();
+        vm.illustrationRequestStatuses = illustrationRequestStatuses;
 
         vm.pageSize = 3;
         vm.currentPage = 1;

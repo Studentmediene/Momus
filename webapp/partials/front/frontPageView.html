@@ -279,13 +279,13 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="request in requests"
-                            ng-style="{backgroundColor: illustrationRequestStatuses[request.status].color}"
+                        <tr ng-repeat="request in vm.requests"
+                            ng-style="{backgroundColor: vm.illustrationRequestStatuses[request.status].color}"
                         >
                             <td><a href="#/artikler/{{request.article.id}}">{{request.article.name}}</a></td>
                             <td>{{request.description}}</td>
-                            <td ng-style="{backgroundColor: illustrationRequestStatuses[request.status].color}">
-                                {{illustrationRequestStatuses[request.status].name}}
+                            <td ng-style="{backgroundColor: vm.illustrationRequestStatuses[request.status].color}">
+                                {{vm.illustrationRequestStatuses[request.status].name}}
                             </td>
                             <td>{{request.created}}</td>
                         </tr>

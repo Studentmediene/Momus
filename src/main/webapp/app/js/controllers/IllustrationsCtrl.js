@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('IllustrationRequestsCtrl', function(
+    .controller('IllustrationsCtrl', function(
         IllustrationRequest,
         illustrationRequestStatuses
     ) {

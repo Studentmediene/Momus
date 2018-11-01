@@ -27,8 +27,14 @@ angular.module('momusApp.controllers')
         IllustrationRequest,
         illustrationRequestStatuses,
         TitleChanger,
+<<<<<<< HEAD:webapp/js/controllers/ArticleCtrl.js
         CookieService,
         MessageModal
+=======
+        ViewArticleService,
+        MessageModal,
+        $uibModal
+>>>>>>> MOM-226 Rename illustration requests view to just illustrations:src/main/webapp/app/js/controllers/ArticleCtrl.js
     ) {
         const vm = this;
 
@@ -39,7 +45,6 @@ angular.module('momusApp.controllers')
         vm.quoteCheckTypes = [{value: false, name: 'I orden'}, {value: true, name: 'Trenger sitatsjekk'}];
         vm.illustrationRequestStatuses = illustrationRequestStatuses;
 
-        vm.requestIllustration = requestIllustration;
         vm.saveNote = saveNote;
         vm.metaClicked = () => { vm.metaEditMode ? saveMeta() : editMeta() };
         vm.cancelMeta = () => { vm.metaEditMode = false; };
@@ -66,7 +71,8 @@ angular.module('momusApp.controllers')
         Article.content(articleId).then(data => { vm.articleContent = data.data; });
 
         CookieService.viewArticle(articleId);
-        vm.illustrationRequest = IllustrationRequest.get({id: $routeParams.id},
+
+        vm.illustrationRequest = IllustrationRequest.get({id: $stateParams.id},
             () => {},
             () => vm.illustrationRequest = {
                 description: "",
