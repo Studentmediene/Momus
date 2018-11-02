@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e # This will abort the script if any command outputs errors
+
 MASTER_BRANCH="master"
 DEVELOP_BRANCH="develop"
 
@@ -74,15 +76,17 @@ function check_argument_pattern {
 }
 
 function set_pom_version {
+    echo "Updating pom.xml"
     DIR=$(dirname "$0")
     cd $DIR/../
     mvn versions:set -DnewVersion=$1 -DgenerateBackupPoms=false -q
 }
 
 function set_npm_version {
+    echo "Updating package.json"
     DIR=$(dirname "$0")
     cd $DIR/../
-    npm version $1 --no-git-tag-version > "/dev/null" 2>&1
+    npm version $1 --no-git-tag-version > "/dev/null"
 }
 
 NEW_VER=$1
