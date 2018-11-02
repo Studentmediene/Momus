@@ -4,7 +4,7 @@ MASTER_BRANCH="master"
 DEVELOP_BRANCH="develop"
 
 function usage {
-    echo 'Usage: deploy.sh [NEW VERSION]'
+    echo "Usage: deploy.sh [NEW VERSION]"
 }
 
 function error {
@@ -40,36 +40,36 @@ function check_no_git_changes {
 
 function check_correct_branch {
     BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    if ! [[ "$BRANCH" == "$DEVELOP_BRANCH" ]]; then
+    if ! [[ $BRANCH == $DEVELOP_BRANCH ]]; then
         error "Not on $DEVELOP_BRANCH branch"
     fi
 }
 
 function check_argument_set {
     if [[ ! "$1" ]]; then
-        error 'Version argument not set'
+        error "Version argument not set"
     fi
 }
 
 function check_newer_than_existing {
     OLD_VER=$(get_old_version)
 
-    if [[ "$1" == "$OLD_VER" ]]; then
+    if [[ $1 == $OLD_VER ]]; then
         error "Please bump the version number"
     fi
 
     OLD_VER_ARR=(${OLD_VER//./ })
     NEW_VER_ARR=(${1//./ })
-    for i in `seq 0 2`; do
-        if [[ "${NEW_VER_ARR[$i]}" < "${OLD_VER_ARR[$i]}" ]]; then
+    for i in $(seq 0 2); do
+        if [[ ${NEW_VER_ARR[$i]} < ${OLD_VER_ARR[$i]} ]]; then
             error "New version must be > $OLD_VER"
         fi
     done
 }
 
 function check_argument_pattern {
-    if ! [[ "$1" =~ ^([0-9]+\.)([0-9]+\.)([0-9]+)$ ]]; then
-        error 'Invalid version number input. Should be x.y.z'
+    if ! [[ $1 =~ ^([0-9]+\.)([0-9]+\.)([0-9]+)$ ]]; then
+        error "Invalid version number input. Should be x.y.z"
     fi
 }
 
@@ -112,6 +112,6 @@ git commit -m "Bump versions to $NEW_VER"
 
 # Merge into master and create tag
 git checkout $MASTER_BRANCH
-git merge $DEVELOP_BRANCH --no-ff
+git merge $DEVELOP_BRANCH --no-ff --no-edit
 git tag -a $NEW_VER
 git push --all --tags
