@@ -17,6 +17,12 @@ function error {
 }
 
 function confirm_deploy {
+    echo -e "Deploying Momus. This will:"
+    echo -e "\tUpdate version to $1"
+    echo -e "\tMerge the following commits into $MASTER_BRANCH:"
+    git log --oneline --decorate --no-merges $MASTER_BRANCH..$DEVELOP_BRANCH
+    echo
+    echo -e "\tYou will be prompted to write a tag message, which should describe changes made"
     read -p "Are you sure you want to deploy? [y/N] " -r
     if ! [[ $REPLY =~ ^[Yy]$ ]]
     then
@@ -32,6 +38,13 @@ function get_old_version {
     echo $OLD_VER
 }
 
+function update_from_remote {
+    echo "Pulling from remote to ensure local branches are up-to-date"
+    git checkout $MASTER_BRANCH
+    git pull
+    git checkout $DEVELOP_BRANCH
+    git pull
+}
 function check_no_git_changes {
     DIR=$(dirname "$0")
     cd $DIR/../
@@ -99,9 +112,10 @@ check_newer_than_existing $NEW_VER
 # Check git state is valid
 check_correct_branch
 check_no_git_changes
+update_from_remote
 
 # Confirm that user wants to do this
-confirm_deploy
+confirm_deploy $NEW_VER
 
 set_pom_version $NEW_VER
 set_npm_version $NEW_VER
@@ -109,6 +123,7 @@ set_npm_version $NEW_VER
 # Make sure we are in correct dir
 DIR=$(dirname "$0")
 cd $DIR/../
+
 
 # Commit changes to version
 git add package.json pom.xml
