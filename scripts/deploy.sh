@@ -69,7 +69,7 @@ function check_newer_than_existing {
 
 function check_argument_pattern {
     if ! [[ "$1" =~ ^([0-9]+\.)([0-9]+\.)([0-9]+)$ ]]; then
-        error 'Bad input. Version should be x.y.z'
+        error 'Invalid version number input. Should be x.y.z'
     fi
 }
 
@@ -108,7 +108,7 @@ cd $DIR/../
 
 # Commit changes to version
 git add package.json pom.xml
-git commit -m "Bump versions"
+git commit -m "Bump versions to $NEW_VER"
 
 # Merge into master and create tag
 git checkout $MASTER_BRANCH
