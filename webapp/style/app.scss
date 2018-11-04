@@ -207,3 +207,14 @@ td > ul, td > ol {
         float: right;
     }
 }
+
+.status-field {
+    text-align: center;
+    white-space: nowrap;
+    padding: 2px 5px;
+    font-weight: bold;
+}
+
+.no-pending-requests {
+    text-align: center;
+}

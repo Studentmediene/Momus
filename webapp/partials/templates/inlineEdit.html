@@ -1,10 +1,16 @@
 <div>
     <textwrapper
+            ng-if="vm.useTextWrapper"
             length="20"
             ng-attr-text="vm.value || '[Rediger]'"
             ng-show="!vm.isEditing" ng-click="vm.isEditing = true">
-
     </textwrapper>
+    <span
+        ng-if="!vm.useTextWrapper"
+        ng-show="!vm.isEditing"
+        ng-click="vm.isEditing = true">
+        {{vm.value || vm.placeholder}}
+    </span>
     <div ng-show="vm.isEditing" style="position: absolute; overflow: visible;">
         <div class="input-group" style="width: 200px">
             <textarea class="form-control custom-control inline-textarea input-sm" ng-model="vm.value"></textarea>

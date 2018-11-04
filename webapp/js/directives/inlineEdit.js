@@ -24,6 +24,7 @@ class InlineEditController {
         this.isEditing = false;
         this.value = this.model;
         this.outsideChange = null;
+        this.useTextWrapper = this.noWrap == null;
     }
 
     $onChanges(changes) {
@@ -59,6 +60,7 @@ angular.module('momusApp.directives')
             model: '<',
             onSave: '&',
             onCancel: '&',
+            noWrap: '@',
         },
         controllerAs: 'vm',
         controller: InlineEditController
