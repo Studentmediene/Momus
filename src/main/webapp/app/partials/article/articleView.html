@@ -332,6 +332,26 @@
                         <hr class="divider">
                         <div class="form-group metaline">
                             <label class="col-sm-4 control-label">
+                                Grafikere
+                            </label>
+
+                            <div class="col-sm-8">
+                                <ul class="list-unstyled form-control-static" ng-hide="vm.metaEditMode">
+                                    <li ng-repeat="graphic in vm.article.graphics">
+                                        <span person-widget="graphic">{{ graphic.name }}</span>
+                                    </li>
+                                </ul>
+                                <id-select multiple
+                                           ng-show="vm.metaEditMode"
+                                           items="vm.persons"
+                                           target="vm.metaEditing.graphics"
+                                           show="name">
+                                </id-select>
+                            </div>
+                        </div>
+                        <hr class="divider">
+                        <div class="form-group metaline">
+                            <label class="col-sm-4 control-label">
                                 Utgave
                             </label>
 

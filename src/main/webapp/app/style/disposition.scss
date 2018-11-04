@@ -10,6 +10,12 @@ $pageAdBackground: #f6f6f6;
     font-size: 85%;
 }
 
+@media ( min-width: 1500px ) {
+    #disposition {
+        width:1500px;
+    }
+}
+
 .d-loading-spinner {
     position: fixed;
     top: 64px;

@@ -797,4 +797,19 @@
             <where>id=1</where>
         </update>
     </changeSet>
+
+    <changeSet id="46_articlegraphic" author="Christoffer">
+        <createTable tableName="article_graphic">
+            <column name="article_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+            <column name="graphics_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="article_id, graphics_id"  tableName="article_graphic"/>
+        <addForeignKeyConstraint baseColumnNames="article_id" baseTableName="article_graphic" constraintName="FK_article_graphic_article" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="article"/>
+        <addForeignKeyConstraint baseColumnNames="graphics_id" baseTableName="article_graphic" constraintName="FK_article_graphic_person" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="person"/>
+    </changeSet>
 </databaseChangeLog>

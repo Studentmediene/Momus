@@ -146,6 +146,7 @@ public class ArticleService {
         existing.setName(article.getName());
         existing.setJournalists(article.getJournalists());
         existing.setPhotographers(article.getPhotographers());
+        existing.setGraphics(article.getGraphics());
         existing.setComment(article.getComment());
         existing.setPublication(article.getPublication());
         existing.setType(article.getType());

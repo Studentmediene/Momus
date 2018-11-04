@@ -51,7 +51,7 @@ angular.module('momusApp.services')
             '<h4>Disposisjon</h4><p>Momus brukes for å lage disposisjon til Under Dusken.</p>',
             '<h4>Flytte sider i disposisjon</h4><p>Flytt på sider i disposisjonen ved å dra dem rundt. Flere sider kan også merkes.</p>',
             '<h4>Artikler i disposisjonen</h4><p>Trykker man på rediger-knappen til en side vil det dukke opp en knapp for å legge en ny artikkel inn i Momus.</p>',
-            '<h4>Reklame i disposisjonen</h4><p>Man kan markere at en side skal inneholde reklame i disposisjonen. Da vil den bli grå.</p>',            
+            '<h4>Reklame i disposisjonen</h4><p>Man kan legge til reklamer i tillegg til artikler på en side. Reklamer blir gule.</p>',
             '<h4>Ferdig side i disposisjonen</h4><p>Man kan markere at en side er helt ferdig i disposisjonen. Da vil den bli grønn.</p>',            
 
             // Publications

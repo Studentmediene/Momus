@@ -73,6 +73,11 @@ public class Article extends AbstractEntity implements Messageable {
     @Fetch(FetchMode.SUBSELECT)
     private Set<Person> photographers;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "article_graphic")
+    @Fetch(FetchMode.SUBSELECT)
+    private Set<Person> graphics;
+
     private ZonedDateTime lastUpdated;
 
     private String photoStatus;
