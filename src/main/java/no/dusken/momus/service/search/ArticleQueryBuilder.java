@@ -78,7 +78,7 @@ public class ArticleQueryBuilder {
             for (Long person : search.getPersons()) {
                 conditions.add("( :personid" + personCount + " member of a.journalists or " +
                         ":personid" + personCount + " member of a.photographers or " +
-                        ":personid" + personCount + " member of a.graphics)");
+                        ":personid" + personCount + " member of a.graphics )");
                 queryParams.put("personid" + personCount++, personRepository.findOne(person));
             }
         }
