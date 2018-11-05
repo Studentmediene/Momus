@@ -402,7 +402,8 @@
                             </div>
                             <div class="col-sm-8" ng-show="vm.metaEditMode">
                                 <select class="form-control input-sm" ng-model="vm.metaEditing.type"
-                                        ng-options="s.name for s in vm.types | orderBy:'type_order' | filter:{deleted: false} track by s.id "></select>
+                                    ng-options="s.name for s in vm.types | orderBy:'type_order' | filter:{deleted: false} track by s.id ">
+                                </select>
                             </div>
                         </div>
                     </form>
@@ -411,6 +412,7 @@
 
             <!-- Illustration request -->
             <div class="panel"
+                ng-show="vm.article.use_illustration"
                  ng-class="vm.hasRequestedIllustration() ?
                     (vm.illustrationRequest.status == 'COMPLETED' ? 'panel-success' : 'panel-warning')
                     : 'panel-info'">
