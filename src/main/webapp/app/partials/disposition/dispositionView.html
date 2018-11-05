@@ -66,6 +66,7 @@
                             <div class="d-table-cell" ng-style="vm.columnWidths.section">Seksjon</div>
                             <div class="d-table-cell" ng-style="vm.columnWidths.journalists">Journalister</div>
                             <div class="d-table-cell" ng-style="vm.columnWidths.photographers">Fotografer</div>
+                            <div class="d-table-cell" ng-style="vm.columnWidths.graphics">Grafikere</div>
                             <div class="d-table-cell" ng-style="vm.columnWidths.status">Status</div>
                             <div class="d-table cell" ng-style="vm.columnWidths.review">Korrektur</div>
                             <div class="d-table-cell" ng-style="vm.columnWidths.photo_status">Fotostatus</div>
@@ -182,6 +183,15 @@
                                     </li>
                                     <li ng-repeat="person in article.external_photographer.split(',')">
                                         <i>{{person}}</i>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="d-table-cell" ng-style="vm.columnWidths.graphics">
+                                <ul class="list-unstyled">
+                                    <li ng-repeat="person in article.graphics">
+                                        <span person-widget="person">
+                                            {{person.name}}
+                                        </span>
                                     </li>
                                 </ul>
                             </div>

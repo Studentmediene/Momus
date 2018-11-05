@@ -129,6 +129,7 @@ public class DevController {
         a1.setReview(articleReviews.get(random.nextInt(articleReviews.size())));
         a1.setJournalists(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a1.setPhotographers(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
+        a1.setGraphics(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a1.setGoogleDriveId("19MklrX5aiYHtdpSuiz_fNr7BfalpJH11O-Q6RdONSa0");
         a1.setNote("<p>Notat her</p>");
         a1.setPublication(p1);
@@ -147,6 +148,7 @@ public class DevController {
                 ))
         );
         a2.setPhotographers(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
+        a2.setGraphics(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a2.setGoogleDriveId("1i8Bq6UYswttJYjAkEf5yRvZV-zPlzTSzW835wUq8s5s");
         a2.setNote("<p>Notat her</p>");
         a2.setPublication(p1);
@@ -159,6 +161,7 @@ public class DevController {
         a3.setSection(sectionRepository.findByName("Spit"));
         a3.setReview(articleReviews.get(random.nextInt(articleReviews.size())));
         a3.setJournalists(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
+        a3.setGraphics(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a3.setUseIllustration(true);
         a3.setGoogleDriveId("1pVVqfVaAUeyyia3X3JYwrv9HXgg-9Flud_GURBsoShg");
         a3.setNote("<p>Notat her</p>");
@@ -173,6 +176,7 @@ public class DevController {
         a5.setReview(articleReviews.get(random.nextInt(articleReviews.size())));
         a5.setJournalists(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a5.setPhotographers(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
+        a5.setGraphics(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a5.setGoogleDriveId("1DPb-IoPNbvkookwOupfT1oaPydrRG8FPUGs97eRUFWc");
         a5.setNote("<p>Notat her</p>");
         a5.setPublication(p2);

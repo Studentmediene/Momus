@@ -244,7 +244,7 @@ angular.module('momusApp.controllers')
 
         function updateToolbar(){
             angular.extend(vm.toolbarStyle, {
-                left: -$window.scrollX + angular.element(".container")[0].offsetLeft + 15,
+                left: -$window.scrollX + angular.element("#disposition")[0].offsetLeft + 15,
                 width: vm.dispWidth
             });
         }

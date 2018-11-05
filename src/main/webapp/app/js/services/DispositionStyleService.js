@@ -16,13 +16,19 @@ angular.module('momusApp.services')
         section: {scope: 'article', width: 100},
         journalists: {
             scope: 'article',
-            part: 0.2,
+            part: 0.14,
             min: 80,
             calculated: 80
         },
         photographers: {
             scope: 'article',
-            part: 0.2,
+            part: 0.13,
+            min: 80,
+            calculated: 80
+        },
+        graphics: {
+            scope: 'article',
+            part: 0.13,
             min: 80,
             calculated: 80
         },
