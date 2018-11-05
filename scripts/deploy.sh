@@ -20,7 +20,7 @@ function confirm_deploy {
     echo -e "Deploying Momus. This will:"
     echo -e "\tUpdate version to $1"
     echo -e "\tMerge the following commits into $MASTER_BRANCH:"
-    git log --oneline --decorate --no-merges $MASTER_BRANCH..$DEVELOP_BRANCH
+    git log --oneline --no-decorate --no-merges $MASTER_BRANCH..$DEVELOP_BRANCH
     echo
     echo -e "\tYou will be prompted to write a tag message, which should describe changes made"
     read -p "Are you sure you want to deploy? [y/N] " -r
