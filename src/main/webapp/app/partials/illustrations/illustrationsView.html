@@ -181,7 +181,10 @@
                     </tbody>
                 </table>
             </div>
-            <div class="panel panel-success">
+            <div
+                ng-show="(vm.requests | filter:{external: false, status: 'COMPLETED'}).length > 0"
+                class="panel panel-success"
+            >
                 <div class="panel-heading">Ferdige illustrasjoner</div>
                 <table class="table table-condensed table-striped" style="font-size: 85%">
                     <thead>
@@ -208,7 +211,7 @@
                             </span>
                         </td>
                         <td>
-                            <span>{{ request.created | date: 'dd/MM/yyyy hh:mm' }}</span>
+                            <span>{{ request.created | date: 'dd/MM/yyyy HH:mm' }}</span>
                             <span person-widget="request.requester">{{request.requester.name}}</span> spør om
                             <div><b>
                                 {{request.number_of_illustrations}} illustrasjon{{request.number_of_illustrations > 1 ? 'er' : ''}}

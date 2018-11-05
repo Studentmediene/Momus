@@ -68,7 +68,10 @@ public class IllustrationRequestService {
         existing.setDescription(request.getDescription());
         existing.setNumberOfIllustrations(request.getNumberOfIllustrations());
         existing.setNumberOfPages(request.getNumberOfPages());
-        existing.setStatus(IllustrationRequest.Status.PENDING);
+
+        if (existing.getStatus().equals(IllustrationRequest.Status.DENIED)) {
+            existing.setStatus(IllustrationRequest.Status.PENDING);
+        }
 
         return illustrationRequestRepository.saveAndFlush(existing);
     }
