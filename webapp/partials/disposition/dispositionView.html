@@ -87,7 +87,7 @@
             <div
                 class="d-table-row"
                 ng-repeat="pageId in vm.pageOrder.order"
-                alias="vm.pagesLookup[pageId] as page"
+                alias="vm.pagesLookup[pageId.id] as page"
                 ng-class="{'page-done': page.done}"
                 ui-sortable-selectable
             >
