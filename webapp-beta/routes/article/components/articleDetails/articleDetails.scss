@@ -44,3 +44,11 @@
         flex-grow: 1;
     }
 }
+
+.person-value {
+    display: flex;
+    align-items: center;
+    > :first-child {
+        margin-right: 5px;
+    }
+}

@@ -27,6 +27,7 @@ export interface Article extends ng.resource.IResource<Article>, TestModel {
     external_author: string;
     photographers: Person[];
     external_photographer: string;
+    graphics: Person[];
     quote_check_status: boolean;
     use_illustration: boolean;
     section: Section;

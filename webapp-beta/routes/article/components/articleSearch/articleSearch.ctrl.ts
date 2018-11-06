@@ -71,6 +71,19 @@ export default class ArticleSearchCtrl implements angular.IController {
             .then((article) => this.$state.go('article.single', {id: article.id }));
     }
 
+    public hasJournalist(article: Article) {
+        return article.journalists.length > 0 || (article.external_author != null && article.external_author !== '');
+    }
+
+    public hasPhotographer(article: Article) {
+        return article.photographers.length > 0
+            || (article.external_photographer != null && article.external_photographer !== '');
+    }
+
+    public hasGraphics(article: Article) {
+        return article.graphics.length > 0;
+    }
+
     // public showHelp() {
     //     $templateRequest("/assets/partials/templates/help/searchHelp.html").then(function(template){
     //         MessageModal.info(template);

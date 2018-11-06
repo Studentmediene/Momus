@@ -154,11 +154,10 @@
                 <tr>
                     <th search-sort-button="name" class="sortBtn">Navn</th>
                     <th search-sort-button="type.name" class="sortBtn">Type</th>
-                    <th>Journalister</th>
-                    <th>Foto/Illustrasjon</th>
+                    <th>Bidragsytere</th>
                     <th>Kommentar</th>
                     <th search-sort-button="content_length" switch-sort-direction="true" class="sortBtn">Tegn</th>
-                    <th search-sort-button="status.id" class="sortBtn" colspan="2" style="text-align: center;">Status</th>
+                    <th search-sort-button="status.id" class="sortBtn" colspan="2">Status</th>
                     <th search-sort-button="section.name" class="sortBtn">Redaksjon</th>
                     <th search-sort-button="[publication.release_date,section.name]" class="sortBtn">Utgave</th>
                 </tr>
@@ -174,22 +173,29 @@
                     </td>
                     <td>{{ article.type.name }}</td>
                     <td>
-                        <ul class="uk-list person-list">
-                            <li ng-repeat="person in article.journalists">
-                                <person-widget person="person"></person-widget>
-                            </li>
-                            <li><i uk-tooltip="Ekstern">{{article.external_author}}</i></li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul class="uk-list">
-                            <li ng-repeat="person in article.photographers">
-                                <i class="fa fa-paint-brush" ng-show="article.use_illustration"> </i>
-                                <i class="fa fa-camera" ng-show="!article.use_illustration"> </i>
-                                <person-widget person="person"></person-widget>
-                            </li>
-                            <li><i uib-tooltip="Ekstern">{{article.external_photographer}}</i></li>
-                        </ul>
+                        <div class="contributor-list" ng-show="vm.hasJournalist(article)">
+                            <i class="fas fa-pen" uk-tooltip="Journalister"></i>
+                            <div>
+                                <person-widget person="person" ng-repeat="person in article.journalists"></person-widget>
+                                <i uk-tooltip="Ekstern">{{article.external_author}}</i>
+                            </div>
+                        </div>
+                        <div class="contributor-list" ng-show="vm.hasPhotographer(article)">
+                            <i
+                                class="fas fa-{{article.has_illustration ? 'paint-brush' : 'camera'}}"
+                                uk-tooltip="{{article.has_illustration ? 'Illustratører': 'Fotografer'}}">
+                            </i>
+                            <div>
+                                <person-widget person="person" ng-repeat="person in article.photographers"></person-widget>
+                                <i uk-tooltip="Ekstern">{{article.external_photographer}}</i>
+                            </div>
+                        </div>
+                        <div class="contributor-list" ng-show="vm.hasGraphics(article)">
+                            <i class="fas fa-object-group" uk-tooltip="Grafikere"></i>
+                            <div>
+                                <person-widget person="person" ng-repeat="person in article.graphics"></person-widget>
+                            </div>
+                        </div>
                     </td>
 
                     <!-- Show only a small part of a long message, with tooltip for the long text -->

@@ -149,9 +149,9 @@
                     on-save="vm.onJournalistsSave(value)">
                     <custom-value-markup>
                         <ul class="uk-list list-no-margin">
-                            <li ng-repeat="journalist in $parent.vm.value" style="display: flex;">
+                            <li ng-repeat="journalist in $parent.vm.value" class="person-value">
                                 <person-avatar user="journalist" size="30"></person-avatar>
-                                <span person-widget="journalist" style="align-self: center; margin-left: 5px;">{{ journalist.name }}</span>
+                                <person-widget person="journalist">{{ journalist.name }}</person-widget>
                             </li>
                         </ul>
                     </custom-value-markup>
@@ -174,9 +174,9 @@
                     on-save="vm.onPhotographersSave(value)">
                     <custom-value-markup>
                         <ul class="uk-list list-no-margin">
-                            <li ng-repeat="photographer in $parent.vm.value" style="display: flex;">
+                            <li ng-repeat="photographer in $parent.vm.value" class="person-value">
                                 <person-avatar user="photographer" size="30"></person-avatar>
-                                <span person-widget="photographer" style="align-self: center; margin-left: 5px;">{{ photographer.name }}</span>
+                                <person-widget person="photographer">{{ photographer.name }}</person-widget>
                             </li>
                         </ul>
                     </custom-value-markup>
@@ -188,6 +188,23 @@
                     value="vm.article.external_photographer"
                     on-save="vm.onExternalPhotographerSave(value)"
                 >
+                </editable-field>
+
+                <editable-field 
+                    type="multiselect"
+                    label="'Grafikere'"
+                    value="vm.article.graphics"
+                    value-label="name"
+                    pool="vm.persons"
+                    on-save="vm.onGraphicsSave(value)">
+                    <custom-value-markup>
+                        <ul class="uk-list list-no-margin">
+                            <li ng-repeat="graphics in $parent.vm.value" class="person-value">
+                                <person-avatar user="graphics" size="30"></person-avatar>
+                                <person-widget person="graphics">{{ graphics.name }}</person-widget>
+                            </li>
+                        </ul>
+                    </custom-value-markup>
                 </editable-field>
             </panel>
             <panel icon="'fas fa-tag'" header="'Detaljer'" type="'edit'">

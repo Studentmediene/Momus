@@ -87,6 +87,11 @@ export default class ArticleDetailsCtrl implements angular.IController {
         this.articleResource.updateMetadata({ id: this.article.id }, this.article);
     }
 
+    public onGraphicsSave(graphics: Person[]) {
+        this.article.graphics = graphics;
+        this.articleResource.updateMetadata({id: this.article.id }, this.article);
+    }
+
     public onExternalPhotographerSave(external: string) {
         this.article.external_photographer = external;
         this.articleResource.updateMetadata({ id: this.article.id }, this.article);
