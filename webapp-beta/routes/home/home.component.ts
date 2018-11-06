@@ -4,6 +4,7 @@ import { IController } from 'angular';
 import { RandomTip } from 'services/app.services';
 import { Tip } from 'services/tips';
 import CookieService from 'services/cookies.service';
+import { StateService } from '@uirouter/core';
 
 /* @ngInject */
 class HomeCtrl implements IController {
@@ -12,18 +13,32 @@ class HomeCtrl implements IController {
     public cookieService: CookieService;
     public $window: angular.IWindowService;
     public $timeout: angular.ITimeoutService;
+    public $state: StateService;
 
-    constructor(randomTip: RandomTip, cookieService: CookieService, $window: angular.IWindowService) {
+    constructor(
+        randomTip: RandomTip,
+        cookieService: CookieService,
+        $window: angular.IWindowService,
+        $state: StateService,
+    ) {
         this.randomTip = randomTip;
         this.tip = randomTip();
 
         this.cookieService = cookieService;
         this.$window = $window;
+        this.$state = $state;
     }
 
     public notUseBeta() {
         this.cookieService.setUseBeta(false);
         this.$window.location.href = '/';
+    }
+
+    public search(searchText?: string) {
+        if (searchText == null || searchText === '') {
+            return;
+        }
+        this.$state.go('article.search', {free: searchText});
     }
 }
 
