@@ -89,11 +89,14 @@ pipeline {
             environment {
                 serverHost = 'java.smint.no'
                 serverWarDir = '/home/jenkins/momus'
-                identityFile = credentials('jenkins-ssh-key')
             }
 
             steps {
-                sh "scp -i ${identityFile} -o StrictHostKeyChecking=no ${momusWar} ${serverHost}:${serverWarDir}"
+                sshagent (
+                    credentials: ['jenkins-ssh-key']
+                ) {
+                    sh "scp -o StrictHostKeyChecking=no ${momusWar} ${serverHost}:${serverWarDir}"
+}
             }
         }
     }
@@ -105,7 +108,7 @@ pipeline {
                     archiveArtifacts momusWar
                 }
 
-                if(BRANCH_NAME == 'master' || BRANCH_NAME == 'develop') {
+                if(BRANCH_NAME in ['master', 'develop']) {
                     notifyTeams(currentBuild)
                 }
             }
