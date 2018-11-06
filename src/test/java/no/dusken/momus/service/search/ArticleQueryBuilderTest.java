@@ -107,7 +107,7 @@ public class ArticleQueryBuilderTest extends AbstractServiceTest {
                 "(section is not null and lower(section.name) like :free0) or " +
                 "(type is not null and lower(type.name) like :free0) or " +
                 "(review is not null and lower(review.name) like :free0) or " +
-                "exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.name) LIKE :free0)) and " +
+                "exists (select p from Person p where (p member of a.journalists or p member of a.photographers or p member of a.graphics) and LOWER(p.name) LIKE :free0)) and " +
                 "(a.rawcontent like :free1 or " +
                 "lower(a.comment) like :free1 or " +
                 "lower(a.name) like :free1 or " +
@@ -116,7 +116,7 @@ public class ArticleQueryBuilderTest extends AbstractServiceTest {
                 "(section is not null and lower(section.name) like :free1) or " +
                 "(type is not null and lower(type.name) like :free1) or " +
                 "(review is not null and lower(review.name) like :free1) or " +
-                "exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.name) LIKE :free1)) and " +
+                "exists (select p from Person p where (p member of a.journalists or p member of a.photographers or p member of a.graphics) and LOWER(p.name) LIKE :free1)) and " +
                 "a.archived = :arch " +
                 ArticleQueryBuilder.baseOrder;
 
@@ -153,9 +153,11 @@ public class ArticleQueryBuilderTest extends AbstractServiceTest {
 
         String expectedQuery = ArticleQueryBuilder.baseQuery + " where ( " +
                                 ":personid0 member of a.journalists or " +
-                                ":personid0 member of a.photographers ) and ( " +
+                                ":personid0 member of a.photographers or " +
+                                ":personid0 member of a.graphics ) and ( " +
                                 ":personid1 member of a.journalists or " +
-                                ":personid1 member of a.photographers ) " +
+                                ":personid1 member of a.photographers or " +
+                                ":personid1 member of a.graphics ) " +
                                 "and a.archived = :arch "  + ArticleQueryBuilder.baseOrder;
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("personid0", person1);
@@ -227,7 +229,7 @@ public class ArticleQueryBuilderTest extends AbstractServiceTest {
                 "(section is not null and lower(section.name) like :free0) or " +
                 "(type is not null and lower(type.name) like :free0) or " +
                 "(review is not null and lower(review.name) like :free0) or " +
-                "exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.name) LIKE :free0)) and " +
+                "exists (select p from Person p where (p member of a.journalists or p member of a.photographers or p member of a.graphics) and LOWER(p.name) LIKE :free0)) and " +
                 "(a.rawcontent like :free1 or " +
                 "lower(a.comment) like :free1 or " +
                 "lower(a.name) like :free1 or " +
@@ -236,12 +238,14 @@ public class ArticleQueryBuilderTest extends AbstractServiceTest {
                 "(section is not null and lower(section.name) like :free1) or " +
                 "(type is not null and lower(type.name) like :free1) or " +
                 "(review is not null and lower(review.name) like :free1) or " +
-                "exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.name) LIKE :free1)) and " +
+                "exists (select p from Person p where (p member of a.journalists or p member of a.photographers or p member of a.graphics) and LOWER(p.name) LIKE :free1)) and " +
                 "status.id = :statusid and " +
                 "( :personid0 member of a.journalists or " +
-                ":personid0 member of a.photographers ) and " +
+                ":personid0 member of a.photographers or " +
+                ":personid0 member of a.graphics ) and " +
                 "( :personid1 member of a.journalists or " +
-                ":personid1 member of a.photographers ) and " +
+                ":personid1 member of a.photographers or " +
+                ":personid1 member of a.graphics ) and " +
                 "section.id = :secid and " +
                 "publication.id = :pubid and " +
                 "a.archived = :arch " +

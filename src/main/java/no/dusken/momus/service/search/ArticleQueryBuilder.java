@@ -63,7 +63,7 @@ public class ArticleQueryBuilder {
                 freeConditions.add("(type is not null and LOWER(type.name) like :free"+i+")");
                 freeConditions.add("(review is not null and LOWER(review.name) like :free"+i+")");
 
-                freeConditions.add("exists (select p from Person p where (p member of a.journalists or p member of a.photographers) and LOWER(p.name) LIKE :free"+i+")");
+                freeConditions.add("exists (select p from Person p where (p member of a.journalists or p member of a.photographers or p member of a.graphics) and LOWER(p.name) LIKE :free"+i+")");
                 queryParams.put("free"+i, "%" + words[i].toLowerCase() + "%");
                 conditions.add("("+StringUtils.collectionToDelimitedString(freeConditions, " OR ")+")");
             }
@@ -77,7 +77,8 @@ public class ArticleQueryBuilder {
 
             for (Long person : search.getPersons()) {
                 conditions.add("( :personid" + personCount + " member of a.journalists or " +
-                        ":personid" + personCount + " member of a.photographers )");
+                        ":personid" + personCount + " member of a.photographers or " +
+                        ":personid" + personCount + " member of a.graphics )");
                 queryParams.put("personid" + personCount++, personRepository.findOne(person));
             }
         }

@@ -68,7 +68,7 @@ public class ArticleController {
 
     @GetMapping
     public List<Article> getLastArticlesForUser(@RequestParam Long userId, Pageable query) {
-        return articleRepository.findByJournalistsOrPhotographersContains(personRepository.findOne(userId), new PageRequest(0, 10));
+        return articleRepository.findByJournalistsOrPhotographersOrGraphicsContains(personRepository.findOne(userId), new PageRequest(0, 10));
     }
 
     @GetMapping("/{id}")

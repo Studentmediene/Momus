@@ -21,6 +21,7 @@ database/
 node_modules/
 .tmp/
 src/main/webapp/app/libs/
+src/main/filters/local.properties
 src/main/resources/local.properties
 
 # build folders
@@ -32,3 +33,4 @@ bin/
 **/*.css.map
 
 package-lock.json
+yarn.lock
