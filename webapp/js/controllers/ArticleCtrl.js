@@ -27,14 +27,8 @@ angular.module('momusApp.controllers')
         IllustrationRequest,
         illustrationRequestStatuses,
         TitleChanger,
-<<<<<<< HEAD:webapp/js/controllers/ArticleCtrl.js
         CookieService,
         MessageModal
-=======
-        ViewArticleService,
-        MessageModal,
-        $uibModal
->>>>>>> MOM-226 Rename illustration requests view to just illustrations:src/main/webapp/app/js/controllers/ArticleCtrl.js
     ) {
         const vm = this;
 

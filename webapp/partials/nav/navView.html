@@ -35,10 +35,11 @@
                 <li ui-sref-active="active">
                     <a ui-sref="info"><i class="fas fa-info"></i> Info/nyheter</a>
                 </li>
-                <li ui-sref-active="active" ng-cloak ng-show="vm.user.roles.includes('ROLE_ADMIN')">
-                    <a ui-sref="admin"><i class="fas fa-wrench hidden-sm"></i> Admin</a>
                 <li ui-sref-active="active" ng-cloak ng-show="vm.user.roles.includes('ROLE_ADMIN') || vm.user.roles.includes('ROLE_ILLUSTRATOR')">
                     <a ui-sref="illustrations"><i class="fa fa-paint-brush"></i> Illustrasjonsforespørsler</a>
+                </li>
+                <li ui-sref-active="active" ng-cloak ng-show="vm.user.roles.includes('ROLE_ADMIN')">
+                    <a ui-sref="admin"><i class="fas fa-wrench hidden-sm"></i> Admin</a>
                 </li>
                 <li ui-sref-active="active" ng-cloak ng-show="vm.devmode" class="navbar-dev">
                     <a ui-sref="dev"><i class="fas fa-cog"></i> Dev</a>
