@@ -235,7 +235,7 @@ public class ArticleService {
         ArticleRevision revision = getLastRevision(article);
 
         boolean isStatusChanged = 
-            revision != null && 
+            revision != null && revision.getStatus() != null &&
             !revision.getStatus().equals(article.getStatus());
         
         boolean canReuseOld = 

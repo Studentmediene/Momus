@@ -1,0 +1,25 @@
+<div class="{{'uk-margin-bottom panel ' + vm.type}}">
+    <div class="{{'panel-heading ' + vm.type}}" ng-if="vm.noHeader == null">
+        <h5>
+            <i ng-if="vm.icon != null" class="{{vm.icon}}">&nbsp;</i>
+            {{vm.header}}
+        </h5>
+        <span class="panel-heading-extra" ng-transclude="extraHeaderContent"></span>
+        <span 
+            class="collapse-button"
+            ng-if="vm.collapsible != null"
+            ng-click="vm.toggleCollapse()"
+            title="{{vm.isCollapsed ? 'Vis panel' : 'Skjul panel'}}"
+            >
+            <i
+                class="fas fa-angle-double-up collapse-icon"
+                ng-class="{'upside-down': vm.isCollapsed}"
+                >
+            </i>
+        </span>
+    </div>
+    <div 
+        ng-class="{'panel-body': true, 'with-padding': !vm.noBodyPadding, 'collapsed': vm.isCollapsed }" 
+        ng-transclude>
+    </div>
+</div>

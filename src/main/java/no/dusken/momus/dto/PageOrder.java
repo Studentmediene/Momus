@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 public class PageOrder implements Messageable {
     @JsonProperty private Long publicationId;
-    @JsonProperty private List<Long> order;
+    @JsonProperty private List<PageId> order;
 
     @Override
     @JsonIgnore

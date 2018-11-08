@@ -1,0 +1,25 @@
+<div ng-style="{width: vm.sizePx, height: vm.sizePx}">
+    <img id="user-image" ng-src="/api/person/{{vm.user.id}}/photo" width="{{vm.size}}" ng-style="{'border-radius': vm.borderRadius}">
+    <div ng-if="vm.showSvg" ng-style="{width: vm.sizePx, height: vm.sizePx}">
+        <svg width="100%" height="100%">
+            <circle
+                    ng-attr-r="{{vm.size/2}}"
+                    ng-attr-cx="{{vm.size/2}}"
+                    ng-attr-cy="{{vm.size/2}}"
+                    ng-attr-fill="{{vm.circleColor}}"
+            >
+            </circle>
+            <text
+                    ng-attr-x="{{vm.size/2}}"
+                    ng-attr-y="{{vm.size/2}}"
+                    text-anchor="middle"
+                    font-family="Arial"
+                    font-weight="bolder"
+                    font-size="{{vm.size/2}}"
+                    ng-attr-fill="{{vm.textColor}}"
+                    dy=".35em">
+                {{vm.user.name | initials}}
+            </text>
+        </svg>
+    </div>
+</div>

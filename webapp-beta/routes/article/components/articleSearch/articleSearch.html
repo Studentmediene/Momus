@@ -1,0 +1,261 @@
+<!--
+  ~ Copyright 2016 Studentmediene i Trondheim AS
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+  <div class="container">
+    <div style="margin-bottom: 5px;">
+        <a ng-click="vm.createArticle()" class="uk-button uk-button-primary">
+            <i class="fa fa-plus-circle"></i> Opprett ny artikkel
+        </a>
+        <a ng-click="vm.showHelp()" class="uk-button button-new">Hjelp?</a>
+    </div>
+
+    <panel icon="'fas fa-search'" type="primary" header="'Søk'">
+        <form role="form" ng-submit="vm.search()">
+            <div uk-grid class="uk-grid-small">
+                <!-- Free search -->
+                <div class="uk-width-1-4@m">
+                    <label class="sr-only" for="searchFree">
+                        Fritekst
+                    </label>
+                    <input
+                        class="uk-input"
+                        id="searchFree"
+                        ng-model="vm.searchParams.free"
+                        placeholder="Fritekst"
+                    >
+                </div>
+
+                <!-- Section search -->
+                <div class="uk-width-1-4@m">
+                    <label class="sr-only" for="searchSection">
+                        Redaksjon
+                    </label>
+                    <select-dropdown
+                        items="vm.sections"
+                        ng-model="vm.searchParams.section"
+                        label="'name'"
+                        placeholder="Redaksjon"
+                    >
+                    </select-dropdown>
+                </div>
+
+                <!-- Status search -->
+                <div class="uk-width-1-4@m">
+                    <label class="sr-only" for="searchStatus">
+                        Status
+                    </label>
+                    <select-dropdown
+                        items="vm.statuses"
+                        ng-model="vm.searchParams.status"
+                        label="'name'"
+                        placeholder="Status"
+                    >
+                    </select-dropdown>
+                </div>
+
+                <!-- Review search -->
+                <div class="uk-width-1-4@m">
+                    <label class="sr-only" for="searchReview">
+                        Korrektur
+                    </label>
+                    <select-dropdown
+                        items="vm.reviews"
+                        ng-model="vm.searchParams.review"
+                        label="'name'"
+                        placeholder="Korrektur"
+                    >
+                    </select-dropdown>
+                </div>
+
+                <!-- Publication search -->
+                <div class="uk-width-1-4@m">
+                    <label class="sr-only" for="searchPublication">
+                        Utgave
+                    </label>
+                    <select-dropdown
+                        items="vm.publications"
+                        ng-model="vm.searchParams.publication"
+                        label="'name'"
+                        placeholder="Utgave"
+                    >
+                    </select-dropdown>
+                </div>
+
+                <!-- Person search -->
+                <div class="uk-width-1-4@m">
+                    <label class="sr-only" for="searchPersons">
+                        Personer
+                    </label>
+                    <multiselect-dropdown
+                        items="vm.persons"
+                        ng-model="vm.searchParams.persons"
+                        label="'name'"
+                        placeholder="Personer"
+                    >
+                    </multiselect-dropdown>
+                </div>
+
+                <div class="uk-width-1-4@m"></div>
+
+                <div class="uk-width-1-4@m">
+                    <button
+                        type="submit"
+                        id="searchSubmit"
+                        class="uk-button uk-button-primary uk-width-1-1"
+                    >
+                        Søk
+                    </button>
+                </div>
+            </div>
+        </form>
+    </panel>
+
+    <div ng-if="vm.searchParams.archived" class="uk-alert uk-alert-warning">
+        Du søker nå kun i arkiverte artikler
+    </div>
+
+    <!-- Results of the search -->
+    <panel icon="'fas fa-file-alt'" header="'Resultater'" no-body-padding="true" type="'primary'">
+        <extra-header-content>
+            <div>
+                <button class="uk-button button-xs uk-button-secondary" ng-click="collapse = !collapse">
+                    <span ng-hide="collapse">Vis kommentarer</span>
+                    <span ng-if="collapse">Skjul kommentarer</span>
+                </button>
+            </div>
+        </extra-header-content>
+        <div class="uk-overflow-auto">
+            <!-- Loading -->
+            <div class="uk-text-center uk-padding" ng-show="!vm.results.$resolved">
+                <i class="fas fa-circle-notch fa-spin fa-4x"></i>
+            </div>
+            <!-- No articles found -->
+            <div class="uk-text-center uk-padding-small" ng-show="vm.results.length === 0">
+                <i class="fas fa-sad-tear fa-2x"></i>
+                <br />
+                Ingen artikler funnet...
+            </div>
+            <!-- Result table -->
+            <table ng-show="vm.results.length > 0" class="result-table uk-table uk-table-hover uk-table-striped uk-table-small">
+                <thead>
+                <tr>
+                    <th search-sort-button="name" class="sortBtn">Navn</th>
+                    <th search-sort-button="type.name" class="sortBtn">Type</th>
+                    <th>Bidragsytere</th>
+                    <th>Kommentar</th>
+                    <th search-sort-button="content_length" switch-sort-direction="true" class="sortBtn">Tegn</th>
+                    <th search-sort-button="status.id" class="sortBtn" colspan="2">Status</th>
+                    <th search-sort-button="section.name" class="sortBtn">Redaksjon</th>
+                    <th search-sort-button="[publication.release_date,section.name]" class="sortBtn">Utgave</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr ng-repeat="article in vm.results | orderBy:vm.articleSortType:vm.articleSortReverse">
+                    <td>
+                        <i ng-if="article.archived" class="fa fa-trash-o" uk-tooltip="Artikkelen er arkivert"></i>
+                        <a ui-sref="article.single({id: article.id})">
+                            {{ article.name }}
+                        </a>
+                    </td>
+                    <td>{{ article.type.name }}</td>
+                    <td>
+                        <div class="contributor-list" ng-show="vm.hasJournalist(article)">
+                            <i class="fas fa-pen" uk-tooltip="Journalister"></i>
+                            <div>
+                                <person-widget person="person" ng-repeat="person in article.journalists"></person-widget>
+                                <i uk-tooltip="Ekstern">{{article.external_author}}</i>
+                            </div>
+                        </div>
+                        <div class="contributor-list" ng-show="vm.hasPhotographer(article)">
+                            <i
+                                class="fas fa-{{article.has_illustration ? 'paint-brush' : 'camera'}}"
+                                uk-tooltip="{{article.has_illustration ? 'Illustratører': 'Fotografer'}}">
+                            </i>
+                            <div>
+                                <person-widget person="person" ng-repeat="person in article.photographers"></person-widget>
+                                <i uk-tooltip="Ekstern">{{article.external_photographer}}</i>
+                            </div>
+                        </div>
+                        <div class="contributor-list" ng-show="vm.hasGraphics(article)">
+                            <i class="fas fa-object-group" uk-tooltip="Grafikere"></i>
+                            <div>
+                                <person-widget person="person" ng-repeat="person in article.graphics"></person-widget>
+                            </div>
+                        </div>
+                    </td>
+
+                    <!-- Show only a small part of a long message, with tooltip for the long text -->
+                    <td ng-hide="collapse">
+                        <textwrapper length="20" text="article.comment"></textwrapper>
+                    </td>
+                    <td style="white-space: normal !important;" ng-show="collapse">
+                        <textwrapper text="article.comment"></textwrapper>
+                    </td>
+
+                    <td>{{ article.content_length }}</td>
+                    <td style="white-space: nowrap">
+                        <i
+                            class="fa fa-user fa-lg"
+                            uk-tooltip="{{article.image_text ? 'Bildetekst er satt' : 'Bildetekst er ikke satt'}}"
+                            ng-class="{'uk-text-danger': !article.image_text || article.image_text.length == 0, 'uk-text-success': article.image_text.length > 0}">
+                        </i>
+
+                        <i
+                            class="fa fa-quote-right fa-lg"
+                            uk-tooltip="{{article.quote_check_status ? 'Sitatsjekk er ikke i orden' : 'Sitatetsjekk er i orden'}}"
+                            ng-class="{'uk-text-danger': article.quote_check_status, 'uk-text-success': !article.quote_check_status}">
+                        </i>
+                    </td>
+                    <td ng-style="{'background-color': article.status.color}">
+                        {{ article.status.name }}
+                    </td>
+                    <td ng-style="{'background-color': article.section.color}">
+                        {{ article.section.name }}
+                    </td>
+                    <td>
+                        {{ article.publication.name }}
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </panel>
+    <ul class="uk-pagination uk-flex-center">
+        <li>
+            <span
+                style="cursor: pointer;"
+                ng-click="vm.search(-1)"
+                ng-class="{'uk-disabled': vm.searchParams.page_number === 0}"
+            >
+                <span uk-pagination-previous></span>
+            </span>
+        </li>
+        <li class="uk-active">
+            <span>{{vm.searchParams.page_number + 1}}</span>
+        </li>
+        <li>
+            <span
+                style="cursor: pointer;"
+                ng-click="vm.search(1)"
+                ng-class="{'uk-disabled': !vm.hasNextPage}"
+            >
+                <span uk-pagination-next></span>
+            </span>
+        </li>
+    </ul>
+</div>

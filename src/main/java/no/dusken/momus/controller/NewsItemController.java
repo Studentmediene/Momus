@@ -30,7 +30,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/newsitem")
+@RequestMapping("/api/newsitem")
 public class NewsItemController {
 
     @Autowired

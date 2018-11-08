@@ -29,10 +29,11 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import liquibase.integration.spring.SpringLiquibase;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +45,6 @@ import no.dusken.momus.mapper.HibernateAwareObjectMapper;
 import no.dusken.momus.service.repository.PersonRepository;
 
 @Configuration
-@EnableWebMvc
 @EnableScheduling
 @EnableAsync
 @EnableTransactionManagement
@@ -53,7 +53,7 @@ import no.dusken.momus.service.repository.PersonRepository;
 @EnableJpaRepositories(basePackages = "no.dusken.momus.service.repository")
 @PropertySource("classpath:momus.properties")
 @Slf4j
-class ApplicationConfig extends WebMvcConfigurerAdapter {
+class ApplicationConfig extends WebMvcConfigurationSupport {
 
     private final Environment env;
 
@@ -153,5 +153,28 @@ class ApplicationConfig extends WebMvcConfigurerAdapter {
     @Bean
     public ExceptionHandler exceptionResolver() {
         return new ExceptionHandler();
+    }
+
+    /**
+     * We need to set the order of assets to be before request mapping, so static files are prioritized to end points,
+     * so we can route all urls not caught by the API over to index.html and the front end. See controllers/ViewController.java.
+     * 
+     * Order will be:
+     * 1. is it a static file path?
+     * 2. is it an api endpoint? 
+     * 3. redirect to angularjs (index.html)
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/assets/**").addResourceLocations("/assets/");
+        registry.addResourceHandler("/favicon.ico").addResourceLocations("/favicon.ico");
+        registry.setOrder(0);
+    }
+
+    @Override
+    public RequestMappingHandlerMapping requestMappingHandlerMapping() {
+        RequestMappingHandlerMapping mapping = super.requestMappingHandlerMapping();
+        mapping.setOrder(1);
+        return mapping;
     }
 }

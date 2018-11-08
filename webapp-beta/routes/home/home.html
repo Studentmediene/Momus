@@ -1,0 +1,100 @@
+<div class="uk-alert uk-alert-primary">
+    Hei! Du er nå inne i betaen for nytt design av Momus. Du kan gjøre nesten akkurat det samme her som i den gamle versjonen,
+    men ikke all funksjonalitet er inne enda. Tilbakemeldinger ønskes gjerne på <a href="mailto:momus@smint.no">momus@smint.no</a>.
+    Ønsker du å gå tilbake til å bruke den gamle versionen av Momus, <a ng-click="vm.notUseBeta()">klikk her</a>
+</div>
+
+<div uk-grid>
+    <div class="uk-width-2-3@m">
+        <panel icon="'fas fa-file-alt'" header="'Dine siste artikler'" no-body-padding="true" type="'primary'">
+            <!-- Loading -->
+            <div
+                ng-show="!vm.myArticles.$resolved"
+                class="uk-text-center uk-padding-small"
+            >
+                <loading-spinner></loading-spinner>
+            </div>
+            <div ng-show="vm.myArticles.$resolved">
+                <article-table articles="vm.myArticles"></article-table>
+            </div>
+        </panel>
+        <panel icon="'fas fa-clock'" header="'Sist viste artikler'" no-body-padding="true" type="'primary'">
+            <div
+                ng-show="!vm.lastViewedArticles.$resolved"
+                class="uk-text-center uk-padding-small"
+            >
+                <loading-spinner></loading-spinner>
+            </div>
+            <div ng-show="vm.lastViewedArticles.$resolved">
+                <article-table articles="vm.lastViewedArticles"></article-table>
+            </div>
+        </panel>
+        <panel icon="'fas fa-star'" header="'Siste artikler fra din favorittredaksjon'" no-body-padding="true" type="'new'">
+            <extra-header-content>
+                <select-dropdown
+                    ng-model="vm.user.favouritesection"
+                    items="vm.sections"
+                    label="'name'"
+                    placeholder="Favorittredaksjon"
+                    on-change="">
+                </select-dropdown>
+            </extra-header-content>
+            <div
+                ng-show="vm.user.favouritesection == null"
+                class="uk-text-center uk-padding-small"
+            >
+                Sett en favorittredaksjon for å se siste artikler derfra
+            </div>
+            <div
+                ng-show="!vm.favouritesectionArticles.$resolved"
+                class="uk-text-center uk-padding-small"
+            >
+                <loading-spinner></loading-spinner>
+            </div>
+            <div ng-show="vm.user.favouritesection != null && vm.favouritesectionArticles.$resolved">
+                <article-table articles="vm.favouritesectionArticles"></article-table>
+            </div>
+        </panel>
+    </div>
+    <div class="uk-width-1-3@m">
+        <panel
+            icon="'fas fa-arrow-right'"
+            header="'Hurtigsøk'"
+            type="'primary'"
+        >
+        <form ng-submit="vm.search(searchText)">
+            <div class="uk-flex">
+                <input
+                    ng-model="searchText"
+                    class="uk-input"
+                    type="text"
+                    placeholder="Søk etter artikler">
+                <button
+                    type="submit"
+                    class="uk-button uk-button-primary"
+                    ng-disabled="searchText == null || searchText == ''"
+                >
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            
+        </form>
+        </panel>
+
+        <news-panel news="vm.news"></news-panel>
+        <panel
+            icon="'fas fa-exclamation'"
+            header="'Tilfeldig tips'"
+            no-body-padding="" 
+            type="'primary'"
+        >
+        <extra-header-content>
+            <button class="uk-button uk-button-secondary button-xs" ng-click="vm.tip = vm.randomTip()">
+                <i class="fas fa-sync"></i>
+            </button>
+        </extra-header-content>
+        <h4>{{ vm.tip.title }}</h4>
+        <p ng-bind-html="vm.tip.text | trustHtml"></p>
+        </panel>
+    </div>
+</div>

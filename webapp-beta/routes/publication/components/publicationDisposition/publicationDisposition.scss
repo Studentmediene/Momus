@@ -1,0 +1,187 @@
+@import '../../../../style/variables.scss';
+
+$pageBorder: solid #CCCCCC 1px;
+$articleBorder: solid #ececec 1px;
+
+$headerBackground: #f6f6f6;
+
+$pageDoneBackground:#DDFFCB;
+$pageAdBackground: #f6f6f6;
+
+#disposition {
+    font-size: 75%;
+}
+
+.d-title {
+    padding: 5px;
+    margin-bottom: 0;
+    border-bottom: $pageBorder;
+}
+
+.d-loading-spinner {
+    position: fixed;
+    top: 64px;
+    left: 50%;
+    z-index: 200;
+}
+
+.d-toolbar {
+    width: 100%;
+    z-index: 100;
+    background: $headerBackground;
+    border-left: $pageBorder;
+    border-right: $pageBorder;
+    border-top: $pageBorder;
+    box-sizing: border-box;
+
+    .button-group {
+        display: flex;
+        flex-direction: row;
+
+        > * {
+            margin: 5px;
+        }
+
+        page-adder {
+            flex-grow: 1;
+        }
+    }
+
+    #online-users {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-content: center;
+    }
+
+    .headers {
+        border-top: $pageBorder;
+    }
+}
+
+.d-toolbar-attach {
+    position: fixed;
+    top: 50px;
+    border-bottom: $pageBorder;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.disposition-table {
+    padding: 0;
+    margin-top: 0;
+    padding-bottom: 100px;
+
+    .dndPlaceholder {
+        display: block;
+        min-height: 40px;
+        background-color: #ddd;
+    }
+
+    .dndDraggingSource {
+        display: none !important;
+    }
+
+    disposition-page {
+        display: block;
+        border-top: $pageBorder;
+
+        > .d-table-row > .d-table-cell {
+            &:first-child {
+                border-left: $pageBorder;
+            }
+            border-right: $pageBorder;
+        }
+
+        .d-table-row > .d-table-cell:not(.article-cell) {
+            padding: 3px;
+            box-sizing: border-box;
+        }
+
+        &:last-child {
+            border-bottom: $pageBorder;
+        }
+    }
+
+    disposition-article {
+        display: block;
+        &:not(:first-child) {
+            border-top: $articleBorder;
+        }
+    }
+
+    disposition-advert {
+        display: block;
+        background: $global-edit-background;
+    }
+}
+
+.page-done {
+    background: $pageDoneBackground !important; //Want this to override ad color
+}
+
+.d-break-word {
+    word-wrap:break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
+.d-dropdown {
+    background: rgba(255,255,255,0.5);
+    outline: 0;
+    border: $pageBorder;
+}
+
+.ui-sortable-helper {
+    opacity:0.7;
+}
+
+.d-placeholder {
+    background-color: #99ff99;
+}
+
+.handle {
+    text-align: center;
+    cursor: move;
+}
+
+.ui-sortable-selected {
+    .handle {
+        border-left:3px solid #F00 !important;
+    }
+}
+
+.d-table {
+    display: table;
+}
+
+.d-table-header {
+    display: table-cell;
+}
+
+.d-table-row {
+    display: table-row;
+}
+
+.d-table-cell {
+    display: table-cell;
+    vertical-align: top;
+}
+
+.d-article-input {
+    display: flex;
+    align-items: center;
+
+    multiselect-dropdown {
+        flex-grow: 1;
+        margin-right: 5px;
+    }
+}
+
+.extra-button-line {
+    border-top: $articleBorder;
+    padding: 10px;
+    background-color: white;
+}

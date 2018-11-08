@@ -31,17 +31,17 @@ public class AdvertControllerTest extends AbstractControllerTest {
 
     @Test
     public void getAllAdverts() throws Exception {
-        performGetExpectOk("/advert").andExpect(jsonPath("$.length()", is(2)));
+        performGetExpectOk("/api/advert").andExpect(jsonPath("$.length()", is(2)));
     }
 
     @Test
     public void getAdvertByID() throws Exception {
-        performGetExpectOk("/advert/" + ad1.getId()).andExpect(jsonPath("$.id", is(ad1.getId().intValue())));
+        performGetExpectOk("/api/advert/" + ad1.getId()).andExpect(jsonPath("$.id", is(ad1.getId().intValue())));
     }
 
     @Test
     public void saveAdvert() throws Exception {
-        performPostExpectOk("/advert",
+        performPostExpectOk("/api/advert",
                 TestUtil.toJsonString(Advert.builder().name("test").comment("yay").build()));
 
         assert advertRepository.findAll().size() == 3;
@@ -49,7 +49,7 @@ public class AdvertControllerTest extends AbstractControllerTest {
 
     @Test
     public void updateComment() throws Exception {
-        performPatchExpectOk("/advert/" + ad1.getId() + "/comment", TestUtil.toJsonString("ny kommentar"));
+        performPatchExpectOk("/api/advert/" + ad1.getId() + "/comment", TestUtil.toJsonString("ny kommentar"));
 
         assertEquals("ny kommentar", advertService.getAdvertById(ad1.getId()).getComment());
     }

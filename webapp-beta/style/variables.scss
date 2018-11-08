@@ -1,0 +1,21 @@
+$global-primary-background: #2481bb;
+$global-edit-background: rgb(247, 228, 147);
+$global-new-background: rgb(182, 247, 179);
+
+$global-muted-color: rgb(110, 110, 110);
+$global-color: rgb(80, 80, 80);
+$global-emphasis-color:rgb(65, 65, 65);
+
+$navbar-background: $global-primary-background;
+$navbar-nav-item-height: 50px;
+$navbar-nav-item-font-size: 0.8em;
+$navbar-nav-item-color: white;
+$navbar-nav-item-hover-color: white;
+$navbar-nav-item-onclick-color: lighten($global-primary-background, 50%);
+$navbar-nav-item-active-color: $global-primary-background;
+$navbar-item-color: white;
+$logo-color: #f1f1f1;
+$logo-hover-color: white;
+
+@import "uikit/src/scss/variables-theme.scss";
+@import "uikit/src/scss/mixins-theme.scss";

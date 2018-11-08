@@ -1,0 +1,35 @@
+<div class="inline-edit">
+    <textwrapper
+            length="10"
+            ng-attr-text="vm.value || '[Rediger]'"
+            ng-show="!vm.isEditing" ng-click="vm.isEditing = true">
+
+    </textwrapper>
+    <div ng-show="vm.isEditing" style="position: absolute; overflow: visible;">
+        <div style="width: 200px">
+            <textarea class="inline-textarea uk-textarea" ng-model="vm.value"></textarea>
+        </div>
+
+        <div style="display: flex;">
+            <div class="uk-button-group" style="flex-grow: 1;">
+                <button class="uk-button uk-button-danger uk-button-small" ng-click="vm.cancel()" style="border-top-left-radius: 0px;">
+                    <i class="fa fa-times"></i>
+                </button>
+                <button class="uk-button button-new uk-button-small" ng-click="vm.save()" style="border-top-right-radius: 0px;">
+                    <i class="fa fa-save"></i>
+                </button>
+            </div>
+
+            <div uk-tooltip="{{vm.tooltipText()}}">
+                <button
+                        ng-show="vm.outsideChange != null"
+                        class="uk-button uk-button-danger uk-button-small"
+                        style="border-top-right-radius: 0px; border-top-left-radius: 0px;"
+                        ng-click="vm.applyOutsideChange()"
+                >
+                    <i class="fas fa-exclamation"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

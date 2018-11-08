@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/pages")
+@RequestMapping("/api/pages")
 public class PageController {
 
     private final PageRepository pageRepository;

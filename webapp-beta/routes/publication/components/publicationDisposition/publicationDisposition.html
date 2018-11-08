@@ -1,0 +1,109 @@
+<!--
+  ~ Copyright 2016 Studentmediene i Trondheim AS
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div ng-if="vm.noPublication">
+    <div>
+        <h1>Ingen utgaver funnet.</h1>
+    </div>
+</div>
+
+<div id="disposition" ng-hide="vm.noPublication">
+    <div ng-show="vm.loading" class="d-loading-spinner">
+        <i class="fa fa-circle-o-notch fa-spin fa-4x"></i>
+    </div>
+    <div id="toolbar" uk-sticky="offset: 50; cls-active: d-toolbar-attach" class="d-toolbar">
+        <h3 class="d-title uk-text-uppercase">Disposisjon for <b>{{vm.publication.name}}</b></h3>
+        <div id="online-users" style="min-height: 40px">
+            <div ng-repeat="user in vm.presentUsers track by user.id" style="margin: 5px">
+                <person-avatar
+                    user="user"
+                    size="30"
+                    uk-tooltip="title: {{user.name}} redigerer denne disposisjonen; pos: top">
+                </person-avatar>
+            </div>
+        </div>
+        <div class="button-group">
+            <a class="uk-button uk-button-primary uk-button-small" href="/api/publications/{{vm.publication.id}}/colophon">
+                <i class="fas fa-file-alt"></i> Generer kolofon
+            </a>
+            <button
+                class="uk-button uk-button-primary uk-button-small"
+                ng-click="vm.hideAllButtonRows()"
+                ng-disabled="vm.openButtonRows.length === 0"
+            >
+                <i class="fas fa-caret-up"></i> Lukk ekstraknapp-rader
+            </button>
+            <page-adder
+                max-num-pages="vm.maxNewPages"
+                max-page-pos="vm.publication.pages.length"
+                submit="vm.newPages(newPageAt, numNewPages)">
+            </page-adder>
+            <button class="uk-button button-new uk-button-small" ng-click="vm.showHelp()">
+                Hjelp?
+            </button>
+        </div>
+        <!-- Headers -->
+        <div class="d-table headers">
+            <div class="d-table-row">
+                <div class="d-table-cell" ng-style="vm.columnWidths.page_nr">#</div>
+                <div class="d-table-cell">
+                    <div class="d-table">
+                        <div class="d-table-row">
+                            <div class="d-table-cell" ng-style="vm.columnWidths.dropdown"></div>
+                            <div class="d-table-cell" ng-style="vm.columnWidths.name">Navn</div>
+                            <div class="d-table-cell" ng-style="vm.columnWidths.section">Redaksjon</div>
+                            <div class="d-table-cell" ng-style="vm.columnWidths.journalists">Journalister</div>
+                            <div class="d-table-cell" ng-style="vm.columnWidths.photographers">Fotografer</div>
+                            <div class="d-table-cell" ng-style="vm.columnWidths.status">Status</div>
+                            <div class="d-table cell" ng-style="vm.columnWidths.review">Korrektur</div>
+                            <div class="d-table-cell" ng-style="vm.columnWidths.photo_status">Fotostatus</div>
+                            <div class="d-table-cell" ng-style="vm.columnWidths.comment">Kommentar</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-table-cell" ng-style="vm.columnWidths.layout">Layout</div>
+                <div class="d-table-cell" ng-style="vm.columnWidths.done"></div>
+                <div class="d-table-cell" ng-style="vm.columnWidths.edit"></div>
+                <div class="d-table-cell" ng-style="vm.columnWidths.delete"></div>
+            </div>
+        </div>
+    </div>
+    <ul
+        class="d-table disposition-table"
+        dnd-list="vm.pageOrder.order"
+        dnd-effect-allowed="move"
+    >
+        <disposition-page
+            ng-repeat="page in vm.pageOrder.order"
+            dnd-draggable="page"
+            dnd-effect-allowed="move"
+            dnd-moved="vm.pageOrder.order.splice($index, 1)"
+            dnd-dragend="vm.updatePageOrder()"
+            number="$index + 1"
+            page="vm.pagesLookup[page.id]"
+            publication="vm.publication"
+            column-widths="vm.columnWidths"
+            article-width="vm.articleWidth"
+            adverts="vm.adverts"
+            articles-lookup="vm.articlesLookup"
+            adverts-lookup="vm.advertsLookup"
+            layout-statuses="vm.layoutStatuses"
+            article-statuses="vm.articleStatuses"
+            review-statuses="vm.reviewStatuses"
+        >
+        </disposition-page>
+    </ul>
+</div>

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/advert")
+@RequestMapping("/api/advert")
 public class AdvertController {
 
     @Autowired

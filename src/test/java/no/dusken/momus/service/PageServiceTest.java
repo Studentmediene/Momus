@@ -1,6 +1,7 @@
 package no.dusken.momus.service;
 
 import no.dusken.momus.dto.PageContent;
+import no.dusken.momus.dto.PageId;
 import no.dusken.momus.model.*;
 import no.dusken.momus.model.websocket.Action;
 import no.dusken.momus.service.repository.AdvertRepository;
@@ -86,7 +87,11 @@ public class PageServiceTest extends AbstractServiceTest {
 
     @Test
     public void setPageOrder() {
-        List<Long> pageOrder = new ArrayList<>(Arrays.asList(0L, 1L, 4L, 3L));
+        List<PageId> pageOrder = new ArrayList<>(Arrays.asList(
+            new PageId(0L), 
+            new PageId(1L), 
+            new PageId(4L),
+            new PageId(3L)));
 
         pageService.setPageOrder(pageOrder, publication.getId());
 
@@ -122,7 +127,7 @@ public class PageServiceTest extends AbstractServiceTest {
     public void delete() {
         Page p = Page.builder().publication(publication).build();
         p.setId(0L);
-        List<Long> pageOrder = new ArrayList<>(Collections.singletonList(0L));
+        List<PageId> pageOrder = new ArrayList<>(Collections.singletonList(new PageId(0L)));
 
         PageService pageServiceSpy = spy(pageService);
 

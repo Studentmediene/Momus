@@ -35,19 +35,19 @@ public class ArticleControllerTest extends AbstractControllerTest {
 
     @Test
     public void getNonexistentArticle() throws Exception {
-        mockMvc.perform(get("/article/1")).andExpect(status().isNotFound());
+        mockMvc.perform(get("/api/article/1")).andExpect(status().isNotFound());
     }
 
     @Test
     public void testSaveArticle() throws Exception {
         Article article = new Article();
         article.setName("Artikkel");
-        mockMvc.perform(buildPost("/article", TestUtil.toJsonString(article))).andExpect(status().isOk());
+        mockMvc.perform(buildPost("/api/article", TestUtil.toJsonString(article))).andExpect(status().isOk());
 
         List<Article> articles = articleRepository.findAll();
 
         assert articles.size() == 1;
-        mockMvc.perform(buildGet("/article/" + articles.get(0).getId())).andExpect(status().isOk());
+        mockMvc.perform(buildGet("/api/article/" + articles.get(0).getId())).andExpect(status().isOk());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
         article = articleRepository.saveAndFlush(article);
         article.setName("Yeah");
 
-        performPatchExpectOk("/article/" +  article.getId() + "/metadata", TestUtil.toJsonString(article));
+        performPatchExpectOk("/api/article/" +  article.getId() + "/metadata", TestUtil.toJsonString(article));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
         article.setContent("Innhold");
         articleRepository.saveAndFlush(article);
 
-        String content = performGetExpectOk("/article/" + article.getId() + "/content")
+        String content = performGetExpectOk("/api/article/" + article.getId() + "/content")
                 .andReturn().getResponse().getContentAsString();
 
         assert content.equals("\"Innhold\"");
@@ -81,7 +81,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
         article.setName("Artikkel");
         articleRepository.saveAndFlush(article);
 
-        performPatchExpectOk("/article/" + article.getId() + "/note", "\"Notat\"");
+        performPatchExpectOk("/api/article/" + article.getId() + "/note", "\"Notat\"");
     }
 
     @Test
@@ -90,7 +90,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
         article.setName("Artikkel");
         articleRepository.saveAndFlush(article);
 
-        performPatchExpectOk("/article/" + article.getId() + "/archived?archived=true", "");
+        performPatchExpectOk("/api/article/" + article.getId() + "/archived?archived=true", "");
     }
 
     @Test
@@ -102,7 +102,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
         article.setPhotographers(new HashSet<>());
         article = articleRepository.saveAndFlush(article);
 
-        MockHttpServletResponse response = performGetExpectOk("/article/" + article.getId() + "/indesignfile")
+        MockHttpServletResponse response = performGetExpectOk("/api/article/" + article.getId() + "/indesignfile")
                 .andReturn().getResponse();
 
         assert response.getHeader("Content-Disposition").equals("attachment; filename=\"" + article.getName() + ".txt\"");
@@ -118,7 +118,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
         article.setPhotographers(new HashSet<>());
         article = articleRepository.saveAndFlush(article);
 
-        performGetExpectOk("/article/" + article.getId() + "/revisions");
+        performGetExpectOk("/api/article/" + article.getId() + "/revisions");
     }
 
     @Test
@@ -145,7 +145,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
 
         List<ArticleRevision> revisions = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(article.getId());
 
-        performGetExpectOk("/article/" +
+        performGetExpectOk("/api/article/" +
                 article.getId() +
                 "/revisions/" +
                 revisions.get(0).getId() + "/" + revisions.get(1).getId());
@@ -162,7 +162,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
         article1 = articleService.saveArticle(article1);
         article2 = articleService.saveArticle(article2);
 
-        performGetExpectOk("/article/multiple?ids=" + article1.getId() + "&ids=" + article2.getId());
+        performGetExpectOk("/api/article/multiple?ids=" + article1.getId() + "&ids=" + article2.getId());
     }
 
     @Test
@@ -181,6 +181,6 @@ public class ArticleControllerTest extends AbstractControllerTest {
                 10,
                 1,
                 true);
-        performPostExpectOk("/article/search", TestUtil.toJsonString(params));
+        performPostExpectOk("/api/article/search", TestUtil.toJsonString(params));
     }
 }

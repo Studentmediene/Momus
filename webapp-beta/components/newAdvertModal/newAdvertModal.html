@@ -1,0 +1,54 @@
+<div class="modal-header">
+    <h3>Lag ny reklame</h3>
+</div>
+<div class="modal-body" ng-click="vm.modalClick($event)">
+    <form class="uk-form-horizontal" name="createAdvertForm" novalidate>
+        <div class="uk-margin">
+            <label class="uk-form-label">
+                Tittel
+            </label>
+            <div class="uk-form-controls">
+                <input
+                    name="name"
+                    class="uk-input"
+                    type="text"
+                    ng-model="advert.name"
+                    required
+                    ng-class="{'uk-form-danger': createAdvertForm.name.$invalid }"
+                >
+            </div>
+        </div>
+
+        <div class="uk-margin">
+            <label class="uk-form-label">
+                Kommentar
+            </label>
+
+            <div class="uk-form-controls">
+                <input
+                    class="uk-input"
+                    type="text"
+                    ng-model="advert.comment"
+                >
+            </div>
+        </div>
+
+        <div class="uk-margin">
+            <div class="uk-form-controls">
+                <button
+                    class="uk-button uk-button-primary"
+                    ng-click="vm.createAdvert()"
+                    ng-disabled="createAdvertForm.$invalid"
+                >
+                    <span>Opprett reklame</span>
+                </button>
+                <button
+                    class="uk-button uk-button-secondary"
+                    ng-click="vm.onCanceled()"
+                >
+                    <span>Avbryt</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

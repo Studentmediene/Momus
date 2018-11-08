@@ -1,0 +1,91 @@
+<!--
+  ~ Copyright 2016 Studentmediene i Trondheim AS
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-info">
+                <div class="panel-heading"><h1 class="panel-title"><i class="fas fa-bullhorn"></i> Nyheter</h1></div>
+                <table class="table">
+                    <tbody ng-repeat="n in news | orderBy: '-date'
+                                                | startFrom:(currentPage-1)*pageSize
+                                                | limitTo:pageSize"
+                    class="news-item">
+                    <tr ng-class="{danger: n.new, active:!n.new}" class="interact" ng-click="n.show = !n.show">
+
+                        <td colspan="2">
+                            <span ng-show="n.new" style="font-weight: bold">{{n.title}}</span>
+                            <span ng-show="!n.new">{{n.title}}</span>
+
+                            <i ng-show="!n.show" class="fas fa-arrow-circle-down pull-right"></i>
+                            <i ng-show="n.show" class="fas fa-arrow-circle-up pull-right"></i>
+                        </td>
+                    </tr>
+                    <tr ng-show="n.show" class="news-meta">
+                        <td>{{n.date | date: 'yyyy-MM-dd'}}</td>
+                        <td>
+                            <span class="d-break-word pull-right" person-widget="n.author">{{n.author.name}}</span>
+                        </td>
+                    </tr>
+                    <tr ng-show="n.show">
+                        <td colspan="4" ng-bind-html="n.content | trustHtml"></td>
+                    </tr>
+                    </tbody>
+                    <tr ng-show="news.length <= 0" class="text-center">
+                        <td colspan="2">
+                            Det finnes ingen nyheter.
+                        </td>
+                    </tr>
+                </table>
+                <div class="text-center">
+                    <ul uib-pagination direction-links="false"
+                        total-items="news.length"
+                        items-per-page="pageSize"
+                        ng-model="currentPage">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h1 class="panel-title"><i class="fas fa-question-circle"></i> Hjelp?
+                    </h1>
+                </div>
+                <div class="panel-body">
+                    Trenger du hjelp med noe i Momus er det <a href="" class="btn btn-success">Hjelp?</a> knapper på de forskjellige sidene som åpner en dialogboks med info om siden.
+                    Finner du det ikke ut da heller, kan du sende en e-post til <a href="mailto: momus@smint.no">momus@smint.no</a>.
+                </div>
+            </div>
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h1 class="panel-title"><i class="fas fa-bug"></i> Bugs? Forslag?
+                    </h1>
+                </div>
+                <div class="panel-body">
+                    Har du funnet en bug, oppdaget noe som er feil/uklart, eller har andre forslag til forbedringer/endringer, send en e-post til <a href="mailto: momus@smint.no">momus@smint.no</a>.
+                </div>
+            </div>
+        </div>
+    </div>
+    <p style="text-align: center; font-weight: bold;">
+        Momus or Momos (μῶμος) was in Greek mythology the personification of satire, mockery, censure;<br>
+        a god of writers and poets; a spirit of evil-spirited blame and unfair criticism.<br>
+        His name is related to μομφή, meaning 'blame' or 'censure'.<br>
+        He is depicted in classical art as lifting a mask from his face.<br>
+    </p>
+</div>
