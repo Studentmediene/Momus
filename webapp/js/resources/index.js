@@ -7,5 +7,6 @@ import './NewsItem';
 import './Page';
 import './Person';
 import './Publication';
+import './IllustrationRequest';
 
 export default resources;

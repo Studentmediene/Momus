@@ -12,5 +12,8 @@ import './InfoCtrl';
 import './NavbarCtrl';
 import './PublicationCtrl';
 import './SearchCtrl';
+import './EditIllustratorsModalCtrl';
+import './IllustrationsCtrl';
+import './RequestIllustrationModalCtrl';
 
 export default controllers;
