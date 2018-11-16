@@ -23,15 +23,15 @@ import no.dusken.momus.model.websocket.Action;
 import no.dusken.momus.service.repository.AdvertRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
 @Service
 @Slf4j
 public class AdvertService {
-
     private final AdvertRepository advertRepository;
     private final MessagingService messagingService;
-
 
     public AdvertService(AdvertRepository advertRepository, MessagingService messagingService) {
         this.advertRepository = advertRepository;
@@ -39,13 +39,15 @@ public class AdvertService {
     }
 
     public Advert getAdvertById(Long id) {
-        if(!advertRepository.exists(id)) {
-            throw new RestException("Advert with id=" + id + " not found", HttpServletResponse.SC_NOT_FOUND);
-        }
-        return advertRepository.findOne(id);
+        return advertRepository.findById(id)
+            .orElseThrow(() -> new RestException("Advert with id=" + id + " not found", HttpServletResponse.SC_NOT_FOUND));
     }
 
-    public Advert saveAdvert(Advert advert){
+    public List<Advert> getAllAdverts() {
+        return advertRepository.findAll();
+    }
+
+    public Advert createAdvert(Advert advert){
         Advert newAdvert = advertRepository.saveAndFlush(advert);
         log.info("Advert with id {} creatd with data: {}", newAdvert.getId(), newAdvert);
 
@@ -65,5 +67,4 @@ public class AdvertService {
         advert.setComment(comment);
         return updateAdvert(advert);
     }
-
 }

@@ -25,8 +25,8 @@ public class AdvertControllerTest extends AbstractControllerTest {
     void internalSetup() {
         super.internalSetup();
 
-        ad1 = advertService.saveAdvert(Advert.builder().name("iBok").comment("ya").build());
-        ad2 = advertService.saveAdvert(Advert.builder().name("barteguiden").comment("nope").build());
+        ad1 = advertService.createAdvert(Advert.builder().name("iBok").comment("ya").build());
+        ad2 = advertService.createAdvert(Advert.builder().name("barteguiden").comment("nope").build());
     }
 
     @Test
