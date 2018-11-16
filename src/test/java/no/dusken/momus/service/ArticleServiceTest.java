@@ -178,8 +178,8 @@ public class ArticleServiceTest extends AbstractServiceTest {
      * Method: {@link ArticleService#saveArticle}
      */
     @Test
-    public void testSaveArticle() {
-        article1 = articleService.saveArticle(article1);
+    public void testCreateArticle() {
+        article1 = articleService.createArticle(article1);
 
         verify(articleRepository, times(1)).saveAndFlush(article1);
     }

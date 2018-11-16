@@ -16,59 +16,53 @@
 
 package no.dusken.momus.service;
 
-import com.google.api.services.drive.model.File;
-import lombok.extern.slf4j.Slf4j;
-import no.dusken.momus.exceptions.RestException;
-import no.dusken.momus.model.*;
-import no.dusken.momus.model.websocket.Action;
-import no.dusken.momus.service.drive.GoogleDriveService;
-import no.dusken.momus.service.indesign.IndesignExport;
-import no.dusken.momus.service.indesign.IndesignGenerator;
-import no.dusken.momus.service.repository.*;
-import no.dusken.momus.service.search.ArticleQuery;
-import no.dusken.momus.service.search.ArticleQueryBuilder;
-import no.dusken.momus.service.search.ArticleSearchParams;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import java.time.Duration;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletResponse;
-import java.time.Duration;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+
+import com.google.api.services.drive.model.File;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
+import no.dusken.momus.exceptions.RestException;
+import no.dusken.momus.model.Article;
+import no.dusken.momus.model.ArticleRevision;
+import no.dusken.momus.model.ArticleStatus;
+import no.dusken.momus.model.Person;
+import no.dusken.momus.model.websocket.Action;
+import no.dusken.momus.service.drive.GoogleDriveService;
+import no.dusken.momus.service.indesign.IndesignExport;
+import no.dusken.momus.service.indesign.IndesignGenerator;
+import no.dusken.momus.service.repository.ArticleRepository;
+import no.dusken.momus.service.repository.ArticleReviewRepository;
+import no.dusken.momus.service.repository.ArticleRevisionRepository;
+import no.dusken.momus.service.repository.ArticleStatusRepository;
+import no.dusken.momus.service.repository.PersonRepository;
+import no.dusken.momus.service.search.ArticleQuery;
+import no.dusken.momus.service.search.ArticleQueryBuilder;
+import no.dusken.momus.service.search.ArticleSearchParams;
 
 @Service
 @Slf4j
 public class ArticleService {
-    @Autowired
-    private ArticleRepository articleRepository;
-
-    @Autowired
-    private ArticleRevisionRepository articleRevisionRepository;
-
-    @Autowired
-    private ArticleStatusRepository articleStatusRepository;
-
-    @Autowired
-    private ArticleReviewRepository articleReviewRepository;
-
-    @Autowired
-    private IndesignGenerator indesignGenerator;
-
-    @Autowired
-    private GoogleDriveService googleDriveService;
-
-    @Autowired
-    private ArticleQueryBuilder articleQueryBuilder;
-
-    @Autowired
-    private MessagingService messagingService;
+    private final ArticleRepository articleRepository;
+    private final ArticleRevisionRepository articleRevisionRepository;
+    private final ArticleStatusRepository articleStatusRepository;
+    private final ArticleReviewRepository articleReviewRepository;
+    private final PersonRepository personRepository;
+    private final ArticleQueryBuilder articleQueryBuilder;
+    private final GoogleDriveService googleDriveService;
+    private final MessagingService messagingService;
+    private final IndesignGenerator indesignGenerator;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -76,21 +70,43 @@ public class ArticleService {
     @Value("${drive.syncEnabled}")
     private boolean driveEnabled;
 
+    public ArticleService(ArticleRepository articleRepository, ArticleRevisionRepository articleRevisionRepository,
+        ArticleStatusRepository articleStatusRepository,
+        ArticleReviewRepository articleReviewRepository,
+        PersonRepository personRepository,
+        ArticleQueryBuilder articleQueryBuilder,
+        GoogleDriveService googleDriveService,
+        MessagingService messagingService,
+        IndesignGenerator indesignGenerator
+    ) {
+        this.articleRepository = articleRepository;
+        this.articleRevisionRepository = articleRevisionRepository;
+        this.articleStatusRepository = articleStatusRepository;
+        this.articleReviewRepository = articleReviewRepository;
+        this.personRepository = personRepository;
+        this.articleQueryBuilder = articleQueryBuilder;
+        this.googleDriveService = googleDriveService;
+        this.messagingService = messagingService;
+        this.indesignGenerator = indesignGenerator;
+    }
+
     public Article getArticleById(Long id) {
-        if(!articleRepository.exists(id)) {
-            throw new RestException("Article with id=" + id + " not found", HttpServletResponse.SC_NOT_FOUND);
-        }
-        return articleRepository.findOne(id);
+        return articleRepository.findById(id)
+            .orElseThrow(() -> new RestException("Article with id="+id+" not found", HttpServletResponse.SC_NOT_FOUND));
     }
 
     public List<Article> getArticlesByIds(List<Long> ids) {
-        if(ids == null) {
-            return new ArrayList<>();
-        }
-        return ids.stream().map(this::getArticleById).collect(Collectors.toList());
+        return articleRepository.findAllById(ids);
     }
 
-    public Article saveArticle(Article article) {
+    public List<Article> getLastArticlesForUser(Long userId) {
+        Person user = personRepository.findById(userId)
+            .orElseThrow(() -> new RestException("User not found", HttpServletResponse.SC_NOT_FOUND));
+        
+        return articleRepository.findByJournalistsOrPhotographersOrGraphicsContains(user, new PageRequest(0, 10));
+    }
+
+    public Article createArticle(Article article) {
         if(driveEnabled) {
             File document = googleDriveService.createDocument(article.getName());
 
@@ -101,8 +117,8 @@ public class ArticleService {
             article.setGoogleDriveId(document.getId());
         }
 
-        if(article.getStatus() == null) { article.setStatus(articleStatusRepository.findOne(2L)); }
-        if(article.getReview() == null) { article.setReview(articleReviewRepository.findOne(1L)); }
+        article.setStatus(articleStatusRepository.findById(2L).get());
+        article.setReview(articleReviewRepository.findById(1L).get());
 
         Article newArticle = articleRepository.saveAndFlush(article);
         log.info("Article with id {} created with data: {}", newArticle.getId(), newArticle);
@@ -120,7 +136,7 @@ public class ArticleService {
     }
 
     public Article updateArticleContent(Article article) {
-        Article existing = articleRepository.findOne(article.getId());
+        Article existing = getArticleById(article.getId());
         String newContent = article.getContent();
         String oldContent = existing.getContent();
 
@@ -264,13 +280,7 @@ public class ArticleService {
     }
 
     private ArticleRevision getLastRevision(Article article) {
-        List<ArticleRevision> revisions = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(article.getId());
-        
-        if (revisions.size() == 0) {
-            return null;
-        }
-
-        return articleRevisionRepository.findOne(revisions.get(0).getId());
+        return articleRevisionRepository.findFirstByArticleIdOrderBySavedDateDesc(article.getId()).orElse(null);
     }
 
     public static String createRawContent(Article article){

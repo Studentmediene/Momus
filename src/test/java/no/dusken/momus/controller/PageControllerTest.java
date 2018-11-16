@@ -79,7 +79,7 @@ public class PageControllerTest extends AbstractControllerTest {
 
     @Test
     public void setContent() throws Exception {
-        Article article = articleService.saveArticle(Article.builder().name("Artikkel").build());
+        Article article = articleService.createArticle(Article.builder().name("Artikkel").build());
         Advert advert = advertService.saveAdvert(Advert.builder().name("Ad").build());
         Page page = pageRepository.findByPublicationId(publication.getId()).get(0);
 

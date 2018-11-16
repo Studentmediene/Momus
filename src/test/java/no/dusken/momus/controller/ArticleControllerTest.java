@@ -39,7 +39,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testSaveArticle() throws Exception {
+    public void testCreateArticle() throws Exception {
         Article article = new Article();
         article.setName("Artikkel");
         mockMvc.perform(buildPost("/api/article", TestUtil.toJsonString(article))).andExpect(status().isOk());
@@ -132,7 +132,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
                 .journalists(new HashSet<>())
                 .photographers(new HashSet<>())
                 .build();
-        article = articleService.saveArticle(article);
+        article = articleService.createArticle(article);
 
         Article updatedArticle = Article.builder()
                 .content("Nytt innhold")
@@ -159,8 +159,8 @@ public class ArticleControllerTest extends AbstractControllerTest {
         Article article2 = new Article();
         article2.setName("Art2");
 
-        article1 = articleService.saveArticle(article1);
-        article2 = articleService.saveArticle(article2);
+        article1 = articleService.createArticle(article1);
+        article2 = articleService.createArticle(article2);
 
         performGetExpectOk("/api/article/multiple?ids=" + article1.getId() + "&ids=" + article2.getId());
     }
@@ -170,7 +170,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
         Article article = new Article();
         article.setName("Artikkel");
 
-        articleService.saveArticle(article);
+        articleService.createArticle(article);
         ArticleSearchParams params = new ArticleSearchParams(
                 "Artikkel",
                 null,
