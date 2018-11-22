@@ -17,7 +17,6 @@
 package no.dusken.momus.service;
 
 import no.dusken.momus.model.*;
-import no.dusken.momus.service.repository.ArticleRepository;
 
 import no.dusken.momus.service.repository.PublicationRepository;
 
