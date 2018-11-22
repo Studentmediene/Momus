@@ -9,6 +9,7 @@ export default function publicationResourceFactory(momResource: MomResourceFacto
             id: '@id',
         },
         {
+            updateMetadata: { method: 'PATCH', params: {resource: 'metadata'} },
             active: { method: 'GET', params: {id: 'active'}, bypassInterceptor: true },
             layoutStatuses: {
                 method: 'GET', isArray: true, params: {id: 'layoutstatuses'}, cache: true, skipTransform: true,
@@ -40,6 +41,12 @@ function publicationRequestTransform(publication: Publication): PublicationSeria
 }
 
 export interface PublicationResource extends ng.resource.IResourceClass<Publication> {
+    updateMetadata(
+        params: {},
+        body: Publication,
+        success?: (publication: Publication) => void,
+        error?: (err: any) => void,
+    ): Publication;
     active(
         params?: {},
         success?: (publication: Publication) => void,

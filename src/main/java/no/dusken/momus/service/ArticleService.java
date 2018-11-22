@@ -99,6 +99,10 @@ public class ArticleService {
         return articleRepository.findAllById(ids);
     }
 
+    public List<Article> getArticlesInPublication(Long publicationId) {
+        return articleRepository.findByPublicationId(publicationId);
+    }
+
     public List<Article> getLastArticlesForUser(Long userId) {
         Person user = personRepository.findById(userId)
             .orElseThrow(() -> new RestException("User not found", HttpServletResponse.SC_NOT_FOUND));

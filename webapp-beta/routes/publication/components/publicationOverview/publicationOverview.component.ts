@@ -60,7 +60,7 @@ class PublicationOverviewCtrl implements angular.IController {
             }).$promise;
         } else { // it's an old one
             const updatedIndex = this.publications.findIndex((pub) => pub.id === this.editing.id);
-            this.savePromise = this.editing.$update({}, (updated: Publication) => {
+            this.savePromise = this.editing.$updateMetadata({}, (updated: Publication) => {
                 this.publications[updatedIndex] = updated;
                 this.editPublication(updated);
                 this.yearOptions = this.createYearOptions();

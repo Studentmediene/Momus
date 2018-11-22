@@ -22,8 +22,6 @@ import no.dusken.momus.model.LayoutStatus;
 import no.dusken.momus.model.Publication;
 import no.dusken.momus.service.PublicationService;
 import no.dusken.momus.service.repository.LayoutStatusRepository;
-import no.dusken.momus.service.repository.PublicationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
@@ -35,49 +33,38 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/publications")
 public class PublicationController {
-    @Autowired
-    private PublicationService publicationService;
+    private final PublicationService publicationService;
+    private final LayoutStatusRepository layoutStatusRepository;
 
-    @Autowired
-    private PublicationRepository publicationRepository;
-
-    @Autowired
-    private LayoutStatusRepository layoutStatusRepository;
+    public PublicationController(
+        PublicationService publicationService,
+        LayoutStatusRepository layoutStatusRepository
+    ) {
+        this.publicationService = publicationService;
+        this.layoutStatusRepository = layoutStatusRepository;
+    }
 
     @GetMapping
     public List<SimplePublication> getAllPublications(){
-        return publicationRepository.findAllByOrderByReleaseDateDesc();
+        return publicationService.getAllPublications();
     }
 
     @PostMapping
-    public Publication savePublication(
+    public Publication createPublication(
             @RequestBody Publication publication,
             @RequestParam(required = false, defaultValue = "50") Integer numEmptyPages
     ) {
-        if(publication.getId() != null && publicationRepository.exists(publication.getId())){
-            throw new RestException("Publication with given id already created. Did you mean to PUT?", HttpServletResponse.SC_BAD_REQUEST);
-        }
-        else if(numEmptyPages > 100){
-            throw new RestException("You don't want to create that many empty pages", HttpServletResponse.SC_BAD_REQUEST);
-        }
-
-        return publicationService.savePublication(publication, numEmptyPages);
+        return publicationService.createPublication(publication, numEmptyPages);
     }
 
     @GetMapping("/{pubid}")
     public Publication getPublicationById(@PathVariable Long pubid){
-        if(!publicationRepository.exists(pubid)){
-            throw new RestException("Publication with given id not found", HttpServletResponse.SC_NOT_FOUND);
-        }
-        return publicationRepository.findOne(pubid);
+        return publicationService.getPublicationById(pubid);
     }
 
-    @PutMapping("/{pubid}")
-    public Publication updatePublication(@RequestBody Publication publication, @PathVariable Long pubid) {
-        if(!publicationRepository.exists(pubid)){
-            throw new RestException("Publication with given id not found", HttpServletResponse.SC_NOT_FOUND);
-        }
-        return publicationService.updatePublication(publication);
+    @PatchMapping("/{pubid}/metadata")
+    public Publication updatePublicationMetadata(@PathVariable Long pubid, @RequestBody Publication publication) {
+        return publicationService.updatePublicationMetadata(pubid, publication);
     }
 
     @GetMapping("/active")
@@ -105,7 +92,7 @@ public class PublicationController {
 
         response.addHeader(
                 "Content-Disposition",
-                "attachment; filename=\"Kolofon_" + publicationRepository.findOne(pubid).getName() + ".txt\"");
+                "attachment; filename=\"Kolofon_" + publicationService.getPublicationById(pubid).getName() + ".txt\"");
         response.addHeader("Content-Type", "text/plain;charset=UTF-8");
 
         ServletOutputStream outStream = response.getOutputStream();
