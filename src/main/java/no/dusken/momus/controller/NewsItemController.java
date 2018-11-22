@@ -17,56 +17,42 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.authorization.AdminAuthorization;
-import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.NewsItemService;
-import no.dusken.momus.service.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 
 @RestController
 @RequestMapping("/api/newsitem")
 public class NewsItemController {
+    private final NewsItemService newsItemService;
 
-    @Autowired
-    NewsItemRepository newsItemRepository;
-
-    @Autowired
-    NewsItemService newsItemService;
+    public NewsItemController(NewsItemService newsItemService) {
+        this.newsItemService = newsItemService;
+    }
 
     @GetMapping
-    public @ResponseBody List<NewsItem> getAllNewsItems() {
-        return newsItemRepository.findAll();
+    public List<NewsItem> getAllNewsItems() {
+        return newsItemService.getAllNewsItems();
+    }
+
+    @GetMapping("/{newsItemId}")
+    public NewsItem getNewsItem(@PathVariable Long newsItemId){
+        return newsItemService.getNewsItemById(newsItemId);
     }
 
     @PostMapping
     @AdminAuthorization
-    public @ResponseBody NewsItem saveNewsItem(@RequestBody NewsItem newsItem) {
-        newsItem.setDate(ZonedDateTime.now());
-        return newsItemRepository.save(newsItem);
-    }
-
-    @GetMapping("/{newsItemId}")
-    public @ResponseBody NewsItem getNewsItem(@PathVariable Long newsItemId){
-        NewsItem newsItem = newsItemRepository.findOne(newsItemId);
-        if(newsItem == null){
-            throw new RestException("NewsItem with given id not found", HttpServletResponse.SC_NOT_FOUND);
-        }
-        return newsItem;
+    public NewsItem createNewsItem(@RequestBody NewsItem newsItem) {
+        return newsItemService.createNewsItem(newsItem);
     }
 
     @PutMapping("/{newsItemId}")
     @AdminAuthorization
     public @ResponseBody NewsItem updateNewsItem(@RequestBody NewsItem newsItem, @PathVariable Long newsItemId) {
-        if(!newsItemRepository.exists(newsItemId)){
-            throw new RestException("NewsItem with given id not found", HttpServletResponse.SC_NOT_FOUND);
-        }
-        return newsItemService.updateNewsItem(newsItem);
+        return newsItemService.updateNewsItem(newsItemId, newsItem);
     }
 
 
