@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -30,6 +31,7 @@ import com.google.api.services.drive.model.File;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -139,15 +141,14 @@ public class ArticleService {
         return articleRepository.saveAndFlush(article);
     }
 
-    public Article updateArticleContent(Article article) {
-        Article existing = getArticleById(article.getId());
-        String newContent = article.getContent();
+    public Article updateArticleContent(Long id, String newContent) {
+        Article existing = getArticleById(id);
         String oldContent = existing.getContent();
 
         if (newContent.equals(oldContent)) {
             // Inserting comments in the Google Docs triggers a change, but the content we see is the same.
             // So it would look weird having multiple revisions without any changes.
-            log.info("No changes made to content of article with id {}, not updating it", article.getId());
+            log.info("No changes made to content of article with id {}, not updating it", id);
             return existing;
         }
 
@@ -277,6 +278,19 @@ public class ArticleService {
         revision = articleRevisionRepository.save(revision);
         log.info("Saved revision for article(id:{}) with id: {}", article.getId(), revision.getId());
         return revision;
+    }
+
+    /**
+     * Will get latest changes from google drive and update article content
+     */
+    @Scheduled(cron = "0 * * * * *")
+    public void sync() {
+        Set<String> modified = googleDriveService.findModifiedFileIds();
+        articleRepository.findByGoogleDriveIdIn(modified).forEach(article -> {
+            String newContent = googleDriveService.getContentFromDrive(article);
+            updateArticleContent(article.getId(), newContent);
+        });
+        log.debug("Done syncing, updated {} articles", modified.size());
     }
 
     private boolean isRevisionTooOld(ArticleRevision revision, ZonedDateTime date) {

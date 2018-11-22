@@ -35,7 +35,6 @@ import no.dusken.momus.service.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -57,19 +56,15 @@ public class GoogleDriveService {
     @Value("${drive.email}")
     private String email;
 
-    @Autowired
-    KeyValueService keyValueService;
-
-    @Autowired
-    GoogleDocsTextConverter googleDocsTextConverter;
-
-    @Autowired
-    ArticleRepository articleRepository;
-
-    @Autowired
-    ArticleService articleService;
+    private final KeyValueService keyValueService;
+    private final GoogleDocsTextConverter googleDocsTextConverter;
 
     private Drive drive = null;
+
+    public GoogleDriveService(KeyValueService keyValueService, GoogleDocsTextConverter googleDocsTextConverter) {
+        this.keyValueService = keyValueService;
+        this.googleDocsTextConverter = googleDocsTextConverter;
+    }
 
     @PostConstruct
     private void setup() {
@@ -80,13 +75,11 @@ public class GoogleDriveService {
 
         log.info("Setting up Google Drive");
 
-
         GoogleCredential credentials;
         HttpTransport httpTransport;
         java.io.File keyFile;
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
         List<String> scopes = Collections.singletonList("https://www.googleapis.com/auth/drive"); // We want full access
-
 
         try {
             keyFile = new ClassPathResource("googlekey.p12").getFile();
@@ -110,7 +103,6 @@ public class GoogleDriveService {
 
         log.info("Successfully set up Google Drive");
     }
-
 
     /**
      * Creates a new Google Document for the name
@@ -154,40 +146,11 @@ public class GoogleDriveService {
         log.info("Created permissions for Google Drive file with id {}", file.getId());
     }
 
-
-    /**
-     * Will pull data from Google Drive and update our local copy
-     * every minute (each time the seconds are "0")
-     *
-     * (second minute hour day month weekdays)
-     */
-    @Scheduled(cron = "0 * * * * *")
-    public void sync() {
-        if (!enabled) {
-            log.info("Not syncing Google Drive");
-            return;
-        }
-        log.debug("Starting Google Drive sync");
-
-        Set<String> modifiedFileIds = findModifiedFileIds();
-        if (modifiedFileIds.size() == 0) {
-            return;
-        }
-
-        List<Article> articles = articleRepository.findByGoogleDriveIdIn(modifiedFileIds);
-        for (Article article : articles) {
-            updateContentFromDrive(article);
-            articleService.updateArticleContent(article);
-        }
-
-        log.debug("Done syncing, updated {} articles", articles.size());
-    }
-
     /**
      * Returns the (up to) 200 next changed files from Google Drive
      * The IDs returned are Google Drive file IDs.
      */
-    private Set<String> findModifiedFileIds() {
+    public Set<String> findModifiedFileIds() {
         Set<String> modifiedFileIds = new HashSet<>();
 
         long oldLatestChange = keyValueService.getValueAsLong("DRIVE_LATEST", 0L);
@@ -224,21 +187,20 @@ public class GoogleDriveService {
      * Fetches the new content from Google Drive as HTML, and sends
      * it to the googleDocsTextConverter
      */
-    private void updateContentFromDrive(Article article) {
+    public String getContentFromDrive(Article article) {
         String downloadUrl = "https://docs.google.com/feeds/download/documents/export/Export?id=" + article.getGoogleDriveId() + "&exportFormat=html";
 
         try {
             // Read data, small hack to convert the stream to a string
             InputStream inputStream = drive.getRequestFactory().buildGetRequest(new GenericUrl(downloadUrl)).execute().getContent();
-            Scanner s = new java.util.Scanner(inputStream).useDelimiter("\\A");
+            Scanner s = new Scanner(inputStream).useDelimiter("\\A");
             String content = s.hasNext() ? s.next() : "";
-            log.info("Got new content:\n{}", content);
 
-            String convertedContent = googleDocsTextConverter.convert(content);
-            article.setContent(convertedContent);
+            return googleDocsTextConverter.convert(content);
         } catch (IOException e) {
             log.error("Couldn't get content for article", e);
             // Let the content remain as it was
+            return article.getContent();
         }
     }
 }

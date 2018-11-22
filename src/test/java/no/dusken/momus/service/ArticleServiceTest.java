@@ -150,9 +150,8 @@ public class ArticleServiceTest extends AbstractServiceTest {
         article1Revision1.setId(0L);
 
         when(indesignGenerator.generateFromArticle(article1)).thenReturn(new IndesignExport("meh", "meh"));
-        when(articleRepository.exists(longThat(i -> i == 1L || i == 2L ))).thenReturn(true);
-        when(articleRepository.findOne(article1.getId())).thenReturn(article1);
-        when(articleRepository.findOne(article2.getId())).thenReturn(article2);
+        when(articleRepository.findById(article1.getId())).thenReturn(Optional.of(article1));
+        when(articleRepository.findById(article2.getId())).thenReturn(Optional.of(article2));
         when(articleRepository.saveAndFlush(any(Article.class))).then(returnsFirstArg());
     }
 
@@ -271,7 +270,7 @@ public class ArticleServiceTest extends AbstractServiceTest {
         ArticleService articleServiceSpy = spy(articleService);
         doReturn(new ArticleRevision()).when(articleServiceSpy).createRevision(any(Article.class));
 
-        article = articleServiceSpy.updateArticleContent(article);
+        article = articleServiceSpy.updateArticleContent(article1.getId(), "<p>NEW CONTENT for article 1</p>");
 
         verify(articleServiceSpy, times(1)).updateArticle(article1);
         verify(articleServiceSpy, times(1)).createRevision(article1);
@@ -286,11 +285,9 @@ public class ArticleServiceTest extends AbstractServiceTest {
      */
     @Test
     public void testUpdateArticleContentNoChange() {
-        Article article = Article.builder().content(article1.getContent()).build();
-        article.setId(article1.getId());
         ArticleService articleServiceSpy = spy(articleService);
 
-        articleServiceSpy.updateArticleContent(article);
+        articleServiceSpy.updateArticleContent(article1.getId(), article1.getContent());
 
         verify(articleServiceSpy, times(0)).updateArticle(article1);
         verify(articleServiceSpy, times(0)).createRevision(article1);
@@ -313,7 +310,7 @@ public class ArticleServiceTest extends AbstractServiceTest {
     public void testCreateRevision() {
         ArticleService articleServiceSpy = spy(articleService);
 
-        when(articleRevisionRepository.findOne(any(Long.class))).thenReturn(article1Revision1);
+        when(articleRevisionRepository.findById(any(Long.class))).thenReturn(Optional.of(article1Revision1));
         when(articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(article1.getId())).thenReturn(Collections.singletonList(article1Revision1));
         when(articleRevisionRepository.save(any(ArticleRevision.class))).then(returnsFirstArg());
 
