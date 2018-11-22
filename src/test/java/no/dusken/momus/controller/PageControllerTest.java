@@ -91,7 +91,7 @@ public class PageControllerTest extends AbstractControllerTest {
                         Collections.singletonList(article.getId()),
                         Collections.singletonList(advert.getId()))));
 
-        page = pageRepository.findOne(page.getId());
+        page = pageRepository.findById(page.getId()).get();
         assert page.getArticles().size() == 1;
         assert page.getAdverts().size() == 1;
     }
@@ -106,7 +106,7 @@ public class PageControllerTest extends AbstractControllerTest {
 
         performPatchExpectOk("/api/pages/" + page.getId() + "/metadata", TestUtil.toJsonString(page));
 
-        page = pageRepository.findOne(page.getId());
+        page = pageRepository.findById(page.getId()).get();
 
         assertEquals(true, page.isDone());
         assertEquals(s, page.getLayoutStatus());

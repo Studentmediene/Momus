@@ -111,7 +111,7 @@ public class PageService {
     }
 
     public void delete(Long id) {
-        Page page = pageRepository.findById(id).or;
+        Page page = pageRepository.findById(id).orElseThrow(() -> new RestException("Not found", 404));
         Long publicationId = page.getPublication().getId();
 
         List<PageId> order = pageRepository.getPageOrderByPublicationId(publicationId);
@@ -119,6 +119,6 @@ public class PageService {
         setPageOrder(order, publicationId);
 
         messagingService.broadcastEntityAction(page, Action.DELETE);
-        pageRepository.delete(id);
+        pageRepository.deleteById(id);
     }
 }

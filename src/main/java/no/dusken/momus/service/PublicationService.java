@@ -21,9 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.dto.SimplePublication;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.*;
-import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
