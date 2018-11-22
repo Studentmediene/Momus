@@ -18,6 +18,7 @@ package no.dusken.momus.controller;
 
 import com.google.api.client.util.IOUtils;
 import no.dusken.momus.authentication.UserDetailsService;
+import no.dusken.momus.authorization.AdminAuthorization;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Avatar;
 import no.dusken.momus.model.Person;
@@ -43,35 +44,29 @@ import java.util.*;
 @Transactional
 @RequestMapping("/api/person")
 public class PersonController {
+    private final PersonService personService;
+    private final AvatarRepository avatarRepository;
+    private final UserDetailsService userDetailsService;
 
-    @Autowired
-    private PersonRepository personRepository;
-
-    @Autowired
-    private AvatarRepository avatarRepository;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    private SectionRepository sectionRepository;
-
-    @Autowired
-    private PersonService personService;
+    public PersonController(PersonService personService, AvatarRepository avatarRepository, UserDetailsService userDetailsService) {
+        this.personService = personService;
+        this.avatarRepository = avatarRepository;
+        this.userDetailsService = userDetailsService;
+    }
 
     /**
      * Gets all active persons. In addition, if article ids are supplied, will return all contributors on those
      * even if they are inactive
      */
     @GetMapping
-    public @ResponseBody Set<Person> getActivePersons(@RequestParam(
+    public Set<Person> getActivePersons(@RequestParam(
             value="articleIds", required = false, defaultValue = "") List<Long> articleIds) {
         return personService.getActivePersonsAndArticleContributors(articleIds);
     }
 
     @GetMapping("/{id}")
-    public @ResponseBody Person getPersonById(@PathVariable("id") Long id) {
-        return personRepository.findOne(id);
+    public Person getPersonById(@PathVariable("id") Long id) {
+        return personService.getPersonById(id);
     }
 
     @GetMapping("/{id}/photo")
@@ -91,7 +86,7 @@ public class PersonController {
     }
 
     @GetMapping("/me")
-    public @ResponseBody Person getCurrentUser() {
+    public Person getCurrentUser() {
         return userDetailsService.getLoggedInPerson();
     }
 
@@ -101,24 +96,18 @@ public class PersonController {
     }
 
     @PatchMapping("/me/favouritesection")
-    public @ResponseBody Person updateFavouritesection(@RequestParam Long section) {
-        if(!sectionRepository.exists(section)) {
-            throw new RestException(
-                    "Can't set favourite section, section with id " + section + " does not exist",
-                    HttpServletResponse.SC_NOT_FOUND);
-        }
-        return personService.updateFavouritesection(
-                userDetailsService.getLoggedInPerson(),
-                sectionRepository.findOne(section));
+    public Person updateFavouritesection(@RequestParam Long section) {
+        return personService.updateFavouritesection(userDetailsService.getLoggedInPerson(), section);
     }
 
     @GetMapping("/loggedin/all")
-    public @ResponseBody Set<Person> getAllActivePersons() {
+    @AdminAuthorization
+    public Set<Person> getAllActivePersons() {
         return personService.getAllLoggedInPersons();
     }
 
     @GetMapping("/loggedin")
-    public @ResponseBody Set<Person> getActivePersonsAtState(@RequestParam String state) {
+    public Set<Person> getActivePersonsAtState(@RequestParam String state) {
         return personService.getLoggedInPersonsAtState(state);
     }
 

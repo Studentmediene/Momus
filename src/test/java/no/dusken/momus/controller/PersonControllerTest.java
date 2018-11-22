@@ -53,7 +53,7 @@ public class PersonControllerTest extends AbstractControllerTest {
                 .active(true)
                 .build();
         List<Person> users = Arrays.asList(eirik, eivind);
-        personRepository.save(users);
+        personRepository.saveAll(users);
         personRepository.flush();
         performGetExpectOk("/api/person").andExpect(jsonPath("$.length()", is(users.size())));
     }

@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import no.dusken.momus.model.Article;
+import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.model.Section;
-import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.PersonRepository;
+import no.dusken.momus.service.repository.SectionRepository;
+
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Service;
 
@@ -23,24 +24,34 @@ import java.util.stream.Collectors;
 public class PersonService {
 
     private final PersonRepository personRepository;
-    private final ArticleRepository articleRepository;
+    private final ArticleService articleService;
+    private final SectionRepository sectionRepository;
     private final SimpUserRegistry userRegistry;
 
     private final Map<String, SessionState> sessionStates;
 
     public PersonService(
             PersonRepository personRepository,
-            ArticleRepository articleRepository,
+            ArticleService articleRepository,
+            SectionRepository sectionRepository,
             SimpUserRegistry userRegistry
     ) {
         this.personRepository = personRepository;
-        this.articleRepository = articleRepository;
+        this.articleService = articleRepository;
+        this.sectionRepository = sectionRepository;
         this.userRegistry = userRegistry;
 
         this.sessionStates = new HashMap<>();
     }
 
-    public Person updateFavouritesection(Person person, Section section) {
+    public Person getPersonById(Long id) {
+        return personRepository.findById(id).orElseThrow(() -> new RestException("Not found", 404));
+    }
+
+    public Person updateFavouritesection(Person person, Long sectionId) {
+        Section section = sectionRepository.findById(sectionId)
+            .orElseThrow(() -> new RestException("Section not found", 404));
+
         person.setFavouritesection(section);
 
         return personRepository.saveAndFlush(person);
@@ -49,13 +60,10 @@ public class PersonService {
     public Set<Person> getActivePersonsAndArticleContributors(List<Long> articleIds) {
         Set<Person> persons = personRepository.findByActiveTrue();
 
-        for(Long articleId : articleIds) {
-            if(articleRepository.exists(articleId)){
-                Article article = articleRepository.findOne(articleId);
-                persons.addAll(article.getJournalists());
-                persons.addAll(article.getPhotographers());
-            }
-        }
+        articleService.getArticlesByIds(articleIds).forEach(article -> {
+            persons.addAll(article.getJournalists());
+            persons.addAll(article.getPhotographers());
+        });
 
         return persons;
     }
