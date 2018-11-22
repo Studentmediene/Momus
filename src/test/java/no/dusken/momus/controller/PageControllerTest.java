@@ -42,7 +42,7 @@ public class PageControllerTest extends AbstractControllerTest {
 
     @Override
     void internalSetup() {
-        publication = publicationService.savePublication(Publication.builder().name("UD").releaseDate(LocalDate.now()).build(), 10);
+        publication = publicationService.createPublication(Publication.builder().name("UD").releaseDate(LocalDate.now()).build(), 10);
     }
 
     @Test
@@ -80,7 +80,7 @@ public class PageControllerTest extends AbstractControllerTest {
     @Test
     public void setContent() throws Exception {
         Article article = articleService.createArticle(Article.builder().name("Artikkel").build());
-        Advert advert = advertService.saveAdvert(Advert.builder().name("Ad").build());
+        Advert advert = advertService.createAdvert(Advert.builder().name("Ad").build());
         Page page = pageRepository.findByPublicationId(publication.getId()).get(0);
 
         performPutExpectOk(

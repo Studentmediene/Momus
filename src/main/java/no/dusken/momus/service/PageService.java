@@ -1,6 +1,7 @@
 package no.dusken.momus.service;
 
 import no.dusken.momus.dto.PageOrder;
+import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.LayoutStatus;
 import no.dusken.momus.model.Page;
 import no.dusken.momus.dto.PageContent;
@@ -40,6 +41,18 @@ public class PageService {
         this.messagingService = messagingService;
     }
 
+    public Page getPageById(Long id) {
+        return pageRepository.findById(id).orElseThrow(() -> new RestException("Not found", 404));
+    }
+
+    public List<Page> getPagesInPublication(Long publicationId) {
+        return pageRepository.findByPublicationId(publicationId);
+    }
+
+    public PageOrder getPageOrderInPublication(Long publicationId) {
+        return new PageOrder(publicationId, pageRepository.getPageOrderByPublicationId(publicationId));
+    }
+
     public List<Page> createEmptyPagesInPublication(Long publicationId, Integer afterPage, Integer numPages) {
         List<PageId> pageOrder = pageRepository.getPageOrderByPublicationId(publicationId);
         List<Page> createdPages = new ArrayList<>();
@@ -65,7 +78,7 @@ public class PageService {
     }
 
     public Page updateMetadata(Long id, Page page) {
-        Page existing = pageRepository.findOne(id);
+        Page existing = pageRepository.getOne(id);
 
         existing.setNote(page.getNote());
         existing.setLayoutStatus(page.getLayoutStatus());
@@ -89,16 +102,16 @@ public class PageService {
     }
 
     public void setContent(Long id, PageContent content) {
-        Page existing = pageRepository.findOne(id);
-        existing.setArticles(new HashSet<>(articleRepository.findAll(content.getArticles())));
-        existing.setAdverts(new HashSet<>(advertRepository.findAll(content.getAdverts())));
+        Page existing = pageRepository.getOne(id);
+        existing.setArticles(new HashSet<>(articleRepository.findAllById(content.getArticles())));
+        existing.setAdverts(new HashSet<>(advertRepository.findAllById(content.getAdverts())));
         pageRepository.saveAndFlush(existing);
 
         messagingService.broadcastEntityAction(content, Action.UPDATE);
     }
 
     public void delete(Long id) {
-        Page page = pageRepository.findOne(id);
+        Page page = pageRepository.findById(id).or;
         Long publicationId = page.getPublication().getId();
 
         List<PageId> order = pageRepository.getPageOrderByPublicationId(publicationId);

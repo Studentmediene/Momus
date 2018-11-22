@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -73,7 +74,7 @@ public class PageServiceTest extends AbstractServiceTest {
         Page existing = new Page();
         existing.setId(0L);
 
-        when(pageRepository.findOne(0L)).thenReturn(existing);
+        when(pageRepository.findById(0L)).thenReturn(Optional.of(existing));
         when(pageRepository.saveAndFlush(existing)).thenReturn(existing);
 
         Page p = Page.builder().layoutStatus(l).done(true).build();
@@ -111,9 +112,9 @@ public class PageServiceTest extends AbstractServiceTest {
                 new ArrayList<>(Collections.singletonList(0L)),
                 new ArrayList<>(Collections.singletonList(2L)));
 
-        when(pageRepository.findOne(0L)).thenReturn(p);
-        when(articleRepository.findAll(anyIterable())).thenReturn(articles);
-        when(advertRepository.findAll(anyIterable())).thenReturn(adverts);
+        when(pageRepository.findById(0L)).thenReturn(Optional.of(p));
+        when(articleRepository.findAll()).thenReturn(articles);
+        when(advertRepository.findAll()).thenReturn(adverts);
 
         pageService.setContent(0L, c);
 
@@ -131,14 +132,14 @@ public class PageServiceTest extends AbstractServiceTest {
 
         PageService pageServiceSpy = spy(pageService);
 
-        when(pageRepository.findOne(0L)).thenReturn(p);
+        when(pageRepository.findById(0L)).thenReturn(Optional.of(p));
         when(pageRepository.getPageOrderByPublicationId(publication.getId())).thenReturn(pageOrder);
 
 
         pageServiceSpy.delete(0L);
 
         verify(pageServiceSpy, times(1)).setPageOrder(pageOrder, 0L);
-        verify(pageRepository, times(1)).delete(0L);
+        verify(pageRepository, times(1)).deleteById(0L);
         verify(messagingService, times(1)).broadcastEntityAction(p, Action.DELETE);
     }
 }
