@@ -78,7 +78,7 @@ public class PageService {
     }
 
     public Page updateMetadata(Long id, Page page) {
-        Page existing = pageRepository.getOne(id);
+        Page existing = getPageById(id);
 
         existing.setNote(page.getNote());
         existing.setLayoutStatus(page.getLayoutStatus());
@@ -102,7 +102,7 @@ public class PageService {
     }
 
     public void setContent(Long id, PageContent content) {
-        Page existing = pageRepository.getOne(id);
+        Page existing = getPageById(id);
         existing.setArticles(new HashSet<>(articleRepository.findAllById(content.getArticles())));
         existing.setAdverts(new HashSet<>(advertRepository.findAllById(content.getAdverts())));
         pageRepository.saveAndFlush(existing);

@@ -73,7 +73,7 @@ public class KeyValueServiceTest extends AbstractServiceTest {
 
     @Test
     public void testGetValue() {
-        when(keyValueRepository.findById(anyString())).thenReturn(null);
+        when(keyValueRepository.findById(anyString())).thenReturn(Optional.empty());
         when(keyValueRepository.findById(keyValue1.getKey())).thenReturn(Optional.of(keyValue1));
 
         String value;
@@ -97,7 +97,7 @@ public class KeyValueServiceTest extends AbstractServiceTest {
 
     @Test
     public void testGetValueAsLong() {
-        when(keyValueRepository.findById(anyString())).thenReturn(null);
+        when(keyValueRepository.findById(anyString())).thenReturn(Optional.empty());
         when(keyValueRepository.findById(keyValue1.getKey())).thenReturn(Optional.of(keyValue1));
 
         long value;

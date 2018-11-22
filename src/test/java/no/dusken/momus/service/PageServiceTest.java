@@ -113,8 +113,8 @@ public class PageServiceTest extends AbstractServiceTest {
                 new ArrayList<>(Collections.singletonList(2L)));
 
         when(pageRepository.findById(0L)).thenReturn(Optional.of(p));
-        when(articleRepository.findAll()).thenReturn(articles);
-        when(advertRepository.findAll()).thenReturn(adverts);
+        when(articleRepository.findAllById(anyList())).thenReturn(articles);
+        when(advertRepository.findAllById(anyList())).thenReturn(adverts);
 
         pageService.setContent(0L, c);
 

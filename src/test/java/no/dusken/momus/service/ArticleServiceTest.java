@@ -43,6 +43,12 @@ public class ArticleServiceTest extends AbstractServiceTest {
     private ArticleRevisionRepository articleRevisionRepository;
 
     @Mock
+    private ArticleStatusRepository articleStatusRepository;
+
+    @Mock
+    private ArticleReviewRepository articleReviewRepository;
+
+    @Mock
     private IndesignGenerator indesignGenerator;
 
     @InjectMocks
@@ -151,8 +157,9 @@ public class ArticleServiceTest extends AbstractServiceTest {
 
         when(indesignGenerator.generateFromArticle(article1)).thenReturn(new IndesignExport("meh", "meh"));
         when(articleRepository.findById(article1.getId())).thenReturn(Optional.of(article1));
-        when(articleRepository.findById(article2.getId())).thenReturn(Optional.of(article2));
         when(articleRepository.saveAndFlush(any(Article.class))).then(returnsFirstArg());
+        when(articleStatusRepository.findById(2L)).thenReturn(Optional.of(articleStatus1));
+        when(articleReviewRepository.findById(1L)).thenReturn(Optional.of(articleReview1));
     }
 
     /**
@@ -162,15 +169,6 @@ public class ArticleServiceTest extends AbstractServiceTest {
     public void testGetArticleById() {
         Article article = articleService.getArticleById(1L);
         assert(article.getId() == 1L);
-    }
-
-    /**
-     * Method: {@link ArticleService#getArticlesByIds}
-     */
-    @Test
-    public void testGetArticlesByIds() {
-        List<Article> articles = articleService.getArticlesByIds(new ArrayList<>(Arrays.asList(1L, 2L)));
-        assert(articles.size() == 2);
     }
 
     /**
@@ -310,8 +308,7 @@ public class ArticleServiceTest extends AbstractServiceTest {
     public void testCreateRevision() {
         ArticleService articleServiceSpy = spy(articleService);
 
-        when(articleRevisionRepository.findById(any(Long.class))).thenReturn(Optional.of(article1Revision1));
-        when(articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(article1.getId())).thenReturn(Collections.singletonList(article1Revision1));
+        when(articleRevisionRepository.findFirstByArticleIdOrderBySavedDateDesc(article1.getId())).thenReturn(Optional.of(article1Revision1));
         when(articleRevisionRepository.save(any(ArticleRevision.class))).then(returnsFirstArg());
 
         // Test too old previous revision creates new

@@ -124,8 +124,8 @@ public class ArticleService {
             article.setGoogleDriveId(document.getId());
         }
 
-        article.setStatus(articleStatusRepository.findById(2L).get());
-        article.setReview(articleReviewRepository.findById(1L).get());
+        article.setStatus(articleStatusRepository.findById(2L).orElse(null));
+        article.setReview(articleReviewRepository.findById(1L).orElse(null));
 
         Article newArticle = articleRepository.saveAndFlush(article);
         log.info("Article with id {} created with data: {}", newArticle.getId(), newArticle);

@@ -41,7 +41,7 @@ public class PublicationServiceTest extends AbstractServiceTest {
     private PublicationRepository publicationRepository;
 
     @Mock
-    private ArticleRepository articleRepository;
+    private ArticleService articleService;
 
     @Mock
     private PageService pageService;
@@ -86,6 +86,7 @@ public class PublicationServiceTest extends AbstractServiceTest {
     @Test
     public void testUpdatePublicationMetadata() {
         PublicationService publicationServiceSpy = spy(publicationService);
+        when(publicationRepository.findById(publication1.getId())).thenReturn(Optional.of(publication1));
         doReturn(publication1).when(publicationRepository).saveAndFlush(publication1);
         publication1.setName("justanupdatedpubname");
         publication1 = publicationServiceSpy.updatePublicationMetadata(publication1.getId(), publication1);
@@ -112,7 +113,7 @@ public class PublicationServiceTest extends AbstractServiceTest {
                 .photographers(Collections.singleton(Person.builder().id(4L).name("Ill").build()))
                 .build();
 
-        doReturn(Arrays.asList(art, art2)).when(articleRepository).findByPublicationId(publication1.getId());
+        doReturn(Arrays.asList(art, art2)).when(articleService).getArticlesInPublication(publication1.getId());
 
         String colophon = publicationService.generateColophon(publication1.getId());
 

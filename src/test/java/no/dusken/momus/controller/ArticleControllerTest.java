@@ -1,10 +1,12 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.model.Article;
+import no.dusken.momus.model.ArticleReview;
 import no.dusken.momus.model.ArticleRevision;
 import no.dusken.momus.model.ArticleStatus;
 import no.dusken.momus.service.ArticleService;
 import no.dusken.momus.service.repository.ArticleRepository;
+import no.dusken.momus.service.repository.ArticleReviewRepository;
 import no.dusken.momus.service.repository.ArticleRevisionRepository;
 import no.dusken.momus.service.repository.ArticleStatusRepository;
 import no.dusken.momus.service.search.ArticleSearchParams;
@@ -13,12 +15,15 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletResponse;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.HashSet;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Slf4j
 public class ArticleControllerTest extends AbstractControllerTest {
 
     @Autowired
@@ -29,6 +34,9 @@ public class ArticleControllerTest extends AbstractControllerTest {
 
     @Autowired
     private ArticleStatusRepository articleStatusRepository;
+
+    @Autowired
+    private ArticleReviewRepository articleReviewRepository;
 
     @Autowired
     private ArticleRevisionRepository articleRevisionRepository;
@@ -128,11 +136,13 @@ public class ArticleControllerTest extends AbstractControllerTest {
         Article article = Article.builder()
                 .name("Artikkel")
                 .content("Innhold")
-                .status(status1)
                 .journalists(new HashSet<>())
                 .photographers(new HashSet<>())
                 .build();
         article = articleService.createArticle(article);
+        
+        article.setStatus(status1);
+        articleService.updateArticleStatus(article.getId(), article);
 
         article = articleService.updateArticleContent(article.getId(), "Nytt innhold");
 
@@ -141,7 +151,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
                 .status(status2)
                 .build();
         updatedArticle.setId(article.getId());
-        articleService.updateArticleMetadata(article.getId(), updatedArticle);
+        articleService.updateArticleStatus(article.getId(), updatedArticle);
 
         List<ArticleRevision> revisions = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(article.getId());
 

@@ -52,11 +52,11 @@ public class PublicationControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void updatePublication() throws Exception {
+    public void updatePublicationMetadata() throws Exception {
         Publication newPub1 = Publication.builder().name("UDUD").releaseDate(pub1.getReleaseDate()).build();
         newPub1.setId(pub1.getId());
 
-        performPutExpectOk("/api/publications/" + pub1.getId(), TestUtil.toJsonString(newPub1));
+        performPatchExpectOk("/api/publications/" + pub1.getId() + "/metadata", TestUtil.toJsonString(newPub1));
 
         newPub1 = publicationRepository.findById(pub1.getId()).get();
 
