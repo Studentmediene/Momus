@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.exceptions.RestException;
@@ -284,6 +285,7 @@ public class ArticleService {
      * Will get latest changes from google drive and update article content
      */
     @Scheduled(cron = "0 * * * * *")
+    @Transactional
     public void sync() {
         Set<String> modified = googleDriveService.findModifiedFileIds();
         articleRepository.findByGoogleDriveIdIn(modified).forEach(article -> {
