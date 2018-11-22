@@ -33,7 +33,7 @@ public class KeyValueService {
      * Returns the value belonging to the key, or null if key not found
      */
     public String getValue(String key) {
-        KeyValue keyValue = keyValueRepository.findOne(key);
+        KeyValue keyValue = keyValueRepository.getOne(key);
         return keyValue != null ? keyValue.getValue() : null;
     }
 

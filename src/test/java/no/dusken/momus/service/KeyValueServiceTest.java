@@ -28,6 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
+
+import java.util.Optional;
+
 import static org.mockito.AdditionalAnswers.*;
 
 @Transactional
@@ -70,8 +73,8 @@ public class KeyValueServiceTest extends AbstractServiceTest {
 
     @Test
     public void testGetValue() {
-        when(keyValueRepository.findOne(anyString())).thenReturn(null);
-        when(keyValueRepository.findOne(keyValue1.getKey())).thenReturn(keyValue1);
+        when(keyValueRepository.findById(anyString())).thenReturn(null);
+        when(keyValueRepository.findById(keyValue1.getKey())).thenReturn(Optional.of(keyValue1));
 
         String value;
 
@@ -94,8 +97,8 @@ public class KeyValueServiceTest extends AbstractServiceTest {
 
     @Test
     public void testGetValueAsLong() {
-        when(keyValueRepository.findOne(anyString())).thenReturn(null);
-        when(keyValueRepository.findOne(keyValue1.getKey())).thenReturn(keyValue1);
+        when(keyValueRepository.findById(anyString())).thenReturn(null);
+        when(keyValueRepository.findById(keyValue1.getKey())).thenReturn(Optional.of(keyValue1));
 
         long value;
 
