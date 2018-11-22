@@ -5,8 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.exceptions.RestException;
+import no.dusken.momus.model.Avatar;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.model.Section;
+import no.dusken.momus.service.repository.AvatarRepository;
 import no.dusken.momus.service.repository.PersonRepository;
 import no.dusken.momus.service.repository.SectionRepository;
 
@@ -19,6 +21,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Service
 @Slf4j
 public class PersonService {
@@ -26,6 +30,7 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final ArticleService articleService;
     private final SectionRepository sectionRepository;
+    private final AvatarRepository avatarRepository;
     private final SimpUserRegistry userRegistry;
 
     private final Map<String, SessionState> sessionStates;
@@ -34,10 +39,12 @@ public class PersonService {
             PersonRepository personRepository,
             ArticleService articleRepository,
             SectionRepository sectionRepository,
+            AvatarRepository avatarRepository,
             SimpUserRegistry userRegistry
     ) {
         this.personRepository = personRepository;
         this.articleService = articleRepository;
+        this.avatarRepository = avatarRepository;
         this.sectionRepository = sectionRepository;
         this.userRegistry = userRegistry;
 
@@ -66,6 +73,11 @@ public class PersonService {
         });
 
         return persons;
+    }
+
+    public Avatar getPersonPhoto(Long id) {
+        return avatarRepository.findById(id)
+            .orElseThrow(() -> new RestException("No photo found for user", HttpServletResponse.SC_NOT_FOUND));
     }
 
     public Set<Person> getAllLoggedInPersons() {

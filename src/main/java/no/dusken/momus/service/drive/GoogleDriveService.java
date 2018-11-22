@@ -16,6 +16,17 @@
 
 package no.dusken.momus.service.drive;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.GeneralSecurityException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
+
+import javax.annotation.PostConstruct;
+
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.GenericUrl;
@@ -27,21 +38,14 @@ import com.google.api.services.drive.model.Change;
 import com.google.api.services.drive.model.ChangeList;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.Permission;
-import lombok.extern.slf4j.Slf4j;
-import no.dusken.momus.model.Article;
-import no.dusken.momus.service.ArticleService;
-import no.dusken.momus.service.KeyValueService;
-import no.dusken.momus.service.repository.ArticleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.GeneralSecurityException;
-import java.util.*;
+import lombok.extern.slf4j.Slf4j;
+import no.dusken.momus.model.Article;
+import no.dusken.momus.service.KeyValueService;
 
 @Service
 @Slf4j

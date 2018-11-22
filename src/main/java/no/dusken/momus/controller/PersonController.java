@@ -16,7 +16,28 @@
 
 package no.dusken.momus.controller;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
 import com.google.api.client.util.IOUtils;
+import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.socket.messaging.SessionConnectedEvent;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+
 import no.dusken.momus.authentication.UserDetailsService;
 import no.dusken.momus.authorization.AdminAuthorization;
 import no.dusken.momus.exceptions.RestException;
@@ -24,21 +45,6 @@ import no.dusken.momus.model.Avatar;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.PersonService;
 import no.dusken.momus.service.repository.AvatarRepository;
-import no.dusken.momus.service.repository.PersonRepository;
-import no.dusken.momus.service.repository.SectionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.EventListener;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.socket.messaging.SessionConnectedEvent;
-import org.springframework.web.socket.messaging.SessionDisconnectEvent;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.*;
 
 @RestController
 @Transactional
@@ -55,8 +61,8 @@ public class PersonController {
     }
 
     /**
-     * Gets all active persons. In addition, if article ids are supplied, will return all contributors on those
-     * even if they are inactive
+     * Gets all active persons. In addition, if article ids are supplied, will
+     * return all contributors on those even if they are inactive
      */
     @GetMapping
     public Set<Person> getActivePersons(@RequestParam(
@@ -71,11 +77,7 @@ public class PersonController {
 
     @GetMapping("/{id}/photo")
     public void getPersonPhoto(@PathVariable("id") Long id, HttpServletResponse response) throws IOException, SQLException {
-        Avatar avatar = avatarRepository.findOne(id);
-
-        if(avatar == null) {
-            throw new RestException("No photo found for user", 404);
-        }
+        Avatar avatar = personService.getPersonPhoto(id);
 
         response.addHeader("Content-Type", "image/jpeg");
 

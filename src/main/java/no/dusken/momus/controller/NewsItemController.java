@@ -51,7 +51,7 @@ public class NewsItemController {
 
     @PutMapping("/{newsItemId}")
     @AdminAuthorization
-    public @ResponseBody NewsItem updateNewsItem(@RequestBody NewsItem newsItem, @PathVariable Long newsItemId) {
+    public NewsItem updateNewsItem(@RequestBody NewsItem newsItem, @PathVariable Long newsItemId) {
         return newsItemService.updateNewsItem(newsItemId, newsItem);
     }
 

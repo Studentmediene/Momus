@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.service.repository.PersonRepository;
 
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class ArticleQueryBuilder {
                 conditions.add("( :personid" + personCount + " member of a.journalists or " +
                         ":personid" + personCount + " member of a.photographers or " +
                         ":personid" + personCount + " member of a.graphics )");
-                queryParams.put("personid" + personCount++, personRepository.findOne(person));
+                queryParams.put("personid" + personCount++, personRepository.findById(person).orElseThrow(() -> new RestException("Not found", 404)));
             }
         }
         if (search.getSection() != null) {

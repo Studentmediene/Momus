@@ -7,14 +7,14 @@ import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurationSupport;
 
 @Configuration
 @EnableWebSocketMessageBroker
 @EnableAsync
-class WebsocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
+class WebsocketConfig extends WebSocketMessageBrokerConfigurationSupport {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
