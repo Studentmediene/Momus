@@ -11,16 +11,15 @@ Momus is the successor to [Pegadi](https://github.com/dusken/pegadi), a java cli
 Instead of the old and clunky java client, this uses AngularJS, making the system available for everyone without installation - for tablets and phones, even!
 The backend is completely rewritten, using a newer version of Spring and the power of JPA.
 
-### Technologies:
- * Java
- * [Spring](http://spring.io/)
- * [Hibernate](http://www.hibernate.org/)
- * [Jackson](http://wiki.fasterxml.com/JacksonHome)
- * [AngularJS](http://angularjs.org/)
- * [Bootstrap 3](http://getbootstrap.com/)
+### Technologies
+ * [Java Spring](https://spring.io/)
+ * [Hibernate](https://www.hibernate.org/)
+ * [TypeScript](http://www.typescriptlang.org/)
+ * [AngularJS](https://angularjs.org/)
+ * [Bootstrap](https://getbootstrap.com/)
 
-###IDE
-JetBRAINS are providing the developers working on this project with licenses to [IntelliJ IDEA](http://www.jetbrains.com/idea/).
+### Developing
+For instructions on how to set up Momus for development, see [wiki.smint.no](https://wiki.smint.no).
 
 OBS!
 ----
@@ -35,7 +34,7 @@ We're using JIRA.
 License
 -------
 
-Copyright 2016 Studentmediene i Trondheim AS
+Copyright 2018 Studentmediene i Trondheim AS
 
 Licensed under the Apache License, Version 2.0: [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
 

@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./webapp-beta",
+    "rootDir": "./webapp-beta/",
+    "outDir": "./webapp-beta/dist/",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "module": "commonjs",
+    "target": "es5",
+    "allowJs": true,
+    "noEmitHelpers": true,
+    "importHelpers": true,
+    "lib": [
+        "es2017",
+        "dom"
+    ],
+    "typeRoots": [
+        "./node_modules/@types",
+        "./webapp-beta/typings"
+    ],
+    "types": ["angular", "angular-resource", "angular-cookies", "node", "momus", "uikit"]
+  },
+  "files": [
+      "./webapp-beta/app.ts"
+  ]
+}

@@ -1,0 +1,50 @@
+@import "../../style/variables.scss";
+
+.select-dropdown {
+    position: relative;
+    background-color: white;
+}
+.select-dropdown-item {
+    border: 1px solid $global-border;
+    &:focus-within {
+        border-color: $global-primary-background;
+    }
+    transition: border-color 0.1s linear;
+
+    padding: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    > span {
+        cursor: pointer;
+        flex-grow: 1;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    > .clear {
+        margin-right: 5px;
+        cursor: pointer;
+    }
+}
+
+.select-dropdown-drop {
+    position: absolute;
+    border: 1px solid $global-primary-background;
+    background-color: white;
+    box-sizing: border-box;
+    right: 0;
+    overflow-y: scroll;
+    z-index: 1000;
+    max-height: 200px;    
+    min-width: 100%;
+
+    .select-dropdown-dropitem {
+        cursor: pointer;
+        white-space: nowrap;
+        &.hover {
+            background-color: lightgrey;
+        }
+    }
+}

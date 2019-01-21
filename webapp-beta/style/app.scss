@@ -1,0 +1,118 @@
+@import "./variables.scss";
+@import "uikit/src/scss/uikit.scss";
+
+.initial-load-spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    text-align: center;
+}
+
+.button-edit {
+    background-color: $global-edit-background;
+    color: black;
+    border: 1px solid transparent;
+    &:hover, &:focus {
+        background-color: darken($global-edit-background, 5%);
+    }
+}
+
+.button-new {
+    background-color: $global-new-background;
+    border: 1px solid transparent;
+
+    &:hover, &:focus {
+        background-color: darken($global-new-background, 5%);
+    }
+}
+
+.button-xs {
+    padding: 0 5px;
+    line-height: 18px;
+    font-size: 0.65rem;
+}
+
+.form-label-text {
+    text-transform: uppercase;
+}
+
+.form-label-small-text {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+}
+
+.list-no-margin {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.visible-print {
+    display: none;
+    @media print {
+        display: block;
+    }
+}
+
+.hidden-print {
+    @media print {
+        display: none;
+    }
+}
+
+textarea {
+    width: 100%;
+    min-height: 100px;
+}
+
+.modal {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    opacity: 1;
+    background-color: rgba(0,0,0,0.6);
+    z-index: 1000;
+
+    .modal-content {
+        width: 60%;
+        margin: auto;
+        margin-top: 20px;
+        background-color: white;
+    }
+
+    .modal-header {
+        padding: 20px;
+
+        h3 {
+            margin-bottom: 0;
+            color: white;
+        }
+
+        background-color: $global-primary-background;
+        &.new {
+            background-color: $global-new-background;
+            h3 {
+                color: unset;
+            }
+        }
+        &.danger {
+            background-color: $global-danger-background;
+        }
+    }
+    .modal-body {
+        opacity: 1;
+        padding: 20px;
+    }
+}
+
+.person-list {
+    > li {
+        margin-top: 0 !important;
+    }
+}
+
+.status-dropdown-item {
+    padding: 0 10px;
+    display: block;
+}

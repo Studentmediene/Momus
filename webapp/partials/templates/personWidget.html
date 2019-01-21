@@ -1,0 +1,48 @@
+<!--
+  ~ Copyright 2016 Studentmediene i Trondheim AS
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<div class="person-widget-wrapper">
+    <div class="person-widget-element panel panel-primary" ng-show="isVisible">
+        <div class="panel-heading">
+            <div style="display: flex; align-items: center">
+                <div style="flex-grow: 1;">
+                    <h5><b>{{pw_person.name}}</b></h5>
+                </div>
+                <div>
+                    <i ng-click="closePW()" class="fas fa-times fa-2x person-widget-close"></i>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div>
+                <user-avatar user="pw_person" size="60"></user-avatar>
+            </div>
+            <div>
+                <table class="table table-condensed person-widget-table">
+                    <tr>
+                        <td><b><i class="fas fa-envelope"></i></b></td>
+                        <td><a href="mailto:{{pw_person.email}}">{{pw_person.email}}</a></td>
+                    </tr>
+                    <tr>
+                        <td><b><i class="fas fa-phone"></i></b></td>
+                        <td>{{pw_person.phone_number}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<span class="hidden-xs person-widget-text" ng-click="openPW()" ng-transclude></span>
+<span class="visible-xs person-widget-text" ng-click="openModal()" ng-transclude></span>

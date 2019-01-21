@@ -60,7 +60,7 @@ import no.dusken.momus.service.repository.SectionRepository;
  * Utility methods etc. goes here.
  */
 @RestController
-@RequestMapping("/dev")
+@RequestMapping("/api/dev")
 public class DevController {
     @Autowired
     private SectionRepository sectionRepository;

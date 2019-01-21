@@ -1,0 +1,61 @@
+<panel
+    icon="'fas fa-bullhorn'"
+    header="'Nyheter'"
+    type="'primary'"
+    no-body-padding="true"
+    class="news-panel"
+>
+    <div ng-repeat="n in vm.news | orderBy: '-date'
+                                    | startFrom:(vm.currentPage-1)*vm.pageSize
+                                    | limitTo:vm.pageSize"
+        ng-hide="vm.news.length === 0"
+    >
+        <div ng-click="show = !show">
+            <div class="news-title-row">
+                <span class="news-title">{{n.title}}</span>
+                <button
+                    ng-show="vm.editable != null"
+                    class="uk-button button-xs button-edit"
+                    ng-click="vm.onEdit({newsItem: n})"
+                >
+                    Rediger
+                </button>
+                <i ng-show="!show" class="fas fa-arrow-circle-down"></i>
+                <i ng-show="show" class="fas fa-arrow-circle-up"></i>
+            </div>
+        </div>
+        <div ng-click="show = !show" class="news-meta-row">
+            <person-widget person="n.author"></person-widget>, {{n.date | date: 'dd/MM/yy HH:mm'}}
+        </div>
+        <div class="news-content" ng-show="show">
+            {{n.content}}
+        </div>
+    </div>
+    <ul class="uk-pagination uk-flex-center" ng-hide="vm.news.length === 0">
+        <li>
+            <span
+                style="cursor: pointer;"
+                ng-click="vm.currentPage = vm.currentPage - 1"
+                ng-class="{'uk-disabled': vm.currentPage === 0}"
+            >
+                <span uk-pagination-previous></span>
+            </span>
+        </li>
+        <li class="uk-active">
+            <span>{{vm.currentPage + 1}}</span>
+        </li>
+        <li>
+            <span
+                style="cursor: pointer;"
+                ng-click="vm.currentPage = vm.currentPage + 1"
+                ng-class="{'uk-disabled': !vm.hasNextPage()}"
+            >
+                <span uk-pagination-next></span>
+            </span>
+        </li>
+    </ul>
+
+    <div ng-show="vm.news.length === 0" class="uk-text-center uk-margin-small-top uk-margin-small-bottom">
+        Ingen nyheter!
+    </div>
+</panel>

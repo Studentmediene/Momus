@@ -1,0 +1,27 @@
+<p>
+    <button
+            class="uk-button uk-button-primary"
+            ng-click="vm.generateData()"
+            button-loading="vm.generating"
+    >
+        Generate dummy articles and publications
+    </button>
+</p>
+<p ng-if="vm.env.noAuth">
+    <span class="uk-button-group">
+        <button
+                class="uk-button uk-button-primary"
+                ng-click="vm.setLoggedInUser(vm.selectedUser.username)"
+                button-loading="vm.settingUser"
+        >
+            Set logged in user
+        </button>
+        <select-dropdown
+            items="vm.persons"
+            ng-model="vm.selectedUser"
+            label="'name'"
+            unclearable
+        >
+        </select-dropdown>
+    </span>
+</p>

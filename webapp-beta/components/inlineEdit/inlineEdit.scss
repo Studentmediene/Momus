@@ -1,0 +1,10 @@
+.inline-edit {
+    > div {
+        z-index: 1000;
+    }
+}
+
+.inline-textarea {
+    min-height: 100px;
+    resize: vertical;
+}

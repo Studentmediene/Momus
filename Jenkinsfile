@@ -38,12 +38,10 @@ pipeline {
             }
             
             steps {
-                sh 'npm install bower'
-
                 sh 'npm install'
-                sh './node_modules/.bin/bower install --config.interactive=false'
 
                 sh 'npm run build'
+                sh 'npm run build:beta'
             }
         }
 

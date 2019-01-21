@@ -1,0 +1,18 @@
+.result-table {
+    font-size: 80%;
+    margin-top: 0 !important; // Override uikit
+    td, th {
+        padding: 5px 6px !important;
+    }
+}
+
+.contributor-list {
+    display: flex;
+    > :first-child {
+        margin-right: 5px;
+    }
+
+    person-widget {
+        margin-right: 5px;
+    }
+}

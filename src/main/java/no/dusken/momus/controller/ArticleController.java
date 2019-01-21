@@ -25,7 +25,6 @@ import no.dusken.momus.service.repository.*;
 import no.dusken.momus.service.search.ArticleSearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
@@ -36,7 +35,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/article")
+@RequestMapping("/api/article")
 public class ArticleController {
 
     @Autowired
@@ -67,7 +66,7 @@ public class ArticleController {
     private PersonRepository personRepository;
 
     @GetMapping
-    public List<Article> getLastArticlesForUser(@RequestParam Long userId, Pageable query) {
+    public List<Article> getLastArticlesForUser(@RequestParam Long userId) {
         return articleRepository.findByJournalistsOrPhotographersOrGraphicsContains(personRepository.findOne(userId), new PageRequest(0, 10));
     }
 

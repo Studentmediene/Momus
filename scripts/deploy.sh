@@ -75,11 +75,17 @@ function check_newer_than_existing {
 
     OLD_VER_ARR=(${OLD_VER//./ })
     NEW_VER_ARR=(${1//./ })
+    ERROR=true
     for i in $(seq 0 2); do
-        if [[ ${NEW_VER_ARR[$i]} < ${OLD_VER_ARR[$i]} ]]; then
-            error "New version must be > $OLD_VER"
+        if [[ ${NEW_VER_ARR[$i]} > ${OLD_VER_ARR[$i]} ]]; then
+            ERROR=false
+            break
         fi
     done
+
+    if [ "$ERROR" = true ]; then
+        error "New version must be > $OLD_VER"
+    fi
 }
 
 function check_argument_pattern {

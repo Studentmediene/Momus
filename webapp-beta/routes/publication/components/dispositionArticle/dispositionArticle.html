@@ -1,0 +1,126 @@
+<div class="d-table-row">
+    <!--Dropdown-arrow-->
+    <div class="d-table-cell" ng-style="vm.columnWidths.dropdown">
+        <button
+            class="uk-button uk-button-primary button-xs"
+            ng-click="vm.toggleButtonRow()"
+        >
+            <i class="fas fa-arrows-alt-v"></i>
+        </button>
+    </div>
+    <!--Name-->
+    <div class="d-table-cell" ng-style="vm.columnWidths.name">
+        <a ui-sref="article.single({id: vm.article.id})">{{vm.article.name}}</a>
+        <span uib-tooltip="Antall tegn">({{vm.article.content_length}})</span>
+    </div>
+    <!--Section-->
+    <div
+        class="d-table-cell"
+        ng-style="vm.applyColumnWidth('section', {'background': vm.article.section.color})"
+    >
+        {{vm.article.section.name}}
+    </div>
+    <!--Journalists-->
+    <div class="d-table-cell" ng-style="vm.columnWidths.journalists">
+        <ul class="uk-list person-list">
+            <li ng-repeat="person in vm.article.journalists">
+                <person-widget person="person" class="d-break-word">
+                </person-widget>
+            </li>
+            <li ng-repeat="person in vm.article.external_author.split(',')">
+                <i>{{person}}</i>
+            </li>
+        </ul>
+    </div>
+    <!--Photographers-->
+    <div class="d-table-cell" ng-style="vm.columnWidths.photographers">
+        <ul class="uk-list person-list">
+            <li ng-repeat="person in article.photographers">
+                <person-widget person="person">
+                </person-widget>
+            </li>
+            <li ng-repeat="person in article.external_photographer.split(',')">
+                <i>{{person}}</i>
+            </li>
+        </ul>
+    </div>
+    <!--Status-->
+    <div
+        class="d-table-cell"
+        ng-style="vm.applyColumnWidth('status', {'background': vm.article.status.color})"
+    >
+        <select-dropdown
+            ng-model="vm.article.status"
+            items="vm.articleStatuses"
+            label="'name'"
+            on-change="vm.updateArticle()"
+            placeholder="Status"
+            unclearable
+        >
+            <item-markup>
+                <span class="status-dropdown-item" style="background-color: {{$parent.value.color}}">
+                    {{$parent.value.name}}
+                </span>
+            </item-markup>
+        </select-dropdown>
+    </div>
+    <!--Review-->
+    <div
+        class="d-table-cell"
+        ng-style="vm.applyColumnWidth('review', {'background': vm.article.review.color})"
+    >
+        <select-dropdown
+            ng-model="vm.article.review"
+            items="vm.reviewStatuses"
+            label="'name'"
+            on-change="vm.updateArticle()"
+            placeholder="Korr."
+            unclearable
+        >
+            <item-markup>
+                <span class="status-dropdown-item" style="background-color: {{$parent.value.color}}">
+                    {{$parent.value.name}}
+                </span>
+            </item-markup>
+        </select-dropdown>
+    </div>
+    <!--Photostatus-->
+    <div
+        class="d-table-cell"
+        ng-style="vm.columnWidths.photo_status"
+        title="Klikk for å redigere"
+    >
+        <inline-edit
+                placeholder="[Fotostatus]"
+                model="vm.article.photo_status"
+                on-save="vm.submitField('photo_status', value)">
+        </inline-edit>
+    </div>
+    <!--Comment-->
+    <div class="d-table-cell" ng-style="vm.columnWidths.comment">
+        <inline-edit
+                placeholder="[Kommentar]"
+                model="vm.article.comment"
+                on-save="vm.submitField('comment', value)">
+        </inline-edit>
+    </div>
+</div>
+<div ng-show="vm.showButtonRow" class="extra-button-line">
+    <a
+        href="/api/article/{{vm.article.id}}/indesignfile"
+        class="uk-button uk-button-primary button-xs"
+        target="_blank"
+    >
+        <i class="fas fa-file"></i>
+        InDesign fil
+    </a>
+    <a
+        href="https://docs.google.com/document/d/{{vm.article.google_drive_id}}/edit"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="uk-button button-edit button-xs"
+    >
+        <i class="fas fa-edit"></i>
+        Rediger i Google Docs
+    </a>
+</div>

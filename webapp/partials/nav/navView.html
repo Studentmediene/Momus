@@ -1,0 +1,57 @@
+<div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button
+                    type="button"
+                    class="navbar-toggle collapsed"
+                    data-toggle="collapse"
+                    data-target="#navbar-collapse"
+            >
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <p ng-show="transitionLoad" class="visible-xs navbar-text transition-load-spinner">
+                <i class="fas fa-circle-notch fa-2x fa-spin"></i>
+            </p>
+            <a class="navbar-brand" ui-sref="front">Momus</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse" data-toggle="collapse" data-target="#navbar-collapse.in">
+            <ul class="nav navbar-nav">
+                <li ui-sref-active="active">
+                    <a ui-sref="front"><i class="fas fa-th-large"></i> Front</a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="disposition"><i class="fas fa-newspaper"></i> Disposisjon</a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="search"><i class="fas fa-pencil-alt"></i> Artikler</a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="publications"><i class="fas fa-list"></i> Utgaver</a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="info"><i class="fas fa-info"></i> Info/nyheter</a>
+                </li>
+                <li ui-sref-active="active"ng-cloak ng-show="vm.user.roles.includes('ROLE_ADMIN')">
+                    <a ui-sref="admin"><i class="fas fa-wrench hidden-sm"></i> Admin</a>
+                </li>
+                <li ui-sref-active="active" ng-cloak ng-show="vm.devmode" class="navbar-dev">
+                    <a ui-sref="dev"><i class="fas fa-cog"></i> Dev</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li ng-show="transitionLoad"><p class="hidden-xs navbar-text transition-load-spinner">
+                    <i class="fas fa-circle-notch fa-2x fa-spin"></i>
+                </p></li>
+                <li><a class="visible-sm" ng-click="vm.logout()">Logg ut <i class="fas fa-power-off"></i></a></li>
+                <li><a class="hidden-sm"  ng-click="vm.logout()">Logg ut <b>{{vm.user.name}}</b> <i class="fas fa-power-off"></i></a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div>
+    <ui-view></ui-view>
+</div>

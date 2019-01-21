@@ -1,0 +1,179 @@
+<!--
+  ~ Copyright 2016 Studentmediene i Trondheim AS
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<div class="modal-header new">
+    <h3>Lag ny artikkel</h3>
+</div>
+<div class="modal-body" ng-click="vm.modalClick($event)">
+    <form class="uk-form-horizontal" name="createArticleForm" novalidate>
+        <div class="uk-margin">
+            <label class="uk-form-label">
+                Tittel
+            </label>
+            <div class="uk-form-controls">
+                <input
+                    name="name"
+                    class="uk-input"
+                    type="text"
+                    ng-model="vm.article.name"
+                    required
+                    ng-class="{'uk-form-danger': createArticleForm.name.$invalid }"
+                >
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label">
+                Journalister
+            </label>
+            <div class="uk-form-controls">
+                <multiselect-dropdown
+                    items="vm.persons"
+                    ng-model="vm.article.journalists"
+                    label="'name'"
+                    placeholder=""
+                >
+                </multiselect-dropdown>
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label">
+                Ekstern
+            </label>
+
+            <div class="uk-form-controls">
+                <input
+                    class="uk-input"
+                    type="text"
+                    ng-model="vm.article.external_author"
+                >
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label">
+                Foto/Illu
+            </label>
+
+            <div class="uk-form-controls">
+                <select
+                    class="uk-select"
+                    ng-model="vm.article.use_illustration"
+                    ng-options="o.selected as o.name for o in photoTypes">
+                </select>
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label">
+                {{vm.article.use_illustration ? 'Illustratører' : 'Fotografer'}}
+            </label>
+            <div class="uk-form-controls">
+                <multiselect-dropdown
+                    items="vm.persons"
+                    ng-model="vm.article.photographers"
+                    label="'name'"
+                    placeholder=""
+                >
+                </multiselect-dropdown>
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label">
+                Ekstern
+            </label>
+
+            <div class="uk-form-controls">
+                <input
+                    class="uk-input"
+                    type="text"
+                    ng-model="vm.article.external_photographer">
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label">
+                Kommentar
+            </label>
+            <div class="uk-form-controls">
+                <input
+                    class="uk-input"
+                    type="text"
+                    ng-model="vm.article.comment"
+                >
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label">
+                Utgave
+            </label>
+            <div class="uk-form-controls">
+                <select-dropdown
+                    items="vm.publications"
+                    ng-model="vm.article.publication"
+                    label="'name'"
+                    unclearable
+                    required
+                ></select-dropdown>
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label">
+                Redaksjon
+            </label>
+            <div class="uk-form-controls">
+                <select-dropdown
+                    items="vm.sections"
+                    ng-model="vm.article.section"
+                    label="'name'"
+                    placeholder="Redaksjon"
+                    unclearable
+                    required
+                >
+                </select-dropdown>
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label">
+                Type
+            </label>
+
+            <div class="uk-form-controls">
+                <select-dropdown
+                    items="vm.types"
+                    ng-model="vm.article.type"
+                    label="'name'"
+                    placeholder="Type"
+                    unclearable
+                    required
+                >
+                </select-dropdown>
+            </div>
+        </div>
+        <div class="uk-margin">
+            <div class="uk-form-controls">
+                <button
+                    class="uk-button uk-button-primary"
+                    ng-click="vm.create()"
+                    ng-disabled="createArticleForm.$invalid"
+                >
+                    <span>Opprett artikkel</span>
+                </button>
+                <button
+                    class="uk-button uk-button-secondary"
+                    ng-click="vm.onCanceled()"
+                >
+                    <span>Avbryt</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

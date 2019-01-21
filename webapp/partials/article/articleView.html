@@ -1,0 +1,440 @@
+<!--
+  ~ Copyright 2016 Studentmediene i Trondheim AS
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+
+<div class="container">
+    <div class="row hidden-print top-spacing" ng-show="vm.article.archived">
+        <div class="col-xs-12">
+            <div class="alert alert-danger">
+                <p>
+                    <i class="fas fa-exclamation-circle fa-2"></i>
+                    <strong> Artikkelen er arkivert.</strong> Den vil ikke vises i søk.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <h1>{{vm.article.name}}</h1>
+
+    <!-- Used when printing Ctrl+P-->
+    <div class="visible-print">
+        <table class="table table-condensed">
+            <tr>
+                <th>Navn:</th>
+                <td>{{ vm.article.name }}</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>Journalister:</th>
+                <td>
+                <span ng-repeat="journalist in vm.article.journalists">
+                    {{ journalist.name }}<span ng-if="!$last">,</span>
+                </span>
+                </td>
+                <th>Kommentar:</th>
+                <td>{{vm.article.comment}}</td>
+            </tr>
+            <tr>
+                <th>Fotografer:</th>
+                <td>
+                <span ng-repeat="photographer in vm.article.photographers">
+                    {{ photographer.name }}<span ng-if="!$last">,</span>
+                </span>
+                </td>
+                <th>Utgave:</th>
+                <td>{{vm.article.publication.name}}</td>
+            </tr>
+        </table>
+
+        <div style="column-count: 2; -moz-column-count:2" ng-bind-html="vm.articleContent | trustHtml"></div>
+
+    </div>
+
+    <div class="row hidden-print top-spacing" ng-show="vm.article.comment">
+        <div class="col-xs-12">
+            <div class="alert alert-info">
+                <p>
+                    <strong>Kommentar:</strong> {{vm.article.comment}}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row hidden-print">
+        <div class="col-xs-12">
+            <div class="btn-row">
+                <a
+                    href="https://docs.google.com/document/d/{{vm.article.google_drive_id}}/edit"
+                    target="_blank"
+                    class="btn btn-success"
+                    rel="noopener noreferrer"
+                >
+                    <span class="fas fa-pencil-alt"></span>
+                    Rediger i Google Docs
+                </a>
+
+                <a ui-sref="articlerevision({id:vm.article.id})" class="btn btn-primary">
+                    <i class="fas fa-file-alt"></i>
+                    Historikk
+                </a>
+
+                <a
+                    href="/api/article/{{vm.article.id}}/indesignfile"
+                    class="btn btn-primary"
+                    target="_blank"
+                >
+                    <i class="fas fa-file-alt"></i>
+                    InDesign fil
+                </a>
+
+                <span ng-hide="vm.article.archived">
+                    <a ng-click="vm.archiveArticle()" class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
+                        Arkiver artikkelen
+                    </a>
+                </span>
+
+                <span ng-show="vm.article.archived">
+                    <a ng-click="vm.restoreArticle()" class="btn btn-success" uib-tooltip="Gjenopprett artikkelen så den vil vises i søk">
+                        <i class="fas fa-plus"></i>
+                        Gjenopprett
+                    </a>
+                </span>
+
+                <a ng-click="vm.showHelp()" class="btn btn-success">
+                    Hjelp?
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row hidden-print top-spacing">
+        <div class="col-md-7">
+            <div id="content-panel" class="panel panel-primary">
+                <div class="panel-heading">
+                    <h1 class="panel-title">
+                        <span class="fas fa-file-alt"></span>
+                        Tekst
+                    </h1>
+                </div>
+                <div class="panel-body">
+                    <div class="articleContent" ng-bind-html="vm.articleContent | trustHtml"></div>
+                    <div class="text-right">
+                        <small class="text-muted">
+                            Ca. {{vm.article.content_length}} tegn
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5 hidden-print">
+            <div id="meta-panel" class="panel panel-info">
+                <div class="panel-heading">
+                    <h1 class="panel-title">
+                        <span class="fas fa-tag"></span>
+                        Detaljer
+                        <span class="pull-right">
+                            <button class="btn btn-xs btn-info" ng-show="vm.metaEditMode" ng-click="vm.cancelMeta()">
+                                Avbryt
+                            </button>
+                            <button class="btn btn-xs btn-primary" ng-click="vm.metaClicked()" button-loader="vm.savingMeta">
+                                <span ng-show="!vm.metaEditMode">Rediger</span>
+                                <span ng-show="vm.metaEditMode">Lagre</span>
+                            </button>
+                        </span>
+                    </h1>
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal" role="form" ng-submit="vm.metaClicked()">
+                        <input type="submit" style="display: none;"/><!-- This is required to submit with enter -->
+                        <div class="form-group metaline">
+                            <label class="col-sm-4 control-label important-field">
+                                Kommentar
+                            </label>
+
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
+                                <p class="form-control-static">
+                                    {{ vm.article.comment }}
+                                </p>
+                            </div>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <input class="form-control input-sm" type="text" ng-model="vm.metaEditing.comment">
+                            </div>
+                        </div>
+                        <div class="form-group metaline">
+                            <label class="col-sm-4 control-label important-field">
+                                Bildetekster
+                            </label>
+
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
+                                <p class="form-control-static" style="overflow: auto; max-height: 75px; white-space: pre-wrap;">{{ vm.article.image_text }}</p>
+                            </div>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <textarea class="form-control" ng-model="vm.metaEditing.image_text" style="height: 150px;"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group metaline">
+                            <label class="col-sm-4 control-label important-field">
+                                Status
+                            </label>
+
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
+                                <p class="form-control-static">
+                                    {{ vm.article.status.name }}
+                                </p>
+                            </div>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <select class="form-control input-sm" ng-model="vm.metaEditing.status"
+                                        ng-options="s.name for s in vm.statuses | filter:{deleted: false} | orderBy:'status_order' track by s.id "></select>
+                            </div>
+                        </div>
+                        <div class="form-group metaline">
+                            <label class="col-sm-4 control-label important-field">
+                                Korrektur
+                            </label>
+
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
+                                <p class="form-control-static">
+                                    {{ vm.article.review.name }}
+                                </p>
+                            </div>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <select class="form-control input-sm" ng-model="vm.metaEditing.review"
+                                        ng-options="s.name for s in vm.reviews track by s.id "></select>
+                            </div>
+                        </div>
+                        <div class="form-group metaline">
+                            <label class="col-sm-4 control-label important-field">
+                                Sitatsjekk
+                            </label>
+
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
+                                <p class="form-control-static">
+                        <span ng-show="vm.article.quote_check_status">
+                            Trenger sitatsjekk
+                        </span>
+                        <span ng-hide="vm.article.quote_check_status">
+                            I orden
+                        </span>
+                                </p>
+                            </div>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <select class="form-control input-sm" ng-model="vm.metaEditing.quote_check_status"
+                                        ng-options="o.value as o.name for o in vm.quoteCheckTypes"></select>
+                            </div>
+                        </div>
+                        <hr class="divider">
+                        <div class="form-group metaline">
+                            <label class="col-sm-4 control-label">
+                                Navn
+                            </label>
+
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
+                                <p class="form-control-static">
+                                    {{ vm.article.name }}
+                                </p>
+                            </div>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <input class="form-control input-sm" type="text" ng-model="vm.metaEditing.name" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group metaline">
+                            <label class="col-sm-4 control-label">
+                                Journalister
+                            </label>
+
+                            <div class="col-sm-8">
+                                <ul class="list-unstyled form-control-static" ng-hide="vm.metaEditMode">
+                                    <li ng-repeat="journalist in vm.article.journalists">
+                                        <span person-widget="journalist">{{ journalist.name }}</span>
+                                    </li>
+                                </ul>
+                                <id-select multiple
+                                           ng-show="vm.metaEditMode"
+                                           items="vm.persons"
+                                           target="vm.metaEditing.journalists"
+                                           show="name">
+                                </id-select>
+                            </div>
+                        </div>
+                        <div class="form-group metaline">
+                            <label class="col-sm-4 control-label">
+                                Ekstern
+                            </label>
+
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
+                                <p class="form-control-static">
+                                    {{ vm.article.external_author }}
+                                </p>
+                            </div>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <input class="form-control input-sm" type="text" ng-model="vm.metaEditing.external_author" uib-tooltip="Separer navn med komma.">
+                            </div>
+                        </div>
+                        <hr class="divider">
+                        <div class="form-group metaline">
+                            <label class="col-sm-4 control-label">
+                                Foto/Illu
+                            </label>
+
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
+                                <p class="form-control-static">
+                                    <span ng-show="vm.article.use_illustration"><i class="fas fa-paint-brush"> </i> Illustrasjon</span>
+                                    <span ng-show="!vm.article.use_illustration"><i class="fas fa-camera"> </i> Foto</span>
+
+                                </p>
+                            </div>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <select class="form-control input-sm" ng-model="vm.metaEditing.use_illustration"
+                                        ng-options="o.value as o.name for o in vm.photoTypes"></select>
+                            </div>
+                        </div>
+                        <div class="form-group metaline">
+                            <label class="col-sm-4 control-label">
+                                {{vm.article.use_illustration ? 'Illustratører' : 'Fotografer'}}
+                            </label>
+
+                            <div class="col-sm-8">
+                                <ul class="list-unstyled form-control-static" ng-hide="vm.metaEditMode">
+                                    <li ng-repeat="photographer in vm.article.photographers">
+                                        <span person-widget="photographer">{{ photographer.name }}</span>
+                                    </li>
+                                </ul>
+                                <id-select multiple
+                                           ng-show="vm.metaEditMode"
+                                           items="vm.persons"
+                                           target="vm.metaEditing.photographers"
+                                           show="name">
+                                </id-select>
+                            </div>
+                        </div>
+                        <div class="form-group metaline">
+                            <label class="col-sm-4 control-label">
+                                Ekstern
+                            </label>
+
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
+                                <p class="form-control-static">
+                                    {{ vm.article.external_photographer }}
+                                </p>
+                            </div>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <input class="form-control input-sm" type="text" ng-model="vm.metaEditing.external_photographer" uib-tooltip="Separer navn med komma.">
+                            </div>
+                        </div>
+                        <hr class="divider">
+                        <div class="form-group metaline">
+                            <label class="col-sm-4 control-label">
+                                Grafikere
+                            </label>
+
+                            <div class="col-sm-8">
+                                <ul class="list-unstyled form-control-static" ng-hide="vm.metaEditMode">
+                                    <li ng-repeat="graphic in vm.article.graphics">
+                                        <span person-widget="graphic">{{ graphic.name }}</span>
+                                    </li>
+                                </ul>
+                                <id-select multiple
+                                           ng-show="vm.metaEditMode"
+                                           items="vm.persons"
+                                           target="vm.metaEditing.graphics"
+                                           show="name">
+                                </id-select>
+                            </div>
+                        </div>
+                        <hr class="divider">
+                        <div class="form-group metaline">
+                            <label class="col-sm-4 control-label">
+                                Utgave
+                            </label>
+
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
+                                <p class="form-control-static">
+                                    {{ vm.article.publication.name }}
+                                </p>
+                            </div>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <select class="form-control input-sm" ng-model="vm.metaEditing.publication"
+                                        ng-options="s.name for s in vm.publications track by s.id"></select>
+
+                            </div>
+                        </div>
+                        <div class="form-group metaline">
+                            <label class="col-sm-4 control-label">
+                                Redaksjon
+                            </label>
+
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
+                                <p class="form-control-static">
+                                    {{ vm.article.section.name }}
+                                </p>
+                            </div>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <select class="form-control input-sm" ng-model="vm.metaEditing.section"
+                                        ng-options="s.name for s in vm.sections  | filter:{deleted: false} track by s.id"></select>
+                            </div>
+                        </div>
+                        <div class="form-group metaline">
+                            <label class="col-sm-4 control-label">
+                                Artikkeltype
+                            </label>
+
+                            <div class="col-sm-8" ng-hide="vm.metaEditMode">
+                                <p class="form-control-static">
+                                    {{ vm.article.type.name }}
+                                </p>
+                            </div>
+                            <div class="col-sm-8" ng-show="vm.metaEditMode">
+                                <select class="form-control input-sm" ng-model="vm.metaEditing.type"
+                                        ng-options="s.name for s in vm.types | orderBy:'type_order' | filter:{deleted: false} track by s.id "></select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h1 class="panel-title">
+                        <span class="fas fa-list"></span>
+                        Artikkel-notater
+                        <div class="pull-right">
+                            <button class="btn btn-default btn-xs"
+                                    ng-disabled="vm.article.note === vm.uneditedNote"
+                                    ng-click="vm.saveNote()"
+                                    button-loader="vm.savingNote">
+                                <i class="fas fa-save"></i>
+                                Lagre
+                            </button>
+                        </div>
+                    </h1>
+                </div>
+                <div class="panel-body">
+                    <div>
+                        <textarea
+                                id="noteArea"
+                                class="form-control note"
+                                ng-model="vm.article.note">
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

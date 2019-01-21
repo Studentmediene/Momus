@@ -1,6 +1,7 @@
 package no.dusken.momus.controller;
 
 import no.dusken.momus.dto.PageContent;
+import no.dusken.momus.dto.PageId;
 import no.dusken.momus.dto.PageOrder;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.AdvertService;
@@ -46,31 +47,31 @@ public class PageControllerTest extends AbstractControllerTest {
 
     @Test
     public void getByPublicationId() throws Exception {
-        performGetExpectOk("/pages?publicationId=" + publication.getId())
+        performGetExpectOk("/api/pages?publicationId=" + publication.getId())
                 .andExpect(jsonPath("$.length()", is(10)));
     }
 
     @Test
     public void getPageOrderByPublicationId() throws Exception {
-        performGetExpectOk("/pages/page-order?publicationId=" + publication.getId())
+        performGetExpectOk("/api/pages/page-order?publicationId=" + publication.getId())
                 .andExpect(jsonPath("$.order.length()", is(10)));
     }
 
     @Test
     public void setPageOrder() throws Exception {
-        List<Long> pageOrder = pageRepository.getPageOrderByPublicationId(publication.getId());
+        List<PageId> pageOrder = pageRepository.getPageOrderByPublicationId(publication.getId());
         Collections.shuffle(pageOrder);
 
-        performPutExpectOk("/pages/page-order", TestUtil.toJsonString(new PageOrder(publication.getId(), pageOrder)));
+        performPutExpectOk("/api/pages/page-order", TestUtil.toJsonString(new PageOrder(publication.getId(), pageOrder)));
 
-        List<Long> updatedPageOrder = pageRepository.getPageOrderByPublicationId(publication.getId());
+        List<PageId> updatedPageOrder = pageRepository.getPageOrderByPublicationId(publication.getId());
 
         assert updatedPageOrder.equals(pageOrder);
     }
 
     @Test
     public void createEmptyPagesInPublication() throws Exception {
-        performPostExpectOk("/pages/empty?publicationId=" + publication.getId() + "&afterPage=0&numPages=2", "")
+        performPostExpectOk("/api/pages/empty?publicationId=" + publication.getId() + "&afterPage=0&numPages=2", "")
                 .andExpect(jsonPath("$.length()", is(2)));
 
         assert pageRepository.findByPublicationId(publication.getId()).size() == 12;
@@ -83,7 +84,7 @@ public class PageControllerTest extends AbstractControllerTest {
         Page page = pageRepository.findByPublicationId(publication.getId()).get(0);
 
         performPutExpectOk(
-                "/pages/" + page.getId() + "/content",
+                "/api/pages/" + page.getId() + "/content",
                 TestUtil.toJsonString(new PageContent(
                         publication.getId(),
                         page.getId(),
@@ -103,7 +104,7 @@ public class PageControllerTest extends AbstractControllerTest {
         page.setLayoutStatus(s);
         page.setDone(true);
 
-        performPatchExpectOk("/pages/" + page.getId() + "/metadata", TestUtil.toJsonString(page));
+        performPatchExpectOk("/api/pages/" + page.getId() + "/metadata", TestUtil.toJsonString(page));
 
         page = pageRepository.findOne(page.getId());
 
@@ -115,7 +116,7 @@ public class PageControllerTest extends AbstractControllerTest {
     public void deletePage() throws Exception {
         Page page = pageRepository.findByPublicationId(publication.getId()).get(0);
 
-        performDeleteExpectOk("/pages/" + page.getId());
+        performDeleteExpectOk("/api/pages/" + page.getId());
 
         List<Page> pages = pageRepository.findByPublicationId(publication.getId());
 

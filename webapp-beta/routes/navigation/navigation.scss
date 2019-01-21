@@ -1,0 +1,88 @@
+@import '../../style/variables.scss';
+
+.uk-active {
+    background: $global-background;
+}
+
+.uk-navbar-nav > li {
+    &:hover, &:focus-within {
+        > a > span {
+            border-bottom: solid 1px white;
+        }
+    }
+    > a > span  {
+        border-bottom: solid 1px transparent;
+        //border-bottom: solid 1px transparent;
+        transition: border-bottom-color .2s ease-in-out;
+    }
+}
+
+.navbar-dev {
+    background: pink !important;
+}
+
+.momus-logo {
+    position: relative;
+    text-decoration: none !important;
+    flex-direction: column;
+    z-index: 1;
+
+    .uk-logo {
+        margin-bottom: -10px;
+        transition: color 0.1s linear;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .beta-label {
+        font-weight: bold;
+        color: $global-edit-background;
+    }
+
+    &:hover {
+        .uk-logo {
+            color: white;
+        }
+        &:after {
+            opacity: 0.5;
+        }
+    }
+
+    .logo-bg {
+        content: "";
+        background: url('/favicon.ico');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        opacity: 0.2;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: -1;
+        transition: opacity 0.1s linear;
+    }
+}
+
+.menu-dropdown {
+    position: fixed !important;
+    left: 0px !important;
+    right: 0px !important;
+    padding: 10px 0 !important;
+    background: $global-primary-background !important;
+
+    li {
+        padding: 0px 10px;
+
+        > a {
+            color: white !important;
+        }
+
+        &.uk-active {
+            > a {
+                color: $global-primary-background !important;
+            }
+        }
+    }
+}

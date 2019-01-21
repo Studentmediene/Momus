@@ -1,0 +1,264 @@
+<!-- Used when printing Ctrl+P-->
+<div class="visible-print">
+    <table class="table table-condensed">
+        <tr>
+            <th>Navn:</th>
+            <td>{{ vm.article.name }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Journalister:</th>
+            <td>
+            <span ng-repeat="journalist in vm.article.journalists">
+                {{ journalist.name }}<span ng-if="!$last">,</span>
+            </span>
+            </td>
+            <th>Kommentar:</th>
+            <td>{{vm.article.comment}}</td>
+        </tr>
+        <tr>
+            <th>Fotografer:</th>
+            <td>
+            <span ng-repeat="photographer in vm.article.photographers">
+                {{ photographer.name }}<span ng-if="!$last">,</span>
+            </span>
+            </td>
+            <th>Utgave:</th>
+            <td>{{vm.article.publication.name }}</td>
+        </tr>
+    </table>
+    <div style="column-count: 2; -moz-column-count:2" ng-bind-html="vm.articleContent | trustHtml"></div>
+</div>
+
+<div class="hidden-print">
+    <h1>{{vm.article.name}}</h1>
+
+    <div uk-alert class="uk-alert-warning" ng-show="vm.article.archived">
+        <p>
+            <i class="fas fa-exclamation-circle fa-2"></i>
+            <strong> Artikkelen er arkivert.</strong> Den vil ikke vises i søk.
+        </p>
+    </div>
+    
+    <!-- Status bar and buttons -->
+    <div>
+        <div uk-margin class="uk-margin-top uk-margin-bottom">
+            <a 
+                href="https://docs.google.com/document/d/{{vm.article.google_drive_id}}/edit"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="uk-button button-edit"
+            >
+                <span class="fas fa-edit"></span>
+                Rediger i Google Docs
+            </a>
+        
+            <a ui-sref="article.single.revisions({id:vm.article.id})" class="uk-button uk-button-primary">
+                <i class="fas fa-history"></i>
+                Historikk
+            </a>
+        
+            <a
+                href="/api/article/{{vm.article.id}}/indesignfile"
+                class="uk-button uk-button-primary"
+                target="_blank"
+            >
+                <i class="fas fa-file-alt"></i>
+                InDesign-fil
+            </a>
+        
+            <button ng-hide="vm.article.archived" ng-click="vm.archiveArticle()" class="uk-button uk-button-danger">
+                <i class="fas fa-trash"></i>
+                Arkivér
+            </button>
+            <button
+                ng-show="vm.article.archived" 
+                ng-click="vm.restoreArticle()" 
+                class="uk-button uk-button-primary" 
+                uib-tooltip="Gjenopprett artikkelen så den vil vises i søk"
+            >
+                <i class="fas fa-plus"></i>
+                Gjenopprett
+            </button>
+        
+            <button ng-click="vm.showHelp()" class="uk-button button-new">
+                <i class="fas fa-question"></i>
+                Hjelp
+            </button>
+        </div>
+    </div>
+    
+    <div uk-grid class="uk-grid-small">
+        <div class="uk-width-3-5@m">
+            <panel icon="'fas fa-align-left'" header="'Tekst'" type="'primary'">
+                <div class="articleContent" ng-bind-html="vm.articleContent | trustHtml"></div>
+                <div class="text-right">
+                    <small class="text-muted">
+                        Ca. {{vm.article.content_length}} tegn
+                    </small>
+                </div>
+            </panel>
+        </div>
+    
+        <div class="uk-width-2-5@m">
+            <panel type="'primary'" no-header class="comment-panel">
+                <editable-field
+                    type="textarea"
+                    label="'Kommentar'"
+                    value="vm.article.comment"
+                    on-save="vm.onCommentSave(value)">
+                </editable-field>
+            </panel>
+            <div class="status-detail">
+                <status-widget 
+                    label="'Status'"
+                    selected="vm.article.status"
+                    statuses="vm.statuses"
+                    on-change="vm.onStatusChange(status)"
+                >
+                </status-widget>
+            </div>
+            <div class="status-detail uk-margin-small-top">
+                <status-widget 
+                    label="'Korrektur'"
+                    selected="vm.article.review"
+                    statuses="vm.reviews"
+                    on-change="vm.onReviewStatusChange(status)"
+                >
+                </status-widget>
+            </div>
+            <div class="status-detail uk-margin-small-top uk-margin-bottom">
+                <boolean-widget 
+                    label="'Sitatsjekk'"
+                    value="vm.article.quote_check_status"
+                    on-change="vm.onQuoteCheckStatusChange(value)"
+                >
+                </boolean-widget>
+            </div>
+            <panel icon="'fas fa-images'" type="'primary'" header="'Bildetekster'" collapsible class="imagetext-panel">
+                <editable-field
+                    type="textarea"
+                    label="'Bildetekster'"
+                    value="vm.article.image_text"
+                    on-save="vm.onImageTextSave(value)">
+                </editable-field>
+            </panel>
+            <panel icon="'fas fa-users'" header="'Personer'" type="'edit'">
+                <editable-field
+                    type="multiselect"
+                    label="'Journalister'"
+                    value="vm.article.journalists"
+                    value-label="name"
+                    pool="vm.persons"
+                    on-save="vm.onJournalistsSave(value)">
+                    <custom-value-markup>
+                        <ul class="uk-list list-no-margin">
+                            <li ng-repeat="journalist in $parent.vm.value" class="person-value">
+                                <person-avatar user="journalist" size="30"></person-avatar>
+                                <person-widget person="journalist">{{ journalist.name }}</person-widget>
+                            </li>
+                        </ul>
+                    </custom-value-markup>
+                </editable-field>
+
+                <editable-field
+                    type="text"
+                    label="'Eksterne'"
+                    value="vm.article.external_author"
+                    on-save="vm.onExternalAuthorSave(value)"
+                >
+                </editable-field>
+
+                <editable-field 
+                    type="multiselect"
+                    label="vm.article.use_illustration ? 'Illustratører' : 'Fotografer'"
+                    value="vm.article.photographers"
+                    value-label="name"
+                    pool="vm.persons"
+                    on-save="vm.onPhotographersSave(value)">
+                    <custom-value-markup>
+                        <ul class="uk-list list-no-margin">
+                            <li ng-repeat="photographer in $parent.vm.value" class="person-value">
+                                <person-avatar user="photographer" size="30"></person-avatar>
+                                <person-widget person="photographer">{{ photographer.name }}</person-widget>
+                            </li>
+                        </ul>
+                    </custom-value-markup>
+                </editable-field>
+
+                <editable-field
+                    type="text"
+                    label="'Eksterne'"
+                    value="vm.article.external_photographer"
+                    on-save="vm.onExternalPhotographerSave(value)"
+                >
+                </editable-field>
+
+                <editable-field 
+                    type="multiselect"
+                    label="'Grafikere'"
+                    value="vm.article.graphics"
+                    value-label="name"
+                    pool="vm.persons"
+                    on-save="vm.onGraphicsSave(value)">
+                    <custom-value-markup>
+                        <ul class="uk-list list-no-margin">
+                            <li ng-repeat="graphics in $parent.vm.value" class="person-value">
+                                <person-avatar user="graphics" size="30"></person-avatar>
+                                <person-widget person="graphics">{{ graphics.name }}</person-widget>
+                            </li>
+                        </ul>
+                    </custom-value-markup>
+                </editable-field>
+            </panel>
+            <panel icon="'fas fa-tag'" header="'Detaljer'" type="'edit'">
+                <editable-field
+                    type="text"
+                    label="'Navn'"
+                    value="vm.article.name"
+                    on-save="">
+                </editable-field>
+                <div>
+                    <label class="uk-text-small form-label-text">Foto/Illustrasjon</label>
+
+                    <div ng-hide="vm.metaEditMode">
+                        <p ng-if="vm.article.use_illustration"><i class="fa fa-paint-brush"></i> Illustrasjon</p>
+                        <p ng-if="!vm.article.use_illustration"><i class="fa fa-camera"></i> Foto</p>
+                    </div>
+                    <div class="uk-form-controls" ng-show="vm.metaEditMode">
+                        <select class="uk-select uk-form-small" ng-model="vm.metaEditing.use_illustration"
+                                ng-options="o.value as o.name for o in vm.photoTypes"></select>
+                    </div>
+                </div>
+
+                <editable-field
+                    type="select"
+                    label="'Redaksjon'"
+                    value="vm.article.section"
+                    value-label="name"
+                    pool="vm.sections"
+                    on-save="">
+                </editable-field>
+
+                <editable-field
+                    type="select"
+                    label="'Type'"
+                    value="vm.article.type"
+                    value-label="name"
+                    pool="vm.types"
+                    on-save="">
+                </editable-field>
+
+                <editable-field
+                    type="select"
+                    label="'Utgave'"
+                    value="vm.article.publication"
+                    value-label="name"
+                    pool="vm.publications"
+                    on-save="">
+                </editable-field>
+            </panel>
+        </div>
+    </div>
+</div>

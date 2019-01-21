@@ -4,6 +4,7 @@ import no.dusken.momus.dto.PageOrder;
 import no.dusken.momus.model.LayoutStatus;
 import no.dusken.momus.model.Page;
 import no.dusken.momus.dto.PageContent;
+import no.dusken.momus.dto.PageId;
 import no.dusken.momus.model.Publication;
 import no.dusken.momus.model.websocket.Action;
 import no.dusken.momus.service.repository.*;
@@ -40,7 +41,7 @@ public class PageService {
     }
 
     public List<Page> createEmptyPagesInPublication(Long publicationId, Integer afterPage, Integer numPages) {
-        List<Long> pageOrder = pageRepository.getPageOrderByPublicationId(publicationId);
+        List<PageId> pageOrder = pageRepository.getPageOrderByPublicationId(publicationId);
         List<Page> createdPages = new ArrayList<>();
         Publication publication = new Publication();
         publication.setId(publicationId);
@@ -56,7 +57,7 @@ public class PageService {
             createdPages.add(newPage);
             messagingService.broadcastEntityAction(newPage, Action.CREATE);
 
-            pageOrder.add(afterPage + i, newPage.getId());
+            pageOrder.add(afterPage + i, new PageId(newPage.getId()));
         }
         pageRepository.flush();
         setPageOrder(pageOrder, publicationId);
@@ -79,10 +80,10 @@ public class PageService {
         setPageOrder(pageOrder.getOrder(), pageOrder.getPublicationId());
     }
 
-    public void setPageOrder(List<Long> pageOrder, Long publicationId) {
+    public void setPageOrder(List<PageId> pageOrder, Long publicationId) {
         Integer pageNr = 1;
-        for (Long pageId : pageOrder) {
-            pageRepository.updatePageNr(pageNr++, pageId);
+        for (PageId page : pageOrder) {
+            pageRepository.updatePageNr(pageNr++, page.getId());
         }
         messagingService.broadcastEntityAction(new PageOrder(publicationId, pageOrder), Action.UPDATE);
     }
@@ -100,8 +101,8 @@ public class PageService {
         Page page = pageRepository.findOne(id);
         Long publicationId = page.getPublication().getId();
 
-        List<Long> order = pageRepository.getPageOrderByPublicationId(publicationId);
-        order.remove(id);
+        List<PageId> order = pageRepository.getPageOrderByPublicationId(publicationId);
+        order.remove(new PageId(id));
         setPageOrder(order, publicationId);
 
         messagingService.broadcastEntityAction(page, Action.DELETE);
