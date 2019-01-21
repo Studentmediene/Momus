@@ -106,13 +106,18 @@
     </div>
 </div>
 <div ng-show="vm.showButtonRow" class="extra-button-line">
-    <a href="/api/article/{{vm.article.id}}/indesignfile" class="uk-button uk-button-primary button-xs">
+    <a
+        href="/api/article/{{vm.article.id}}/indesignfile"
+        class="uk-button uk-button-primary button-xs"
+        target="_blank"
+    >
         <i class="fas fa-file"></i>
         InDesign fil
     </a>
     <a
         href="https://docs.google.com/document/d/{{vm.article.google_drive_id}}/edit"
         target="_blank"
+        rel="noopener noreferrer"
         class="uk-button button-edit button-xs"
     >
         <i class="fas fa-edit"></i>

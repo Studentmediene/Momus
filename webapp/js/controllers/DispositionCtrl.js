@@ -198,7 +198,7 @@ angular.module('momusApp.controllers')
         function createArticle(page){
             $uibModal
                 .open({
-                    templateUrl: 'partials/article/createArticleModal.html',
+                    templateUrl: '/assets/partials/article/createArticleModal.html',
                     controller: 'CreateArticleModalCtrl',
                     resolve: { pubId: () => vm.publication.id }
                 }).result
@@ -218,7 +218,7 @@ angular.module('momusApp.controllers')
         function createAdvert(page) {
             $uibModal
                 .open({
-                    templateUrl: 'partials/advert/createAdvertModal.html',
+                    templateUrl: '/assets/partials/advert/createAdvertModal.html',
                     controller: 'CreateAdvertModalCtrl'
                 }).result
                 .then(id => {

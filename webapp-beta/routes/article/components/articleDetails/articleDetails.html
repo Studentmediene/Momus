@@ -47,6 +47,7 @@
             <a 
                 href="https://docs.google.com/document/d/{{vm.article.google_drive_id}}/edit"
                 target="_blank"
+                rel="noopener noreferrer"
                 class="uk-button button-edit"
             >
                 <span class="fas fa-edit"></span>
@@ -58,7 +59,11 @@
                 Historikk
             </a>
         
-            <a href="/api/article/{{vm.article.id}}/indesignfile" class="uk-button uk-button-primary">
+            <a
+                href="/api/article/{{vm.article.id}}/indesignfile"
+                class="uk-button uk-button-primary"
+                target="_blank"
+            >
                 <i class="fas fa-file-alt"></i>
                 InDesign-fil
             </a>
