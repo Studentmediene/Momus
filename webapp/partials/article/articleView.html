@@ -77,7 +77,12 @@
     <div class="row hidden-print">
         <div class="col-xs-12">
             <div class="btn-row">
-                <a href="https://docs.google.com/document/d/{{vm.article.google_drive_id}}/edit" target="_blank" class="btn btn-success">
+                <a
+                    href="https://docs.google.com/document/d/{{vm.article.google_drive_id}}/edit"
+                    target="_blank"
+                    class="btn btn-success"
+                    rel="noopener noreferrer"
+                >
                     <span class="fas fa-pencil-alt"></span>
                     Rediger i Google Docs
                 </a>
@@ -87,7 +92,11 @@
                     Historikk
                 </a>
 
-                <a href="/api/article/{{vm.article.id}}/indesignfile" class="btn btn-primary">
+                <a
+                    href="/api/article/{{vm.article.id}}/indesignfile"
+                    class="btn btn-primary"
+                    target="_blank"
+                >
                     <i class="fas fa-file-alt"></i>
                     InDesign fil
                 </a>

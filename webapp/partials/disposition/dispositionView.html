@@ -43,7 +43,6 @@
                 class="btn btn-primary"
                 href="/api/publications/{{vm.publication.id}}/colophon"
                 target="_blank"
-                rel="noopener noreferrer"
             >
                 <i class="fas fa-file-alt"></i> Generer kolofon
             </a>
@@ -248,10 +247,19 @@
                         </div>
                         <div class="collapse extra-button-line" id="{{page.page_nr}}-{{article.id}}-button-line">
                             <div style="margin: 5px">
-                                <a href="/api/article/{{article.id}}/indesignfile" class="btn btn-primary btn-xs">
+                                <a
+                                    href="/api/article/{{article.id}}/indesignfile"
+                                    class="btn btn-primary btn-xs"
+                                    target="_blank"
+                                >
                                     <i class="fas fa-file-alt"></i>InDesign fil
                                 </a>
-                                <a href="https://docs.google.com/document/d/{{article.google_drive_id}}/edit" target="_blank" class="btn btn-success btn-xs">
+                                <a
+                                    href="https://docs.google.com/document/d/{{article.google_drive_id}}/edit"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="btn btn-success btn-xs"
+                                >
                                     <span class="fas fa-pencil-alt"></span>
                                     Rediger i Google Docs
                                 </a>
