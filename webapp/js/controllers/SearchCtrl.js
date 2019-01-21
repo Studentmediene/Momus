@@ -73,7 +73,7 @@ angular.module('momusApp.controllers')
 
         function createArticle() {
             $uibModal.open({
-                templateUrl: 'partials/article/createArticleModal.html',
+                templateUrl: '/assets/partials/article/createArticleModal.html',
                 controller: 'CreateArticleModalCtrl'
             }).result.then(id => $state.go('article', {id: id}));
         }
