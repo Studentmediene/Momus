@@ -39,7 +39,12 @@
             </div>
         </div>
         <div class="button-group">
-            <a class="btn btn-primary" href="/api/publications/{{vm.publication.id}}/colophon">
+            <a
+                class="btn btn-primary"
+                href="/api/publications/{{vm.publication.id}}/colophon"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
                 <i class="fas fa-file-alt"></i> Generer kolofon
             </a>
             <button class="btn btn-primary" ng-click="vm.hideAllButtonRows()">
