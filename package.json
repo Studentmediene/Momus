@@ -1,6 +1,6 @@
 {
   "name": "momus",
-  "version": "1.10.7",
+  "version": "1.11.0",
   "scripts": {
     "clean": "rm -rf webapp/dist/* && rm -rf webapp-beta/dist/*",
     "build": "webpack-cli -p --config webapp/webpack.config.js",
