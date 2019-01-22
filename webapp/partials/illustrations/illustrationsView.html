@@ -28,14 +28,14 @@
                     <tbody>
                     <tr ng-repeat="request in vm.requests | filter:{external:false, status:'PENDING'}">
                         <td>
-                            <b><a href="#/artikler/{{request.article.id}}">{{request.article.name}}</a></b>
+                            <b><a ui-sref="article({id: request.article.id})">{{request.article.name}}</a></b>
                             <div>{{request.number_of_pages}} side{{request.number_of_illustrations > 1 ? 'r' : ''}}</div>
                             <div>{{request.article.type.name}}</div>
                             <div class="status-field" ng-style="{backgroundColor: request.article.section.color}">{{request.article.section.name}}</div>
                             <div class="status-field" ng-style="{backgroundColor: request.article.status.color}">{{request.article.status.name}}</div>
                         </td>
                         <td>
-                            <span>{{ request.created | date: 'dd/MM/yyyy hh:mm' }}</span>
+                            <span>{{ request.created | date: 'dd/MM/yyyy HH:mm' }}</span>
                             <span person-widget="request.requester">{{request.requester.name}}</span> spør om
                             <div><b>
                                 {{request.number_of_illustrations}} illustrasjon{{request.number_of_illustrations > 1 ? 'er' : ''}}
@@ -87,14 +87,14 @@
                     <tbody>
                     <tr ng-repeat="request in vm.requests | filter:{external:false, status:'DENIED'}">
                         <td>
-                            <b><a href="#/artikler/{{request.article.id}}">{{request.article.name}}</a></b>
+                            <b><a ui-sref="article({id: request.article.id})">{{request.article.name}}</a></b>
                             <div>{{request.number_of_pages}} side{{request.number_of_illustrations > 1 ? 'r' : ''}}</div>
                             <div>{{request.article.type.name}}</div>
                             <div class="status-field" ng-style="{backgroundColor: request.article.section.color}">{{request.article.section.name}}</div>
                             <div class="status-field" ng-style="{backgroundColor: request.article.status.color}">{{request.article.status.name}}</div>
                         </td>
                         <td>
-                            <span>{{ request.created | date: 'dd/MM/yyyy hh:mm' }}</span>
+                            <span>{{ request.created | date: 'dd/MM/yyyy HH:mm' }}</span>
                             <span person-widget="request.requester">{{request.requester.name}}</span> spør om
                             <div><b>
                                 {{request.number_of_illustrations}} illustrasjon{{request.number_of_illustrations > 1 ? 'er' : ''}}
@@ -142,7 +142,7 @@
                     <tbody>
                     <tr ng-repeat="request in vm.requests | filter:{external:false, status:'ACCEPTED'}">
                         <td>
-                            <b><a href="#/artikler/{{request.article.id}}">{{request.article.name}}</a></b>
+                            <b><a ui-sref="article({id: request.article.id})">{{request.article.name}}</a></b>
                             <div>{{request.number_of_pages}} side{{request.number_of_illustrations > 1 ? 'r' : ''}}</div>
                             <div>{{request.article.type.name}}</div>
                             <div class="status-field" ng-style="{backgroundColor: request.article.section.color}">{{request.article.section.name}}</div>
@@ -154,7 +154,7 @@
                             </span>
                         </td>
                         <td>
-                            <span>{{ request.created | date: 'dd/MM/yyyy hh:mm' }}</span>
+                            <span>{{ request.created | date: 'dd/MM/yyyy HH:mm' }}</span>
                             <span person-widget="request.requester">{{request.requester.name}}</span> spør om
                             <div><b>
                                 {{request.number_of_illustrations}} illustrasjon{{request.number_of_illustrations > 1 ? 'er' : ''}}
@@ -199,7 +199,7 @@
                     <tbody>
                     <tr ng-repeat="request in vm.requests | filter:{external:false, status:'COMPLETED'}">
                         <td>
-                            <b><a href="#/artikler/{{request.article.id}}">{{request.article.name}}</a></b>
+                            <b><a ui-sref="article({id: request.article.id})">{{request.article.name}}</a></b>
                             <div>{{request.number_of_pages}} side{{request.number_of_illustrations > 1 ? 'r' : ''}}</div>
                             <div>{{request.article.type.name}}</div>
                             <div class="status-field" ng-style="{backgroundColor: request.article.section.color}">{{request.article.section.name}}</div>

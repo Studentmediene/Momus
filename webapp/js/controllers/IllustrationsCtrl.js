@@ -30,7 +30,7 @@ angular.module('momusApp.controllers')
 
         function giveToIllustrators(request) {
             $uibModal.open({
-                templateUrl: 'partials/article/editIllustratorsModal.html',
+                templateUrl: '/assets/partials/article/editIllustratorsModal.html',
                 controller: 'EditIllustratorsModalCtrl',
                 resolve: {
                     article: request.article,
