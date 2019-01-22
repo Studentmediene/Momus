@@ -20,8 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.authorization.Role;
 import no.dusken.momus.ldap.PersonMapper.Status;
 import no.dusken.momus.model.Person;
+import no.dusken.momus.service.repository.AvatarRepository;
 import no.dusken.momus.service.repository.PersonRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.ldap.control.PagedResultsDirContextProcessor;
@@ -43,14 +43,20 @@ public class LdapSyncer {
 
     private final String USER_FILTER = "(&(objectClass=user)(!(objectClass=inetOrgPerson)))";
 
-    @Autowired
-    LdapTemplate ldapTemplate;
+    private final LdapTemplate ldapTemplate;
 
-    @Autowired
-    PersonRepository personRepository;
+    private final PersonRepository personRepository;
 
-    @Autowired
-    Environment env;
+    private final AvatarRepository avatarRepository;
+
+    private final Environment env;
+
+    public LdapSyncer (LdapTemplate ldapTemplate, PersonRepository personRepository, AvatarRepository avatarRepository, Environment env) {
+        this.ldapTemplate = ldapTemplate;
+        this.personRepository = personRepository;
+        this.avatarRepository = avatarRepository;
+        this.env = env;
+    }
 
     @Value("${ldap.syncEnabled}")
     private boolean enabled;
@@ -111,7 +117,7 @@ public class LdapSyncer {
         SearchControls ctrl = new SearchControls();
         ctrl.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-        PersonMapper personMapper = new PersonMapper(personRepository, active, groupToRole);
+        PersonMapper personMapper = new PersonMapper(personRepository, avatarRepository, active, groupToRole);
 
         List<Person> persons = new ArrayList<>();
 

@@ -1,7 +1,9 @@
 package no.dusken.momus.ldap;
 
 import no.dusken.momus.authorization.Role;
+import no.dusken.momus.model.Avatar;
 import no.dusken.momus.model.Person;
+import no.dusken.momus.service.repository.AvatarRepository;
 import no.dusken.momus.service.repository.PersonRepository;
 import org.springframework.ldap.core.AttributesMapper;
 
@@ -14,13 +16,15 @@ import java.util.*;
 
 public class PersonMapper implements AttributesMapper<Person> {
     private PersonRepository personRepository;
+    private AvatarRepository avatarRepository;
     private boolean active;
     private long lastId;
 
     private Map<String, Role> groupToRole;
 
-    public PersonMapper(PersonRepository personRepository, boolean active, Map<String, Role> groupToRole) {
+    public PersonMapper(PersonRepository personRepository, AvatarRepository avatarRepository, boolean active, Map<String, Role> groupToRole) {
         this.personRepository = personRepository;
+        this.avatarRepository = avatarRepository;
         this.active = active;
         this.lastId = 0L;
         this.groupToRole = groupToRole;
@@ -28,8 +32,24 @@ public class PersonMapper implements AttributesMapper<Person> {
 
     @Override
     public Person mapFromAttributes(Attributes attributes) throws NamingException {
+        // Create person from ldap attributes
         Person person = getPersonFromAttributes(attributes);
-        return personRepository.saveAndFlush(person);
+        // Persist it
+        person = personRepository.saveAndFlush(person);
+
+        // Get the avatar (photo) if it exists
+        Optional<Avatar> avatar = getAvatarFromAttributes(person, attributes);
+        avatar.ifPresent((a) -> avatarRepository.saveAndFlush(a));
+
+        return person;
+    }
+
+    private Optional<Avatar> getAvatarFromAttributes(Person person, Attributes attributes) throws NamingException {
+        Blob blob = LDAPAttributes.getAvatar(attributes);
+        if (blob != null) {
+            return Optional.of(Avatar.builder().id(person.getId()).avatar(blob).build());
+        }
+        return Optional.empty();
     }
 
     private Person getPersonFromAttributes(Attributes attributes) throws NamingException {
@@ -38,7 +58,6 @@ public class PersonMapper implements AttributesMapper<Person> {
         String email = LDAPAttributes.getEmail(attributes);
         String phoneNumber = LDAPAttributes.getPhoneNumber(attributes);
         UUID guid = LDAPAttributes.getGuid(attributes);
-        Blob photo = LDAPAttributes.getPhoto(attributes);
         Collection<String> groups = LDAPAttributes.getGroups(attributes);
 
         Person person = getPersonIfExists(guid, username);
@@ -60,10 +79,6 @@ public class PersonMapper implements AttributesMapper<Person> {
             person.setEmail(email);
             person.setPhoneNumber(phoneNumber);
             person.setActive(active);
-        }
-
-        if(photo != null) {
-            person.setPhoto(photo);
         }
 
         Collection<Role> roles = new HashSet<>();

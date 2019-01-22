@@ -812,4 +812,27 @@
         <addForeignKeyConstraint baseColumnNames="article_id" baseTableName="article_graphic" constraintName="FK_article_graphic_article" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="article"/>
         <addForeignKeyConstraint baseColumnNames="graphics_id" baseTableName="article_graphic" constraintName="FK_article_graphic_person" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="person"/>
     </changeSet>
+
+    <changeSet id="46_avatar_table" author="Eivind">
+        <dropColumn tableName="person" columnName="photo" />
+
+        <createTable tableName="avatar">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="avatar" type="BLOB" />
+        </createTable>
+
+        <addForeignKeyConstraint
+            baseColumnNames="id"
+            baseTableName="avatar"
+            constraintName="FK_avatar_person"
+            deferrable="false"
+            initiallyDeferred="false"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"
+            referencedColumnNames="id"
+            referencedTableName="person"
+        />
+    </changeSet>
 </databaseChangeLog>
