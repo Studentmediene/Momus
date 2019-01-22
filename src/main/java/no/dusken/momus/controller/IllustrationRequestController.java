@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/illustrationrequests")
+@RequestMapping("/api/illustrationrequests")
 public class IllustrationRequestController {
 
     @Autowired

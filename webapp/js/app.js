@@ -240,7 +240,7 @@ angular.module('momusApp', [
                 parent: 'root',
                 url: '/illustrasjoner',
                 title: 'Illustrasjoner',
-                templateUrl: 'partials/illustrations/illustrationsView.html',
+                templateUrl: '/assets/partials/illustrations/illustrationsView.html',
                 controller: 'IllustrationsCtrl',
                 controllerAs: 'vm',
                 access: ["ROLE_ADMIN", "ROLE_ILLUSTRATOR"]
