@@ -78,7 +78,7 @@ public class PersonController {
     public void getPersonPhoto(@PathVariable("id") Long id, HttpServletResponse response) throws IOException, SQLException {
         Avatar avatar = avatarRepository.findOne(id);
 
-        if(avatar.getAvatar() == null) {
+        if(avatar == null) {
             throw new RestException("No photo found for user", 404);
         }
 
