@@ -11,6 +11,7 @@ import no.dusken.momus.model.websocket.Action;
 import no.dusken.momus.service.repository.*;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -42,7 +43,7 @@ public class PageService {
     }
 
     public Page getPageById(Long id) {
-        return pageRepository.findById(id).orElseThrow(() -> new RestException("Not found", 404));
+        return pageRepository.findById(id).orElseThrow(() -> new RestException("Not found", HttpServletResponse.SC_NOT_FOUND));
     }
 
     public List<Page> getPagesInPublication(Long publicationId) {
@@ -111,7 +112,7 @@ public class PageService {
     }
 
     public void delete(Long id) {
-        Page page = pageRepository.findById(id).orElseThrow(() -> new RestException("Not found", 404));
+        Page page = pageRepository.findById(id).orElseThrow(() -> new RestException("Not found", HttpServletResponse.SC_NOT_FOUND));
         Long publicationId = page.getPublication().getId();
 
         List<PageId> order = pageRepository.getPageOrderByPublicationId(publicationId);

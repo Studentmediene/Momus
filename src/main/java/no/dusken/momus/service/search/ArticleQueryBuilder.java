@@ -24,6 +24,7 @@ import org.springframework.util.StringUtils;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.service.repository.PersonRepository;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,7 +81,7 @@ public class ArticleQueryBuilder {
                 conditions.add("( :personid" + personCount + " member of a.journalists or " +
                         ":personid" + personCount + " member of a.photographers or " +
                         ":personid" + personCount + " member of a.graphics )");
-                queryParams.put("personid" + personCount++, personRepository.findById(person).orElseThrow(() -> new RestException("Not found", 404)));
+                queryParams.put("personid" + personCount++, personRepository.findById(person).orElseThrow(() -> new RestException("Not found", HttpServletResponse.SC_NOT_FOUND)));
             }
         }
         if (search.getSection() != null) {

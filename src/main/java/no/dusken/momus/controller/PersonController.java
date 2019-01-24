@@ -44,19 +44,16 @@ import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Avatar;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.PersonService;
-import no.dusken.momus.service.repository.AvatarRepository;
 
 @RestController
 @Transactional
 @RequestMapping("/api/person")
 public class PersonController {
     private final PersonService personService;
-    private final AvatarRepository avatarRepository;
     private final UserDetailsService userDetailsService;
 
-    public PersonController(PersonService personService, AvatarRepository avatarRepository, UserDetailsService userDetailsService) {
+    public PersonController(PersonService personService, UserDetailsService userDetailsService) {
         this.personService = personService;
-        this.avatarRepository = avatarRepository;
         this.userDetailsService = userDetailsService;
     }
 

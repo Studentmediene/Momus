@@ -52,12 +52,12 @@ public class PersonService {
     }
 
     public Person getPersonById(Long id) {
-        return personRepository.findById(id).orElseThrow(() -> new RestException("Not found", 404));
+        return personRepository.findById(id).orElseThrow(() -> new RestException("Not found", HttpServletResponse.SC_NOT_FOUND));
     }
 
     public Person updateFavouritesection(Person person, Long sectionId) {
         Section section = sectionRepository.findById(sectionId)
-            .orElseThrow(() -> new RestException("Section not found", 404));
+            .orElseThrow(() -> new RestException("Section not found", HttpServletResponse.SC_NOT_FOUND));
 
         person.setFavouritesection(section);
 

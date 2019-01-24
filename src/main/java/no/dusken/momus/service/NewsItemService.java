@@ -26,6 +26,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
+
+import javax.servlet.http.HttpServletResponse;
+
 @Slf4j
 @Service
 public class NewsItemService {
@@ -41,7 +44,7 @@ public class NewsItemService {
 
     public NewsItem getNewsItemById(Long id) {
         return newsItemRepository.findById(id)
-            .orElseThrow(() -> new RestException("Not found", 404));
+            .orElseThrow(() -> new RestException("Not found", HttpServletResponse.SC_NOT_FOUND));
     }
 
     public NewsItem createNewsItem(NewsItem item) {

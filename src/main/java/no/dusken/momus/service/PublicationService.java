@@ -52,7 +52,7 @@ public class PublicationService {
     }
 
     public Publication getPublicationById(Long id) {
-        return publicationRepository.findById(id).orElseThrow(() -> new RestException("Not found", 404));
+        return publicationRepository.findById(id).orElseThrow(() -> new RestException("Not found", HttpServletResponse.SC_NOT_FOUND));
     }
 
     /**
