@@ -22,7 +22,7 @@
 
     <groupId>no.dusken.momus</groupId>
     <artifactId>momus</artifactId>
-    <version>1.11.0</version>
+    <version>1.11.1</version>
     <packaging>war</packaging>
 
     <!-- Some boilerplate info -->
@@ -370,8 +370,10 @@
                     <!-- include the content of the dist folders built by webpack -->
                     <webResources>
                         <resource>
-                            <directory>webapp/dist</directory>
                             <directory>webapp-beta/dist</directory>
+                        </resource>
+                        <resource>
+                            <directory>webapp/dist</directory>
                         </resource>
                     </webResources>
                 </configuration>

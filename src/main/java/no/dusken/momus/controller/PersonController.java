@@ -19,8 +19,10 @@ package no.dusken.momus.controller;
 import com.google.api.client.util.IOUtils;
 import no.dusken.momus.authentication.UserDetailsService;
 import no.dusken.momus.exceptions.RestException;
+import no.dusken.momus.model.Avatar;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.PersonService;
+import no.dusken.momus.service.repository.AvatarRepository;
 import no.dusken.momus.service.repository.PersonRepository;
 import no.dusken.momus.service.repository.SectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,9 @@ public class PersonController {
 
     @Autowired
     private PersonRepository personRepository;
+
+    @Autowired
+    private AvatarRepository avatarRepository;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -71,16 +76,16 @@ public class PersonController {
 
     @GetMapping("/{id}/photo")
     public void getPersonPhoto(@PathVariable("id") Long id, HttpServletResponse response) throws IOException, SQLException {
-        Person person = personRepository.findOne(id);
+        Avatar avatar = avatarRepository.findOne(id);
 
-        if(person.getPhoto() == null) {
+        if(avatar == null) {
             throw new RestException("No photo found for user", 404);
         }
 
         response.addHeader("Content-Type", "image/jpeg");
 
         ServletOutputStream outStream = response.getOutputStream();
-        IOUtils.copy(person.getPhoto().getBinaryStream(), outStream);
+        IOUtils.copy(avatar.getAvatar().getBinaryStream(), outStream);
         outStream.flush();
         outStream.close();
     }

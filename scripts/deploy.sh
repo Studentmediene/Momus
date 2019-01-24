@@ -139,5 +139,5 @@ git commit -m "Bump versions to $NEW_VER"
 git checkout $MASTER_BRANCH
 git merge $DEVELOP_BRANCH --no-ff --no-edit
 git tag -a $NEW_VER
-git push --all
+git push
 git push --tags
