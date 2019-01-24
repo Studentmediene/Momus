@@ -103,7 +103,7 @@ angular.module('momusApp', [
                                 {}, 
                                 {
                                     section: loggedInPerson.favouritesection.id,
-                                    page_number: 1,
+                                    page_number: 0,
                                     page_size: 9,
                                 }).$promise :
                             [];
