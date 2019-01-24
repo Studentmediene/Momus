@@ -18,8 +18,8 @@ class WebsocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/api/ws");
-        config.setApplicationDestinationPrefixes("/api/ws");
+        config.enableSimpleBroker("/ws");
+        config.setApplicationDestinationPrefixes("/ws");
     }
 
 	@Override
