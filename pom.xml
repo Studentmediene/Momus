@@ -370,8 +370,10 @@
                     <!-- include the content of the dist folders built by webpack -->
                     <webResources>
                         <resource>
-                            <directory>webapp/dist</directory>
                             <directory>webapp-beta/dist</directory>
+                        </resource>
+                        <resource>
+                            <directory>webapp/dist</directory>
                         </resource>
                     </webResources>
                 </configuration>
