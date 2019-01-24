@@ -17,7 +17,7 @@ public class LDAPAttributes {
     private static final String phoneNumberAttribute = "telephoneNumber";
     private static final String firstNameAttribute = "givenName";
     private static final String lastNameAttribute = "sn";
-    private static final String photoAttribute = "thumbnailPhoto";
+    private static final String avatarAttribute = "thumbnailPhoto";
     private static final String groupAttribute = "memberOf";
     private static final String[] nameAttributes = {"displayName", "name", "cn"};
 
@@ -37,13 +37,13 @@ public class LDAPAttributes {
         return getAttribute(attributes, phoneNumberAttribute);
     }
 
-    public static Blob getPhoto(Attributes attributes) throws NamingException {
-        Attribute photo = attributes.get(photoAttribute);
-        if(photo == null) {
+    public static Blob getAvatar(Attributes attributes) throws NamingException {
+        Attribute avatar = attributes.get(avatarAttribute);
+        if(avatar == null) {
             return null;
         }
         try {
-            return new SerialBlob((byte[]) photo.get());
+            return new SerialBlob((byte[]) avatar.get());
         } catch (SQLException e) {
             return null;
         }

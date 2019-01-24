@@ -24,7 +24,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.sql.Blob;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -55,10 +54,6 @@ public class Person implements UserDetails {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Section favouritesection;
-
-    @JsonIgnore
-    @Lob
-    private Blob photo;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
