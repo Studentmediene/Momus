@@ -66,9 +66,10 @@ textarea {
     opacity: 1;
     background-color: rgba(0,0,0,0.6);
     z-index: 1000;
+    overflow-y: scroll;
 
     .modal-content {
-        width: 60%;
+        width: 70%;
         margin: auto;
         margin-top: 20px;
         background-color: white;
