@@ -45,8 +45,15 @@ const routesModule = angular
             },
         });
     })
-    .run(($transitions: TransitionService, $rootScope: RootScope) => {
-        $transitions.onSuccess({}, (transition) => { $rootScope.pageTitle = getNextStateTitle(transition); });
+    .run(($transitions: TransitionService, $rootScope: RootScope, $document: angular.IDocumentService) => {
+        $transitions.onSuccess({}, (transition) => {
+            // Reset scroll position to top if we move to a different state.
+            if (transition.to().name !== transition.from().name) {
+                $document[0].scrollTop = $document[0].documentElement.scrollTop = 0;
+            }
+            // Set page title
+            $rootScope.pageTitle = getNextStateTitle(transition);
+        });
 
         const initialStateMatcher = (state: StateObject) => state.name === '^';
         $transitions.onBefore({from: initialStateMatcher}, () => { $rootScope.initialLoad = true; });
