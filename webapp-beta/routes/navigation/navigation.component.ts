@@ -12,7 +12,7 @@ class NavigationCtrl implements angular.IController {
         this.$transitions = $transitions;
     }
     public $postLink() {
-        const navDropdown = UIKit.dropdown('#navbardropdown', {offset: 0, mode: 'click', delayHide: 0});
+        const navDropdown = UIKit.dropdown('#navbardropdown', {offset: 0, mode: 'click', delayHide: 0, duration: 0});
 
         this.$transitions.onBefore({}, () => {
             navDropdown.hide();
