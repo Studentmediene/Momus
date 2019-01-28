@@ -18,6 +18,8 @@ export default class ArticleDetailsCtrl implements angular.IController {
 
     public publications: Publication[];
 
+    public contentInitiallyCollapsed: boolean = false;
+
     public savingNote: boolean;
     public uneditedNote: string;
 
@@ -48,6 +50,12 @@ export default class ArticleDetailsCtrl implements angular.IController {
                 return true;
             }
         };
+
+        // If the client is so small that all of the panels are in one column, it is best to start with content
+        // initially collapsed, so that not all of the other panels are so far to scroll to
+        if (document.body.clientWidth < 960) {
+            this.contentInitiallyCollapsed = true;
+        }
     }
 
     public $onDestroy() {

@@ -91,7 +91,7 @@
     
     <div uk-grid class="uk-grid-small">
         <div class="uk-width-3-5@m">
-            <panel icon="'fas fa-align-left'" header="'Tekst'" type="'primary'">
+            <panel icon="'fas fa-align-left'" header="'Tekst'" type="'primary'" collapsible="true" initially-collapsed="vm.contentInitiallyCollapsed">
                 <div
                     ng-show="!vm.articleContent.$resolved"
                     class="uk-text-center uk-padding-small"
@@ -142,7 +142,7 @@
                 >
                 </boolean-widget>
             </div>
-            <panel icon="'fas fa-images'" type="'primary'" header="'Bildetekster'" collapsible class="imagetext-panel">
+            <panel icon="'fas fa-images'" type="'primary'" header="'Bildetekster'" collapsible="true" class="imagetext-panel">
                 <editable-field
                     type="textarea"
                     label="'Bildetekster'"
