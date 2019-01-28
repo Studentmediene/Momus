@@ -36,6 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
+import no.dusken.momus.dto.ArticleContent;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleRevision;
@@ -111,6 +112,11 @@ public class ArticleService {
             .orElseThrow(() -> new RestException("User not found", HttpServletResponse.SC_NOT_FOUND));
         
         return articleRepository.findByJournalistsOrPhotographersOrGraphicsContains(user, new PageRequest(0, 10));
+    }
+
+    public ArticleContent getArticleContent(Long id) {
+        return articleRepository.findArticleContentById(id)
+            .orElseThrow(() -> new RestException("Article with id="+id+" not found", HttpServletResponse.SC_NOT_FOUND));
     }
 
     public Article createArticle(Article article) {

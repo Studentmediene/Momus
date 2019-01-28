@@ -2,7 +2,7 @@ import * as angular from 'angular';
 import { TransitionService, StateService } from '@uirouter/core';
 
 import { ArticleResource } from 'resources/article.resource';
-import { Article, ArticleType } from 'models/Article';
+import { Article, ArticleContent, ArticleType } from 'models/Article';
 import { ArticleStatus, ReviewStatus } from 'models/Statuses';
 import { Person } from 'models/Person';
 import { Publication } from 'models/Publication';
@@ -14,7 +14,7 @@ export default class ArticleDetailsCtrl implements angular.IController {
     public photoTypes: object[] = [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}];
 
     public article: Article;
-    public articleContent: string;
+    public articleContent: ArticleContent;
 
     public publications: Publication[];
 
@@ -26,7 +26,6 @@ export default class ArticleDetailsCtrl implements angular.IController {
     constructor(
         $state: StateService,
         $transitions: TransitionService,
-        $templateRequest: angular.ITemplateRequestService,
         articleResource: ArticleResource,
     ) {
         this.articleResource = articleResource;
@@ -40,7 +39,9 @@ export default class ArticleDetailsCtrl implements angular.IController {
     }
 
     public $onInit() {
-        this.uneditedNote = this.article.note;
+        this.article.$promise.then((article) => {
+            this.uneditedNote = article.note;
+        });
 
         window.onbeforeunload = () => {
             if (this.promptCondition()) {

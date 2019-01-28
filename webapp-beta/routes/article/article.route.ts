@@ -97,7 +97,7 @@ const routeModule = angular
                     article: (articleId: number, articleResource: ArticleResource) =>
                         articleResource.get({ id: articleId }),
                     articleContent: (articleId: number, articleResource: ArticleResource) =>
-                        articleResource.content({id: articleId}).then((data) => data.data),
+                        articleResource.content({id: articleId}),
                 },
             })
             .state('article.single.details', {
