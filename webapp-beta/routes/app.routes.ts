@@ -1,6 +1,6 @@
 import * as angular from 'angular';
-import uirouter, { UrlRouterProvider } from '@uirouter/angularjs';
-import { Transition, TransitionService, StateObject } from '@uirouter/core';
+import uirouter, { UrlRouterProvider, StateProvider } from '@uirouter/angularjs';
+import { Transition, TransitionService, StateObject, StateParams } from '@uirouter/core';
 
 import { Environment, RootScope } from '../app.types';
 import navigation from './navigation/navigation.route';
@@ -29,6 +29,21 @@ const routesModule = angular
     .config(($urlRouterProvider: UrlRouterProvider, $locationProvider: angular.ILocationProvider) => {
         $urlRouterProvider.otherwise('/');
         $locationProvider.html5Mode(true);
+    })
+    .config(($stateProvider: StateProvider) => {
+        $stateProvider.state('error', {
+            parent: 'root',
+            component: 'errorMessage',
+            params: {
+                message: 'Det har skjedd en feil',
+            },
+            resolve: {
+                message: ($stateParams: StateParams) => $stateParams.message,
+            },
+            data: {
+                title: 'Feil',
+            },
+        });
     })
     .run(($transitions: TransitionService, $rootScope: RootScope) => {
         $transitions.onSuccess({}, (transition) => { $rootScope.pageTitle = getNextStateTitle(transition); });

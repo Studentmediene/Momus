@@ -24,7 +24,7 @@ angular.module('momusApp.resources')
             },
             {
                 updateMetadata: { method: 'PATCH', params: {resource: 'metadata'} },
-                active: { method: 'GET', params: {id: 'active'}, bypassInterceptor: true },
+                active: { method: 'GET', params: {id: 'active'} },
                 layoutStatuses: { method: 'GET', isArray: true, params: {id: 'layoutstatuses'}, cache: true, skipTransform: true}
             },
             publicationRequestTransform,
