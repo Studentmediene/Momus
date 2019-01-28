@@ -146,7 +146,7 @@ angular.module('momusApp.controllers')
                     vm.pagesLookup[p.id] = p;
                     publication.pages.push(p);
                 });
-                pageOrder.order.splice(newPageAt, 0, ...pages.map(p => p.id));
+                pageOrder.order.splice(newPageAt, 0, ...pages.map(p => ({ id: p.id })));
                 vm.loading = false;
             });
         }
