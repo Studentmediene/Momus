@@ -55,7 +55,7 @@
         <spring.version>5.1.2.RELEASE</spring.version>
         <spring-data.version>2.1.2.RELEASE</spring-data.version>
         <spring-ldap.version>2.3.2.RELEASE</spring-ldap.version>
-        <spring-security.version>5.1.1.RELEASE</spring-security.version>
+        <spring-security.version>5.1.3.RELEASE</spring-security.version>
         <spring-security-saml2.version>1.0.3.RELEASE</spring-security-saml2.version>
         <hibernate.version>5.3.7.Final</hibernate.version>
         <jackson.version>2.9.7</jackson.version>
