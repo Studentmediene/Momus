@@ -16,42 +16,45 @@
 
 package no.dusken.momus.controller;
 
-import no.dusken.momus.model.*;
-import no.dusken.momus.service.AdvertService;
-import no.dusken.momus.service.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import no.dusken.momus.model.Advert;
+import no.dusken.momus.service.AdvertService;
 
 @RestController
 @RequestMapping("/api/advert")
 public class AdvertController {
+    private final AdvertService advertService;
 
-    @Autowired
-    private AdvertService advertService;
-
-    @Autowired
-    private AdvertRepository advertRepository;
-
-    @GetMapping
-    public @ResponseBody List<Advert> getAllAdverts(){
-        return advertRepository.findAll();
+    public AdvertController(AdvertService advertService) {
+        this.advertService = advertService;
     }
 
+    @GetMapping
+    public List<Advert> getAllAdverts(){
+        return advertService.getAllAdverts();
+    }
 
     @GetMapping("/{id}")
-    public @ResponseBody Advert getAdvertByID(@PathVariable Long id) {
+    public Advert getAdvertByID(@PathVariable Long id) {
         return advertService.getAdvertById(id);
     }
 
     @PostMapping
-    public @ResponseBody Advert saveAdvert(@RequestBody Advert advert){
-        return advertService.saveAdvert(advert);
+    public Advert createAdvert(@RequestBody Advert advert){
+        return advertService.createAdvert(advert);
     }
 
     @PatchMapping("{id}/comment")
-    public @ResponseBody Advert updateComment(@PathVariable Long id, @RequestBody String comment){
+    public Advert updateComment(@PathVariable Long id, @RequestBody String comment){
         return advertService.updateComment(id, comment);
     }
 

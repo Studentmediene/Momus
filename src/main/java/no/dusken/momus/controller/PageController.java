@@ -30,28 +30,28 @@ public class PageController {
     }
 
     @GetMapping("/{id}")
-    public @ResponseBody Page getById(@PathVariable Long id) {
-        return pageRepository.findOne(id);
+    public Page getById(@PathVariable Long id) {
+        return pageService.getPageById(id);
     }
 
     @GetMapping
     @JsonView(SerializationViews.Simple.class)
-    public @ResponseBody List<Page> getByPublicationId(@RequestParam Long publicationId) {
-        return pageRepository.findByPublicationId(publicationId);
+    public List<Page> getByPublicationId(@RequestParam Long publicationId) {
+        return pageService.getPagesInPublication(publicationId);
     }
 
     @GetMapping("/page-order")
-    public @ResponseBody PageOrder getPageOrderByPublicationId(@RequestParam Long publicationId) {
-        return new PageOrder(publicationId, pageRepository.getPageOrderByPublicationId(publicationId));
+    public PageOrder getPageOrderByPublicationId(@RequestParam Long publicationId) {
+        return pageService.getPageOrderInPublication(publicationId);
     }
 
     @PutMapping("/page-order")
-    public @ResponseBody void setPageOrder(@RequestBody PageOrder pageOrder) {
+    public void setPageOrder(@RequestBody PageOrder pageOrder) {
         pageService.setPageOrder(pageOrder);
     }
 
     @PostMapping("/empty")
-    public @ResponseBody List<Page> createEmptyPagesInPublication(
+    public List<Page> createEmptyPagesInPublication(
             @RequestParam Long publicationId,
             @RequestParam Integer afterPage,
             @RequestParam(required = false, defaultValue = "1") Integer numPages
@@ -65,7 +65,7 @@ public class PageController {
     }
 
     @PatchMapping("/{id}/metadata")
-    public @ResponseBody Page updateMetadata(@PathVariable Long id, @RequestBody Page page) {
+    public Page updateMetadata(@PathVariable Long id, @RequestBody Page page) {
         return pageService.updateMetadata(id, page);
     }
 
@@ -75,8 +75,7 @@ public class PageController {
     }
 
     @GetMapping("/layoutstatuscounts")
-    public @ResponseBody
-    Map<Long,Integer> getStatusCountsByPubId(@RequestParam Long pubid){
+    public Map<Long,Integer> getStatusCountsByPubId(@RequestParam Long pubid){
         List<LayoutStatus> statuses = layoutStatusRepository.findAll();
         Map<Long, Integer> map = new HashMap<>();
         for (LayoutStatus status : statuses) {
@@ -86,7 +85,7 @@ public class PageController {
     }
 
     @GetMapping("/layoutstatuscounts/{status}")
-    public @ResponseBody int getStatusCount(@PathVariable String status, @PathVariable Long id){
+    public int getStatusCount(@PathVariable String status, @PathVariable Long id){
         Long statusId = layoutStatusRepository.findByName(status).getId();
         return pageRepository.countByLayoutStatusIdAndPublicationId(statusId, id);
     }

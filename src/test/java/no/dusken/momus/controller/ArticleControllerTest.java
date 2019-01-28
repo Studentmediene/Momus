@@ -1,5 +1,15 @@
 package no.dusken.momus.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.HashSet;
+import java.util.List;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletResponse;
+
 import no.dusken.momus.model.Article;
 import no.dusken.momus.model.ArticleRevision;
 import no.dusken.momus.model.ArticleStatus;
@@ -9,15 +19,6 @@ import no.dusken.momus.service.repository.ArticleRevisionRepository;
 import no.dusken.momus.service.repository.ArticleStatusRepository;
 import no.dusken.momus.service.search.ArticleSearchParams;
 import no.dusken.momus.util.TestUtil;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockHttpServletResponse;
-
-import java.util.HashSet;
-import java.util.List;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ArticleControllerTest extends AbstractControllerTest {
 
@@ -39,7 +40,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testSaveArticle() throws Exception {
+    public void testCreateArticle() throws Exception {
         Article article = new Article();
         article.setName("Artikkel");
         mockMvc.perform(buildPost("/api/article", TestUtil.toJsonString(article))).andExpect(status().isOk());
@@ -128,20 +129,22 @@ public class ArticleControllerTest extends AbstractControllerTest {
         Article article = Article.builder()
                 .name("Artikkel")
                 .content("Innhold")
-                .status(status1)
                 .journalists(new HashSet<>())
                 .photographers(new HashSet<>())
                 .build();
-        article = articleService.saveArticle(article);
+        article = articleService.createArticle(article);
+        
+        article.setStatus(status1);
+        articleService.updateArticleStatus(article.getId(), article);
+
+        article = articleService.updateArticleContent(article.getId(), "Nytt innhold");
 
         Article updatedArticle = Article.builder()
-                .content("Nytt innhold")
                 .name("Artikkel")
                 .status(status2)
                 .build();
         updatedArticle.setId(article.getId());
-        article = articleService.updateArticleContent(updatedArticle);
-        articleService.updateArticleMetadata(article.getId(), updatedArticle);
+        articleService.updateArticleStatus(article.getId(), updatedArticle);
 
         List<ArticleRevision> revisions = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(article.getId());
 
@@ -159,8 +162,8 @@ public class ArticleControllerTest extends AbstractControllerTest {
         Article article2 = new Article();
         article2.setName("Art2");
 
-        article1 = articleService.saveArticle(article1);
-        article2 = articleService.saveArticle(article2);
+        article1 = articleService.createArticle(article1);
+        article2 = articleService.createArticle(article2);
 
         performGetExpectOk("/api/article/multiple?ids=" + article1.getId() + "&ids=" + article2.getId());
     }
@@ -170,7 +173,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
         Article article = new Article();
         article.setName("Artikkel");
 
-        articleService.saveArticle(article);
+        articleService.createArticle(article);
         ArticleSearchParams params = new ArticleSearchParams(
                 "Artikkel",
                 null,

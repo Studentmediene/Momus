@@ -38,6 +38,6 @@ public class UserDetailsServiceMock implements UserDetailsService {
 
     @Override
     public Person getLoggedInPerson() {
-        return personRepository.findOne(1L);
+        return personRepository.findById(1L).get();
     }
 }

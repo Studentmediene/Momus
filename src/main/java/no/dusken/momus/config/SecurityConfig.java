@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -91,7 +92,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class)
             .addFilterAfter(samlFilter(), BasicAuthenticationFilter.class)
             .authorizeRequests()
-            .antMatchers("/api/dev/**").access(String.valueOf(env.acceptsProfiles("dev")))
+            .antMatchers("/api/dev/**").access(String.valueOf(env.acceptsProfiles(Profiles.of("dev"))))
             .antMatchers("/**").fullyAuthenticated()
             .and()
             .exceptionHandling()

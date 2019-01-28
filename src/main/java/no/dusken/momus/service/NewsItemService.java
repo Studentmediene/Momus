@@ -16,25 +16,50 @@
 
 package no.dusken.momus.service;
 
+import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import java.time.ZonedDateTime;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
+
+import javax.servlet.http.HttpServletResponse;
+
+@Slf4j
 @Service
 public class NewsItemService {
+    private final NewsItemRepository newsItemRepository;
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    public NewsItemService(NewsItemRepository newsItemRepository) {
+        this.newsItemRepository = newsItemRepository;
+    }
 
-    @Autowired
-    private NewsItemRepository newsItemRepository;
+    public List<NewsItem> getAllNewsItems() {
+        return newsItemRepository.findAll();
+    }
 
-    public NewsItem updateNewsItem(NewsItem newsItem){
-        newsItem = newsItemRepository.save(newsItem);
+    public NewsItem getNewsItemById(Long id) {
+        return newsItemRepository.findById(id)
+            .orElseThrow(() -> new RestException("Not found", HttpServletResponse.SC_NOT_FOUND));
+    }
 
-        logger.info("Updated newsItem {}.", newsItem.getTitle());
+    public NewsItem createNewsItem(NewsItem item) {
+        item.setDate(ZonedDateTime.now());
+        return newsItemRepository.saveAndFlush(item);
+    }
+    public NewsItem updateNewsItem(Long id, NewsItem newsItem){
+        NewsItem existing = getNewsItemById(id);
+        existing.setContent(newsItem.getContent());
+        existing.setTitle(newsItem.getTitle());
 
-        return newsItem;
+        existing = newsItemRepository.save(existing);
+
+        log.info("Updated newsItem {}.", existing.getTitle());
+
+        return existing;
     }
 }

@@ -42,7 +42,7 @@ public class PageControllerTest extends AbstractControllerTest {
 
     @Override
     void internalSetup() {
-        publication = publicationService.savePublication(Publication.builder().name("UD").releaseDate(LocalDate.now()).build(), 10);
+        publication = publicationService.createPublication(Publication.builder().name("UD").releaseDate(LocalDate.now()).build(), 10);
     }
 
     @Test
@@ -79,8 +79,8 @@ public class PageControllerTest extends AbstractControllerTest {
 
     @Test
     public void setContent() throws Exception {
-        Article article = articleService.saveArticle(Article.builder().name("Artikkel").build());
-        Advert advert = advertService.saveAdvert(Advert.builder().name("Ad").build());
+        Article article = articleService.createArticle(Article.builder().name("Artikkel").build());
+        Advert advert = advertService.createAdvert(Advert.builder().name("Ad").build());
         Page page = pageRepository.findByPublicationId(publication.getId()).get(0);
 
         performPutExpectOk(
@@ -91,7 +91,7 @@ public class PageControllerTest extends AbstractControllerTest {
                         Collections.singletonList(article.getId()),
                         Collections.singletonList(advert.getId()))));
 
-        page = pageRepository.findOne(page.getId());
+        page = pageRepository.findById(page.getId()).get();
         assert page.getArticles().size() == 1;
         assert page.getAdverts().size() == 1;
     }
@@ -106,7 +106,7 @@ public class PageControllerTest extends AbstractControllerTest {
 
         performPatchExpectOk("/api/pages/" + page.getId() + "/metadata", TestUtil.toJsonString(page));
 
-        page = pageRepository.findOne(page.getId());
+        page = pageRepository.findById(page.getId()).get();
 
         assertEquals(true, page.isDone());
         assertEquals(s, page.getLayoutStatus());

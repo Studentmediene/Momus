@@ -59,8 +59,8 @@ public class ArticleQueryBuilderTest extends AbstractServiceTest {
                 .active(true)
                 .build();
 
-        when(personRepository.findOne(person1.getId())).thenReturn(person1);
-        when(personRepository.findOne(person2.getId())).thenReturn(person2);
+        when(personRepository.findById(person1.getId())).thenReturn(Optional.of(person1));
+        when(personRepository.findById(person2.getId())).thenReturn(Optional.of(person2));
     }
 
     @Before
