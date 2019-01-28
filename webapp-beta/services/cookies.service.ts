@@ -12,17 +12,17 @@ export default class CookieService {
         this.$cookies = $cookies;
     }
 
-    public addToRecentArticles(article: Article) {
+    public addToRecentArticles(articleId: number) {
         const recentlyViewed = this.getRecentArticles();
 
         // If article already in list, remove it
-        if (recentlyViewed.indexOf(article.id) !== -1) {
-            const index = recentlyViewed.indexOf(article.id);
+        if (recentlyViewed.indexOf(articleId) !== -1) {
+            const index = recentlyViewed.indexOf(articleId);
             recentlyViewed.splice(index, 1);
         }
 
         // Add it to the front
-        recentlyViewed.splice(0, 0, article.id);
+        recentlyViewed.splice(0, 0, articleId);
 
         // Trim to correct length
         const cut = recentlyViewed.filter((_, i) => i < RECENT_ARTICLES_LENGTH);
