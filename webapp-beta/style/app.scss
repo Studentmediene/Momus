@@ -1,13 +1,6 @@
 @import "./variables.scss";
 @import "uikit/src/scss/uikit.scss";
 
-.initial-load-spinner {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    text-align: center;
-}
-
 .button-edit {
     background-color: $global-edit-background;
     color: black;
