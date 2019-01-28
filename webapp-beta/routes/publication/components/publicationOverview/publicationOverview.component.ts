@@ -38,9 +38,9 @@ class PublicationOverviewCtrl implements angular.IController {
         return this.selectedYear === null || publication.release_date.getFullYear() === this.selectedYear;
     }
 
-    public hasNextPage() {
+    public hasNextPage(totalLength: number) {
         const shownAmount = (this.currentPage + 1) * this.pageSize;
-        return this.publications.length > shownAmount;
+        return totalLength > shownAmount;
     }
 
     public createYearOptions() {

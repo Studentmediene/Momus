@@ -27,8 +27,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="publication in vm.publications 
-                                | filter:vm.isInCurrentYear 
+                <tr ng-repeat="publication in filteredPubs = (vm.publications | filter:vm.isInCurrentYear)
                                 | orderBy:'release_date':true
                                 | startFrom:(vm.currentPage)*vm.pageSize 
                                 | limitTo:vm.pageSize"
@@ -58,7 +57,7 @@
                     <span
                         style="cursor: pointer;"
                         ng-click="vm.currentPage = vm.currentPage + 1"
-                        ng-class="{'uk-disabled': !vm.hasNextPage()}"
+                        ng-class="{'uk-disabled': !vm.hasNextPage(filteredPubs.length)}"
                     >
                         <span uk-pagination-next></span>
                     </span>
