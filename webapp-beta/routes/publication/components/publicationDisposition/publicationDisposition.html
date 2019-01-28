@@ -85,6 +85,12 @@
             </div>
         </div>
     </div>
+    <div
+        ng-show="!vm.pageOrder.$resolved"
+        class="uk-text-center"
+    >
+        <loading-spinner></loading-spinner>
+    </div>
     <ul
         class="d-table disposition-table"
         dnd-list="vm.pageOrder.order"

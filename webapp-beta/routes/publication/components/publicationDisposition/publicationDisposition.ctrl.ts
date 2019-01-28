@@ -62,9 +62,13 @@ export default class PublicationDispositionCtrl implements angular.IController {
     }
 
     public $onInit() {
-        this.pagesLookup = toIdLookup(this.publication.pages);
-        this.articlesLookup = toIdLookup(this.publication.articles);
-        this.advertsLookup = toIdLookup(this.adverts);
+        this.publication.$promise.then((pub) => {
+            this.pagesLookup = toIdLookup(pub.pages);
+            this.articlesLookup = toIdLookup(pub.articles);
+        });
+        this.adverts.$promise.then((adverts) => {
+            this.advertsLookup = toIdLookup(adverts);
+        });
 
         this.presentUsers = this.session.getPresentUsers();
 

@@ -10,6 +10,12 @@
                 >
                 </select-dropdown>
             </extra-header-content>
+            <div
+                ng-if="!vm.publications.$resolved"
+                class="uk-text-center uk-padding-small"
+            >
+                <loading-spinner></loading-spinner>
+            </div>
             <table class="uk-table uk-table-hover uk-table-striped">
                 <thead>
                     <tr>

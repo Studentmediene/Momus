@@ -66,14 +66,10 @@ const routeModule = angular
                     nav: false,
                 },
                 resolve: {
-                    activePublication: (publicationResource: PublicationResource) =>
-                        publicationResource.active().$promise
-                            .then((pub) => pub)
-                            .catch(() => null),
                     publications: (publicationResource: PublicationResource) =>
-                        publicationResource.query().$promise,
+                        publicationResource.query(),
                     persons: (personResource: PersonResource) =>
-                        personResource.query().$promise,
+                        personResource.query(),
                     sections: (articleResource: ArticleResource) =>
                         articleResource.sections().$promise,
                     statuses: (articleResource: ArticleResource) =>

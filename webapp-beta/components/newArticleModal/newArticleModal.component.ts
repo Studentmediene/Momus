@@ -1,6 +1,6 @@
 import * as angular from 'angular';
 
-import { Publication } from '../../models/Publication';
+import { Publication, SimplePublication } from '../../models/Publication';
 import { Article, ArticleType } from 'models/Article';
 
 import { ArticleResource } from 'resources/article.resource';
@@ -9,8 +9,8 @@ import { Section } from 'models/Section';
 import { OpenModal, ModalInput } from 'services/openModal.factory';
 
 interface ArticleModalInput extends ModalInput {
-    publication: Publication;
-    publications: Publication[];
+    publication: SimplePublication;
+    publications: SimplePublication[];
     persons: Person[];
     sections: Section[];
     types: ArticleType[];
@@ -21,8 +21,8 @@ export type OpenNewArticleModal = (input: ArticleModalInput) => Promise<Article>
 /* @ngInject */
 class NewArticleModalCtrl implements angular.IController {
     public article: Article;
-    public publication: Publication;
-    public publications: Publication[];
+    public publication: SimplePublication;
+    public publications: SimplePublication[];
 
     public onFinished: ({ value }: { value: Article }) => void;
 

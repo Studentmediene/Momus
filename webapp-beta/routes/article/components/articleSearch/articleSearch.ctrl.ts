@@ -2,7 +2,7 @@ import * as angular from 'angular';
 import { ArticleSearchParams } from 'models/ArticleSearchParams';
 import { StateService } from '@uirouter/core';
 import { OpenNewArticleModal } from 'components/newArticleModal/newArticleModal.component';
-import { Publication } from 'models/Publication';
+import { Publication, SimplePublication } from 'models/Publication';
 import { Person } from 'models/Person';
 import { Section } from 'models/Section';
 import { ArticleType, Article } from 'models/Article';
@@ -14,7 +14,7 @@ export default class ArticleSearchCtrl implements angular.IController {
     public articleSortReverse: boolean = false;
 
     public results: Article[];
-    public activePublication: Publication;
+    public activePublication: SimplePublication;
     public persons: Person[];
     public publications: Publication[];
     public sections: Section[];
@@ -39,7 +39,9 @@ export default class ArticleSearchCtrl implements angular.IController {
     }
 
     public $onInit() {
-        this.hasNextPage = this.results.length > this.searchParams.page_size;
+        this.results.$promise.then(() => {
+            this.hasNextPage = this.results.length > this.searchParams.page_size;
+        });
     }
 
     public search(pageDelta: number) {

@@ -154,7 +154,7 @@ angular.module('momusApp', [
                     archived: {type: 'bool'}
                 },
                 resolve: {
-                    activePublication: Publication => Publication.active().$promise
+                    activePublication: Publication => Publication.active({resource: 'simple'}).$promise
                         .then(pub => pub)
                         .catch(() => null),
                     publications: Publication => Publication.query().$promise,

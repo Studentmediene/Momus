@@ -1,4 +1,4 @@
-import { Publication, PublicationSerial } from '../models/Publication';
+import { Publication, PublicationSerial, SimplePublication } from '../models/Publication';
 import { MomResourceFactory } from 'services/momResource.factory';
 import { LayoutStatus } from 'models/Statuses';
 
@@ -48,10 +48,10 @@ export interface PublicationResource extends ng.resource.IResourceClass<Publicat
         error?: (err: any) => void,
     ): Publication;
     active(
-        params?: {},
-        success?: (publication: Publication) => void,
+        params?: {resource: string},
+        success?: (publication: SimplePublication) => void,
         error?: (err: any) => void,
-    ): Publication;
+    ): SimplePublication;
 
     layoutStatuses(
         params?: {},

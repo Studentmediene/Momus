@@ -7,7 +7,7 @@ import { PublicationResource } from 'resources/publication.resource';
 import publicationOverview from './components/publicationOverview/publicationOverview.component';
 import publicationDisposition from './components/publicationDisposition/publicationDisposition.component';
 import { PageResource } from 'resources/page.resource';
-import { Publication } from 'models/Publication';
+import { Publication, SimplePublication } from 'models/Publication';
 import { AdvertResource } from 'resources/advert.resource';
 import { ArticleResource } from 'resources/article.resource';
 
@@ -34,7 +34,7 @@ const routeModule = angular
                 },
                 resolve: {
                     publications: (publicationResource: PublicationResource) =>
-                        publicationResource.query().$promise,
+                        publicationResource.query(),
                 },
             })
             .state('publication.disposition', {
@@ -44,20 +44,20 @@ const routeModule = angular
                     id: {value: 'aktiv'},
                 },
                 resolve: {
-                    publication: ($stateParams: StateParams, publicationResource: PublicationResource) =>
-                        $stateParams.id === 'aktiv' ?
-                            publicationResource.active().$promise :
-                            publicationResource.get({id: $stateParams.id}).$promise,
-                    pageOrder: (pageResource: PageResource, publication: Publication) =>
-                        pageResource.pageOrder({ publicationId: publication.id }).$promise,
+                    publicationId: ($stateParams: StateParams, activePublication: SimplePublication) =>
+                        $stateParams.id === 'aktiv' ? activePublication.id : $stateParams.id,
+                    publication: (publicationId: number, publicationResource: PublicationResource) =>
+                        publicationResource.get({ id: publicationId }),
+                    pageOrder: (pageResource: PageResource, publicationId: number) =>
+                        pageResource.pageOrder({ publicationId }),
                     adverts: (advertResource: AdvertResource) =>
-                        advertResource.query().$promise,
+                        advertResource.query(),
                     articleStatuses: (articleResource: ArticleResource) =>
-                        articleResource.statuses().$promise,
+                        articleResource.statuses(),
                     reviewStatuses: (articleResource: ArticleResource) =>
-                        articleResource.reviewStatuses().$promise,
+                        articleResource.reviewStatuses(),
                     layoutStatuses: (publicationResource: PublicationResource) =>
-                        publicationResource.layoutStatuses().$promise,
+                        publicationResource.layoutStatuses(),
                 },
                 data: {
                     nav: {

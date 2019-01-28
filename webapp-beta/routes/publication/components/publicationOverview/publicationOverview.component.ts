@@ -26,7 +26,9 @@ class PublicationOverviewCtrl implements angular.IController {
     }
 
     public $onInit() {
-        this.yearOptions = this.createYearOptions();
+        this.publications.$promise.then(() => {
+            this.yearOptions = this.createYearOptions();
+        });
     }
 
     public isInCurrentYear(publication: Publication) {
