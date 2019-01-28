@@ -23,11 +23,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PublicationRepository extends JpaRepository<Publication, Long> {
     List<SimplePublication> findAllByOrderByReleaseDateDesc();
 
-    <T> T findFirstByReleaseDateAfterOrderByReleaseDate(LocalDate date, Class<T> projection);
+    <T> Optional<T> findFirstByReleaseDateAfterOrderByReleaseDate(LocalDate date, Class<T> projection);
 }

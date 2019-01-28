@@ -69,22 +69,12 @@ public class PublicationController {
 
     @GetMapping("/active")
     public Publication getActivePublication(){
-        Publication active = publicationService.getActivePublication(LocalDate.now());
-        if(active == null) {
-            throw new RestException("No active publication found", HttpServletResponse.SC_NOT_FOUND);
-        }
-
-        return active;
+        return publicationService.getActivePublication(LocalDate.now(), Publication.class);
     }
 
     @GetMapping("/active/simple")
     public SimplePublication getSimpleActivePublication() {
-        SimplePublication active = publicationService.getActiveSimplePublication(LocalDate.now());
-        if(active == null) {
-            throw new RestException("No active publication found", HttpServletResponse.SC_NOT_FOUND);
-        }
-
-        return active;
+        return publicationService.getActivePublication(LocalDate.now(), SimplePublication.class);
     }
 
     @GetMapping("/{pubid}/colophon")
