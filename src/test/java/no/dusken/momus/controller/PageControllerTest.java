@@ -71,7 +71,7 @@ public class PageControllerTest extends AbstractControllerTest {
 
     @Test
     public void createEmptyPagesInPublication() throws Exception {
-        performPostExpectOk("/api/pages/empty?publicationId=" + publication.getId() + "&afterPage=0&numPages=2", "")
+        performPostExpectOk("/api/pages/empty?publicationId=" + publication.getId() + "&afterPage=0&numNewPages=2", "")
                 .andExpect(jsonPath("$.length()", is(2)));
 
         assert pageRepository.findByPublicationId(publication.getId()).size() == 12;
