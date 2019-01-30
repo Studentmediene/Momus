@@ -15,6 +15,7 @@ import newArticleModal from './newArticleModal/newArticleModal.component';
 import newAdvertModal from './newAdvertModal/newAdvertModal.component';
 import newsPanel from './newsPanel/newsPanel.component';
 import messageModal from './messageModal/messageModal.component';
+import pageAdder from './pageAdder/pageAdder.component';
 
 export default angular
     .module('momusApp.components', [
@@ -33,6 +34,7 @@ export default angular
         newAdvertModal.name,
         newsPanel.name,
         messageModal.name,
+        pageAdder.name,
     ])
     .component('loadingSpinner', {
         template: '<i class="fas fa-circle-notch fa-4x fa-spin"></i>',

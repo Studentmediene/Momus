@@ -1,0 +1,17 @@
+@import '../../style/variables.scss';
+
+.page-adder {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    border: 1px solid $global-border;
+    .uk-form-label {
+        white-space: nowrap;
+    }
+    .uk-form-controls {
+        max-width: 60px;
+    }
+    :not(:last-child) {
+        margin-left: 5px;
+    }
+}

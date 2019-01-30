@@ -1,0 +1,36 @@
+<form name="pageForm" class="page-adder">
+    <label class="uk-form-label">Legg til</label>
+    <div class="uk-form-controls">
+        <input
+            class="uk-input uk-form-small"
+            name="num"
+            type="number"
+            ng-model="vm.numNewPages"
+            initial="1"
+            min="1"
+            max="{{vm.maxNumPages}}"
+            required
+        >
+    </div>
+    <label class="uk-form-label">side(r) etter</label>
+    <div class="uk-form-controls">
+        <input
+            class="uk-input uk-form-small"
+            name="at"
+            type="number"
+            ng-model="vm.newPageAt"
+            initial="1"
+            min="0"
+            max="{{vm.maxPagePos}}"
+            required
+        >
+    </div>
+    <button
+        class="uk-button button-new uk-button-small"
+        type="button"
+        ng-click="vm.click()"
+        ng-disabled="!pageForm.$valid"
+    >
+        <i class="fas fa-plus"></i>
+    </button>
+</form>
