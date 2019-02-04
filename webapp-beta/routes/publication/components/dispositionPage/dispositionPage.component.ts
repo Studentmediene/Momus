@@ -15,6 +15,7 @@ class DispositionPageCtrl implements angular.IController {
     public publication: Publication;
     public articles: Article[];
     public adverts: Advert[];
+    public onDelete: (page: {page: Page}) => void;
 
     public articlesLookup: {[index: number]: Article};
     public advertsLookup: {[index: number]: Advert};
@@ -76,7 +77,7 @@ class DispositionPageCtrl implements angular.IController {
     }
 
     public deletePage() {
-
+        this.onDelete({ page: this.page });
     }
 
     public updatePageMeta() {
@@ -125,5 +126,6 @@ export default angular.module('momusApp.routes.publication.dispositionPage', [])
             layoutStatuses: '<',
             articleStatuses: '<',
             reviewStatuses: '<',
+            onDelete: '&',
         },
     });
