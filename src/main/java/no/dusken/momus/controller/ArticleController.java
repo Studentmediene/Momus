@@ -61,9 +61,14 @@ public class ArticleController {
     @Autowired
     private ArticleRevisionRepository articleRevisionRepository;
 
-    @GetMapping
+    @GetMapping(params="userId")
     public List<Article> getLastArticlesForUser(@RequestParam Long userId) {
         return articleService.getLastArticlesForUser(userId);
+    }
+
+    @GetMapping(params="publicationId")
+    public List<Article> getArticlesInPublication(@RequestParam Long publicationId) {
+        return articleService.getArticlesInPublication(publicationId);
     }
 
     @GetMapping("/{id}")
