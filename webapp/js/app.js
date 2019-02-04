@@ -152,7 +152,7 @@ angular.module('momusApp', [
                     archived: {type: 'bool'}
                 },
                 resolve: {
-                    activePublication: Publication => Publication.active({resource: 'simple'}),
+                    activePublication: Publication => Publication.active(),
                     publications: Publication => Publication.query().$promise,
                     persons: Person => Person.query().$promise,
                     sections: Article => Article.sections().$promise,
@@ -208,8 +208,10 @@ angular.module('momusApp', [
                             return Publication.get({id: $stateParams.id}).$promise;
                         }
                     },
-                    pageOrder: (publication, Page) => Page.pageOrder({publicationId: publication.id}).$promise,
-                    adverts: Advert => Advert.query().$promise,
+                    pages: (publication, Page) => Page.query({publicationId: publication.id}),
+                    pageOrder: (publication, Page) => Page.pageOrder({publicationId: publication.id}),
+                    articles: (publication, Article) => Article.query({publicationId: publication.id}),
+                    adverts: Advert => Advert.query(),
                     articleStatuses: Article => Article.statuses().$promise,
                     reviewStatuses: Article => Article.reviewStatuses().$promise,
                     layoutStatuses: Publication => Publication.layoutStatuses().$promise
