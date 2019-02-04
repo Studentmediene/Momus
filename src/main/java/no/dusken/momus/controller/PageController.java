@@ -54,9 +54,9 @@ public class PageController {
     public List<Page> createEmptyPagesInPublication(
             @RequestParam Long publicationId,
             @RequestParam Integer afterPage,
-            @RequestParam(required = false, defaultValue = "1") Integer numPages
+            @RequestParam(required = false, defaultValue = "1") Integer numNewPages
     ) {
-        return pageService.createEmptyPagesInPublication(publicationId, afterPage, numPages);
+        return pageService.createEmptyPagesInPublication(publicationId, afterPage, numNewPages);
     }
 
     @PutMapping("/{id}/content")
