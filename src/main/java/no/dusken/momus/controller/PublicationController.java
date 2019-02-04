@@ -16,8 +16,6 @@
 
 package no.dusken.momus.controller;
 
-import no.dusken.momus.dto.SimplePublication;
-import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.LayoutStatus;
 import no.dusken.momus.model.Publication;
 import no.dusken.momus.service.PublicationService;
@@ -45,7 +43,7 @@ public class PublicationController {
     }
 
     @GetMapping
-    public List<SimplePublication> getAllPublications(){
+    public List<Publication> getAllPublications(){
         return publicationService.getAllPublications();
     }
 
@@ -70,11 +68,6 @@ public class PublicationController {
     @GetMapping("/active")
     public Publication getActivePublication(){
         return publicationService.getActivePublication(LocalDate.now(), Publication.class);
-    }
-
-    @GetMapping("/active/simple")
-    public SimplePublication getSimpleActivePublication() {
-        return publicationService.getActivePublication(LocalDate.now(), SimplePublication.class);
     }
 
     @GetMapping("/{pubid}/colophon")

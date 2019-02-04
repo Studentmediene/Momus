@@ -1,8 +1,6 @@
 package no.dusken.momus.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import no.dusken.momus.dto.PageOrder;
-import no.dusken.momus.mapper.SerializationViews;
 import no.dusken.momus.model.LayoutStatus;
 import no.dusken.momus.model.Page;
 import no.dusken.momus.dto.PageContent;
@@ -35,7 +33,6 @@ public class PageController {
     }
 
     @GetMapping
-    @JsonView(SerializationViews.Simple.class)
     public List<Page> getByPublicationId(@RequestParam Long publicationId) {
         return pageService.getPagesInPublication(publicationId);
     }

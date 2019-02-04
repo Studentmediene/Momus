@@ -18,7 +18,6 @@ package no.dusken.momus.service;
 
 
 import lombok.extern.slf4j.Slf4j;
-import no.dusken.momus.dto.SimplePublication;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.PublicationRepository;
@@ -47,7 +46,7 @@ public class PublicationService {
         this.articleService = articleService;
     }
 
-    public List<SimplePublication> getAllPublications() {
+    public List<Publication> getAllPublications() {
         return publicationRepository.findAllByOrderByReleaseDateDesc();
     }
 
