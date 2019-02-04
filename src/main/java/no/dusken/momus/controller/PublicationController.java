@@ -67,7 +67,7 @@ public class PublicationController {
 
     @GetMapping("/active")
     public Publication getActivePublication(){
-        return publicationService.getActivePublication(LocalDate.now(), Publication.class);
+        return publicationService.getActivePublication(LocalDate.now());
     }
 
     @GetMapping("/{pubid}/colophon")

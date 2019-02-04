@@ -30,5 +30,5 @@ import org.springframework.stereotype.Repository;
 public interface PublicationRepository extends JpaRepository<Publication, Long> {
     List<Publication> findAllByOrderByReleaseDateDesc();
 
-    <T> Optional<T> findFirstByReleaseDateAfterOrderByReleaseDate(LocalDate date, Class<T> projection);
+    Optional<Publication> findFirstByReleaseDateAfterOrderByReleaseDate(LocalDate date);
 }

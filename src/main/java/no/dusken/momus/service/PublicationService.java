@@ -58,8 +58,8 @@ public class PublicationService {
      *
      * @return Returns the oldest publication that has not been released yet at the time of the date parameter
      */
-    public <T> T getActivePublication(LocalDate date, Class<T> projection){
-        return publicationRepository.findFirstByReleaseDateAfterOrderByReleaseDate(date.minus(1, ChronoUnit.DAYS), projection)
+    public Publication getActivePublication(LocalDate date){
+        return publicationRepository.findFirstByReleaseDateAfterOrderByReleaseDate(date.minus(1, ChronoUnit.DAYS))
             .orElse(null);
     }
 
