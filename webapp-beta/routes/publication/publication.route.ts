@@ -7,7 +7,7 @@ import { PublicationResource } from 'resources/publication.resource';
 import publicationOverview from './components/publicationOverview/publicationOverview.component';
 import publicationDisposition from './components/publicationDisposition/publicationDisposition.component';
 import { PageResource } from 'resources/page.resource';
-import { SimplePublication } from 'models/Publication';
+import { Publication } from 'models/Publication';
 import { AdvertResource } from 'resources/advert.resource';
 import { ArticleResource } from 'resources/article.resource';
 
@@ -44,25 +44,28 @@ const routeModule = angular
                     id: { value: 'aktiv' },
                 },
                 resolve: {
-                    publicationId: (
+                    publication: (
+                        activePublication: Publication,
+                        publicationResource: PublicationResource,
                         $stateParams: StateParams,
-                        activePublication: SimplePublication,
                         $state: StateService,
                         $q: angular.IQService,
                     ) => {
                         if ($stateParams.id !== 'aktiv') {
-                            return $stateParams.id;
+                            return publicationResource.get({id: $stateParams.id}).$promise;
                         } else if (activePublication.id == null) {
                             $state.go('error', { message: 'Det finnes ingen aktiv utgave.' });
                             return $q.reject();
                         } else {
-                            return activePublication.id;
+                            return activePublication;
                         }
                     },
-                    publication: (publicationId: number, publicationResource: PublicationResource) =>
-                        publicationResource.get({ id: publicationId }),
-                    pageOrder: (pageResource: PageResource, publicationId: number) =>
-                        pageResource.pageOrder({ publicationId }),
+                    pages: (publication: Publication, pageResource: PageResource) =>
+                        pageResource.query({ publicationId: publication.id }),
+                    pageOrder: (pageResource: PageResource, publication: Publication) =>
+                        pageResource.pageOrder({ publicationId: publication.id }),
+                    articles: (articleResource: ArticleResource, publication: Publication) =>
+                        articleResource.query({publicationId: publication.id}),
                     adverts: (advertResource: AdvertResource) =>
                         advertResource.query(),
                     articleStatuses: (articleResource: ArticleResource) =>

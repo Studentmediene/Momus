@@ -52,7 +52,7 @@
             </button>
             <page-adder
                 max-num-pages="vm.maxNewPages"
-                max-page-pos="vm.publication.pages.length"
+                max-page-pos="vm.pages.length"
                 submit="vm.newPages(newPageAt, numNewPages)">
             </page-adder>
             <button class="uk-button button-new uk-button-small" ng-click="vm.showHelp()">
@@ -103,8 +103,9 @@
             dnd-moved="vm.pageOrder.order.splice($index, 1)"
             dnd-dragend="vm.updatePageOrder()"
             number="$index + 1"
-            page="vm.pagesLookup[page.id]"
             publication="vm.publication"
+            page="vm.pagesLookup[page.id]"
+            articles="vm.articles"
             column-widths="vm.columnWidths"
             article-width="vm.articleWidth"
             adverts="vm.adverts"

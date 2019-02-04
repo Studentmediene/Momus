@@ -2,7 +2,7 @@ import * as angular from 'angular';
 import { ArticleSearchParams } from 'models/ArticleSearchParams';
 import { StateService } from '@uirouter/core';
 import { OpenNewArticleModal } from 'components/newArticleModal/newArticleModal.component';
-import { Publication, SimplePublication } from 'models/Publication';
+import { Publication } from 'models/Publication';
 import { Person } from 'models/Person';
 import { Section } from 'models/Section';
 import { ArticleType, Article } from 'models/Article';
@@ -14,7 +14,7 @@ export default class ArticleSearchCtrl implements angular.IController {
     public articleSortReverse: boolean = false;
 
     public results: Article[];
-    public activePublication: SimplePublication;
+    public activePublication: Publication;
     public persons: Person[];
     public publications: Publication[];
     public sections: Section[];

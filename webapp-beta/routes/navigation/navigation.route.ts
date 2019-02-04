@@ -28,7 +28,7 @@ export default angular
                     return session.connect().then(() => session);
                 },
                 activePublication: (publicationResource: PublicationResource) =>
-                    publicationResource.active({ resource: 'simple' }).$promise,
+                    publicationResource.active().$promise,
                 navItems: ($state: StateService) => $state.get()
                     .filter((state) => state.data && state.data.nav)
                     .map((state): NavItem => ({ stateName: state.name, ...state.data.nav })),
