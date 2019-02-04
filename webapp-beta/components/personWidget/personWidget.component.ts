@@ -2,7 +2,6 @@ import * as angular from 'angular';
 
 import './personWidget.scss';
 import { Person } from 'models/Person';
-import { autoBind } from 'utils';
 import { TransitionService } from '@uirouter/core';
 
 interface PopupScope extends angular.IScope {
@@ -33,8 +32,8 @@ class PersonWidgetCtrl implements angular.IController {
         this.$transitions = $transitions;
         this.$window = $window;
 
+        this.open = this.open.bind(this);
         this.close = this.close.bind(this);
-        autoBind(this);
     }
 
     public $onInit() {
