@@ -2,7 +2,6 @@ import * as angular from 'angular';
 
 import './personWidget.scss';
 import { Person } from 'models/Person';
-import { autoBind } from 'utils';
 import { TransitionService } from '@uirouter/core';
 
 interface PopupScope extends angular.IScope {
@@ -20,17 +19,21 @@ class PersonWidgetCtrl implements angular.IController {
     private $compile: angular.ICompileService;
     private $rootScope: angular.IRootScopeService;
     private $transitions: TransitionService;
+    private $window: angular.IWindowService;
 
     constructor(
         $compile: angular.ICompileService,
         $rootScope: angular.IRootScopeService,
         $transitions: TransitionService,
+        $window: angular.IWindowService,
     ) {
         this.$compile = $compile;
         this.$rootScope = $rootScope;
         this.$transitions = $transitions;
+        this.$window = $window;
 
-        autoBind(this);
+        this.open = this.open.bind(this);
+        this.close = this.close.bind(this);
     }
 
     public $onInit() {
@@ -43,6 +46,8 @@ class PersonWidgetCtrl implements angular.IController {
     }
 
     public open(event: MouseEvent) {
+        event.stopPropagation();
+
         this.$rootScope.$broadcast('personWidgetOpened');
         const elementPos = (<HTMLElement> event.target).getBoundingClientRect();
 
@@ -55,8 +60,8 @@ class PersonWidgetCtrl implements angular.IController {
             ></person-widget-popup>`;
         const scope = <PopupScope> this.$rootScope.$new(true);
         scope.person = this.person;
-        scope.x = elementPos.left;
-        scope.y = elementPos.top;
+        scope.x = elementPos.left + this.$window.scrollX;
+        scope.y = elementPos.top + this.$window.scrollY;
         scope.onClose = () => {
             this.close();
         };
@@ -64,6 +69,9 @@ class PersonWidgetCtrl implements angular.IController {
         const element = this.$compile(template)(scope);
         angular.element(document.body).append(element);
         this.popupElement = element;
+
+        angular.element(this.popupElement).on('click', (e) => e.stopPropagation());
+        angular.element(this.$window).on('click', this.close);
     }
 
     public close() {
@@ -72,6 +80,8 @@ class PersonWidgetCtrl implements angular.IController {
         }
         this.popupElement.remove();
         this.popupElement = null;
+
+        angular.element(this.$window).off('click', this.close);
     }
 }
 
