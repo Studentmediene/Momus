@@ -217,7 +217,7 @@
                     type="text"
                     label="'Navn'"
                     value="vm.article.name"
-                    on-save="">
+                    on-save="vm.onNameSave(value)">
                 </editable-field>
                 <div>
                     <label class="uk-text-small form-label-text">Foto/Illustrasjon</label>
@@ -238,7 +238,7 @@
                     value="vm.article.section"
                     value-label="name"
                     pool="vm.sections"
-                    on-save="">
+                    on-save="vm.onSectionSave(value)">
                 </editable-field>
 
                 <editable-field
@@ -247,7 +247,7 @@
                     value="vm.article.type"
                     value-label="name"
                     pool="vm.types"
-                    on-save="">
+                    on-save="vm.onTypeSave(value)">
                 </editable-field>
 
                 <editable-field
@@ -256,7 +256,7 @@
                     value="vm.article.publication"
                     value-label="name"
                     pool="vm.publications"
-                    on-save="">
+                    on-save="vm.onPublicationSave(value)">
                 </editable-field>
             </panel>
         </div>

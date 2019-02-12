@@ -2,10 +2,11 @@ import * as angular from 'angular';
 import { TransitionService, StateService } from '@uirouter/core';
 
 import { ArticleResource } from 'resources/article.resource';
-import { Article } from 'models/Article';
+import { Article, ArticleType } from 'models/Article';
 import { ArticleStatus, ReviewStatus } from 'models/Statuses';
 import { Person } from 'models/Person';
 import { Publication } from 'models/Publication';
+import { Section } from 'models/Section';
 
 /* @ngInject */
 export default class ArticleDetailsCtrl implements angular.IController {
@@ -54,62 +55,80 @@ export default class ArticleDetailsCtrl implements angular.IController {
 
     public onStatusChange(newStatus: ArticleStatus) {
         this.article.status = newStatus;
-        this.articleResource.updateStatus({ id: this.article.id }, this.article);
+        this.saveStatus();
     }
 
     public onReviewStatusChange(newReviewStatus: ReviewStatus) {
         this.article.review = newReviewStatus;
-        this.articleResource.updateStatus({ id: this.article.id }, this.article);
+        this.saveStatus();
     }
 
     public onQuoteCheckStatusChange(newQuoteCheckStatus: boolean) {
         this.article.quote_check_status = newQuoteCheckStatus;
-        this.articleResource.updateStatus({ id: this.article.id }, this.article);
+        this.saveStatus();
     }
 
     public onCommentSave(newComment: string) {
         this.article.comment = newComment;
-        this.articleResource.updateMetadata({ id: this.article.id }, this.article);
+        this.saveMetadata();
     }
 
     public onJournalistsSave(journalists: Person[]) {
         this.article.journalists = journalists;
-        this.articleResource.updateMetadata({ id: this.article.id }, this.article);
+        this.saveMetadata();
     }
 
     public onExternalAuthorSave(external: string) {
         this.article.external_author = external;
-        this.articleResource.updateMetadata({ id: this.article.id }, this.article);
+        this.saveMetadata();
     }
 
     public onPhotographersSave(photographers: Person[]) {
         this.article.photographers = photographers;
-        this.articleResource.updateMetadata({ id: this.article.id }, this.article);
+        this.saveMetadata();
     }
 
     public onGraphicsSave(graphics: Person[]) {
         this.article.graphics = graphics;
-        this.articleResource.updateMetadata({id: this.article.id }, this.article);
+        this.saveMetadata();
     }
 
     public onExternalPhotographerSave(external: string) {
         this.article.external_photographer = external;
-        this.articleResource.updateMetadata({ id: this.article.id }, this.article);
+        this.saveMetadata();
     }
 
     public onImageTextSave(text: string) {
         this.article.image_text = text;
+        this.saveMetadata();
+    }
+
+    public onSectionSave(section: Section) {
+        this.article.section = section;
+        this.saveMetadata();
+    }
+
+    public onNameSave(name: string) {
+        this.article.name = name;
+        this.saveMetadata();
+    }
+
+    public onTypeSave(type: ArticleType) {
+        this.article.type = type;
+        this.saveMetadata();
+    }
+
+    public onPublicationSave(publication: Publication) {
+        this.article.publication = publication;
+        this.saveMetadata();
+    }
+
+    public saveMetadata() {
         this.articleResource.updateMetadata({ id: this.article.id }, this.article);
     }
 
-    /* note panel */
-    public saveNote() {
-        this.savingNote = true;
-        this.uneditedNote = this.article.note;
-        this.articleResource.updateNote(
-            {id: this.article.id},
-            JSON.stringify(this.article.note),
-            () => { this.savingNote = false; });
+    public saveStatus() {
+        this.articleResource.updateStatus({ id: this.article.id }, this.article);
     }
 
     public archiveArticle() {
