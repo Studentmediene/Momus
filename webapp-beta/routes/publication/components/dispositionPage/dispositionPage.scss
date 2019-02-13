@@ -2,13 +2,17 @@
 
 .disposition-page {
     display: flex;
-    border-left: $disp-page-border;
+    border-right: $disp-page-border;
     border-top: $disp-page-border;
 
     > :not(.article-cell) {
-        border-right: $disp-page-border;
+        border-left: $disp-page-border;
         box-sizing: border-box;
         padding: 3px;
+    }
+
+    > :nth-child(1) {
+        border-right: $disp-page-border;
     }
 }
 
@@ -37,4 +41,8 @@
     :not(:first-child) {
         margin-left: 3px;
     }
+}
+
+.page-done {
+    background: $disp-page-done-background !important; //Want this to override ad color
 }

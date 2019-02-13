@@ -53,10 +53,9 @@
         <div class="d-column-headers">
             <div ng-style="vm.columnWidths.page_nr">#</div>
             <div ng-style="vm.columnWidths.dropdown"></div>
+            <div ng-style="vm.columnWidths.section"></div>
             <div ng-style="vm.columnWidths.name">Navn</div>
-            <div ng-style="vm.columnWidths.section">Redaksjon</div>
-            <div ng-style="vm.columnWidths.journalists">Journalister</div>
-            <div ng-style="vm.columnWidths.photographers">Fotografer</div>
+            <div ng-style="vm.columnWidths.contributors">Bidragsytere</div>
             <div ng-style="vm.columnWidths.status">Status</div>
             <div ng-style="vm.columnWidths.review">Korrektur</div>
             <div ng-style="vm.columnWidths.photo_status">Fotostatus</div>
@@ -72,7 +71,7 @@
         <loading-spinner></loading-spinner>
     </div>
     <ul
-        class="d-table disposition-table"
+        class="disposition-table"
         dnd-list="vm.pageOrder.order"
         dnd-effect-allowed="move"
     >
@@ -84,6 +83,7 @@
             dnd-dragend="vm.updatePageOrder()"
             number="$index + 1"
             publication="vm.publication"
+            prev-page="$index === 0 ? null : vm.pagesLookup[vm.pageOrder.order[$index-1].id]"
             page="vm.pagesLookup[page.id]"
             articles="vm.articles"
             column-widths="vm.columnWidths"

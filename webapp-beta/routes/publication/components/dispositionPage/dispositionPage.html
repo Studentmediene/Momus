@@ -14,7 +14,7 @@
             >
             </multiselect-dropdown>
             <div>
-                <button ng-click="vm.createArticle(page)" class="uk-button button-new" uk-tooltip="Lag ny artikkel">
+                <button ng-click="vm.createArticle()" class="uk-button button-new" uk-tooltip="Lag ny artikkel">
                     <i class="fas fa-plus"></i> <i class="fas fa-file"></i>
                 </button>
             </div>
@@ -30,7 +30,7 @@
             >
             </multiselect-dropdown>
             <div>
-                <button ng-click="vm.createAdvert(page)" class="uk-button button-edit" uk-tooltip="Lag ny reklame">
+                <button ng-click="vm.createAdvert()" class="uk-button button-edit" uk-tooltip="Lag ny reklame">
                     <i class="fas fa-plus"></i> <i class="fas fa-bullhorn"></i>
                 </button>
             </div>
@@ -41,6 +41,7 @@
     <div class="article-cell" ng-style="{width: vm.articleWidth + 'px'}" ng-hide="vm.editing">
         <disposition-article
             ng-repeat="articleId in vm.page.articles"
+            continuation="vm.prevPageHasArticle(articleId)"
             article="vm.articlesLookup[articleId]"
             article-statuses="vm.articleStatuses"
             review-statuses="vm.reviewStatuses"
@@ -66,11 +67,6 @@
             unclearable
             small
         >
-            <item-markup>
-                <span class="status-dropdown-item" style="background-color: {{$parent.value.color}}">
-                    {{$parent.value.name}}
-                </span>
-            </item-markup>
         </select-dropdown>
     </div>
 

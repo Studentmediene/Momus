@@ -13,6 +13,7 @@ import { PersonResource } from 'resources/person.resource';
 import './dispositionPage.scss';
 
 class DispositionPageCtrl implements angular.IController {
+    public prevPage: Page;
     public page: Page;
     public publication: Publication;
     public articles: Article[];
@@ -28,6 +29,7 @@ class DispositionPageCtrl implements angular.IController {
     public newArticles: Article[];
     public newAdverts: Advert[];
 
+    private $scope: angular.IScope;
     private articleResource: ArticleResource;
     private pageResource: PageResource;
     private personResource: PersonResource;
@@ -35,12 +37,14 @@ class DispositionPageCtrl implements angular.IController {
     private openNewAdvertModal: OpenNewAdvertModal;
 
     constructor(
+        $scope: angular.IScope,
         articleResource: ArticleResource,
         pageResource: PageResource,
         personResource: PersonResource,
         openNewArticleModal: OpenNewArticleModal,
         openNewAdvertModal: OpenNewAdvertModal,
     ) {
+        this.$scope = $scope;
         this.articleResource = articleResource;
         this.pageResource = pageResource;
         this.personResource = personResource;
@@ -92,7 +96,15 @@ class DispositionPageCtrl implements angular.IController {
         this.pageResource.updateMeta({}, this.page, () => { this.loading = false; });
     }
 
-    public createArticle(page: Page) {
+    public prevPageHasArticle(articleId: number) {
+        if (this.prevPage == null) {
+            return false;
+        }
+
+        return this.prevPage.articles.indexOf(articleId) !== -1;
+    }
+
+    public createArticle() {
         this.openNewArticleModal({
             persons: this.personResource.query(),
             publication: this.publication,
@@ -102,16 +114,20 @@ class DispositionPageCtrl implements angular.IController {
         }).then((article) => {
             this.articlesLookup[article.id] = article;
             this.articles.push(article);
-            page.articles.push(article.id);
+            this.page.articles.push(article.id);
+            this.newArticles = this.page.articles.map((aid) => this.articlesLookup[aid]);
+            this.$scope.$apply(); // Need to apply here to update view
         });
     }
 
-    public createAdvert(page: Page) {
+    public createAdvert() {
         this.openNewAdvertModal()
             .then((advert) => {
                 this.advertsLookup[advert.id] = advert;
                 this.adverts.push(advert);
-                page.adverts.push(advert.id);
+                this.page.adverts.push(advert.id);
+                this.newAdverts = this.page.adverts.map((aid) => this.advertsLookup[aid]);
+                this.$scope.$apply(); // Need to apply here to update view
             });
     }
 }
@@ -123,6 +139,7 @@ export default angular.module('momusApp.routes.publication.dispositionPage', [])
         bindings: {
             number: '<',
             publication: '<',
+            prevPage: '<',
             page: '<',
             articles: '<',
             columnWidths: '<',
