@@ -3,6 +3,8 @@ import { Article } from 'models/Article';
 import { ArticleResource } from 'resources/article.resource';
 import { ColumnWidths } from '../publicationDisposition/getColumnWidths';
 
+import './dispositionArticle.scss';
+
 class DispositionArticleCtrl implements angular.IController {
     public article: Article;
 

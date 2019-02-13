@@ -60,29 +60,21 @@
             </button>
         </div>
         <!-- Headers -->
-        <div class="d-table headers">
-            <div class="d-table-row">
-                <div class="d-table-cell" ng-style="vm.columnWidths.page_nr">#</div>
-                <div class="d-table-cell">
-                    <div class="d-table">
-                        <div class="d-table-row">
-                            <div class="d-table-cell" ng-style="vm.columnWidths.dropdown"></div>
-                            <div class="d-table-cell" ng-style="vm.columnWidths.name">Navn</div>
-                            <div class="d-table-cell" ng-style="vm.columnWidths.section">Redaksjon</div>
-                            <div class="d-table-cell" ng-style="vm.columnWidths.journalists">Journalister</div>
-                            <div class="d-table-cell" ng-style="vm.columnWidths.photographers">Fotografer</div>
-                            <div class="d-table-cell" ng-style="vm.columnWidths.status">Status</div>
-                            <div class="d-table cell" ng-style="vm.columnWidths.review">Korrektur</div>
-                            <div class="d-table-cell" ng-style="vm.columnWidths.photo_status">Fotostatus</div>
-                            <div class="d-table-cell" ng-style="vm.columnWidths.comment">Kommentar</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="d-table-cell" ng-style="vm.columnWidths.layout">Layout</div>
-                <div class="d-table-cell" ng-style="vm.columnWidths.done"></div>
-                <div class="d-table-cell" ng-style="vm.columnWidths.edit"></div>
-                <div class="d-table-cell" ng-style="vm.columnWidths.delete"></div>
-            </div>
+        <div style="display: flex">
+            <div ng-style="vm.columnWidths.page_nr">#</div>
+            <div ng-style="vm.columnWidths.dropdown"></div>
+            <div ng-style="vm.columnWidths.name">Navn</div>
+            <div ng-style="vm.columnWidths.section">Redaksjon</div>
+            <div ng-style="vm.columnWidths.journalists">Journalister</div>
+            <div ng-style="vm.columnWidths.photographers">Fotografer</div>
+            <div ng-style="vm.columnWidths.status">Status</div>
+            <div ng-style="vm.columnWidths.review">Korrektur</div>
+            <div ng-style="vm.columnWidths.photo_status">Fotostatus</div>
+            <div ng-style="vm.columnWidths.comment">Kommentar</div>
+            <div ng-style="vm.columnWidths.layout">Layout</div>
+            <div ng-style="vm.columnWidths.done"></div>
+            <div ng-style="vm.columnWidths.edit"></div>
+            <div ng-style="vm.columnWidths.delete"></div>
         </div>
     </div>
     <div

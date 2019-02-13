@@ -10,6 +10,8 @@ import { OpenNewAdvertModal } from 'components/newAdvertModal/newAdvertModal.com
 import { ArticleResource } from 'resources/article.resource';
 import { PersonResource } from 'resources/person.resource';
 
+import './dispositionPage.scss';
+
 class DispositionPageCtrl implements angular.IController {
     public page: Page;
     public publication: Publication;

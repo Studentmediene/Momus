@@ -6,6 +6,14 @@ $global-muted-color: rgb(110, 110, 110);
 $global-color: rgb(80, 80, 80);
 $global-emphasis-color:rgb(65, 65, 65);
 
+$disp-page-border: solid #CCCCCC 1px;
+$disp-article-border: solid #ececec 1px;
+
+$disp-header-background: #f6f6f6;
+
+$disp-page-done-background:#DDFFCB;
+$disp-ad-background: $global-edit-background;
+
 $navbar-background: $global-primary-background;
 $navbar-nav-item-height: 50px;
 $navbar-nav-item-font-size: 0.8em;

@@ -1,25 +1,25 @@
-<div class="d-table-row">
+<div class="disposition-advert">
     <!--Dropdown-arrow-->
-    <div class="d-table-cell" ng-style="vm.columnWidths.dropdown">
+    <div ng-style="vm.columnWidths.dropdown">
         <i class="fas fa-bullhorn"></i>
     </div>
     <!--Name-->
-    <div class="d-table-cell" ng-style="vm.columnWidths.name">
-        {{vm.advert.name}}
+    <div ng-style="vm.columnWidths.name">
+        <div>{{vm.advert.name}}</div>
     </div>
     <!--Quick Lazy Fix-->
-    <div class="d-table-cell" ng-style="vm.columnWidths.section"></div>
-    <div class="d-table-cell" ng-style="vm.columnWidths.journalists"></div>
-    <div class="d-table-cell" ng-style="vm.columnWidths.photographers"></div>
-    <div class="d-table-cell" ng-style="vm.columnWidths.status"></div>
-    <div class="d-table-cell" ng-style="vm.columnWidths.review"></div>
-    <div class="d-table-cell" ng-style="vm.columnWidths.photo_status"></div>
+    <div ng-style="vm.columnWidths.section"></div>
+    <div ng-style="vm.columnWidths.journalists"></div>
+    <div ng-style="vm.columnWidths.photographers"></div>
+    <div ng-style="vm.columnWidths.status"></div>
+    <div ng-style="vm.columnWidths.review"></div>
+    <div ng-style="vm.columnWidths.photo_status"></div>
     <!--Comment-->
-      <div class="d-table-cell" ng-style="vm.columnWidths.comment">
+      <div ng-style="vm.columnWidths.comment">
           <inline-edit
-                  placeholder="[Kommentar]"
-                  model="vm.advert.comment"
-                  on-save="vm.submitAdvertComment(advert, value)">
+                placeholder="[Kommentar]"
+                model="vm.advert.comment"
+                on-save="vm.submitAdvertComment(advert, value)">
           </inline-edit>
       </div>
   </div>

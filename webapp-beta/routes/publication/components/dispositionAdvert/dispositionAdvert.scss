@@ -1,0 +1,8 @@
+@import '../../../../style/variables.scss';
+
+.disposition-advert {
+    display: flex;
+    background-color: $disp-ad-background;
+    padding: 10px 5px;
+    box-sizing: border-box;
+}
