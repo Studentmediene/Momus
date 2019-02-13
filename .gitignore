@@ -43,3 +43,8 @@ webapp-beta/dist/**/*
 
 package-lock.json
 yarn.lock
+
+certificate.crt
+
+# Docker compose env
+.env

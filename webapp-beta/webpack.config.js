@@ -6,6 +6,11 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const Visualizer = require('webpack-visualizer-plugin');
 const path = require('path');
 
+const devServerPort = process.env.DEV_SERVER_PORT || 8081;
+const proxyApiHost = process.env.PROXY_API_HOST || 'localhost';
+const proxyApiPort = process.env.PROXY_API_PORT || '8080';
+const proxyApi = `${proxyApiHost}:${proxyApiPort}`;
+
 const root = __dirname;
 const dev = root;
 const out = path.join(root, 'dist');
@@ -48,14 +53,15 @@ const plugins = commonPlugins.concat(isprod ? prodPlugins : []);
 if (visualize) plugins.push(new Visualizer());
 
 const devServer = {
+    host: '0.0.0.0',
     publicPath: publicPath,
-    port: 8081,
+    port: devServerPort,
     historyApiFallback: true,
     proxy: {
-        '/api': 'http://localhost:8080',
-        '/saml': 'http://localhost:8080',
+        '/api': `http://${proxyApi}`,
+        '/saml': `http://${proxyApi}`,
         '/api/ws': {
-            target: 'ws://localhost:8080',
+            target: `ws://${proxyApi}`,
             ws: true
         }
     }
