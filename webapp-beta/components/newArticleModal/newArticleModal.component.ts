@@ -26,6 +26,8 @@ class NewArticleModalCtrl implements angular.IController {
 
     public onFinished: ({ value }: { value: Article }) => void;
 
+    public savePromise: angular.IPromise<Article> = null;
+
     private articleResource: ArticleResource;
 
     constructor(articleResource: ArticleResource) {
@@ -37,6 +39,7 @@ class NewArticleModalCtrl implements angular.IController {
             name: null,
             journalists: [],
             photographers: [],
+            graphics: [],
             comment: '',
             publication: this.publications.find((pub) => pub.id === this.publication.id),
             type: null,
@@ -55,7 +58,7 @@ class NewArticleModalCtrl implements angular.IController {
     }
 
     public create() {
-        this.article.$save({}, (article: Article) => {
+        this.savePromise = this.article.$save({}, (article: Article) => {
             this.onFinished({ value: article });
         });
     }

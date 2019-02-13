@@ -12,6 +12,8 @@ class NewAdvertModalCtrl implements angular.IController {
 
     public onFinished: ({ value }: { value: Advert }) => void;
 
+    public savePromise: angular.IPromise<Advert>;
+
     private advertResource: AdvertResource;
 
     constructor(advertResource: AdvertResource) {
@@ -26,7 +28,7 @@ class NewAdvertModalCtrl implements angular.IController {
     }
 
     public create() {
-        this.advert.$save({}, (advert: Advert) => {
+        this.savePromise = this.advert.$save({}, (advert: Advert) => {
             this.onFinished({ value: advert });
         });
     }
