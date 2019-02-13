@@ -64,6 +64,7 @@
             items="vm.layoutStatuses"
             label="'name'"
             unclearable
+            small
         >
             <item-markup>
                 <span class="status-dropdown-item" style="background-color: {{$parent.value.color}}">
@@ -73,28 +74,22 @@
         </select-dropdown>
     </div>
 
-    <!--Done-->
-    <div ng-style="vm.columnWidths.done">
-        <span style="cursor: pointer" ng-click="vm.page.done = !vm.page.done; vm.updatePageMeta();">
-            <i class="fas fa-check fa-lg"
-                ng-class="{'uk-text-danger' : !vm.page.done, 'uk-text-success' : vm.page.done }"
-                uib-tooltip="Siden er {{!vm.page.done ? 'ikke ' : ''}} helt ferdig">
-            </i>
-        </span>
-    </div>
-
-    <!--Edit-->
-    <div ng-style="vm.columnWidths.edit">
+    <!-- Buttons -->
+    <div class="page-buttons" ng-style="vm.columnWidths.buttons">
+        <button
+            ng-click="vm.toggleDone()"
+            class="uk-button button-xs"
+            ng-class="{'uk-button-danger' : !vm.page.done, 'button-new' : vm.page.done }"
+            uk-tooltip="Siden er {{!vm.page.done ? 'ikke ' : ''}} helt ferdig"
+        >
+            <i class="fas fa-check fa-lg"></i>
+        </button>
         <button ng-click="vm.editPage()" class="uk-button button-edit button-xs" ng-hide="vm.editing">
             <i class="fas fa-edit"></i>
         </button>
         <button ng-click="vm.submitPage()" class="uk-button button-new button-xs" ng-show="vm.editing">
             <i class="fas fa-save"></i>
         </button>
-    </div>
-
-    <!--Delete-->
-    <div ng-style="vm.columnWidths.delete">
         <button ng-click="vm.deletePage()" class="uk-button uk-button-danger button-xs">
             <i class="fas fa-trash"></i>
         </button>

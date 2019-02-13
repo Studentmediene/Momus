@@ -78,6 +78,11 @@ class DispositionPageCtrl implements angular.IController {
         );
     }
 
+    public toggleDone() {
+        this.page.done = !this.page.done;
+        this.updatePageMeta();
+    }
+
     public deletePage() {
         this.onDelete({ page: this.page });
     }

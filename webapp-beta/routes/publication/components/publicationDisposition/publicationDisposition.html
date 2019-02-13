@@ -13,43 +13,33 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<div ng-if="vm.noPublication">
-    <div>
-        <h1>Ingen utgaver funnet.</h1>
-    </div>
-</div>
-
-<div id="disposition" ng-hide="vm.noPublication">
-    <div ng-show="vm.loading" class="d-loading-spinner">
-        <i class="fa fa-circle-o-notch fa-spin fa-4x"></i>
-    </div>
-    <div id="toolbar" uk-sticky="offset: 50; cls-active: d-toolbar-attach" class="d-toolbar">
-        <h3 class="d-title uk-text-uppercase">Disposisjon for <b>{{vm.publication.name}}</b></h3>
-        <div id="online-users" style="min-height: 40px">
-            <div ng-repeat="user in vm.presentUsers track by user.id" style="margin: 5px">
+<div id="disposition">
+    <div class="d-toolbar" uk-sticky="offset: 50; cls-active: d-toolbar-attach">
+        <div class="d-title-row">
+            <h3 class="uk-text-uppercase uk-margin-remove-bottom">Disposisjon for <b>{{vm.publication.name}}</b></h3>
+            <span ng-repeat="user in vm.presentUsers track by user.id">
                 <person-avatar
                     user="user"
                     size="30"
-                    uk-tooltip="title: {{user.name}} redigerer denne disposisjonen; pos: top">
+                    uk-tooltip="title: {{user.name}} redigerer denne disposisjonen; pos: bottom">
                 </person-avatar>
-            </div>
+            </span>
         </div>
-        <div class="button-group">
+        <div class="d-button-group">
             <a
                 class="uk-button uk-button-primary uk-button-small"
                 href="/api/publications/{{vm.publication.id}}/colophon"
                 target="_blank"
             >
-                <i class="fas fa-file-alt"></i> Generer kolofon
+                <i class="fas fa-file-alt"></i> Kolofon
             </a>
-            <button
+            <!-- <button
                 class="uk-button uk-button-primary uk-button-small"
                 ng-click="vm.hideAllButtonRows()"
                 ng-disabled="vm.openButtonRows.length === 0"
             >
-                <i class="fas fa-caret-up"></i> Lukk ekstraknapp-rader
-            </button>
+                <i class="fas fa-caret-up"></i> Lukk ekstraknapper
+            </button> -->
             <page-adder
                 max-num-pages="vm.maxNewPages"
                 max-page-pos="vm.pages.length"
@@ -60,7 +50,7 @@
             </button>
         </div>
         <!-- Headers -->
-        <div style="display: flex">
+        <div class="d-column-headers">
             <div ng-style="vm.columnWidths.page_nr">#</div>
             <div ng-style="vm.columnWidths.dropdown"></div>
             <div ng-style="vm.columnWidths.name">Navn</div>
@@ -72,9 +62,7 @@
             <div ng-style="vm.columnWidths.photo_status">Fotostatus</div>
             <div ng-style="vm.columnWidths.comment">Kommentar</div>
             <div ng-style="vm.columnWidths.layout">Layout</div>
-            <div ng-style="vm.columnWidths.done"></div>
-            <div ng-style="vm.columnWidths.edit"></div>
-            <div ng-style="vm.columnWidths.delete"></div>
+            <div ng-style="vm.columnWidths.buttons"></div>
         </div>
     </div>
     <div

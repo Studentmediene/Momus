@@ -55,9 +55,7 @@ const columnWidthTemplates: ColumnWidthTemplates = {
         calculated: 120,
     },
     layout: {scope: 'page', width: 90},
-    done: {scope: 'page', width: 30},
-    edit: {scope: 'page', width: 30},
-    delete: {scope: 'page', width: 30},
+    buttons: {scope: 'page', width: 90},
 };
 
 // Get the width of the entire disposition and article table that is constant

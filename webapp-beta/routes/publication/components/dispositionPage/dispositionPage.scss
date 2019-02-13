@@ -29,3 +29,12 @@
         margin-right: 5px;
     }
 }
+
+.page-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    :not(:first-child) {
+        margin-left: 3px;
+    }
+}
