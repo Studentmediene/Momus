@@ -8,109 +8,29 @@ type ItemType = Model | number | string;
 /* @ngInject */
 class SelectDropdownCtrl implements angular.IController {
     public ngModel: angular.INgModelController;
-    public viewModel: ItemType;
+    public value: ItemType;
     public required: string;
+    public isRequired: boolean;
     public onChange: ({ value }: {value: ItemType}) => void;
 
-    public hasItemMarkup: boolean;
-    public items: ItemType[];
-    public sortKey: string;
-    public label: string;
-    public placeholder: string;
-    public showDropdown: boolean = false;
-    public shouldUnfocus: boolean = true;
-
-    public listIndex: number = 0;
-
-    private $transclude: angular.ITranscludeFunction;
-    private $timeout: angular.ITimeoutService;
-
-    constructor($timeout: angular.ITimeoutService, $transclude: angular.ITranscludeFunction) {
-        this.$timeout = $timeout;
-        this.$transclude = $transclude;
-    }
-
     public $onInit() {
-        this.hasItemMarkup = this.$transclude.isSlotFilled('itemMarkup');
+        this.isRequired = this.required != null;
+        this.ngModel.$setValidity('required', !this.isRequired || this.ngModel.$viewValue != null);
         this.ngModel.$render = () => {
-            this.viewModel = this.ngModel.$viewValue;
-        };
-
-        this.ngModel.$validators.req = (modelValue: ItemType, viewValue: ItemType) => {
-            const val = modelValue || viewValue;
-            return !this.required || val != null;
+            this.value = this.ngModel.$viewValue;
         };
     }
 
-    public clear($event: MouseEvent) {
-        this.setModel(null);
-        $event.stopPropagation();
+    public clear() {
+        this.value = null;
+        this.changeHandler();
     }
 
-    public onFocus() {
-        this.showDropdown = true;
-    }
-
-    public onBlur() {
-        if (!this.shouldUnfocus) {
-            return;
-        }
-        this.$timeout(100).then(() => {
-            this.showDropdown = false;
-        });
-    }
-
-    public onListMousedown() {
-        this.shouldUnfocus = false;
-    }
-
-    public onListMouseup() {
-        this.shouldUnfocus = true;
-    }
-
-    public onSelect(p: ItemType) {
-        this.setModel(p);
-        this.showDropdown = false;
-    }
-
-    public onKeypress(evt: KeyboardEvent) {
-        const e = (<HTMLElement> evt.currentTarget).getElementsByClassName('select-dropdown-drop')[0];
-        if (this.showDropdown) {
-            let child;
-            switch (evt.key) {
-                case 'ArrowUp':
-                    this.listIndex = this.listIndex === 0
-                        ? this.listIndex
-                        : this.listIndex - 1;
-                    child = e.children[this.listIndex];
-                    child.scrollIntoView({block: 'nearest'});
-                    evt.preventDefault();
-                    break;
-                case 'ArrowDown':
-                    this.listIndex = this.listIndex === this.items.length - 1
-                        ? this.listIndex
-                        : this.listIndex + 1;
-                    child = e.children[this.listIndex];
-                    child.scrollIntoView({block: 'nearest'});
-                    evt.preventDefault();
-                    break;
-                case 'Enter':
-                    this.onSelect(this.items[this.listIndex]);
-                    evt.preventDefault();
-                    break;
-                case 'Escape':
-                    this.onBlur();
-            }
-        }
-    }
-
-    private setModel(value: ItemType) {
-        this.ngModel.$setViewValue(value);
-        this.ngModel.$render();
-        this.ngModel.$validate();
-
+    public changeHandler() {
+        this.ngModel.$setViewValue(this.value);
+        this.ngModel.$setValidity('required', !this.isRequired || this.ngModel.$viewValue != null);
         if (this.onChange != null) {
-            this.onChange({ value });
+            this.onChange({ value: this.value });
         }
     }
 }
@@ -128,12 +48,10 @@ export default angular
             placeholder: '@',
             unclearable: '@',
             required: '@',
+            small: '@',
             onChange: '&',
         },
         require: {
             ngModel: 'ngModel',
-        },
-        transclude: {
-            itemMarkup: '?itemMarkup',
         },
     });
