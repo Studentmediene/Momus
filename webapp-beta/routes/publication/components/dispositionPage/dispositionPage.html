@@ -87,17 +87,17 @@
 
     <!--Edit-->
     <div class="d-table-cell" ng-style="vm.columnWidths.edit">
-        <button ng-click="vm.editPage(this)" class="uk-button button-edit button-xs" ng-hide="vm.editing">
+        <button ng-click="vm.editPage()" class="uk-button button-edit button-xs" ng-hide="vm.editing">
             <i class="fas fa-edit"></i>
         </button>
-        <button ng-click="vm.submitPage(this)" class="uk-button button-new button-xs" ng-show="vm.editing">
+        <button ng-click="vm.submitPage()" class="uk-button button-new button-xs" ng-show="vm.editing">
             <i class="fas fa-save"></i>
         </button>
     </div>
 
     <!--Delete-->
     <div class="d-table-cell" ng-style="vm.columnWidths.delete">
-        <button ng-click="vm.deletePage(page)" class="uk-button uk-button-danger button-xs">
+        <button ng-click="vm.deletePage()" class="uk-button uk-button-danger button-xs">
             <i class="fas fa-trash"></i>
         </button>
     </div>

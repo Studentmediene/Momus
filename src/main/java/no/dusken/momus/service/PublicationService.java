@@ -18,7 +18,6 @@ package no.dusken.momus.service;
 
 
 import lombok.extern.slf4j.Slf4j;
-import no.dusken.momus.dto.SimplePublication;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.repository.PublicationRepository;
@@ -47,7 +46,7 @@ public class PublicationService {
         this.articleService = articleService;
     }
 
-    public List<SimplePublication> getAllPublications() {
+    public List<Publication> getAllPublications() {
         return publicationRepository.findAllByOrderByReleaseDateDesc();
     }
 
@@ -60,11 +59,8 @@ public class PublicationService {
      * @return Returns the oldest publication that has not been released yet at the time of the date parameter
      */
     public Publication getActivePublication(LocalDate date){
-        return publicationRepository.findFirstByReleaseDateAfterOrderByReleaseDate(date.minus(1, ChronoUnit.DAYS), Publication.class);
-    }
-
-    public SimplePublication getActiveSimplePublication(LocalDate date) {
-        return publicationRepository.findFirstByReleaseDateAfterOrderByReleaseDate(date.minus(1, ChronoUnit.DAYS), SimplePublication.class);
+        return publicationRepository.findFirstByReleaseDateAfterOrderByReleaseDate(date.minus(1, ChronoUnit.DAYS))
+            .orElse(null);
     }
 
     public Publication createPublication(Publication publication, Integer numEmptyPages){

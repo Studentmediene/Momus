@@ -143,7 +143,7 @@
                 <i class="fas fa-circle-notch fa-spin fa-4x"></i>
             </div>
             <!-- No articles found -->
-            <div class="uk-text-center uk-padding-small" ng-show="vm.results.length === 0">
+            <div class="uk-text-center uk-padding-small" ng-show="vm.results.$resolved && vm.results.length === 0">
                 <i class="fas fa-sad-tear fa-2x"></i>
                 <br />
                 Ingen artikler funnet...

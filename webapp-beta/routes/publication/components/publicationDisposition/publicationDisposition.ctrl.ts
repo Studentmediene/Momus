@@ -19,6 +19,8 @@ interface ArticleScope extends angular.IScope {
 export default class PublicationDispositionCtrl implements angular.IController {
     public maxNewPages: number = 100;
     public publication: Publication;
+    public pages: Page[];
+    public articles: Article[];
     public adverts: Advert[];
     public pageOrder: PageOrder;
     public session: Session;
@@ -62,9 +64,15 @@ export default class PublicationDispositionCtrl implements angular.IController {
     }
 
     public $onInit() {
-        this.pagesLookup = toIdLookup(this.publication.pages);
-        this.articlesLookup = toIdLookup(this.publication.articles);
-        this.advertsLookup = toIdLookup(this.adverts);
+        this.pages.$promise.then((pages) => {
+            this.pagesLookup = toIdLookup(pages);
+        });
+        this.articles.$promise.then((articles) => {
+            this.articlesLookup = toIdLookup(articles);
+        });
+        this.adverts.$promise.then((adverts) => {
+            this.advertsLookup = toIdLookup(adverts);
+        });
 
         this.presentUsers = this.session.getPresentUsers();
 
@@ -74,16 +82,16 @@ export default class PublicationDispositionCtrl implements angular.IController {
                 const {entity, action} = data;
                 switch (action) {
                     case 'CREATE':
-                        this.publication.pages.push(entity);
+                        this.pages.push(entity);
                         this.pagesLookup[entity.id] = entity;
                         break;
                     case 'UPDATE':
-                        this.publication.pages.splice(
-                            this.publication.pages.findIndex((p) => p.id === entity.id), 1, entity);
+                        this.pages.splice(
+                            this.pages.findIndex((p) => p.id === entity.id), 1, entity);
                         this.pagesLookup[entity.id] = entity;
                         break;
                     case 'DELETE':
-                        this.publication.pages.splice(this.publication.pages.findIndex((p) => p.id === entity.id), 1);
+                        this.pages.splice(this.pages.findIndex((p) => p.id === entity.id), 1);
                         delete this.pagesLookup[entity.id];
                 }
             },
@@ -91,12 +99,12 @@ export default class PublicationDispositionCtrl implements angular.IController {
                 const {entity, action} = data;
                 switch (action) {
                     case 'CREATE':
-                        this.publication.articles.push(entity);
+                        this.articles.push(entity);
                         this.articlesLookup[entity.id] = entity;
                         break;
                     case 'UPDATE':
-                        this.publication.articles.splice(
-                            this.publication.articles.findIndex((a) => a.id === entity.id), 1, entity);
+                        this.articles.splice(
+                            this.articles.findIndex((a) => a.id === entity.id), 1, entity);
                         this.articlesLookup[entity.id] = entity;
                         break;
                 }
@@ -169,7 +177,7 @@ export default class PublicationDispositionCtrl implements angular.IController {
         }, (pages) => {
             pages.forEach((p) => {
                 this.pagesLookup[p.id] = p;
-                this.publication.pages.push(p);
+                this.pages.push(p);
             });
             this.pageOrder.order.splice(newPageAt, 0, ...pages.map((p) => ({id: p.id})));
             this.loading = false;
@@ -182,7 +190,7 @@ export default class PublicationDispositionCtrl implements angular.IController {
 
     public deletePage(page: Page) {
         if (confirm('Er du sikker på at du vil slette denne siden?')) {
-            this.publication.pages.splice(this.publication.pages.indexOf(page), 1);
+            this.pages.splice(this.pages.indexOf(page), 1);
             this.pageOrder.order.splice(this.pageOrder.order.findIndex((p) => p.id === page.id), 1);
             delete this.pagesLookup[page.id];
             this.loading = true;

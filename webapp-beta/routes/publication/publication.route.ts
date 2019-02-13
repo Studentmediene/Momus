@@ -1,7 +1,7 @@
 import * as angular from 'angular';
 
 import { Environment } from '../../app.types';
-import { StateProvider, StateParams } from '@uirouter/angularjs';
+import { StateProvider, StateParams, StateService } from '@uirouter/angularjs';
 import { PublicationResource } from 'resources/publication.resource';
 
 import publicationOverview from './components/publicationOverview/publicationOverview.component';
@@ -34,30 +34,46 @@ const routeModule = angular
                 },
                 resolve: {
                     publications: (publicationResource: PublicationResource) =>
-                        publicationResource.query().$promise,
+                        publicationResource.query(),
                 },
             })
             .state('publication.disposition', {
                 url: '/utgaver/:id/disposisjon',
                 component: 'publicationDisposition',
                 params: {
-                    id: {value: 'aktiv'},
+                    id: { value: 'aktiv' },
                 },
                 resolve: {
-                    publication: ($stateParams: StateParams, publicationResource: PublicationResource) =>
-                        $stateParams.id === 'aktiv' ?
-                            publicationResource.active().$promise :
-                            publicationResource.get({id: $stateParams.id}).$promise,
+                    publication: (
+                        activePublication: Publication,
+                        publicationResource: PublicationResource,
+                        $stateParams: StateParams,
+                        $state: StateService,
+                        $q: angular.IQService,
+                    ) => {
+                        if ($stateParams.id !== 'aktiv') {
+                            return publicationResource.get({id: $stateParams.id}).$promise;
+                        } else if (activePublication.id == null) {
+                            $state.go('error', { message: 'Det finnes ingen aktiv utgave.' });
+                            return $q.reject();
+                        } else {
+                            return activePublication;
+                        }
+                    },
+                    pages: (publication: Publication, pageResource: PageResource) =>
+                        pageResource.query({ publicationId: publication.id }),
                     pageOrder: (pageResource: PageResource, publication: Publication) =>
-                        pageResource.pageOrder({ publicationId: publication.id }).$promise,
+                        pageResource.pageOrder({ publicationId: publication.id }),
+                    articles: (articleResource: ArticleResource, publication: Publication) =>
+                        articleResource.query({publicationId: publication.id}),
                     adverts: (advertResource: AdvertResource) =>
-                        advertResource.query().$promise,
+                        advertResource.query(),
                     articleStatuses: (articleResource: ArticleResource) =>
-                        articleResource.statuses().$promise,
+                        articleResource.statuses(),
                     reviewStatuses: (articleResource: ArticleResource) =>
-                        articleResource.reviewStatuses().$promise,
+                        articleResource.reviewStatuses(),
                     layoutStatuses: (publicationResource: PublicationResource) =>
-                        publicationResource.layoutStatuses().$promise,
+                        publicationResource.layoutStatuses(),
                 },
                 data: {
                     nav: {

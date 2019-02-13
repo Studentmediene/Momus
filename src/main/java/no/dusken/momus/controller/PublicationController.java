@@ -16,8 +16,6 @@
 
 package no.dusken.momus.controller;
 
-import no.dusken.momus.dto.SimplePublication;
-import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.LayoutStatus;
 import no.dusken.momus.model.Publication;
 import no.dusken.momus.service.PublicationService;
@@ -45,7 +43,7 @@ public class PublicationController {
     }
 
     @GetMapping
-    public List<SimplePublication> getAllPublications(){
+    public List<Publication> getAllPublications(){
         return publicationService.getAllPublications();
     }
 
@@ -69,22 +67,7 @@ public class PublicationController {
 
     @GetMapping("/active")
     public Publication getActivePublication(){
-        Publication active = publicationService.getActivePublication(LocalDate.now());
-        if(active == null) {
-            throw new RestException("No active publication found", HttpServletResponse.SC_NOT_FOUND);
-        }
-
-        return active;
-    }
-
-    @GetMapping("/active/simple")
-    public SimplePublication getSimpleActivePublication() {
-        SimplePublication active = publicationService.getActiveSimplePublication(LocalDate.now());
-        if(active == null) {
-            throw new RestException("No active publication found", HttpServletResponse.SC_NOT_FOUND);
-        }
-
-        return active;
+        return publicationService.getActivePublication(LocalDate.now());
     }
 
     @GetMapping("/{pubid}/colophon")

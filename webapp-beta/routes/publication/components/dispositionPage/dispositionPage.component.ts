@@ -13,7 +13,9 @@ import { PersonResource } from 'resources/person.resource';
 class DispositionPageCtrl implements angular.IController {
     public page: Page;
     public publication: Publication;
+    public articles: Article[];
     public adverts: Advert[];
+    public onDelete: (page: {page: Page}) => void;
 
     public articlesLookup: {[index: number]: Article};
     public advertsLookup: {[index: number]: Advert};
@@ -75,7 +77,7 @@ class DispositionPageCtrl implements angular.IController {
     }
 
     public deletePage() {
-
+        this.onDelete({ page: this.page });
     }
 
     public updatePageMeta() {
@@ -92,7 +94,7 @@ class DispositionPageCtrl implements angular.IController {
             types: this.articleResource.types(),
         }).then((article) => {
             this.articlesLookup[article.id] = article;
-            this.publication.articles.push(article);
+            this.articles.push(article);
             page.articles.push(article.id);
         });
     }
@@ -113,8 +115,9 @@ export default angular.module('momusApp.routes.publication.dispositionPage', [])
         controllerAs: 'vm',
         bindings: {
             number: '<',
-            page: '<',
             publication: '<',
+            page: '<',
+            articles: '<',
             columnWidths: '<',
             articleWidth: '<',
             adverts: '<',
@@ -123,5 +126,6 @@ export default angular.module('momusApp.routes.publication.dispositionPage', [])
             layoutStatuses: '<',
             articleStatuses: '<',
             reviewStatuses: '<',
+            onDelete: '&',
         },
     });

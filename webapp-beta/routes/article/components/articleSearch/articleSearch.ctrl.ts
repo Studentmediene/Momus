@@ -39,7 +39,9 @@ export default class ArticleSearchCtrl implements angular.IController {
     }
 
     public $onInit() {
-        this.hasNextPage = this.results.length > this.searchParams.page_size;
+        this.results.$promise.then(() => {
+            this.hasNextPage = this.results.length > this.searchParams.page_size;
+        });
     }
 
     public search(pageDelta: number) {

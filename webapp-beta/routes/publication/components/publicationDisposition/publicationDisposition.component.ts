@@ -19,7 +19,9 @@ export default angular.module('momusApp.routes.publication.publicationDispositio
     .component('publicationDisposition', {
         bindings: {
             publication: '<',
+            pages: '<',
             pageOrder: '<',
+            articles: '<',
             adverts: '<',
             articleStatuses: '<',
             reviewStatuses: '<',

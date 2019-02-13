@@ -108,25 +108,23 @@ angular.module('momusApp', [
                                 }).$promise :
                             [];
                     },
-                    activePublication: Publication => Publication.active().$promise
-                        .then(pub => pub)
-                        .catch(() => null),
+                    activePublication: Publication => Publication.active(),
                     sections: Article => Article.sections().$promise,
                     statuses: Article => Article.statuses().$promise,
                     statusCounts: (activePublication, Article) => {
-                        return activePublication ?
+                        return activePublication.id != null ?
                             Article.statusCounts({publicationId: activePublication.id}).$promise :
                             [];
                     },
                     reviewStatuses: Article => Article.reviewStatuses().$promise,
                     reviewStatusCounts: (activePublication, Article) => {
-                        return activePublication ?
+                        return activePublication.id != null ?
                             Article.reviewStatusCounts({publicationId: activePublication.id}).$promise :
                             [];
                     },
                     layoutStatuses: Publication => Publication.layoutStatuses().$promise,
                     layoutStatusCounts: (activePublication, Page) => {
-                        return activePublication ?
+                        return activePublication.id != null ?
                             Page.layoutStatusCounts({pubid: activePublication.id}).$promise :
                             [];
                     },
@@ -154,9 +152,7 @@ angular.module('momusApp', [
                     archived: {type: 'bool'}
                 },
                 resolve: {
-                    activePublication: Publication => Publication.active().$promise
-                        .then(pub => pub)
-                        .catch(() => null),
+                    activePublication: Publication => Publication.active(),
                     publications: Publication => Publication.query().$promise,
                     persons: Person => Person.query().$promise,
                     sections: Article => Article.sections().$promise,
@@ -199,11 +195,23 @@ angular.module('momusApp', [
                     id: {squash: true, value: null}
                 },
                 resolve: {
-                    publication: ($stateParams, Publication) => $stateParams.id == null ?
-                        Publication.active().$promise :
-                        Publication.get({id: $stateParams.id}).$promise,
-                    pageOrder: (publication, Page) => Page.pageOrder({publicationId: publication.id}).$promise,
-                    adverts: Advert => Advert.query().$promise,
+                    publication: ($q, $state, $stateParams, Publication) => {
+                        if ($stateParams.id == null) {
+                            return Publication.active().$promise.then(publication => {
+                                if (publication.id == null) {
+                                    $state.go('front');
+                                    return $q.reject();
+                                }
+                                return publication;
+                            });
+                        } else {
+                            return Publication.get({id: $stateParams.id}).$promise;
+                        }
+                    },
+                    pages: (publication, Page) => Page.query({publicationId: publication.id}),
+                    pageOrder: (publication, Page) => Page.pageOrder({publicationId: publication.id}),
+                    articles: (publication, Article) => Article.query({publicationId: publication.id}),
+                    adverts: Advert => Advert.query(),
                     articleStatuses: Article => Article.statuses().$promise,
                     reviewStatuses: Article => Article.reviewStatuses().$promise,
                     layoutStatuses: Publication => Publication.layoutStatuses().$promise

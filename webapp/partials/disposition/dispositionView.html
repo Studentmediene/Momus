@@ -51,7 +51,7 @@
             </button>
             <page-adder
                 max-num-pages="vm.maxNewPages"
-                max-page-pos="vm.publication.pages.length"
+                max-page-pos="vm.pages.length"
                 submit="vm.newPages(newPageAt, numNewPages)">
             </page-adder>
             <button class="btn btn-success" ng-click="vm.showHelp()">
@@ -105,7 +105,7 @@
                             class="pull-left" style="width: 90%;"
                             multiple
                             use-ids
-                            items="vm.publication.articles"
+                            items="vm.articles"
                             target="page.articles"
                             show="name">
                         </id-select>

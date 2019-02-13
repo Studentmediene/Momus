@@ -48,7 +48,7 @@ angular.module('momusApp.controllers')
         vm.favouriteSectionArticles = favouriteSectionArticles;
         vm.sections = sections;
         vm.publication = activePublication;
-        vm.noPublication = activePublication == null;
+        vm.noPublication = activePublication.id == null;
         vm.news = news;
 
         if(!vm.noPublication) {

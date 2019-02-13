@@ -1,6 +1,7 @@
 import * as angular from 'angular';
 import { Publication } from 'models/Publication';
 import { PublicationResource } from 'resources/publication.resource';
+import { StateService } from '@uirouter/core';
 
 /* @ngInject */
 class PublicationOverviewCtrl implements angular.IController {
@@ -18,15 +19,19 @@ class PublicationOverviewCtrl implements angular.IController {
     public publicationForm: angular.INgModelController;
 
     private publicationResource: PublicationResource;
+    private $state: StateService;
 
-    constructor(publicationResource: PublicationResource) {
+    constructor(publicationResource: PublicationResource, $state: StateService) {
         this.publicationResource = publicationResource;
+        this.$state = $state;
 
         this.isInCurrentYear = this.isInCurrentYear.bind(this);
     }
 
     public $onInit() {
-        this.yearOptions = this.createYearOptions();
+        this.publications.$promise.then(() => {
+            this.yearOptions = this.createYearOptions();
+        });
     }
 
     public isInCurrentYear(publication: Publication) {
@@ -57,6 +62,7 @@ class PublicationOverviewCtrl implements angular.IController {
                 this.publications.push(publication);
                 this.editPublication(publication);
                 this.yearOptions = this.createYearOptions();
+                this.$state.reload(); // We need to reload to refetch active publication, since it might have changed
             }).$promise;
         } else { // it's an old one
             const updatedIndex = this.publications.findIndex((pub) => pub.id === this.editing.id);
@@ -64,6 +70,8 @@ class PublicationOverviewCtrl implements angular.IController {
                 this.publications[updatedIndex] = updated;
                 this.editPublication(updated);
                 this.yearOptions = this.createYearOptions();
+                this.$state.reload();
+
             }).$promise;
         }
     }
