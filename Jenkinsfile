@@ -5,6 +5,7 @@ pipeline {
     environment {
         momusWar = 'target/momus-*.war'
         testReports = 'target/surefire-reports/*.xml'
+        teamsUrl = 'https://outlook.office.com/webhook/18a676a7-fd27-4e0a-8b81-fd91abd9692a@c845b8fa-0078-426b-8679-0da9f5eb0eed/JenkinsCI/d103706acbc94615aac713a658615647/9f437a56-fe33-4eb8-b7eb-6bfdf3ac4f70'
     }
 
     stages {
@@ -38,7 +39,7 @@ pipeline {
             }
             
             steps {
-                sh 'npm install'
+                sh 'npm ci'
 
                 sh 'npm run build'
                 sh 'npm run build:beta'
@@ -107,34 +108,9 @@ pipeline {
                 }
 
                 if(BRANCH_NAME in ['master', 'develop']) {
-                    notifyTeams(currentBuild)
+                    notifyTeams(teamsUrl, currentBuild.currentResult)
                 }
             }
         }
     }
-}
-
-def notifyTeams(currentBuild) {
-    def url = 'https://outlook.office.com/webhook/18a676a7-fd27-4e0a-8b81-fd91abd9692a@c845b8fa-0078-426b-8679-0da9f5eb0eed/JenkinsCI/d103706acbc94615aac713a658615647/9f437a56-fe33-4eb8-b7eb-6bfdf3ac4f70'
-    def status
-    def color
-
-    switch (currentBuild.currentResult) {
-        case 'SUCCESS':
-            color = '00f000'
-            status = 'succeded'
-            break
-
-        case 'UNSTABLE':
-            color = 'fff000'
-            status = 'is unstable'
-            break
-
-        case 'FAILURE':
-            color = 'd00000'
-            status = 'failed'
-            break
-    }
-
-    office365ConnectorSend message: 'Build ' + status, status: currentBuild.currentResult, color: color, webhookUrl: url
 }

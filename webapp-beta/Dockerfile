@@ -3,7 +3,8 @@ FROM node:10-alpine
 WORKDIR /
 
 COPY package.json package.json
-RUN npm install --no-progress --ignore-optional
+COPY package-lock.json package-lock.json
+RUN npm ci
 
 COPY tsconfig.json tsconfig.json
 COPY webapp-beta webapp-beta
