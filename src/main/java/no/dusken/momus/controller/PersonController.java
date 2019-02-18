@@ -86,7 +86,6 @@ public class PersonController {
 
     @GetMapping("/me")
     public Person getCurrentUser() {
-        System.out.println("getting");
         return userDetailsService.getLoggedInPerson();
     }
 

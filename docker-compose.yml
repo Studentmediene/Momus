@@ -5,9 +5,10 @@ services:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - dev_db
+      - database
       - frontend-beta
       - frontend
+      - ssh_tunnel
     ports:
       - "8080:8080"
     volumes:
@@ -36,7 +37,7 @@ services:
       - "8082:8082"
     volumes:
       - ./webapp-beta:/webapp-beta
-  dev_db:
+  database:
     image: postgres:11-alpine
     restart: always
     environment:

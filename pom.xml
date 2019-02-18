@@ -358,10 +358,6 @@
                             <resourceBase>src/main/webapp</resourceBase>
                         </resourceBases>
                     </webApp>
-                    <scanIntervalSeconds>5</scanIntervalSeconds>
-                    <scanTargets>
-                        <scanTarget>src/main/java/no/dusken/momus</scanTarget>
-                    </scanTargets>
                 </configuration>
             </plugin>
             <!-- Control how the application is built -->
