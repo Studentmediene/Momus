@@ -31,7 +31,7 @@ pipeline {
             agent {
                 docker {
                     reuseNode true
-                    image 'node:9.5'
+                    image 'node:lts-alpine'
                 }
             }
             environment {
