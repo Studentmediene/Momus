@@ -34,21 +34,6 @@
         </encoder>
     </appender>
 
-    <!-- Log to a rolling file, e.g. it creates a file for each day -->
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- Use the location specified in properties, and name it by the date -->
-            <fileNamePattern>${log.location}momus.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- Only keep last 30 days -->
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-
-        <encoder>
-            <pattern>%-7([%level]) %date{HH:mm:ss} %thread %logger{36}: %msg %n</pattern>
-        </encoder>
-    </appender>
-
-
     <!-- Hide the info/debug from these frameworks even if the log level is lower as it's a lot of spam!-->
     <logger name="org.hibernate" level="WARN" />
 
@@ -63,19 +48,8 @@
     <logger name="PROTOCOL_MESSAGE" level="INFO"/>
     <logger name="httpclient" level="INFO"/>
 
-    <if condition='property("spring.profiles.active").contains("dev")'>
-        <then>
-            <root level="DEBUG">
-                <appender-ref ref="STDOUT" />
-                <appender-ref ref="FILE" />
-            </root>
-        </then>
-        <else>
-            <root level="DEBUG">
-                <!-- File only when not in dev -->
-                <appender-ref ref="FILE" />
-            </root>
-        </else>
-    </if>
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </root>
 
 </configuration>

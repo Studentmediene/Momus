@@ -1,4 +1,4 @@
-FROM maven:3.5-jdk-8-alpine as cache
+FROM maven:3-jdk-8-alpine as cache
 
 WORKDIR /
 
