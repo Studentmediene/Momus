@@ -227,7 +227,7 @@ public class ArticleService {
         for (Map.Entry<String, Object> e : articleQuery.getParams().entrySet()) {
             query.setParameter(e.getKey(), e.getValue());
         }
-        
+
         query.setMaxResults(params.getPageSize() + 1); // One extra, so searchpage can see if there is "more pages"
         query.setFirstResult(params.getStartOfPage());
 
