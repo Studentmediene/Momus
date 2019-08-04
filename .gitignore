@@ -19,7 +19,6 @@ log/
 database/
 node_modules/
 .tmp/
-src/main/webapp/app/libs/
 src/main/filters/local.properties
 src/main/resources/local.properties
 src/main/resources/spcert.pem
@@ -37,9 +36,7 @@ webapp/dist/**/*
 webapp-beta/dist/**/*
 !webapp-beta/dist/.gitkeep
 
-# sass output
-**/*.css
-**/*.css.map
+certificate.crt
 
-package-lock.json
-yarn.lock
+# Docker compose env
+.env
