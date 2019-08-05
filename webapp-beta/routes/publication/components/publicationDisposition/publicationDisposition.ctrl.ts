@@ -135,13 +135,13 @@ export default class PublicationDispositionCtrl implements angular.IController {
 
         this.updateDispSize();
         // To recalculate disp table when resizing the screen
-        angular.element(this.$window).bind('resize', () => {
+        angular.element(this.$window.document).bind('resize', () => {
             this.updateDispSize();
             this.$timeout(() => this.$scope.$apply());
         });
 
         this.$scope.$on('$destroy', () => {
-            angular.element(this.$window).unbind('resize');
+            angular.element(this.$window.document).unbind('resize');
         });
     }
 

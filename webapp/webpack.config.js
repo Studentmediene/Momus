@@ -5,7 +5,6 @@ const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const Visualizer = require('webpack-visualizer-plugin');
 const path = require('path');
 
 const devServerPort = process.env.DEV_SERVER_PORT || 8082;
@@ -22,8 +21,6 @@ const partials = 'partials/'; // HTML templates
 
 const isDevServer = process.argv.some(v => v.includes('webpack-dev-server'));
 const isprod = process.argv.indexOf('-p') !== -1;
-const visualize = process.argv.indexOf('--visualizer') !== -1;
-
 
 const commonPlugins = [
     // Injects bundles into the index file
@@ -60,7 +57,6 @@ const prodPlugins = [
 ];
 
 const plugins = commonPlugins.concat(isprod ? prodPlugins : []);
-if (visualize) plugins.push(new Visualizer());
 
 const devServer = {
     publicPath: publicPath,

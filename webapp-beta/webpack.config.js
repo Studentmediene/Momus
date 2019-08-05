@@ -3,7 +3,6 @@ const { BaseHrefWebpackPlugin } = require('base-href-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const Visualizer = require('webpack-visualizer-plugin');
 const path = require('path');
 
 const devServerPort = process.env.DEV_SERVER_PORT || 8081;
@@ -18,7 +17,6 @@ const publicPath = '/';
 const assets = 'assets/';
 
 const isprod = process.argv.indexOf('-p') !== -1;
-const visualize = process.argv.indexOf('--visualizer') !== -1;
 const isbeta = process.argv.indexOf('--beta') !== -1;
 
 const indexPath = path.join(publicPath, isbeta ? '/beta/' : '/');
@@ -50,7 +48,6 @@ const prodPlugins = [
 ];
 
 const plugins = commonPlugins.concat(isprod ? prodPlugins : []);
-if (visualize) plugins.push(new Visualizer());
 
 const devServer = {
     host: '0.0.0.0',
