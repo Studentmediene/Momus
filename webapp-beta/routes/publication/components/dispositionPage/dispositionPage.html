@@ -1,14 +1,14 @@
-<div class="d-table-row" ng-class="{'page-done': vm.page.done}">
+<div class="disposition-page" ng-class="{'page-done': vm.page.done}">
     <!--Page number-->
-    <div class="d-table-cell handle" ng-style="vm.columnWidths.page_nr">{{vm.number}}</div>
+    <div class="handle" ng-style="vm.columnWidths.page_nr">{{vm.number}}</div>
 
     <!--Edit mode -->
-    <div class="d-table-cell" ng-style="{width: vm.articleWidth + 'px'}" ng-show="vm.editing">
+    <div ng-style="{width: vm.articleWidth + 'px'}" ng-show="vm.editing">
         <div><b>Artikler</b></div>
-        <div class="d-article-input">
+        <div class="article-input">
             <multiselect-dropdown
                 ng-model="vm.newArticles"
-                items="vm.publication.articles"
+                items="vm.articles"
                 label="'name'"
                 placeholder="Artikler"
             >
@@ -21,7 +21,7 @@
             
         </div>
         <div><b>Annonser</b></div>
-        <div class="d-article-input">
+        <div class="article-input">
             <multiselect-dropdown
                 ng-model="vm.newAdverts"
                 items="vm.adverts"
@@ -38,21 +38,19 @@
     </div>
 
     <!-- View mode -->
-    <div class="d-table-cell article-cell" ng-style="{width: vm.articleWidth + 'px'}" ng-hide="vm.editing">
-        <div class="d-table">
-            <disposition-article
-                ng-repeat="articleId in vm.page.articles"
-                article="vm.articlesLookup[articleId]"
-                article-statuses="vm.articleStatuses"
-                review-statuses="vm.reviewStatuses"
-                column-widths="vm.columnWidths"
-            ></disposition-article>
-            <disposition-advert
-                ng-repeat="advertId in vm.page.adverts"
-                advert="vm.advertsLookup[advertId]"
-                column-widths="vm.columnWidths"
-            ></disposition-advert>          
-        </div>
+    <div class="article-cell" ng-style="{width: vm.articleWidth + 'px'}" ng-hide="vm.editing">
+        <disposition-article
+            ng-repeat="articleId in vm.page.articles"
+            article="vm.articlesLookup[articleId]"
+            article-statuses="vm.articleStatuses"
+            review-statuses="vm.reviewStatuses"
+            column-widths="vm.columnWidths"
+        ></disposition-article>
+        <disposition-advert
+            ng-repeat="advertId in vm.page.adverts"
+            advert="vm.advertsLookup[advertId]"
+            column-widths="vm.columnWidths"
+        ></disposition-advert>          
     </div>
 
     <!--Layout status-->
@@ -76,7 +74,7 @@
     </div>
 
     <!--Done-->
-    <div class="d-table-cell" ng-style="vm.columnWidths.done">
+    <div ng-style="vm.columnWidths.done">
         <span style="cursor: pointer" ng-click="vm.page.done = !vm.page.done; vm.updatePageMeta();">
             <i class="fas fa-check fa-lg"
                 ng-class="{'uk-text-danger' : !vm.page.done, 'uk-text-success' : vm.page.done }"
@@ -86,7 +84,7 @@
     </div>
 
     <!--Edit-->
-    <div class="d-table-cell" ng-style="vm.columnWidths.edit">
+    <div ng-style="vm.columnWidths.edit">
         <button ng-click="vm.editPage()" class="uk-button button-edit button-xs" ng-hide="vm.editing">
             <i class="fas fa-edit"></i>
         </button>
@@ -96,7 +94,7 @@
     </div>
 
     <!--Delete-->
-    <div class="d-table-cell" ng-style="vm.columnWidths.delete">
+    <div ng-style="vm.columnWidths.delete">
         <button ng-click="vm.deletePage()" class="uk-button uk-button-danger button-xs">
             <i class="fas fa-trash"></i>
         </button>

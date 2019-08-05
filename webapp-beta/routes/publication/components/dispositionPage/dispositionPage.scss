@@ -1,0 +1,31 @@
+@import '../../../../style/variables.scss';
+
+.disposition-page {
+    display: flex;
+    border-left: $disp-page-border;
+    border-top: $disp-page-border;
+
+    > :not(.article-cell) {
+        border-right: $disp-page-border;
+        box-sizing: border-box;
+        padding: 3px;
+    }
+}
+
+.article-cell {
+    >:not(:first-child) {
+        > * {
+            border-top: $disp-article-border;
+        }
+    }
+}
+
+.article-input {
+    display: flex;
+    align-items: center;
+
+    multiselect-dropdown {
+        flex-grow: 1;
+        margin-right: 5px;
+    }
+}
