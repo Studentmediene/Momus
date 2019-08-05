@@ -31,13 +31,16 @@
         </panel>
         <panel icon="'fas fa-star'" header="'Siste artikler fra din favorittredaksjon'" no-body-padding="true" type="'new'">
             <extra-header-content>
-                <select-dropdown
+                <ui-select
+                    theme="select2"
                     ng-model="vm.user.favouritesection"
-                    items="vm.sections"
-                    label="'name'"
-                    placeholder="Favorittredaksjon"
-                    on-change="">
-                </select-dropdown>
+                    search-enabled="false"
+                    style="width: 300px">
+                    <ui-select-match placeholder="Favorittredaksjon">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="item in vm.sections track by item.id">
+                        <span ng-bind-html="item.name"></span>
+                    </ui-select-choices>
+                </ui-select>
             </extra-header-content>
             <div
                 ng-show="vm.user.favouritesection == null"

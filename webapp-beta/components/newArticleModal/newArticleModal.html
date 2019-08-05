@@ -38,13 +38,12 @@
                 Journalister
             </label>
             <div class="uk-form-controls">
-                <multiselect-dropdown
-                    items="vm.persons"
-                    ng-model="vm.article.journalists"
-                    label="'name'"
-                    placeholder=""
-                >
-                </multiselect-dropdown>
+                <ui-select theme="select2" multiple ng-model="vm.article.journalists" style="width: 100%">
+                    <ui-select-match>{{$item.name}}</ui-select-match>
+                    <ui-select-choices repeat="item in (vm.persons | filter: $select.search) track by item.id">
+                        <div ng-bind-html="item.name"></div>
+                    </ui-select-choices>
+                </ui-select>
             </div>
         </div>
         <div class="uk-margin">
@@ -81,13 +80,12 @@
                 {{vm.article.use_illustration ? 'Illustratører' : 'Fotografer'}}
             </label>
             <div class="uk-form-controls">
-                <multiselect-dropdown
-                    items="vm.persons"
-                    ng-model="vm.article.photographers"
-                    label="'name'"
-                    placeholder=""
-                >
-                </multiselect-dropdown>
+                <ui-select theme="select2" multiple ng-model="vm.article.photographers" style="width: 100%">
+                    <ui-select-match>{{$item.name}}</ui-select-match>
+                    <ui-select-choices repeat="item in (vm.persons | filter: $select.search) track by item.id">
+                        <div ng-bind-html="item.name"></div>
+                    </ui-select-choices>
+                </ui-select>
             </div>
         </div>
         <div class="uk-margin">
@@ -119,13 +117,12 @@
                 Utgave
             </label>
             <div class="uk-form-controls">
-                <select-dropdown
-                    items="vm.publications"
-                    ng-model="vm.article.publication"
-                    label="'name'"
-                    unclearable
-                    required
-                ></select-dropdown>
+                <ui-select theme="select2" ng-model="vm.article.publication" required style="width: 100%">
+                    <ui-select-match placeholder="Utgave">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="item in (vm.publications | filter: $select.search) track by item.id">
+                        <div ng-bind-html="item.name"></div>
+                    </ui-select-choices>
+                </ui-select>
             </div>
         </div>
         <div class="uk-margin">
@@ -133,15 +130,20 @@
                 Redaksjon
             </label>
             <div class="uk-form-controls">
-                <select-dropdown
-                    items="vm.sections"
+                <ui-select
+                    id="section"
+                    name="section"
+                    theme="select2"
                     ng-model="vm.article.section"
-                    label="'name'"
-                    placeholder="Redaksjon"
-                    unclearable
                     required
-                >
-                </select-dropdown>
+                    
+                    style="width: 100%"
+                    ng-class="{'uk-form-danger': createArticleForm.section.$invalid }">
+                    <ui-select-match placeholder="Redaksjon">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="item in (vm.sections | filter: $select.search) track by item.id">
+                        <div ng-bind-html="item.name"></div>
+                    </ui-select-choices>
+                </ui-select>
             </div>
         </div>
         <div class="uk-margin">
@@ -150,15 +152,19 @@
             </label>
 
             <div class="uk-form-controls">
-                <select-dropdown
-                    items="vm.types"
+                <ui-select
+                    id="type"
+                    name="type"
                     ng-model="vm.article.type"
-                    label="'name'"
-                    placeholder="Type"
-                    unclearable
                     required
-                >
-                </select-dropdown>
+                    theme="select2"
+                    style="width: 100%"
+                    ng-class="{'uk-form-danger': createArticleForm.type.$invalid }">
+                    <ui-select-match placeholder="Type">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="item in (vm.types | filter: $select.search) track by item.id">
+                        <div ng-bind-html="item.name"></div>
+                    </ui-select-choices>
+                </ui-select>
             </div>
         </div>
         <div class="uk-margin">

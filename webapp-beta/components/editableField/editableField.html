@@ -37,12 +37,12 @@
         </ul>
     
         <span ng-show="vm.isEditing">
-            <multiselect-dropdown 
-                items="vm.pool" 
-                ng-model="vm.value" 
-                label="vm.valueLabel"
-            >
-            </multiselect-dropdown>
+            <ui-select multiple theme="select2" ng-model="vm.value" style="width: 100%">
+                <ui-select-match>{{$item[vm.valueLabel]}}</ui-select-match>
+                <ui-select-choices repeat="item in (vm.pool | filter: $select.search) track by item.id">
+                    <div ng-bind-html="item[vm.valueLabel]"></div>
+                </ui-select-choices>
+            </ui-select>
         </span>
     </div>
     

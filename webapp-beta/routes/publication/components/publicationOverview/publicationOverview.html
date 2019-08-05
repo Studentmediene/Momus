@@ -3,12 +3,16 @@
     <div class="uk-width-3-5@m">
         <panel icon="'fas fa-newspaper'" header="'Utgaver'" no-body-padding="true" type="'primary'">
             <extra-header-content>
-                <select-dropdown
+                <ui-select
+                    theme="select2"
                     ng-model="vm.selectedYear"
-                    items="vm.yearOptions"
-                    placeholder="År"
-                >
-                </select-dropdown>
+                    search-enabled="false"
+                    style="width: 100px">
+                    <ui-select-match placeholder="År" allow-clear="true">{{$select.selected}}</ui-select-match>
+                    <ui-select-choices repeat="item in vm.yearOptions">
+                        <span ng-bind-html="item"></span>
+                    </ui-select-choices>
+                </ui-select>
             </extra-header-content>
             <div
                 ng-if="!vm.publications.$resolved"

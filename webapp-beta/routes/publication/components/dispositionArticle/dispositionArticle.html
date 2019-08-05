@@ -46,29 +46,39 @@
     </div>
     <!--Status-->
     <div ng-style="vm.applyColumnWidth('status', {'background': vm.article.status.color})" ng-class="{'hidden-column': vm.continuation}">
-        <select-dropdown
+        <ui-select
+            theme="select2"
             ng-model="vm.article.status"
-            items="vm.articleStatuses"
-            label="'name'"
-            on-change="vm.updateArticle()"
-            placeholder="Status"
-            unclearable
-            small
-        >
-        </select-dropdown>
+            on-select="vm.updateArticle()"
+            search-enabled="false"
+            style="width: 100%"
+            small>
+            <ui-select-match placeholder="Status">{{$select.selected.name}}</ui-select-match>
+            <ui-select-choices
+                repeat="item in vm.articleStatuses track by item.id"
+                style="background-color: {{$item.color}}"
+            >
+                <span ng-bind-html="item.name"></span>
+            </ui-select-choices>
+        </ui-select>
     </div>
     <!--Review-->
     <div ng-style="vm.applyColumnWidth('review', {'background': vm.article.review.color})" ng-class="{'hidden-column': vm.continuation}">
-        <select-dropdown
+        <ui-select
             ng-model="vm.article.review"
-            items="vm.reviewStatuses"
-            label="'name'"
-            on-change="vm.updateArticle()"
-            placeholder="Korr."
-            unclearable
-            small
-        >
-        </select-dropdown>
+            on-select="vm.updateArticle()"
+            search-enabled="false"
+            style="width: 100%"
+            theme="select2"
+            small>
+            <ui-select-match placeholder="Korr.">{{$select.selected.name}}</ui-select-match>
+            <ui-select-choices
+                repeat="item in vm.reviewStatuses track by item.id"
+                style="background-color: {{$item.color}}"
+            >
+                <span ng-bind-html="item.name"></span>
+            </ui-select-choices>
+        </ui-select>
     </div>
     <!--Photostatus-->
     <div ng-style="vm.columnWidths.photo_status" title="Klikk for å redigere" ng-class="{'hidden-column': vm.continuation}">
