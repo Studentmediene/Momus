@@ -71,7 +71,7 @@ class PersonWidgetCtrl implements angular.IController {
         this.popupElement = element;
 
         angular.element(this.popupElement).on('click', (e) => e.stopPropagation());
-        angular.element(this.$window).on('click', this.close);
+        angular.element(this.$window.document).on('click', this.close);
     }
 
     public close() {
@@ -81,7 +81,7 @@ class PersonWidgetCtrl implements angular.IController {
         this.popupElement.remove();
         this.popupElement = null;
 
-        angular.element(this.$window).off('click', this.close);
+        angular.element(this.$window.document).off('click', this.close);
     }
 }
 
