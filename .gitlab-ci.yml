@@ -1,0 +1,81 @@
+image: node:10-alpine
+
+stages:
+  - install
+  - quality
+  - test
+  - build
+  - bundle
+  - deploy
+
+env_setup:
+  stage: install
+  script:
+    - cp $LOCAL_PROPERTIES "$(pwd)/src/main/filters/local.properties"
+    - echo $GDRIVE_KEY | base64 -d > "$(pwd)/src/main/resources/googlekey.p12"
+  artifacts:
+    paths:
+      - src/main/filters/local.properties
+      - src/main/resources/googlekey.p12
+
+install_frontend_dependencies:
+  stage: install
+  script: npm ci
+  artifacts:
+    paths:
+      - node_modules/
+
+lint_frontend:
+  stage: quality
+  script: npm run lint
+
+test_backend:
+  stage: test
+  image: maven:3-jdk-8-alpine
+  variables:
+    MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+    MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  cache:
+    paths:
+      - .m2/repository/
+  script: mvn test
+  artifacts:
+    reports:
+      junit: target/surefire-reports/*.xml
+
+build_frontend:
+  stage: build
+  script:
+    - npm run build
+    - npm run build:beta
+  artifacts:
+    paths:
+      - dist/
+
+bundle_app:
+  stage: bundle
+  image: maven:3-jdk-8-alpine
+  variables:
+    MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+    MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  cache:
+    paths:
+      - .m2/repository/
+  script: mvn -Pprod -DskipTests install
+  artifacts:
+    paths:
+      - target/momus-*.war
+
+deploy_production:
+  image: alpine
+  stage: deploy
+  only:
+  - master
+  before_script:
+  - apk --update add openssh-client
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | ssh-add -
+  - mkdir -p ~/.ssh
+  - echo "$JAVA_SMINT_NO_PUBLIC_KEY" > ~/.ssh/known_hosts
+  script:
+    - scp target/momus-*.war momus@java.smint.no:/home/momus

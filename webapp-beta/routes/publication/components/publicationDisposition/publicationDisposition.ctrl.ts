@@ -145,10 +145,6 @@ export default class PublicationDispositionCtrl implements angular.IController {
         });
     }
 
-    public onDrop(index: number, item: any, external: any, type: any) {
-        console.log('dropped ', index, item);
-    }
-
     public toggleButtonRow(articleScope: ArticleScope) {
         if (articleScope.showButtonRow) {
             articleScope.showButtonRow = false;
