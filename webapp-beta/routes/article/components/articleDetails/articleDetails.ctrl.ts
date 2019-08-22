@@ -7,6 +7,7 @@ import { ArticleStatus, ReviewStatus } from 'models/Statuses';
 import { Person } from 'models/Person';
 import { Publication } from 'models/Publication';
 import { Section } from 'models/Section';
+import TitleService from 'services/title.service';
 
 /* @ngInject */
 export default class ArticleDetailsCtrl implements angular.IController {
@@ -23,14 +24,12 @@ export default class ArticleDetailsCtrl implements angular.IController {
     public savingNote: boolean;
     public uneditedNote: string;
 
-    private articleResource: ArticleResource;
-
     constructor(
         $state: StateService,
         $transitions: TransitionService,
-        articleResource: ArticleResource,
+        private titleService: TitleService,
+        private articleResource: ArticleResource,
     ) {
-        this.articleResource = articleResource;
 
         $transitions.onBefore({from: $state.current.name }, (transition) => {
             if (this.promptCondition()) {
@@ -42,6 +41,7 @@ export default class ArticleDetailsCtrl implements angular.IController {
 
     public $onInit() {
         this.article.$promise.then((article) => {
+            this.titleService.setTitle(article.name);
             this.uneditedNote = article.note;
         });
 

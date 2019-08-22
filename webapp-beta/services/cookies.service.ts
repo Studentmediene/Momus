@@ -1,5 +1,3 @@
-import { Article } from 'models/Article';
-
 const RECENT_ARTICLES_STORE = 'recentlyViewed';
 const RECENT_ARTICLES_LENGTH = 5;
 

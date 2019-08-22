@@ -17,6 +17,7 @@ const routeModule = angular
                 url: '/info',
                 component: 'infoPage',
                 data: {
+                    title: 'Info',
                     nav: {
                         name: 'Info',
                         icon: 'fas fa-info-circle',
