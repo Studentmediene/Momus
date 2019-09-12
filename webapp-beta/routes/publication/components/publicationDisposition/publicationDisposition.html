@@ -72,15 +72,11 @@
     </div>
     <ul
         class="disposition-table"
-        dnd-list="vm.pageOrder.order"
-        dnd-effect-allowed="move"
+        ui-sortable="vm.sortableOptions"
+        ng-model="vm.pageOrder.order"
     >
         <disposition-page
             ng-repeat="page in vm.pageOrder.order"
-            dnd-draggable="page"
-            dnd-effect-allowed="move"
-            dnd-moved="vm.pageOrder.order.splice($index, 1)"
-            dnd-dragend="vm.updatePageOrder()"
             number="$index + 1"
             publication="vm.publication"
             prev-page="$index === 0 ? null : vm.pagesLookup[vm.pageOrder.order[$index-1].id]"

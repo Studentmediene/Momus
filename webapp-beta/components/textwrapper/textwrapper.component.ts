@@ -14,7 +14,7 @@ export default angular
         return {
             restrict: 'E',
             scope: {
-                length: '@',
+                length: '=',
                 text: '=',
             },
             template: `

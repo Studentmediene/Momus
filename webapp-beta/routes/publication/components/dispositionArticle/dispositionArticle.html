@@ -74,6 +74,7 @@
     <div ng-style="vm.columnWidths.photo_status" title="Klikk for å redigere" ng-class="{'hidden-column': vm.continuation}">
         <inline-edit
                 placeholder="[Fotostatus]"
+                textlength="60"
                 model="vm.article.photo_status"
                 on-save="vm.submitField('photo_status', value)">
         </inline-edit>
@@ -82,6 +83,7 @@
     <div ng-style="vm.columnWidths.comment" ng-class="{'hidden-column': vm.continuation}">
         <inline-edit
                 placeholder="[Kommentar]"
+                textlength="80"
                 model="vm.article.comment"
                 on-save="vm.submitField('comment', value)">
         </inline-edit>

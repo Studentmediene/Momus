@@ -39,6 +39,14 @@ export default class PublicationDispositionCtrl implements angular.IController {
 
     public openButtonRows: ArticleScope[];
 
+    public sortableOptions: angular.ui.SortableOptions<Page> = {
+        update: () => this.updatePageOrder(),
+        axis: 'y',
+        handle: '.handle',
+        placeholder: 'sortable-placeholder',
+        containment: '#disposition',
+    };
+
     private pageResource: PageResource;
     private advertResource: AdvertResource;
 
@@ -82,6 +90,8 @@ export default class PublicationDispositionCtrl implements angular.IController {
                 const {entity, action} = data;
                 switch (action) {
                     case 'CREATE':
+                        entity.articles = [];
+                        entity.adverts = [];
                         this.pages.push(entity);
                         this.pagesLookup[entity.id] = entity;
                         break;
@@ -145,10 +155,6 @@ export default class PublicationDispositionCtrl implements angular.IController {
         });
     }
 
-    public onDrop(index: number, item: any, external: any, type: any) {
-        console.log('dropped ', index, item);
-    }
-
     public toggleButtonRow(articleScope: ArticleScope) {
         if (articleScope.showButtonRow) {
             articleScope.showButtonRow = false;
@@ -176,6 +182,8 @@ export default class PublicationDispositionCtrl implements angular.IController {
             numNewPages,
         }, (pages) => {
             pages.forEach((p) => {
+                p.articles = [];
+                p.adverts = [];
                 this.pagesLookup[p.id] = p;
                 this.pages.push(p);
             });

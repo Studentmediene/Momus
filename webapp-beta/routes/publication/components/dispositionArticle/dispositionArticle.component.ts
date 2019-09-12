@@ -27,6 +27,7 @@ class DispositionArticleCtrl implements angular.IController {
 
     public submitField(field: string, value: any) {
         this.article[field] = value;
+        this.updateArticle();
     }
 
     public toggleButtonRow() {

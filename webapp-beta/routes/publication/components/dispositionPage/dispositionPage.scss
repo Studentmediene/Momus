@@ -46,3 +46,17 @@
 .page-done {
     background: $disp-page-done-background !important; //Want this to override ad color
 }
+
+.handle {
+    cursor: pointer;
+}
+
+.sortable-placeholder {
+    min-height: 50px;
+    background: $disp-page-done-background;
+    display: block;
+}
+
+.ui-sortable-helper {
+    background-color: rgba($color: white, $alpha: 0.75);
+}

@@ -3,6 +3,7 @@ const { BaseHrefWebpackPlugin } = require('base-href-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const webpack = require('webpack');
 const path = require('path');
 
 const devServerPort = process.env.DEV_SERVER_PORT || 8081;
@@ -27,6 +28,11 @@ const commonPlugins = [
         template: path.join(dev, 'index.html'),
         favicon: path.join(dev, 'favicon.ico'),
         filename: path.join(path.join(out, isbeta ? '/assets/beta/' : '/'), 'index.html'),
+    }),
+    new webpack.ProvidePlugin({
+        $: "jquery",
+        jQuery: "jquery",
+        "window.jQuery": "jquery"
     }),
     new BaseHrefWebpackPlugin({ baseHref: indexPath })
 ];
