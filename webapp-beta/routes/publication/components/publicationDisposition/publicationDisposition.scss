@@ -2,33 +2,33 @@
 
 #disposition {
     font-size: 75%;
-}
 
-.d-title {
-    padding: 5px;
-    margin-bottom: 0;
-    border-bottom: $global-border;
-}
-
-.d-loading-spinner {
-    position: fixed;
-    top: 64px;
-    left: 50%;
-    z-index: 200;
+    // Its being overriden by uikit, so force it here
+    select {
+        font-size: 1em;
+    }
 }
 
 .d-toolbar {
-    width: 100%;
-    z-index: 100;
     background: $disp-header-background;
     border-left: $disp-page-border;
     border-right: $disp-page-border;
     border-top: $disp-page-border;
     box-sizing: border-box;
 
-    .button-group {
+    .d-title-row {
         display: flex;
-        flex-direction: row;
+        padding: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+        :not(:last-child) {
+            margin-right: 8px;
+        }
+    }
+
+    .d-button-group {
+        display: flex;
+        flex-wrap: wrap;
 
         > * {
             margin: 5px;
@@ -39,14 +39,8 @@
         }
     }
 
-    #online-users {
+    .d-column-headers {
         display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-content: center;
-    }
-
-    .headers {
         border-top: $disp-page-border;
     }
 }
@@ -73,42 +67,5 @@
 
     .dndDraggingSource {
         display: none !important;
-    }
-}
-
-.page-done {
-    background: $disp-page-done-background !important; //Want this to override ad color
-}
-
-.d-break-word {
-    word-wrap:break-word;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    hyphens: auto;
-}
-
-.d-dropdown {
-    background: rgba(255,255,255,0.5);
-    outline: 0;
-    border: $disp-page-border;
-}
-
-.ui-sortable-helper {
-    opacity:0.7;
-}
-
-.d-placeholder {
-    background-color: #99ff99;
-}
-
-.handle {
-    text-align: center;
-    cursor: move;
-}
-
-.ui-sortable-selected {
-    .handle {
-        border-left:3px solid #F00 !important;
     }
 }

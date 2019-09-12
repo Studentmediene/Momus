@@ -56,7 +56,8 @@ export default angular
         controller: InlineEditCtrl,
         controllerAs: 'vm',
         bindings: {
-            placeholder: '@',
+            placeholder: '=',
+            textlength: '@',
             model: '<',
             onSave: '&',
             onCancel: '&',

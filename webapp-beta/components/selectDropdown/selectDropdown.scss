@@ -1,50 +1,22 @@
 @import "../../style/variables.scss";
 
-.select-dropdown {
+.select-container {
     position: relative;
-    background-color: white;
-}
-.select-dropdown-item {
-    border: 1px solid $global-border;
-    &:focus-within {
-        border-color: $global-primary-background;
-    }
-    transition: border-color 0.1s linear;
-
-    padding: 5px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-
-    > span {
-        cursor: pointer;
-        flex-grow: 1;
-        margin-left: 5px;
-        margin-right: 5px;
-    }
-
-    > .clear {
-        margin-right: 5px;
-        cursor: pointer;
-    }
 }
 
-.select-dropdown-drop {
+.select-clear {
     position: absolute;
-    border: 1px solid $global-primary-background;
-    background-color: white;
-    box-sizing: border-box;
+    margin: auto;
     right: 0;
-    overflow-y: scroll;
-    z-index: 1000;
-    max-height: 200px;    
-    min-width: 100%;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    margin-right: 25px;
+    color: $global-muted-color;
 
-    .select-dropdown-dropitem {
+    :hover {
         cursor: pointer;
-        white-space: nowrap;
-        &.hover {
-            background-color: lightgrey;
-        }
+        color: $global-color;
     }
 }

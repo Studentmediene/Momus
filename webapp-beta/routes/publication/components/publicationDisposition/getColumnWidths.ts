@@ -20,25 +20,19 @@ const columnWidthTemplates: ColumnWidthTemplates = {
     page_nr:
         {scope: 'page', width: 25},
     dropdown:
-        {scope: 'article', width: 20},
+        {scope: 'article', width: 25},
     name: {
         scope: 'article',
         part: 0.25,
         min: 100,
         calculated: 100,
     },
-    section: {scope: 'article', width: 100},
-    journalists: {
+    section: {scope: 'article', width: 10},
+    contributors: {
         scope: 'article',
-        part: 0.2,
-        min: 80,
-        calculated: 80,
-    },
-    photographers: {
-        scope: 'article',
-        part: 0.2,
-        min: 80,
-        calculated: 80,
+        part: 0.4,
+        min: 160,
+        calculated: 160,
     },
     status: {scope: 'article', width: 130},
     review: {scope: 'article', width: 100},
@@ -55,9 +49,7 @@ const columnWidthTemplates: ColumnWidthTemplates = {
         calculated: 120,
     },
     layout: {scope: 'page', width: 90},
-    done: {scope: 'page', width: 30},
-    edit: {scope: 'page', width: 30},
-    delete: {scope: 'page', width: 30},
+    buttons: {scope: 'page', width: 90},
 };
 
 // Get the width of the entire disposition and article table that is constant

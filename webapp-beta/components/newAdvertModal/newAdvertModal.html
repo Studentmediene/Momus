@@ -12,7 +12,7 @@
                     name="name"
                     class="uk-input"
                     type="text"
-                    ng-model="advert.name"
+                    ng-model="vm.advert.name"
                     required
                     ng-class="{'uk-form-danger': createAdvertForm.name.$invalid }"
                 >
@@ -28,7 +28,7 @@
                 <input
                     class="uk-input"
                     type="text"
-                    ng-model="advert.comment"
+                    ng-model="vm.advert.comment"
                 >
             </div>
         </div>
@@ -37,7 +37,7 @@
             <div class="uk-form-controls">
                 <button
                     class="uk-button uk-button-primary"
-                    ng-click="vm.createAdvert()"
+                    ng-click="vm.create()"
                     ng-disabled="createAdvertForm.$invalid"
                 >
                     <span>Opprett reklame</span>
@@ -45,6 +45,7 @@
                 <button
                     class="uk-button uk-button-secondary"
                     ng-click="vm.onCanceled()"
+                    button-loading="vm.savePromise"
                 >
                     <span>Avbryt</span>
                 </button>

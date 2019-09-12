@@ -1,6 +1,6 @@
 <div class="disposition-article">
     <!--Dropdown-arrow-->
-    <div ng-style="vm.columnWidths.dropdown">
+    <div ng-style="vm.columnWidths.dropdown" ng-class="{'hidden-column': vm.continuation}">
         <button
             class="uk-button uk-button-primary button-xs"
             ng-click="vm.toggleButtonRow()"
@@ -8,41 +8,44 @@
             <i class="fas fa-arrows-alt-v"></i>
         </button>
     </div>
+    <!--Section-->
+    <div ng-style="vm.applyColumnWidth('section', {'background': vm.article.section.color})"></div>
     <!--Name-->
     <div ng-style="vm.columnWidths.name">
         <a ui-sref="article.single({id: vm.article.id})">{{vm.article.name}}</a>
         <span uib-tooltip="Antall tegn">({{vm.article.content_length}})</span>
+        <div ng-style="{'color': vm.article.section.color}">
+            <span class="section-text">{{vm.article.section.name}}</span>
+        </div>
     </div>
-    <!--Section-->
-    <div ng-style="vm.applyColumnWidth('section', {'background': vm.article.section.color})">
-        {{vm.article.section.name}}
-    </div>
-    <!--Journalists-->
-    <div ng-style="vm.columnWidths.journalists">
-        <ul class="uk-list person-list">
-            <li ng-repeat="person in vm.article.journalists">
-                <person-widget person="person" class="d-break-word">
-                </person-widget>
-            </li>
-            <li ng-repeat="person in vm.article.external_author.split(',')">
-                <i>{{person}}</i>
-            </li>
-        </ul>
-    </div>
-    <!--Photographers-->
-    <div ng-style="vm.columnWidths.photographers">
-        <ul class="uk-list person-list">
-            <li ng-repeat="person in vm.article.photographers">
-                <person-widget person="person">
-                </person-widget>
-            </li>
-            <li ng-repeat="person in vm.article.external_photographer.split(',')">
-                <i>{{person}}</i>
-            </li>
-        </ul>
+    <!--Contributors-->
+    <div ng-style="vm.columnWidths.contributors" ng-class="{'hidden-column': vm.continuation}">
+        <div class="contributor-list" ng-show="vm.hasJournalists()">
+            <i class="fas fa-pen" uk-tooltip="Journalister"></i>
+            <div>
+                <person-widget person="person" ng-repeat="person in vm.article.journalists"></person-widget>
+                <i uk-tooltip="Ekstern">{{vm.article.external_author}}</i>
+            </div>
+        </div>
+        <div class="contributor-list" ng-show="vm.hasPhotographers()">
+            <i
+                class="fas fa-{{vm.article.has_illustration ? 'paint-brush' : 'camera'}}"
+                uk-tooltip="{{vm.article.has_illustration ? 'Illustratører': 'Fotografer'}}">
+            </i>
+            <div>
+                <person-widget person="person" ng-repeat="person in vm.article.photographers"></person-widget>
+                <i uk-tooltip="Ekstern">{{vm.article.external_photographer}}</i>
+            </div>
+        </div>
+        <div class="contributor-list" ng-show="vm.hasGraphics()">
+            <i class="fas fa-object-group" uk-tooltip="Grafikere"></i>
+            <div>
+                <person-widget person="person" ng-repeat="person in vm.article.graphics"></person-widget>
+            </div>
+        </div>
     </div>
     <!--Status-->
-    <div ng-style="vm.applyColumnWidth('status', {'background': vm.article.status.color})">
+    <div ng-style="vm.applyColumnWidth('status', {'background': vm.article.status.color})" ng-class="{'hidden-column': vm.continuation}">
         <select-dropdown
             ng-model="vm.article.status"
             items="vm.articleStatuses"
@@ -50,16 +53,12 @@
             on-change="vm.updateArticle()"
             placeholder="Status"
             unclearable
+            small
         >
-            <item-markup>
-                <span class="status-dropdown-item" style="background-color: {{$parent.value.color}}">
-                    {{$parent.value.name}}
-                </span>
-            </item-markup>
         </select-dropdown>
     </div>
     <!--Review-->
-    <div ng-style="vm.applyColumnWidth('review', {'background': vm.article.review.color})">
+    <div ng-style="vm.applyColumnWidth('review', {'background': vm.article.review.color})" ng-class="{'hidden-column': vm.continuation}">
         <select-dropdown
             ng-model="vm.article.review"
             items="vm.reviewStatuses"
@@ -67,26 +66,24 @@
             on-change="vm.updateArticle()"
             placeholder="Korr."
             unclearable
+            small
         >
-            <item-markup>
-                <span class="status-dropdown-item" style="background-color: {{$parent.value.color}}">
-                    {{$parent.value.name}}
-                </span>
-            </item-markup>
         </select-dropdown>
     </div>
     <!--Photostatus-->
-    <div ng-style="vm.columnWidths.photo_status" title="Klikk for å redigere">
+    <div ng-style="vm.columnWidths.photo_status" title="Klikk for å redigere" ng-class="{'hidden-column': vm.continuation}">
         <inline-edit
                 placeholder="[Fotostatus]"
+                textlength="60"
                 model="vm.article.photo_status"
                 on-save="vm.submitField('photo_status', value)">
         </inline-edit>
     </div>
     <!--Comment-->
-    <div  ng-style="vm.columnWidths.comment">
+    <div ng-style="vm.columnWidths.comment" ng-class="{'hidden-column': vm.continuation}">
         <inline-edit
                 placeholder="[Kommentar]"
+                textlength="80"
                 model="vm.article.comment"
                 on-save="vm.submitField('comment', value)">
         </inline-edit>

@@ -1,3 +1,5 @@
+import 'jquery';
+import 'jquery-ui';
 import * as angular from 'angular';
 
 import '@fortawesome/fontawesome-free/css/fontawesome.css';

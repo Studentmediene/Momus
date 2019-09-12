@@ -8,8 +8,23 @@
     }
 }
 
+.extra-button-line-button {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
 .extra-button-line {
     border-top: $disp-article-border;
     padding: 10px;
     background-color: white;
+}
+
+.section-text {
+    font-weight: bold;
+}
+
+.hidden-column {
+    visibility: hidden;
+    height: 0;
 }
