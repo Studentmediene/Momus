@@ -18,6 +18,7 @@ package no.dusken.momus.controller;
 
 import no.dusken.momus.diff.DiffMatchPatch;
 import no.dusken.momus.diff.DiffUtil;
+import no.dusken.momus.dto.ArticleContent;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.ArticleService;
 import no.dusken.momus.service.indesign.IndesignExport;
@@ -97,8 +98,8 @@ public class ArticleController {
     }
 
     @GetMapping("{id}/content")
-    public String getArticleContent(@PathVariable Long id) {
-        return articleService.getArticleById(id).getContent();
+    public ArticleContent getArticleContent(@PathVariable Long id) {
+        return articleService.getArticleContent(id);
     }
 
     @PatchMapping("{id}/note")

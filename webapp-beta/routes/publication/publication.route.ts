@@ -27,6 +27,7 @@ const routeModule = angular
                 url: '/utgaver',
                 component: 'publicationOverview',
                 data: {
+                    title: 'Utgaver',
                     nav: {
                         name: 'Utgaver',
                         icon: 'fas fa-list-ul',

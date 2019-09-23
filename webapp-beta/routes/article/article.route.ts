@@ -14,9 +14,10 @@ import {
 import { ArticleResource } from '../../resources/article.resource';
 import { PersonResource } from '../../resources/person.resource';
 import { Article } from '../../models/Article';
-import { createArticleSearchParams, ArticleSearchParams } from '../../models/ArticleSearchParams';
+import { createArticleSearchParams } from './components/articleSearch/utils';
 import { PublicationResource } from 'resources/publication.resource';
 import CookieService from 'services/cookies.service';
+import { ArticleSearchParams } from 'models/ArticleSearchParams';
 
 const routeModule = angular
     .module('momusApp.routes.article', [
@@ -92,27 +93,28 @@ const routeModule = angular
                     nav: false,
                 },
                 resolve: {
-                    article: ($stateParams: StateParams, articleResource: ArticleResource) =>
-                        articleResource.get({ id: $stateParams.id }).$promise,
-                    articleContent: ($stateParams: StateParams, articleResource: ArticleResource) =>
-                        articleResource.content($stateParams.id).then((data) => data.data),
+                    articleId: ($stateParams: StateParams) => $stateParams.id,
+                    article: (articleId: number, articleResource: ArticleResource) =>
+                        articleResource.get({ id: articleId }),
+                    articleContent: (articleId: number, articleResource: ArticleResource) =>
+                        articleResource.content({id: articleId}),
                 },
             })
             .state('article.single.details', {
                 url: '/detaljer',
                 component: 'articleDetails',
                 resolve: {
-                    sections: (articleResource: ArticleResource) => articleResource.sections().$promise,
-                    types: (articleResource: ArticleResource) => articleResource.types().$promise,
-                    reviews: (articleResource: ArticleResource) => articleResource.reviewStatuses().$promise,
-                    statuses: (articleResource: ArticleResource) => articleResource.statuses().$promise,
-                    persons: (personResource: PersonResource, article: Article) =>
-                        personResource.query({articleIds: [article.id]}).$promise,
+                    sections: (articleResource: ArticleResource) => articleResource.sections(),
+                    types: (articleResource: ArticleResource) => articleResource.types(),
+                    reviews: (articleResource: ArticleResource) => articleResource.reviewStatuses(),
+                    statuses: (articleResource: ArticleResource) => articleResource.statuses(),
+                    persons: (personResource: PersonResource, articleId: number) =>
+                        personResource.query({articleIds: [articleId]}),
                     publications: (publicationResource: PublicationResource) =>
                         publicationResource.query(),
                 },
-                onEnter: (cookieService: CookieService, article: Article) => {
-                    cookieService.addToRecentArticles(article);
+                onEnter: (cookieService: CookieService, articleId: number) => {
+                    cookieService.addToRecentArticles(articleId);
                 },
             })
             .state('article.single.revisions', {

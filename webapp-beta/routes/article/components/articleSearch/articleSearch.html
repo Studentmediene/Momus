@@ -43,13 +43,12 @@
                     <label class="sr-only" for="searchSection">
                         Redaksjon
                     </label>
-                    <select-dropdown
-                        items="vm.sections"
-                        ng-model="vm.searchParams.section"
-                        label="'name'"
-                        placeholder="Redaksjon"
-                    >
-                    </select-dropdown>
+                    <ui-select theme="select2" ng-model="vm.searchParams.section" style="width: 100%">
+                        <ui-select-match placeholder="Redaksjon" allow-clear="true">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="item in (vm.sections | filter: $select.search) track by item.id">
+                            <div ng-bind-html="item.name"></div>
+                        </ui-select-choices>
+                    </ui-select>
                 </div>
 
                 <!-- Status search -->
@@ -57,13 +56,12 @@
                     <label class="sr-only" for="searchStatus">
                         Status
                     </label>
-                    <select-dropdown
-                        items="vm.statuses"
-                        ng-model="vm.searchParams.status"
-                        label="'name'"
-                        placeholder="Status"
-                    >
-                    </select-dropdown>
+                    <ui-select theme="select2" ng-model="vm.searchParams.status" style="width: 100%">
+                        <ui-select-match placeholder="Status" allow-clear="true">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="item in (vm.statuses | filter: $select.search) track by item.id">
+                            <div ng-bind-html="item.name"></div>
+                        </ui-select-choices>
+                    </ui-select>
                 </div>
 
                 <!-- Review search -->
@@ -71,13 +69,12 @@
                     <label class="sr-only" for="searchReview">
                         Korrektur
                     </label>
-                    <select-dropdown
-                        items="vm.reviews"
-                        ng-model="vm.searchParams.review"
-                        label="'name'"
-                        placeholder="Korrektur"
-                    >
-                    </select-dropdown>
+                    <ui-select theme="select2" ng-model="vm.searchParams.review" style="width: 100%">
+                        <ui-select-match placeholder="Korrektur" allow-clear="true">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="item in (vm.reviews | filter: $select.search) track by item.id">
+                            <div ng-bind-html="item.name"></div>
+                        </ui-select-choices>
+                    </ui-select>
                 </div>
 
                 <!-- Publication search -->
@@ -85,30 +82,26 @@
                     <label class="sr-only" for="searchPublication">
                         Utgave
                     </label>
-                    <select-dropdown
-                        items="vm.publications"
-                        ng-model="vm.searchParams.publication"
-                        label="'name'"
-                        placeholder="Utgave"
-                    >
-                    </select-dropdown>
+                    <ui-select theme="select2" ng-model="vm.searchParams.publication" style="width: 100%">
+                        <ui-select-match placeholder="Utgave" allow-clear="true">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="item in (vm.publications | filter: $select.search) track by item.id">
+                            <div ng-bind-html="item.name"></div>
+                        </ui-select-choices>
+                    </ui-select>
                 </div>
 
                 <!-- Person search -->
-                <div class="uk-width-1-4@m">
+                <div class="uk-width-1-2@m">
                     <label class="sr-only" for="searchPersons">
                         Personer
                     </label>
-                    <multiselect-dropdown
-                        items="vm.persons"
-                        ng-model="vm.searchParams.persons"
-                        label="'name'"
-                        placeholder="Personer"
-                    >
-                    </multiselect-dropdown>
+                    <ui-select theme="select2" multiple ng-model="vm.searchParams.persons" style="width: 100%">
+                        <ui-select-match placeholder="Personer">{{$item.name}}</ui-select-match>
+                        <ui-select-choices repeat="item in (vm.persons | filter: $select.search) track by item.id">
+                            <div ng-bind-html="item.name"></div>
+                        </ui-select-choices>
+                    </ui-select>
                 </div>
-
-                <div class="uk-width-1-4@m"></div>
 
                 <div class="uk-width-1-4@m">
                     <button

@@ -10,14 +10,15 @@ import publication from './publication/publication.route';
 import info from './info/info.route';
 import admin from './admin/admin.route';
 import dev from './dev/dev.route';
+import TitleService from 'services/title.service';
 
 function getNextStateTitle(transition: Transition) {
     const newState = transition.to();
     const { title } = newState.data;
     switch (typeof title) {
-        case 'string': return title + ' - Momus';
-        case 'function': return title(transition.injector()) + ' - Momus';
-        default: return 'Momus';
+        case 'string': return title;
+        case 'function': return title(transition.injector());
+        default: return undefined;
     }
 }
 
@@ -45,8 +46,15 @@ const routesModule = angular
             },
         });
     })
-    .run(($transitions: TransitionService, $rootScope: RootScope) => {
-        $transitions.onSuccess({}, (transition) => { $rootScope.pageTitle = getNextStateTitle(transition); });
+    .run(($transitions: TransitionService, titleService: TitleService, $rootScope: RootScope, $document: angular.IDocumentService) => {
+        $transitions.onSuccess({}, (transition) => {
+            // Reset scroll position to top if we move to a different state.
+            if (transition.to().name !== transition.from().name) {
+                $document[0].scrollTop = $document[0].documentElement.scrollTop = 0;
+            }
+            // Set page title
+            titleService.setTitle(getNextStateTitle(transition));
+        });
 
         const initialStateMatcher = (state: StateObject) => state.name === '^';
         $transitions.onBefore({from: initialStateMatcher}, () => { $rootScope.initialLoad = true; });

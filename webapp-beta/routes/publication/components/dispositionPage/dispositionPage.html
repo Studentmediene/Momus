@@ -3,35 +3,38 @@
     <div class="handle" ng-style="vm.columnWidths.page_nr">{{vm.number}}</div>
 
     <!--Edit mode -->
-    <div ng-style="{width: vm.articleWidth + 'px'}" ng-show="vm.editing">
+    <div class="article-edit" ng-style="{width: vm.articleWidth + 'px'}" ng-show="vm.editing">
         <div><b>Artikler</b></div>
-        <div class="article-input">
-            <multiselect-dropdown
-                ng-model="vm.newArticles"
-                items="vm.articles"
-                label="'name'"
-                placeholder="Artikler"
-            >
-            </multiselect-dropdown>
+        <div class="content-input">
+            <ui-select theme="select2" multiple ng-model="vm.newArticles">
+                <ui-select-match placeholder="Artikler">{{$item.name}}</ui-select-match>
+                <ui-select-choices repeat="item in (vm.articles | filter: $select.search) track by item.id">
+                    <div ng-bind-html="item.name"></div>
+                </ui-select-choices>
+            </ui-select>
             <div>
                 <button ng-click="vm.createArticle()" class="uk-button button-new" uk-tooltip="Lag ny artikkel">
-                    <i class="fas fa-plus"></i> <i class="fas fa-file"></i>
+                    <span class="fa-stack">
+                        <i class="fas fa-file"></i>
+                        <i class="fas fa-plus"></i>
+                    </span>
                 </button>
             </div>
-            
         </div>
         <div><b>Annonser</b></div>
-        <div class="article-input">
-            <multiselect-dropdown
-                ng-model="vm.newAdverts"
-                items="vm.adverts"
-                label="'name'"
-                placeholder="Annonser"
-            >
-            </multiselect-dropdown>
+        <div class="content-input">
+            <ui-select theme="select2" multiple ng-model="vm.newAdverts">
+                <ui-select-match placeholder="Annonser">{{$item.name}}</ui-select-match>
+                <ui-select-choices repeat="item in (vm.adverts | filter: $select.search) track by item.id">
+                    <div ng-bind-html="item.name"></div>
+                </ui-select-choices>
+            </ui-select>
             <div>
-                <button ng-click="vm.createAdvert()" class="uk-button button-edit" uk-tooltip="Lag ny reklame">
-                    <i class="fas fa-plus"></i> <i class="fas fa-bullhorn"></i>
+                <button ng-click="vm.createAdvert()" class="uk-button button-edit" uk-tooltip="Lag ny annonse">
+                    <span class="fa-stack">
+                        <i class="fas fa-bullhorn"></i>
+                        <i class="fas fa-plus"></i>
+                    </span>
                 </button>
             </div>
         </div>
@@ -59,15 +62,22 @@
         class="d-table-cell"
         ng-style="vm.applyColumnWidth('layout', {'background': vm.page.layout_status.color})"
     >
-        <select-dropdown
+        <ui-select
+            theme="select2"
             ng-model="vm.page.layout_status"
-            on-change="vm.updatePageMeta(page)"
-            items="vm.layoutStatuses"
-            label="'name'"
-            unclearable
+            on-select="vm.updatePageMeta(page)"
+            search-enabled="false"
+            style="width: 100%"
             small
         >
-        </select-dropdown>
+            <ui-select-match placeholder="Status">{{$select.selected.name}}</ui-select-match>
+            <ui-select-choices
+                repeat="item in (vm.layoutStatuses | filter: $select.search) track by item.id"
+                style="background-color: {{$item.color}}"
+            >
+                <span ng-bind-html="item.name"></span>
+            </ui-select-choices>
+        </ui-select>
     </div>
 
     <!-- Buttons -->
@@ -80,13 +90,13 @@
         >
             <i class="fas fa-check fa-lg"></i>
         </button>
-        <button ng-click="vm.editPage()" class="uk-button button-edit button-xs" ng-hide="vm.editing">
+        <button title="Rediger innhold" ng-click="vm.editPage()" class="uk-button button-edit button-xs" ng-hide="vm.editing">
             <i class="fas fa-edit"></i>
         </button>
-        <button ng-click="vm.submitPage()" class="uk-button button-new button-xs" ng-show="vm.editing">
+        <button title="Lagre innhold" ng-click="vm.submitPage()" class="uk-button button-new button-xs" ng-show="vm.editing">
             <i class="fas fa-save"></i>
         </button>
-        <button ng-click="vm.deletePage()" class="uk-button uk-button-danger button-xs">
+        <button title="Slett siden" ng-click="vm.deletePage()" class="uk-button uk-button-danger button-xs">
             <i class="fas fa-trash"></i>
         </button>
     </div>

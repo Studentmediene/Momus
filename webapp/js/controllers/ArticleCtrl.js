@@ -55,7 +55,7 @@ angular.module('momusApp.controllers')
             TitleChanger.setTitle(article.name);
             vm.uneditedNote = article.note;
         });
-        Article.content(articleId).then(data => { vm.articleContent = data.data; });
+        Article.content(articleId).then(data => { vm.articleContent = data.data.content; });
 
         CookieService.viewArticle(articleId);
 

@@ -2,11 +2,12 @@ import * as angular from 'angular';
 import { TransitionService, StateService } from '@uirouter/core';
 
 import { ArticleResource } from 'resources/article.resource';
-import { Article, ArticleType } from 'models/Article';
+import { Article, ArticleContent, ArticleType } from 'models/Article';
 import { ArticleStatus, ReviewStatus } from 'models/Statuses';
 import { Person } from 'models/Person';
 import { Publication } from 'models/Publication';
 import { Section } from 'models/Section';
+import TitleService from 'services/title.service';
 
 /* @ngInject */
 export default class ArticleDetailsCtrl implements angular.IController {
@@ -14,22 +15,21 @@ export default class ArticleDetailsCtrl implements angular.IController {
     public photoTypes: object[] = [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}];
 
     public article: Article;
-    public articleContent: string;
+    public articleContent: ArticleContent;
 
     public publications: Publication[];
+
+    public contentInitiallyCollapsed: boolean = false;
 
     public savingNote: boolean;
     public uneditedNote: string;
 
-    private articleResource: ArticleResource;
-
     constructor(
         $state: StateService,
         $transitions: TransitionService,
-        $templateRequest: angular.ITemplateRequestService,
-        articleResource: ArticleResource,
+        private titleService: TitleService,
+        private articleResource: ArticleResource,
     ) {
-        this.articleResource = articleResource;
 
         $transitions.onBefore({from: $state.current.name }, (transition) => {
             if (this.promptCondition()) {
@@ -40,13 +40,22 @@ export default class ArticleDetailsCtrl implements angular.IController {
     }
 
     public $onInit() {
-        this.uneditedNote = this.article.note;
+        this.article.$promise.then((article) => {
+            this.titleService.setTitle(article.name);
+            this.uneditedNote = article.note;
+        });
 
         window.onbeforeunload = () => {
             if (this.promptCondition()) {
                 return true;
             }
         };
+
+        // If the client is so small that all of the panels are in one column, it is best to start with content
+        // initially collapsed, so that not all of the other panels are so far to scroll to
+        if (document.body.clientWidth < 960) {
+            this.contentInitiallyCollapsed = true;
+        }
     }
 
     public $onDestroy() {

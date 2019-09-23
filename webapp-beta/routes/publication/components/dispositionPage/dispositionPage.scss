@@ -11,6 +11,11 @@
         padding: 3px;
     }
 
+    > .article-edit {
+        border-left: 0;
+        padding: 5px;
+    }
+
     > :nth-child(1) {
         border-right: $disp-page-border;
     }
@@ -24,13 +29,13 @@
     }
 }
 
-.article-input {
+.content-input {
     display: flex;
     align-items: center;
 
-    multiselect-dropdown {
+    > :first-child {
         flex-grow: 1;
-        margin-right: 5px;
+        margin-right: 10px;
     }
 }
 
