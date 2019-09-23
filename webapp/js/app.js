@@ -108,7 +108,7 @@ angular.module('momusApp', [
                                 }).$promise :
                             [];
                     },
-                    activePublication: Publication => Publication.active(),
+                    activePublication: Publication => Publication.active().$promise,
                     sections: Article => Article.sections().$promise,
                     statuses: Article => Article.statuses().$promise,
                     statusCounts: (activePublication, Article) => {
