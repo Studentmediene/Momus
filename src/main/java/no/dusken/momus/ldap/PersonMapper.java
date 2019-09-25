@@ -88,8 +88,22 @@ public class PersonMapper implements AttributesMapper<Person> {
                 roles.add(accessGroup.getRole());
         }
         person.setRoles(roles);
+        person.setMainRole(getMainRole(roles));
 
         return person;
+    }
+
+    /**
+     * The "main role" of a person is the role they have that appears first in the Role enum
+     */
+    private Role getMainRole(Collection<Role> roles) {
+        for (Role r : Role.values()) {
+            if (roles.contains(r)) {
+                return r;
+            }
+        }
+
+        return null;
     }
 
     private Person getPersonIfExists(UUID guid, String username) {

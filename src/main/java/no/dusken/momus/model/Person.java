@@ -59,6 +59,8 @@ public class Person implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Collection<Role> roles;
 
+    private Role mainRole;
+
     /*
     The following methods is to implement UserDetails,
     so that Spring can get a persons roles.
