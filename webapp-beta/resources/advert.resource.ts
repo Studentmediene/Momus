@@ -1,4 +1,5 @@
 import { Advert } from '../models/Advert';
+import { ResourceFunc } from './app.resources';
 
 /* @ngInject */
 export default function advertResourceFactory(
@@ -12,12 +13,7 @@ export default function advertResourceFactory(
             updateComment: { method: 'PATCH', params: {resource: 'comment'} },
         });
 }
-type errFunc = (err: any) => void;
+
 export interface AdvertResource extends ng.resource.IResourceClass<Advert> {
-    updateComment(
-        params: {id: number},
-        body: string,
-        success?: (advert: Advert) => void,
-        err?: errFunc,
-    ): Advert;
+    updateComment: ResourceFunc<Advert, string, {id: number}>;
 }
