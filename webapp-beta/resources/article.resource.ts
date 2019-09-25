@@ -4,6 +4,8 @@ import { IPromise, IHttpResponse } from 'angular';
 import { ArticleStatus } from '../models/Statuses';
 import { ReviewStatus } from '../models/Statuses';
 import { Section } from '../models/Section';
+import { ResourceFunc } from './app.resources';
+import { ArticleSearchParams } from 'models/ArticleSearchParams';
 
 /* @ngInject */
 export default function articleResourceFactory(
@@ -36,94 +38,25 @@ export default function articleResourceFactory(
         });
 }
 
-type errFunc = (err: any) => void;
-
 export interface ArticleResource extends ng.resource.IResourceClass<Article> {
+    lastArticlesForPerson: ResourceFunc<Article[], null, { userId: number }>;
+    multiple: ResourceFunc<Article[], null, { ids: number[] }>;
+    search: ResourceFunc<Article[], ReturnType<ArticleSearchParams["stringify"]>>;
+    content: ResourceFunc<ArticleContent, null, { id: number }>;
+    updateMetadata: ResourceFunc<Article, Article, { id: number }>;
+    updateStatus: ResourceFunc<Article, Article, { id: number}>;
+    updateNote: ResourceFunc<Article, string, { id: number}>;
+    archive: ResourceFunc<Article, null, { id: number }>;
+    restore: ResourceFunc<Article, null, { id: number }>;
 
-    lastArticlesForPerson(
-        params: { userId: number },
-        success?: (articles: Article[]) => void,
-        error?: errFunc,
-    ): Article[];
+    revisions: ResourceFunc<ArticleRevision[], null, { id: number}>;
+    compareRevisions: ResourceFunc<RevisionDiff[], null, { id: number, rev1: number, rev2: number }>;
 
-    revisions(
-        params: { id: number },
-        success?: (revisions: ArticleRevision[]) => void,
-        error?: errFunc,
-    ): ArticleRevision[];
+    types: ResourceFunc<ArticleType[]>;
+    statuses: ResourceFunc<ArticleStatus[]>;
+    reviewStatuses: ResourceFunc<ReviewStatus[]>;
+    sections: ResourceFunc<Section[]>;
 
-    compareRevisions(
-        params: { id: number, rev1: number, rev2: number },
-        success?: (diffs: object[]) => void,
-        error?: errFunc,
-    ): RevisionDiff[];
-
-    multiple(
-        params: { ids: number[] },
-        success?: (articles: Article[]) => void,
-        error?: errFunc,
-    ): Article[];
-
-    search(
-        params: {},
-        body: object,
-        success?: (articles: Article[]) => void,
-        error?: errFunc,
-    ): Article[];
-
-    content(
-        params: {id: number},
-        success?: (content: ArticleContent) => void,
-        error?: errFunc,
-    ): ArticleContent;
-
-    updateMetadata(
-        params: { id: number },
-        body: Article,
-        success?: (article: Article) => void,
-        error?: errFunc,
-    ): Article;
-
-    updateStatus(
-        params: { id: number },
-        body: Article,
-        success?: (article: Article) => void,
-        error?: errFunc,
-    ): Article;
-
-    updateNote(
-        params: { id: number },
-        body: string,
-        success?: (article: Article) => void,
-        error?: errFunc,
-    ): Article;
-
-    archive(
-        params: { id: number },
-        success?: (article: Article) => void,
-        error?: errFunc,
-    ): Article;
-
-    restore(
-        params: { id: number },
-        success?: (article: Article) => void,
-        error?: errFunc,
-    ): Article;
-
-    types(params?: {}, success?: (types: ArticleType[]) => void, error?: errFunc): ArticleType[];
-    statuses(params?: {}, success?: (types: ArticleStatus[]) => void, error?: errFunc): ArticleStatus[];
-    reviewStatuses(params?: {}, success?: (types: ReviewStatus[]) => void, error?: errFunc): ReviewStatus[];
-    sections(params?: {}, success?: (types: Section[]) => void, error?: errFunc): Section[];
-
-    statusCounts(
-        params: { publicationId: number },
-        success?: (counts: Map<number, number>) => void,
-        error?: errFunc,
-    ): Map<number, number>;
-
-    reviewStatusCounts(
-        params: { publicationId: number },
-        success?: (counts: Map<number, number>) => void,
-        error?: errFunc,
-    ): Map<number, number>;
+    statusCounts: ResourceFunc<Map<number, number>, null, { publicationId: number }>;
+    reviewStatusCounts: ResourceFunc<Map<number, number>, null, { publicationId: number }>;
 }

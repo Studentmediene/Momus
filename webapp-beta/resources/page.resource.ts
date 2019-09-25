@@ -1,4 +1,5 @@
 import { Page, PageOrder, PageContent } from '../models/Page';
+import { ResourceFunc } from './app.resources';
 
 /* @ngInject */
 export default function pageResourceFactory(
@@ -17,45 +18,14 @@ export default function pageResourceFactory(
             updateContent: { method: 'PUT', params: {resource: 'content'} },
         });
 }
-type errFunc = (err: any) => void;
 
 export interface PageResource extends ng.resource.IResourceClass<Page> {
-    saveMultipleEmpty(
-        params: {publicationId: number, afterPage: number, numNewPages: number},
-        success?: (pages: Page[]) => void,
-        error?: errFunc,
-    ): Page[];
+    saveMultipleEmpty: ResourceFunc<Page[], null, { publicationId: number, afterPage: number, numNewPages: number }>;
+    updateMeta: ResourceFunc<Page, Page>;
 
-    updateMeta(
-        params: {},
-        body: Page,
-        success?: (page: Page) => void,
-        error?: errFunc,
-    ): Page;
+    pageOrder: ResourceFunc<ng.resource.IResource<PageOrder>, null, { publicationId: number }>;
+    updatePageOrder: ResourceFunc<void, PageOrder>;
+    updateContent: ResourceFunc<void, PageContent, { pageid: number }>;
 
-    layoutStatusCounts(
-        params: {publicationId: number},
-        success?: (counts: any) => void,
-        error?: errFunc,
-    ): any;
-
-    pageOrder(
-        params: {publicationId: number},
-        success?: (order: PageOrder) => void,
-        error?: errFunc,
-    ): ng.resource.IResource<PageOrder>;
-
-    updatePageOrder(
-        params: {},
-        body: PageOrder,
-        success?: () => void,
-        error?: errFunc,
-    ): void;
-
-    updateContent(
-        params: {pageid: number},
-        body: PageContent,
-        success?: () => void,
-        error?: errFunc,
-    ): void;
+    layoutStatusCounts: ResourceFunc<any, null, { publicationId: number }>;
 }
