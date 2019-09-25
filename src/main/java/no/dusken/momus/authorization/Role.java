@@ -5,6 +5,8 @@ import org.springframework.security.core.GrantedAuthority;
 import lombok.Getter;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum Role implements Serializable, GrantedAuthority {
     // The enums are sorted in such a way that the most important roles are higher up,
@@ -51,5 +53,14 @@ public enum Role implements Serializable, GrantedAuthority {
     @Override
     public String getAuthority() {
         return name();
+    }
+
+    public static Map<String, String> roleNameMap() {
+        Map<String, String> roleNames = new HashMap<>();
+        for(Role r : Role.values()) {
+            roleNames.put(r.toString(), r.getPrettyName());
+        }
+
+        return roleNames;
     }
 }
