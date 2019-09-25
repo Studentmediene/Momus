@@ -20,9 +20,9 @@ public class PersonMapper implements AttributesMapper<Person> {
     private boolean active;
     private long lastId;
 
-    private Map<String, Role> groupToRole;
+    private List<GroupRole> groupToRole;
 
-    public PersonMapper(PersonRepository personRepository, AvatarRepository avatarRepository, boolean active, Map<String, Role> groupToRole) {
+    public PersonMapper(PersonRepository personRepository, AvatarRepository avatarRepository, boolean active, List<GroupRole> groupToRole) {
         this.personRepository = personRepository;
         this.avatarRepository = avatarRepository;
         this.active = active;
@@ -83,9 +83,9 @@ public class PersonMapper implements AttributesMapper<Person> {
 
         Collection<Role> roles = new HashSet<>();
         roles.add(Role.ROLE_USER);
-        for (String accessGroup: groupToRole.keySet())
-            if (groups.contains(accessGroup)) {
-                roles.add(groupToRole.get(accessGroup));
+        for (GroupRole accessGroup: groupToRole)
+            if (isMemberOf(groups, accessGroup.getGroup())) {
+                roles.add(accessGroup.getRole());
         }
         person.setRoles(roles);
 
@@ -109,6 +109,10 @@ public class PersonMapper implements AttributesMapper<Person> {
             lastId++;
         }
         return lastId;
+    }
+
+    private boolean isMemberOf(Collection<String> userGroups, String group) {
+        return userGroups.stream().anyMatch(g -> g.toLowerCase().startsWith(group.toLowerCase()));
     }
 
     @Getter
