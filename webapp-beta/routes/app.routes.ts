@@ -46,7 +46,12 @@ const routesModule = angular
             },
         });
     })
-    .run(($transitions: TransitionService, titleService: TitleService, $rootScope: RootScope, $document: angular.IDocumentService) => {
+    .run((
+        $transitions: TransitionService,
+        titleService: TitleService,
+        $rootScope: RootScope,
+        $document: ng.IDocumentService,
+    ) => {
         $transitions.onSuccess({}, (transition) => {
             // Reset scroll position to top if we move to a different state.
             if (transition.to().name !== transition.from().name) {
@@ -57,11 +62,11 @@ const routesModule = angular
         });
 
         const initialStateMatcher = (state: StateObject) => state.name === '^';
-        $transitions.onBefore({from: initialStateMatcher}, () => { $rootScope.initialLoad = true; });
-        $transitions.onSuccess({from: initialStateMatcher}, () => { $rootScope.initialLoad = false; });
+        $transitions.onBefore({ from: initialStateMatcher }, () => { $rootScope.initialLoad = true; });
+        $transitions.onSuccess({ from: initialStateMatcher }, () => { $rootScope.initialLoad = false; });
 
-        $transitions.onBefore({from: (s) => !initialStateMatcher(s)}, () => { $rootScope.transitionLoad = true; });
-        $transitions.onSuccess({from: (s) => !initialStateMatcher(s)}, () => { $rootScope.transitionLoad = false; });
+        $transitions.onBefore({ from: (s) => !initialStateMatcher(s) }, () => { $rootScope.transitionLoad = true; });
+        $transitions.onSuccess({ from: (s) => !initialStateMatcher(s) }, () => { $rootScope.transitionLoad = false; });
     });
 
 /*

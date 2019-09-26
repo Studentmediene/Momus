@@ -41,7 +41,7 @@ export default function articleResourceFactory(
 export interface ArticleResource extends ng.resource.IResourceClass<Article> {
     lastArticlesForPerson: ResourceFunc<Article[], null, { userId: number }>;
     multiple: ResourceFunc<Article[], null, { ids: number[] }>;
-    search: ResourceFunc<Article[], ReturnType<ArticleSearchParams["stringify"]>>;
+    search: ResourceFunc<Article[], ReturnType<ArticleSearchParams['stringify']>>;
     content: ResourceFunc<ArticleContent, null, { id: number }>;
     updateMetadata: ResourceFunc<Article, Article, { id: number }>;
     updateStatus: ResourceFunc<Article, Article, { id: number}>;

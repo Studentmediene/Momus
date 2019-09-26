@@ -36,7 +36,7 @@ class DispositionArticleCtrl implements angular.IController {
 
     public hasJournalists() {
         const article = this.article;
-        return article != null && (article.journalists.length > 0 
+        return article != null && (article.journalists.length > 0
             || (article.external_author != null && article.external_author !== ''));
     }
 

@@ -12,7 +12,7 @@ export type ResourceFunc<Res, Body = null, Params = {}> = Body extends null
     ? (Params extends {}
         ? (params?: Params, success?: (res: Res) => void, error?: (err: any) => void) => Res
         : (params: Params, success?: (res: Res) => void, error?: (err: any) => void) => Res
-    ) 
+    )
     : (params: Params, body: Body, success?: (res: Res) => void, error?: (err: any) => void) => Res;
 
 export default angular

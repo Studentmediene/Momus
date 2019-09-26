@@ -4,7 +4,7 @@ import { RootScope } from 'app.types';
 export default class TitleService {
     constructor(private $rootScope: RootScope) {}
 
-    setTitle(title?: string) {
+    public setTitle(title?: string) {
         this.$rootScope.pageTitle = title != null ? `${title} - Momus` : 'Momus';
     }
 }
