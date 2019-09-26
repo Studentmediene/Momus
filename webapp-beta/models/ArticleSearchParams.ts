@@ -12,8 +12,8 @@ export class ArticleSearchParams {
     public review?: ReviewStatus;
     public free?: string;
     public persons?: Person[];
-    public page_number: number;
-    public page_size: number;
+    public page_number: number; // tslint:disable-line
+    public page_size: number; // tslint:disable-line
     public archived?: boolean;
 
     public stringify() {
