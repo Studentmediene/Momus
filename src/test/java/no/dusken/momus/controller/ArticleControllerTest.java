@@ -73,7 +73,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
         String content = performGetExpectOk("/api/article/" + article.getId() + "/content")
                 .andReturn().getResponse().getContentAsString();
 
-        assert content.equals("\"Innhold\"");
+        assert content.equals("{\"content\":\"Innhold\"}");
     }
 
     @Test
