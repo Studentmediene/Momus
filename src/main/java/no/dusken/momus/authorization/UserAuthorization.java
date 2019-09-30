@@ -8,6 +8,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-@PreAuthorize("hasRole(T(no.dusken.momus.authorization.Role).ROLE_USER)")
+@PreAuthorize("hasRole(T(no.dusken.momus.authorization.Role).USER)")
 public @interface UserAuthorization {
 }
