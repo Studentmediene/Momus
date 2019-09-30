@@ -82,7 +82,7 @@ public class PersonMapper implements AttributesMapper<Person> {
         }
 
         Collection<Role> roles = new HashSet<>();
-        roles.add(Role.ROLE_USER);
+        roles.add(Role.USER);
         for (GroupRole accessGroup: groupToRole)
             if (isMemberOf(groups, accessGroup.getGroup())) {
                 roles.add(accessGroup.getRole());
