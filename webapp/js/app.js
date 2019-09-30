@@ -64,10 +64,9 @@ angular.module('momusApp', [
         'ui.sortable.multiselection',
         'chart.js'
     ]).
-    run((CookieService, $http, $window) => {
+    run((CookieService, StaticValues, $window) => {
         const useBeta = CookieService.getUseBeta();
-        $http.get('/api/env/all').then(res => {
-            const env = res.data;
+        StaticValues.environment().$promise.then(env => {
             if(!env.devmode && useBeta) {
                 $window.location.href = "/beta";
             }
@@ -78,7 +77,7 @@ angular.module('momusApp', [
             .state('root', {
                 resolve: {
                     loggedInPerson: Person => Person.me().$promise,
-                    env: $http => $http.get('/api/env/all').then(resp => resp.data),
+                    env: StaticValues => StaticValues.environment(),
                     session: (loggedInPerson, MessagingService) => MessagingService.createSession(loggedInPerson)
                 },
                 templateUrl: '/assets/partials/nav/navView.html',
@@ -158,7 +157,7 @@ angular.module('momusApp', [
                     sections: Article => Article.sections().$promise,
                     statuses: Article => Article.statuses().$promise,
                     reviews: Article => Article.reviewStatuses().$promise,
-                    searchParams: ($state, $stateParams, activePublication) => {
+                    searchParams: ($stateParams, activePublication) => {
                         const {['#']: _, ['defaultSearch']: defaultSearch, ...searchParams} = $stateParams;
 
                         if(defaultSearch) {

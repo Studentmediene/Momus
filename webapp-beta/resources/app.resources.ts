@@ -7,6 +7,7 @@ import advertResourceFactory from './advert.resource';
 import publicationResourceFactory from './publication.resource';
 import pageResourceFactory from './page.resource';
 import newsItemResourceFactory from './newsItem.resource';
+import staticValuesResourceFactory from './staticValues.resource';
 
 export type ResourceFunc<Res, Body = null, Params = {}> = Body extends null
     ? (Params extends {}
@@ -37,4 +38,5 @@ export default angular
     .factory('advertResource', advertResourceFactory)
     .factory('publicationResource', publicationResourceFactory)
     .factory('pageResource', pageResourceFactory)
-    .factory('newsItemResource', newsItemResourceFactory);
+    .factory('newsItemResource', newsItemResourceFactory)
+    .factory('staticValuesResource', staticValuesResourceFactory);

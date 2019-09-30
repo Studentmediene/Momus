@@ -61,7 +61,7 @@ public class LdapSyncer {
     @Value("${ldap.syncEnabled}")
     private boolean enabled;
 
-    private Map<String, Role> groupToRole = new HashMap<>();
+    private List<GroupRole> groupToRole = new ArrayList<>();
 
     /**
      * Will pull data from LDAP and update our local copy
@@ -86,8 +86,7 @@ public class LdapSyncer {
 
     @PostConstruct
     public void startUp(){
-        groupToRole.put(env.getProperty("roles.admin"), Role.ROLE_ADMIN);
-        groupToRole.put(env.getProperty("roles.illustrator"), Role.ROLE_ILLUSTRATOR);
+        groupToRole = GroupRole.getGroupRoleMapping(env);
         sync();
     }
 

@@ -3,9 +3,12 @@ import * as angular from 'angular';
 import './personWidget.scss';
 import { Person } from 'models/Person';
 import { TransitionService } from '@uirouter/core';
+import { PersonResource } from 'resources/person.resource';
+import { StaticValuesResource } from 'resources/staticValues.resource';
 
 interface PopupScope extends angular.IScope {
     person: Person;
+    roleNames: object;
     onClose: () => void;
     x: number;
     y: number;
@@ -16,21 +19,13 @@ class PersonWidgetCtrl implements angular.IController {
     public person: Person;
     public popupElement: JQLite;
 
-    private $compile: angular.ICompileService;
-    private $rootScope: angular.IRootScopeService;
-    private $transitions: TransitionService;
-    private $window: angular.IWindowService;
-
     constructor(
-        $compile: angular.ICompileService,
-        $rootScope: angular.IRootScopeService,
-        $transitions: TransitionService,
-        $window: angular.IWindowService,
+        private $compile: angular.ICompileService,
+        private $rootScope: angular.IRootScopeService,
+        private $transitions: TransitionService,
+        private $window: angular.IWindowService,
+        private staticValuesResource: StaticValuesResource,
     ) {
-        this.$compile = $compile;
-        this.$rootScope = $rootScope;
-        this.$transitions = $transitions;
-        this.$window = $window;
 
         this.open = this.open.bind(this);
         this.close = this.close.bind(this);
@@ -54,12 +49,15 @@ class PersonWidgetCtrl implements angular.IController {
         const template = `
             <person-widget-popup
                 person="person"
+                role-names="roleNames"
                 on-close="onClose()"
                 x="x"
                 y="y"
             ></person-widget-popup>`;
         const scope = <PopupScope> this.$rootScope.$new(true);
         scope.person = this.person;
+
+        scope.roleNames = this.staticValuesResource.roleNames();
         scope.x = elementPos.left + this.$window.scrollX;
         scope.y = elementPos.top + this.$window.scrollY;
         scope.onClose = () => {
@@ -103,6 +101,7 @@ export default angular
     .component('personWidgetPopup', {
         bindings: {
             person: '<',
+            roleNames: '<',
             x: '<',
             y: '<',
             onClose: '&',
