@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 @PreAuthorize("hasAnyRole(" +
-        "T(no.dusken.momus.authorization.Role).ILLUSTRATOR, " +
-        "T(no.dusken.momus.authorization.Role).ADMIN)")
+        "T(no.dusken.momus.authorization.Role).ROLE_ILLUSTRATOR, " +
+        "T(no.dusken.momus.authorization.Role).ROLE_ADMIN)")
 public @interface IllustratorAuthorization {
 }
