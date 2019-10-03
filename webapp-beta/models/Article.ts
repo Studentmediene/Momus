@@ -4,19 +4,18 @@ import { Person } from './Person';
 import { Section } from './Section';
 import { Publication } from 'models/Publication';
 
-interface TestModel {
-    id: number;
-}
-
 export interface ArticleType extends ng.resource.IResource<ArticleType>, Model {
     name: string;
 }
 
-export interface Article extends ng.resource.IResource<Article>, TestModel {
+export interface ArticleContent extends ng.resource.IResource<ArticleContent> {
+    content: string;
+}
+
+export interface Article extends ng.resource.IResource<Article>, Model {
     [index: string]: any;
     name: string;
     comment: string;
-    content: string;
     image_text: string;
     content_length?: number;
     note: string;

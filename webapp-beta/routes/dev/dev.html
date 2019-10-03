@@ -16,12 +16,11 @@
         >
             Set logged in user
         </button>
-        <select-dropdown
-            items="vm.persons"
-            ng-model="vm.selectedUser"
-            label="'name'"
-            unclearable
-        >
-        </select-dropdown>
+        <ui-select theme="select2" ng-model="vm.selectedUser" style="width: 300px">
+            <ui-select-match>{{$select.selected.name}}</ui-select-match>
+            <ui-select-choices repeat="item in (vm.persons | filter: $select.search) track by item.id">
+                <span ng-bind-html="item.name"></span>
+            </ui-select-choices>
+        </ui-select>
     </span>
 </p>

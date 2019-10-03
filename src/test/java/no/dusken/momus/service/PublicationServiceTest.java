@@ -17,7 +17,6 @@
 package no.dusken.momus.service;
 
 import no.dusken.momus.model.*;
-import no.dusken.momus.service.repository.ArticleRepository;
 
 import no.dusken.momus.service.repository.PublicationRepository;
 
@@ -41,7 +40,7 @@ public class PublicationServiceTest extends AbstractServiceTest {
     private PublicationRepository publicationRepository;
 
     @Mock
-    private ArticleRepository articleRepository;
+    private ArticleService articleService;
 
     @Mock
     private PageService pageService;
@@ -75,7 +74,7 @@ public class PublicationServiceTest extends AbstractServiceTest {
     public void testSavePublication() {
         doReturn(publication1).when(publicationRepository).saveAndFlush(publication1);
 
-        publicationService.savePublication(publication1, 50);
+        publicationService.createPublication(publication1, 50);
         verify(publicationRepository, times(1)).saveAndFlush(publication1);
         verify(pageService, times(1)).createEmptyPagesInPublication(publication1.getId(), 0, 50);
     }
@@ -86,9 +85,10 @@ public class PublicationServiceTest extends AbstractServiceTest {
     @Test
     public void testUpdatePublicationMetadata() {
         PublicationService publicationServiceSpy = spy(publicationService);
+        when(publicationRepository.findById(publication1.getId())).thenReturn(Optional.of(publication1));
         doReturn(publication1).when(publicationRepository).saveAndFlush(publication1);
         publication1.setName("justanupdatedpubname");
-        publication1 = publicationServiceSpy.updatePublication(publication1);
+        publication1 = publicationServiceSpy.updatePublicationMetadata(publication1.getId(), publication1);
 
         verify(publicationRepository, times(1)).saveAndFlush(publication1);
         assertEquals("justanupdatedpubname",publication1.getName());
@@ -112,7 +112,7 @@ public class PublicationServiceTest extends AbstractServiceTest {
                 .photographers(Collections.singleton(Person.builder().id(4L).name("Ill").build()))
                 .build();
 
-        doReturn(Arrays.asList(art, art2)).when(articleRepository).findByPublicationId(publication1.getId());
+        doReturn(Arrays.asList(art, art2)).when(articleService).getArticlesInPublication(publication1.getId());
 
         String colophon = publicationService.generateColophon(publication1.getId());
 

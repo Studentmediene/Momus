@@ -18,42 +18,56 @@ package no.dusken.momus.service;
 
 
 import lombok.extern.slf4j.Slf4j;
-import no.dusken.momus.dto.SimplePublication;
+import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.*;
-import no.dusken.momus.service.repository.ArticleRepository;
 import no.dusken.momus.service.repository.PublicationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Service
 @Slf4j
 public class PublicationService {
-    @Autowired
-    private PublicationRepository publicationRepository;
+    private final PublicationRepository publicationRepository;
+    private final PageService pageService;
+    private final ArticleService articleService;
 
-    @Autowired
-    private PageService pageService;
+    public PublicationService(
+        PublicationRepository publicationRepository,
+        PageService pageService,
+        ArticleService articleService
+    ) {
+        this.publicationRepository = publicationRepository;
+        this.pageService = pageService;
+        this.articleService = articleService;
+    }
 
-    @Autowired
-    private ArticleRepository articleRepository;
+    public List<Publication> getAllPublications() {
+        return publicationRepository.findAllByOrderByReleaseDateDesc();
+    }
+
+    public Publication getPublicationById(Long id) {
+        return publicationRepository.findById(id).orElseThrow(() -> new RestException("Not found", HttpServletResponse.SC_NOT_FOUND));
+    }
 
     /**
      *
      * @return Returns the oldest publication that has not been released yet at the time of the date parameter
      */
     public Publication getActivePublication(LocalDate date){
-        return publicationRepository.findFirstByReleaseDateAfterOrderByReleaseDate(date.minus(1, ChronoUnit.DAYS), Publication.class);
+        return publicationRepository.findFirstByReleaseDateAfterOrderByReleaseDate(date.minus(1, ChronoUnit.DAYS))
+            .orElse(null);
     }
 
-    public SimplePublication getActiveSimplePublication(LocalDate date) {
-        return publicationRepository.findFirstByReleaseDateAfterOrderByReleaseDate(date.minus(1, ChronoUnit.DAYS), SimplePublication.class);
-    }
+    public Publication createPublication(Publication publication, Integer numEmptyPages){
+        if(numEmptyPages > 100){
+            throw new RestException("You don't want to create that many empty pages", HttpServletResponse.SC_BAD_REQUEST);
+        }
 
-    public Publication savePublication(Publication publication, Integer numEmptyPages){
         Publication newPublication = publicationRepository.saveAndFlush(publication);
 
         pageService.createEmptyPagesInPublication(newPublication.getId(), 0, numEmptyPages);
@@ -63,7 +77,12 @@ public class PublicationService {
         return newPublication;
     }
 
-    public Publication updatePublication(Publication publication){
+    public Publication updatePublicationMetadata(Long id, Publication publication){
+        Publication existing = getPublicationById(id);
+
+        existing.setName(publication.getName());
+        existing.setReleaseDate(publication.getReleaseDate());
+
         log.info("Updated publication {} with data: {}", publication.getName(), publication);
 
         return publicationRepository.saveAndFlush(publication);
@@ -75,7 +94,7 @@ public class PublicationService {
      * @return The generated colophon
      */
     public String generateColophon(Long pubId){
-        List<Article> articles = articleRepository.findByPublicationId(pubId);
+        List<Article> articles = articleService.getArticlesInPublication(pubId);
 
         Set<Person> journalists = new HashSet<>();
         Set<Person> photographers = new HashSet<>();

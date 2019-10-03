@@ -25,6 +25,7 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -33,7 +34,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import no.dusken.momus.config.MockToken;
@@ -96,13 +96,13 @@ public class DevController {
     LdapSyncer ldapSyncer;
 
     @GetMapping("/ldaptest")
-    public @ResponseBody String ldaptest() {
+    public String ldaptest() {
         ldapSyncer.sync();
         return "oook";
     }
 
     @PostMapping("/generatedata")
-    public @ResponseBody String generatePublicationsAndArticles() {
+    public String generatePublicationsAndArticles() {
         Random random = new Random();
 
         List<ArticleStatus> articleStatuses = articleStatusRepository.findAll();
@@ -114,12 +114,12 @@ public class DevController {
         Publication p1 = new Publication();
         p1.setName("UD #1");
         p1.setReleaseDate(LocalDate.now().plusDays(7));
-        p1 = publicationService.savePublication(p1, 50);
+        p1 = publicationService.createPublication(p1, 50);
 
         Publication p2 = new Publication();
         p2.setName("UD #2");
         p2.setReleaseDate(LocalDate.now().plusDays(14));
-        p2 = publicationService.savePublication(p2, 50);
+        p2 = publicationService.createPublication(p2, 50);
 
         Article a1 = new Article();
         a1.setName("Lorem Ipsum");
@@ -189,13 +189,13 @@ public class DevController {
     }
 
     @GetMapping("/devmode")
-    public @ResponseBody boolean isDevmode() {
-        return env.acceptsProfiles("dev");
+    public boolean isDevmode() {
+        return env.acceptsProfiles(Profiles.of("dev"));
     }
 
     @GetMapping("/noauth")
-    public @ResponseBody boolean isNoAuth() {
-        return env.acceptsProfiles("noAuth");
+    public boolean isNoAuth() {
+        return env.acceptsProfiles(Profiles.of("noAuth"));
     }
 
     @PostMapping("/login")

@@ -16,71 +16,65 @@
 
 package no.dusken.momus.controller;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
 import com.google.api.client.util.IOUtils;
+import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.socket.messaging.SessionConnectedEvent;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+
 import no.dusken.momus.authentication.UserDetailsService;
+import no.dusken.momus.authorization.AdminAuthorization;
 import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.Avatar;
 import no.dusken.momus.model.Person;
 import no.dusken.momus.service.PersonService;
-import no.dusken.momus.service.repository.AvatarRepository;
-import no.dusken.momus.service.repository.PersonRepository;
-import no.dusken.momus.service.repository.SectionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.EventListener;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.socket.messaging.SessionConnectedEvent;
-import org.springframework.web.socket.messaging.SessionDisconnectEvent;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.*;
 
 @RestController
 @Transactional
 @RequestMapping("/api/person")
 public class PersonController {
+    private final PersonService personService;
+    private final UserDetailsService userDetailsService;
 
-    @Autowired
-    private PersonRepository personRepository;
-
-    @Autowired
-    private AvatarRepository avatarRepository;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    private SectionRepository sectionRepository;
-
-    @Autowired
-    private PersonService personService;
+    public PersonController(PersonService personService, UserDetailsService userDetailsService) {
+        this.personService = personService;
+        this.userDetailsService = userDetailsService;
+    }
 
     /**
-     * Gets all active persons. In addition, if article ids are supplied, will return all contributors on those
-     * even if they are inactive
+     * Gets all active persons. In addition, if article ids are supplied, will
+     * return all contributors on those even if they are inactive
      */
     @GetMapping
-    public @ResponseBody Set<Person> getActivePersons(@RequestParam(
+    public Set<Person> getActivePersons(@RequestParam(
             value="articleIds", required = false, defaultValue = "") List<Long> articleIds) {
         return personService.getActivePersonsAndArticleContributors(articleIds);
     }
 
     @GetMapping("/{id}")
-    public @ResponseBody Person getPersonById(@PathVariable("id") Long id) {
-        return personRepository.findOne(id);
+    public Person getPersonById(@PathVariable("id") Long id) {
+        return personService.getPersonById(id);
     }
 
     @GetMapping("/{id}/photo")
     public void getPersonPhoto(@PathVariable("id") Long id, HttpServletResponse response) throws IOException, SQLException {
-        Avatar avatar = avatarRepository.findOne(id);
-
-        if(avatar == null) {
-            throw new RestException("No photo found for user", 404);
-        }
+        Avatar avatar = personService.getPersonPhoto(id);
 
         response.addHeader("Content-Type", "image/jpeg");
 
@@ -91,7 +85,7 @@ public class PersonController {
     }
 
     @GetMapping("/me")
-    public @ResponseBody Person getCurrentUser() {
+    public Person getCurrentUser() {
         return userDetailsService.getLoggedInPerson();
     }
 
@@ -101,24 +95,18 @@ public class PersonController {
     }
 
     @PatchMapping("/me/favouritesection")
-    public @ResponseBody Person updateFavouritesection(@RequestParam Long section) {
-        if(!sectionRepository.exists(section)) {
-            throw new RestException(
-                    "Can't set favourite section, section with id " + section + " does not exist",
-                    HttpServletResponse.SC_NOT_FOUND);
-        }
-        return personService.updateFavouritesection(
-                userDetailsService.getLoggedInPerson(),
-                sectionRepository.findOne(section));
+    public Person updateFavouritesection(@RequestParam Long section) {
+        return personService.updateFavouritesection(userDetailsService.getLoggedInPerson(), section);
     }
 
     @GetMapping("/loggedin/all")
-    public @ResponseBody Set<Person> getAllActivePersons() {
+    @AdminAuthorization
+    public Set<Person> getAllActivePersons() {
         return personService.getAllLoggedInPersons();
     }
 
     @GetMapping("/loggedin")
-    public @ResponseBody Set<Person> getActivePersonsAtState(@RequestParam String state) {
+    public Set<Person> getActivePersonsAtState(@RequestParam String state) {
         return personService.getLoggedInPersonsAtState(state);
     }
 

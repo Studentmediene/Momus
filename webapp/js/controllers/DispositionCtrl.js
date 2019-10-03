@@ -34,7 +34,9 @@ angular.module('momusApp.controllers')
         MessagingService,
         DispositionStyleService,
         publication,
+        pages,
         pageOrder,
+        articles,
         adverts,
         articleStatuses,
         reviewStatuses,
@@ -56,9 +58,15 @@ angular.module('momusApp.controllers')
         vm.reviewStatuses = reviewStatuses;
         vm.layoutStatuses = layoutStatuses;
 
-        vm.pagesLookup = toIdLookup(publication.pages);
-        vm.articlesLookup = toIdLookup(publication.articles);
-        vm.advertsLookup = toIdLookup(adverts);
+        pages.$promise.then(() => {
+            vm.pagesLookup = toIdLookup(pages);
+        });
+        articles.$promise.then(() => {
+            vm.articlesLookup = toIdLookup(articles);
+        });
+        adverts.$promise.then(() => {
+            vm.advertsLookup = toIdLookup(adverts);
+        });
 
         vm.newPages = newPages;
 		vm.updatePageMeta = updatePageMeta;
@@ -89,15 +97,15 @@ angular.module('momusApp.controllers')
                 const {entity, action} = data;
                 switch(action) {
                     case 'CREATE':
-                        publication.pages.push(entity);
+                        pages.push(entity);
                         vm.pagesLookup[entity.id] = entity;
                         break;
                     case 'UPDATE':
-                        publication.pages.splice(publication.pages.findIndex(p => p.id === entity.id), 1, entity);
+                        pages.splice(pages.findIndex(p => p.id === entity.id), 1, entity);
                         vm.pagesLookup[entity.id] = entity;
                         break;
                     case 'DELETE':
-                        publication.pages.splice(publication.pages.findIndex(p => p.id === entity.id), 1);
+                        pages.splice(pages.findIndex(p => p.id === entity.id), 1);
                         delete vm.pagesLookup[entity.id];
                 }
             },
@@ -105,11 +113,11 @@ angular.module('momusApp.controllers')
                 const {entity, action} = data;
                 switch(action) {
                     case 'CREATE':
-                        publication.articles.push(entity);
+                        articles.push(entity);
                         vm.articlesLookup[entity.id] = entity;
                         break;
                     case 'UPDATE':
-                        publication.articles.splice(publication.articles.findIndex(a => a.id === entity.id), 1, entity);
+                        articles.splice(articles.findIndex(a => a.id === entity.id), 1, entity);
                         vm.articlesLookup[entity.id] = entity;
                         break;
                 }
@@ -144,9 +152,9 @@ angular.module('momusApp.controllers')
             Page.saveMultipleEmpty({publicationId: publication.id, afterPage: newPageAt, numNewPages: numNewPages}, pages => {
                 pages.forEach(p => {
                     vm.pagesLookup[p.id] = p;
-                    publication.pages.push(p);
+                    pages.push(p);
                 });
-                pageOrder.order.splice(newPageAt, 0, ...pages.map(p => p.id));
+                pageOrder.order.splice(newPageAt, 0, ...pages.map(p => ({ id: p.id })));
                 vm.loading = false;
             });
         }
@@ -177,7 +185,7 @@ angular.module('momusApp.controllers')
 
         function deletePage(page) {
             if(confirm("Er du sikker på at du vil slette denne siden?")){
-                publication.pages.splice(publication.pages.indexOf(page), 1);
+                pages.splice(pages.indexOf(page), 1);
                 pageOrder.order.splice(pageOrder.order.indexOf(page.id), 1);
                 delete vm.pagesLookup[page.id];
                 vm.loading = true;
@@ -205,7 +213,7 @@ angular.module('momusApp.controllers')
                 .then(id => {
                     Article.get({id: id}, article => {
                         vm.articlesLookup[id] = article;
-                        publication.articles.push(article);
+                        articles.push(article);
                         page.articles.push(id);
                     });
                 });

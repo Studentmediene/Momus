@@ -1,6 +1,7 @@
 import { Publication, PublicationSerial } from '../models/Publication';
 import { MomResourceFactory } from 'services/momResource.factory';
 import { LayoutStatus } from 'models/Statuses';
+import { ResourceFunc } from './app.resources';
 
 /* @ngInject */
 export default function publicationResourceFactory(momResource: MomResourceFactory<Publication>): PublicationResource {
@@ -9,7 +10,8 @@ export default function publicationResourceFactory(momResource: MomResourceFacto
             id: '@id',
         },
         {
-            active: { method: 'GET', params: {id: 'active'}, bypassInterceptor: true },
+            updateMetadata: { method: 'PATCH', params: {resource: 'metadata'} },
+            active: { method: 'GET', params: {id: 'active'} },
             layoutStatuses: {
                 method: 'GET', isArray: true, params: {id: 'layoutstatuses'}, cache: true, skipTransform: true,
             },
@@ -17,6 +19,12 @@ export default function publicationResourceFactory(momResource: MomResourceFacto
         publicationRequestTransform,
         publicationResponseTransform,
     );
+}
+
+export interface PublicationResource extends ng.resource.IResourceClass<Publication> {
+    updateMetadata: ResourceFunc<Publication, Publication>;
+    active: ResourceFunc<Publication>;
+    layoutStatuses: ResourceFunc<LayoutStatus>;
 }
 
 function publicationResponseTransform(publication: PublicationSerial): Publication {
@@ -37,18 +45,4 @@ function publicationRequestTransform(publication: Publication): PublicationSeria
         ...publication,
         release_date: publication.release_date.toISOString(),
     };
-}
-
-export interface PublicationResource extends ng.resource.IResourceClass<Publication> {
-    active(
-        params?: {},
-        success?: (publication: Publication) => void,
-        error?: (err: any) => void,
-    ): Publication;
-
-    layoutStatuses(
-        params?: {},
-        success?: (layoutStatuses: LayoutStatus[]) => void,
-        error?: (err: any) => void,
-    ): LayoutStatus[];
 }

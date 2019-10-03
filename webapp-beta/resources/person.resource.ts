@@ -1,4 +1,5 @@
 import { Person } from '../models/Person';
+import { ResourceFunc } from './app.resources';
 
 /* @ngInject */
 export default function personResourceFactory($resource: ng.resource.IResourceService): PersonResource {
@@ -20,27 +21,8 @@ export default function personResourceFactory($resource: ng.resource.IResourceSe
 }
 
 export interface PersonResource extends ng.resource.IResourceClass<Person> {
-    me(
-        params?: {},
-        success?: (person: Person) => void,
-        error?: (err: any) => void,
-    ): Person;
-
-    updateFavouritesection(
-        params: {section: number},
-        success?: () => void,
-        error?: (err: any) => void,
-    ): void;
-
-    loggedIn(
-        params: {state: string},
-        success?: (active: Person[]) => void,
-        error?: (err: any) => void,
-    ): Person[];
-
-    updateSessionState(
-        params: {id: string, state: string},
-        success?: () => void,
-        error?: (err: any) => void,
-    ): void;
+    me: ResourceFunc<Person>;
+    updateFavouritesection: ResourceFunc<void, null, { section: number }>;
+    loggedIn: ResourceFunc<Person[], null, { state: string}>;
+    updateSessionState: ResourceFunc<void, null, { id: string, state: string}>;
 }

@@ -63,7 +63,7 @@ angular.module('momusApp.controllers')
                 })
             } else { // it's an old one
                 const updatedIndex = vm.publications.findIndex(pub => pub.id === vm.editing.id);
-                vm.editing.$update({}, (updated) => {
+                vm.editing.$updateMetadata({}, (updated) => {
                     vm.publications[updatedIndex] = updated;
                     editPublication(updated);
                     vm.isSaving = false;

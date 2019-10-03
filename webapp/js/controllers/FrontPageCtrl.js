@@ -48,7 +48,7 @@ angular.module('momusApp.controllers')
         vm.favouriteSectionArticles = favouriteSectionArticles;
         vm.sections = sections;
         vm.publication = activePublication;
-        vm.noPublication = activePublication == null;
+        vm.noPublication = activePublication.id == null;
         vm.news = news;
 
         if(!vm.noPublication) {
@@ -72,7 +72,7 @@ angular.module('momusApp.controllers')
             Person.updateFavouritesection({section: vm.user.favouritesection.id});
             vm.favouriteSectionArticles = Article.search({}, {
                 section: vm.user.favouritesection.id,
-                page_number: 1,
+                page_number: 0,
                 page_size: 9,
             });
         }

@@ -3,13 +3,23 @@
     <div class="uk-width-3-5@m">
         <panel icon="'fas fa-newspaper'" header="'Utgaver'" no-body-padding="true" type="'primary'">
             <extra-header-content>
-                <select-dropdown
+                <ui-select
+                    theme="select2"
                     ng-model="vm.selectedYear"
-                    items="vm.yearOptions"
-                    placeholder="År"
-                >
-                </select-dropdown>
+                    search-enabled="false"
+                    style="width: 100px">
+                    <ui-select-match placeholder="År" allow-clear="true">{{$select.selected}}</ui-select-match>
+                    <ui-select-choices repeat="item in vm.yearOptions">
+                        <span ng-bind-html="item"></span>
+                    </ui-select-choices>
+                </ui-select>
             </extra-header-content>
+            <div
+                ng-if="!vm.publications.$resolved"
+                class="uk-text-center uk-padding-small"
+            >
+                <loading-spinner></loading-spinner>
+            </div>
             <table class="uk-table uk-table-hover uk-table-striped">
                 <thead>
                     <tr>
@@ -21,8 +31,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="publication in vm.publications 
-                                | filter:vm.isInCurrentYear 
+                <tr ng-repeat="publication in filteredPubs = (vm.publications | filter:vm.isInCurrentYear)
                                 | orderBy:'release_date':true
                                 | startFrom:(vm.currentPage)*vm.pageSize 
                                 | limitTo:vm.pageSize"
@@ -52,7 +61,7 @@
                     <span
                         style="cursor: pointer;"
                         ng-click="vm.currentPage = vm.currentPage + 1"
-                        ng-class="{'uk-disabled': !vm.hasNextPage()}"
+                        ng-class="{'uk-disabled': !vm.hasNextPage(filteredPubs.length)}"
                     >
                         <span uk-pagination-next></span>
                     </span>

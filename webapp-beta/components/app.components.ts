@@ -7,14 +7,14 @@ import personWidget from './personWidget/personWidget.component';
 import statusWidget from './statusWidget/statusWidget.component';
 import booleanWidget from './booleanWidget/booleanWidget.component';
 import textwrapper from './textwrapper/textwrapper.component';
-import selectDropdown from './selectDropdown/selectDropdown.component';
-import multiselectDropdown from './multiselectDropdown/multiselectDropdown.component';
 import editableAlert from './editableAlert/editableAlert.component';
 import editableField from './editableField/editableField.component';
 import newArticleModal from './newArticleModal/newArticleModal.component';
 import newAdvertModal from './newAdvertModal/newAdvertModal.component';
 import newsPanel from './newsPanel/newsPanel.component';
 import messageModal from './messageModal/messageModal.component';
+import pageAdder from './pageAdder/pageAdder.component';
+import errorMessage from './errorMessage/errorMessage.component';
 
 export default angular
     .module('momusApp.components', [
@@ -25,14 +25,14 @@ export default angular
         inlineEdit.name,
         textwrapper.name,
         panel.name,
-        selectDropdown.name,
-        multiselectDropdown.name,
         editableAlert.name,
         editableField.name,
         newArticleModal.name,
         newAdvertModal.name,
         newsPanel.name,
         messageModal.name,
+        pageAdder.name,
+        errorMessage.name,
     ])
     .component('loadingSpinner', {
         template: '<i class="fas fa-circle-notch fa-4x fa-spin"></i>',

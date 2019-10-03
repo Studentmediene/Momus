@@ -1,12 +1,6 @@
 @import "./variables.scss";
 @import "uikit/src/scss/uikit.scss";
-
-.initial-load-spinner {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    text-align: center;
-}
+@import "./select2.scss";
 
 .button-edit {
     background-color: $global-edit-background;
@@ -73,9 +67,10 @@ textarea {
     opacity: 1;
     background-color: rgba(0,0,0,0.6);
     z-index: 1000;
+    overflow-y: scroll;
 
     .modal-content {
-        width: 60%;
+        width: 70%;
         margin: auto;
         margin-top: 20px;
         background-color: white;
@@ -109,6 +104,18 @@ textarea {
 .person-list {
     > li {
         margin-top: 0 !important;
+    }
+}
+
+.contributor-list {
+    display: flex;
+    align-items: center;
+    > :first-child {
+        margin-right: 5px;
+    }
+
+    person-widget {
+        margin-right: 5px;
     }
 }
 

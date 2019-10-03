@@ -17,11 +17,12 @@
 'use strict';
 
 angular.module('momusApp.directives').
-    directive( 'personWidget', ['$rootScope', 'MessageModal', '$window',
+    directive('personWidget',
         function (
             $rootScope,
             MessageModal,
-            $window
+            $window,
+            StaticValues,
         ) {
         return {
             restrict: 'A',
@@ -32,6 +33,7 @@ angular.module('momusApp.directives').
             transclude: true,
             link: (scope, element, attrs) => {
                 scope.isVisible = false;
+                scope.roleNames = StaticValues.roleNames();
 
                 scope.openPW = () => {
                     $rootScope.$broadcast('closePersonWidgets');
@@ -57,5 +59,5 @@ angular.module('momusApp.directives').
                 };
             }
         };
-    }]
+    }
 );

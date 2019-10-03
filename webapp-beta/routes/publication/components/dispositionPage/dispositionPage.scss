@@ -1,0 +1,67 @@
+@import '../../../../style/variables.scss';
+
+.disposition-page {
+    display: flex;
+    border-right: $disp-page-border;
+    border-top: $disp-page-border;
+
+    > :not(.article-cell) {
+        border-left: $disp-page-border;
+        box-sizing: border-box;
+        padding: 3px;
+    }
+
+    > .article-edit {
+        border-left: 0;
+        padding: 5px;
+    }
+
+    > :nth-child(1) {
+        border-right: $disp-page-border;
+    }
+}
+
+.article-cell {
+    >:not(:first-child) {
+        > * {
+            border-top: $disp-article-border;
+        }
+    }
+}
+
+.content-input {
+    display: flex;
+    align-items: center;
+
+    > :first-child {
+        flex-grow: 1;
+        margin-right: 10px;
+    }
+}
+
+.page-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    :not(:first-child) {
+        margin-left: 3px;
+    }
+}
+
+.page-done {
+    background: $disp-page-done-background !important; //Want this to override ad color
+}
+
+.handle {
+    cursor: pointer;
+}
+
+.sortable-placeholder {
+    min-height: 50px;
+    background: $disp-page-done-background;
+    display: block;
+}
+
+.ui-sortable-helper {
+    background-color: rgba($color: white, $alpha: 0.75);
+}

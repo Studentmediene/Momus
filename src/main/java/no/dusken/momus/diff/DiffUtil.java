@@ -22,7 +22,6 @@ import no.dusken.momus.model.ArticleRevision;
 import no.dusken.momus.service.repository.ArticleRevisionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -37,7 +36,7 @@ public class DiffUtil {
     @Autowired
     TagToUnicodeConverter tagToUnicodeConverter;
 
-    public @ResponseBody LinkedList<DiffMatchPatch.Diff> getDiffList(long art, long oldId, long newId) {
+    public LinkedList<DiffMatchPatch.Diff> getDiffList(long art, long oldId, long newId) {
         List<ArticleRevision> revision = articleRevisionRepository.findByArticleIdOrderBySavedDateDesc(art);
 
         if (oldId > newId) {

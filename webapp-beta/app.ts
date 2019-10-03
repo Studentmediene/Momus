@@ -1,8 +1,14 @@
+import 'jquery';
+import 'jquery-ui';
 import * as angular from 'angular';
 
 import '@fortawesome/fontawesome-free/css/fontawesome.css';
 import '@fortawesome/fontawesome-free/css/solid.css';
 import 'uikit';
+import 'ui-select';
+import 'ui-select/dist/select.css';
+
+import * as sanitize from 'angular-sanitize';
 
 import filters from './app.filters';
 import services from './services/app.services';
@@ -19,6 +25,8 @@ import './style/app.scss';
 
 const app = angular
     .module('momusApp', [
+        sanitize,
+        'ui.select',
         filters.name,
         services.name,
         resources.name,
@@ -51,7 +59,7 @@ async function loadInitData(): Promise<Environment> {
     const injector = angular.injector(['ng']);
     const $http = injector.get('$http');
     const loggedInUser = (await $http.get<Person>('/api/person/me')).data;
-    const env = (await $http.get<Env>('/api/env/all')).data;
+    const env = (await $http.get<Env>('/api/static-values/env')).data;
     return new Promise<Environment>((resolve) => resolve({loggedInUser, env}));
 }
 

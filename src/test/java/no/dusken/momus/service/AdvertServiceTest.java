@@ -11,6 +11,8 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import java.util.Optional;
+
 public class AdvertServiceTest extends AbstractServiceTest {
 
     @InjectMocks
@@ -26,8 +28,7 @@ public class AdvertServiceTest extends AbstractServiceTest {
         advert = Advert.builder().name("iBok").comment("er kult").build();
         advert.setId(0L);
 
-        when(advertRepository.findOne(0L)).thenReturn(advert);
-        when(advertRepository.exists(0L)).thenReturn(true);
+        when(advertRepository.findById(0L)).thenReturn(Optional.of(advert));
         when(advertRepository.saveAndFlush(any(Advert.class)))
                 .then(invocationOnMock -> invocationOnMock.getArgument(0));
     }
@@ -43,7 +44,7 @@ public class AdvertServiceTest extends AbstractServiceTest {
     public void saveAdvert() {
         Advert a = Advert.builder().name("dusken.no").comment("oh yes").build();
 
-        advertService.saveAdvert(a);
+        advertService.createAdvert(a);
 
         verify(advertRepository, times(1)).saveAndFlush(a);
     }

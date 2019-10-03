@@ -10,10 +10,15 @@ import { OpenNewAdvertModal } from 'components/newAdvertModal/newAdvertModal.com
 import { ArticleResource } from 'resources/article.resource';
 import { PersonResource } from 'resources/person.resource';
 
+import './dispositionPage.scss';
+
 class DispositionPageCtrl implements angular.IController {
+    public prevPage: Page;
     public page: Page;
     public publication: Publication;
+    public articles: Article[];
     public adverts: Advert[];
+    public onDelete: (page: {page: Page}) => void;
 
     public articlesLookup: {[index: number]: Article};
     public advertsLookup: {[index: number]: Advert};
@@ -24,6 +29,7 @@ class DispositionPageCtrl implements angular.IController {
     public newArticles: Article[];
     public newAdverts: Advert[];
 
+    private $scope: angular.IScope;
     private articleResource: ArticleResource;
     private pageResource: PageResource;
     private personResource: PersonResource;
@@ -31,12 +37,14 @@ class DispositionPageCtrl implements angular.IController {
     private openNewAdvertModal: OpenNewAdvertModal;
 
     constructor(
+        $scope: angular.IScope,
         articleResource: ArticleResource,
         pageResource: PageResource,
         personResource: PersonResource,
         openNewArticleModal: OpenNewArticleModal,
         openNewAdvertModal: OpenNewAdvertModal,
     ) {
+        this.$scope = $scope;
         this.articleResource = articleResource;
         this.pageResource = pageResource;
         this.personResource = personResource;
@@ -74,8 +82,13 @@ class DispositionPageCtrl implements angular.IController {
         );
     }
 
-    public deletePage() {
+    public toggleDone() {
+        this.page.done = !this.page.done;
+        this.updatePageMeta();
+    }
 
+    public deletePage() {
+        this.onDelete({ page: this.page });
     }
 
     public updatePageMeta() {
@@ -83,7 +96,15 @@ class DispositionPageCtrl implements angular.IController {
         this.pageResource.updateMeta({}, this.page, () => { this.loading = false; });
     }
 
-    public createArticle(page: Page) {
+    public prevPageHasArticle(articleId: number) {
+        if (this.prevPage == null) {
+            return false;
+        }
+
+        return this.prevPage.articles.indexOf(articleId) !== -1;
+    }
+
+    public createArticle() {
         this.openNewArticleModal({
             persons: this.personResource.query(),
             publication: this.publication,
@@ -92,17 +113,21 @@ class DispositionPageCtrl implements angular.IController {
             types: this.articleResource.types(),
         }).then((article) => {
             this.articlesLookup[article.id] = article;
-            this.publication.articles.push(article);
-            page.articles.push(article.id);
+            this.articles.push(article);
+            this.page.articles.push(article.id);
+            this.newArticles = this.page.articles.map((aid) => this.articlesLookup[aid]);
+            this.$scope.$apply(); // Need to apply here to update view
         });
     }
 
-    public createAdvert(page: Page) {
+    public createAdvert() {
         this.openNewAdvertModal()
             .then((advert) => {
                 this.advertsLookup[advert.id] = advert;
                 this.adverts.push(advert);
-                page.adverts.push(advert.id);
+                this.page.adverts.push(advert.id);
+                this.newAdverts = this.page.adverts.map((aid) => this.advertsLookup[aid]);
+                this.$scope.$apply(); // Need to apply here to update view
             });
     }
 }
@@ -113,8 +138,10 @@ export default angular.module('momusApp.routes.publication.dispositionPage', [])
         controllerAs: 'vm',
         bindings: {
             number: '<',
-            page: '<',
             publication: '<',
+            prevPage: '<',
+            page: '<',
+            articles: '<',
             columnWidths: '<',
             articleWidth: '<',
             adverts: '<',
@@ -123,5 +150,6 @@ export default angular.module('momusApp.routes.publication.dispositionPage', [])
             layoutStatuses: '<',
             articleStatuses: '<',
             reviewStatuses: '<',
+            onDelete: '&',
         },
     });

@@ -7,17 +7,19 @@ type PanelType = 'primary' | 'new' | 'edit' | 'danger';
 /* @ngInject */
 class PanelCtrl {
     public icon: string;
-    public title: string;
+    public header: string;
     public noBodyPadding: boolean;
     public type: PanelType;
     public collapsible: boolean;
     public isCollapsed: boolean = false;
+    public initiallyCollapsed: boolean;
 
     public $onInit() {
         this.noBodyPadding = this.noBodyPadding || false;
         this.type = this.type || 'primary';
 
-        this.isCollapsed = this.collapsible != null;
+        this.initiallyCollapsed = this.initiallyCollapsed != null ? this.initiallyCollapsed : true;
+        this.isCollapsed = this.collapsible && this.initiallyCollapsed;
     }
 
     public toggleCollapse() {
@@ -34,7 +36,8 @@ export default angular
             noBodyPadding: '<',
             type: '<',
             noHeader: '@',
-            collapsible: '@',
+            collapsible: '<',
+            initiallyCollapsed: '<',
         },
         controller: PanelCtrl,
         controllerAs: 'vm',

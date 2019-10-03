@@ -16,6 +16,9 @@ export default function newsItemResourceFactory(
     );
 }
 
+export interface NewsItemResource extends ng.resource.IResourceClass<NewsItem> {
+}
+
 function newsItemResponseTransform(newsItem: NewsItem) {
     if (!newsItem) {
         return newsItem;
@@ -34,7 +37,4 @@ function newsItemRequestTransform(newsItem: NewsItem) {
         ...newsItem,
         date: newsItem.date.toISOString(),
     };
-}
-
-export interface NewsItemResource extends ng.resource.IResourceClass<NewsItem> {
 }

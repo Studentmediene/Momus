@@ -18,12 +18,13 @@
 
 angular.module('momusApp.resources')
     .factory('Publication', (momResource) => {
-        return momResource('/api/publications/:id',
+        return momResource('/api/publications/:id/:resource',
             {
                 id: '@id'
             },
             {
-                active: { method: 'GET', params: {id: 'active'}, bypassInterceptor: true },
+                updateMetadata: { method: 'PATCH', params: {resource: 'metadata'} },
+                active: { method: 'GET', params: {id: 'active'} },
                 layoutStatuses: { method: 'GET', isArray: true, params: {id: 'layoutstatuses'}, cache: true, skipTransform: true}
             },
             publicationRequestTransform,

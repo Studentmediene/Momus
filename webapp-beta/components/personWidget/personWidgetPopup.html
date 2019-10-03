@@ -28,7 +28,7 @@
     <div>
         <table class="table table-condensed person-widget-table">
             <tr>
-                <td rowspan="2">
+                <td rowspan="3">
                     <person-avatar user="vm.person" size="60"></person-avatar>
                 </td>
                 <td>
@@ -39,10 +39,12 @@
                 </td>
             </tr>
             <tr>
-                <td>
-                    <b><i class="fas fa-phone"></i></b>
-                </td>
+                <td><b><i class="fas fa-phone"></i></b></td>
                 <td>{{vm.person.phone_number}}</td>
+            </tr>
+            <tr>
+                <td><b><i class="fas fa-tags"></i></b></td>
+                <td>{{ vm.roleNames[vm.person.main_role] }}</span></td>
             </tr>
         </table>
     </div>

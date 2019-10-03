@@ -1,7 +1,7 @@
 @import "../../style/variables.scss";
 
 .person-widget-popup {
-    position: fixed;
+    position: absolute;
     cursor: default;
     transform: translate(-10%, -115%);
     background-color: white;

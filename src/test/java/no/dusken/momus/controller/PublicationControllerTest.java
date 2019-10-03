@@ -26,9 +26,9 @@ public class PublicationControllerTest extends AbstractControllerTest {
 
     @Override
     void internalSetup() {
-        pub1 = publicationService.savePublication(
+        pub1 = publicationService.createPublication(
                 Publication.builder().name("UD").releaseDate(LocalDate.now()).build(), 10);
-        pub2 = publicationService.savePublication(
+        pub2 = publicationService.createPublication(
                 Publication.builder().name("UD2").releaseDate(LocalDate.now().plusDays(10)).build(), 10);
     }
 
@@ -52,13 +52,13 @@ public class PublicationControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void updatePublication() throws Exception {
+    public void updatePublicationMetadata() throws Exception {
         Publication newPub1 = Publication.builder().name("UDUD").releaseDate(pub1.getReleaseDate()).build();
         newPub1.setId(pub1.getId());
 
-        performPutExpectOk("/api/publications/" + pub1.getId(), TestUtil.toJsonString(newPub1));
+        performPatchExpectOk("/api/publications/" + pub1.getId() + "/metadata", TestUtil.toJsonString(newPub1));
 
-        newPub1 = publicationRepository.findOne(pub1.getId());
+        newPub1 = publicationRepository.findById(pub1.getId()).get();
 
         assert newPub1.getName().equals("UDUD");
     }

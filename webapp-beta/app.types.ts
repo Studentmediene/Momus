@@ -1,7 +1,9 @@
 import { Person } from './models/Person';
 
 export interface Env {
-    devmode: string;
+    devmode: boolean;
+    noAuth: boolean;
+    version: string;
 }
 
 export interface Environment {

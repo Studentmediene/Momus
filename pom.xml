@@ -22,7 +22,7 @@
 
     <groupId>no.dusken.momus</groupId>
     <artifactId>momus</artifactId>
-    <version>1.11.2</version>
+    <version>1.11.3</version>
     <packaging>war</packaging>
 
     <!-- Some boilerplate info -->
@@ -51,18 +51,18 @@
 
         <java.version>1.8</java.version>
 
-        <lombok.version>1.18.2</lombok.version>
-        <spring.version>4.3.20.RELEASE</spring.version>
-        <spring-data.version>1.11.16.RELEASE</spring-data.version>
-        <spring-ldap.version>2.0.2.RELEASE</spring-ldap.version>
-        <spring-security.version>4.2.9.RELEASE</spring-security.version>
+        <lombok.version>1.18.8</lombok.version>
+        <spring.version>5.1.9.RELEASE</spring.version>
+        <spring-data.version>2.1.9.RELEASE</spring-data.version>
+        <spring-ldap.version>2.3.2.RELEASE</spring-ldap.version>
+        <spring-security.version>5.1.5.RELEASE</spring-security.version>
         <spring-security-saml2.version>1.0.3.RELEASE</spring-security-saml2.version>
-        <hibernate.version>5.3.7.Final</hibernate.version>
-        <jackson.version>2.9.7</jackson.version>
-        <commons-dbcp2.version>2.5.0</commons-dbcp2.version>
-        <liquibase.version>3.6.2</liquibase.version>
+        <hibernate.version>5.4.4.Final</hibernate.version>
+        <jackson.version>2.9.9</jackson.version>
+        <commons-dbcp2.version>2.6.0</commons-dbcp2.version>
+        <liquibase.version>3.7.0</liquibase.version>
         <google-drive.version>v2-rev277-1.22.0</google-drive.version>
-        <commons-lang3.version>3.6</commons-lang3.version>
+        <commons-lang3.version>3.9</commons-lang3.version>
 
         <javax-servlet.version>3.1.0</javax-servlet.version>
         <jetty.version>9.4.7.v20180619</jetty.version>
@@ -174,6 +174,11 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-junit4</artifactId>
+            <version>${maven-surefire.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -379,7 +384,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Teest reporting -->
+            <!-- Test reporting -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

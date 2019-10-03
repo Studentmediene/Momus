@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -53,14 +54,15 @@ public class PersonControllerTest extends AbstractControllerTest {
                 .active(true)
                 .build();
         List<Person> users = Arrays.asList(eirik, eivind);
-        personRepository.save(users);
+        personRepository.saveAll(users);
         personRepository.flush();
         performGetExpectOk("/api/person").andExpect(jsonPath("$.length()", is(users.size())));
     }
 
     @Test
     public void getNonexistentID() throws Exception {
-        performGetExpectOk("/api/person/2").andExpect(content().string(""));
+        mockMvc.perform(get("/api/person/2"))
+            .andExpect(status().isNotFound());
     }
 
     @Test
