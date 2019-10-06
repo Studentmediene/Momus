@@ -50,7 +50,8 @@ build_frontend:
     - npm run build:beta
   artifacts:
     paths:
-      - dist/
+      - webapp/dist/
+      - webapp-beta/dist/
 
 bundle_app:
   stage: bundle
