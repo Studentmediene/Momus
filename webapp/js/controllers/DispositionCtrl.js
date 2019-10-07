@@ -52,6 +52,7 @@ angular.module('momusApp.controllers')
         vm.presentUsers = session.getPresentUsers();
 
         vm.publication = publication;
+        vm.articles = articles;
         vm.adverts = adverts;
         vm.pageOrder = pageOrder;
         vm.articleStatuses = articleStatuses;
