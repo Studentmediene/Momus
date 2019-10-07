@@ -16,12 +16,15 @@
 
 package no.dusken.momus.controller;
 
+import no.dusken.momus.authorization.AdminAuthorization;
+import no.dusken.momus.exceptions.RestException;
 import no.dusken.momus.model.*;
 import no.dusken.momus.service.ArticleTypeService;
 import no.dusken.momus.service.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -38,18 +41,15 @@ public class ArticleTypeController {
         return articleTypeService.getAllArticleTypes();
     }
 
-    @GetMapping("/{id}")
-    public @ResponseBody ArticleType getArticleTypeByID(@PathVariable Long id) {
-        return articleTypeService.getArticleTypeById(id);
-    }
-
     @PostMapping
+    @AdminAuthorization
     public @ResponseBody ArticleType createArticleType(@RequestBody ArticleType articleType){
         return articleTypeService.createArticleType(articleType);
     }
 
     @PatchMapping
-    public @ResponseBody ArticleType updateArticleType(@RequestBody ArticleType articleType){
-        return articleTypeService.updateArticleType(articleType);
+    @AdminAuthorization
+    public @ResponseBody ArticleType updateArticleType(@PathVariable Long id, @RequestBody ArticleType articleType){
+        return articleTypeService.updateArticleType(id, articleType);
     }
 }

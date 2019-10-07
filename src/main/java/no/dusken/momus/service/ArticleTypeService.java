@@ -50,8 +50,14 @@ public class ArticleTypeService {
         return newArticleType;
     }
 
-    public ArticleType updateArticleType(ArticleType articleType) {
+    public ArticleType updateArticleType(Long id, ArticleType articleType) {
+        ArticleType existing = getArticleTypeById(id);
+
+        existing.setName(articleType.getName());
+        existing.setDescription(articleType.getDescription());
+        existing.setDeleted(articleType.isDeleted());
+
         log.info("ArticleType with id {} updated, data: {}", articleType.getId(), articleType);
-        return articleTypeRepository.saveAndFlush(articleType);
+        return articleTypeRepository.saveAndFlush(existing);
     }
 }

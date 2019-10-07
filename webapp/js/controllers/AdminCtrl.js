@@ -35,6 +35,8 @@ angular.module('momusApp.controllers')
 
         vm.saveEditedArticleType = saveEditedArticleType;
         vm.editArticleType = editArticleType;
+        vm.deleteArticleType = deleteArticleType;
+        vm.restoreArticleType = restoreArticleType;
         vm.articleTypes = articleTypes;
 
         vm.pageSize = 5;
@@ -52,13 +54,13 @@ angular.module('momusApp.controllers')
         vm.isEditingSections = false;
 
         function saveEditedNews() {
-            vm.isSaving = true;
+            vm.isSavingNews = true;
             if (vm.new_news.id == undefined) { // no id means it's a new one
                 vm.new_news.author = loggedInPerson;
                 const newsItem = NewsItem.save({}, vm.new_news, function(data) {
                     vm.news.push(newsItem);
                     vm.editNews(newsItem);
-                    vm.isSaving = false;
+                    vm.isSavingNews = false;
                 });
             } else { // it's an old one
                 const updatedIndex = vm.news.findIndex(function(news) { return news.id === vm.new_news.id});
@@ -66,7 +68,7 @@ angular.module('momusApp.controllers')
                     updatedNewsItem.date = new Date(updatedNewsItem.date);
                     vm.news[updatedIndex] = updatedNewsItem;
                     vm.editNews(updatedNewsItem);
-                    vm.isSaving = false;
+                    vm.isSavingNews = false;
                 }).toJSON();
             }
         }
@@ -95,11 +97,21 @@ angular.module('momusApp.controllers')
         }
 
         function saveEditedArticleType() {
-            vm.isSaving = true;
+            vm.isSavingArticleType = true;
             if (vm.new_articleType.id == undefined) {
                 const articleType = ArticleType.save({}, vm.new_articleType, function(data) {
-                    vm.articleType.push(articleType)
+                    vm.articleTypes.push(articleType);
+                    vm.editArticleType(articleType);
+                    vm.isSavingArticleType = false;
                 })
+            }
+            else {
+                const updatedIndex = vm.articleTypes.findIndex(function(articleTypes) { return articleTypes.id == vm.new_articleType.id })
+                const updatedArticleType = ArticleType.update({}, vm.new_articleType, function() {
+                    vm.articleTypes[updatedIndex] = updatedArticleType;
+                    vm.editArticleType(updatedArticleType);
+                    vm.isSavingArticleType = false;
+                }).toJSON();
             }
         }
 
@@ -107,5 +119,13 @@ angular.module('momusApp.controllers')
             vm.new_articleType = angular.copy(articleType);
 
             $scope.articleTypeForm.$setPristine();
+        }
+
+        function deleteArticleType(articleType) {
+            articleType.$delete();
+        }
+
+        function restoreArticleType(articleType) {
+            articleType.$restore();
         }
     });
