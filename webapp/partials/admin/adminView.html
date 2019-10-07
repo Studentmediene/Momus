@@ -78,7 +78,7 @@
                         <!-- buttons -->
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary col-xs-4" ng-disabled="newsForm.$invalid"
-                                    ng-click="vm.saveEditedNews()" button-loader="vm.isSaving">Lagre
+                                    ng-click="vm.saveEditedNews()" button-loader="vm.isSavingNews">Lagre
                             </button>
 
                             <button class="btn btn-default col-xs-4 col-xs-offset-1" ng-show="vm.new_news.id != undefined"
@@ -93,16 +93,33 @@
             <div class="panel panel-info">
                 <div class="panel-heading">
                     Artikkeltyper
+                    <button class="btn btn-info btn-xs pull-right" ng-click="showDeleted = !showDeleted">{{showDeleted ? 'Vis aktive' : 'Vis slettede'}}</button>
                 </div>
                 <table class="table">
-                        <tbody ng-repeat="a in vm.articleTypes" class="article-type">
+                        <tbody ng-show="!showDeleted" ng-hide="showDeleted" ng-repeat="type in vm.articleTypes | filter:{deleted: false}" class="article-type">
                                 <tr>
-                                    <td colspan="1.5">{{a.name}}</td>
-                                    <td colspan="0.5">{{a.description}}</td>
-                                    <td colspan="0.5"><button class="btn btn-success btn-xs pull-right" ng-click="vm.editArticleType(a);$event.stopPropagation();">Rediger</button></td>
+                                    <td colspan="1.5">{{type.name}}</td>
+                                    <td colspan="0.5">{{type.description}}</td>
+                                    <td colspan="0.5"><button class="btn btn-success btn-xs pull-right" ng-click="vm.editArticleType(type);$event.stopPropagation();">Rediger</button></td>
+                                    <td colspan="0.5"><button class="btn btn-danger btn-xs pull-right" ng-click="vm.deleteArticleType(type);$event.stopPropagation();">Slett</button></td>
+                                </tr>
+                        </tbody>
+                        <tbody ng-show="showDeleted" ng-hide="!showDeleted" ng-repeat="type in vm.articleTypes | filter:{deleted: true}" class="article-type-deleted">
+                                <tr>
+                                    <td colspan="1.5">{{type.name}}</td>
+                                    <td colspan="0.5">{{type.description}}</td>
+                                    <td colspan="0.5"><button class="btn btn-success btn-xs pull-right" ng-click="vm.editArticleType(type);$event.stopPropagation();">Rediger</button></td>
+                                    <td colspan="0.5"><button class="btn btn-primary btn-xs pull-right" ng-click="vm.restoreArticleType(type);$event.stopPropagation();">Gjenopprett</button></td>
                                 </tr>
                         </tbody>
                 </table>
+                <div class="text-center">
+                        <ul uib-pagination direction-links="false"
+                            total-items="showDeleted ? vm.numberOfDeleted : vm.numberOfActive"
+                            items-per-page="vm.pageSize"
+                            ng-model="vm.currentPage">
+                        </ul>
+                </div>
             </div>
         </div>
         <div class="col-md-6">
@@ -120,12 +137,12 @@
                                 <div class="form-group"
                                     ng-class="{'has-error' : articleTypeForm.description.$invalid && articleTypeForm.description.$dirty}">
                                     <label for="description">Beskrivelse</label>
-                                    <textarea name="description" id="description" class="form-control" ng-model="vm.new_articleType.description" required></textarea>
+                                    <textarea name="description" id="description" class="form-control" ng-model="vm.new_articleType.description"></textarea>
                                 </div>
                                 <!-- buttons -->
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-primary col-xs-4" ng-disabled="articleTypeForm.$invalid"
-                                            ng-click="vm.saveEditedArticleType()" button-loader="vm.isSaving">Lagre
+                                            ng-click="vm.saveEditedArticleType()" button-loader="vm.isSavingArticleType">Lagre
                                     </button>
         
                                     <button class="btn btn-default col-xs-4 col-xs-offset-1" ng-show="vm.new_articleType.id != undefined"

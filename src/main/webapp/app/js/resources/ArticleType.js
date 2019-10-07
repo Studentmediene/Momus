@@ -23,8 +23,7 @@ angular.module('momusApp.resources')
                 id: '@id'
             },
             {
-                updateName: { method: 'PATCH', params: {resource: 'name'} },
-                updateDescription: { method: 'PATCH', params: {resource: 'description'} },
-                updateDeleted: { method: 'PATCH', params: {resource: 'deleted'} },
+                delete: { method: 'PATCH', params: {resource: 'deleted', deleted: true}, hasBody: false },
+                restore: { method: 'PATCH', params: {resource: 'deleted', deleted: false}, hasBody: false },
             });
     });
