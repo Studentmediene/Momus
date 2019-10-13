@@ -47,7 +47,7 @@ public class ArticleTypeController {
         return articleTypeService.createArticleType(articleType);
     }
 
-    @PatchMapping
+    @PutMapping("/{id}")
     @AdminAuthorization
     public @ResponseBody ArticleType updateArticleType(@PathVariable Long id, @RequestBody ArticleType articleType){
         return articleTypeService.updateArticleType(id, articleType);

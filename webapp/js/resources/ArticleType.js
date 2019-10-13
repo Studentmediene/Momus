@@ -23,6 +23,7 @@ angular.module('momusApp.resources')
                 id: '@id'
             },
             {
+                query: { method: 'GET', isArray: true, cache: true },
                 delete: { method: 'PATCH', params: {resource: 'deleted', deleted: true}, hasBody: false },
                 restore: { method: 'PATCH', params: {resource: 'deleted', deleted: false}, hasBody: false },
             });

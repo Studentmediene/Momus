@@ -33,12 +33,6 @@ angular.module('momusApp.controllers')
         vm.editNews = editNews;
         vm.news = news;
 
-        vm.saveEditedArticleType = saveEditedArticleType;
-        vm.editArticleType = editArticleType;
-        vm.deleteArticleType = deleteArticleType;
-        vm.restoreArticleType = restoreArticleType;
-        vm.articleTypes = articleTypes;
-
         vm.pageSize = 5;
         vm.currentPage = 1;
 
@@ -53,23 +47,27 @@ angular.module('momusApp.controllers')
         vm.cancelEditSections = cancelEditSections;
         vm.isEditingSections = false;
 
+        vm.saveEditedArticleType = saveEditedArticleType;
+        vm.editArticleType = editArticleType;
+        vm.toggleArticleTypeDeleted = toggleArticleTypeDeleted;
+        vm.articleTypes = articleTypes;
+
         function saveEditedNews() {
             vm.isSavingNews = true;
             if (vm.new_news.id == undefined) { // no id means it's a new one
                 vm.new_news.author = loggedInPerson;
-                const newsItem = NewsItem.save({}, vm.new_news, function(data) {
+                const newsItem = NewsItem.save({}, vm.new_news, data => {
                     vm.news.push(newsItem);
                     vm.editNews(newsItem);
                     vm.isSavingNews = false;
                 });
             } else { // it's an old one
-                const updatedIndex = vm.news.findIndex(function(news) { return news.id === vm.new_news.id});
-                const updatedNewsItem = NewsItem.update({}, vm.new_news, function() {
-                    updatedNewsItem.date = new Date(updatedNewsItem.date);
+                const updatedIndex = vm.news.findIndex(news => news.id === vm.new_news.id);
+                const updatedNewsItem = NewsItem.update({}, vm.new_news, () => {
                     vm.news[updatedIndex] = updatedNewsItem;
                     vm.editNews(updatedNewsItem);
                     vm.isSavingNews = false;
-                }).toJSON();
+                });
             }
         }
 
@@ -99,33 +97,31 @@ angular.module('momusApp.controllers')
         function saveEditedArticleType() {
             vm.isSavingArticleType = true;
             if (vm.new_articleType.id == undefined) {
-                const articleType = ArticleType.save({}, vm.new_articleType, function(data) {
+                const articleType = ArticleType.save({}, vm.new_articleType, data => {
                     vm.articleTypes.push(articleType);
                     vm.editArticleType(articleType);
                     vm.isSavingArticleType = false;
                 })
             }
             else {
-                const updatedIndex = vm.articleTypes.findIndex(function(articleTypes) { return articleTypes.id == vm.new_articleType.id })
-                const updatedArticleType = ArticleType.update({}, vm.new_articleType, function() {
+                const updatedIndex = vm.articleTypes.findIndex(t => t.id == vm.new_articleType.id)
+                const updatedArticleType = ArticleType.update({}, vm.new_articleType, () => {
                     vm.articleTypes[updatedIndex] = updatedArticleType;
                     vm.editArticleType(updatedArticleType);
                     vm.isSavingArticleType = false;
-                }).toJSON();
+                });
             }
         }
 
         function editArticleType(articleType) {
             vm.new_articleType = angular.copy(articleType);
-
             $scope.articleTypeForm.$setPristine();
         }
 
-        function deleteArticleType(articleType) {
-            articleType.$delete();
-        }
-
-        function restoreArticleType(articleType) {
-            articleType.$restore();
+        function toggleArticleTypeDeleted(articleType) {
+            const updatedIndex = vm.articleTypes.findIndex(t => t.id == articleType.id)
+            const updatedArticleType = ArticleType.update({}, { ...articleType, deleted: !articleType.deleted }, () => {
+                vm.articleTypes[updatedIndex] = updatedArticleType;
+            });
         }
     });

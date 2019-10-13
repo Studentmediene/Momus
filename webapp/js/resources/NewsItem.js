@@ -30,7 +30,6 @@ angular.module('momusApp.resources')
 
 function newsItemResponseTransform(newsItem) {
     if(!newsItem) return newsItem;
-    var dateThreshold = new Date(new Date().setDate(new Date().getDate() - 14));
     return {
         ...newsItem,
         date: new Date(newsItem.date)

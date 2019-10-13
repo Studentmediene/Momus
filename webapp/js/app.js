@@ -253,7 +253,7 @@ angular.module('momusApp', [
                 },
                 templateUrl: '/assets/partials/admin/adminView.html',
                 controller: 'AdminCtrl',
-                title: 'Adminpanel',
+                title: 'Admin',
                 controllerAs: 'vm',
                 access: ["ROLE_ADMIN"]
             })
