@@ -28,6 +28,10 @@
     </div>
 
     <h1>{{vm.article.name}}</h1>
+    <h4 ng-if="vm.article.type != null">
+        {{vm.article.type.name}}
+        <span ng-if="vm.article.type.description">({{vm.article.type.description}})</span>
+    </h4>
 
     <!-- Used when printing Ctrl+P-->
     <div class="visible-print">
