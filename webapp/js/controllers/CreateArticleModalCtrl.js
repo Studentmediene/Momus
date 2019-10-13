@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('momusApp.controllers')
-    .controller('CreateArticleModalCtrl', function($scope, $uibModalInstance, Publication, Article, Person, $q, pubId){
+    .controller('CreateArticleModalCtrl', function($scope, $uibModalInstance, Publication, Article, ArticleType, Section, Person, $q, pubId){
         $scope.article = {
             name: "",
             journalists: null,
@@ -45,8 +45,8 @@ angular.module('momusApp.controllers')
                 active;
         });
 
-        $scope.sections = Section.query({}, () => $scope.article.section = $scope.sections[0]);
-        $scope.types = Article.types();
+        $scope.sections = Section.sections({}, () => $scope.article.section = $scope.sections[0]);
+        $scope.types = ArticleType.query();
         $scope.persons = Person.query();
 
         $scope.photoTypes = [{value: false, name: 'Foto'}, {value: true, name: 'Illustrasjon'}];

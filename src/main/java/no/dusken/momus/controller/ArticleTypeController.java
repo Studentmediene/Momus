@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
-@RequestMapping("/articletype")
+@RequestMapping("/api/articletype")
 public class ArticleTypeController {
     private final ArticleTypeService articleTypeService;
 
