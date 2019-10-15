@@ -184,7 +184,7 @@ angular.module('momusApp.controllers')
         function deletePage(page) {
             if(confirm("Er du sikker på at du vil slette denne siden?")){
                 pages.splice(pages.indexOf(page), 1);
-                pageOrder.order.splice(pageOrder.order.indexOf(page.id), 1);
+                pageOrder.order.splice(pageOrder.order.findIndex(o => o.id === page.id), 1);
                 delete vm.pagesLookup[page.id];
                 vm.loading = true;
                 Page.delete({pageid: page.id}, () => vm.loading = false);
