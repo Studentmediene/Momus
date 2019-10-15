@@ -19,8 +19,6 @@
 angular.module('momusApp.controllers')
     .controller('DispositionCtrl', function (
         $scope,
-        $stateParams,
-        $interval,
         $timeout,
         $uibModal,
         $window,
@@ -31,7 +29,6 @@ angular.module('momusApp.controllers')
         Page,
         Article,
         Advert,
-        MessagingService,
         DispositionStyleService,
         publication,
         pages,
