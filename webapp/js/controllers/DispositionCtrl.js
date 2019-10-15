@@ -69,8 +69,8 @@ angular.module('momusApp.controllers')
         vm.insertNewPages = insertNewPages;
 		vm.updatePageMeta = updatePageMeta;
         vm.deletePage = deletePage;
-        vm.editPage = editPage;
-        vm.submitPage = submitPage;
+        vm.editPageContent = editPageContent;
+        vm.updatePageContent = updatePageContent;
 
         vm.createArticle = createArticle;
         vm.createAdvert = createAdvert;
@@ -162,19 +162,19 @@ angular.module('momusApp.controllers')
             Page.updateMeta(page, () => vm.loading = false);
         }
 
-        function editPage(scope) {
+        function editPageContent(scope) {
             scope.editPage = true;
         }
 
-        function submitPage(scope) {
+        function updatePageContent(scope) {
             vm.loading = true;
             Page.updateContent(
                 {pageid: scope.page.id},
                 {
                     publication_id: publication.id,
                     page_id: scope.page.id,
-                    articles: scope.page.articles,
-                    adverts: scope.page.adverts
+                    articles: scope.page.articles || [],
+                    adverts: scope.page.adverts || []
                 },
                 () => vm.loading = false
             );
