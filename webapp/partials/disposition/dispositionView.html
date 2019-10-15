@@ -52,7 +52,7 @@
             <page-adder
                 max-num-pages="vm.maxNewPages"
                 max-page-pos="vm.pages.length"
-                submit="vm.newPages(newPageAt, numNewPages)">
+                submit="vm.insertNewPages(newPageAt, numNewPages)">
             </page-adder>
             <button class="btn btn-success" ng-click="vm.showHelp()">
                 Hjelp?
@@ -323,10 +323,10 @@
                 </div>
                 <!--Edit-->
                 <div class="d-table-cell button" ng-style="vm.columnWidths.edit">
-                    <button ng-click="vm.editPage(this)" class="btn btn-warning btn-xs pull-right" ng-hide="editPage">
+                    <button ng-click="vm.editPageContent(this)" class="btn btn-warning btn-xs pull-right" ng-hide="editPage">
                         <i class="fas fa-pencil-alt"></i>
                     </button>
-                    <button ng-click="vm.submitPage(this)" class="btn btn-success pull-right btn-xs" ng-show="editPage">
+                    <button ng-click="vm.updatePageContent(this)" class="btn btn-success pull-right btn-xs" ng-show="editPage">
                         <i class="fas fa-save"></i>
                     </button>
                 </div>
