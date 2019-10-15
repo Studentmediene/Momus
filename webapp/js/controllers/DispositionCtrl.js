@@ -66,7 +66,7 @@ angular.module('momusApp.controllers')
             vm.advertsLookup = toIdLookup(adverts);
         });
 
-        vm.newPages = newPages;
+        vm.insertNewPages = insertNewPages;
 		vm.updatePageMeta = updatePageMeta;
         vm.deletePage = deletePage;
         vm.editPage = editPage;
@@ -145,14 +145,14 @@ angular.module('momusApp.controllers')
             }
         });
 
-        function newPages(newPageAt, numNewPages){
+        function insertNewPages(newPageAt, numNewPages){
             vm.loading = true;
-            Page.saveMultipleEmpty({publicationId: publication.id, afterPage: newPageAt, numNewPages: numNewPages}, pages => {
-                pages.forEach(p => {
+            Page.saveMultipleEmpty({publicationId: publication.id, afterPage: newPageAt, numNewPages: numNewPages}, newPages => {
+                newPages.forEach(p => {
                     vm.pagesLookup[p.id] = p;
                     pages.push(p);
                 });
-                pageOrder.order.splice(newPageAt, 0, ...pages.map(p => ({ id: p.id })));
+                pageOrder.order.splice(newPageAt, 0, ...newPages.map(p => ({ id: p.id })));
                 vm.loading = false;
             });
         }
