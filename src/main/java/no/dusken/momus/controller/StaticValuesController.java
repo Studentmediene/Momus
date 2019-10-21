@@ -1,6 +1,8 @@
 package no.dusken.momus.controller;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.core.env.Environment;
@@ -18,16 +20,21 @@ public class StaticValuesController {
 
     private final Map<String, String> roleNames;
 
+    private final List<Role> roles;
 
     public StaticValuesController(Environment env) {
         this.env = env;
         roleNames = Role.roleNameMap();
+        roles = Arrays.asList(Role.values());
     }
 
     @GetMapping("/role-names")
     public Map<String, String> getRoleNames() {
         return roleNames;
     }
+
+    @GetMapping("/roles")
+    public List<Role> getRoles() { return roles; }
 
     @GetMapping("/env")
     public Map<String, Object> getEnvironment() {
