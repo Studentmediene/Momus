@@ -11,6 +11,7 @@ import { ArticleResource } from 'resources/article.resource';
 import { PersonResource } from 'resources/person.resource';
 
 import './dispositionPage.scss';
+import {SectionResource} from "../../../../resources/section.resource";
 
 class DispositionPageCtrl implements angular.IController {
     public prevPage: Page;
@@ -31,6 +32,7 @@ class DispositionPageCtrl implements angular.IController {
 
     private $scope: angular.IScope;
     private articleResource: ArticleResource;
+    private sectionResource: SectionResource;
     private pageResource: PageResource;
     private personResource: PersonResource;
     private openNewArticleModal: OpenNewArticleModal;
@@ -39,6 +41,7 @@ class DispositionPageCtrl implements angular.IController {
     constructor(
         $scope: angular.IScope,
         articleResource: ArticleResource,
+        sectionResource: SectionResource,
         pageResource: PageResource,
         personResource: PersonResource,
         openNewArticleModal: OpenNewArticleModal,
@@ -46,6 +49,7 @@ class DispositionPageCtrl implements angular.IController {
     ) {
         this.$scope = $scope;
         this.articleResource = articleResource;
+        this.sectionResource = sectionResource;
         this.pageResource = pageResource;
         this.personResource = personResource;
         this.openNewArticleModal = openNewArticleModal;
@@ -109,7 +113,7 @@ class DispositionPageCtrl implements angular.IController {
             persons: this.personResource.query(),
             publication: this.publication,
             publications: [this.publication],
-            sections: this.articleResource.sections(),
+            sections: this.sectionResource.query(),
             types: this.articleResource.types(),
         }).then((article) => {
             this.articlesLookup[article.id] = article;

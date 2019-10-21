@@ -18,6 +18,7 @@ import { createArticleSearchParams } from './components/articleSearch/utils';
 import { PublicationResource } from 'resources/publication.resource';
 import CookieService from 'services/cookies.service';
 import { ArticleSearchParams } from 'models/ArticleSearchParams';
+import {SectionResource} from "../../resources/section.resource";
 
 const routeModule = angular
     .module('momusApp.routes.article', [
@@ -71,8 +72,8 @@ const routeModule = angular
                         publicationResource.query(),
                     persons: (personResource: PersonResource) =>
                         personResource.query(),
-                    sections: (articleResource: ArticleResource) =>
-                        articleResource.sections().$promise,
+                    sections: (sectionResource: SectionResource) =>
+                        sectionResource.query().$promise,
                     statuses: (articleResource: ArticleResource) =>
                         articleResource.statuses().$promise,
                     reviews: (articleResource: ArticleResource) =>
@@ -104,7 +105,7 @@ const routeModule = angular
                 url: '/detaljer',
                 component: 'articleDetails',
                 resolve: {
-                    sections: (articleResource: ArticleResource) => articleResource.sections(),
+                    sections: (sectionResource: SectionResource) => sectionResource.query(),
                     types: (articleResource: ArticleResource) => articleResource.types(),
                     reviews: (articleResource: ArticleResource) => articleResource.reviewStatuses(),
                     statuses: (articleResource: ArticleResource) => articleResource.statuses(),

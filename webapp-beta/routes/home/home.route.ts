@@ -11,6 +11,7 @@ import { NewsItemResource } from 'resources/newsItem.resource';
 import { ArticleSearchParams } from 'models/ArticleSearchParams';
 import CookieService from 'services/cookies.service';
 import { emptyArrayResponse } from 'utils';
+import {SectionResource} from "../../resources/section.resource";
 
 const routeModule = angular
     .module('momusApp.routes.home', [
@@ -50,8 +51,8 @@ const routeModule = angular
                 },
                 news: (newsItemResource: NewsItemResource) =>
                     newsItemResource.query().$promise,
-                sections: (articleResource: ArticleResource) =>
-                    articleResource.sections().$promise,
+                sections: (sectionResource: SectionResource) =>
+                    sectionResource.query().$promise,
             },
         });
     });
