@@ -57,9 +57,6 @@ public class ArticleController {
     private ArticleReviewRepository articleReviewRepository;
 
     @Autowired
-    private SectionRepository sectionRepository;
-
-    @Autowired
     private ArticleRevisionRepository articleRevisionRepository;
 
     @GetMapping(params="userId")
@@ -150,11 +147,6 @@ public class ArticleController {
     @GetMapping("/statuses")
     public List<ArticleStatus> getAllArticleStatuses(){
         return articleStatusRepository.findAll();
-    }
-
-    @GetMapping("/sections")
-    public List<Section> getAllSections(){
-        return sectionRepository.findAll();
     }
 
     @GetMapping("/reviews")
