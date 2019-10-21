@@ -25,6 +25,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import no.dusken.momus.authorization.Role;
 
 @Entity
 @Data
@@ -36,5 +37,7 @@ import lombok.ToString;
 public class Section extends AbstractEntity {
     private String name;
     private String color;
+    private Role editorRole;
+    private Role journalistRole;
     private boolean deleted;
 }
