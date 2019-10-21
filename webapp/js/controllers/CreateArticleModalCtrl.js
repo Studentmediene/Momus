@@ -45,7 +45,7 @@ angular.module('momusApp.controllers')
                 active;
         });
 
-        $scope.sections = Article.sections({}, () => $scope.article.section = $scope.sections[0]);
+        $scope.sections = Section.query({}, () => $scope.article.section = $scope.sections[0]);
         $scope.types = Article.types();
         $scope.persons = Person.query();
 

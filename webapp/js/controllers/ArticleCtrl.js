@@ -23,6 +23,7 @@ angular.module('momusApp.controllers')
         $templateRequest,
         Person,
         Article,
+        Section,
         Publication,
         TitleChanger,
         CookieService,
@@ -47,7 +48,7 @@ angular.module('momusApp.controllers')
 
         // Get data
         vm.persons = Person.query({articleIds: [articleId]});
-        vm.sections = Article.sections();
+        vm.sections = Section.query();
         vm.statuses = Article.statuses();
         vm.reviews = Article.reviewStatuses();
         vm.types = Article.types();

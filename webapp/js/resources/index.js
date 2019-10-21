@@ -8,5 +8,6 @@ import './Page';
 import './Person';
 import './Publication';
 import './StaticValues';
+import './Section';
 
 export default resources;

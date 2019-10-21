@@ -108,7 +108,7 @@ angular.module('momusApp', [
                             [];
                     },
                     activePublication: Publication => Publication.active().$promise,
-                    sections: Article => Article.sections().$promise,
+                    sections: Section => Article.query().$promise,
                     statuses: Article => Article.statuses().$promise,
                     statusCounts: (activePublication, Article) => {
                         return activePublication.id != null ?
@@ -154,7 +154,7 @@ angular.module('momusApp', [
                     activePublication: Publication => Publication.active(),
                     publications: Publication => Publication.query().$promise,
                     persons: Person => Person.query().$promise,
-                    sections: Article => Article.sections().$promise,
+                    sections: Section => Section.query().$promise,
                     statuses: Article => Article.statuses().$promise,
                     reviews: Article => Article.reviewStatuses().$promise,
                     searchParams: ($stateParams, activePublication) => {
