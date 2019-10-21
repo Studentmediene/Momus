@@ -57,6 +57,43 @@
                     </ul>
                 </div>
             </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <div class="pull-right">
+                        <button ng-show="!vm.isEditingSections" ng-click="vm.editSections()" title="Rediger" class="btn btn-xs btn-success">
+                            Rediger
+                        </button>
+                        <button ng-show="vm.isEditingSections" ng-click="vm.saveSections()" title="Lagre" class="btn btn-xs btn-success">
+                            Lagre
+                        </button>
+                        <button ng-show="vm.isEditingSections" ng-click="vm.cancelEditSections()" title="Avbryt" class="btn btn-xs btn-danger">
+                            Avbryt
+                        </button>
+                    </div>
+                    Redaksjoner
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Redaksjon</th>
+                            <th>Journalistrolle</th>
+                            <th>Redaktørrolle</th>
+                        </tr>
+                        <tr ng-repeat="section in vm.sections | orderBy: 'name'">
+                            <td>{{section.name}}</td>
+                            <td>
+                                <span ng-show="!vm.isEditingSections">{{vm.roleNames[section.journalist_role]}}</span>
+                                <select ng-show="vm.isEditingSections" class="form-control" ng-model="section.journalist_role" ng-options="vm.roleNames[role] for role in vm.roles"></select>
+                            </td>
+                            <td>
+                                <span ng-show="!vm.isEditingSections">{{vm.roleNames[section.editor_role]}}</span>
+                                <select ng-show="vm.isEditingSections" class="form-control" ng-model="section.editor_role" ng-options="vm.roleNames[role] for role in vm.roles"></select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
         <div class="col-md-6">
             <div class="panel {{vm.new_news.id == undefined ? 'panel-success' : 'panel-warning'}}">

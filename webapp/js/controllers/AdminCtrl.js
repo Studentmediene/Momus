@@ -21,7 +21,9 @@ angular.module('momusApp.controllers')
         $scope,
         loggedInPerson,
         NewsItem,
-        news
+        news,
+        Section,
+        StaticValues
     ) {
         const vm = this;
 
@@ -31,6 +33,15 @@ angular.module('momusApp.controllers')
 
         vm.pageSize = 5;
         vm.currentPage = 1;
+
+        vm.sections = Section.query();
+        vm.roles = StaticValues.roles();
+        vm.roleNames = StaticValues.roleNames();
+        vm.editSections = editSections;
+        vm.updateSectionRoles = updateSectionRoles;
+        vm.saveSections = saveSections;
+        vm.cancelEditSections = cancelEditSections;
+        vm.isEditingSections = false;
 
         function saveEditedNews() {
             vm.isSaving = true;
@@ -57,5 +68,25 @@ angular.module('momusApp.controllers')
 
             // clear form errors
             $scope.newsForm.$setPristine();
+        }
+
+        function editSections() {
+            vm.isEditingSections = true;
+        }
+
+        function saveSections() {
+            vm.sections.forEach(section => {
+                Section.updateRoles(section);
+            });
+            vm.isEditingSections = false;
+        }
+
+        function cancelEditSections() {
+            vm.sections = Section.query();
+            vm.isEditingSections = false;
+        }
+
+        function updateSectionRoles(section) {
+            Section.updateRoles(section);
         }
     });
