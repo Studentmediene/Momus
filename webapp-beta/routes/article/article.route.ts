@@ -18,7 +18,7 @@ import { createArticleSearchParams } from './components/articleSearch/utils';
 import { PublicationResource } from 'resources/publication.resource';
 import CookieService from 'services/cookies.service';
 import { ArticleSearchParams } from 'models/ArticleSearchParams';
-import {SectionResource} from "../../resources/section.resource";
+import { SectionResource } from '../../resources/section.resource';
 
 const routeModule = angular
     .module('momusApp.routes.article', [

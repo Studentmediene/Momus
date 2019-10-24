@@ -3,6 +3,7 @@ import * as angular from 'angular';
 import { Environment } from '../../app.types';
 import { StateProvider } from '@uirouter/angularjs';
 import { ArticleResource } from '../../resources/article.resource';
+import { SectionResource } from '../../resources/section.resource';
 import { Person } from '../../models/Person';
 
 import homePage from './home.component';
@@ -11,7 +12,6 @@ import { NewsItemResource } from 'resources/newsItem.resource';
 import { ArticleSearchParams } from 'models/ArticleSearchParams';
 import CookieService from 'services/cookies.service';
 import { emptyArrayResponse } from 'utils';
-import {SectionResource} from "../../resources/section.resource";
 
 const routeModule = angular
     .module('momusApp.routes.home', [

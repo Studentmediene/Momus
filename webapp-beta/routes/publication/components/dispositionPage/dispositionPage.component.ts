@@ -9,9 +9,9 @@ import { OpenNewArticleModal } from 'components/newArticleModal/newArticleModal.
 import { OpenNewAdvertModal } from 'components/newAdvertModal/newAdvertModal.component';
 import { ArticleResource } from 'resources/article.resource';
 import { PersonResource } from 'resources/person.resource';
+import { SectionResource } from 'resources/section.resource';
 
 import './dispositionPage.scss';
-import {SectionResource} from "../../../../resources/section.resource";
 
 class DispositionPageCtrl implements angular.IController {
     public prevPage: Page;
