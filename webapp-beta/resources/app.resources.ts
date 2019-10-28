@@ -8,6 +8,7 @@ import publicationResourceFactory from './publication.resource';
 import pageResourceFactory from './page.resource';
 import newsItemResourceFactory from './newsItem.resource';
 import staticValuesResourceFactory from './staticValues.resource';
+import sectionResourceFactory from './section.resource';
 
 export type ResourceFunc<Res, Body = null, Params = {}> = Body extends null
     ? (Params extends {}
@@ -35,6 +36,7 @@ export default angular
     })
     .factory('personResource', personResourceFactory)
     .factory('articleResource', articleResourceFactory)
+    .factory('sectionResource', sectionResourceFactory)
     .factory('advertResource', advertResourceFactory)
     .factory('publicationResource', publicationResourceFactory)
     .factory('pageResource', pageResourceFactory)
