@@ -35,10 +35,12 @@ angular.module('momusApp.controllers')
         vm.currentPage = 1;
 
         vm.sections = Section.query();
-        vm.roles = StaticValues.roles();
-        vm.roleNames = StaticValues.roleNames();
+        StaticValues.roleNames().$promise.then(roleNames => {
+            vm.roleNames = roleNames;
+            vm.roles = Object.keys(roleNames);
+        });
+
         vm.editSections = editSections;
-        vm.updateSectionRoles = updateSectionRoles;
         vm.saveSections = saveSections;
         vm.cancelEditSections = cancelEditSections;
         vm.isEditingSections = false;
@@ -84,9 +86,5 @@ angular.module('momusApp.controllers')
         function cancelEditSections() {
             vm.sections = Section.query();
             vm.isEditingSections = false;
-        }
-
-        function updateSectionRoles(section) {
-            Section.updateRoles(section);
         }
     });

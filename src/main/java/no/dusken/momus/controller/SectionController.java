@@ -16,7 +16,7 @@ public class SectionController {
         this.sectionService = sectionService;
     }
 
-    @GetMapping("")
+    @GetMapping
     public List<Section> getAllSections() {
         return sectionService.getAllSections();
     }
