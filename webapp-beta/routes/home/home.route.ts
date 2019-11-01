@@ -3,6 +3,7 @@ import * as angular from 'angular';
 import { Environment } from '../../app.types';
 import { StateProvider } from '@uirouter/angularjs';
 import { ArticleResource } from '../../resources/article.resource';
+import { SectionResource } from '../../resources/section.resource';
 import { Person } from '../../models/Person';
 
 import homePage from './home.component';
@@ -50,8 +51,8 @@ const routeModule = angular
                 },
                 news: (newsItemResource: NewsItemResource) =>
                     newsItemResource.query().$promise,
-                sections: (articleResource: ArticleResource) =>
-                    articleResource.sections().$promise,
+                sections: (sectionResource: SectionResource) =>
+                    sectionResource.query().$promise,
             },
         });
     });

@@ -3,7 +3,6 @@ import { ArticleRevision, RevisionDiff } from '../models/ArticleRevision';
 import { IPromise, IHttpResponse } from 'angular';
 import { ArticleStatus } from '../models/Statuses';
 import { ReviewStatus } from '../models/Statuses';
-import { Section } from '../models/Section';
 import { ResourceFunc } from './app.resources';
 import { ArticleSearchParams } from 'models/ArticleSearchParams';
 
@@ -32,7 +31,6 @@ export default function articleResourceFactory(
             types: { method: 'GET', params: { id: 'types' }, isArray: true, cache: true },
             statuses: { method: 'GET', params: { id: 'statuses' }, isArray: true, cache: true },
             reviewStatuses: { method: 'GET', params: { id: 'reviews' }, isArray: true, cache: true },
-            sections: { method: 'GET', params: { id: 'sections' }, isArray: true, cache: true },
             statusCounts: { method: 'GET', params: { id: 'statuscounts' } },
             reviewStatusCounts: { method: 'GET', params: { id: 'reviewstatuscounts' } },
         });
@@ -55,7 +53,6 @@ export interface ArticleResource extends ng.resource.IResourceClass<Article> {
     types: ResourceFunc<ArticleType[]>;
     statuses: ResourceFunc<ArticleStatus[]>;
     reviewStatuses: ResourceFunc<ReviewStatus[]>;
-    sections: ResourceFunc<Section[]>;
 
     statusCounts: ResourceFunc<Map<number, number>, null, { publicationId: number }>;
     reviewStatusCounts: ResourceFunc<Map<number, number>, null, { publicationId: number }>;

@@ -18,7 +18,6 @@ public class StaticValuesController {
 
     private final Map<String, String> roleNames;
 
-
     public StaticValuesController(Environment env) {
         this.env = env;
         roleNames = Role.roleNameMap();

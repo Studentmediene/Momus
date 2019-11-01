@@ -17,12 +17,12 @@
 'use strict';
 
 angular.module('momusApp.resources')
-    .factory('StaticValues', $resource => {
-        return $resource('/api/static-values/:resource',
-        {},
-        {
-            environment: { method: 'GET' , params: {resource: 'env'}, cache: true },
-            roleNames: { method: 'GET' , params: {resource: 'role-names'}, cache: true },
-            roles: { method: 'GET' , params: {resource: 'roles'}, cache: true, isArray: true },
-        });
+    .factory('Section', $resource => {
+        return $resource('/api/section/:id/:resource',
+            {
+                id: '@id'
+            },
+            {
+                updateRoles: { method: 'PATCH', params: {resource: 'roles'} }
+            })
     });
