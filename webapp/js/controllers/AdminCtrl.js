@@ -39,7 +39,7 @@ angular.module('momusApp.controllers')
         vm.sections = Section.query();
         StaticValues.roleNames().$promise.then(roleNames => {
             vm.roleNames = roleNames;
-            vm.roles = Object.keys(roleNames);
+            vm.roles = Object.keys(roleNames).filter(k => !k.startsWith('$'));
         });
 
         vm.editSections = editSections;
