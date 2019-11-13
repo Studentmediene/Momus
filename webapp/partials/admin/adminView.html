@@ -17,6 +17,125 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <div class="pull-right">
+                        <button ng-show="!vm.isEditingSections" ng-click="vm.editSections()" title="Rediger" class="btn btn-xs btn-success">
+                            Rediger
+                        </button>
+                        <button ng-show="vm.isEditingSections" ng-click="vm.saveSections()" title="Lagre" class="btn btn-xs btn-success">
+                            Lagre
+                        </button>
+                        <button ng-show="vm.isEditingSections" ng-click="vm.cancelEditSections()" title="Avbryt" class="btn btn-xs btn-danger">
+                            Avbryt
+                        </button>
+                    </div>
+                    Redaksjoner
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <tr>
+                            <th></th>
+                            <th>Redaksjon</th>
+                            <th>Journalistrolle</th>
+                            <th>Redaktørrolle</th>
+                        </tr>
+                        <tr ng-repeat="section in vm.sections | orderBy: 'name'">
+                            <td style="background-color: {{ section.color }}"></td>
+                            <td>{{section.name}}</td>
+                            <td>
+                                <span ng-show="!vm.isEditingSections">{{vm.roleNames[section.journalist_role]}}</span>
+                                <select 
+                                    ng-show="vm.isEditingSections"
+                                    class="form-control"
+                                    ng-model="section.journalist_role"
+                                    ng-options="vm.roleNames[role] for role in vm.roles">
+                                </select>
+                            </td>
+                            <td>
+                                <span ng-show="!vm.isEditingSections">{{vm.roleNames[section.editor_role]}}</span>
+                                <select
+                                    ng-show="vm.isEditingSections"
+                                    class="form-control"
+                                    ng-model="section.editor_role"
+                                    ng-options="vm.roleNames[role] for role in vm.roles">
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-heading" style="display: flex; align-items: center;">
+                    <span style="flex-grow: 1">Artikkeltyper</span>
+                    <span>Vis slettede</span>
+                    <div style="margin-left: 5px;">
+                        <input type="checkbox" ng-model="showDeleted">
+                    </div>
+                </div>
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Navn</th>
+                            <th>Beskrivelse</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="type in vm.articleTypes | orderBy: 'name' | filter: showDeleted ? {} : {deleted: false}"
+                            ng-class="{'danger': type.deleted}">
+                            <td>{{type.name}}</td>
+                            <td>{{type.description}}</td>
+                            <td>
+                                <a class="interact" ng-click="vm.editArticleType(type)">Rediger</a>
+                            </td>
+                            <td>
+                                <a class="interact" ng-click="vm.toggleArticleTypeDeleted(type)">
+                                    {{ type.deleted ? 'Gjenopprett' : 'Slett' }}
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel {{vm.new_articleType.id == undefined ? 'panel-success' : 'panel-warning'}}">
+                <div class="panel-heading">
+                    <h4 class="panel-title text-center">
+                        {{vm.new_articleType.id === undefined ? 'Ny artikkeltype' : 'Rediger ' + vm.new_articleType.name}}
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <form name="articleTypeForm" novalidate>
+                        <div class="form-group"
+                            ng-class="{'has-error' : articleTypeForm.name.$invalid && articleTypeForm.name.$dirty}">
+                            <label for="name">Navn</label>
+                            <input type="text" name="name" id="name" class="form-control"
+                                ng-model="vm.new_articleType.name" required>
+                        </div>
+                        <div class="form-group"
+                            ng-class="{'has-error' : articleTypeForm.description.$invalid && articleTypeForm.description.$dirty}">
+                            <label for="description">Beskrivelse</label>
+                            <textarea name="description" id="description" class="form-control"
+                                ng-model="vm.new_articleType.description"></textarea>
+                        </div>
+                        <!-- buttons -->
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary col-xs-4"
+                                ng-disabled="articleTypeForm.$invalid" ng-click="vm.saveEditedArticleType()"
+                                button-loader="vm.isSavingArticleType">Lagre
+                            </button>
+
+                            <button class="btn btn-default col-xs-4 col-xs-offset-1"
+                                ng-show="vm.new_articleType.id != undefined" ng-click="vm.editArticleType({})">Avbryt
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
             <div class="panel panel-info">
                 <div class="panel-heading">
                     Nyheter
@@ -57,44 +176,6 @@
                 </div>
             </div>
 
-            <div class="panel panel-default">
-                <div class="panel-heading clearfix">
-                    <div class="pull-right">
-                        <button ng-show="!vm.isEditingSections" ng-click="vm.editSections()" title="Rediger" class="btn btn-xs btn-success">
-                            Rediger
-                        </button>
-                        <button ng-show="vm.isEditingSections" ng-click="vm.saveSections()" title="Lagre" class="btn btn-xs btn-success">
-                            Lagre
-                        </button>
-                        <button ng-show="vm.isEditingSections" ng-click="vm.cancelEditSections()" title="Avbryt" class="btn btn-xs btn-danger">
-                            Avbryt
-                        </button>
-                    </div>
-                    Redaksjoner
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <tr>
-                            <th>Redaksjon</th>
-                            <th>Journalistrolle</th>
-                            <th>Redaktørrolle</th>
-                        </tr>
-                        <tr ng-repeat="section in vm.sections | orderBy: 'name'">
-                            <td>{{section.name}}</td>
-                            <td>
-                                <span ng-show="!vm.isEditingSections">{{vm.roleNames[section.journalist_role]}}</span>
-                                <select ng-show="vm.isEditingSections" class="form-control" ng-model="section.journalist_role" ng-options="vm.roleNames[role] for role in vm.roles"></select>
-                            </td>
-                            <td>
-                                <span ng-show="!vm.isEditingSections">{{vm.roleNames[section.editor_role]}}</span>
-                                <select ng-show="vm.isEditingSections" class="form-control" ng-model="section.editor_role" ng-options="vm.roleNames[role] for role in vm.roles"></select>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
             <div class="panel {{vm.new_news.id == undefined ? 'panel-success' : 'panel-warning'}}">
                 <div class="panel-heading">
                     <h4 class="panel-title text-center">
@@ -122,80 +203,6 @@
 
                             <button class="btn btn-default col-xs-4 col-xs-offset-1"
                                 ng-show="vm.new_news.id != undefined" ng-click="vm.editNews({})">Avbryt
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="panel panel-info">
-                <div class="panel-heading" style="display: flex; align-items: center;">
-                    <span style="flex-grow: 1">Artikkeltyper</span>
-                    <span>Vis slettede</span>
-                    <div style="margin-left: 5px;">
-                        <input type="checkbox" ng-model="showDeleted">
-                    </div>
-                </div>
-                <table class="table table-hover table-striped">
-                    <thead>
-                        <tr>
-                            <th>Navn</th>
-                            <th>Beskrivelse</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="type in vm.articleTypes | orderBy: 'name' | filter: showDeleted ? {} : {deleted: false}"
-                            ng-class="{'danger': type.deleted}">
-                            <td>{{type.name}}</td>
-                            <td>{{type.description}}</td>
-                            <td>
-                                <a class="interact" ng-click="vm.editArticleType(type)">Rediger</a>
-                            </td>
-                            <td>
-                                <a class="interact" ng-click="vm.toggleArticleTypeDeleted(type)">
-                                    {{ type.deleted ? 'Gjenopprett' : 'Slett' }}
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="panel {{vm.new_articleType.id == undefined ? 'panel-success' : 'panel-warning'}}">
-                <div class="panel-heading">
-                    <h4 class="panel-title text-center">
-                        {{vm.new_articleType.id === undefined ? 'Ny artikkeltype' : 'Rediger ' + vm.new_articleType.name}}
-                    </h4>
-                </div>
-                <div class="panel-body">
-                    <form name="articleTypeForm" novalidate>
-                        <div class="form-group"
-                            ng-class="{'has-error' : articleTypeForm.name.$invalid && articleTypeForm.name.$dirty}">
-                            <label for="name">Navn</label>
-                            <input type="text" name="name" id="name" class="form-control"
-                                ng-model="vm.new_articleType.name" required>
-                        </div>
-                        <div class="form-group"
-                            ng-class="{'has-error' : articleTypeForm.description.$invalid && articleTypeForm.description.$dirty}">
-                            <label for="description">Beskrivelse</label>
-                            <textarea name="description" id="description" class="form-control"
-                                ng-model="vm.new_articleType.description"></textarea>
-                        </div>
-                        <!-- buttons -->
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary col-xs-4"
-                                ng-disabled="articleTypeForm.$invalid" ng-click="vm.saveEditedArticleType()"
-                                button-loader="vm.isSavingArticleType">Lagre
-                            </button>
-
-                            <button class="btn btn-default col-xs-4 col-xs-offset-1"
-                                ng-show="vm.new_articleType.id != undefined" ng-click="vm.editArticleType({})">Avbryt
                             </button>
                         </div>
                     </form>
