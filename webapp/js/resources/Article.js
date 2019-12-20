@@ -33,7 +33,6 @@ angular.module('momusApp.resources')
                 archive: { method: 'PATCH', params: {resource: 'archived', archived: true}, hasBody: false },
                 restore: { method: 'PATCH', params: {resource: 'archived', archived: false}, hasBody: false },
 
-                types: { method: 'GET', params: {id: 'types'}, isArray: true, cache: true },
                 statuses: { method: 'GET', params: {id: 'statuses'}, isArray: true, cache: true },
                 reviewStatuses: { method: 'GET', params: {id: 'reviews'}, isArray: true, cache: true },
                 statusCounts: { method: 'GET', params: {id: 'statuscounts'} },

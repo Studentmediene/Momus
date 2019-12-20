@@ -24,6 +24,7 @@ angular.module('momusApp.controllers')
         Person,
         Article,
         Section,
+        ArticleType,
         Publication,
         TitleChanger,
         CookieService,
@@ -51,7 +52,7 @@ angular.module('momusApp.controllers')
         vm.sections = Section.query();
         vm.statuses = Article.statuses();
         vm.reviews = Article.reviewStatuses();
-        vm.types = Article.types();
+        vm.types = ArticleType.query();
         vm.article = Article.get({id: articleId}, article => {
             TitleChanger.setTitle(article.name);
             vm.uneditedNote = article.note;

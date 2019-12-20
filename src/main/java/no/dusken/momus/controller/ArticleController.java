@@ -139,11 +139,6 @@ public class ArticleController {
         return articleService.searchForArticles(search);
     }
 
-    @GetMapping("/types")
-    public List<ArticleType> getAllArticleTypes(){
-        return articleTypeRepository.findAll();
-    }
-
     @GetMapping("/statuses")
     public List<ArticleStatus> getAllArticleStatuses(){
         return articleStatusRepository.findAll();

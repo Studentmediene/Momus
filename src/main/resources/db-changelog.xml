@@ -850,4 +850,8 @@
             <column name="journalistrole" type="VARCHAR(255)"></column>
         </addColumn>
     </changeSet>
+    <changeSet id="49_type_pk" author="Eivind">
+        <sql dbms="postgresql">ALTER SEQUENCE articletype_id_seq RESTART WITH 15;</sql>
+    </changeSet>
+
 </databaseChangeLog>

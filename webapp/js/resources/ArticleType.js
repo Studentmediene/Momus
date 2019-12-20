@@ -17,29 +17,14 @@
 'use strict';
 
 angular.module('momusApp.resources')
-    .factory('NewsItem', momResource => {
-    return momResource('/api/newsitem/:newsitemid/:resource',
-        {
-            newsitemid: '@id'
-        },
-        {},
-        newsItemRequestTransform,
-        newsItemResponseTransform
-    );
-});
-
-function newsItemResponseTransform(newsItem) {
-    if(!newsItem) return newsItem;
-    return {
-        ...newsItem,
-        date: new Date(newsItem.date)
-    };
-}
-
-function newsItemRequestTransform(newsItem) {
-    if(!newsItem || newsItem.date == undefined) return newsItem;
-    return {
-        ...newsItem,
-        date: newsItem.date.toISOString()
-    };
-}
+    .factory('ArticleType', $resource => {
+        return $resource('/api/articletype/:id/:resource',
+            {
+                id: '@id'
+            },
+            {
+                query: { method: 'GET', isArray: true, cache: true },
+                delete: { method: 'PATCH', params: {resource: 'deleted', deleted: true}, hasBody: false },
+                restore: { method: 'PATCH', params: {resource: 'deleted', deleted: false}, hasBody: false },
+            });
+    });

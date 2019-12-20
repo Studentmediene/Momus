@@ -15,49 +15,8 @@
   -->
 
 <div class="container">
-    <row>
+    <div class="row">
         <div class="col-md-6">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    Nyheter
-                </div>
-                <table class="table">
-                    <tbody ng-repeat="n in vm.news
-                                                    | orderBy: '-date'
-                                                    | startFrom:(vm.currentPage-1)*vm.pageSize
-                                                    | limitTo:vm.pageSize"
-                    class="news-item">
-                        <tr ng-click="show = !show" class="interact active">
-                            <td colspan="1.5" style="font-weight:bold;">{{n.title}}</td>
-                            <td colspan="0.5"><button class="btn btn-success btn-xs pull-right" ng-click="vm.editNews(n);$event.stopPropagation();">Rediger</button></td>
-                            <td colspan="0.5" width="5%">
-                                <i ng-show="!show" class="fas fa-arrow-circle-down"></i>
-                                <i ng-show="show" class="fas fa-arrow-circle-up"></i>
-                            </td>
-                        </tr>
-                        <tr ng-click="show = !show" class="news-meta interact">
-                            <td>{{n.date | date: 'yyyy-MM-dd'}}</td>
-                            <td colspan="2"><span class="pull-right" person-widget="n.author">{{n.author.name}}</span></td>
-                        </tr>
-                        <tr ng-show="show">
-                            <td colspan="5">{{n.content}}</td>
-                        </tr>
-                    </tbody>
-                    <tr ng-show="vm.news.length <= 0">
-                        <td colspan="2" class="text-center">
-                            Det finnes ingen nyheter.
-                        </td>
-                    </tr>
-                </table>
-                <div class="text-center">
-                    <ul uib-pagination direction-links="false"
-                        total-items="vm.news.length"
-                        items-per-page="vm.pageSize"
-                        ng-model="vm.currentPage">
-                    </ul>
-                </div>
-            </div>
-
             <div class="panel panel-default">
                 <div class="panel-heading clearfix">
                     <div class="pull-right">
@@ -76,55 +35,179 @@
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <tr>
+                            <th></th>
                             <th>Redaksjon</th>
                             <th>Journalistrolle</th>
                             <th>Redaktørrolle</th>
                         </tr>
                         <tr ng-repeat="section in vm.sections | orderBy: 'name'">
+                            <td style="background-color: {{ section.color }}"></td>
                             <td>{{section.name}}</td>
                             <td>
                                 <span ng-show="!vm.isEditingSections">{{vm.roleNames[section.journalist_role]}}</span>
-                                <select ng-show="vm.isEditingSections" class="form-control" ng-model="section.journalist_role" ng-options="vm.roleNames[role] for role in vm.roles"></select>
+                                <select 
+                                    ng-show="vm.isEditingSections"
+                                    class="form-control"
+                                    ng-model="section.journalist_role"
+                                    ng-options="vm.roleNames[role] for role in vm.roles">
+                                </select>
                             </td>
                             <td>
                                 <span ng-show="!vm.isEditingSections">{{vm.roleNames[section.editor_role]}}</span>
-                                <select ng-show="vm.isEditingSections" class="form-control" ng-model="section.editor_role" ng-options="vm.roleNames[role] for role in vm.roles"></select>
+                                <select
+                                    ng-show="vm.isEditingSections"
+                                    class="form-control"
+                                    ng-model="section.editor_role"
+                                    ng-options="vm.roleNames[role] for role in vm.roles">
+                                </select>
                             </td>
                         </tr>
                     </table>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="panel {{vm.new_news.id == undefined ? 'panel-success' : 'panel-warning'}}">
+
+            <div class="panel panel-info">
+                <div class="panel-heading" style="display: flex; align-items: center;">
+                    <span style="flex-grow: 1">Artikkeltyper</span>
+                    <span>Vis slettede</span>
+                    <div style="margin-left: 5px;">
+                        <input type="checkbox" ng-model="showDeleted">
+                    </div>
+                </div>
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Navn</th>
+                            <th>Beskrivelse</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="type in vm.articleTypes | orderBy: 'name' | filter: showDeleted ? {} : {deleted: false}"
+                            ng-class="{'danger': type.deleted}">
+                            <td>{{type.name}}</td>
+                            <td>{{type.description}}</td>
+                            <td>
+                                <a class="interact" ng-click="vm.editArticleType(type)">Rediger</a>
+                            </td>
+                            <td>
+                                <a class="interact" ng-click="vm.toggleArticleTypeDeleted(type)">
+                                    {{ type.deleted ? 'Gjenopprett' : 'Slett' }}
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel {{vm.new_articleType.id == undefined ? 'panel-success' : 'panel-warning'}}">
                 <div class="panel-heading">
-                    <h4 class="panel-title text-center">{{vm.new_news.id === undefined ? 'Ny nyhet' : 'Rediger ' + vm.new_news.title }}</h4>
+                    <h4 class="panel-title text-center">
+                        {{vm.new_articleType.id === undefined ? 'Ny artikkeltype' : 'Rediger ' + vm.new_articleType.name}}
+                    </h4>
                 </div>
                 <div class="panel-body">
-                    <form name="newsForm" novalidate>
+                    <form name="articleTypeForm" novalidate>
                         <div class="form-group"
-                            ng-class="{'has-error' : newsForm.title.$invalid && newsForm.title.$dirty}">
-                            <label for="title">Tittel</label>
-                            <input type="text" name="title" id="title" class="form-control" ng-model="vm.new_news.title" required>
+                            ng-class="{'has-error' : articleTypeForm.name.$invalid && articleTypeForm.name.$dirty}">
+                            <label for="name">Navn</label>
+                            <input type="text" name="name" id="name" class="form-control"
+                                ng-model="vm.new_articleType.name" required>
                         </div>
                         <div class="form-group"
-                            ng-class="{'has-error' : newsForm.content.$invalid && newsForm.content.$dirty}">
-                            <label for="content">Tekst</label>
-                            <textarea name="content" id="content" class="form-control" ng-model="vm.new_news.content" required></textarea>
+                            ng-class="{'has-error' : articleTypeForm.description.$invalid && articleTypeForm.description.$dirty}">
+                            <label for="description">Beskrivelse</label>
+                            <textarea name="description" id="description" class="form-control"
+                                ng-model="vm.new_articleType.description"></textarea>
                         </div>
                         <!-- buttons -->
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary col-xs-4" ng-disabled="newsForm.$invalid"
-                                    ng-click="vm.saveEditedNews()" button-loader="vm.isSaving">Lagre
+                            <button type="submit" class="btn btn-primary col-xs-4"
+                                ng-disabled="articleTypeForm.$invalid" ng-click="vm.saveEditedArticleType()"
+                                button-loader="vm.isSavingArticleType">Lagre
                             </button>
 
-                            <button class="btn btn-default col-xs-4 col-xs-offset-1" ng-show="vm.new_news.id != undefined"
-                                    ng-click="vm.editNews({})">Avbryt
+                            <button class="btn btn-default col-xs-4 col-xs-offset-1"
+                                ng-show="vm.new_articleType.id != undefined" ng-click="vm.editArticleType({})">Avbryt
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    </row>
+        <div class="col-md-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Nyheter
+                </div>
+                <table class="table">
+                    <tbody ng-repeat="n in vm.news
+                                                    | orderBy: '-date'
+                                                    | startFrom:(vm.currentPage-1)*vm.pageSize
+                                                    | limitTo:vm.pageSize" class="news-item">
+                        <tr ng-click="show = !show" class="interact active">
+                            <td colspan="1.5" style="font-weight:bold;">{{n.title}}</td>
+                            <td colspan="0.5"><button class="btn btn-success btn-xs pull-right"
+                                    ng-click="vm.editNews(n);$event.stopPropagation();">Rediger</button></td>
+                            <td colspan="0.5" width="5%">
+                                <i ng-show="!show" class="fas fa-arrow-circle-down"></i>
+                                <i ng-show="show" class="fas fa-arrow-circle-up"></i>
+                            </td>
+                        </tr>
+                        <tr ng-click="show = !show" class="news-meta interact">
+                            <td>{{n.date | date: 'yyyy-MM-dd'}}</td>
+                            <td colspan="2"><span class="pull-right" person-widget="n.author">{{n.author.name}}</span>
+                            </td>
+                        </tr>
+                        <tr ng-show="show">
+                            <td colspan="5">{{n.content}}</td>
+                        </tr>
+                    </tbody>
+                    <tr ng-show="vm.news.length <= 0">
+                        <td colspan="2" class="text-center">
+                            Det finnes ingen nyheter.
+                        </td>
+                    </tr>
+                </table>
+                <div class="text-center">
+                    <ul uib-pagination direction-links="false" total-items="vm.news.length" items-per-page="vm.pageSize"
+                        ng-model="vm.currentPage">
+                    </ul>
+                </div>
+            </div>
+
+            <div class="panel {{vm.new_news.id == undefined ? 'panel-success' : 'panel-warning'}}">
+                <div class="panel-heading">
+                    <h4 class="panel-title text-center">
+                        {{vm.new_news.id === undefined ? 'Ny nyhet' : 'Rediger ' + vm.new_news.title }}</h4>
+                </div>
+                <div class="panel-body">
+                    <form name="newsForm" novalidate>
+                        <div class="form-group"
+                            ng-class="{'has-error' : newsForm.title.$invalid && newsForm.title.$dirty}">
+                            <label for="title">Tittel</label>
+                            <input type="text" name="title" id="title" class="form-control" ng-model="vm.new_news.title"
+                                required>
+                        </div>
+                        <div class="form-group"
+                            ng-class="{'has-error' : newsForm.content.$invalid && newsForm.content.$dirty}">
+                            <label for="content">Tekst</label>
+                            <textarea name="content" id="content" class="form-control" ng-model="vm.new_news.content"
+                                required></textarea>
+                        </div>
+                        <!-- buttons -->
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary col-xs-4" ng-disabled="newsForm.$invalid"
+                                ng-click="vm.saveEditedNews()" button-loader="vm.isSavingNews">Lagre
+                            </button>
+
+                            <button class="btn btn-default col-xs-4 col-xs-offset-1"
+                                ng-show="vm.new_news.id != undefined" ng-click="vm.editNews({})">Avbryt
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
