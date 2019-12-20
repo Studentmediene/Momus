@@ -2,7 +2,8 @@ package no.dusken.momus.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import no.dusken.momus.mapper.HibernateAwareObjectMapper;
+
+import no.dusken.momus.common.config.HibernateAwareObjectMapper;
 
 public class TestUtil {
 

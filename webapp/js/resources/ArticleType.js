@@ -18,7 +18,7 @@
 
 angular.module('momusApp.resources')
     .factory('ArticleType', $resource => {
-        return $resource('/api/articletype/:id/:resource',
+        return $resource('/api/articletypes/:id/:resource',
             {
                 id: '@id'
             },

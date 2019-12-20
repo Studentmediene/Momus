@@ -11,14 +11,14 @@ export default function articleResourceFactory(
     $resource: ng.resource.IResourceService,
     $http: ng.IHttpService,
 ): ArticleResource {
-    return <ArticleResource> $resource('/api/article/:id/:resource',
+    return <ArticleResource> $resource('/api/articles/:id/:resource',
         {
             id: '@id',
         },
         {
             lastArticlesForPerson: { method: 'GET', isArray: true },
             revisions: { method: 'GET', params: { resource: 'revisions' }, isArray: true },
-            compareRevisions: { method: 'GET', url: '/api/article/:id/revisions/:rev1/:rev2', isArray: true },
+            compareRevisions: { method: 'GET', url: '/api/articles/:id/revisions/:rev1/:rev2', isArray: true },
             multiple: { method: 'GET', params: { id: 'multiple' }, isArray: true },
             search: { method: 'POST', params: { id: 'search' }, isArray: true },
             content: { method: 'GET', params: { resource: 'content' } },

@@ -5,7 +5,7 @@ import { ResourceFunc } from './app.resources';
 export default function advertResourceFactory(
     $resource: ng.resource.IResourceService,
 ): AdvertResource {
-    return <AdvertResource> $resource('/api/advert/:id/:resource',
+    return <AdvertResource> $resource('/api/adverts/:id/:resource',
         {
             id: '@id',
         },
