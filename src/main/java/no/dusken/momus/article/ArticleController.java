@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,12 +38,6 @@ public class ArticleController {
 
     @Autowired
     private ArticleRepository articleRepository;
-
-    @Autowired
-    private ArticleStatusRepository articleStatusRepository;
-
-    @Autowired
-    private ArticleReviewRepository articleReviewRepository;
 
     @GetMapping(params="userId")
     public List<Article> getLastArticlesForUser(@RequestParam Long userId) {
@@ -113,29 +108,19 @@ public class ArticleController {
         return articleService.searchForArticles(search);
     }
 
-    @GetMapping("/statuses")
-    public List<ArticleStatus> getAllArticleStatuses(){
-        return articleStatusRepository.findAll();
-    }
-
-    @GetMapping("/reviews")
-    public List<ArticleReview> getAllReviewStatuses() {
-        return articleReviewRepository.findAll();
-    }
-
     @GetMapping("/statuscounts")
-    public Map<Long,Integer> getStatusCountsByPubId(@RequestParam Long publicationId){
-        return getAllArticleStatuses().stream().map(ArticleStatus::getId)
+    public Map<ArticleStatus, Integer> getStatusCountsByPubId(@RequestParam Long publicationId){
+        return Arrays.stream(ArticleStatus.values())
                 .collect(Collectors.toMap(
                         t -> t,
-                        t -> articleRepository.countByStatusIdAndPublicationId(t, publicationId)));
+                        t -> articleRepository.countByStatusAndPublicationId(t, publicationId)));
     }
 
     @GetMapping("/reviewstatuscounts")
-    public Map<Long,Integer> getReviewStatusCountsByPubId(@RequestParam Long publicationId){
-        return getAllReviewStatuses().stream().map(ArticleReview::getId)
+    public Map<ArticleReviewStatus,Integer> getReviewStatusCountsByPubId(@RequestParam Long publicationId){
+        return Arrays.stream(ArticleReviewStatus.values())
                 .collect(Collectors.toMap(
                         t -> t,
-                        t -> articleRepository.countByReviewIdAndPublicationId(t, publicationId)));
+                        t -> articleRepository.countByReviewAndPublicationId(t, publicationId)));
     }
 }

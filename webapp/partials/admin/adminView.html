@@ -44,22 +44,18 @@
                             <td style="background-color: {{ section.color }}"></td>
                             <td>{{section.name}}</td>
                             <td>
-                                <span ng-show="!vm.isEditingSections">{{vm.roleNames[section.journalist_role]}}</span>
-                                <select 
-                                    ng-show="vm.isEditingSections"
-                                    class="form-control"
-                                    ng-model="section.journalist_role"
-                                    ng-options="vm.roleNames[role] for role in vm.roles">
-                                </select>
+                                <span ng-show="!vm.isEditingSections">
+                                    <static-value-label group="role" key="section.journalist_role"></static-value-label>
+                                </span>
+                                <static-value-select group="role" ng-show="vm.isEditingSections" ng-model="section.journalist_role">
+                                </static-value-select>
                             </td>
                             <td>
-                                <span ng-show="!vm.isEditingSections">{{vm.roleNames[section.editor_role]}}</span>
-                                <select
-                                    ng-show="vm.isEditingSections"
-                                    class="form-control"
-                                    ng-model="section.editor_role"
-                                    ng-options="vm.roleNames[role] for role in vm.roles">
-                                </select>
+                                <span ng-show="!vm.isEditingSections">
+                                    <static-value-label group="role" key="section.editor_role"></static-value-label>
+                                </span>
+                                <static-value-select group="role" ng-show="vm.isEditingSections" ng-model="section.editor_role">
+                                </static-value-select>
                             </td>
                         </tr>
                     </table>

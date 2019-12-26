@@ -109,19 +109,16 @@ angular.module('momusApp', [
                     },
                     activePublication: Publication => Publication.active().$promise,
                     sections: Section => Section.query().$promise,
-                    statuses: Article => Article.statuses().$promise,
                     statusCounts: (activePublication, Article) => {
                         return activePublication.id != null ?
                             Article.statusCounts({publicationId: activePublication.id}).$promise :
                             [];
                     },
-                    reviewStatuses: Article => Article.reviewStatuses().$promise,
                     reviewStatusCounts: (activePublication, Article) => {
                         return activePublication.id != null ?
                             Article.reviewStatusCounts({publicationId: activePublication.id}).$promise :
                             [];
                     },
-                    layoutStatuses: Publication => Publication.layoutStatuses().$promise,
                     layoutStatusCounts: (activePublication, Page) => {
                         return activePublication.id != null ?
                             Page.layoutStatusCounts({pubid: activePublication.id}).$promise :
@@ -142,8 +139,8 @@ angular.module('momusApp', [
                     defaultSearch: {type: 'bool'},
                     publication: {type: 'int'},
                     section: {type: 'int'},
-                    status: {type: 'int'},
-                    review: {type: 'int'},
+                    status: {type: 'string'},
+                    review: {type: 'string'},
                     free: {type: 'string'},
                     persons: {type: 'int', array: true},
                     page_number: {type: 'int', value: 0},
@@ -155,8 +152,6 @@ angular.module('momusApp', [
                     publications: Publication => Publication.query().$promise,
                     persons: Person => Person.query().$promise,
                     sections: Section => Section.query().$promise,
-                    statuses: Article => Article.statuses().$promise,
-                    reviews: Article => Article.reviewStatuses().$promise,
                     searchParams: ($stateParams, activePublication) => {
                         const {['#']: _, ['defaultSearch']: defaultSearch, ...searchParams} = $stateParams;
 
@@ -211,9 +206,6 @@ angular.module('momusApp', [
                     pageOrder: (publication, Page) => Page.pageOrder({publicationId: publication.id}),
                     articles: (publication, Article) => Article.query({publicationId: publication.id}),
                     adverts: Advert => Advert.query(),
-                    articleStatuses: Article => Article.statuses().$promise,
-                    reviewStatuses: Article => Article.reviewStatuses().$promise,
-                    layoutStatuses: Publication => Publication.layoutStatuses().$promise
                 },
                 templateUrl: '/assets/partials/disposition/dispositionView.html',
                 controller: 'DispositionCtrl',

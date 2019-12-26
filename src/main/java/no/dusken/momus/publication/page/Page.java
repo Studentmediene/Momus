@@ -58,7 +58,7 @@ public class Page extends AbstractEntity implements Comparable<Page>, Comparator
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Set<Advert> adverts;
 
-    @ManyToOne
+    @Enumerated(EnumType.STRING)
     private LayoutStatus layoutStatus;
 
     @Override

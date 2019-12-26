@@ -48,12 +48,6 @@ public class ArticleServiceTest extends AbstractServiceTest {
     private ArticleRevisionService articleRevisionService;
 
     @Mock
-    private ArticleStatusRepository articleStatusRepository;
-
-    @Mock
-    private ArticleReviewRepository articleReviewRepository;
-
-    @Mock
     private IndesignGenerator indesignGenerator;
 
     @InjectMocks
@@ -70,9 +64,6 @@ public class ArticleServiceTest extends AbstractServiceTest {
 
     private ArticleStatus articleStatus1;
     private ArticleStatus articleStatus2;
-
-    private ArticleReview articleReview1;
-    private ArticleReview articleReview2;
 
     private ArticleType articleType1;
     private ArticleType articleType2;
@@ -107,15 +98,8 @@ public class ArticleServiceTest extends AbstractServiceTest {
                 .build();
         publication2.setId(1L);
 
-        articleStatus1 = ArticleStatus.builder().name("Skrives").build();
-        articleStatus1.setId(0L);
-        articleStatus2 = ArticleStatus.builder().name("Til korrektur").build();
-        articleStatus2.setId(1L);
-
-        articleReview1 = ArticleReview.builder().name("Ukjent").build();
-        articleReview1.setId(0L);
-        articleReview2 = ArticleReview.builder().name("Ferdig").build();
-        articleReview2.setId(1L);
+        articleStatus1 = ArticleStatus.UNKNOWN;
+        articleStatus2 = ArticleStatus.WRITING;
 
         articleType1 = ArticleType.builder().name("Anmeldelse").build();
         articleType1.setId(0L);
@@ -134,7 +118,7 @@ public class ArticleServiceTest extends AbstractServiceTest {
                 .section(section1)
                 .status(articleStatus1)
                 .type(articleType1)
-                .review(articleReview1)
+                .review(ArticleReviewStatus.SHOULD_BE_REVIEWED)
                 .archived(false)
                 .build();
         article1.setId(1L);
@@ -146,7 +130,7 @@ public class ArticleServiceTest extends AbstractServiceTest {
                 .section(section1)
                 .status(articleStatus1)
                 .type(articleType1)
-                .review(articleReview1)
+                .review(ArticleReviewStatus.SHOULD_BE_REVIEWED)
                 .archived(false)
                 .build();
         article2.setId(2L);
@@ -154,7 +138,6 @@ public class ArticleServiceTest extends AbstractServiceTest {
         when(indesignGenerator.generateFromArticle(article1)).thenReturn(new IndesignExport("meh", "meh"));
         when(articleRepository.findById(article1.getId())).thenReturn(Optional.of(article1));
         when(articleRepository.saveAndFlush(any(Article.class))).then(returnsFirstArg());
-        when(articleReviewRepository.findById(1L)).thenReturn(Optional.of(articleReview1));
     }
 
     /**
@@ -200,7 +183,7 @@ public class ArticleServiceTest extends AbstractServiceTest {
                 .comment("my cool comment")
                 .status(articleStatus2)
                 .type(articleType2)
-                .review(articleReview2)
+                .review(ArticleReviewStatus.REVIEWED)
                 .section(section2)
                 .publication(publication2)
                 .build();
@@ -220,7 +203,6 @@ public class ArticleServiceTest extends AbstractServiceTest {
         assertEquals("my cool comment", article.getComment());
         assertEquals(articleStatus2.getName(), article.getStatus().getName());
         assertEquals(articleType2.getName(), article.getType().getName());
-        assertEquals(articleReview2.getName(), article.getReview().getName());
         assertEquals(section2.getName(), article.getSection().getName());
         assertEquals(publication2.getName(), article.getPublication().getName());
         assertEquals("Testinnhold for artikkel 1 yay", article.getContent());
@@ -235,7 +217,7 @@ public class ArticleServiceTest extends AbstractServiceTest {
                 .name("Updated name")
                 .comment("my cool comment")
                 .status(articleStatus2)
-                .review(articleReview2)
+                .review(ArticleReviewStatus.REVIEWED)
                 .build();
         article.setId(article1.getId());
 
@@ -249,7 +231,6 @@ public class ArticleServiceTest extends AbstractServiceTest {
         verify(articleServiceSpy, times(1)).updateArticle(article1);
         assertEquals("my cool comment", article.getComment());
         assertEquals(articleStatus2.getName(), article.getStatus().getName());
-        assertEquals(articleReview2.getName(), article.getReview().getName());
     }
 
     /**

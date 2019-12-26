@@ -4,7 +4,6 @@ import no.dusken.momus.common.exceptions.RestException;
 import no.dusken.momus.messaging.Action;
 import no.dusken.momus.messaging.MessagingService;
 import no.dusken.momus.publication.LayoutStatus;
-import no.dusken.momus.publication.LayoutStatusRepository;
 import no.dusken.momus.publication.Publication;
 import no.dusken.momus.advert.AdvertRepository;
 import no.dusken.momus.article.ArticleService;
@@ -21,7 +20,6 @@ import java.util.List;
 public class PageService {
 
     private final PageRepository pageRepository;
-    private final LayoutStatusRepository layoutStatusRepository;
     private final ArticleService articleService;
     private final AdvertRepository advertRepository;
 
@@ -29,13 +27,11 @@ public class PageService {
 
     public PageService(
             PageRepository pageRepository,
-            LayoutStatusRepository layoutStatusRepository,
             ArticleService articleService,
             AdvertRepository advertRepository,
             MessagingService messagingService
     ) {
         this.pageRepository = pageRepository;
-        this.layoutStatusRepository = layoutStatusRepository;
         this.articleService = articleService;
         this.advertRepository = advertRepository;
         this.messagingService = messagingService;
@@ -58,13 +54,12 @@ public class PageService {
         List<Page> createdPages = new ArrayList<>();
         Publication publication = new Publication();
         publication.setId(publicationId);
-        LayoutStatus layoutStatus = layoutStatusRepository.findByName("Ukjent");
 
         for (int i = 0; i < numPages; i++) {
             Page newPage = Page.builder()
                     .pageNr(afterPage + i + 1)
                     .publication(publication)
-                    .layoutStatus(layoutStatus)
+                    .layoutStatus(LayoutStatus.PLANNED)
                     .build();
             newPage = pageRepository.save(newPage);
             createdPages.add(newPage);

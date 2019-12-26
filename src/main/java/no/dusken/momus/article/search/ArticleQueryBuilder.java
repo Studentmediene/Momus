@@ -35,10 +35,8 @@ import java.util.Map;
 public class ArticleQueryBuilder {
     public static final String baseQuery = 
         "select a from Article a " + 
-        "left join a.status status " + 
         "left join a.publication publication " + 
         "left join a.section section " + 
-        "left join a.review review " + 
         "left join a.type type";
     public static final String baseOrder = "order by publication.releaseDate DESC";
 
@@ -59,11 +57,11 @@ public class ArticleQueryBuilder {
                 freeConditions.add("a.rawcontent like :free"+i);
                 freeConditions.add("LOWER(a.comment) like :free"+i);
                 freeConditions.add("LOWER(a.name) like :free"+i);                
+                freeConditions.add("LOWER(a.status) like :free"+i);                
+                freeConditions.add("LOWER(a.review) like :free"+i);                
                 freeConditions.add("(publication is not null and LOWER(publication.name) like :free"+i+")");
-                freeConditions.add("(status is not null and LOWER(status.name) like :free"+i+")");
                 freeConditions.add("(section is not null and LOWER(section.name) like :free"+i+")");
                 freeConditions.add("(type is not null and LOWER(type.name) like :free"+i+")");
-                freeConditions.add("(review is not null and LOWER(review.name) like :free"+i+")");
 
                 freeConditions.add("exists (select p from Person p where (p member of a.journalists or p member of a.photographers or p member of a.graphics) and LOWER(p.name) LIKE :free"+i+")");
                 queryParams.put("free"+i, "%" + words[i].toLowerCase() + "%");
@@ -71,8 +69,8 @@ public class ArticleQueryBuilder {
             }
         }
         if (search.getStatus() != null) {
-            conditions.add("status.id = :statusid");
-            queryParams.put("statusid", search.getStatus());
+            conditions.add("a.status = :status");
+            queryParams.put("status", search.getStatus());
         }
         if (search.getPersons() != null && search.getPersons().size() > 0) {
             int personCount = 0;
@@ -93,12 +91,12 @@ public class ArticleQueryBuilder {
             queryParams.put("pubid", search.getPublication());
         }
         if (search.getReview() != null) {
-            conditions.add("review.id = :reviewid");
-            queryParams.put("reviewid", search.getReview());
+            conditions.add("a.review = :review");
+            queryParams.put("review", search.getReview());
         }
 
         conditions.add("a.archived = :arch");
-        queryParams.put("arch", search.getArchived());
+        queryParams.put("arch", search.isArchived());
 
         String allConditions = StringUtils.collectionToDelimitedString(conditions, " AND ");
 

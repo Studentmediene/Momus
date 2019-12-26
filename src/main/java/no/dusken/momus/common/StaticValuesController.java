@@ -9,23 +9,38 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import no.dusken.momus.article.ArticleReviewStatus;
+import no.dusken.momus.article.ArticleStatus;
 import no.dusken.momus.person.authorization.Role;
+import no.dusken.momus.publication.LayoutStatus;
 
 @RestController
 @RequestMapping("/api/static-values")
 public class StaticValuesController {
     private final Environment env;
 
-    private final Map<String, String> roleNames;
-
     public StaticValuesController(Environment env) {
         this.env = env;
-        roleNames = Role.roleNameMap();
     }
 
-    @GetMapping("/role-names")
-    public Map<String, String> getRoleNames() {
-        return roleNames;
+    @GetMapping("/role")
+    public Map<String, StaticValue> getRoles() {
+        return Role.map();
+    }
+
+    @GetMapping("/article-status")
+    public Map<String, StaticValue> getArticleStatus() {
+        return ArticleStatus.map();
+    }
+
+    @GetMapping("/article-review-status")
+    public Map<String, StaticValue> getArticleReviewStatus() {
+        return ArticleReviewStatus.map();
+    }
+
+    @GetMapping("/layout-status")
+    public Map<String, StaticValue> getLayoutStatus() {
+        return LayoutStatus.map();
     }
 
     @GetMapping("/env")

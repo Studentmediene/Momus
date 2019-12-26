@@ -22,9 +22,6 @@ public class ArticleControllerTest extends AbstractControllerTest {
     @Autowired
     private ArticleRepository articleRepository;
 
-    @Autowired
-    private ArticleStatusRepository articleStatusRepository;
-
     @Test
     public void getNonexistentArticle() throws Exception {
         mockMvc.perform(get("/api/articles/1")).andExpect(status().isNotFound());
@@ -44,10 +41,9 @@ public class ArticleControllerTest extends AbstractControllerTest {
 
     @Test
     public void testUpdateArticleMetadata() throws Exception {
-        ArticleStatus status = articleStatusRepository.saveAndFlush(ArticleStatus.builder().name("Ukjent").build());
         Article article = new Article();
         article.setName("Artikkel");
-        article.setStatus(status);
+        article.setStatus(ArticleStatus.UNKNOWN);
         article = articleRepository.saveAndFlush(article);
         article.setName("Yeah");
 

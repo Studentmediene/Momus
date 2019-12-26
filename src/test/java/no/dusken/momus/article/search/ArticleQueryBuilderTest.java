@@ -22,6 +22,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import no.dusken.momus.article.ArticleReviewStatus;
+import no.dusken.momus.article.ArticleStatus;
 import no.dusken.momus.common.AbstractServiceTest;
 import no.dusken.momus.person.Person;
 import no.dusken.momus.person.PersonRepository;
@@ -71,7 +73,7 @@ public class ArticleQueryBuilderTest extends AbstractServiceTest {
 
     @Test
     public void testEmptyQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("", null, emptyList,null, null, null, 0, 0, false);
+        ArticleSearchParams params = new ArticleSearchParams("", null, null, emptyList, null, null, 0, 0, false);
 
         ArticleQuery query = articleQueryBuilder.buildQuery(params);
 
@@ -95,7 +97,7 @@ public class ArticleQueryBuilderTest extends AbstractServiceTest {
 
     @Test
     public void testTextQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("fInn meg", null, emptyList, null,null, null, 0, 0, false);
+        ArticleSearchParams params = new ArticleSearchParams("fInn meg", null, null, emptyList, null, null, 0, 0, false);
 
         ArticleQuery query = articleQueryBuilder.buildQuery(params);
 
@@ -103,20 +105,21 @@ public class ArticleQueryBuilderTest extends AbstractServiceTest {
                 "(a.rawcontent like :free0 or " +
                 "lower(a.comment) like :free0 or " +
                 "lower(a.name) like :free0 or " +
+                "lower(a.status) like :free0 or " +
+                "lower(a.review) like :free0 or " +
                 "(publication is not null and lower(publication.name) like :free0) or " +
-                "(status is not null and lower(status.name) like :free0) or " +
                 "(section is not null and lower(section.name) like :free0) or " +
                 "(type is not null and lower(type.name) like :free0) or " +
-                "(review is not null and lower(review.name) like :free0) or " +
                 "exists (select p from Person p where (p member of a.journalists or p member of a.photographers or p member of a.graphics) and LOWER(p.name) LIKE :free0)) and " +
+
                 "(a.rawcontent like :free1 or " +
                 "lower(a.comment) like :free1 or " +
                 "lower(a.name) like :free1 or " +
+                "lower(a.status) like :free1 or " +
+                "lower(a.review) like :free1 or " +
                 "(publication is not null and lower(publication.name) like :free1) or " +
-                "(status is not null and lower(status.name) like :free1) or " +
                 "(section is not null and lower(section.name) like :free1) or " +
                 "(type is not null and lower(type.name) like :free1) or " +
-                "(review is not null and lower(review.name) like :free1) or " +
                 "exists (select p from Person p where (p member of a.journalists or p member of a.photographers or p member of a.graphics) and LOWER(p.name) LIKE :free1)) and " +
                 "a.archived = :arch " +
                 ArticleQueryBuilder.baseOrder;
@@ -132,13 +135,13 @@ public class ArticleQueryBuilderTest extends AbstractServiceTest {
 
     @Test
     public void testStatusQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("", 1L, emptyList, null,null, null, 0, 0, false);
+        ArticleSearchParams params = new ArticleSearchParams("", ArticleStatus.UNKNOWN, null, emptyList,null, null, 0, 0, false);
 
         ArticleQuery query = articleQueryBuilder.buildQuery(params);
 
-        String expectedQuery = ArticleQueryBuilder.baseQuery + " where status.id = :statusid and a.archived = :arch " +  ArticleQueryBuilder.baseOrder;
+        String expectedQuery = ArticleQueryBuilder.baseQuery + " where a.status = :status and a.archived = :arch " +  ArticleQueryBuilder.baseOrder;
         Map<String, Object> expectedMap = new HashMap<>();
-        expectedMap.put("statusid", 1L);
+        expectedMap.put("status", ArticleStatus.UNKNOWN);
         expectedMap.put("arch", false);
 
         assertEquals(expectedQuery.toLowerCase(), query.getQuery().toLowerCase());
@@ -148,7 +151,7 @@ public class ArticleQueryBuilderTest extends AbstractServiceTest {
     @Test
     public void testPersonQuery() {
         initPersonMocks();
-        ArticleSearchParams params = new ArticleSearchParams("", null, Arrays.asList(1L, 2L),null, null, null, 0, 0, false);
+        ArticleSearchParams params = new ArticleSearchParams("", null, null, Arrays.asList(1L, 2L), null, null, 0, 0, false);
 
         ArticleQuery query = articleQueryBuilder.buildQuery(params);
 
@@ -171,7 +174,7 @@ public class ArticleQueryBuilderTest extends AbstractServiceTest {
 
     @Test
     public void testSectionQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("", null, emptyList, null,31337L, null, 0, 0, false);
+        ArticleSearchParams params = new ArticleSearchParams("", null, null, emptyList, 31337L, null, 0, 0, false);
 
         ArticleQuery query = articleQueryBuilder.buildQuery(params);
 
@@ -186,7 +189,7 @@ public class ArticleQueryBuilderTest extends AbstractServiceTest {
 
     @Test
     public void testPublicationQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("", null, emptyList,null, null, 2L, 0, 0, false);
+        ArticleSearchParams params = new ArticleSearchParams("", null, null, emptyList, null, 2L, 0, 0, false);
 
         ArticleQuery query = articleQueryBuilder.buildQuery(params);
 
@@ -201,13 +204,13 @@ public class ArticleQueryBuilderTest extends AbstractServiceTest {
 
     @Test
     public void testReviewQuery() {
-        ArticleSearchParams params = new ArticleSearchParams("", null, emptyList, 1L,null, null, 0, 0, false);
+        ArticleSearchParams params = new ArticleSearchParams("", null, ArticleReviewStatus.PRINTED, emptyList, null, null, 0, 0, false);
 
         ArticleQuery query = articleQueryBuilder.buildQuery(params);
 
-        String expectedQuery = ArticleQueryBuilder.baseQuery + " where review.id = :reviewid and a.archived = :arch " + ArticleQueryBuilder.baseOrder;
+        String expectedQuery = ArticleQueryBuilder.baseQuery + " where a.review = :review and a.archived = :arch " + ArticleQueryBuilder.baseOrder;
         Map<String, Object> expectedMap = new HashMap<>();
-        expectedMap.put("reviewid", 1L);
+        expectedMap.put("review", ArticleReviewStatus.PRINTED);
         expectedMap.put("arch", false);
 
         assertEquals(expectedQuery.toLowerCase(), query.getQuery().toLowerCase());
@@ -217,7 +220,7 @@ public class ArticleQueryBuilderTest extends AbstractServiceTest {
     @Test
     public void testCombinedQuery() {
         initPersonMocks();        
-        ArticleSearchParams params = new ArticleSearchParams("kombinert test", 1L, Arrays.asList(1L, 2L),null, 31337L, 2L, 0, 0, true);
+        ArticleSearchParams params = new ArticleSearchParams("kombinert test", ArticleStatus.UNKNOWN, null, Arrays.asList(1L, 2L), 31337L, 2L, 0, 0, true);
 
         ArticleQuery query = articleQueryBuilder.buildQuery(params);
 
@@ -225,22 +228,24 @@ public class ArticleQueryBuilderTest extends AbstractServiceTest {
                 "(a.rawcontent like :free0 or " +
                 "lower(a.comment) like :free0 or " +
                 "lower(a.name) like :free0 or " +
+                "lower(a.status) like :free0 or " +
+                "lower(a.review) like :free0 or " +
                 "(publication is not null and lower(publication.name) like :free0) or " +
-                "(status is not null and lower(status.name) like :free0) or " +
                 "(section is not null and lower(section.name) like :free0) or " +
                 "(type is not null and lower(type.name) like :free0) or " +
-                "(review is not null and lower(review.name) like :free0) or " +
                 "exists (select p from Person p where (p member of a.journalists or p member of a.photographers or p member of a.graphics) and LOWER(p.name) LIKE :free0)) and " +
+                
                 "(a.rawcontent like :free1 or " +
                 "lower(a.comment) like :free1 or " +
                 "lower(a.name) like :free1 or " +
+                "lower(a.status) like :free1 or " +
+                "lower(a.review) like :free1 or " +
                 "(publication is not null and lower(publication.name) like :free1) or " +
-                "(status is not null and lower(status.name) like :free1) or " +
                 "(section is not null and lower(section.name) like :free1) or " +
                 "(type is not null and lower(type.name) like :free1) or " +
-                "(review is not null and lower(review.name) like :free1) or " +
                 "exists (select p from Person p where (p member of a.journalists or p member of a.photographers or p member of a.graphics) and LOWER(p.name) LIKE :free1)) and " +
-                "status.id = :statusid and " +
+                
+                "a.status = :status and " +
                 "( :personid0 member of a.journalists or " +
                 ":personid0 member of a.photographers or " +
                 ":personid0 member of a.graphics ) and " +
@@ -255,7 +260,7 @@ public class ArticleQueryBuilderTest extends AbstractServiceTest {
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("free0", "%kombinert%");
         expectedMap.put("free1", "%test%");
-        expectedMap.put("statusid", 1L);
+        expectedMap.put("status", ArticleStatus.UNKNOWN);
         expectedMap.put("personid0", person1);
         expectedMap.put("personid1", person2);
         expectedMap.put("secid", 31337L);

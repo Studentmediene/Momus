@@ -26,22 +26,18 @@ import no.dusken.momus.common.StaticValue;
 
 @AllArgsConstructor
 @Getter
-public enum ArticleStatus {
-    UNKNOWN("Ukjent", "#ffffff", true),
-    PLANNED("Planlagt", "#eeeeee", true),
-    WRITING("Skrives", "#aaaaff", true),
-    DESKING("Deskes", "#ffaaaa", true),
-    APPROVING("Til godkjenning", "#aaffaa", true),
-    EDITING("Til korrektur", "#009F00", true),
-    PUBLISHED("Publisert", "#00ff00", true);
+public enum ArticleReviewStatus {
+    SHOULD_NOT_BE_REVIEWED("Leses ikke", "#ffaaaa"),
+    SHOULD_BE_REVIEWED("Skal leses", "#eeeeee"),
+    PRINTED("Skrevet ut", "#aaaaff"),
+    REVIEWED("Lest", "#aaffaa");
 
     private String name;
     private String color;
-    private boolean available;
 
     public static Map<String, StaticValue> map() {
         Map<String, StaticValue> statusNames = new LinkedHashMap<>();
-        for(ArticleStatus r : ArticleStatus.values()) {
+        for(ArticleReviewStatus r : ArticleReviewStatus.values()) {
             Map<String, Object> extra = new HashMap<>();
             extra.put("color", r.color);
             statusNames.put(r.toString(), new StaticValue(r.name, extra));

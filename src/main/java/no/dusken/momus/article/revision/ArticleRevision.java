@@ -36,7 +36,7 @@ public class ArticleRevision extends AbstractEntity {
 
     private String content;
 
-    @ManyToOne
+    @Enumerated(EnumType.STRING)
     private ArticleStatus status;
 
     private ZonedDateTime savedDate;

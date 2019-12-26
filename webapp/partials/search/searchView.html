@@ -35,21 +35,11 @@
                 </div>
 
                 <!-- Status search -->
-                <div class="col-sm-3">
+                <div class="col-sm-3" static-value group="articleStatus">
                     <label class="sr-only" for="searchStatus">
                         Status
                     </label>
-                    <select class="form-control" id="searchStatus" ui-select2 ng-model="vm.searchParams.status" placeholder="Status">
-                        <option class="" value="">
-                            Alle statuser
-                        </option>
-                        <option
-                                ng-repeat="status in vm.statuses | filter:{deleted: false} | orderBy:'status_order'"
-                                ng-value="status.id"
-                        >
-                            {{ status.name }}
-                        </option>
-                    </select>
+                    <static-value-select placeholder="Alle statuser" ng-model="vm.searchParams.status"></static-value-select>
                 </div>
 
                 <!-- Section search -->
@@ -68,18 +58,11 @@
                 </div>
 
                 <!-- Review search -->
-                <div class="col-sm-3">
+                <div class="col-sm-3" static-value group="articleReviewStatus">
                     <label class="sr-only" for="searchReview">
                         Korrektur
                     </label>
-                    <select class="form-control" id="searchReview" ui-select2 ng-model="vm.searchParams.review">
-                        <option value="">
-                            Alle korrekturstatuser
-                        </option>
-                        <option ng-repeat="review in vm.reviews" ng-value="review.id">
-                            {{ review.name }}
-                        </option>
-                    </select>
+                    <static-value-select placeholder="Alle korrekturstatuser" ng-model="vm.searchParams.review"></static-value-select>
                 </div>
 
                 <!-- Publication search -->
@@ -226,10 +209,11 @@
                         <i class="fas fa-quote-right fa-lg" uib-tooltip="{{article.quote_check_status ? 'Sitatsjekk er ikke i orden' : 'Sitatetsjekk er i orden'}}"
                            ng-class="{'text-danger': article.quote_check_status, 'text-success': !article.quote_check_status}"></i>
                     </td>
-                    <td class="break-word" style="background-color: {{article.status.color}}; padding: 3px;">
-                        {{ article.status.name }}
+                    <td static-value group="articleStatus" key="article.status" class="break-word" with-background>
+                        <static-value-label></static-value-label>
                     </td>
-                    <td style="background: {{article.section.color}}">
+                    
+                    <td ng-style="{background: article.section.color}">
                         {{ article.section.name }}
                     </td>
                     <td>

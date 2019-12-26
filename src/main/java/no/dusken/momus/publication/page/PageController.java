@@ -3,24 +3,22 @@ package no.dusken.momus.publication.page;
 import org.springframework.web.bind.annotation.*;
 
 import no.dusken.momus.publication.LayoutStatus;
-import no.dusken.momus.publication.LayoutStatusRepository;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/pages")
 public class PageController {
 
     private final PageRepository pageRepository;
-    private final LayoutStatusRepository layoutStatusRepository;
     private final PageService pageService;
 
-    public PageController(PageRepository pageRepository, PageService pageService, LayoutStatusRepository layoutStatusRepository) {
+    public PageController(PageRepository pageRepository, PageService pageService) {
         this.pageRepository = pageRepository;
         this.pageService = pageService;
-        this.layoutStatusRepository = layoutStatusRepository;
     }
 
     @GetMapping("/{id}")
@@ -68,18 +66,10 @@ public class PageController {
     }
 
     @GetMapping("/layoutstatuscounts")
-    public Map<Long,Integer> getStatusCountsByPubId(@RequestParam Long pubid){
-        List<LayoutStatus> statuses = layoutStatusRepository.findAll();
-        Map<Long, Integer> map = new HashMap<>();
-        for (LayoutStatus status : statuses) {
-            map.put(status.getId(), this.getStatusCount(status.getName(), pubid));
-        }
-        return map;
-    }
-
-    @GetMapping("/layoutstatuscounts/{status}")
-    public int getStatusCount(@PathVariable String status, @PathVariable Long id){
-        Long statusId = layoutStatusRepository.findByName(status).getId();
-        return pageRepository.countByLayoutStatusIdAndPublicationId(statusId, id);
+    public Map<LayoutStatus, Integer> getStatusCountsByPubId(@RequestParam Long pubid){
+        return Arrays.stream(LayoutStatus.values())
+                .collect(Collectors.toMap(
+                    t -> t,
+                    t -> pageRepository.countByLayoutStatusAndPublicationId(t, pubid)));
     }
 }

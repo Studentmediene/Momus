@@ -30,11 +30,7 @@ angular.module('momusApp.controllers')
         recentArticles,
         favouriteSectionArticles,
         sections,
-        statuses,
-        statusCounts,
-        reviewStatuses,
         reviewStatusCounts,
-        layoutStatuses,
         layoutStatusCounts,
         activePublication,
         news
@@ -52,9 +48,9 @@ angular.module('momusApp.controllers')
         vm.news = news;
 
         if(!vm.noPublication) {
-            vm.articlestatus = getStatusArrays(statusCounts, statuses);
-            vm.reviewstatus = getStatusArrays(reviewStatusCounts, reviewStatuses);
-            vm.layoutstatus = getStatusArrays(layoutStatusCounts, layoutStatuses);
+            // vm.articlestatus = getStatusArrays(statusCounts, statuses);
+            // vm.reviewstatus = getStatusArrays(reviewStatusCounts, reviewStatuses);
+            // vm.layoutstatus = getStatusArrays(layoutStatusCounts, layoutStatuses);
         }
 
         vm.pageSize = 3;

@@ -19,19 +19,13 @@
 angular.module('momusApp.controllers')
     .controller('SearchCtrl', function (
         $scope,
-        $location,
         $templateRequest,
         $uibModal,
         $state,
-        $stateParams,
-        Article,
         MessageModal,
-        activePublication,
         publications,
         persons,
         sections,
-        statuses,
-        reviews,
         searchParams,
         results
     ) {
@@ -40,8 +34,6 @@ angular.module('momusApp.controllers')
         vm.publications = publications;
         vm.persons = persons;
         vm.sections = sections;
-        vm.statuses = statuses;
-        vm.reviews = reviews;
         vm.hasNextPage = results.length > searchParams.page_size;
         vm.results = vm.hasNextPage ? results.slice(0, results.length-1) : results;
         vm.searchParams = searchParams;

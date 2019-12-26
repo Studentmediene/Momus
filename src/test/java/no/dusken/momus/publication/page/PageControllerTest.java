@@ -6,7 +6,6 @@ import no.dusken.momus.article.Article;
 import no.dusken.momus.article.ArticleService;
 import no.dusken.momus.common.AbstractControllerTest;
 import no.dusken.momus.publication.LayoutStatus;
-import no.dusken.momus.publication.LayoutStatusRepository;
 import no.dusken.momus.publication.Publication;
 import no.dusken.momus.publication.PublicationService;
 import no.dusken.momus.util.TestUtil;
@@ -34,9 +33,6 @@ public class PageControllerTest extends AbstractControllerTest {
 
     @Autowired
     private PageRepository pageRepository;
-
-    @Autowired
-    private LayoutStatusRepository layoutStatusRepository;
 
     private Publication publication;
 
@@ -100,7 +96,7 @@ public class PageControllerTest extends AbstractControllerTest {
     public void updateMetadata() throws Exception {
         Page page = pageRepository.findByPublicationId(publication.getId()).get(0);
 
-        LayoutStatus s = layoutStatusRepository.findAll().get(1);
+        LayoutStatus s = LayoutStatus.DONE;
         page.setLayoutStatus(s);
         page.setDone(true);
 
