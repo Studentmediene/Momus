@@ -18,13 +18,13 @@
 
 angular.module('momusApp.resources')
     .factory('Article', ($resource, $http) => {
-        const Article = $resource('/api/article/:id/:resource',
+        const Article = $resource('/api/articles/:id/:resource',
             {
                 id: '@id'
             },
             {
                 revisions: { method: 'GET', params: {resource: 'revisions'}, isArray: true },
-                compareRevisions: { method: 'GET', url: '/api/article/:id/revisions/:rev1/:rev2', isArray: true },
+                compareRevisions: { method: 'GET', url: '/api/articles/:id/revisions/:rev1/:rev2', isArray: true },
                 multiple: { method: 'GET', params: {id: 'multiple'}, isArray: true },                
                 search: { method: 'POST', params: {id: 'search'}, isArray: true },
                 updateMetadata: { method: 'PATCH', params: {resource: 'metadata'} },
@@ -40,6 +40,6 @@ angular.module('momusApp.resources')
             });
         // Since content is only a string, $resource does not now how to handle it
         // So use raw http call instead
-        Article.content = id => $http.get('/api/article/' + id + '/content');
+        Article.content = id => $http.get('/api/articles/' + id + '/content');
         return Article;
     });

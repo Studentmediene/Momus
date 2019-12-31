@@ -18,7 +18,7 @@
 
 angular.module('momusApp.resources')
     .factory('Advert', $resource => {
-      return $resource('/api/advert/:id/:resource',
+      return $resource('/api/adverts/:id/:resource',
         {
           id: '@id'
         },
