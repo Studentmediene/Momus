@@ -16,7 +16,7 @@
 
 package no.dusken.momus.article.gdocs;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -139,7 +139,6 @@ public class GoogleDocsMarkupConverter {
             StringBuffer sb = new StringBuffer();
             while(spanMatcherItalics.find()) {
                 boolean italicbold = false;
-                int boldStart = 0;
                 for(Pattern boldClass : boldClasses) {
                     Matcher spanMatcherBold = boldClass.matcher(spanMatcherItalics.group());
                     if(spanMatcherBold.matches()) {

@@ -62,7 +62,7 @@
         <commons-dbcp2.version>2.6.0</commons-dbcp2.version>
         <liquibase.version>3.7.0</liquibase.version>
         <google-drive.version>v2-rev277-1.22.0</google-drive.version>
-        <commons-lang3.version>3.9</commons-lang3.version>
+        <commons-text.version>1.8</commons-text.version>
 
         <javax-servlet.version>3.1.0</javax-servlet.version>
         <jetty.version>9.4.7.v20180619</jetty.version>
@@ -294,8 +294,8 @@
 
         <dependency>
             <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
+            <artifactId>commons-text</artifactId>
+            <version>${commons-text.version}</version>
         </dependency>
 
         <!-- Only for the redirect in index.jsp ... -->
