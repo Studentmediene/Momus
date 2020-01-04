@@ -58,7 +58,7 @@ function bootstrap() {
 async function loadInitData(): Promise<Environment> {
     const injector = angular.injector(['ng']);
     const $http = injector.get('$http');
-    const loggedInUser = (await $http.get<Person>('/api/person/me')).data;
+    const loggedInUser = (await $http.get<Person>('/api/people/me')).data;
     const env = (await $http.get<Env>('/api/static-values/env')).data;
     return new Promise<Environment>((resolve) => resolve({loggedInUser, env}));
 }

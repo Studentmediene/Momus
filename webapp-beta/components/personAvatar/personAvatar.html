@@ -1,5 +1,5 @@
 <div ng-style="{width: vm.sizePx, height: vm.sizePx}">
-    <img id="user-image" ng-src="/api/person/{{vm.user.id}}/photo" width="{{vm.size}}" ng-style="{'border-radius': vm.borderRadius}">
+    <img id="user-image" ng-src="/api/people/{{vm.user.id}}/photo" width="{{vm.size}}" ng-style="{'border-radius': vm.borderRadius}">
     <div ng-if="vm.showSvg" ng-style="{width: vm.sizePx, height: vm.sizePx}">
         <svg ng-attr-width="{{vm.sizePx}}" ng-attr-height="{{vm.sizePx}}">
             <circle

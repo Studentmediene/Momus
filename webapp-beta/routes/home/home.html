@@ -29,33 +29,15 @@
                 <article-table articles="vm.lastViewedArticles"></article-table>
             </div>
         </panel>
-        <panel icon="'fas fa-star'" header="'Siste artikler fra din favorittredaksjon'" no-body-padding="true" type="'new'">
-            <extra-header-content>
-                <ui-select
-                    theme="select2"
-                    ng-model="vm.user.favouritesection"
-                    search-enabled="false"
-                    style="width: 300px">
-                    <ui-select-match placeholder="Favorittredaksjon">{{$select.selected.name}}</ui-select-match>
-                    <ui-select-choices repeat="item in vm.sections track by item.id">
-                        <span ng-bind-html="item.name"></span>
-                    </ui-select-choices>
-                </ui-select>
-            </extra-header-content>
+        <panel ng-show="vm.user.section != null" icon="'fas fa-star'" header="'Siste artikler fra din redaksjon'" no-body-padding="true" type="'new'">
             <div
-                ng-show="vm.user.favouritesection == null"
-                class="uk-text-center uk-padding-small"
-            >
-                Sett en favorittredaksjon for å se siste artikler derfra
-            </div>
-            <div
-                ng-show="!vm.favouritesectionArticles.$resolved"
+                ng-show="!vm.sectionArticles.$resolved"
                 class="uk-text-center uk-padding-small"
             >
                 <loading-spinner></loading-spinner>
             </div>
-            <div ng-show="vm.user.favouritesection != null && vm.favouritesectionArticles.$resolved">
-                <article-table articles="vm.favouritesectionArticles"></article-table>
+            <div ng-show="vm.sectionArticles.$resolved">
+                <article-table articles="vm.sectionArticles"></article-table>
             </div>
         </panel>
     </div>

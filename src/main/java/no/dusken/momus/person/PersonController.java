@@ -29,7 +29,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +42,7 @@ import no.dusken.momus.person.authorization.AdminAuthorization;
 
 @RestController
 @Transactional
-@RequestMapping("/api/person")
+@RequestMapping("/api/people")
 public class PersonController {
     private final PersonService personService;
     private final UserDetailsService userDetailsService;
@@ -54,13 +53,13 @@ public class PersonController {
     }
 
     /**
-     * Gets all active persons. In addition, if article ids are supplied, will
+     * Gets all active people. In addition, if article ids are supplied, will
      * return all contributors on those even if they are inactive
      */
     @GetMapping
-    public Set<Person> getActivePersons(@RequestParam(
+    public Set<Person> getActivePeople(@RequestParam(
             value="articleIds", required = false, defaultValue = "") List<Long> articleIds) {
-        return personService.getActivePersonsAndArticleContributors(articleIds);
+        return personService.getActivePeopleAndArticleContributors(articleIds);
     }
 
     @GetMapping("/{id}")
@@ -90,20 +89,15 @@ public class PersonController {
         getPersonPhoto(userDetailsService.getLoggedInPerson().getId(), response);
     }
 
-    @PatchMapping("/me/favouritesection")
-    public Person updateFavouritesection(@RequestParam Long section) {
-        return personService.updateFavouritesection(userDetailsService.getLoggedInPerson(), section);
-    }
-
     @GetMapping("/loggedin/all")
     @AdminAuthorization
-    public Set<Person> getAllActivePersons() {
-        return personService.getAllLoggedInPersons();
+    public Set<Person> getAllActivePeople() {
+        return personService.getAllLoggedInPeople();
     }
 
     @GetMapping("/loggedin")
-    public Set<Person> getActivePersonsAtState(@RequestParam String state) {
-        return personService.getLoggedInPersonsAtState(state);
+    public Set<Person> getActivePeopleAtState(@RequestParam String state) {
+        return personService.getLoggedInPeopleAtState(state);
     }
 
     @PutMapping("/sessions/{sessid}")

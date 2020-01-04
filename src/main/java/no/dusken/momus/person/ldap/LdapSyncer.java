@@ -21,7 +21,6 @@ import no.dusken.momus.person.*;
 import no.dusken.momus.person.ldap.PersonMapper.Status;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.ldap.control.PagedResultsDirContextProcessor;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -41,23 +40,15 @@ public class LdapSyncer {
 
     private final LdapTemplate ldapTemplate;
 
-    private final PersonRepository personRepository;
+    private final PersonMapper personMapper;
 
-    private final AvatarRepository avatarRepository;
-
-    private final Environment env;
-
-    public LdapSyncer (LdapTemplate ldapTemplate, PersonRepository personRepository, AvatarRepository avatarRepository, Environment env) {
+    public LdapSyncer(LdapTemplate ldapTemplate, PersonMapper personMapper) {
         this.ldapTemplate = ldapTemplate;
-        this.personRepository = personRepository;
-        this.avatarRepository = avatarRepository;
-        this.env = env;
+        this.personMapper = personMapper;
     }
 
     @Value("${ldap.syncEnabled}")
     private boolean enabled;
-
-    private List<GroupRole> groupToRole = new ArrayList<>();
 
     /**
      * Will pull data from LDAP and update our local copy
@@ -82,7 +73,6 @@ public class LdapSyncer {
 
     @PostConstruct
     public void startUp(){
-        groupToRole = GroupRole.getGroupRoleMapping(env);
         sync();
     }
 
@@ -112,12 +102,10 @@ public class LdapSyncer {
         SearchControls ctrl = new SearchControls();
         ctrl.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-        PersonMapper personMapper = new PersonMapper(personRepository, avatarRepository, active, groupToRole);
-
         List<Person> persons = new ArrayList<>();
 
         do{
-            List<Person> result = ldapTemplate.search(base, USER_FILTER, ctrl, personMapper, processor);
+            List<Person> result = ldapTemplate.search(base, USER_FILTER, ctrl, personMapper.createMapper(active), processor);
             persons.addAll(result);
             processor = new PagedResultsDirContextProcessor(PAGE_SIZE, processor.getCookie());
         }while (processor.getCookie().getCookie() != null);

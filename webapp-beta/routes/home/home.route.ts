@@ -33,14 +33,14 @@ const routeModule = angular
             resolve: {
                 myArticles: (articleResource: ArticleResource, loggedInUser: Person) =>
                     articleResource.lastArticlesForPerson({ userId: loggedInUser.id }),
-                favouritesectionArticles: (articleResource: ArticleResource, loggedInUser: Person) => {
-                    if (loggedInUser.favouritesection == null) {
+                sectionArticles: (articleResource: ArticleResource, loggedInUser: Person) => {
+                    if (loggedInUser.section == null) {
                         return emptyArrayResponse();
                     }
                     const params = new ArticleSearchParams();
                     params.page_number = 1;
                     params.page_size = 9;
-                    params.section = loggedInUser.favouritesection;
+                    params.section = loggedInUser.section;
                     return articleResource.search({}, params.stringify());
                 },
                 lastViewedArticles: (articleResource: ArticleResource, cookieService: CookieService) => {

@@ -28,7 +28,7 @@ angular.module('momusApp.controllers')
         loggedInPerson,
         myArticles,
         recentArticles,
-        favouriteSectionArticles,
+        sectionArticles,
         sections,
         reviewStatusCounts,
         layoutStatusCounts,
@@ -41,7 +41,7 @@ angular.module('momusApp.controllers')
         vm.tip = TipAndNewsService.getRandomTip();
         vm.myArticles = myArticles;
         vm.recentArticles = recentArticles;
-        vm.favouriteSectionArticles = favouriteSectionArticles;
+        vm.sectionArticles = sectionArticles;
         vm.sections = sections;
         vm.publication = activePublication;
         vm.noPublication = activePublication.id == null;
@@ -57,21 +57,11 @@ angular.module('momusApp.controllers')
         vm.currentPage = 1;
 
         vm.updateRandomTip = () => {vm.tip = TipAndNewsService.getRandomTip()};
-        vm.updateFavouriteSection = updateFavouriteSection;
         vm.countTotals = countTotals;
         vm.clickArticleStatus = clickArticleStatus;
         vm.clickReviewStatus = clickReviewStatus;
         vm.clickLayoutStatus = clickLayoutStatus;
         vm.useBeta = useBeta;
-
-        function updateFavouriteSection() {
-            Person.updateFavouritesection({section: vm.user.favouritesection.id});
-            vm.favouriteSectionArticles = Article.search({}, {
-                section: vm.user.favouritesection.id,
-                page_number: 0,
-                page_size: 9,
-            });
-        }
 
         function getStatusArrays(counts, statuses){
             const statusObj = {statuses: statuses, labels: [], colors: [], counts: []};

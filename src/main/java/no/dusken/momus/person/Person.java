@@ -41,6 +41,10 @@ public class Person implements UserDetails {
     @Id
     private Long id;
 
+    @Column(columnDefinition = "BINARY(16)")
+    @Type(type = "uuid-binary")
+    private UUID guid;
+
     private String username;
 
     private String name;
@@ -50,12 +54,8 @@ public class Person implements UserDetails {
 
     private boolean active;
 
-    @Column(columnDefinition = "BINARY(16)")
-    @Type(type = "uuid-binary")
-    private UUID guid;
-
     @ManyToOne(fetch = FetchType.EAGER)
-    private Section favouritesection;
+    private Section section;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
