@@ -39,7 +39,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     List<Article> findByGoogleDriveIdIn(Iterable<String> ids);
 
-    int countByStatusIdAndPublicationId(Long articleStatus, Long id);
+    int countByStatusAndPublicationId(ArticleStatus articleStatus, Long id);
 
-    int countByReviewIdAndPublicationId(Long articleStatus, Long id);
+    int countByReviewAndPublicationId(ArticleReviewStatus reviewStatus, Long id);
 }

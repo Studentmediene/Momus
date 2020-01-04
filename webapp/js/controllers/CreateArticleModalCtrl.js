@@ -18,7 +18,7 @@
 
 angular.module('momusApp.controllers')
     .controller('CreateArticleModalCtrl', function($scope, $uibModalInstance, Publication, Article, ArticleType, Section, Person, $q, pubId){
-        $scope.article = {
+        $scope.article = new Article({
             name: "",
             journalists: null,
             photographers: null,
@@ -33,7 +33,7 @@ angular.module('momusApp.controllers')
             external_author: '',
             external_photographer: '',
             quote_check_status: false
-        };
+        });
 
         $q.all([
             Publication.query().$promise,
@@ -45,7 +45,7 @@ angular.module('momusApp.controllers')
                 active;
         });
 
-        $scope.sections = Section.sections({}, () => $scope.article.section = $scope.sections[0]);
+        $scope.sections = Section.query({}, () => $scope.article.section = $scope.sections[0]);
         $scope.types = ArticleType.query();
         $scope.persons = Person.query();
 
@@ -54,7 +54,7 @@ angular.module('momusApp.controllers')
 
         $scope.createArticle = function () {
             $scope.creating = true;
-            Article.save({}, $scope.article, article => {
+            $scope.article.$save({}, article => {
                 $scope.creating = false;
                 $uibModalInstance.close(article.id);
             });

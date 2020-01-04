@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import no.dusken.momus.common.AbstractServiceTest;
 import no.dusken.momus.article.Article;
-import no.dusken.momus.article.ArticleReview;
+import no.dusken.momus.article.ArticleReviewStatus;
 import no.dusken.momus.article.ArticleStatus;
 import no.dusken.momus.article.revision.ArticleRevision;
 import no.dusken.momus.article.revision.ArticleRevisionRepository;
@@ -56,11 +56,9 @@ public class ArticleRevisionServiceTest extends AbstractServiceTest {
     private Publication publication1;
     private Publication publication2;
 
-    private ArticleStatus articleStatus1;
-    private ArticleStatus articleStatus2;
+    private ArticleStatus articleStatus;
 
-    private ArticleReview articleReview1;
-    private ArticleReview articleReview2;
+    private ArticleReviewStatus articleReviewStatus;
 
     private ArticleType articleType1;
     private ArticleType articleType2;
@@ -80,15 +78,9 @@ public class ArticleRevisionServiceTest extends AbstractServiceTest {
                 .build();
         publication2.setId(1L);
 
-        articleStatus1 = ArticleStatus.builder().name("Skrives").build();
-        articleStatus1.setId(0L);
-        articleStatus2 = ArticleStatus.builder().name("Til korrektur").build();
-        articleStatus2.setId(1L);
+        articleStatus = ArticleStatus.UNKNOWN;
 
-        articleReview1 = ArticleReview.builder().name("Ukjent").build();
-        articleReview1.setId(0L);
-        articleReview2 = ArticleReview.builder().name("Ferdig").build();
-        articleReview2.setId(1L);
+        articleReviewStatus = ArticleReviewStatus.PRINTED;
 
         articleType1 = ArticleType.builder().name("Anmeldelse").build();
         articleType1.setId(0L);
@@ -105,9 +97,9 @@ public class ArticleRevisionServiceTest extends AbstractServiceTest {
                 .content("Testinnhold for artikkel 1 yay")
                 .publication(publication1)
                 .section(section1)
-                .status(articleStatus1)
+                .status(articleStatus)
                 .type(articleType1)
-                .review(articleReview1)
+                .review(articleReviewStatus)
                 .archived(false)
                 .build();
         article1.setId(1L);
@@ -117,9 +109,9 @@ public class ArticleRevisionServiceTest extends AbstractServiceTest {
                 .content("Lorem ipsum")
                 .publication(publication1)
                 .section(section1)
-                .status(articleStatus1)
+                .status(articleStatus)
                 .type(articleType1)
-                .review(articleReview1)
+                .review(articleReviewStatus)
                 .archived(false)
                 .build();
         article2.setId(2L);

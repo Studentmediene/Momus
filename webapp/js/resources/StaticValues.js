@@ -22,7 +22,9 @@ angular.module('momusApp.resources')
         {},
         {
             environment: { method: 'GET' , params: {resource: 'env'}, cache: true },
-            roleNames: { method: 'GET' , params: {resource: 'role-names'}, cache: true },
-            roles: { method: 'GET' , params: {resource: 'roles'}, cache: true, isArray: true },
+            role: { method: 'GET' , params: {resource: 'role'}, cache: true },
+            articleStatus: { method: 'GET' , params: {resource: 'article-status'}, cache: true },
+            articleReviewStatus: { method: 'GET' , params: {resource: 'article-review-status'}, cache: true },
+            layoutStatus: { method: 'GET' , params: {resource: 'layout-status'}, cache: true },
         });
     });

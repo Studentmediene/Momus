@@ -2,12 +2,16 @@ package no.dusken.momus.person.authorization;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import no.dusken.momus.common.StaticValue;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+@AllArgsConstructor
+@Getter
 public enum Role implements Serializable, GrantedAuthority {
     // The enums are sorted in such a way that the most important roles are higher up,
     // in the way that if a user has sveral roles, it's the role that appears first
@@ -43,24 +47,19 @@ public enum Role implements Serializable, GrantedAuthority {
     ROLE_USER("Bruker"),
     ;
 
-    @Getter
-    private final String prettyName;
-
-    Role(String prettyName) {
-        this.prettyName = prettyName;
-    }
+    private final String name;
 
     @Override
     public String getAuthority() {
         return name();
     }
 
-    public static Map<String, String> roleNameMap() {
-        Map<String, String> roleNames = new HashMap<>();
+    public static Map<String, StaticValue> map() {
+        Map<String, StaticValue> roleMap = new LinkedHashMap<>();
         for(Role r : Role.values()) {
-            roleNames.put(r.toString(), r.getPrettyName());
+            roleMap.put(r.toString(), new StaticValue(r.name, null));
         }
 
-        return roleNames;
+        return roleMap;
     }
 }

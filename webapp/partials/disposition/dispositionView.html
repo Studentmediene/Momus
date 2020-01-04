@@ -200,28 +200,26 @@
                                 </ul>
                             </div>
                             <!--Status-->
-                            <div
-                                class="d-table-cell"
-                                ng-style="vm.applyColumnWidth('status', {'background': article.status.color})"
-                            >
-                                <select class="d-dropdown"
-                                        ng-model="article.status"
-                                        ng-change="vm.updateArticle(article)"
-                                        ng-options="s.name for s in vm.articleStatuses track by s.id"
-                                        ng-disabled="vm.loading">
-                                </select>
+                            <div static-value group="articleStatus" key="article.status" class="d-table-cell" ng-style="vm.columnWidths.status" with-background>
+                                <static-value-select
+                                    class="d-dropdown"
+                                    disable-style
+                                    required
+                                    ng-model="article.status"
+                                    ng-change="vm.updateArticle(article)"
+                                    disabled="vm.loading">
+                                </static-value-select>
                             </div>
                             <!--Review-->
-                            <div
-                                class="d-table-cell"
-                                ng-style="vm.applyColumnWidth('review', {'background':article.review.color})"
-                            >
-                                <select class="d-dropdown"
-                                        ng-model="article.review"
-                                        ng-change="vm.updateArticle(article)"
-                                        ng-options="s.name for s in vm.reviewStatuses track by s.id"
-                                        ng-disabled="vm.loading">
-                                </select>
+                            <div static-value group="articleReviewStatus" key="article.review" class="d-table-cell" ng-style="vm.columnWidths.review" with-background>
+                                <static-value-select
+                                    class="d-dropdown"
+                                    disable-style
+                                    required
+                                    ng-model="article.review"
+                                    ng-change="vm.updateArticle(article)"
+                                    disabled="vm.loading">
+                                </static-value-select>
                             </div>
                             <!--Photostatus-->
                             <!--View-->
@@ -301,16 +299,15 @@
                     </div>
                 </div>
                 <!--Layout status-->
-                <div
-                    class="d-table-cell"
-                    ng-style="vm.applyColumnWidth('layout', {'background': page.layout_status.color})"
-                >
-                    <select class="d-dropdown"
-                            ng-model="page.layout_status"
-                            ng-change="vm.updatePageMeta(page)"
-                            ng-options="l.name for l in vm.layoutStatuses track by l.id"
-                            ng-disabled="vm.loading">
-                    </select>
+                <div static-value group="layoutStatus" key="page.layout_status" class="d-table-cell" ng-style="vm.columnWidths.layout" with-background>
+                    <static-value-select
+                        class="d-dropdown"
+                        disable-style
+                        required
+                        ng-model="page.layout_status"
+                        ng-change="vm.updatePageMeta(page)"
+                        disabled="vm.loading">
+                    </static-value-select>
                 </div>
                 <!--Done-->
                 <div class="d-table-cell button" ng-style="vm.columnWidths.done">

@@ -111,9 +111,11 @@ $pageAdBackground: #f6f6f6;
 }
 
 .d-dropdown {
-    background: rgba(255,255,255,0.5);
-    outline: 0;
-    border: $pageBorder;
+    select {
+        background: rgba(255,255,255,0.5);
+        outline: 0;
+        border: $pageBorder;
+    }
 }
 
 .ui-sortable-helper {

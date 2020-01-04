@@ -16,25 +16,34 @@
 
 package no.dusken.momus.publication;
 
-import javax.persistence.Entity;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import no.dusken.momus.common.AbstractEntity;
+import lombok.Getter;
+import no.dusken.momus.common.StaticValue;
 
-@Entity
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {}, callSuper = true)
-@ToString(of = {"name"}, callSuper = true)
-@Builder(toBuilder = true)
-public class LayoutStatus extends AbstractEntity {
+@Getter
+public enum LayoutStatus {
+    UNKNOWN("Ukjent", "#ffffff"),
+    PLANNED("Planlagt", "#eeeeee"),
+    BREKKING("Brekkes", "#ff9999"),
+    CRISIS("Krise", "#eeeeee"),
+    DONE("Ferdig", "#9999ff");
+    
     private String name;
-
     private String color;
+
+    public static Map<String, StaticValue> map() {
+        Map<String, StaticValue> statusNames = new LinkedHashMap<>();
+        for(LayoutStatus r : LayoutStatus.values()) {
+            Map<String, Object> extra = new HashMap<>();
+            extra.put("color", r.color);
+            statusNames.put(r.toString(), new StaticValue(r.name, extra));
+        }
+
+        return statusNames;
+    }
 }

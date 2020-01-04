@@ -25,7 +25,6 @@ angular.module('momusApp.controllers')
         NewsItem,
         news,
         Section,
-        StaticValues
     ) {
         const vm = this;
 
@@ -37,10 +36,6 @@ angular.module('momusApp.controllers')
         vm.currentPage = 1;
 
         vm.sections = Section.query();
-        StaticValues.roleNames().$promise.then(roleNames => {
-            vm.roleNames = roleNames;
-            vm.roles = Object.keys(roleNames).filter(k => !k.startsWith('$'));
-        });
 
         vm.editSections = editSections;
         vm.saveSections = saveSections;

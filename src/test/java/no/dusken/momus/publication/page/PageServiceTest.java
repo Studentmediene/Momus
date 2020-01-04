@@ -12,7 +12,6 @@ import no.dusken.momus.article.ArticleService;
 import no.dusken.momus.common.AbstractServiceTest;
 import no.dusken.momus.messaging.Action;
 import no.dusken.momus.publication.LayoutStatus;
-import no.dusken.momus.publication.LayoutStatusRepository;
 import no.dusken.momus.publication.Publication;
 
 import java.util.ArrayList;
@@ -33,9 +32,6 @@ public class PageServiceTest extends AbstractServiceTest {
     private PageRepository pageRepository;
 
     @Mock
-    private LayoutStatusRepository layoutStatusRepository;
-
-    @Mock
     private ArticleService articleService;
 
     @Mock
@@ -48,7 +44,6 @@ public class PageServiceTest extends AbstractServiceTest {
         publication = Publication.builder().name("D1").build();
         publication.setId(0L);
 
-        when(layoutStatusRepository.findByName(anyString())).thenReturn(new LayoutStatus());
         when(pageRepository.getPageOrderByPublicationId(anyLong())).thenReturn(new ArrayList<>());
     }
 
@@ -72,7 +67,7 @@ public class PageServiceTest extends AbstractServiceTest {
 
     @Test
     public void updateMetadata() {
-        LayoutStatus l = new LayoutStatus();
+        LayoutStatus l = LayoutStatus.PLANNED;
         Page existing = new Page();
         existing.setId(0L);
 

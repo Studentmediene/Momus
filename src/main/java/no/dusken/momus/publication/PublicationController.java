@@ -28,14 +28,9 @@ import java.util.*;
 @RequestMapping("/api/publications")
 public class PublicationController {
     private final PublicationService publicationService;
-    private final LayoutStatusRepository layoutStatusRepository;
 
-    public PublicationController(
-        PublicationService publicationService,
-        LayoutStatusRepository layoutStatusRepository
-    ) {
+    public PublicationController(PublicationService publicationService) {
         this.publicationService = publicationService;
-        this.layoutStatusRepository = layoutStatusRepository;
     }
 
     @GetMapping
@@ -79,10 +74,5 @@ public class PublicationController {
         outStream.print(colophon);
         outStream.flush();
         outStream.close();
-    }
-
-    @GetMapping("/layoutstatuses")
-    public List<LayoutStatus> getLayoutStatuses(){
-        return layoutStatusRepository.findAll();
     }
 }

@@ -53,8 +53,6 @@ import no.dusken.momus.person.PersonRepository;
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final ArticleRevisionService articleRevisionService;
-    private final ArticleStatusRepository articleStatusRepository;
-    private final ArticleReviewRepository articleReviewRepository;
     private final PersonRepository personRepository;
     private final ArticleQueryBuilder articleQueryBuilder;
     private final GoogleDocsService googleDocsService;
@@ -68,8 +66,6 @@ public class ArticleService {
     private boolean driveEnabled;
 
     public ArticleService(ArticleRepository articleRepository, ArticleRevisionService articleRevisionService,
-        ArticleStatusRepository articleStatusRepository,
-        ArticleReviewRepository articleReviewRepository,
         PersonRepository personRepository,
         ArticleQueryBuilder articleQueryBuilder,
         GoogleDocsService googleDocsService,
@@ -78,8 +74,6 @@ public class ArticleService {
     ) {
         this.articleRepository = articleRepository;
         this.articleRevisionService = articleRevisionService;
-        this.articleStatusRepository = articleStatusRepository;
-        this.articleReviewRepository = articleReviewRepository;
         this.personRepository = personRepository;
         this.articleQueryBuilder = articleQueryBuilder;
         this.googleDocsService = googleDocsService;
@@ -123,8 +117,8 @@ public class ArticleService {
             article.setGoogleDriveId(document.getId());
         }
 
-        article.setStatus(articleStatusRepository.findById(2L).orElse(null));
-        article.setReview(articleReviewRepository.findById(1L).orElse(null));
+        article.setStatus(ArticleStatus.UNKNOWN);
+        article.setReview(ArticleReviewStatus.SHOULD_BE_REVIEWED);
 
         Article newArticle = articleRepository.saveAndFlush(article);
         log.info("Article with id {} created with data: {}", newArticle.getId(), newArticle);

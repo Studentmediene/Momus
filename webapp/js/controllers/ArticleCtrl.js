@@ -50,8 +50,6 @@ angular.module('momusApp.controllers')
         // Get data
         vm.persons = Person.query({articleIds: [articleId]});
         vm.sections = Section.query();
-        vm.statuses = Article.statuses();
-        vm.reviews = Article.reviewStatuses();
         vm.types = ArticleType.query();
         vm.article = Article.get({id: articleId}, article => {
             TitleChanger.setTitle(article.name);

@@ -10,7 +10,6 @@ import no.dusken.momus.common.AbstractControllerTest;
 import no.dusken.momus.article.Article;
 import no.dusken.momus.article.ArticleService;
 import no.dusken.momus.article.ArticleStatus;
-import no.dusken.momus.article.ArticleStatusRepository;
 import no.dusken.momus.article.revision.ArticleRevision;
 import no.dusken.momus.article.revision.ArticleRevisionRepository;
 
@@ -21,9 +20,6 @@ public class ArticleRevisionControllerTest extends AbstractControllerTest {
 
     @Autowired
     private ArticleRevisionRepository articleRevisionRepository;
-
-    @Autowired
-    private ArticleStatusRepository articleStatusRepository;
 
     @Test
     public void testGetArticleRevisions() throws Exception {
@@ -39,9 +35,6 @@ public class ArticleRevisionControllerTest extends AbstractControllerTest {
 
     @Test
     public void testGetArticleRevisionComparison() throws Exception {
-        ArticleStatus status1 = articleStatusRepository.saveAndFlush(ArticleStatus.builder().name("Ukjent").build());
-        ArticleStatus status2 = articleStatusRepository.saveAndFlush(ArticleStatus.builder().name("Planlagt").build());
-
         Article article = Article.builder()
                 .name("Artikkel")
                 .content("Innhold")
@@ -50,14 +43,14 @@ public class ArticleRevisionControllerTest extends AbstractControllerTest {
                 .build();
         article = articleService.createArticle(article);
         
-        article.setStatus(status1);
+        article.setStatus(ArticleStatus.DESKING);
         articleService.updateArticleStatus(article.getId(), article);
 
         article = articleService.updateArticleContent(article.getId(), "Nytt innhold");
 
         Article updatedArticle = Article.builder()
                 .name("Artikkel")
-                .status(status2)
+                .status(ArticleStatus.PUBLISHED)
                 .build();
         updatedArticle.setId(article.getId());
         articleService.updateArticleStatus(article.getId(), updatedArticle);

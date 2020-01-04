@@ -35,14 +35,13 @@ angular.module('momusApp.controllers')
         pageOrder,
         articles,
         adverts,
-        articleStatuses,
-        reviewStatuses,
-        layoutStatuses,
         toIdLookup,
         nodeHeight,
         session
     ){
         const vm = this;
+
+        vm.loading = false;
 
         vm.maxNewPages = 100;
 
@@ -52,9 +51,6 @@ angular.module('momusApp.controllers')
         vm.articles = articles;
         vm.adverts = adverts;
         vm.pageOrder = pageOrder;
-        vm.articleStatuses = articleStatuses;
-        vm.reviewStatuses = reviewStatuses;
-        vm.layoutStatuses = layoutStatuses;
 
         pages.$promise.then(() => {
             vm.pagesLookup = toIdLookup(pages);
@@ -109,14 +105,15 @@ angular.module('momusApp.controllers')
             },
             article: data => {
                 const {entity, action} = data;
+                const article = new Article(entity);
                 switch(action) {
                     case 'CREATE':
-                        articles.push(entity);
-                        vm.articlesLookup[entity.id] = entity;
+                        articles.push(article);
+                        vm.articlesLookup[article.id] = article;
                         break;
                     case 'UPDATE':
-                        articles.splice(articles.findIndex(a => a.id === entity.id), 1, entity);
-                        vm.articlesLookup[entity.id] = entity;
+                        articles.splice(articles.findIndex(a => a.id === article.id), 1, article);
+                        vm.articlesLookup[article.id] = article;
                         break;
                 }
             },
@@ -218,7 +215,7 @@ angular.module('momusApp.controllers')
         }
 
         function updateArticle(article) {
-            Article.updateStatus({}, article);
+            article.$updateStatus();
         }
 
         function createAdvert(page) {

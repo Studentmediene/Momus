@@ -56,14 +56,14 @@ public class Article extends AbstractEntity implements Messageable {
     @ManyToOne
     private Section section;
 
-    @ManyToOne
+    @Enumerated(EnumType.STRING)
     private ArticleStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private ArticleReviewStatus review;
 
     @ManyToOne
     private ArticleType type;
-
-    @ManyToOne
-    private ArticleReview review;
 
     @ManyToOne
     @JsonIgnoreProperties(value = {"articles", "pages"})

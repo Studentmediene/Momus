@@ -22,6 +22,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import no.dusken.momus.publication.LayoutStatus;
+
 import java.util.List;
 
 @Repository
@@ -40,5 +42,5 @@ public interface PageRepository extends JpaRepository<Page, Long> {
 
     void deleteByPublicationId(Long id);
 
-    int countByLayoutStatusIdAndPublicationId(Long status, Long id);
+    int countByLayoutStatusAndPublicationId(LayoutStatus status, Long id);
 }

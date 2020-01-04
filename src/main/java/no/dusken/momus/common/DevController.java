@@ -40,10 +40,8 @@ import no.dusken.momus.advert.Advert;
 import no.dusken.momus.advert.AdvertRepository;
 import no.dusken.momus.article.Article;
 import no.dusken.momus.article.ArticleRepository;
-import no.dusken.momus.article.ArticleReview;
-import no.dusken.momus.article.ArticleReviewRepository;
+import no.dusken.momus.article.ArticleReviewStatus;
 import no.dusken.momus.article.ArticleStatus;
-import no.dusken.momus.article.ArticleStatusRepository;
 import no.dusken.momus.article.type.ArticleType;
 import no.dusken.momus.article.type.ArticleTypeRepository;
 import no.dusken.momus.common.config.MockToken;
@@ -78,12 +76,6 @@ public class DevController {
     private ArticleTypeRepository articleTypeRepository;
 
     @Autowired
-    private ArticleStatusRepository articleStatusRepository;
-
-    @Autowired
-    private ArticleReviewRepository articleReviewRepository;
-
-    @Autowired
     private AdvertRepository advertRepository;
 
     @Autowired
@@ -105,10 +97,8 @@ public class DevController {
     public String generatePublicationsAndArticles() {
         Random random = new Random();
 
-        List<ArticleStatus> articleStatuses = articleStatusRepository.findAll();
         List<ArticleType> articleTypes = articleTypeRepository.findAll();
         List<Section> sections = sectionRepository.findAll();
-        List<ArticleReview> articleReviews = articleReviewRepository.findAll();
         List<Person> people = new ArrayList<>(personRepository.findByActiveTrue());
 
         Publication p1 = new Publication();
@@ -123,10 +113,10 @@ public class DevController {
 
         Article a1 = new Article();
         a1.setName("Lorem Ipsum");
-        a1.setStatus(articleStatuses.get(random.nextInt(articleStatuses.size())));
+        a1.setStatus(ArticleStatus.UNKNOWN);
         a1.setType(articleTypes.get(random.nextInt(articleTypes.size())));
         a1.setSection(sections.get(random.nextInt(sections.size())));
-        a1.setReview(articleReviews.get(random.nextInt(articleReviews.size())));
+        a1.setReview(ArticleReviewStatus.SHOULD_BE_REVIEWED);
         a1.setJournalists(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a1.setPhotographers(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a1.setGraphics(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
@@ -137,10 +127,10 @@ public class DevController {
 
         Article a2 = new Article();
         a2.setName("Bacon Ipsum");
-        a2.setStatus(articleStatuses.get(random.nextInt(articleStatuses.size())));
+        a2.setStatus(ArticleStatus.UNKNOWN);
         a2.setType(articleTypes.get(random.nextInt(articleTypes.size())));
         a2.setSection(sections.get(random.nextInt(sections.size())));
-        a2.setReview(articleReviews.get(random.nextInt(articleReviews.size())));
+        a2.setReview(ArticleReviewStatus.SHOULD_BE_REVIEWED);
         a2.setJournalists(new HashSet<>(
                 Arrays.asList(
                         people.get(random.nextInt(people.size())),
@@ -156,10 +146,10 @@ public class DevController {
 
         Article a3 = new Article();
         a3.setName("Spit");
-        a3.setStatus(articleStatuses.get(random.nextInt(articleStatuses.size())));
+        a3.setStatus(ArticleStatus.UNKNOWN);
         a3.setType(articleTypes.get(random.nextInt(articleTypes.size())));
         a3.setSection(sectionRepository.findByName("Spit"));
-        a3.setReview(articleReviews.get(random.nextInt(articleReviews.size())));
+        a3.setReview(ArticleReviewStatus.SHOULD_NOT_BE_REVIEWED);
         a3.setJournalists(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a3.setGraphics(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a3.setUseIllustration(true);
@@ -170,10 +160,10 @@ public class DevController {
 
         Article a5 = new Article();
         a5.setName("Tinder har dødd");
-        a5.setStatus(articleStatuses.get(0));
+        a5.setStatus(ArticleStatus.UNKNOWN);
         a5.setType(articleTypes.get(random.nextInt(articleTypes.size())));
         a5.setSection(sections.get(random.nextInt(sections.size())));
-        a5.setReview(articleReviews.get(random.nextInt(articleReviews.size())));
+        a5.setReview(ArticleReviewStatus.SHOULD_BE_REVIEWED);
         a5.setJournalists(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a5.setPhotographers(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));
         a5.setGraphics(new HashSet<>(Arrays.asList(people.get(random.nextInt(people.size())))));

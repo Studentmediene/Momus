@@ -854,4 +854,141 @@
         <sql dbms="postgresql">ALTER SEQUENCE articletype_id_seq RESTART WITH 15;</sql>
     </changeSet>
 
+    <changeSet id="50_statuses_as_enum_strings" author="Eivind">
+        <!-- Add new string columns -->
+        <addColumn tableName="article">
+            <column name="status" type="VARCHAR(255)" value="UNKNOWN" />
+            <column name="review" type="VARCHAR(255)" value="SHOULD_BE_REVIEWED" />
+        </addColumn>
+        <addColumn tableName="articlerevision">
+            <column name="status" type="VARCHAR(255)" value="UNKNOWN" />
+        </addColumn>
+
+        <addColumn tableName="page">
+            <column name="layoutstatus" type="VARCHAR(255)" value="UNKNOWN" />
+        </addColumn>
+
+        <!-- Insert correct values -->
+        <!-- Article status -->
+        <update tableName="article">
+            <column name="status" value="UNKNOWN" />
+            <where>status_id=1</where>
+        </update>
+        <update tableName="article">
+            <column name="status" value="PLANNED" />
+            <where>status_id=2</where>
+        </update>
+        <update tableName="article">
+            <column name="status" value="WRITING" />
+            <where>status_id=3</where>
+        </update>
+        <update tableName="article">
+            <column name="status" value="DESKING" />
+            <where>status_id=4</where>
+        </update>
+        <update tableName="article">
+            <column name="status" value="APPROVING" />
+            <where>status_id=5</where>
+        </update>
+        <update tableName="article">
+            <column name="status" value="PUBLISHED" />
+            <where>status_id=6</where>
+        </update>
+        <update tableName="article">
+            <column name="status" value="EDITING" />
+            <where>status_id=7</where>
+        </update>
+
+        <update tableName="articlerevision">
+            <column name="status" value="UNKNOWN" />
+            <where>status_id=1</where>
+        </update>
+        <update tableName="articlerevision">
+            <column name="status" value="PLANNED" />
+            <where>status_id=2</where>
+        </update>
+        <update tableName="articlerevision">
+            <column name="status" value="WRITING" />
+            <where>status_id=3</where>
+        </update>
+        <update tableName="articlerevision">
+            <column name="status" value="DESKING" />
+            <where>status_id=4</where>
+        </update>
+        <update tableName="articlerevision">
+            <column name="status" value="APPROVING" />
+            <where>status_id=5</where>
+        </update>
+        <update tableName="articlerevision">
+            <column name="status" value="PUBLISHED" />
+            <where>status_id=6</where>
+        </update>
+        <update tableName="articlerevision">
+            <column name="status" value="EDITING" />
+            <where>status_id=7</where>
+        </update>
+
+        <!-- Article review status -->
+        <update tableName="article">
+            <column name="review" value="SHOULD_NOT_BE_REVIEWED" />
+            <where>review_id=2</where>
+        </update>
+        <update tableName="article">
+            <column name="review" value="SHOULD_BE_REVIEWED" />
+            <where>review_id=1</where>
+        </update>
+        <update tableName="article">
+            <column name="review" value="PRINTED" />
+            <where>review_id=3</where>
+        </update>
+        <update tableName="article">
+            <column name="review" value="REVIEWED" />
+            <where>review_id=4</where>
+        </update>
+
+        <!-- Layout status -->
+        <update tableName="page">
+            <column name="layoutstatus" value="UNKNOWN" />
+            <where>layoutstatus_id=5</where>
+        </update>
+        <update tableName="page">
+            <column name="layoutstatus" value="PLANNED" />
+            <where>layoutstatus_id=4</where>
+        </update>
+        <update tableName="page">
+            <column name="layoutstatus" value="BREKKING" />
+            <where>layoutstatus_id=2</where>
+        </update>
+        <update tableName="page">
+            <column name="layoutstatus" value="CRISIS" />
+            <where>layoutstatus_id=3</where>
+        </update>
+        <update tableName="page">
+            <column name="layoutstatus" value="DONE" />
+            <where>layoutstatus_id=1</where>
+        </update>
+
+        <!-- Drop old foreign key columns -->
+        <dropForeignKeyConstraint baseTableName="article" constraintName="FK_article_articlestatus" />
+        <dropColumn tableName="article" columnName="status_id" />
+        <dropColumn tableName="article" columnName="review_id" />
+
+        <dropForeignKeyConstraint baseTableName="articlerevision" constraintName="FK_articlerevision_articlestatus" />
+        <dropColumn tableName="articlerevision" columnName="status_id" />
+
+        <dropColumn tableName="page" columnName="layoutstatus_id" />
+
+        <!-- Drop the old tables -->
+        <dropTable cascadeConstraints="true" tableName="articlestatus" />
+        <dropTable cascadeConstraints="true" tableName="articlereview" />
+        <dropTable cascadeConstraints="true" tableName="layoutstatus" />
+    </changeSet>
+
+    <changeSet id="51_remove_unused_tables" author="Eivind">
+        <dropTable cascadeConstraints="true" tableName="note" />
+        <dropTable cascadeConstraints="true" tableName="source" />
+        <dropTable cascadeConstraints="true" tableName="source_sourcetag" />
+        <dropTable cascadeConstraints="true" tableName="sourcetag" />
+    </changeSet> 
+
 </databaseChangeLog>

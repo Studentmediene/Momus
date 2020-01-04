@@ -10,6 +10,7 @@ import './pageAdder';
 import './personWidget';
 import './scrollTrigger';
 import './searchSortButton';
+import './staticValue';
 import './statusChart';
 import './textwrapper';
 import './userAvatar';

@@ -22,7 +22,6 @@ angular.module('momusApp.directives').
             $rootScope,
             MessageModal,
             $window,
-            StaticValues,
         ) {
         return {
             restrict: 'A',
@@ -33,7 +32,6 @@ angular.module('momusApp.directives').
             transclude: true,
             link: (scope, element, attrs) => {
                 scope.isVisible = false;
-                scope.roleNames = StaticValues.roleNames();
 
                 scope.openPW = () => {
                     $rootScope.$broadcast('closePersonWidgets');

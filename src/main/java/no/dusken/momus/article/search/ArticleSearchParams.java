@@ -19,13 +19,24 @@ package no.dusken.momus.article.search;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import no.dusken.momus.article.ArticleReviewStatus;
+import no.dusken.momus.article.ArticleStatus;
+
 import java.util.List;
 
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class ArticleSearchParams {
     private String free;
-    private Long status;
+    private ArticleStatus status;
+    private ArticleReviewStatus review;
     private List<Long> persons;
-    private Long review;
     private Long section;
     private Long publication;
 
@@ -33,77 +44,11 @@ public class ArticleSearchParams {
     private int pageNumber = 1;
     private boolean archived = false;
 
-
-    public ArticleSearchParams() {
-        // empty
-    }
-
-    public ArticleSearchParams(String free, Long status, List<Long> persons, Long review, Long section, Long publication, int pageSize, int pageNumber, boolean archived) {
-        this.free = free;
-        this.status = status;
-        this.persons = persons;
-        this.review = review;
-        this.section = section;
-        this.publication = publication;
-
-        this.pageSize = pageSize;
-        this.pageNumber = pageNumber;
-
-        this.archived = archived;
-    }
-
     /**
      * Jackson, the JSON converter will use this one, so we can limit the size
      */
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize <= 500 ? pageSize : 500;
-    }
-
-    public Long getPublication() {
-        return publication;
-    }
-
-    public List<Long> getPersons() {
-        return persons;
-    }
-
-    public String getFree() {
-        return free;
-    }
-
-    public Long getStatus() {
-        return status;
-    }
-
-    public Long getReview() {return review;}
-
-    public Long getSection() {
-        return section;
-    }
-
-    public boolean getArchived() { return archived; }
-
-    @Override
-    public String toString() {
-        return "ArticleSearchParams{" +
-                "free='" + free + '\'' +
-                ", status='" + status + '\'' +
-                ", review='" + review + '\'' +
-                ", persons=" + persons +
-                ", section='" + section + '\'' +
-                ", publication='" + publication + '\'' +
-                ", pageSize='" + this.pageSize + '\'' +
-                ", pageNumber='" + this.pageNumber + '\'' +
-                ", archived='" + archived + '\''+
-                '}';
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public int getPageNumber() {
-        return pageNumber;
     }
 
     @JsonIgnore
