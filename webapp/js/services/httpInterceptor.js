@@ -18,7 +18,7 @@
 
 angular.module('momusApp.services').
 
-    factory('HttpInterceptor', function ($q, $location, $injector, $window) {
+    factory('HttpInterceptor', function ($q, $injector, $window, $rootScope) {
         return {
             'responseError': function (response) {
                 // Allow $http requests to handle errors themselves
@@ -57,13 +57,16 @@ angular.module('momusApp.services').
                 }
                 const MessageModal = $injector.get('MessageModal');
                 const redirect = () => {
+                    $rootScope.errorModal = null;
                     if (reloadOnAlertClose) {
                         $window.location.reload();
                     } else if(redirectOnAlertClose) {
                         $window.location.href = redirectLocation;
                     }
                 };
-                MessageModal.error(errorMessage, showExtras, redirect, redirect);
+
+                if($rootScope.errorModal == null)
+                    $rootScope.errorModal = MessageModal.error(errorMessage, showExtras, redirect, redirect);
 
                 return $q.reject(response);
             }
