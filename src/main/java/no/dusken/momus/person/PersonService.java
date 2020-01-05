@@ -6,8 +6,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import no.dusken.momus.article.ArticleService;
 import no.dusken.momus.common.exceptions.RestException;
-import no.dusken.momus.section.Section;
-import no.dusken.momus.section.SectionService;
 
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Service;
@@ -26,7 +24,6 @@ public class PersonService {
 
     private final PersonRepository personRepository;
     private final ArticleService articleService;
-    private final SectionService sectionService;
     private final AvatarRepository avatarRepository;
     private final SimpUserRegistry userRegistry;
 
@@ -34,15 +31,13 @@ public class PersonService {
 
     public PersonService(
             PersonRepository personRepository,
-            ArticleService articleRepository,
-            SectionService sectionService,
+            ArticleService articleService,
             AvatarRepository avatarRepository,
             SimpUserRegistry userRegistry
     ) {
         this.personRepository = personRepository;
-        this.articleService = articleRepository;
+        this.articleService = articleService;
         this.avatarRepository = avatarRepository;
-        this.sectionService = sectionService;
         this.userRegistry = userRegistry;
 
         this.sessionStates = new HashMap<>();
@@ -52,15 +47,7 @@ public class PersonService {
         return personRepository.findById(id).orElseThrow(() -> new RestException("Not found", HttpServletResponse.SC_NOT_FOUND));
     }
 
-    public Person updateFavouritesection(Person person, Long sectionId) {
-        Section section = sectionService.getSectionById(sectionId);
-
-        person.setFavouritesection(section);
-
-        return personRepository.saveAndFlush(person);
-    }
-
-    public Set<Person> getActivePersonsAndArticleContributors(List<Long> articleIds) {
+    public Set<Person> getActivePeopleAndArticleContributors(List<Long> articleIds) {
         Set<Person> persons = personRepository.findByActiveTrue();
 
         articleService.getArticlesByIds(articleIds).forEach(article -> {
@@ -76,14 +63,14 @@ public class PersonService {
             .orElseThrow(() -> new RestException("No photo found for user", HttpServletResponse.SC_NOT_FOUND));
     }
 
-    public Set<Person> getAllLoggedInPersons() {
+    public Set<Person> getAllLoggedInPeople() {
         return userRegistry.findSubscriptions(sub -> true)
                 .stream()
                 .map(s -> sessionStates.get(s.getSession().getId()).getPerson())
                 .collect(Collectors.toSet());
     }
 
-    public Set<Person> getLoggedInPersonsAtState(String state) {
+    public Set<Person> getLoggedInPeopleAtState(String state) {
         return userRegistry.findSubscriptions(sub -> true)
                 .stream()
                 .filter(s -> sessionStates.get(s.getSession().getId()).getState().equals(state))

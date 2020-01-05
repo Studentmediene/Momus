@@ -110,7 +110,6 @@
                         <tr>
                             <th class="front-column-trash"></th>
                             <th class="front-column-name">Navn</th>
-                            <th class="front-column-symbols">Tegn</th>
                             <th class="front-column-journalists">Journalister</th>
                             <th class="front-column-status">Status</th>
                             <th class="front-column-section">Redaksjon</th>
@@ -133,8 +132,7 @@
 
                         <tr ng-repeat="article in vm.myArticles | limitTo:10">
                             <td></td>
-                            <td><a ui-sref="article({id: article.id})">{{article.name}}</a></td>
-                            <td>{{article.content_length}}</td>
+                            <td><a ui-sref="article({id: article.id})">{{article.name}}</a> ({{article.content_length}})</td>
                             <td>
                                 <ul class="list-unstyled">
                                     <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.name}}</span></li>
@@ -163,7 +161,6 @@
                         <tr>
                             <th class="front-column-trash"></th>
                             <th class="front-column-name">Navn</th>
-                            <th class="front-column-symbols">Tegn</th>
                             <th class="front-column-journalists">Journalister</th>
                             <th class="front-column-status">Status</th>
                             <th class="front-column-section">Redaksjon</th>
@@ -185,8 +182,7 @@
                         </tr>
                         <tr ng-repeat="article in vm.recentArticles">
                             <td><i ng-if="article.archived" class="fas fa-trash" uib-tooltip="Artikkelen er arkivert"></i></td>
-                            <td><a ui-sref="article({id: article.id})">{{article.name}}</a></td>
-                            <td>{{article.content_length}}</td>
+                            <td><a ui-sref="article({id: article.id})">{{article.name}}</a> ({{article.content_length}})</td>
                             <td>
                                 <ul class="list-unstyled">
                                     <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.name}}</span></li>
@@ -201,20 +197,12 @@
                 </div>
             </div>
 
-            <!--Table: Last articles from favorite section-->
-            <div class="panel panel-info">
-                <div class="panel-heading clearfix">
-                    <div class="pull-right">
-                        <select id="favsec" class="form-control input-sm" ng-model="vm.user.favouritesection" ng-change="vm.updateFavouriteSection()"
-                                ng-options="s.name for s in vm.sections  | filter:{deleted: false} track by s.id">
-                        </select>
-                    </div>
-                    <h1 class="panel-title fav">
+            <!--Table: Last articles from users section-->
+            <div class="panel panel-info" ng-show="vm.user.section != null">
+                <div class="panel-heading section-header-background">
+                    <h1 class="panel-title">
                         <i class="fas fa-star"></i>
-                        {{!vm.user.favouritesection ?
-                            "Velg favorittredaksjon for å vise de nyeste artiklene derfra" :
-                            "Siste artikler fra din favorittredaksjon (" + vm.user.favouritesection.name + ")"
-                        }}
+                        Siste artikler i {{ vm.user.section.name }}
                     </h1>
                 </div>
                 <div class="table-responsive">
@@ -223,7 +211,6 @@
                         <tr>
                             <th class="front-column-trash"></th>
                             <th class="front-column-name">Navn</th>
-                            <th class="front-column-symbols">Tegn</th>
                             <th class="front-column-journalists">Journalister</th>
                             <th class="front-column-status">Status</th>
                             <th class="front-column-section">Type</th>
@@ -232,20 +219,14 @@
                         </thead>
                         <tbody>
 
-                        <tr ng-show="!vm.user.favouritesection">
+                        <tr ng-show="vm.sectionArticles.length <= 0">
                             <td colspan="10" style="text-align: center;">
-                                Du har ikke satt en favorittredaksjon
+                                Det finnes ingen artikler i {{ vm.user.section.name }}
                             </td>
                         </tr>
-                        <tr ng-show="favouriteSectionArticles.length <= 0">
-                            <td colspan="10" style="text-align: center;">
-                                Det finnes ingen artikler i denne redaksjonen
-                            </td>
-                        </tr>
-                        <tr ng-repeat="article in vm.favouriteSectionArticles">
+                        <tr ng-repeat="article in vm.sectionArticles">
                             <td></td>
-                            <td><a ui-sref="article({id: article.id})">{{article.name}}</a></td>
-                            <td>{{article.content_length}}</td>
+                            <td><a ui-sref="article({id: article.id})">{{article.name}}</a> ({{article.content_length}})</td>
                             <td>
                                 <ul class="list-unstyled">
                                     <li ng-repeat="journalist in article.journalists"><span person-widget="journalist">{{journalist.name}}</span></li>

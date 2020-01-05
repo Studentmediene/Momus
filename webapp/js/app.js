@@ -96,12 +96,12 @@ angular.module('momusApp', [
                             Article.multiple({ids: recents}).$promise :
                             [];
                     },
-                    favouriteSectionArticles: (Article, loggedInPerson) => {
-                        return loggedInPerson.favouritesection ?
+                    sectionArticles: (Article, loggedInPerson) => {
+                        return loggedInPerson.section ?
                             Article.search(
                                 {}, 
                                 {
-                                    section: loggedInPerson.favouritesection.id,
+                                    section: loggedInPerson.section.id,
                                     page_number: 0,
                                     page_size: 9,
                                 }).$promise :

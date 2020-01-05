@@ -989,6 +989,10 @@
         <dropTable cascadeConstraints="true" tableName="source" />
         <dropTable cascadeConstraints="true" tableName="source_sourcetag" />
         <dropTable cascadeConstraints="true" tableName="sourcetag" />
-    </changeSet> 
+    </changeSet>
+
+    <changeSet id="52_update_person_section_column_name" author="Eivind">
+        <renameColumn tableName="person" oldColumnName="favouritesection_id" newColumnName="section_id" />
+    </changeSet>
 
 </databaseChangeLog>

@@ -47,7 +47,7 @@ export default angular.module('momusApp.routes.home.homePage', [])
         bindings: {
             user: '<',
             myArticles: '<',
-            favouritesectionArticles: '<',
+            sectionArticles: '<',
             lastViewedArticles: '<',
             news: '<',
             sections: '<',

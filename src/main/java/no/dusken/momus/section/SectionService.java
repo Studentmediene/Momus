@@ -6,9 +6,8 @@ import no.dusken.momus.person.authorization.Role;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class SectionService {
@@ -27,8 +26,8 @@ public class SectionService {
         return sectionRepository.findAll();
     }
 
-    public List<Role> getRoles() {
-        return Arrays.stream(Role.values()).collect(Collectors.toList());
+    public Optional<Section> getSectionForRole(Role role) {
+        return getAllSections().stream().filter(s -> s.getEditorRole() == role || s.getJournalistRole() == role).findFirst();
     }
 
     public Section updateSectionRoles(Long id, Section section) {

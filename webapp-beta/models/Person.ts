@@ -6,7 +6,7 @@ export interface Person extends ng.resource.IResource<Person>, Model {
     username: string;
     name: string;
     roles: string[];
-    favouritesection: Section;
+    section: Section;
     email: string;
     phone_number: string;
     active: boolean;

@@ -1,44 +1,54 @@
 package no.dusken.momus.person.ldap;
 
+import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.stereotype.Service;
 
 import lombok.Getter;
 import no.dusken.momus.person.*;
 import no.dusken.momus.person.authorization.Role;
+import no.dusken.momus.section.SectionService;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import java.sql.Blob;
 import java.util.*;
 
-public class PersonMapper implements AttributesMapper<Person> {
-    private PersonRepository personRepository;
-    private AvatarRepository avatarRepository;
-    private boolean active;
-    private long lastId;
+@Service
+public class PersonMapper {
+    private final Environment env;
 
-    private List<GroupRole> groupToRole;
+    private final PersonRepository personRepository;
+    private final AvatarRepository avatarRepository;
+    private final SectionService sectionService;
 
-    public PersonMapper(PersonRepository personRepository, AvatarRepository avatarRepository, boolean active, List<GroupRole> groupToRole) {
+    private long highestUsedId;
+
+    public PersonMapper(Environment env, PersonRepository personRepository, AvatarRepository avatarRepository, SectionService sectionService) {
+        this.env = env;
         this.personRepository = personRepository;
         this.avatarRepository = avatarRepository;
-        this.active = active;
-        this.lastId = 0L;
-        this.groupToRole = groupToRole;
+        this.sectionService = sectionService;
+        this.highestUsedId = 0L;
     }
 
-    @Override
-    public Person mapFromAttributes(Attributes attributes) throws NamingException {
-        // Create person from ldap attributes
-        Person person = getPersonFromAttributes(attributes);
-        // Persist it
-        person = personRepository.saveAndFlush(person);
+    public AttributesMapper<Person> createMapper(boolean activeStatus) {
+        return new AttributesMapper<Person>() {
 
-        // Get the avatar (photo) if it exists
-        Optional<Avatar> avatar = getAvatarFromAttributes(person, attributes);
-        avatar.ifPresent((a) -> avatarRepository.saveAndFlush(a));
+            @Override
+            public Person mapFromAttributes(Attributes attributes) throws NamingException {
+                // Create person from ldap attributes
+                Person person = getPersonFromAttributes(attributes, activeStatus);
+                // Persist it
+                person = personRepository.saveAndFlush(person);
 
-        return person;
+                // Get the avatar (photo) if it exists
+                Optional<Avatar> avatar = getAvatarFromAttributes(person, attributes);
+                avatar.ifPresent((a) -> avatarRepository.saveAndFlush(a));
+
+                return person;
+            }
+        };
     }
 
     private Optional<Avatar> getAvatarFromAttributes(Person person, Attributes attributes) throws NamingException {
@@ -49,7 +59,7 @@ public class PersonMapper implements AttributesMapper<Person> {
         return Optional.empty();
     }
 
-    private Person getPersonFromAttributes(Attributes attributes) throws NamingException {
+    private Person getPersonFromAttributes(Attributes attributes, boolean active) throws NamingException {
         String username = LDAPAttributes.getUsername(attributes);
         String name = LDAPAttributes.getName(attributes);
         String email = LDAPAttributes.getEmail(attributes);
@@ -80,12 +90,15 @@ public class PersonMapper implements AttributesMapper<Person> {
 
         Collection<Role> roles = new HashSet<>();
         roles.add(Role.ROLE_USER);
-        for (GroupRole accessGroup: groupToRole)
+        for (GroupRole accessGroup: GroupRole.getGroupRoleMapping(env))
             if (isMemberOf(groups, accessGroup.getGroup())) {
                 roles.add(accessGroup.getRole());
         }
         person.setRoles(roles);
-        person.setMainRole(getMainRole(roles));
+
+        Role mainRole = getMainRole(roles);
+        person.setMainRole(mainRole);
+        person.setSection(sectionService.getSectionForRole(mainRole).orElse(null));
 
         return person;
     }
@@ -116,10 +129,10 @@ public class PersonMapper implements AttributesMapper<Person> {
      * reference integrity of old articles.
      */
     private Long findFreeId(){
-        while(personRepository.existsById(lastId)){ // New person
-            lastId++;
+        while(personRepository.existsById(highestUsedId)){ // New person
+            highestUsedId++;
         }
-        return lastId;
+        return highestUsedId;
     }
 
     private boolean isMemberOf(Collection<String> userGroups, String group) {
