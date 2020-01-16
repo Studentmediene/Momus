@@ -98,7 +98,7 @@
                 <!--Page number-->
                 <div class="d-table-cell handle" ng-style="vm.columnWidths.page_nr">{{$index + 1}}</div>
                 <!--Edit mode -->
-                <div class="d-table-cell" ng-style="{width: vm.articleWidth}" ng-show="editPage">
+                <div class="d-table-cell" ng-style="{width: vm.articleWidth}" ng-if="editPage">
                     <div><b>Artikler</b></div>
                     <div class="d-article-input">
                         <id-select

@@ -198,7 +198,7 @@
             </div>
 
             <!--Table: Last articles from users section-->
-            <div class="panel panel-info" ng-show="vm.user.section != null">
+            <div class="panel panel-info" ng-if="vm.user.section != null">
                 <div class="panel-heading section-header-background">
                     <h1 class="panel-title">
                         <i class="fas fa-star"></i>
@@ -255,7 +255,7 @@
                             <a
                                 class="btn btn-primary"
                                 type="button"
-                                ui-sref="search({free: searchText})"
+                                ui-sref="search({free: searchText, defaultSearch: true})"
                                 ng-disabled="searchText == null || searchText === ''">
                                 Søk!
                             </a>

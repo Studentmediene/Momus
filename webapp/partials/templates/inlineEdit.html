@@ -5,7 +5,7 @@
             ng-show="!vm.isEditing" ng-click="vm.isEditing = true">
 
     </textwrapper>
-    <div ng-show="vm.isEditing" style="position: absolute; overflow: visible;">
+    <div ng-if="vm.isEditing" style="position: absolute; overflow: visible;">
         <div class="input-group" style="width: 200px">
             <textarea class="form-control custom-control inline-textarea input-sm" ng-model="vm.value"></textarea>
         </div>

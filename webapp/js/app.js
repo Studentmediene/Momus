@@ -148,7 +148,7 @@ angular.module('momusApp', [
                     archived: {type: 'bool'}
                 },
                 resolve: {
-                    activePublication: Publication => Publication.active(),
+                    activePublication: Publication => Publication.active().$promise,
                     publications: Publication => Publication.query().$promise,
                     persons: Person => Person.query().$promise,
                     sections: Section => Section.query().$promise,
