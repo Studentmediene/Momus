@@ -44,7 +44,7 @@
     "@types/node": "^12.6.9",
     "@types/sockjs-client": "~1.1.1",
     "@types/ui-select": "^0.13.29",
-    "acorn": "~6.2.1",
+    "acorn": "~6.4.1",
     "babel-loader": "^8.0.6",
     "base-href-webpack-plugin": "^2.0.0",
     "clean-webpack-plugin": "~1.0.0",
